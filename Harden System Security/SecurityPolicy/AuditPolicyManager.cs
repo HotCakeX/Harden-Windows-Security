@@ -59,21 +59,17 @@ internal sealed partial class AuditPolicyInfo(
 	[JsonPropertyOrder(0)]
 	internal string CategoryName => categoryName;
 
-	[JsonIgnore]
-	private uint _originalAuditingInformation = auditingInformation;
-	[JsonIgnore]
-	private uint _currentAuditingInformation = auditingInformation;
-
+	[field: JsonIgnore]
 	[JsonInclude]
 	[JsonPropertyOrder(2)]
 	internal uint AuditingInformation
 	{
-		get => _currentAuditingInformation;
+		get;
 		set
 		{
-			if (_currentAuditingInformation != value)
+			if (field != value)
 			{
-				_currentAuditingInformation = value;
+				field = value;
 
 				_ = Dispatcher.TryEnqueue(() =>
 				{
@@ -83,23 +79,24 @@ internal sealed partial class AuditPolicyInfo(
 				});
 			}
 		}
-	}
+	} = auditingInformation;
 
+	[field: JsonIgnore]
 	[JsonIgnore]
-	internal uint OriginalAuditingInformation => _originalAuditingInformation;
+	internal uint OriginalAuditingInformation { get; private set; } = auditingInformation;
 
 	/// <summary>
 	/// Gets whether there are pending changes (current value different from original)
 	/// </summary>
 	[JsonIgnore]
-	internal bool HasPendingChanges => _currentAuditingInformation != _originalAuditingInformation;
+	internal bool HasPendingChanges => AuditingInformation != OriginalAuditingInformation;
 
 	/// <summary>
 	/// Updates the original value after successful application
 	/// </summary>
 	internal void CommitChanges()
 	{
-		_originalAuditingInformation = _currentAuditingInformation;
+		OriginalAuditingInformation = AuditingInformation;
 		_ = Dispatcher.TryEnqueue(() =>
 		{
 			OnPropertyChanged(nameof(HasPendingChanges));
@@ -109,16 +106,14 @@ internal sealed partial class AuditPolicyInfo(
 	/// <summary>
 	/// Reverts current value back to original.
 	/// </summary>
-	internal void RevertChanges()
-	{
-		AuditingInformation = _originalAuditingInformation;
-	}
+	internal void RevertChanges() => AuditingInformation = OriginalAuditingInformation;
+
 
 	/// <summary>
 	/// Gets the human-readable audit setting
 	/// </summary>
 	[JsonIgnore]
-	internal string AuditSettingDescription => GetAuditSettingDescription(_currentAuditingInformation);
+	internal string AuditSettingDescription => GetAuditSettingDescription(AuditingInformation);
 
 	/// <summary>
 	/// Gets or sets the selected index for the ComboBox binding (0-3)
@@ -126,7 +121,7 @@ internal sealed partial class AuditPolicyInfo(
 	[JsonIgnore]
 	internal int SelectedAuditSettingIndex
 	{
-		get => (int)_currentAuditingInformation;
+		get => (int)AuditingInformation;
 		set
 		{
 			uint newValue = (uint)Math.Max(0, Math.Min(3, value));

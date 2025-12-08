@@ -479,21 +479,16 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					PolicyInfoIDTextBox = policyIDInfo;
 				});
 
-				if (PolicyObj.HvciOptionsSpecified)
-				{
-					_ = Dispatcher.TryEnqueue(() =>
+				_ = PolicyObj.HvciOptionsSpecified
+					? Dispatcher.TryEnqueue(() =>
 					{
 						HVCIOptionComboBox = GetHVCIOptionKey(PolicyObj.HvciOptions);
-					});
-				}
-				// If policy doesn't have HVCI field then set it to None on the UI ComboBox
-				else
-				{
-					_ = Dispatcher.TryEnqueue(() =>
+					})
+					// If policy doesn't have HVCI field then set it to None on the UI ComboBox
+					: Dispatcher.TryEnqueue(() =>
 					{
 						HVCIOptionComboBox = GetHVCIOptionKey(0);
 					});
-				}
 
 				#endregion
 
@@ -1335,15 +1330,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					string cipFileName = Path.GetFileNameWithoutExtension(SelectedPolicyFile);
 
 					// Save it to User Config dir when elevated
-					if (App.IsElevated)
-					{
-						fileToSaveTheChangesTo = Path.Combine(GlobalVars.UserConfigDir, $"{cipFileName}.xml");
-					}
-					// Save it to the same location file is being read from if non-elevated since we already check if we have write permission in that location
-					else
-					{
-						fileToSaveTheChangesTo = Path.Combine(Path.GetDirectoryName(SelectedPolicyFile)!, $"{cipFileName}.xml");
-					}
+					fileToSaveTheChangesTo = App.IsElevated
+						? Path.Combine(GlobalVars.UserConfigDir, $"{cipFileName}.xml")
+						// Save it to the same location file is being read from if non-elevated since we already check if we have write permission in that location
+						: Path.Combine(Path.GetDirectoryName(SelectedPolicyFile)!, $"{cipFileName}.xml");
 				}
 				else
 				{

@@ -68,10 +68,7 @@ internal sealed partial class HeaderCarousel : UserControl
 	// Periodic single-run glitch trigger for the header title
 	private readonly DispatcherTimer glitchTimer = new() { Interval = TimeSpan.FromSeconds(4) };
 
-	internal HeaderCarousel()
-	{
-		InitializeComponent();
-	}
+	internal HeaderCarousel() => InitializeComponent();
 
 	private void UserControl_Loaded(object sender, RoutedEventArgs e)
 	{

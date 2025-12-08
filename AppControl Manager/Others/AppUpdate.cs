@@ -140,14 +140,7 @@ internal static class AppUpdate
 			{
 				if (App.Settings.AutoCheckForUpdateAtStartup)
 				{
-					if (App.PackageSource is 0)
-					{
-						_ = CheckGitHub();
-					}
-					else
-					{
-						_ = await CheckStore();
-					}
+					_ = App.PackageSource is 0 ? CheckGitHub() : await CheckStore();
 				}
 			}
 			catch (Exception ex)

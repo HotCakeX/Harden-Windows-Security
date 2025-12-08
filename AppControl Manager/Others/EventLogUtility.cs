@@ -30,12 +30,10 @@ namespace AppControlManager.Others;
 /// </summary>
 internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 {
-	internal EventLogUtility()
-	{
+	internal EventLogUtility() =>
 		// Kick off the registry monitor
 		// (this will also read the initial MaxSize into)
 		EventLogMaxSizeWatcher();
-	}
 
 	private readonly Lock _syncRoot = new();
 
@@ -49,23 +47,22 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// <summary>
 	/// Current maximum log size in megabytes (MB).
 	/// </summary>
-	private double _MaxSizeMB;
 	internal double MaxSizeMB
 	{
 		get
 		{
 			lock (_syncRoot)
 			{
-				return _MaxSizeMB;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_MaxSizeMB != value)
+				if (field != value)
 				{
-					_MaxSizeMB = value;
+					field = value;
 					OnPropertyChanged(nameof(MaxSizeMB));
 				}
 			}

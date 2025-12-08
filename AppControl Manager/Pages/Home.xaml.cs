@@ -107,7 +107,7 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		// This guarantees no "ghost" visuals during DrillIn or even with no animation.
 		try
 		{
-			this.Content = null;
+			Content = null;
 		}
 		catch
 		{

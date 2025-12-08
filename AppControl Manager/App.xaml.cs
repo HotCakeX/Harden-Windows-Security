@@ -135,7 +135,7 @@ public partial class App : Application
 	/// </summary>
 	internal App()
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 
 		// Location where File/Folder picker dialog will be opened
 #if APP_CONTROL_MANAGER
@@ -155,7 +155,7 @@ public partial class App : Application
 		Logger.Configure(logsDirectory: LogsDirectory, appName: AppName);
 
 		// to handle unhandled exceptions
-		this.UnhandledException += App_UnhandledException;
+		UnhandledException += App_UnhandledException;
 
 		AppDomain.CurrentDomain.UnhandledException += App_UnhandledException;
 
@@ -174,7 +174,7 @@ public partial class App : Application
 		{
 			// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 			// https://learn.microsoft.com/windows/apps/design/style/reveal-focus
-			this.FocusVisualKind = FocusVisualKind.Reveal;
+			FocusVisualKind = FocusVisualKind.Reveal;
 		}
 		catch (Exception ex)
 		{

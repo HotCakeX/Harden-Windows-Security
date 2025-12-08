@@ -30,15 +30,12 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 {
 
-	internal ConfigurePolicyRuleOptionsVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal ConfigurePolicyRuleOptionsVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-	}
 
 	internal readonly InfoBarSettings MainInfoBar;
 

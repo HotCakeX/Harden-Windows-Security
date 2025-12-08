@@ -195,15 +195,12 @@ internal sealed partial class CSPVM : ViewModelBase
 		}
 	}
 
-	internal CSPVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal CSPVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-	}
 
 	/// <summary>
 	/// Event handler to open file picker to collect XML files.

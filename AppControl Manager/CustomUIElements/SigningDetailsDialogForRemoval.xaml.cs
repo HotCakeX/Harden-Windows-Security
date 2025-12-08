@@ -86,10 +86,10 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		try
 		{
 			// Ensure we're on the UI thread
-			if (this.DispatcherQueue is not null)
+			if (DispatcherQueue is not null)
 			{
 				// Use DispatcherQueue to ensure we're on the UI thread
-				_ = this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+				_ = DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
 				{
 					try
 					{
@@ -186,7 +186,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	private void OpenAppSettingsButton_Click()
 	{
 		// Hide the dialog box
-		this.Hide();
+		Hide();
 
 		ViewModelProvider.NavigationService.Navigate(typeof(Pages.Settings), null);
 	}
@@ -262,7 +262,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			VerifyButtonProgressRing.Visibility = Visibility.Visible;
 
 			// Disable the submit button until all checks are done (in case it was enabled)
-			this.IsPrimaryButtonEnabled = false;
+			IsPrimaryButtonEnabled = false;
 
 			VerifyButtonTeachingTip.IsOpen = false;
 
@@ -380,7 +380,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			#endregion
 
 			// If everything checks out then enable the Primary button for submission
-			this.IsPrimaryButtonEnabled = true;
+			IsPrimaryButtonEnabled = true;
 
 			everythingChecksOut = true;
 
@@ -388,16 +388,16 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			_ = UserConfiguration.Set(CertificateCommonName: CertificateCommonNameAutoSuggestBox.Text, CertificatePath: CertFilePathTextBox.Text);
 
 			// Set the focus on the Primary button after verification has been successful
-			Button? primaryButton = this.GetTemplateChild("PrimaryButton") as Button;
+			Button? primaryButton = GetTemplateChild("PrimaryButton") as Button;
 			if (primaryButton is not null)
 			{
 				try
 				{
 					// Ensure we're on the UI thread
-					if (this.DispatcherQueue is not null)
+					if (DispatcherQueue is not null)
 					{
 						// Use DispatcherQueue to ensure we're on the UI thread
-						_ = this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+						_ = DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
 						{
 							try
 							{

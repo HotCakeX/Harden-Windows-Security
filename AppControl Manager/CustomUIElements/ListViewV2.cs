@@ -63,7 +63,7 @@ internal sealed partial class ListViewV2 : ListView
 		ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Visible);
 
 		// Set a default style of the ListView
-		this.ShowsScrollingPlaceholders = true;
+		ShowsScrollingPlaceholders = true;
 
 		// Subscribe to life cycle events of the ListView
 		Loaded += OnLoaded;
@@ -131,7 +131,7 @@ internal sealed partial class ListViewV2 : ListView
 	private void OnListViewV2ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
 		// Don't proceed further if the sender is not a ListViewItem or if the ListView is in None or Single selection mode because then SelectedItems property is readonly and we get COM error if we attempt to clear it.
-		if (sender is not ListViewItem item || this.SelectionMode is ListViewSelectionMode.None or ListViewSelectionMode.Single)
+		if (sender is not ListViewItem item || SelectionMode is ListViewSelectionMode.None or ListViewSelectionMode.Single)
 			return;
 
 		// If the item is already selected, do nothing so multi-selection is preserved.
@@ -142,7 +142,7 @@ internal sealed partial class ListViewV2 : ListView
 		// Otherwise, switch to single-selection on this item.
 		// SelectionChanged will fire for Clear and for the new selection; suppress both.
 		_skipSelectionChangedCount = 2;
-		this.SelectedItems.Clear();
+		SelectedItems.Clear();
 		item.IsSelected = true;
 	}
 
@@ -154,7 +154,7 @@ internal sealed partial class ListViewV2 : ListView
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
 		// Delay execution until the visual tree is ready
-		_ = this.DispatcherQueue.TryEnqueue(() =>
+		_ = DispatcherQueue.TryEnqueue(() =>
 		{
 			ScrollViewer? sv = this.FindScrollViewer();
 			if (sv != null)

@@ -52,10 +52,7 @@ internal sealed class NavigationService
 #endif
 
 #if HARDEN_SYSTEM_SECURITY
-	internal NavigationService(MainWindowVM _MainWindowVM)
-	{
-		mainWindowVM = _MainWindowVM;
-	}
+	internal NavigationService(MainWindowVM _MainWindowVM) => mainWindowVM = _MainWindowVM;
 #endif
 
 	private Frame? _frame;

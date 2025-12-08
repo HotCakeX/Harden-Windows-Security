@@ -122,11 +122,6 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	private int ActivePageIndex { get; set; }
 
 	/// <summary>
-	/// Mirrors "Is busy" status; toggles OnLoadingStarted/OnLoadingCompleted when changed.
-	/// </summary>
-	private bool _isCurrentlyLoading;
-
-	/// <summary>
 	/// Tracks whether there are more pages available (true until a fetch returns no items or a terminal failure occurs).
 	/// </summary>
 	private bool _hasAdditionalItems;
@@ -151,22 +146,19 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	/// </summary>
 	internal bool IsCurrentlyLoading
 	{
-		get
-		{
-			return _isCurrentlyLoading;
-		}
+		get;
 
 		private set
 		{
-			if (value != _isCurrentlyLoading)
+			if (value != field)
 			{
-				_isCurrentlyLoading = value;
+				field = value;
 
 				// Notify bindings that depend on IsCurrentlyLoading
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsCurrentlyLoading)));
 
 				// Fire lifecycle callbacks so consumers can update UI affordances.
-				if (_isCurrentlyLoading)
+				if (field)
 				{
 					OnLoadingStarted?.Invoke();
 				}
@@ -212,14 +204,7 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 
 		// Reflect the suspension in HasAdditionalItems reporting so the control stops asking for more data.
 		// When resuming, we mark "more items" available; the first subsequent load will determine actual availability.
-		if (suspend)
-		{
-			HasAdditionalItems = false;
-		}
-		else
-		{
-			HasAdditionalItems = true;
-		}
+		HasAdditionalItems = !suspend;
 	}
 
 	/// <summary>
@@ -467,10 +452,7 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	{
 		private GenericIncrementalCollection<TDataSource, TDataType>? _owner;
 
-		internal BulkUpdateScope(GenericIncrementalCollection<TDataSource, TDataType> owner)
-		{
-			_owner = owner;
-		}
+		internal BulkUpdateScope(GenericIncrementalCollection<TDataSource, TDataType> owner) => _owner = owner;
 
 		public void Dispose()
 		{

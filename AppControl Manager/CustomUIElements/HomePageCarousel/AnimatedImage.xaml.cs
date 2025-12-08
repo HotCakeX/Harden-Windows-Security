@@ -67,10 +67,7 @@ internal sealed partial class AnimatedImage : UserControl
 		set => SetValue(ImageUrlProperty, value);
 	}
 
-	public AnimatedImage()
-	{
-		this.InitializeComponent();
-	}
+	public AnimatedImage() => InitializeComponent();
 
 	private void AnimatedImage_Unloaded(object sender, RoutedEventArgs e)
 	{
@@ -83,7 +80,7 @@ internal sealed partial class AnimatedImage : UserControl
 
 	private void IsImageChanged(Uri oldValue, Uri newValue)
 	{
-		BottomImage.Source = new BitmapImage(this.ImageUrl);
+		BottomImage.Source = new BitmapImage(ImageUrl);
 		BottomImage.Opacity = 1;
 
 		if (selectAnimation != null)
@@ -100,7 +97,7 @@ internal sealed partial class AnimatedImage : UserControl
 	{
 		try
 		{
-			TopImage.Source = new BitmapImage(this.ImageUrl);
+			TopImage.Source = new BitmapImage(ImageUrl);
 			TopImage.Opacity = 1;
 		}
 		catch

@@ -34,11 +34,9 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 {
 	private Button? _innerButton;
 
-	internal SettingsCardV3()
-	{
+	internal SettingsCardV3() =>
 		// Wait until Content is applied
 		Loaded += OnLoaded;
-	}
 
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{

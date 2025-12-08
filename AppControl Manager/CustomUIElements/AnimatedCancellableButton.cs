@@ -722,28 +722,19 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		{
 			if (ExternalInternalIsCancellingState)
 			{
-				this.Content = GlobalVars.GetStr("Cancelling");
+				Content = GlobalVars.GetStr("Cancelling");
 				UpdateButtonStyle(true);
 			}
 			else if (ExternalInternalIsCancelState)
 			{
-				this.Content = GlobalVars.GetStr("Cancel");
+				Content = GlobalVars.GetStr("Cancel");
 				UpdateButtonStyle(true);
 			}
 			else
 			{
-				if (!string.IsNullOrEmpty(ExternalButtonContent))
-				{
-					this.Content = ExternalButtonContent;
-				}
-				else if (!string.IsNullOrEmpty(ExternalOriginalText))
-				{
-					this.Content = ExternalOriginalText;
-				}
-				else
-				{
-					this.Content = ButtonDefaultText;
-				}
+				Content = !string.IsNullOrEmpty(ExternalButtonContent)
+					? ExternalButtonContent
+					: !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText;
 				UpdateButtonStyle(false);
 			}
 		}
@@ -756,7 +747,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		try
 		{
 			// Apply DefaultButtonStyle for Cancel/Cancelling, and AccentButtonStyle for ready/active states
-			this.Style = isCancelState ? DefaultButtonStyle : AccentButtonStyle;
+			Style = isCancelState ? DefaultButtonStyle : AccentButtonStyle;
 		}
 		catch (Exception)
 		{ }
@@ -794,7 +785,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 
 			UpdateButtonContentImmediately();
 
-			this.Opacity = 1.0;
+			Opacity = 1.0;
 		}
 	}
 
@@ -828,7 +819,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 						_fadeInStoryboard.Stop();
 					}
 
-					this.Opacity = 1.0;
+					Opacity = 1.0;
 				}
 				catch (Exception)
 				{ }
@@ -859,7 +850,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 					_fadeInStoryboard.Stop();
 				}
 
-				this.Opacity = 1.0;
+				Opacity = 1.0;
 			}
 			catch (Exception)
 			{ }
@@ -883,10 +874,10 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 
 	internal AnimatedCancellableButton()
 	{
-		this.DefaultStyleKey = typeof(Button);
+		DefaultStyleKey = typeof(Button);
 		base.Click += AnimatedCancellableButton_BaseClick;
-		this.Loaded += AnimatedCancellableButton_Loaded;
-		this.Unloaded += AnimatedCancellableButton_Unloaded;
+		Loaded += AnimatedCancellableButton_Loaded;
+		Unloaded += AnimatedCancellableButton_Unloaded;
 		InitializeAnimations();
 		InitializeShadowAnimation();
 		InitializeClickDelayTimer();
@@ -1076,28 +1067,19 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		{
 			if (_targetCancellingStateAfterFadeOut)
 			{
-				this.Content = GlobalVars.GetStr("Cancelling");
+				Content = GlobalVars.GetStr("Cancelling");
 				UpdateButtonStyle(true);
 			}
 			else if (_targetStateAfterFadeOut)
 			{
-				this.Content = GlobalVars.GetStr("Cancel");
+				Content = GlobalVars.GetStr("Cancel");
 				UpdateButtonStyle(true);
 			}
 			else
 			{
-				if (!string.IsNullOrEmpty(ExternalButtonContent))
-				{
-					this.Content = ExternalButtonContent;
-				}
-				else if (!string.IsNullOrEmpty(ExternalOriginalText))
-				{
-					this.Content = ExternalOriginalText;
-				}
-				else
-				{
-					this.Content = ButtonDefaultText;
-				}
+				Content = !string.IsNullOrEmpty(ExternalButtonContent)
+					? ExternalButtonContent
+					: !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText;
 				UpdateButtonStyle(false);
 			}
 
@@ -1255,8 +1237,8 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		try
 		{
 			base.Click -= AnimatedCancellableButton_BaseClick;
-			this.Loaded -= AnimatedCancellableButton_Loaded;
-			this.Unloaded -= AnimatedCancellableButton_Unloaded;
+			Loaded -= AnimatedCancellableButton_Loaded;
+			Unloaded -= AnimatedCancellableButton_Unloaded;
 		}
 		catch (Exception)
 		{ }

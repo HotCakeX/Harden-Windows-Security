@@ -108,10 +108,10 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	internal InfoBarV2()
 	{
 		// Wire up all necessary event handlers
-		this.Loaded += InfoBarV2_Loaded;
-		this.Unloaded += InfoBarV2_Unloaded;
-		this.Closing += InfoBarV2_Closing;  // Critical for intercepting close button clicks
-		this.Closed += InfoBarV2_Closed;
+		Loaded += InfoBarV2_Loaded;
+		Unloaded += InfoBarV2_Unloaded;
+		Closing += InfoBarV2_Closing;  // Critical for intercepting close button clicks
+		Closed += InfoBarV2_Closed;
 
 		// Initialize close button timer with short interval for responsive close handling
 		// The timer is needed because InfoBar's close button handling has timing issues
@@ -125,14 +125,14 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		InitializeTransforms();
 
 		// Set initial visual state - InfoBar should start hidden
-		this.Visibility = Visibility.Collapsed;
-		this.Opacity = 0;
+		Visibility = Visibility.Collapsed;
+		Opacity = 0;
 		_lastKnownIsOpenState = false;
 
 		// Register for IsOpen property changes - this is how to detect when ViewModel changes the property
 		// This callback is essential for responding to two-way binding changes from the ViewModel
 		// Track the registration token so we can unregister during cleanup
-		_isOpenCallbackToken = this.RegisterPropertyChangedCallback(IsOpenProperty, OnIsOpenPropertyChanged);
+		_isOpenCallbackToken = RegisterPropertyChangedCallback(IsOpenProperty, OnIsOpenPropertyChanged);
 	}
 
 	// Override to enable text selection on the internal "Message" TextBlock after the template is applied.
@@ -161,8 +161,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		_transformGroup.Children.Add(_compositeTransform);
 
 		// Apply the transform group to the InfoBar and set origin to center for scaling
-		this.RenderTransform = _transformGroup;
-		this.RenderTransformOrigin = new Point(0.5, 0.5);
+		RenderTransform = _transformGroup;
+		RenderTransformOrigin = new Point(0.5, 0.5);
 	}
 
 	#region Dependency Properties - Default Values Set Here
@@ -722,7 +722,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Update state tracking if InfoBar was closed without my custom animation
-		if (!_isClosingViaButton && EnableAnimation && !this.IsOpen && _lastKnownIsOpenState)
+		if (!_isClosingViaButton && EnableAnimation && !IsOpen && _lastKnownIsOpenState)
 		{
 			_lastKnownIsOpenState = false;
 		}
@@ -778,7 +778,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Queue the operation with safety checks
-		_ = this.DispatcherQueue.TryEnqueue(() =>
+		_ = DispatcherQueue.TryEnqueue(() =>
 		{
 			// Check if we're still valid before executing
 			bool shouldExecute = false;
@@ -826,7 +826,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			return;
 		}
 
-		bool newIsOpenValue = this.IsOpen;
+		bool newIsOpenValue = IsOpen;
 
 		// Skip redundant property changes that don't actually change the state
 		if (_lastKnownIsOpenState == newIsOpenValue)
@@ -840,8 +840,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		// If animations are disabled, use default InfoBar behavior
 		if (!EnableAnimation)
 		{
-			this.Visibility = this.IsOpen ? Visibility.Visible : Visibility.Collapsed;
-			this.Opacity = this.IsOpen ? 1.0 : 0.0;
+			Visibility = IsOpen ? Visibility.Visible : Visibility.Collapsed;
+			Opacity = IsOpen ? 1.0 : 0.0;
 			ResetTransforms();
 			return;
 		}
@@ -877,7 +877,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Start the appropriate animation based on the new IsOpen value
-		AnimateInfoBarState(this.IsOpen);
+		AnimateInfoBarState(IsOpen);
 	}
 
 	#endregion
@@ -951,9 +951,9 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		// Create event args for animation events
 		InfoBarV2AnimationEventArgs eventArgs = new(
-			animationType: this.AnimationType,
+			animationType: AnimationType,
 			isOpening: shouldOpen,
-			duration: this.AnimationDuration);
+			duration: AnimationDuration);
 
 		// Notify observers that animation is starting (with null check for safety)
 		try
@@ -993,26 +993,26 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		if (shouldOpen)
 		{
-			this.Visibility = Visibility.Visible;
-			this.Opacity = 1.0;
+			Visibility = Visibility.Visible;
+			Opacity = 1.0;
 			ResetTransforms();
-			if (!this.IsOpen)
+			if (!IsOpen)
 			{
 				_isInternalIsOpenChange = true;
-				this.IsOpen = true;
+				IsOpen = true;
 				_isInternalIsOpenChange = false;
 			}
 		}
 		else
 		{
-			this.Visibility = Visibility.Collapsed;
-			this.Opacity = 0.0;
+			Visibility = Visibility.Collapsed;
+			Opacity = 0.0;
 			ResetTransforms();
-			if (this.IsOpen)
+			if (IsOpen)
 			{
 				_suppressCloseAnimation = true;
 				_isInternalIsOpenChange = true;
-				this.IsOpen = false;
+				IsOpen = false;
 				_isInternalIsOpenChange = false;
 			}
 		}
@@ -1048,7 +1048,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Make InfoBar visible before starting animation
-		this.Visibility = Visibility.Visible;
+		Visibility = Visibility.Visible;
 
 		// Set initial state for the animation (invisible, scaled down, offset, etc.)
 		SetInitialStateForShow();
@@ -1101,7 +1101,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	private void SetInitialStateForShow()
 	{
 		// Always start with opacity 0 for show animations
-		this.Opacity = 0;
+		Opacity = 0;
 
 		// Set transform initial state based on animation type
 		switch (AnimationType)
@@ -1165,7 +1165,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	private void SetInitialStateForHide()
 	{
 		// Start from fully visible state
-		this.Opacity = 1;
+		Opacity = 1;
 		_translateTransform.Y = 0;
 		_scaleTransform.ScaleX = ScaleTo;
 		_scaleTransform.ScaleY = ScaleTo;
@@ -1193,7 +1193,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	{
 		// Only create animations if control is loaded and has access to visual tree
 		// and we're not disposed or unloading
-		if (!this.IsLoaded || _isDisposed || _isUnloading)
+		if (!IsLoaded || _isDisposed || _isUnloading)
 		{
 			return;
 		}
@@ -1701,23 +1701,23 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Ensure final visual state is correct
-		this.Visibility = Visibility.Visible;
-		this.Opacity = 1;
+		Visibility = Visibility.Visible;
+		Opacity = 1;
 		ResetTransforms();
 
 		// Ensure IsOpen property reflects the shown state
-		if (!this.IsOpen)
+		if (!IsOpen)
 		{
 			_isInternalIsOpenChange = true;
-			this.IsOpen = true;
+			IsOpen = true;
 			_isInternalIsOpenChange = false;
 		}
 
 		// Create event args and notify observers
 		InfoBarV2AnimationEventArgs eventArgs = new(
-			animationType: this.AnimationType,
+			animationType: AnimationType,
 			isOpening: true,
-			duration: this.AnimationDuration);
+			duration: AnimationDuration);
 
 		// Safely invoke event with null check
 		try
@@ -1747,8 +1747,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Hide the InfoBar completely
-		this.Visibility = Visibility.Collapsed;
-		this.Opacity = 0;
+		Visibility = Visibility.Collapsed;
+		Opacity = 0;
 
 		// Handle close button vs programmatic close differently
 		// This prevents infinite loops while maintaining proper data binding
@@ -1759,7 +1759,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			_isHandlingCloseButton = true;
 			_suppressCloseAnimation = true;
 			_isInternalIsOpenChange = true;
-			this.IsOpen = false;  // This will close the InfoBar and update ViewModel
+			IsOpen = false;  // This will close the InfoBar and update ViewModel
 			_isInternalIsOpenChange = false;
 			_lastKnownIsOpenState = false;
 		}
@@ -1771,9 +1771,9 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		// Create event args and notify observers
 		InfoBarV2AnimationEventArgs eventArgs = new(
-			animationType: this.AnimationType,
+			animationType: AnimationType,
 			isOpening: false,
-			duration: this.AnimationDuration);
+			duration: AnimationDuration);
 
 		// Safely invoke event with null check
 		try
@@ -1818,7 +1818,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			SafeDispatcherQueueTryEnqueue(() =>
 			{
 				// Only start pending animation if state actually needs to change
-				if (this.IsOpen != pendingState)
+				if (IsOpen != pendingState)
 				{
 					_lastKnownIsOpenState = pendingState;
 					AnimateInfoBarState(pendingState);

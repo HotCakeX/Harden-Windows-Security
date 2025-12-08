@@ -485,22 +485,17 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new GitHub()
 					};
 
-					if (currentTheme == ElementTheme.Dark)
-					{
-						UpdateIcon = new AnimatedIcon
+					UpdateIcon = currentTheme == ElementTheme.Dark
+						? new AnimatedIcon
 						{
 							Margin = new Thickness(0, -5, -5, -5),
 							Source = new Heart()
-						};
-					}
-					else
-					{
-						UpdateIcon = new AnimatedIcon
+						}
+						: new AnimatedIcon
 						{
 							Margin = new Thickness(0, -25, -25, -25),
 							Source = new HeartPulse()
 						};
-					}
 
 					GroupPolicyEditorIcon = new AnimatedIcon
 					{

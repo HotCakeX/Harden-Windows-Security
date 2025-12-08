@@ -45,16 +45,7 @@ internal static class Helper
 		];
 
 		// Normalize the input CN
-		string targetCN;
-		if (!subjectNameFragment.StartsWith("CN=", StringComparison.OrdinalIgnoreCase))
-		{
-			targetCN = $"CN={subjectNameFragment}";
-		}
-		else
-		{
-			targetCN = subjectNameFragment;
-		}
-
+		string targetCN = !subjectNameFragment.StartsWith("CN=", StringComparison.OrdinalIgnoreCase) ? $"CN={subjectNameFragment}" : subjectNameFragment;
 		foreach (X509Store storeInstance in storesToSearch)
 		{
 			X509Store? store = null;

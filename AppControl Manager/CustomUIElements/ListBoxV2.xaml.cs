@@ -45,20 +45,15 @@ internal sealed partial class ListBoxV2 : UserControl
 
 	public IEnumerable? ItemsSource
 	{
-		get { return (IEnumerable?)GetValue(ItemsSourceProperty); }
-		set { SetValue(ItemsSourceProperty, value); }
+		get => (IEnumerable?)GetValue(ItemsSourceProperty); set => SetValue(ItemsSourceProperty, value);
 	}
 
 	public SelectionMode SelectionMode
 	{
-		get { return (SelectionMode)GetValue(SelectionModeProperty); }
-		set { SetValue(SelectionModeProperty, value); }
+		get => (SelectionMode)GetValue(SelectionModeProperty); set => SetValue(SelectionModeProperty, value);
 	}
 
-	internal ListBoxV2()
-	{
-		InitializeComponent();
-	}
+	internal ListBoxV2() => InitializeComponent();
 
 	/// <summary>
 	/// Click handler for the delete button. Removes the item from the bound collection.

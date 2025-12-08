@@ -545,16 +545,11 @@ DeviceEvents
 
 				List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(MDEAdvancedHuntingLogs);
 
-				if (MDEAHCSVData.Count > 0)
-				{
-					Output = GetMDEAdvancedHuntingLogsData.Retrieve(MDEAHCSVData);
-				}
-				else
-				{
-					throw new InvalidOperationException(
+				Output = MDEAHCSVData.Count > 0
+					? GetMDEAdvancedHuntingLogsData.Retrieve(MDEAHCSVData)
+					: throw new InvalidOperationException(
 						GlobalVars.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs")
 					);
-				}
 			});
 
 			// Store all of the data in the List

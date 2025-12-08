@@ -28,16 +28,13 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class BuildNewCertificateVM : ViewModelBase
 {
 
-	internal BuildNewCertificateVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal BuildNewCertificateVM() => MainInfoBar = new InfoBarSettings(
 		() => StatusInfoBarIsOpen, value => StatusInfoBarIsOpen = value,
 		() => StatusInfoBarMessage, value => StatusInfoBarMessage = value,
 		() => StatusInfoBarSeverity, value => StatusInfoBarSeverity = value,
 		() => StatusInfoBarIsClosable, value => StatusInfoBarIsClosable = value,
 		Dispatcher,
 		() => StatusInfoBarTitle, value => StatusInfoBarTitle = value);
-	}
 
 	private readonly InfoBarSettings MainInfoBar;
 

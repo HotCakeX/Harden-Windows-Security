@@ -56,15 +56,12 @@ internal sealed partial class UpdateVM : ViewModelBase
 	{
 	}
 
-	internal UpdateVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal UpdateVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-	}
 
 	internal readonly InfoBarSettings MainInfoBar;
 

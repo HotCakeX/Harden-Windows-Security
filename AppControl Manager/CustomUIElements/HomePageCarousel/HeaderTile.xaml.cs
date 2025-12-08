@@ -98,10 +98,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(IsSelectedProperty, value);
 	}
 
-	internal HeaderTile()
-	{
-		DefaultStyleKey = typeof(HeaderTile);
-	}
+	internal HeaderTile() => DefaultStyleKey = typeof(HeaderTile);
 
 	private void IsSelectedChanged(object oldValue, object newValue)
 	{

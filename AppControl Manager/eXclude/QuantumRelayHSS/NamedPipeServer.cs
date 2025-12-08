@@ -566,14 +566,7 @@ internal sealed class NamedPipeServer : IDisposable
 
 					// TokenHandle = NULL means evaluate membership for the effective token of the calling thread.
 					// Since we are inside RunAsClient, the thread is impersonating the client.
-					if (NativeMethods.CheckTokenMembership(IntPtr.Zero, pSid, out bool isMember))
-					{
-						isAdmin = isMember;
-					}
-					else
-					{
-						isAdmin = false;
-					}
+					isAdmin = NativeMethods.CheckTokenMembership(IntPtr.Zero, pSid, out bool isMember) ? isMember : false;
 				}
 				catch
 				{

@@ -25,10 +25,7 @@ internal sealed partial class BitLockerSuspend : ContentDialogV2, INPCImplant
 {
 	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 
-	internal BitLockerSuspend()
-	{
-		InitializeComponent();
-	}
+	internal BitLockerSuspend() => InitializeComponent();
 
 	internal double RestartCount { get; private set => this.SP(ref field, value); } = 1;
 

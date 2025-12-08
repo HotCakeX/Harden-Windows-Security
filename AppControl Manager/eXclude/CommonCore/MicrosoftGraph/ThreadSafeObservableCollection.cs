@@ -84,7 +84,7 @@ internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T
 		try
 		{
 			// Create a snapshot of the items to iterate over.
-			var items = new T[Items.Count];
+			T[] items = new T[Items.Count];
 			Items.CopyTo(items, 0);
 			foreach (T? item in items)
 			{

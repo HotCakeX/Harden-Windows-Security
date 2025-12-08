@@ -58,8 +58,7 @@ internal sealed partial class ButtonV2 : Button
 	/// </summary>
 	public object? ObservedData
 	{
-		get { return GetValue(ObservedDataProperty); }
-		set { SetValue(ObservedDataProperty, value); }
+		get => GetValue(ObservedDataProperty); set => SetValue(ObservedDataProperty, value);
 	}
 
 	private static void OnObservedDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((ButtonV2)d).UpdateAppearance();

@@ -30,11 +30,9 @@ internal sealed partial class MenuFlyoutV2 : MenuFlyout
 	/// Initializes a new instance of the <see cref="MenuFlyoutV2"/> class.
 	/// Subscribes to the Opened event to attach pointer event handlers to the menu items.
 	/// </summary>
-	internal MenuFlyoutV2()
-	{
+	internal MenuFlyoutV2() =>
 		// Attach the handler for the Opened event to initialize event listeners for pointer interactions on menu items
 		Opened += MenuFlyoutV2_Opened;
-	}
 
 	/// <summary>
 	/// Property to track whether the user's pointer is currently over any menu item in the flyout.

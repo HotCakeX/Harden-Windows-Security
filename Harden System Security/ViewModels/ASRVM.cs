@@ -136,10 +136,7 @@ internal sealed partial class ASRRuleEntry(RegistryPolicyEntry policyEntry, ASRV
 			{
 				FriendlyName = name
 			},
-			asrVMRef: ViewModelProvider.ASRVM)
-	{
-		State = state;
-	}
+			asrVMRef: ViewModelProvider.ASRVM) => State = state;
 
 	/// <summary>
 	/// Apply this specific ASR rule, event handler for individual Apply buttons.

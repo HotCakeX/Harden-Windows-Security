@@ -668,19 +668,12 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		try
 		{
 			Result<AppMitigations> systemPolicyResult = SecurityPolicyRepository.RetrieveSystemSecurityConfiguration();
-			AppMitigations appMitigations;
-			if (systemPolicyResult.IsSuccess)
-			{
-				appMitigations = systemPolicyResult.Value;
-			}
-			else
-			{
-				appMitigations = new AppMitigations("System")
+			AppMitigations appMitigations = systemPolicyResult.IsSuccess
+				? systemPolicyResult.Value
+				: new AppMitigations("System")
 				{
 					Source = "System Defaults"
 				};
-			}
-
 			return SetProcessMitigationsCommand.setEnableAndDisable(appMitigations, disableList, enableList, EAFModulesList, isForce, isRemove, isReset, isSystemMode: true);
 		}
 		catch (Exception ex)

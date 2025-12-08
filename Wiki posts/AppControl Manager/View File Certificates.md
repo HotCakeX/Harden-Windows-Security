@@ -137,6 +137,18 @@ Key capabilities include:
 
 * **Get Default Forbidden Signature Database:** Retrieve the factory default Forbidden Signature Database (dbxDefault), containing the initial revocation list provided by the system manufacturer.
 
+<br>
+
+### Potential for Detecting Virtual Machines
+
+Virtual machines running on hypervisors such as Hyper-V, VMware, or VirtualBox show different values than a real bare metal system.
+
+* **Hyper-V**: At the time of this writing, Hyper-V VMs do not display all of the `Default` variations of UEFI variables; in fact, you will encounter an error when attempting to get the values of `PKDefault` or `dbxDefault`. Whether the VM is shielded or not does not have any effect on the results.
+
+* **VirtualBox**: At the time of this writing, attempting to get many of the UEFI variables mentioned in this post results in an error on VirtualBox VMs.
+
+* **VMware**: At the time of this writing, attempting to get the Platform Key or Default Platform Key in VMware Workstation VMs results in 0 certificates, an anomaly that can be considered an indicator of a VM. Additionally, getting the default DBX database results in significantly fewer forbidden hashes than those available on the host. The Default and non-default DB both have certificates with the subject `VMware, Inc.`, which can clearly help identify that the system is a VM.
+
 > [!TIP]\
 > You can read more about these UEFI Secure Boot variables on:
 >

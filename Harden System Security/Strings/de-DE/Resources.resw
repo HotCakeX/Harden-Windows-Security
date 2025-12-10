@@ -4895,5 +4895,21 @@ Fingerabdruck: {3}</value>
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Zusätzlich zu den zur Entfernung empfohlenen Features und Funktionen, schließen Sie auch die zur Aktivierung empfohlenen ein.</value>
-  </data>  
+  </data>
+    <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Nur das Laden von Good-Kernelmodustreibern zulassen, um die Sicherheit zu erhöhen.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>Drittanbieter-Virenschutzsoftware oder andere Arten von Drittanbietertreibern sind möglicherweise nicht kompatibel. Im Fall von Inkompatibilität wird das System Probleme beim Starten haben.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Optionale Überschreibungen anwenden</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Es wird dringend empfohlen, diese optionalen Überschreibungen anzuwenden, um die Benutzererfahrung bei der Verwendung der Microsoft-Sicherheitsbaselines zu verbessern.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Es wird dringend empfohlen, diese optionalen Überschreibungen anzuwenden, um die Benutzererfahrung bei der Verwendung der Microsoft-Sicherheitsbaselines zu verbessern.</value>
+  </data>
 </root>

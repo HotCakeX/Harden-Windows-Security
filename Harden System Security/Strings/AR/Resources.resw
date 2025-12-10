@@ -4895,5 +4895,21 @@
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>بالإضافة إلى الميزات والقدرات الموصى بإزالتها، ضمّن أيضًا تلك الموصى بتمكينها.</value>
-  </data>  
+  </data>
+    <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>السماح فقط بتحميل برامج تشغيل وضع النواة Good لتحسين الأمان.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>قد تكون برامج مكافحة الفيروسات التابعة لجهات خارجية أو أنواع أخرى من برامج تشغيل الجهات الخارجية غير متوافقة. في حالة عدم التوافق، سيواجه النظام مشكلة في التمهيد.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تطبيق التجاوزات الاختيارية</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يوصى بشدة بتطبيق هذه التجاوزات الاختيارية لتحسين تجربة المستخدم عند استخدام خطوط أساس الأمان من Microsoft.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يوصى بشدة بتطبيق هذه التجاوزات الاختيارية لتحسين تجربة المستخدم عند استخدام خطوط أساس الأمان من Microsoft.</value>
+  </data>
 </root>

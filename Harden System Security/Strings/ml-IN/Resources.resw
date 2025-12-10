@@ -4895,5 +4895,21 @@
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>നീക്കം ചെയ്യാൻ ശുപാർശ ചെയ്ത സവിശേഷതകളും ശേഷികളും കൂടാതെ, പ്രവർത്തനക്ഷമമാക്കാൻ ശുപാർശ ചെയ്തവയും ഉൾപ്പെടുത്തുക.</value>
-  </data>  
+  </data>
+    <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>മെച്ചപ്പെട്ട സുരക്ഷയ്ക്കായി Good കേർണൽ-മോഡ് ഡ്രൈവറുകൾ മാത്രം ലോഡുചെയ്യാൻ അനുവദിക്കുക.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>തേർഡ് പാർട്ടി ആന്റിവൈറസുകളോ മറ്റ് തരത്തിലുള്ള തേർഡ് പാർട്ടി ഡ്രൈവറുകളോ പൊരുത്തപ്പെടാത്തതായിരിക്കാം. പൊരുത്തക്കേടുണ്ടെങ്കിൽ, സിസ്റ്റം ബൂട്ട് ചെയ്യുന്നതിൽ പ്രശ്നമുണ്ടാകും.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഓപ്ഷണൽ ഓവർറൈഡുകൾ പ്രയോഗിക്കുക</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft സുരക്ഷാ ബേസ്‌ലൈനുകൾ ഉപയോഗിക്കുമ്പോൾ മെച്ചപ്പെട്ട ഉപയോക്തൃ അനുഭവത്തിനായി ഈ ഓപ്ഷണൽ ഓവർറൈഡുകൾ പ്രയോഗിക്കാൻ ശക്തമായി ശുപാർശ ചെയ്യുന്നു.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft സുരക്ഷാ ബേസ്‌ലൈനുകൾ ഉപയോഗിക്കുമ്പോൾ മെച്ചപ്പെട്ട ഉപയോക്തൃ അനുഭവത്തിനായി ഈ ഓപ്ഷണൽ ഓവർറൈഡുകൾ പ്രയോഗിക്കാൻ ശക്തമായി ശുപാർശ ചെയ്യുന്നു.</value>
+  </data>
 </root>

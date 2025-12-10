@@ -98,6 +98,57 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 		return filtered;
 	}
 
+	/// <summary>
+	/// Resolves conflicts where multiple <see cref="MUnit"/>s target the same Registry Key/Value (same <see cref="MUnit.JsonPolicyId"/>).
+	/// Priority rule: MUnits with a specific <see cref="SubCategories"/> win over MUnits with no <see cref="SubCategories"/> (null).
+	/// </summary>
+	/// <param name="mUnits">The list of MUnits to process.</param>
+	/// <returns>A new list of MUnits with conflicts resolved.</returns>
+	protected virtual List<MUnit> ResolvePolicyConflicts(List<MUnit> mUnits)
+	{
+		if (mUnits is null || mUnits.Count <= 1)
+			return mUnits ?? [];
+
+		List<MUnit> result = [];
+
+		// Keep MUnits with no JsonPolicyId (non-Registry/GP based, those from security baselines) as they don't have this conflict type.
+		IEnumerable<MUnit> nonJsonMUnits = mUnits.Where(m => m.JsonPolicyId is null);
+		result.AddRange(nonJsonMUnits);
+
+		// Process Registry/GP based MUnits
+		IEnumerable<IGrouping<string, MUnit>> jsonGroups = mUnits
+			.Where(m => m.JsonPolicyId is not null)
+			.GroupBy(m => m.JsonPolicyId!, StringComparer.OrdinalIgnoreCase);
+
+		foreach (IGrouping<string, MUnit> group in jsonGroups)
+		{
+			// If no conflict (only 1 item targeting this Key|Value), keep it.
+			if (group.Count() == 1)
+			{
+				result.Add(group.First());
+				continue;
+			}
+
+			// Conflict detected.
+			// Prefer items with a SubCategory (Specific) over those without (Generic).
+			List<MUnit> specificItems = group.Where(m => m.SubCategory is not null).ToList();
+
+			if (specificItems.Count > 0)
+			{
+				// Specific items exist, so they supersede the Generic ones (SubCategory == null).
+				// We keep all specific items (in case multiple specific sub-categories were selected).
+				result.AddRange(specificItems);
+			}
+			else
+			{
+				// Only generic items exist (e.g. duplicates in JSON file with no subcategory).
+				result.AddRange(group);
+			}
+		}
+
+		return result;
+	}
+
 	public virtual async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 	{
 		// When applying based on intent (selectedIntent provided), do not use sub-category filtering.
@@ -110,6 +161,9 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 
 		// Apply any possible Intent-based filtration.
 		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
+
+		// Resolve any conflicts (e.g. Same Key/Value but one is Specific and one is Generic)
+		filteredMUnits = ResolvePolicyConflicts(filteredMUnits);
 
 		// Calling the core method as if we called it from each VM's UI.
 		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, MUnitOperation.Apply, cancellationToken);
@@ -128,6 +182,9 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 		// Apply any possible Intent-based filtration.
 		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
 
+		// Resolve any conflicts (e.g. Same Key/Value but one is Specific and one is Generic)
+		filteredMUnits = ResolvePolicyConflicts(filteredMUnits);
+
 		// Include all MUnits regardless of whether they have a remove strategy
 		// The MUnit processing logic will handle cases where remove strategy is null
 		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, MUnitOperation.Remove, cancellationToken);
@@ -145,6 +202,9 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 
 		// Apply any possible Intent-based filtration.
 		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
+
+		// Resolve any conflicts (e.g. Same Key/Value but one is Specific and one is Generic)
+		filteredMUnits = ResolvePolicyConflicts(filteredMUnits);
 
 		// Include all MUnits regardless of whether they have a verify strategy
 		// The MUnit processing logic will handle cases where verify strategy is null

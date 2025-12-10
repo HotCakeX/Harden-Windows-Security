@@ -4895,5 +4895,21 @@ Thumbprint: {3}</value>
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>In addition to the features and capabilities recommended to be removed, also include those recommended to be enabled.</value>
-  </data>  
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Only allow Good Kernel-mode drivers to load for improved security.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>3rd party AVs or some other types of 3rd party drivers might be incompatible. In case of incompatibility, the system will have problem booting.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Apply Optional Overrides</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Highly recommended to apply these optional overrides for enhanced user experience when using the Microsoft Security Baselines.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Highly recommended to apply these optional overrides for enhanced user experience when using the Microsoft Security Baselines.</value>
+  </data>
 </root>

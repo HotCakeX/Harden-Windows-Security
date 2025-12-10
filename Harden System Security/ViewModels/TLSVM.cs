@@ -77,23 +77,15 @@ internal sealed partial class TLSVM : MUnitListViewModelBase
 	/// </summary>
 	private sealed class TLSCipherSuites : ISpecializedVerificationStrategy
 	{
-		public bool Verify()
+		public bool Verify(RegistryPolicyEntry? targetPolicy = null)
 		{
 			try
 			{
-				// Build the full path to the JSON file
-				string jsonConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "TLSSecurity.json");
-
-				// Load the policies from the JSON file
-				List<RegistryPolicyEntry> policies = RegistryPolicyEntry.LoadWithFriendlyNameKeyResolve(jsonConfigPath) ?? throw new InvalidOperationException(string.Format(GlobalVars.GetStr("CouldNotLoadPoliciesFromPath"), jsonConfigPath));
-
-				Guid CipherSuitesPolicyID = new("019a8dfa-2725-71bb-b3ab-1950941755fd");
-
-				// Find the specific policy for TLS Cipher Suites
-				string? cipherSuitesValue = policies.Find(x => x.ID == CipherSuitesPolicyID)?.RegValue;
-
-				if (cipherSuitesValue is null)
+				if (targetPolicy is null || targetPolicy.RegValue is null)
 					return false;
+
+				// Use the RegValue directly from the target policy that invoked this fallback to ensure we verify against the specific expected state
+				string cipherSuitesValue = targetPolicy.RegValue;
 
 				// Parse the configured cipher suites into a HashSet
 				HashSet<string> configuredCipherSuites = cipherSuitesValue.Split([','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);

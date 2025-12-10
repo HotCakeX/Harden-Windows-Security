@@ -4895,5 +4895,21 @@
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>हटाने के लिए अनुशंसित फीचर्स और क्षमताओं के अलावा, सक्रिय करने के लिए अनुशंसित उन आइटमों को भी शामिल करें.</value>
-  </data>  
+  </data>
+    <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>बेहतर सुरक्षा के लिए केवल Good कर्नेल-मोड ड्राइवर को लोड होने की अनुमति दें।</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>थर्ड पार्टी एंटीवायरस या अन्य प्रकार के थर्ड पार्टी ड्राइवर असंगत हो सकते हैं। असंगतता के मामले में, सिस्टम को बूट करने में समस्या होगी।</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>वैकल्पिक ओवरराइड लागू करें</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft सुरक्षा आधार-रेखाओं का उपयोग करते समय बेहतर उपयोगकर्ता अनुभव के लिए इन वैकल्पिक ओवरराइड को लागू करने की अत्यधिक अनुशंसा की जाती है।</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft सुरक्षा आधार-रेखाओं का उपयोग करते समय बेहतर उपयोगकर्ता अनुभव के लिए इन वैकल्पिक ओवरराइड को लागू करने की अत्यधिक अनुशंसा की जाती है।</value>
+  </data>
 </root>

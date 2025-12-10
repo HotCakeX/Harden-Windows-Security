@@ -4895,5 +4895,21 @@ Odcisk Palca: {3}</value>
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Oprócz funkcji i możliwości zalecanych do usunięcia, uwzględnij również te zalecane do włączenia.</value>
-  </data>  
+  </data>
+    <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Zezwalaj na ładowanie tylko sterowników trybu jądra typu Good w celu zwiększenia bezpieczeństwa.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>Oprogramowanie antywirusowe innych firm lub inne typy sterowników innych firm mogą być niekompatybilne. W przypadku niekompatybilności system napotka problem podczas uruchamiania.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zastosuj opcjonalne nadpisania</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zdecydowanie zaleca się zastosowanie tych opcjonalnych nadpisań w celu poprawy komfortu użytkowania podczas korzystania z punktów odniesienia zabezpieczeń firmy Microsoft.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zdecydowanie zaleca się zastosowanie tych opcjonalnych nadpisań w celu poprawy komfortu użytkowania podczas korzystania z punktów odniesienia zabezpieczeń firmy Microsoft.</value>
+  </data>
 </root>

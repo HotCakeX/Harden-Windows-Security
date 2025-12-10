@@ -354,5 +354,29 @@
             4
         ],
         "ID": "019a8dfa-263d-78f4-bf2d-7ea336aac7a0"
+    },
+    {
+        "Source": 1,
+        "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+        "ValueName": "ConsentPromptBehaviorUser",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AQAAAA==",
+        "RegValue": "1",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "ConsentPromptBehaviorUser-UAC",
+        "URL": "https://learn.microsoft.com/openspecs/windows_protocols/ms-gpsb/15f4f7b3-d966-4ff4-8393-cb22ea1c3a63",
+        "Category": 7,
+        "SubCategory": null,
+        "DefaultRegValue": "3",
+        "DeviceIntents": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "ID": "019b09c1-e25c-7d4f-9d03-afdcec167870"
     }
 ]

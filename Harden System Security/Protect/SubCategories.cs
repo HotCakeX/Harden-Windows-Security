@@ -34,5 +34,6 @@ internal enum SubCategories : uint
 	MiscellaneousConfigurations_ForceStrongKeyProtection = 12,
 	MiscellaneousConfigurations_ReducedTelemetry = 13,
 	CountryIPBlocking_BlockOFACSanctionedCountries = 14,
-	OptionalWindowsFeatures_IncludeEnablements = 15
+	OptionalWindowsFeatures_IncludeEnablements = 15,
+	MiscellaneousConfigurations_DriverLoadPolicyGoodOnly = 16
 }

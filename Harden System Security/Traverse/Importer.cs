@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -118,24 +119,58 @@ internal static class Importer
 				applyByCategory.Count, totalMeasuresToApply)
 				);
 
-			// Apply phase
-			foreach (KeyValuePair<Categories, List<MUnit>> kvp in applyByCategory)
+			// Intra-Category Conflict Resolution
+			// We need to track which registry keys are being targeted to prevent double-writes (conflicts) within the same category or across categories.
+			HashSet<string> targetedRegistryKeys = new(StringComparer.OrdinalIgnoreCase);
+
+			// Sort categories by execution priority
+			List<KeyValuePair<Categories, List<MUnit>>> sortedApplyCategories = [.. applyByCategory.OrderBy(kv => CategoryProcessorFactory.GetExecutionPriority(kv.Key))];
+
+			// Apply phase: Sort keys by priority in ascending order to match the Factory logic.
+			foreach (KeyValuePair<Categories, List<MUnit>> kvp in sortedApplyCategories)
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 
-				if (kvp.Value.Count == 0)
+				List<MUnit> finalApplyList = new(kvp.Value.Count);
+
+				foreach (MUnit mUnit in CollectionsMarshal.AsSpan(kvp.Value))
+				{
+					// If it's a JSON-based policy, we check for conflicts
+					if (mUnit.JsonPolicyId != null)
+					{
+						// If we haven't targeted this key yet, add it.
+						if (targetedRegistryKeys.Add(mUnit.JsonPolicyId))
+						{
+							finalApplyList.Add(mUnit);
+						}
+						else
+						{
+							// This key was already claimed by a higher priority category or
+							// an earlier item in this same list.
+							// Since this logic processes "Applies" (true), the first one wins.
+							Logger.Write($"Skipping duplicate apply target during import: {mUnit.JsonPolicyId}");
+						}
+					}
+					else
+					{
+						// Non-JSON based MUnits don't conflict via Registry Key ID
+						finalApplyList.Add(mUnit);
+					}
+				}
+
+				if (finalApplyList.Count == 0)
 					continue;
 
 				IMUnitListViewModel viewModel = ResolveViewModel(kvp.Key);
 
 				Logger.Write(string.Format(
 					GlobalVars.GetStr("ImportOperationIndividualApplyOperationMsg"),
-					kvp.Value.Count, kvp.Key)
+					finalApplyList.Count, kvp.Key)
 					);
 
 				await MUnit.ProcessMUnitsWithBulkOperations(
 					viewModel,
-					kvp.Value,
+					finalApplyList,
 					MUnitOperation.Apply,
 					cancellationToken);
 			}
@@ -148,23 +183,47 @@ internal static class Importer
 					removeByCategory.Count, totalMeasuresToRemove)
 					);
 
-				foreach (KeyValuePair<Categories, List<MUnit>> kvp in removeByCategory)
+				List<KeyValuePair<Categories, List<MUnit>>> sortedRemoveCategories = [.. removeByCategory.OrderBy(kv => CategoryProcessorFactory.GetExecutionPriority(kv.Key))];
+
+				foreach (KeyValuePair<Categories, List<MUnit>> kvp in sortedRemoveCategories)
 				{
 					cancellationToken.ThrowIfCancellationRequested();
 
-					if (kvp.Value.Count == 0)
+					List<MUnit> finalRemoveList = new(kvp.Value.Count);
+
+					foreach (MUnit mUnit in CollectionsMarshal.AsSpan(kvp.Value))
+					{
+						if (mUnit.JsonPolicyId != null)
+						{
+							// If we are about to Remove a policy (set to default/delete), we obviously must ensure
+							// that we didn't just Apply it in the loop above.
+							if (targetedRegistryKeys.Contains(mUnit.JsonPolicyId))
+							{
+								// This key was targeted for Application. Do Not remove it.
+								continue;
+							}
+
+							finalRemoveList.Add(mUnit);
+						}
+						else
+						{
+							finalRemoveList.Add(mUnit);
+						}
+					}
+
+					if (finalRemoveList.Count == 0)
 						continue;
 
 					IMUnitListViewModel viewModel = ResolveViewModel(kvp.Key);
 
 					Logger.Write(string.Format(
 						GlobalVars.GetStr("ImportOperationIndividualRemoveOperationMsg"),
-						kvp.Value.Count, kvp.Key)
+						finalRemoveList.Count, kvp.Key)
 						);
 
 					await MUnit.ProcessMUnitsWithBulkOperations(
 						viewModel,
-						kvp.Value,
+						finalRemoveList,
 						MUnitOperation.Remove,
 						cancellationToken);
 				}

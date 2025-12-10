@@ -4895,5 +4895,21 @@ Huella Digital: {3}</value>
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Además de las características y capacidades recomendadas para eliminar, incluya también las recomendadas para habilitar.</value>
-  </data>  
+  </data>
+    <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Permitir solo la carga de controladores de modo kernel Good para mejorar la seguridad.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>Los antivirus de terceros u otros tipos de controladores de terceros pueden ser incompatibles. En caso de incompatibilidad, el sistema tendrá problemas al arrancar.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Aplicar invalidaciones opcionales</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Se recomienda encarecidamente aplicar estas invalidaciones opcionales para una experiencia de usuario mejorada al utilizar las líneas base de seguridad de Microsoft.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Se recomienda encarecidamente aplicar estas invalidaciones opcionales para una experiencia de usuario mejorada al utilizar las líneas base de seguridad de Microsoft.</value>
+  </data>
 </root>

@@ -982,7 +982,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MiscellaneousConfigurations_ReducedTelemetry,
 							description: GlobalVars.GetStr("ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry"),
-							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry"))
+							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry")),
+
+							new SubCategoryDefinition(
+							subCategory:SubCategories.MiscellaneousConfigurations_DriverLoadPolicyGoodOnly,
+							description: GlobalVars.GetStr("ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"),
+							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"))
 							]
 						));
 
@@ -1193,7 +1198,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MiscellaneousConfigurations_ReducedTelemetry,
 							description: GlobalVars.GetStr("ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry"),
-							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry"))
+							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry")),
+
+							new SubCategoryDefinition(
+							subCategory:SubCategories.MiscellaneousConfigurations_DriverLoadPolicyGoodOnly,
+							description: GlobalVars.GetStr("ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"),
+							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"))
 							]
 						));
 
@@ -1244,47 +1254,20 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Apply security measures for selected categories
 	/// </summary>
-	internal async void ApplySelectedCategories()
-	{
-		try
-		{
-			await ExecuteSelectedCategoriesOperation(MUnitOperation.Apply, ApplySelectedCancellableButton);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-	}
+	internal async void ApplySelectedCategories() =>
+		await ExecuteSelectedCategoriesOperation(MUnitOperation.Apply, ApplySelectedCancellableButton);
 
 	/// <summary>
 	/// Remove security measures for selected categories
 	/// </summary>
-	internal async void RemoveSelectedCategories()
-	{
-		try
-		{
+	internal async void RemoveSelectedCategories() =>
 			await ExecuteSelectedCategoriesOperation(MUnitOperation.Remove, RemoveSelectedCancellableButton);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-	}
 
 	/// <summary>
 	/// Verify security measures for selected categories
 	/// </summary>
-	internal async void VerifySelectedCategories()
-	{
-		try
-		{
+	internal async void VerifySelectedCategories() =>
 			await ExecuteSelectedCategoriesOperation(MUnitOperation.Verify, VerifySelectedCancellableButton);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-	}
 
 	/// <summary>
 	/// Execute the specified operation on selected categories
@@ -1300,10 +1283,11 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 
 		bool errorsOccurred = false;
-		button.Begin();
 
 		try
 		{
+			button.Begin();
+
 			// Set flags to disable other operations and UI elements
 			ElementsAreEnabled = false;
 
@@ -1539,5 +1523,4 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 	internal bool RestorationModePartial { get; set => SP(ref field, value); }
 	internal bool RestorationModeFull { get; set => SP(ref field, value); } = true;
-
 }

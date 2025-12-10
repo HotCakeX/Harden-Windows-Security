@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
+using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
@@ -192,6 +193,11 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// </summary>
 	internal readonly List<VerificationResult> AllVerificationResults = [];
 
+	/// <summary>
+	/// Whether the optional overrides must be applied after the Microsoft Security Baseline has been applied or not.
+	/// </summary>
+	internal bool ApplyBaselineOverridesToggle { get; set => SP(ref field, value); } = true;
+
 	#region Search
 
 	/// <summary>
@@ -337,6 +343,18 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 				sourceUri,
 				MSBaseline.Action.Apply,
 				cancellationToken: ApplyAllCancellableButton.Cts?.Token);
+
+			// Check if the Optional Overrides toggle is enabled
+			if (ApplyBaselineOverridesToggle)
+			{
+				ICategoryProcessor overridesProcessor = CategoryProcessorFactory.GetProcessor(Categories.MSFTSecBaselines_OptionalOverrides);
+
+				// Apply the optional overrides (apply all MUnits in that category)
+				await overridesProcessor.ApplyAllAsync(
+					selectedSubCategories: null,
+					selectedIntent: null, // No specific intent filter, apply all available overrides
+					cancellationToken: ApplyAllCancellableButton.Cts?.Token);
+			}
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("MicrosoftSecurityBaselineAppliedSuccessfully"));
 

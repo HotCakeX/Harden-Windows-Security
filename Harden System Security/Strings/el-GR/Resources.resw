@@ -4895,5 +4895,21 @@
   <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Εκτός από τις δυνατότητες και λειτουργίες που συνιστάται να αφαιρεθούν, συμπεριλάβετε επίσης εκείνες που συνιστάται να ενεργοποιηθούν.</value>
-  </data>  
+  </data>
+    <data name="ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Να επιτρέπεται η φόρτωση μόνο προγραμμάτων οδήγησης λειτουργίας πυρήνα Good για βελτιωμένη ασφάλεια.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly" xml:space="preserve">
+    <value>Τα προγράμματα προστασίας από ιούς τρίτων ή άλλοι τύποι προγραμμάτων οδήγησης τρίτων ενδέχεται να μην είναι συμβατά. Σε περίπτωση ασυμβατότητας, το σύστημα θα αντιμετωπίσει πρόβλημα κατά την εκκίνηση.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Εφαρμογή προαιρετικών παρακάμψεων</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Συνιστάται ιδιαίτερα η εφαρμογή αυτών των προαιρετικών παρακάμψεων για βελτιωμένη εμπειρία χρήστη κατά τη χρήση των γραμμών βάσης ασφαλείας της Microsoft.</value>
+  </data>
+  <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Συνιστάται ιδιαίτερα η εφαρμογή αυτών των προαιρετικών παρακάμψεων για βελτιωμένη εμπειρία χρήστη κατά τη χρήση των γραμμών βάσης ασφαλείας της Microsoft.</value>
+  </data>
 </root>

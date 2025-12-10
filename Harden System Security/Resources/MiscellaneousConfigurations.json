@@ -141,14 +141,12 @@
         "RegValue": "8",
         "Hive": 0,
         "PolicyAction": 0,
-        "FriendlyName": "DriverLoadPolicy-Miscellaneous",
+        "FriendlyName": "DriverLoadPolicyGoodOnly-Miscellaneous",
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-system#bootstartdriverinitialization",
         "Category": 12,
-        "SubCategory": null,
+        "SubCategory": 16,
         "DefaultRegValue": null,
         "DeviceIntents": [
-            1,
-            2,
             3,
             4,
             5
@@ -626,5 +624,30 @@
             5
         ],
         "ID": "019a8dfa-25dc-7f42-8129-f54fabf027e5"
+    },
+    {
+        "Source": 0,
+        "KeyName": "System\\CurrentControlSet\\Policies\\EarlyLaunch",
+        "ValueName": "DriverLoadPolicy",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AQAAAA==",
+        "RegValue": "1",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "DriverLoadPolicyGoodAndUnknown-Miscellaneous",
+        "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-system#bootstartdriverinitialization",
+        "Category": 12,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "ID": "019b0786-b318-7ee2-88a0-bdfafe8a0261"
     }
 ]

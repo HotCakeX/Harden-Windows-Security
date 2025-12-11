@@ -4912,4 +4912,149 @@ Fingerabdruck: {3}</value>
   <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Es wird dringend empfohlen, diese optionalen Überschreibungen anzuwenden, um die Benutzererfahrung bei der Verwendung der Microsoft-Sicherheitsbaselines zu verbessern.</value>
   </data>
+    <data name="FirewallManagementTab.Header" xml:space="preserve">
+    <value>Verwaltung</value>
+  </data>
+  <data name="FirewallManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erstellen Sie neue Firewallregeln, zeigen Sie vorhandene Regeln an und verwalten Sie sie, erlauben oder blockieren Sie alle Dateien in einem Ordner, sichern und stellen Sie Ihre Firewallregeln wieder her und führen Sie viele weitere Aktionen aus.</value>
+  </data>
+  <data name="FirewallManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erstellen Sie neue Firewallregeln, zeigen Sie vorhandene Regeln an und verwalten Sie sie, erlauben oder blockieren Sie alle Dateien in einem Ordner, sichern und stellen Sie Ihre Firewallregeln wieder her und führen Sie viele weitere Aktionen aus.</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Sicherheitsmaßnahmen</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verwalten Sie Sicherheitsmaßnahmen im Zusammenhang mit der Windows-Firewall.</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verwalten Sie Sicherheitsmaßnahmen im Zusammenhang mit der Windows-Firewall.</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.Content" xml:space="preserve">
+    <value>Konfigurieren</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Konfigurieren Sie, wie die neuen Firewallregeln erstellt werden. Klicken Sie mit der rechten Maustaste, oder tippen und halten Sie, um die ausgewählten Dateien anzuzeigen.</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Konfigurieren Sie, wie die neuen Firewallregeln erstellt werden. Klicken Sie mit der rechten Maustaste, oder tippen und halten Sie, um die ausgewählten Dateien anzuzeigen.</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Eingehend</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eingehend bedeutet eingehender Netzwerkdatenverkehr zum Gerät.</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eingehend bedeutet eingehender Netzwerkdatenverkehr zum Gerät.</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ausgehend</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ausgehend bedeutet ausgehender Netzwerkdatenverkehr vom Gerät.</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ausgehend bedeutet ausgehender Netzwerkdatenverkehr vom Gerät.</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Beides</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Beides bedeutet ein- und ausgehender Netzwerkdatenverkehr zum und vom Gerät.</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Beides bedeutet ein- und ausgehender Netzwerkdatenverkehr zum und vom Gerät.</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zulassen</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Firewallregel lässt den Netzwerkdatenverkehr zu.</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Firewallregel lässt den Netzwerkdatenverkehr zu.</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Blockieren</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Firewallregel blockiert den Netzwerkdatenverkehr.</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Firewallregel blockiert den Netzwerkdatenverkehr.</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Programme auswählen</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie die ausführbaren Dateien von Programmen, für die Firewallregeln erstellt werden sollen.</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie die ausführbaren Dateien von Programmen, für die Firewallregeln erstellt werden sollen.</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ordner auswählen</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie Ordner, die rekursiv gescannt werden, um ausführbare Dateien zu finden, für die Firewallregeln erstellt werden sollen.</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie Ordner, die rekursiv gescannt werden, um ausführbare Dateien zu finden, für die Firewallregeln erstellt werden sollen.</value>
+  </data>
+  <data name="FirewallCreateSplitButton.Content" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="FirewallCreateSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Firewallregeln für die ausgewählten Dateien erstellen</value>
+  </data>
+  <data name="FirewallCreateSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Firewallregeln für die ausgewählten Dateien erstellen</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Dual-Use-Programme in der Firewall blockieren</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Blockieren Sie den Netzwerkzugriff über die Windows-Firewall für Dual-Use-Binärdateien mit hohem Risiko, um zu verhindern, dass sie für schädliche Downloads oder Datenexfiltration missbraucht werden.</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Blockieren Sie den Netzwerkzugriff über die Windows-Firewall für Dual-Use-Binärdateien mit hohem Risiko, um zu verhindern, dass sie für schädliche Downloads oder Datenexfiltration missbraucht werden.</value>
+  </data>
+  <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
+    <value>Keine Datei zum Erstellen von Firewallregeln ausgewählt.</value>
+  </data> 
+  <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
+    <value>Firewallregeln wurden erfolgreich für {0} ausgewählte Dateien erstellt.</value>
+  </data>
+  <data name="WindowsFirewallCreateRuleForMessage" xml:space="preserve">
+    <value>Firewallregeln werden erstellt für: '{0}'</value>
+  </data>
+  <!-- For Windows Firewall Management ListView - Headers -->
+  <data name="DirectionHeader.Text" xml:space="preserve">
+    <value>Richtung</value>
+  </data>
+  <data name="ActionHeader.Text" xml:space="preserve">
+    <value>Aktion</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Headers -->
+  <!-- For Windows Firewall Management ListView - Buttons -->
+  <data name="DirectionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Richtung</value>
+  </data>
+  <data name="ActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Aktion</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Buttons -->
+  <data name="RetrieveFirewallRulesButton.Content" xml:space="preserve">
+    <value>Firewallregeln abrufen</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie alle Firewallregeln ab, die von der App Harden System Security erstellt wurden.</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie alle Firewallregeln ab, die von der App Harden System Security erstellt wurden.</value>
+  </data>
+  <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
+    <value>{0} von der App Harden System Security erstellte Firewallregeln wurden erfolgreich abgerufen.</value>
+  </data>
 </root>

@@ -26,6 +26,9 @@ bool EqualsOrdinalIgnoreCase(const wchar_t* a, const wchar_t* b);
 [[nodiscard]] HRESULT ContextSetStringArray(IWbemContext* pCtx, const wchar_t* name, SAFEARRAY* psa);
 [[nodiscard]] HRESULT CreateContextAndSetString(IWbemContext** ppCtx, const wchar_t* name, const wchar_t* value);
 
+// Helper to set a single string value on an existing context
+[[nodiscard]] HRESULT ContextSetString(IWbemContext* pCtx, const wchar_t* name, const wchar_t* value);
+
 // Helper function to process SAFEARRAY of different types and return JSON array string.
 template<typename T>
 string ProcessSafeArray(SAFEARRAY* psa)

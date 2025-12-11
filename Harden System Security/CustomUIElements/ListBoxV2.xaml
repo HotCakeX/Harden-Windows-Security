@@ -1,0 +1,40 @@
+<UserControl
+    x:Class="AppControlManager.CustomUIElements.ListBoxV2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customUI="using:AppControlManager.CustomUIElements">
+
+    <Grid>
+        <ListBox MinWidth="{x:Bind MinWidth, Mode=OneWay}"
+                 ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                 SelectionMode="{x:Bind SelectionMode, Mode=OneWay}"
+                 HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <Grid ColumnSpacing="8" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="{x:Bind}"
+                                   TextWrapping="WrapWholeWords"
+                                   VerticalAlignment="Center" />
+
+                        <Button Grid.Column="1"
+                                Padding="6,2"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="Remove"
+                                Tag="{x:Bind}"
+                                Click="DeleteItem_Click"
+                                MinWidth="32">
+                            <FontIcon Glyph="&#xE74D;" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

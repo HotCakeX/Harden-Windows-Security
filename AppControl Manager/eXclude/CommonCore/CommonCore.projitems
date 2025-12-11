@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes_ExploitMitigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ComJsonDeserializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\FirewallRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GroupInfoListForPackagedAppView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\HashMismatchInCertificateException.cs" />

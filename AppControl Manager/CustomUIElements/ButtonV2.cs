@@ -21,6 +21,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.UI;
 
@@ -94,11 +95,22 @@ internal sealed partial class ButtonV2 : Button
 	/// </summary>
 	internal bool TryShowFlyout()
 	{
+		// First check if button has a ContextFlyout (intended for right-click/Tap+Hold actions)
+		if (ContextFlyout is FlyoutBase contextFlyout && !contextFlyout.IsOpen)
+		{
+			contextFlyout.ShowAt(this);
+			return true;
+		}
+
+		// Fallback to Standard Flyout, only if it's a generic Flyout, not a MenuFlyout,
+		// So that if the button already has a primary Flyout, maybe to act like a DropDownButton,
+		// We won't open it.
 		if (Flyout is Flyout flyout && !flyout.IsOpen)
 		{
 			flyout.ShowAt(this);
 			return true;
 		}
+
 		return false;
 	}
 
@@ -125,9 +137,9 @@ internal sealed partial class ButtonV2 : Button
 
 			// Without this dispatcher, due to pages not having navigation page, sometimes the shadow will not be re-applied when we navigate away to another page and then navigate back
 			_ = DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
-				{
-					Effects.SetShadow(this, _selectedShadow);
-				});
+			{
+				Effects.SetShadow(this, _selectedShadow);
+			});
 		}
 		else if (_originalContent is not null)
 		{

@@ -10,7 +10,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "PolicyVersion-WindowsFirewall",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fasp/1da2ee70-a6ae-4f76-b08f-fdc25c77d8a0#Appendix_A_12",
         "Category": 9,
         "SubCategory": null,
         "DefaultRegValue": null,

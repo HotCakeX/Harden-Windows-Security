@@ -304,7 +304,7 @@ internal static class GetAppsList
 
 	}
 
-
+#pragma warning disable IDE0055
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
@@ -313,8 +313,8 @@ internal static class GetAppsList
 		// Grab Apps objects from pre-existing list
 		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await Get(VMRef)
 
-																 // Ensure DisplayName is not null before grouping
-																 // This also prevents apps without a DisplayName to exist in the returned apps list
+															 // Ensure DisplayName is not null before grouping
+															 // This also prevents apps without a DisplayName to exist in the returned apps list
 															 where !string.IsNullOrWhiteSpace(item.DisplayName)
 
 															 // Group the items returned from the query, sort and select the ones you want to keep

@@ -670,7 +670,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			Result<AppMitigations> systemPolicyResult = SecurityPolicyRepository.RetrieveSystemSecurityConfiguration();
 			AppMitigations appMitigations = systemPolicyResult.IsSuccess
 				? systemPolicyResult.Value
-				: new AppMitigations("System")
+				: new("System")
 				{
 					Source = "System Defaults"
 				};

@@ -4912,4 +4912,149 @@
   <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Microsoft സുരക്ഷാ ബേസ്‌ലൈനുകൾ ഉപയോഗിക്കുമ്പോൾ മെച്ചപ്പെട്ട ഉപയോക്തൃ അനുഭവത്തിനായി ഈ ഓപ്ഷണൽ ഓവർറൈഡുകൾ പ്രയോഗിക്കാൻ ശക്തമായി ശുപാർശ ചെയ്യുന്നു.</value>
   </data>
+    <data name="FirewallManagementTab.Header" xml:space="preserve">
+    <value>നിർവഹണം</value>
+  </data>
+  <data name="FirewallManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പുതിയ ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുക, നിലവിലുള്ള നിയമങ്ങൾ കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക, ഒരു ഫോൾഡറിനുള്ളിലെ എല്ലാ ഫയലുകളും അനുവദിക്കുകയോ തടയുകയോ ചെയ്യുക, നിങ്ങളുടെ ഫയർവാൾ നിയമങ്ങൾ ബാക്കപ്പ് എടുക്കുകയും പുനഃസ്ഥാപിക്കുകയും ചെയ്യുക, കൂടാതെ മറ്റ് നിരവധി പ്രവർത്തനങ്ങൾ നടത്തുക.</value>
+  </data>
+  <data name="FirewallManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പുതിയ ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുക, നിലവിലുള്ള നിയമങ്ങൾ കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക, ഒരു ഫോൾഡറിനുള്ളിലെ എല്ലാ ഫയലുകളും അനുവദിക്കുകയോ തടയുകയോ ചെയ്യുക, നിങ്ങളുടെ ഫയർവാൾ നിയമങ്ങൾ ബാക്കപ്പ് എടുക്കുകയും പുനഃസ്ഥാപിക്കുകയും ചെയ്യുക, കൂടാതെ മറ്റ് നിരവധി പ്രവർത്തനങ്ങൾ നടത്തുക.</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾ</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows ഫയർവാളുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows ഫയർവാളുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.Content" xml:space="preserve">
+    <value>ക്രമീകരിക്കുക</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പുതിയ ഫയർവാൾ നിയമങ്ങൾ എങ്ങനെ സൃഷ്ടിക്കപ്പെടണം എന്ന് ക്രമീകരിക്കുക. തിരഞ്ഞെടുത്ത ഫയലുകൾ കാണാൻ റൈറ്റ്-ക്ലിക്ക് ചെയ്യുക അല്ലെങ്കിൽ ടാപ്പ് ചെയ്ത് അമർത്തി പിടിക്കുക.</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പുതിയ ഫയർവാൾ നിയമങ്ങൾ എങ്ങനെ സൃഷ്ടിക്കപ്പെടണം എന്ന് ക്രമീകരിക്കുക. തിരഞ്ഞെടുത്ത ഫയലുകൾ കാണാൻ റൈറ്റ്-ക്ലിക്ക് ചെയ്യുക അല്ലെങ്കിൽ ടാപ്പ് ചെയ്ത് അമർത്തി പിടിക്കുക.</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഇൻബൗണ്ട്</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇൻബൗണ്ട് എന്നത് ഉപകരണത്തിലേക്ക് വരുന്ന നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇൻബൗണ്ട് എന്നത് ഉപകരണത്തിലേക്ക് വരുന്ന നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഔട്ട്ബൗണ്ട്</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഔട്ട്ബൗണ്ട് എന്നത് ഉപകരണത്തിൽ നിന്ന് പുറപ്പെടുന്ന നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഔട്ട്ബൗണ്ട് എന്നത് ഉപകരണത്തിൽ നിന്ന് പുറപ്പെടുന്ന നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>രണ്ടും</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>രണ്ടും എന്നത് ഉപകരണത്തിലേക്ക് വരുന്നതും ഉപകരണത്ത���ൽ നിന്ന് പോകുന്നതുമായ നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>രണ്ടും എന്നത് ഉപകരണത്തിലേക്ക് വരുന്നതും ഉപകരണത്തിൽ നിന്ന് പോകുന്നതുമായ നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>അനുവദിക്കുക</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമം നെറ്റ്‌വർക്ക് ട്രാഫിക് ഒഴുകാൻ അനുവദിക്കും.</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമം നെറ്റ്‌വർക്ക് ട്രാഫിക് ഒഴുകാൻ അനുവദിക്കും.</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തടയുക</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമം നെറ്റ്‌വർക്ക് ട്രാഫിക് ഒഴുകുന്നത് തടയും.</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമം നെറ്റ്‌വർക്ക് ട്രാഫിക് ഒഴുകുന്നത് തടയും.</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പ്രോഗ്രാമുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കാനുള്ള പ്രോഗ്രാമുകളുടെ എക്സിക്യൂട്ടബിൾ ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കാനുള്ള പ്രോഗ്രാമുകളുടെ എക്സിക്യൂട്ടബിൾ ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫോൾഡറുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എക്സിക്യൂട്ടബിളുകൾ കണ്ടെത്താൻ ആവർത്തിച്ച് സ്കാൻ ചെയ്യുന്നതിനുള്ള ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക, തുടർന്ന് അവയ്ക്കായി ഫയർവാൾ നിയമങ്ങൾ സ���ഷ്ടിക്കുക.</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എക്സിക്യൂട്ടബിളുകൾ കണ്ടെത്താൻ ആവർത്തിച്ച് സ്കാൻ ചെയ്യുന്നതിനുള്ള ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക, തുടർന്ന് അവയ്ക്കായി ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="FirewallCreateSplitButton.Content" xml:space="preserve">
+    <value>സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="FirewallCreateSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഫയലുകൾക്കായി ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="FirewallCreateSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഫയലുകൾക്കായി ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫയർവാളിൽ ഇരട്ട-ഉപയോഗ പ്രോഗ്രാമുകൾ തടയുക</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ദുരുപയോഗ ഡൗൺലോകൾക്കോ ഡാറ്റ എക്സ്ഫിൽട്രേഷനോ വേണ്ടി ഉപയോഗിക്കുന്നത് തടയാൻ ഉയർന്ന അപകടസാധ്യതയുള്ള ഇരട്ട-ഉപയോഗ ബൈനറികൾക്ക് Windows ഫയർവാളിലൂടെ നെറ്റ്‌വർക്ക് ആക്സസ് തടയുക.</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ദുരുപയോഗ ഡൗൺലോകൾക്കോ ഡാറ്റ എക്സ്ഫിൽട്രേഷനോ വേണ്ടി ഉപയോഗിക്കുന്നത് തടയാൻ ഉയർന്ന അപകടസാധ്യതയുള്ള ഇരട്ട-ഉപയോഗ ബൈനറികൾക്ക് Windows ഫയർവാളിലൂടെ നെറ്റ്‌വർക്ക് ആക്സസ് തടയുക.</value>
+  </data>
+  <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിന് ഒരു ഫയലും തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല.</value>
+  </data> 
+  <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
+    <value>{0} തിരഞ്ഞെടുക്കപ്പെട്ട ഫയലുകൾക്ക് ഫയർവാൾ നിയമങ്ങൾ വിജയകരമായി സൃഷ്ടിച്ചു.</value>
+  </data>
+  <data name="WindowsFirewallCreateRuleForMessage" xml:space="preserve">
+    <value>ഇതിനായി ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നു: '{0}'</value>
+  </data>
+  <!-- For Windows Firewall Management ListView - Headers -->
+  <data name="DirectionHeader.Text" xml:space="preserve">
+    <value>ദിശ</value>
+  </data>
+  <data name="ActionHeader.Text" xml:space="preserve">
+    <value>നടപടി</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Headers -->
+  <!-- For Windows Firewall Management ListView - Buttons -->
+  <data name="DirectionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ദിശ</value>
+  </data>
+  <data name="ActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>നടപടി</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Buttons -->
+  <data name="RetrieveFirewallRulesButton.Content" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമങ്ങൾ നേടുക</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden System Security ആപ്പ് സൃഷ്ടിച്ച എല്ലാ ഫയർവാൾ നിയമങ്ങളും നേടുക.</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden System Security ആപ്പ് സൃഷ്ടിച്ച എല്ലാ ഫയർവാൾ നിയമങ്ങളും നേടുക.</value>
+  </data>
+  <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
+    <value>Harden System Security ആപ്പ് സൃഷ്ടിച്ച {0} ഫയർവാൾ നിയമങ്ങൾ വിജയകരമായി നേടി.</value>
+  </data>
 </root>

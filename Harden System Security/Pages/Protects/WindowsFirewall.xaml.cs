@@ -32,6 +32,22 @@ internal sealed partial class WindowsFirewall : Page, CommonCore.UI.IPageHeaderP
 		DataContext = ViewModel;
 	}
 
+	/// <summary>
+	/// OnNavigatedFrom indicates real page navigation (not transient Unloaded under TabView).
+	/// We explicitly dispose the special controls that were prevented from auto-disposal.
+	/// </summary>
+	/// <param name="e"></param>
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		base.OnNavigatedFrom(e);
+
+		// Dispose all descendants that explicitly opted out of automatic disposal.
+		AppControlManager.ViewModels.ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
+
+		// Finally dispose the list control itself.
+		SecurityMeasuresList.Dispose();
+	}
+
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("WindowsFirewallPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall");
 }

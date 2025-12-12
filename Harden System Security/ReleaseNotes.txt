@@ -12,4 +12,6 @@
 
 * Added a new policy to the Optional Overrides to allow elevation on Secure Desktop for Standard user accounts.
 
-Please see GitHub repository's release section for full info.
+* Added new Firewall Rules Management!
+
+Please make sure to visit GitHub repository's release section for full info.

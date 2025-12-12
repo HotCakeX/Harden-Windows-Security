@@ -5,7 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCOthers="using:CommonCore.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -16,14 +18,350 @@
         </Grid.RowDefinitions>
 
         <customUI:InfoBarV2 Grid.Row="0"
-                    IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                    Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                    Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                    IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+                            IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <customUI:MUnitListViewControl Grid.Row="1"
-                       ViewModel="{x:Bind ViewModel}"
-                       ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
+        <TabView VerticalAlignment="Stretch"
+                 IsAddTabButtonVisible="False"
+                 Grid.Row="1"
+                 TabWidthMode="Equal"
+                 CanReorderTabs="{x:Bind ViewModel.IsNotElevated}">
+
+            <!-- Security Measures Tab -->
+            <TabViewItem x:Uid="WindowsFirewallSecurityMeasuresTab" IsClosable="False" MinHeight="40">
+                <TabViewItem.IconSource>
+                    <BitmapIconSource UriSource="/Assets/External/SecurityMeasures.png" ShowAsMonochrome="False" />
+                </TabViewItem.IconSource>
+                <TabViewItem.Content>
+                    <Grid>
+                        <win:Grid.ChildrenTransitions>
+                            <win:EntranceThemeTransition FromVerticalOffset="50" />
+                            <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                        </win:Grid.ChildrenTransitions>
+
+                        <customUI:MUnitListViewControl x:Name="SecurityMeasuresList"
+                                                       ViewModel="{x:Bind ViewModel}"
+                                                       DisposeOnlyOnExplicitCall="True"
+                                                       ChildButtonsDisposeOnlyOnExplicitCall="True"
+                                                       ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
+
+                    </Grid>
+                </TabViewItem.Content>
+            </TabViewItem>
+
+            <!-- Management Tab -->
+            <TabViewItem x:Uid="FirewallManagementTab" IsClosable="False" MinHeight="40">
+                <TabViewItem.IconSource>
+                    <BitmapIconSource UriSource="/Assets/External/FirewallManagement.png" ShowAsMonochrome="False" />
+                </TabViewItem.IconSource>
+                <TabViewItem.Content>
+                    <Grid>
+                        <win:Grid.ChildrenTransitions>
+                            <win:EntranceThemeTransition FromVerticalOffset="50" />
+                            <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                        </win:Grid.ChildrenTransitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Margin="0,10,0,10"
+                                Grid.Row="0"
+                                Style="{StaticResource GridCardStyle}" Padding="8">
+
+                            <controls:WrapPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                HorizontalSpacing="10"
+                                                VerticalSpacing="10">
+
+                                <ProgressRing Visibility="{x:Bind ViewModel.ManagementProgressVisibility, Mode=OneWay}"
+                                              VerticalAlignment="Center"
+                                              IsIndeterminate="True" />
+
+                                <customUI:ButtonV2 x:Uid="FirewallManagementConfigureButton"
+                                                   VerticalAlignment="Center"
+                                                   ObservedData="{x:Bind ViewModel.SelectedFiles.Count, Mode=OneWay}"
+                                                   IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+
+                                    <customUI:ButtonV2.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xF259;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </customUI:ButtonV2.ContentTemplate>
+
+                                    <customUI:ButtonV2.Flyout>
+                                        <customUI:MenuFlyoutV2 Placement="Bottom" Closing="{x:Bind ViewModel.MenuFlyout_Closing}">
+
+                                            <MenuFlyout.SystemBackdrop>
+                                                <MicaBackdrop Kind="BaseAlt"/>
+                                            </MenuFlyout.SystemBackdrop>
+
+                                            <RadioMenuFlyoutItem x:Uid="FirewallInboundDirectionRadioMenuFlyoutItem"
+                                                                 GroupName="Direction"
+                                                                 IsChecked="{x:Bind ViewModel.FirewallDirectionInbound, Mode=TwoWay}"
+                                                                 IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74B;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+
+                                            <RadioMenuFlyoutItem x:Uid="FirewallOutboundDirectionRadioMenuFlyoutItem"
+                                                                 GroupName="Direction"
+                                                                 IsChecked="{x:Bind ViewModel.FirewallDirectionOutbound, Mode=TwoWay}"
+                                                                 IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74A;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+
+                                            <RadioMenuFlyoutItem x:Uid="FirewallBothDirectionsRadioMenuFlyoutItem"
+                                                                 GroupName="Direction"
+                                                                 IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
+                                                                 IsChecked="{x:Bind ViewModel.FirewallDirectionBoth, Mode=TwoWay}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEC8F;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+
+                                            <MenuFlyoutSeparator/>
+
+                                            <RadioMenuFlyoutItem x:Uid="FirewallAllowActionRadioMenuFlyoutItem"
+                                                                 GroupName="Action"
+                                                                 IsChecked="{x:Bind ViewModel.FirewallActionAllow, Mode=TwoWay}"
+                                                                 IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE930;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+
+                                            <RadioMenuFlyoutItem x:Uid="FirewallBlockActionRadioMenuFlyoutItem"
+                                                                 GroupName="Action"
+                                                                 IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
+                                                                 IsChecked="{x:Bind ViewModel.FirewallActionBlock, Mode=TwoWay}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE733;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+
+                                            <MenuFlyoutSeparator/>
+
+                                            <MenuFlyoutItem x:Uid="FirewallSelectProgramsMenuFlyoutItem"
+                                                            Click="{x:Bind ViewModel.SelectFiles}"
+                                                            IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE7AC;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                            <MenuFlyoutItem x:Uid="FirewallSelectFoldersMenuFlyoutItem"
+                                                            Click="{x:Bind ViewModel.SelectFolders}"
+                                                            IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xF89A;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                        </customUI:MenuFlyoutV2>
+                                    </customUI:ButtonV2.Flyout>
+
+                                    <!-- Secondary Flyout (for Right Click / Tap + Hold) -->
+                                    <customUI:ButtonV2.ContextFlyout>
+                                        <Flyout>
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                                <Button x:Uid="ClearButton"
+                                                        Click="{x:Bind ViewModel.ClearSelectedFiles}" />
+
+                                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                                <customUI:ListBoxV2 MinWidth="400"
+                                                                    SelectionMode="Single"
+                                                                    ItemsSource="{x:Bind ViewModel.SelectedFiles, Mode=OneWay}" />
+                                            </controls:WrapPanel>
+                                        </Flyout>
+                                    </customUI:ButtonV2.ContextFlyout>
+
+                                </customUI:ButtonV2>
+
+                                <SplitButton x:Uid="FirewallCreateSplitButton"
+                                             Click="{x:Bind ViewModel.CreateFirewallRules}"
+                                             IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+
+                                    <SplitButton.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE710;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </SplitButton.ContentTemplate>
+
+                                    <SplitButton.Flyout>
+                                        <MenuFlyout Placement="RightEdgeAlignedBottom">
+                                            <MenuFlyout.SystemBackdrop>
+                                                <MicaBackdrop Kind="BaseAlt"/>
+                                            </MenuFlyout.SystemBackdrop>
+
+                                            <MenuFlyoutItem x:Uid="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem"
+                                                            IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
+                                                            Click="{x:Bind ViewModel.BlockDualUseBinariesInFirewall}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE7AC;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                        </MenuFlyout>
+
+                                    </SplitButton.Flyout>
+                                </SplitButton>
+
+                                <Button x:Uid="RetrieveFirewallRulesButton"
+                                        IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.RetrieveFirewallRules}" />
+
+                                <!-- Search box -->
+                                <TextBox IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
+                                         x:Uid="SearchBoxTextBox"
+                                         Text="{x:Bind ViewModel.FirewallRulesSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+
+                            </controls:WrapPanel>
+
+                        </Border>
+
+                        <customUI:ListViewV2 Grid.Row="1"
+                                             RegistryKey="Firewall_Management"
+                                             IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
+                                             ItemsSource="{x:Bind ViewModel.FirewallRules}"
+                                             SelectionMode="Extended">
+
+                            <customUI:ListViewV2.Header>
+                                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FWRuleColWidth1, Mode=TwoWay}" MinWidth="50"/>
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FWRuleColWidth2, Mode=TwoWay}" MinWidth="50"/>
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FWRuleColWidth3, Mode=TwoWay}" MinWidth="50"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button x:Uid="NameColumnHeaderBtn"
+                                                Tag="DisplayString"
+                                                Grid.Column="0"
+                                                Margin="10,0,0,0"
+                                                Style="{StaticResource ListViewHeaderButton}"
+                                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+
+                                        <Button x:Uid="DirectionColumnHeaderBtn"
+                                                Tag="Direction"
+                                                Grid.Column="1"
+                                                Style="{StaticResource ListViewHeaderButton}"
+                                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+
+                                        <Button x:Uid="ActionColumnHeaderBtn"
+                                                Tag="Action"
+                                                Grid.Column="2"
+                                                Style="{StaticResource ListViewHeaderButton}"
+                                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+
+                                        <controls:GridSplitter Grid.Column="1"/>
+                                        <controls:GridSplitter Grid.Column="2"/>
+                                    </Grid>
+                                </Border>
+                            </customUI:ListViewV2.Header>
+
+                            <customUI:ListViewV2.ItemTemplate>
+                                <DataTemplate x:DataType="CCOthers:FirewallRule" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                                    <Grid Background="Transparent">
+                                        <Grid.ContextFlyout>
+                                            <MenuFlyout>
+
+                                                <MenuFlyoutItem x:Uid="DeleteRow"
+                                                                Click="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.DeleteSelectedFirewallRules_Click}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE74D;" />
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+
+                                                <MenuFlyoutSeparator />
+
+                                                <MenuFlyoutItem x:Uid="CopyRow"
+                                                                Click="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.CopySelectedFirewallRules_Click}">
+                                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                                        <KeyboardAccelerator Key="C" Modifiers="Control"
+                                                                             Invoked="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.CopySelectedFirewallRules_Click}"/>
+                                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE8C8;" />
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+
+                                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                                    <MenuFlyoutSubItem.Icon>
+                                                        <FontIcon Glyph="&#xE8C8;" />
+                                                    </MenuFlyoutSubItem.Icon>
+
+                                                    <MenuFlyoutSubItem.Items>
+
+                                                        <MenuFlyoutItem x:Uid="NameHeader"
+                                                                        Tag="DisplayString"
+                                                                        Click="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.CopyFirewallRuleProperty_Click}">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="&#xE8C8;" />
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+
+                                                        <MenuFlyoutItem x:Uid="DirectionHeader"
+                                                                        Tag="Direction"
+                                                                        Click="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.CopyFirewallRuleProperty_Click}">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="&#xE8C8;" />
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+
+                                                        <MenuFlyoutItem x:Uid="ActionHeader"
+                                                                        Tag="Action"
+                                                                        Click="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.CopyFirewallRuleProperty_Click}">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="&#xE8C8;" />
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+
+                                                    </MenuFlyoutSubItem.Items>
+
+                                                </MenuFlyoutSubItem>
+
+                                            </MenuFlyout>
+                                        </Grid.ContextFlyout>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.FWRuleColWidth1, Mode=OneWay}"/>
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.FWRuleColWidth2, Mode=OneWay}"/>
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.FWRuleColWidth3, Mode=OneWay}"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="{x:Bind DisplayString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                        <TextBlock Text="{x:Bind Direction}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                        <TextBlock Text="{x:Bind Action}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </customUI:ListViewV2.ItemTemplate>
+                        </customUI:ListViewV2>
+
+                    </Grid>
+
+                </TabViewItem.Content>
+
+            </TabViewItem>
+
+        </TabView>
 
     </Grid>
 </Page>

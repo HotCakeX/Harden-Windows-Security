@@ -23,6 +23,9 @@ All examples assume the executable is named `ComManager.exe`.
 |-----------------|---------|
 | `Get` | Retrieve a specific WMI property or all properties of a class |
 | `Firewall` | Manage Firewall settings and rules |
+| `FirewallProgram` | Create a program-based firewall rule in the Local Group Policy store (with deduplication) |
+| `FirewallProgramList` | List program-based firewall rules from the same policy store used by this program, limited to the `HardenSystemSecurity` group, outputting JSON |
+| `FirewallDelete` | Delete firewall rule(s) from the same policy store used by this program's firewall operations, by ElementName (with DisplayName fallback) |
 | `BitLocker` | Manage BitLocker |
 | `WMI` | Apply WMI preferences of typed values |
 | `SCHEDULEDTASKS` | Manage Scheduled Tasks |
@@ -84,17 +87,207 @@ ComManager.exe firewall "Block NK IPs" "" false
 
 ---
 
-## 3. BITLOCKER
+## 3. FIREWALLDELETE
+
+Deletes firewall rule(s) from the **same policy store used by this program** for firewall operations and IP blocking:
+
+- `PolicyStore = localhost` (Local Group Policy store)
+
+It matches the provided token against:
+- `ElementName` (primary), and if not matched:
+- `DisplayName` (fallback)
+
+### 3.1 Syntax
+
+```
+ComManager.exe firewalldelete <ElementName>
+```
+
+Notes:
+- The primary command is case-insensitive.
+- `<ElementName>` must be provided and must not be empty.
+
+### 3.3 Exit Codes
+
+- `0` on success (including when no rule matched).
+- `1` on runtime/provider errors (WMI/COM failures).
+- `2` on invalid arguments / syntax error.
+
+### 3.4 Examples
+
+Delete rule(s) by element name:
+```
+ComManager.exe firewalldelete "Program A rule inbound"
+```
+
+Delete program rule(s) by the name token used at creation time:
+```
+ComManager.exe firewalldelete "Program A rule inbound"
+```
+
+---
+
+## 4. FIREWALLPROGRAM
+
+Creates a program-based Windows Firewall rule in the **Local Group Policy** store (`PolicyStore=localhost`) inside the rule group:
+
+- `RuleGroup = "HardenSystemSecurity"`
+
+This command is intended for rules that should persist and be managed by policy. It also performs **deduplication** before creation.
+
+### 4.1 Syntax
+
+Minimum invocation:
+```
+ComManager.exe firewallprogram <Name> <Path> <Direction> <Action> <Description> [--appid <PolicyAppId>] [--package <PackageFamilyName>]
+```
+
+- The primary command and tokens are case-insensitive.
+- All required positional parameters must be present and non-empty.
+- Optional parameters (if present) must be provided with their value.
+
+### 4.2 Parameters (positional)
+
+| Position | Name | Required | Notes |
+|---------:|------|----------|------|
+| 2 | `<Name>` | Yes | Display name of the firewall rule. Used for deduplication. |
+| 3 | `<Path>` | Yes | Full path to the program executable. |
+| 4 | `<Direction>` | Yes | `Inbound` / `Outbound` (or `1` / `2`). |
+| 5 | `<Action>` | Yes | `Allow` / `Block` (or `2` / `4`). |
+| 6 | `<Description>` | Yes | Rule description string. |
+
+### 4.3 Optional Parameters (named)
+
+| Switch | Value | Required | Notes |
+|--------|-------|----------|------|
+| `--appid` | `<PolicyAppId>` | No | Adds the `PolicyAppId` filter via WMI context. |
+| `--package` | `<PackageFamilyName>` | No | Adds the `PackageFamilyName` filter via WMI context. |
+
+Aliases supported by the CLI implementation:
+- `--appid` or `-PolicyAppId`
+- `--package` or `-PackageFamilyName`
+
+### 4.4 Deduplication Behavior
+
+Before creating the new rule, this command deletes any existing firewall rules in the **same policy store** that match all of the following:
+
+- `DisplayName` equals `<Name>` (case-insensitive)
+- `RuleGroup` equals `"HardenSystemSecurity"`
+- `Direction` equals the requested direction
+
+After deletion, it creates exactly one new rule with the provided configuration.
+
+### 4.5 Rule Properties
+
+The created rule sets (at minimum):
+
+- `ElementName = <Name>`
+- `DisplayName = <Name>`
+- `Description = <Description>`
+- `RuleGroup = "HardenSystemSecurity"`
+- `Direction = Inbound(1) / Outbound(2)`
+- `Action = Allow(2) / Block(4)`
+- `Enabled = 1` (enabled)
+- `Profiles = 0` (Any)
+- `EdgeTraversalPolicy = 0` (Block)
+
+And applies filters via WMI context:
+- `Program = <Path>` (required)
+- `PolicyAppId = <PolicyAppId>` (optional)
+- `PackageFamilyName = <PackageFamilyName>` (optional)
+
+### 4.6 Exit Codes
+
+- `0` on success.
+- `1` on runtime/provider errors (WMI/COM errors, insufficient privileges, invalid path/provider failures).
+- `2` on invalid arguments / syntax errors.
+
+### 4.7 Examples
+
+Create an inbound allow rule for a classic EXE:
+```
+ComManager.exe firewallprogram "Allow My App Inbound" "C:\Program Files\MyApp\MyApp.exe" Inbound Allow "Allow inbound traffic for MyApp"
+```
+
+Create an outbound block rule:
+```
+ComManager.exe firewallprogram "Block My App Outbound" "C:\Program Files\MyApp\MyApp.exe" Outbound Block "Block outbound traffic for MyApp"
+```
+
+Create a rule with an explicit PolicyAppId filter:
+```
+ComManager.exe firewallprogram "Allow App With PolicyAppId" "C:\Tools\App.exe" Inbound Allow "Policy-based filter example" --appid "MyPolicyAppId"
+```
+
+Create a rule for a packaged app (MSIX) with PackageFamilyName:
+```
+ComManager.exe firewallprogram "Allow Packaged App" "C:\Windows\System32\ApplicationFrameHost.exe" Outbound Allow "Example packaged app rule" --package "Contoso.App_1234567890abc"
+```
+
+---
+
+## 4.8 FIREWALLPROGRAMLIST
+
+Lists program-based firewall rules from the **same policy store used by this program**:
+
+- `PolicyStore = localhost` (Local Group Policy store)
+
+And filters results down to:
+
+- `RuleGroup = "HardenSystemSecurity"`
+
+This is intended for callers that want to enumerate the set of policy-managed program rules created/managed by ComManager.
+
+### 4.8.1 Syntax
+
+```
+ComManager.exe firewallprogramlist
+```
+
+Notes:
+- The primary command is case-insensitive.
+- No additional arguments are accepted.
+
+### 4.8.2 Output (JSON)
+
+The command writes a JSON array to stdout:
+
+```json
+[
+  {
+    "name": "Allow My App Inbound",
+    "direction": "Inbound",
+    "action": "Allow"
+  }
+]
+```
+
+### 4.8.3 Exit Codes
+
+- `0` on success (including when no rules match; an empty array `[]` is printed).
+- `1` on runtime/provider errors (WMI/COM failures).
+- `2` on invalid arguments / syntax error.
+
+### 4.8.4 Examples
+
+List all HardenSystemSecurity program rules:
+```
+ComManager.exe firewallprogramlist
+```
+
+---
+
+## 5. BITLOCKER
 
 Primary pattern:
 ```
 ComManager.exe bitlocker <action> [parameters]
 ```
 
-### 3.1 Drive Letter Format
+### 5.1 Drive Letter Format
 Use a root drive designator like `C:` (capitalization is ignored).
 
-### 3.2 Actions Overview
+### 5.2 Actions Overview
 
 | Action | Syntax (after `bitlocker`) | Description |
 |--------|----------------------------|-------------|
@@ -117,7 +310,7 @@ Use a root drive designator like `C:` (capitalization is ignored).
 | info | `info <DriveLetter>` | Output JSON describing a single volume |
 | list | `list [all/nonos/removable]` | JSON array of volumes (filter optional) |
 
-### 3.3 Detailed Notes
+### 5.3 Detailed Notes
 
 - `enableos`:
   - Modes:
@@ -149,7 +342,7 @@ Use a root drive designator like `C:` (capitalization is ignored).
     - `nonos` (exclude OS volume)
     - `removable` (only removable volumes recognized with drive letters)
 
-### 3.4 Examples
+### 5.4 Examples
 
 ```
 ComManager.exe bitlocker addpass C: "My Pass Phrase 123!"
@@ -178,7 +371,7 @@ ComManager.exe bitlocker list removable
 
 ---
 
-## 4. WMI
+## 6. WMI
 
 Primary pattern:
 ```
@@ -192,7 +385,7 @@ Type tokens:
 - `stringarray`
 - `intarray`
 
-### 4.1 Argument Mapping (Indices)
+### 6.1 Argument Mapping (Indices)
 
 | Index | Description |
 |-------|-------------|
@@ -205,7 +398,7 @@ Type tokens:
 | 6 | Preference name |
 | 7..N | Values (count depends on type) |
 
-### 4.3 Examples
+### 6.3 Examples
 
 Bool:
 ```
@@ -234,29 +427,29 @@ ComManager.exe wmi intarray root\Microsoft\Windows\Defender MSFT_MpPreference Se
 
 ---
 
-## 5. SCHEDULEDTASKS
+## 7. SCHEDULEDTASKS
 
 Manage Windows Scheduled Tasks.
 
-### 5.1 Main Usage Example
+### 7.1 Main Usage Example
 
 ```
 ComManager.exe scheduledtasks --name <TaskName> --exe <PathToExe> [--arg <Arguments>] [--hidden] [--allowstartifonbatteries] [--dontstopifgoingonbatteries] [--startwhenavailable] [--restartcount <Count>] [--restartinterval <Duration>] [--priority <Priority>] [--runonlyifnetworkavailable] [--folder <TaskFolder>] [--author <Author>] [--description <Description>] [--sid <SID>] [--logon <LogonType>] [--runlevel <RunLevel>] [--password <Password>] [--useunifiedschedulingengine true|false] [--executiontimelimit <Duration>] [--waketorun true|false] [--multipleinstancespolicy <Policy>] [--allowhardterminate true|false] [--allowdemandstart true|false] --trigger <TriggerParams> [--trigger <TriggerParams> ...]
 ```
 
-### 5.2 Delete Task Example
+### 7.2 Delete Task Example
 
 ```
 ComManager.exe scheduledtasks --delete --name <TaskName> [--folder <TaskFolder>]
 ```
 
-### 5.3 Delete Folder Example
+### 7.3 Delete Folder Example
 
 ```
 ComManager.exe scheduledtasks --deletefolder --folder <TaskFolder>
 ```
 
-### 5.4 Options
+### 7.4 Options
 
 | Name | Description |
 |-------|-------------|
@@ -288,7 +481,7 @@ ComManager.exe scheduledtasks --deletefolder --folder <TaskFolder>
 | `--deletefolder` | Delete the specified folder and all tasks in it (use with --folder) |
 | `--trigger` | Trigger definition string; can be specified multiple times for multiple triggers. |
 
-### 5.5 Trigger Definition Syntax
+### 7.5 Trigger Definition Syntax
 
 Format: `type=<type>; [key=value; ...]`
 
@@ -302,7 +495,7 @@ Format: `type=<type>; [key=value; ...]`
 | monthly | Monthly, with start, months, days_of_month, execution_time_limit, stop_at_duration_end |
 | idle | At idle |
 
-### 5.6 Common Keys
+### 7.6 Common Keys
 
 | Key | Value |
 |-------|-------------|
@@ -316,7 +509,7 @@ Format: `type=<type>; [key=value; ...]`
 | `days_of_month=<1,15,31>` | (comma-separated list of days) |
 | `months=<jan,feb,..>` | (comma-separated list of months) |
 
-### 5.7 Examples
+### 7.7 Examples
 
 ```
 --trigger type=logon;
@@ -330,7 +523,7 @@ Format: `type=<type>; [key=value; ...]`
 --trigger type=monthly;start=2025-04-22T10:00:00;months=jan,apr,dec;days_of_month=1,15,31;execution_time_limit=PT2H;stop_at_duration_end=false;
 ```
 
-### 5.8 Delete Examples
+### 7.8 Delete Examples
 
 ```
 ComManager.exe scheduledtasks --delete --name \"Task To Delete\" --folder \"\\MyFolder\"
@@ -344,7 +537,7 @@ ComManager.exe scheduledtasks --deletefolder --folder \"\\MyFolder\\SubFolder\";
 
 ---
 
-## 6. GETAVAILABILITY
+## 8. GETAVAILABILITY
 
 Check if a WMI class contains a given property (outputs a boolean token).
 
@@ -369,7 +562,7 @@ ComManager.exe getavailability root\cimv2 Win32_OperatingSystem NonExistentPrope
 
 ---
 
-## 7. VIRTUALIZATION
+## 9. VIRTUALIZATION
 
 Manage Hyper‑V VM CPU setting `ExposeVirtualizationExtensions` (nested virtualization).
 
@@ -378,7 +571,7 @@ Primary pattern:
 ComManager.exe Virtualization <subcommand> [parameters]
 ```
 
-### 7.1 Subcommands
+### 9.1 Subcommands
 
 - list
   - Outputs a JSON array of VMs with their current status and details.
@@ -397,7 +590,7 @@ ComManager.exe Virtualization <subcommand> [parameters]
     ComManager.exe Virtualization ExposeVirtualizationExtensions --all --enable true|false
     ```
 
-### 7.2 Notes
+### 9.2 Notes
 
 - VM state requirement: Target VM must be Off (EnabledState = 3) for set operations.
 - Name matching uses Ordinal Ignore Case.
@@ -408,7 +601,7 @@ ComManager.exe Virtualization <subcommand> [parameters]
   - 1 on runtime/provider errors. For `--all`, exit code is 1 if any VM fails; a summary is printed.
   - 2 on invalid arguments (e.g., missing `--enable`, or both/neither of `--VMName` and `--all`).
 
-### 7.3 Examples
+### 9.3 Examples
 
 ```
 ComManager.exe Virtualization list
@@ -419,7 +612,7 @@ ComManager.exe Virtualization ExposeVirtualizationExtensions --all --enable true
 
 ---
 
-## 8. DO
+## 10. DO
 
 Invoke a parameterless WMI class method.
 
@@ -437,7 +630,7 @@ Notes:
 - Arguments are case-insensitive for the primary command.
 - `<namespace>`, `<className>`, and `<methodName>` must be provided and non-empty; otherwise exit code `2` is returned.
 
-### 8.1 Example
+### 10.1 Example
 
 ```
 ComManager.exe do root\cimv2\mdm\dmmap MDM_EnterpriseModernAppManagement_AppManagement01 UpdateScanMethod
@@ -447,7 +640,7 @@ If the provider supplies a `ReturnValue`, it will be printed to stdout (informat
 
 ---
 
-## 9. FIREWALLMDNS
+## 11. FIREWALLMDNS
 
 Manage the Enabled state of built‑in mDNS UDP-In firewall rules.
 
@@ -482,7 +675,7 @@ ComManager.exe firewallmdns set true
 
 ---
 
-## 10. NETWORKPROFILES
+## 12. NETWORKPROFILES
 
 Manage the NetworkCategory of all network connection profiles (MSFT_NetConnectionProfile).
 

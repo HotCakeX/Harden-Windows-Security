@@ -76,9 +76,13 @@
                                      HorizontalSpacing="10"
                                      VerticalSpacing="10">
 
+                                <ProgressRing Visibility="{x:Bind ViewModel.ExclusionProgressVisibility, Mode=OneWay}"
+                                               VerticalAlignment="Center"
+                                               IsIndeterminate="True" />
+
                                 <DropDownButton x:Uid="AddExclusionsButton"
                                         VerticalAlignment="Center"
-                                        IsEnabled="{x:Bind ViewModel.ExclusionsUIIsEnabled}">
+                                        IsEnabled="{x:Bind ViewModel.ExclusionsUIIsEnabled, Mode=OneWay}">
                                     <DropDownButton.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
@@ -108,7 +112,7 @@
                                 </DropDownButton>
 
                                 <Button x:Uid="RetrieveAllExclusionsButton"
-                                        IsEnabled="{x:Bind ViewModel.ExclusionsUIIsEnabled}"
+                                        IsEnabled="{x:Bind ViewModel.ExclusionsUIIsEnabled, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.RetrieveAllExclusions}"
                                         VerticalAlignment="Center">
                                     <Button.ContentTemplate>
@@ -123,7 +127,7 @@
 
                                 <Button x:Uid="ClearDataButton"
                                         VerticalAlignment="Center"
-                                        IsEnabled="{x:Bind ViewModel.ExclusionsUIIsEnabled}"
+                                        IsEnabled="{x:Bind ViewModel.ExclusionsUIIsEnabled, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.ClearExclusionsList}">
                                     <Button.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">

@@ -294,6 +294,123 @@ int wmain(int argc, wchar_t* argv[])
 		return 0;
 	}
 
+	// Primary: FIREWALLDELETE
+	// Deletes firewall rules from the PolicyStore used by this program's firewall operations (PolicyStore=localhost)
+	// by ElementName (with DisplayName fallback).
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewalldelete"))
+	{
+		// Must have exactly 3 arguments: firewalldelete <ElementName>
+		if (argc != 3)
+		{
+			return 2;
+		}
+
+		const wchar_t* elementName = argv[2];
+		if (!elementName || *elementName == L'\0')
+		{
+			return 2;
+		}
+
+		bool result = FW_DeleteFirewallRuleByElementName(elementName);
+		if (!result)
+		{
+			LogErr(L"Failed to delete firewall rule(s). Error: ", GetLastErrorMessage());
+			return 1;
+		}
+
+		LogOut(L"Successfully deleted firewall rule(s) for: ", elementName);
+		return 0;
+	}
+
+	// Primary: FIREWALLPROGRAM	
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewallprogram"))
+	{
+		// Minimum 7 args: firewallprogram, Name, Path, Direction, Action, Description
+		if (argc < 7)
+		{
+			return 2;
+		}
+
+		const wchar_t* displayName = argv[2];
+		const wchar_t* programPath = argv[3];
+		const wchar_t* dirToken = argv[4];
+		const wchar_t* actionToken = argv[5];
+		const wchar_t* desc = argv[6];
+
+		const wchar_t* policyAppId = nullptr;
+		const wchar_t* packageFamilyName = nullptr;
+
+		// Parse optional arguments
+		for (int i = 7; i < argc; ++i)
+		{
+			wstring arg = argv[i];
+			if (IsEq(arg.c_str(), L"--appid") || IsEq(arg.c_str(), L"-PolicyAppId"))
+			{
+				if (i + 1 >= argc) return 2;
+				policyAppId = argv[++i];
+			}
+			else if (IsEq(arg.c_str(), L"--package") || IsEq(arg.c_str(), L"-PackageFamilyName"))
+			{
+				if (i + 1 >= argc) return 2;
+				packageFamilyName = argv[++i];
+			}
+			else
+			{
+				return 2; // Unknown argument
+			}
+		}
+
+		// Helper to filter out "-" or empty strings if user passed them explicitly
+		auto fixOptional = [](const wchar_t* s) -> const wchar_t* {
+			if (s && (IsEq(s, L"") || IsEq(s, L"-"))) return nullptr;
+			return s;
+			};
+
+		bool ok = FW_AddProgramFirewallRule(
+			displayName,
+			programPath,
+			dirToken,
+			actionToken,
+			desc,
+			fixOptional(policyAppId),
+			fixOptional(packageFamilyName)
+		);
+
+		if (!ok)
+		{
+			LogErr(L"Failed to add program firewall rule. Error: ", GetLastErrorMessage());
+			return 1;
+		}
+
+		LogOut(L"Successfully added program firewall rule for: ", displayName);
+		return 0;
+	}
+
+	// Primary: FIREWALLPROGRAMLIST
+	// Lists program firewall rules from the PolicyStore used by this program (PolicyStore=localhost),
+	// limited to RuleGroup="HardenSystemSecurity", outputting JSON for.
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewallprogramlist"))
+	{
+		if (argc != 2)
+		{
+			return 2;
+		}
+
+		bool ok = FW_ListProgramFirewallRulesInHardenSystemSecurityGroupJson();
+		if (!ok)
+		{
+			const wchar_t* err = GetLastErrorMessage();
+			if (err && *err)
+				LogErr(L"Failed to list firewall program rules. Error: ", err);
+			else
+				LogErr(L"Failed to list firewall program rules.");
+			return 1;
+		}
+
+		// FW_ListProgramFirewallRulesInHardenSystemSecurityGroupJson writes JSON to stdout directly.
+		return 0;
+	}
+
 	// Primary: FIREWALLMDNS
 	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewallmdns"))
 	{

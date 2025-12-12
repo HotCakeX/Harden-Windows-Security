@@ -546,3 +546,29 @@ bool EqualsOrdinalIgnoreCase(const wchar_t* a, const wchar_t* b)
 	*ppCtx = pCtx;
 	return S_OK;
 }
+
+/// <summary>
+/// Helper function to set a single string value on an existing IWbemContext.
+/// </summary>
+/// <param name="pCtx">The WMI context object</param>
+/// <param name="name">Name of the context parameter</param>
+/// <param name="value">Value of the context parameter</param>
+/// <returns>HRESULT indicating success or failure</returns>
+[[nodiscard]] HRESULT ContextSetString(IWbemContext* pCtx, const wchar_t* name, const wchar_t* value)
+{
+	if (!pCtx || !name || !value) return E_INVALIDARG;
+
+	VARIANT v;
+	VariantInit(&v);
+	v.vt = VT_BSTR;
+	v.bstrVal = SysAllocString(value);
+	if (!v.bstrVal)
+	{
+		return E_OUTOFMEMORY;
+	}
+
+	HRESULT hr = pCtx->SetValue(_bstr_t(name), 0, &v);
+	VariantClear(&v);
+
+	return hr;
+}

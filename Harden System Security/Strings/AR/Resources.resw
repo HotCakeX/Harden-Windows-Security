@@ -4912,4 +4912,149 @@
   <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>يوصى بشدة بتطبيق هذه التجاوزات الاختيارية لتحسين تجربة المستخدم عند استخدام خطوط أساس الأمان من Microsoft.</value>
   </data>
+    <data name="FirewallManagementTab.Header" xml:space="preserve">
+    <value>الإدارة</value>
+  </data>
+  <data name="FirewallManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أنشئ قواعد جدار حماية جديدة، واعرض القواعد الموجودة وأدرها، واسمح أو احظر جميع الملفات داخل مجلد، وأنشئ نسخة احتياطية لقواعد جدار الحماية واستعدها، ونفّذ العديد من الإجراءات الأخرى.</value>
+  </data>
+  <data name="FirewallManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أنشئ قواعد جدار حماية جديدة، واعرض القواعد الموجودة وأدرها، واسمح أو احظر جميع الملفات داخل مجلد، وأنشئ نسخة احتياطية لقواعد جدار الحماية واستعدها، ونفّذ العديد من الإجراءات الأخرى.</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>إجراءات الأمان</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أدر إجراءات الأمان المتعلقة بجدار حماية Windows.</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أدر إجراءات الأمان المتعلقة بجدار حماية Windows.</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.Content" xml:space="preserve">
+    <value>تكوين</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتكوين كيفية إنشاء قواعد جدار الحماية الجديدة. انقر بزر الماوس الأيمن أو اضغط مع الاستمرار لعرض الملفات المحددة.</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتكوين كيفية إنشاء قواعد جدار الحماية الجديدة. انقر بزر الماوس الأيمن أو اضغط مع الاستمرار لعرض الملفات المحددة.</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>وارد</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>وارد يعني حركة مرور الشبكة الواردة إلى الجهاز.</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>وارد يعني حركة مرور الشبكة الواردة إلى الجهاز.</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>صادر</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>صادر يعني حركة مرور الشبكة الصادرة من الجهاز.</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>صادر يعني حركة مرور الشبكة الصادرة من الجهاز.</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>كلاهما</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>كلاهما يعني حركة مرور الشبكة الواردة والصادرة إلى الجهاز ومنه.</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>كلاهما يعني حركة مرور الشبكة الواردة والصادرة إلى الجهاز ومنه.</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>سماح</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ستسمح قاعدة جدار الحماية بمرور حركة مرور الشبكة.</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ستسمح قاعدة جدار الحماية بمرور حركة مرور الشبكة.</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حظر</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ستحظر قاعدة جدار الحماية مرور حركة مرور الشبكة.</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ستحظر قاعدة جدار الحماية مرور حركة مرور الشبكة.</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تحديد البرامج</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض ملفات البرامج التنفيذية لإنشاء قواعد جدار حماية لها.</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض ملفات البرامج التنفيذية لإنشاء قواعد جدار حماية لها.</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تحديد المجلدات</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض المجلدات التي سيتم فحصها بشكل متكرر للعثور على ملفات تنفيذية لإنشاء قواعد جدار حماية لها.</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض المجلدات التي سيتم فحصها بشكل متكرر للعثور على ملفات تنفيذية لإنشاء قواعد جدار حماية لها.</value>
+  </data>
+  <data name="FirewallCreateSplitButton.Content" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="FirewallCreateSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أنشئ قواعد جدار حماية للملفات المحددة</value>
+  </data>
+  <data name="FirewallCreateSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أنشئ قواعد جدار حماية للملفات المحددة</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حظر برامج ثنائية الاستخدام في جدار الحماية</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>احظر الوصول إلى الشبكة عبر جدار حماية Windows للملفات الثنائية ثنائية الاستخدام عالية الخطورة لمنع استخدامها في عمليات تنزيل ضارة أو تهريب البيانات.</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>احظر الوصول إلى الشبكة عبر جدار حماية Windows للملفات الثنائية ثنائية الاستخدام عالية الخطورة لمنع استخدامها في عمليات تنزيل ضارة أو تهريب البيانات.</value>
+  </data>
+  <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
+    <value>لم يتم تحديد أي ملف لإنشاء قواعد جدار الحماية.</value>
+  </data> 
+  <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
+    <value>تم إنشاء قواعد جدار الحماية بنجاح لـ {0} من الملفات المحددة.</value>
+  </data>
+  <data name="WindowsFirewallCreateRuleForMessage" xml:space="preserve">
+    <value>جارٍ إنشاء قواعد جدار الحماية لـ: '{0}'</value>
+  </data>
+  <!-- For Windows Firewall Management ListView - Headers -->
+  <data name="DirectionHeader.Text" xml:space="preserve">
+    <value>الاتجاه</value>
+  </data>
+  <data name="ActionHeader.Text" xml:space="preserve">
+    <value>الإجراء</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Headers -->
+  <!-- For Windows Firewall Management ListView - Buttons -->
+  <data name="DirectionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الاتجاه</value>
+  </data>
+  <data name="ActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الإجراء</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Buttons -->
+  <data name="RetrieveFirewallRulesButton.Content" xml:space="preserve">
+    <value>استرداد قواعد جدار الحماية</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرد جميع قواعد جدار الحماية التي تم إنشاؤها بواسطة تطبيق Harden System Security.</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرد جميع قواعد جدار الحماية التي تم إنشاؤها بواسطة تطبيق Harden System Security.</value>
+  </data>
+  <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
+    <value>تم استرداد {0} من قواعد جدار الحماية التي تم إنشاؤها بواسطة تطبيق Harden System Security بنجاح.</value>
+  </data>
 </root>

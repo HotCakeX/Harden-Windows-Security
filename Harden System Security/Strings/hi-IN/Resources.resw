@@ -4912,4 +4912,149 @@
   <data name="ApplyBaselineOverridesToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Microsoft सुरक्षा आधार-रेखाओं का उपयोग करते समय बेहतर उपयोगकर्ता अनुभव के लिए इन वैकल्पिक ओवरराइड को लागू करने की अत्यधिक अनुशंसा की जाती है।</value>
   </data>
+    <data name="FirewallManagementTab.Header" xml:space="preserve">
+    <value>प्रबंधन</value>
+  </data>
+  <data name="FirewallManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>नई फ़ायरवॉल नियम बनाएं, मौजूदा नियम देखें और प्रबंधित करें, किसी फ़ोल्डर के भीतर सभी फ़ाइलों को अनुमति दें या ब्लॉक करें, अपने फ़ायरवॉल नियमों का बैकअप लें और पुनर्स्थापित करें, और कई अन्य कार्रवाइयाँ करें।</value>
+  </data>
+  <data name="FirewallManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>नई फ़ायरवॉल नियम बनाएं, मौजूदा नियम देखें और प्रबंधित करें, किसी फ़ोल्डर के भीतर सभी फ़ाइलों को अनुमति दें या ब्लॉक करें, अपने फ़ायरवॉल नियमों का बैकअप लें और पुनर्स्थापित करें, और कई अन्य कार्रवाइयाँ करें।</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>सुरक्षा उपाय</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows फ़ायरवॉल से संबंधित सुरक्षा उपायों का प्रबंधन करें।</value>
+  </data>
+  <data name="WindowsFirewallSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows फ़ायरवॉल से संबंधित सुरक्षा उपायों का प्रबंधन करें।</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.Content" xml:space="preserve">
+    <value>कॉन्फ़िगर करें</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कॉन्फ़िगर करें कि नई फ़ायरवॉल नियम कैसे बनाए जाएंगे। चयनित फ़ाइलें देखने के लिए राइट-क्लिक करें या टैप करके दबाए रखें।</value>
+  </data>
+  <data name="FirewallManagementConfigureButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कॉन्फ़िगर करें कि नई फ़ायरवॉल नियम कैसे बनाए जाएंगे। चयनित फ़ाइलें देखने के लिए राइट-क्लिक करें या टैप करके दबाए रखें।</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>इनबाउंड</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इनबाउंड का अर्थ है डिवाइस पर आने वाला नेटवर्क ट्रैफ़िक।</value>
+  </data>
+  <data name="FirewallInboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इनबाउंड का अर्थ है डिवाइस पर आने वाला नेटवर्क ट्रैफ़िक।</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>आउटबाउंड</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आउटबाउंड का अर्थ है डिवाइस से जाने वाला नेटवर्क ट्रैफ़िक।</value>
+  </data>
+  <data name="FirewallOutboundDirectionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आउटबाउंड का अर्थ है डिवाइस से जाने वाला नेटवर्क ट्रैफ़िक।</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>दोनों</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>दोनों का अर्थ है डिवाइस पर आने वाला और डिवाइस से जाने वाला नेटवर्क ट्रैफ़िक।</value>
+  </data>
+  <data name="FirewallBothDirectionsRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>दोनों का अर्थ है डिवाइस पर आने वाला और डिवाइस से जाने वाला नेटवर्क ट्रैफ़िक।</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>अनुमति दें</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ायरवॉल नियम नेटवर्क ट्रैफ़िक को प्रवाहित होने की अनुमति देगा।</value>
+  </data>
+  <data name="FirewallAllowActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ायरवॉल नियम नेटवर्क ट्रैफ़िक को प्रवाहित होने की अनुमति देगा।</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ब्लॉक करें</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ायरवॉल नियम नेटवर्क ट्रैफ़िक को प्रवाहित होने से रोकेगा।</value>
+  </data>
+  <data name="FirewallBlockActionRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ायरवॉल नियम नेटवर्क ट्रैफ़िक को प्रवाहित होने से रोकेगा।</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>प्रोग्राम चुनें</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उन प्रोग्रामों की निष्पादन योग्य फ़ाइलें ब्राउज़ करें जिनके लिए फ़ायरवॉल नियम बनानी हैं।</value>
+  </data>
+  <data name="FirewallSelectProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उन प्रोग्रामों की निष्पादन योग्य फ़ाइलें ब्राउज़ करें जिनके लिए फ़ायरवॉल नियम बनानी हैं।</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.Text" xml:space="preserve">
+    <value>फ़ोल्डर चुनें</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐसे फ़ोल्डर ब्राउज़ करें जिन्हें निष्पादन योग्य फ़ाइलें खोजने के लिए पुनरावर्ती रूप से स्कैन किया जाएगा, ताकि उनके लिए फ़ायरवॉल नियम बनाई जा सकें।</value>
+  </data>
+  <data name="FirewallSelectFoldersMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐसे फ़ोल्डर ब्राउज़ करें जिन्हें निष्पादन योग्य फ़ाइलें खोजने के लिए पुनरावर्ती रूप से स्कैन किया जाएगा, ताकि उनके लिए फ़ायरवॉल नियम बनाई जा सकें।</value>
+  </data>
+  <data name="FirewallCreateSplitButton.Content" xml:space="preserve">
+    <value>बनाएं</value>
+  </data>
+  <data name="FirewallCreateSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित फ़ाइलों के लिए फ़ायरवॉल नियम बनाएं</value>
+  </data>
+  <data name="FirewallCreateSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित फ़ाइलों के लिए फ़ायरवॉल नियम बनाएं</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>फ़ायरवॉल में द्वि-उपयोग प्रोग्राम ब्लॉक करें</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उच्च-जोखिम वाले द्वि-उपयोग बाइनरी के लिए Windows फ़ायरवॉल के माध्यम से नेटवर्क एक्सेस ब्लॉक करें ताकि उनका उपयोग दुर्भावनापूर्ण डाउनलोड या डेटा एक्सफ़िल्ट्रेशन के लिए न हो सके।</value>
+  </data>
+  <data name="FirewallCreateRulesForDualUseProgramsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उच्च-जोखिम वाले द्वि-उपयोग बाइनरी के लिए Windows फ़ायरवॉल के माध्यम से नेटवर्क एक्सेस ब्लॉक करें ताकि उनका उपयोग दुर्भावनापूर्ण डाउनलोड या डेटा एक्सफ़िल्ट्रेशन के लिए न हो सके।</value>
+  </data>
+  <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
+    <value>फ़ायरवॉल नियम बनाने के लिए कोई फ़ाइल चयनित नहीं है।</value>
+  </data> 
+  <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
+    <value>{0} चयनित फ़ाइलों के लिए फ़ायरवॉल नियम सफलतापूर्वक बनाए गए।</value>
+  </data>
+  <data name="WindowsFirewallCreateRuleForMessage" xml:space="preserve">
+    <value>इसके लिए फ़ायरवॉल नियम बनाए जा रहे हैं: '{0}'</value>
+  </data>
+  <!-- For Windows Firewall Management ListView - Headers -->
+  <data name="DirectionHeader.Text" xml:space="preserve">
+    <value>दिशा</value>
+  </data>
+  <data name="ActionHeader.Text" xml:space="preserve">
+    <value>कार्रवाई</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Headers -->
+  <!-- For Windows Firewall Management ListView - Buttons -->
+  <data name="DirectionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>दिशा</value>
+  </data>
+  <data name="ActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>कार्रवाई</value>
+  </data>
+  <!-- End Of For Windows Firewall Management ListView - Buttons -->
+  <data name="RetrieveFirewallRulesButton.Content" xml:space="preserve">
+    <value>फ़ायरवॉल नियम प्राप्त करें</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden System Security ऐप द्वारा बनाई गई सभी फ़ायरवॉल नियम प्राप्त करें।</value>
+  </data>
+  <data name="RetrieveFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden System Security ऐप द्वारा बनाई गई सभी फ़ायरवॉल नियम प्राप्त करें।</value>
+  </data>
+  <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
+    <value>Harden System Security ऐप द्वारा बनाई गई {0} फ़ायरवॉल नियम सफलतापूर्वक प्राप्त की गईं।</value>
+  </data>
 </root>

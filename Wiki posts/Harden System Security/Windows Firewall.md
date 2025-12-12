@@ -24,3 +24,91 @@
     - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.
 
 <br>
+
+## Management
+
+Use this tab to manage Windows Firewall rules created by the Harden System Security app, create new rules and so much more:
+
+- Browse for individual files to allow or block through Windows Firewall, controlling whether they can make network connections.
+
+- Browse for folders to allow or block all executable files within them, including executables in all subfolders.
+
+  - This is very useful if you install a new application that contains multiple executables, as you can simply select the installation folder to allow or block all of them at once quickly.
+
+- List all of the Firewall rule created by the Harden System Security app.
+
+- Delete any Firewall rules created by the Harden System Security app.
+
+- Copy one or more Firewall rule to clipboard.
+
+- Search through the Firewall rules and sort them.
+
+<br>
+
+### Dual-Use Program Blocking via Windows Firewall
+
+You can now block network access through Windows Firewall for high-risk dual-use binaries to reduce abuse for malicious downloads or data exfiltration. This implements the requested feature in [#706](https://github.com/HotCakeX/Harden-Windows-Security/issues/706). The full list of these programs is available in the [Windows Firewall page in the wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall).
+
+> [!NOTE]\
+> All of the Windows Firewall rules are created in the Group Policy store instead of the regular local store so they are not affected by the local rules merges and they have more flexibility. All of rules created by the Harden System Security app are part of the `HardenSystemSecurity` group, so you can easily identify them.
+
+### User Interface Guide
+
+* **Configure**: Use this button to adjust the configurations that will be applied when you use the **Create** button. Here you can select the direction (inbound/outbound) and action (allow/block) of the firewall rules that you will create. You can also browse for executable files or browse for folders to recursively scan for executable files.
+
+   * Any executable file that is detected will be added to a list that is visible when you right-click or tap and hold on the **Configure button** so you can adjust the selected files by removing them one by one or clearing the full list.
+
+* **Create**: Use this button to create Windows Firewall rules based on the configurations you set in the **Configure** button. Once you click this button, all of the executable files that are in the list will have Windows Firewall rules created for them.
+
+* **Block Dual-Use programs in Firewall**: Use this button to block network access for high-risk dual-use binaries through Windows Firewall. This will create outbound and inbound rules, with edge traversal set to block, for the following programs:
+
+<details>
+<summary>List of Dual-Use programs</summary>
+
+```
+C:\Windows\System32\bitsadmin.exe
+C:\Windows\System32\certreq.exe
+C:\Windows\System32\certutil.exe
+C:\Windows\System32\cmstp.exe
+C:\Windows\System32\cmd.exe
+C:\Windows\System32\cscript.exe
+C:\Windows\System32\forfiles.exe
+C:\Windows\System32\hh.exe
+C:\Windows\System32\mshta.exe
+C:\Windows\System32\msiexec.exe
+C:\Windows\System32\netsh.exe
+C:\Windows\System32\powershell.exe
+C:\Windows\System32\presentationhost.exe
+C:\Windows\System32\reg.exe
+C:\Windows\System32\regsvr32.exe
+C:\Windows\System32\rundll32.exe
+C:\Windows\System32\schtasks.exe
+C:\Windows\System32\wscript.exe
+C:\Windows\System32\wmic.exe
+C:\Windows\System32\xwizard.exe
+C:\Windows\SysWOW64\bitsadmin.exe
+C:\Windows\SysWOW64\certreq.exe
+C:\Windows\SysWOW64\certutil.exe
+C:\Windows\SysWOW64\cmstp.exe
+C:\Windows\SysWOW64\cmd.exe
+C:\Windows\SysWOW64\cscript.exe
+C:\Windows\SysWOW64\forfiles.exe
+C:\Windows\SysWOW64\hh.exe
+C:\Windows\SysWOW64\mshta.exe
+C:\Windows\SysWOW64\msiexec.exe
+C:\Windows\SysWOW64\netsh.exe
+C:\Windows\SysWOW64\powershell.exe
+C:\Windows\SysWOW64\presentationhost.exe
+C:\Windows\SysWOW64\reg.exe
+C:\Windows\SysWOW64\regsvr32.exe
+C:\Windows\SysWOW64\rundll32.exe
+C:\Windows\SysWOW64\schtasks.exe
+C:\Windows\SysWOW64\wscript.exe
+C:\Windows\SysWOW64\wmic.exe
+C:\Windows\SysWOW64\xwizard.exe
+```
+</details>
+
+* **Retrieve Firewall Rules**: Use this button to list all of the Windows Firewall rules that were created by the Harden System Security app.
+
+<br>

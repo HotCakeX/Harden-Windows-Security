@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/2f7f97e4924790c551b5d1b586771e605ab9c20a/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Policy%20Editor.png" alt="AppControl Manager Application's Policy Editor Page">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Policy%20Editor.png" alt="AppControl Manager Application's Policy Editor Page">
 
 </div>
 

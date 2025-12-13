@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/9b60b35b98cd998537202f7893fdc711a3507688/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/View%20File%20Certificates.png" alt="AppControl Manager Application's View File Certificates Page">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/View%20File%20Certificates.png" alt="AppControl Manager Application's View File Certificates Page">
 
 </div>
 

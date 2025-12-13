@@ -1,6 +1,6 @@
 # Attack Surface Reduction Rules | Harden System Security
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/0180bc6ace1ea086653cc405f142d1aada424150/Pictures/Readme%20Categories/Attack%20Surface%20Reduction/Attack%20Surface%20Reduction.svg" alt="Attack surface reduction rules - Harden Windows Security GitHub repository" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Readme%20Categories/Attack%20Surface%20Reduction/Attack%20Surface%20Reduction.svg" alt="Attack surface reduction rules - Harden Windows Security GitHub repository" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Attack surface reduction rules](https://learn.microsoft.com/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide) target certain software behaviors, such as: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#attacksurfacereductionrules)
 

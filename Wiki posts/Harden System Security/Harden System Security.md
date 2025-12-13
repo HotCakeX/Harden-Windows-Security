@@ -68,10 +68,17 @@ Please feel free to open a discussion if you have any questions about the build 
 * Natively supports X64 and ARM64 architectures.
 * Full [Trimming](https://learn.microsoft.com/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot) support.
 * Never uses runtime marshaling.
+* 0 dependency on any executable in the OS.
 
 <br>
 
 ## Features <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png">
+
+<div align="center">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/harden%20windows%20security%20Module.apng" alt="Harden Windows Security by Violet Hansen aka HotCakeX">
+</div>
+
+<br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
 
@@ -87,6 +94,18 @@ Please feel free to open a discussion if you have any questions about the build 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> If you have multiple accounts on your device, you only need to apply the security measures 1 time with Admin privileges, that will make system-wide changes. Then you can ***optionally*** run the app, without Admin privileges, for each standard user to apply the [Non-Admin category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures).
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/Logging.svg" width="35" alt="Comprehensive Logging Capabilities Harden System Security App"> Comprehensive Logging Capabilities
+
+The Harden System Security app includes detailed logging feature that tracks every part of its operations. These logs are helpful for reviewing what actions were taken, making it easier to audit and troubleshoot if necessary. The logs are saved in the following location:
+
+```
+C:\Users\USERNAME\AppData\Local\Temp\HardenSystemSecurityLogs
+```
+
+The logs ensure that all actions taken by the Harden System Security app are recorded, giving you clear visibility into your security processes. Whether you're conducting security checks, responding to issues, or just keeping an eye on things, these logs can provide valuable information.
 
 <br>
 

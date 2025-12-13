@@ -64,10 +64,6 @@
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/purplewings.gif" width="50"> [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
-
-<br>
-
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [App Control for Business](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [Introduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/9f919d18ad67bf53cdbd7a0f99c0cde2bbc5e02c/Pictures/APNGs/Harden%20System%20Security/AuditPoliciesPage.apng" alt="Audit Policies page demo of the Harden System Security App" />
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/APNGs/Harden%20System%20Security/AuditPoliciesPage.apng" alt="Audit Policies page demo of the Harden System Security App" />
 
 </div>
 

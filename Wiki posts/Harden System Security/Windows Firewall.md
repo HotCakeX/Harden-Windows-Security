@@ -25,47 +25,44 @@
 
 <br>
 
-## Management
+## Management <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/Harden%20System%20Security/Assets/External/FirewallManagement.png" alt="Firewall Management Tab Icon" width="30" />
 
-Use this tab to manage Windows Firewall rules created by the Harden System Security app, create new rules and so much more:
-
-- Browse for individual files to allow or block through Windows Firewall, controlling whether they can make network connections.
-
-- Browse for folders to allow or block all executable files within them, including executables in all subfolders.
-
-  - This is very useful if you install a new application that contains multiple executables, as you can simply select the installation folder to allow or block all of them at once quickly.
-
-- List all of the Firewall rule created by the Harden System Security app.
-
-- Delete any Firewall rules created by the Harden System Security app.
-
-- Copy one or more Firewall rule to clipboard.
-
-- Search through the Firewall rules and sort them.
-
-<br>
-
-### Dual-Use Program Blocking via Windows Firewall
-
-You can now block network access through Windows Firewall for high-risk dual-use binaries to reduce abuse for malicious downloads or data exfiltration. This implements the requested feature in [#706](https://github.com/HotCakeX/Harden-Windows-Security/issues/706). The full list of these programs is available in the [Windows Firewall page in the wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall).
-
-> [!NOTE]\
-> All of the Windows Firewall rules are created in the Group Policy store instead of the regular local store so they are not affected by the local rules merges and they have more flexibility. All of rules created by the Harden System Security app are part of the `HardenSystemSecurity` group, so you can easily identify them.
+The **Management** tab provides an interface for creating, viewing, and deleting Windows Firewall rules created by the Harden System Security app. This feature is designed to give you granular control over network traffic for specific applications and directories.
 
 ### User Interface Guide
 
-* **Configure**: Use this button to adjust the configurations that will be applied when you use the **Create** button. Here you can select the direction (inbound/outbound) and action (allow/block) of the firewall rules that you will create. You can also browse for executable files or browse for folders to recursively scan for executable files.
+#### Configure button
 
-   * Any executable file that is detected will be added to a list that is visible when you right-click or tap and hold on the **Configure button** so you can adjust the selected files by removing them one by one or clearing the full list.
+Before creating rules, use this menu to set your preferences or view the defaults to confirm they are what you desire.
 
-* **Create**: Use this button to create Windows Firewall rules based on the configurations you set in the **Configure** button. Once you click this button, all of the executable files that are in the list will have Windows Firewall rules created for them.
+* **Direction**: Choose `Inbound`, `Outbound`, or `Both`. This will determine whether the rule applies to incoming traffic, outgoing traffic, or both.
 
-* **Block Dual-Use programs in Firewall**: Use this button to block network access for high-risk dual-use binaries through Windows Firewall. This will create outbound and inbound rules, with edge traversal set to block, for the following programs:
+* **Action**: Choose to `Allow` or `Block` the connection.
+
+* **Select Programs**: Browse for specific `.exe` file(s).
+
+* **Select Folders**: Browse for folder(s). The app will recursively scan the selected folders and any sub-folders in them and detect all `.exe` files.
+
+#### Managing Selections
+
+Any file you select is added to a pending list. To view or modify this list:
+
+1. Right-click (or Tap & Hold) the **Configure** button.
+
+2. A context menu will appear showing the selected files. You can review the list, remove individual items from it or click **Clear** to remove all selections.
+
+#### Create button
+
+Once you have configured your settings and selected your files, click or tap on the **Create** button. The app will iterate through every file in your pending list and create a firewall rule for each one based on your selected direction and action. After rules have been created, the ListView at the bottom will be refreshed to display the latest status of the Firewall rules created by this app.
+
+#### Block Dual-Use Programs in Firewall button
+
+It is located within the flyout of the **Create** button. This specialized function proactively blocks network access for high-risk dual-use system binaries often abused by attackers for downloading payloads or exfiltrating data. When you use this button, an inbound and outbound rule with the action set to **Block** will be created for every one of the programs in the list below:
 
 <details>
-<summary>List of Dual-Use programs</summary>
+<summary><strong>View Full List of Blocked Dual-Use Programs</strong></summary>
 
-```
+```text
 C:\Windows\System32\bitsadmin.exe
 C:\Windows\System32\certreq.exe
 C:\Windows\System32\certutil.exe
@@ -109,6 +106,14 @@ C:\Windows\SysWOW64\xwizard.exe
 ```
 </details>
 
-* **Retrieve Firewall Rules**: Use this button to list all of the Windows Firewall rules that were created by the Harden System Security app.
+#### Retrieve Firewall Rules button
+
+Click or tap on this button to load the current state of rules managed by this application. You will be able to search through them or sort them based on different available properties. You can also **right-click** or **tap & hold** on one or more rules and delete them if you wish.
+
+> [!NOTE]
+>
+> * All firewall rules created by this application are stored in the **Group Policy** store rather than the standard local store.
+> * **Persistence**: These rules are not affected by local rule merges, ensuring your security configurations remain active.
+> * **Organization**: All rules are tagged with the `HardenSystemSecurity` group, making them easy to identify and manage exclusively through this application without cluttering the default Windows Firewall list.
 
 <br>

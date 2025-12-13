@@ -38,7 +38,7 @@ Use the 3 apply, remove or verify buttons on this page to apply the security con
 
 - [Uninstalls](https://learn.microsoft.com/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):
 
-    - Notepad (system): legacy Notepad program. Windows 11 has multi-tabbed modern Notepad app.
+    - Notepad (system): legacy Notepad program. Windows 11 has multi-tabbed [modern Notepad app](https://apps.microsoft.com/detail/9MSMLRH6LZF3) that is [sandboxed](https://learn.microsoft.com/windows/msix/overview).
 
     - VBSCRIPT: a legacy [deprecated](https://learn.microsoft.com/windows/whats-new/deprecated-features) scripting engine component, [Microsoft does not recommend](https://techcommunity.microsoft.com/t5/windows-insider-program/windows-11-insider-dev-build-25309-allows-for-uninstallation-of/m-p/3759739) using this component unless and until it is really required.
 

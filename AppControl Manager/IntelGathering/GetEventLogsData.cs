@@ -220,7 +220,7 @@ internal static class GetEventLogsData
 						InternalName = GetStringValue(xmlSpan, "InternalName"),
 						FileDescription = GetStringValue(xmlSpan, "FileDescription"),
 						ProductName = GetStringValue(xmlSpan, "ProductName"),
-						PolicyGUID = GetGuidValue(xmlSpan, "PolicyGUID"),
+						PolicyGUID = GetStringValue(xmlSpan, "PolicyGUID"),
 						UserWriteable = GetBooleanValue(xmlSpan, "UserWriteable"),
 						PackageFamilyName = GetStringValue(xmlSpan, "PackageFamilyName")
 					};
@@ -354,7 +354,7 @@ internal static class GetEventLogsData
 						InternalName = GetStringValue(xmlSpan, "InternalName"),
 						FileDescription = GetStringValue(xmlSpan, "FileDescription"),
 						ProductName = GetStringValue(xmlSpan, "ProductName"),
-						PolicyGUID = GetGuidValue(xmlSpan, "PolicyGUID"),
+						PolicyGUID = GetStringValue(xmlSpan, "PolicyGUID"),
 						UserWriteable = GetBooleanValue(xmlSpan, "UserWriteable"),
 						PackageFamilyName = GetStringValue(xmlSpan, "PackageFamilyName")
 					};
@@ -879,15 +879,6 @@ internal static class GetEventLogsData
 	{
 		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
 		return !valueSpan.IsEmpty && long.TryParse(valueSpan, NumberStyles.Integer, CultureInfo.InvariantCulture, out long result) ? result : null;
-	}
-
-	/// <summary>
-	/// Safely get a GUID value from the XML using Span.
-	/// </summary>
-	private static Guid? GetGuidValue(ReadOnlySpan<char> xml, string attributeName)
-	{
-		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
-		return !valueSpan.IsEmpty && Guid.TryParse(valueSpan, out Guid guid) ? guid : null;
 	}
 
 	/// <summary>

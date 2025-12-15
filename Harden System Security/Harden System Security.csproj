@@ -239,7 +239,6 @@
 		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.79.2" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
-		<PackageReference Include="System.Numerics.Tensors" Version="10.0.1" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.1" />
         <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.1" />
 
@@ -262,6 +261,7 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.250904007" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.251105000" />
         <PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2109" />
+		<PackageReference Include="System.Numerics.Tensors" Version="10.0.1" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

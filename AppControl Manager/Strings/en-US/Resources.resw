@@ -4684,54 +4684,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Select the security group(s) to assign to the policy in Intune</value>
   </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>Select signed XML policy file(s)</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>Select CIP Binary file(s)</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>Browse for CIP Binary file(s) to deploy on the system</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for CIP Binary file(s) to deploy on the system</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for CIP Binary file(s) to deploy on the system</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>Select XML policy file(s)</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>Browse for XML policy file(s) to convert to CIP file(s)</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for XML policy file(s) to convert to CIP file(s)</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for XML policy file(s) to convert to CIP file(s)</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>Select unsigned XML policy file(s)</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
-  </data>
   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>Subject name fragment is empty.</value>
 </data>
@@ -6319,5 +6271,53 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Retrieve the factory default Key Exchange Key (KEKDefault) database, containing the initial set of keys trusted for database updates provided by the system manufacturer.</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>Deploy XML Policies (Signed)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>Deploy XML Policies (Unsigned)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>Deploy CIP files</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>Browse for CIP Binary file(s) to deploy on the system</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for CIP Binary file(s) to deploy on the system</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for CIP Binary file(s) to deploy on the system</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>Convert XML policy files to CIP files</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>Browse for XML policy file(s) to convert to CIP binary file(s)</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for XML policy file(s) to convert to CIP binary file(s)</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for XML policy file(s) to convert to CIP binary file(s)</value>
   </data>
 </root>

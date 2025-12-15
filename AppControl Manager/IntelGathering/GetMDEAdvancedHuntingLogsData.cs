@@ -98,7 +98,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 					OriginalFileName = possibleCodeIntegrityAuditEvent.OriginalFileName,
 					InternalName = possibleCodeIntegrityAuditEvent.InternalName,
 					FileDescription = possibleCodeIntegrityAuditEvent.FileDescription,
-					PolicyGUID = GetGuidValue(possibleCodeIntegrityAuditEvent.PolicyGuid),
+					PolicyGUID = possibleCodeIntegrityAuditEvent.PolicyGuid,
 					UserWriteable = possibleCodeIntegrityAuditEvent.UserWriteable,
 					FileVersion = SetFileVersion(possibleCodeIntegrityAuditEvent.FileVersion)
 				};
@@ -180,7 +180,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 					OriginalFileName = possibleCodeIntegrityBlockEvent.OriginalFileName,
 					InternalName = possibleCodeIntegrityBlockEvent.InternalName,
 					FileDescription = possibleCodeIntegrityBlockEvent.FileDescription,
-					PolicyGUID = GetGuidValue(possibleCodeIntegrityBlockEvent.PolicyGuid),
+					PolicyGUID = possibleCodeIntegrityBlockEvent.PolicyGuid,
 					UserWriteable = possibleCodeIntegrityBlockEvent.UserWriteable,
 					FileVersion = SetFileVersion(possibleCodeIntegrityBlockEvent.FileVersion)
 				};
@@ -261,7 +261,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 					OriginalFileName = possibleAppLockerAuditEvent.OriginalFileName,
 					InternalName = possibleAppLockerAuditEvent.InternalName,
 					FileDescription = possibleAppLockerAuditEvent.FileDescription,
-					PolicyGUID = GetGuidValue(possibleAppLockerAuditEvent.PolicyGuid),
+					PolicyGUID = possibleAppLockerAuditEvent.PolicyGuid,
 					UserWriteable = possibleAppLockerAuditEvent.UserWriteable,
 					FileVersion = SetFileVersion(possibleAppLockerAuditEvent.FileVersion)
 				};
@@ -342,7 +342,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 					OriginalFileName = possibleAppLockerBlockEvent.OriginalFileName,
 					InternalName = possibleAppLockerBlockEvent.InternalName,
 					FileDescription = possibleAppLockerBlockEvent.FileDescription,
-					PolicyGUID = GetGuidValue(possibleAppLockerBlockEvent.PolicyGuid),
+					PolicyGUID = possibleAppLockerBlockEvent.PolicyGuid,
 					UserWriteable = possibleAppLockerBlockEvent.UserWriteable,
 					FileVersion = SetFileVersion(possibleAppLockerBlockEvent.FileVersion)
 				};
@@ -414,28 +414,14 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// </summary>
 	/// <param name="data"></param>
 	/// <returns></returns>
-	private static int? GetIntValue(string? data)
-	{
-		return int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
-	}
+	private static int? GetIntValue(string? data) =>
+		 int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
 
 	/// <summary>
 	/// Safely converts string to DateTime
 	/// </summary>
-	private static DateTime? GetEventDataDateTimeValue(string? data)
-	{
-		return DateTime.TryParse(data, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime result) ? result : null;
-	}
-
-	/// <summary>
-	/// Safely converts string to GUID
-	/// </summary>
-	/// <param name="data"></param>
-	/// <returns></returns>
-	private static Guid? GetGuidValue(string? data)
-	{
-		return Guid.TryParse(data, out Guid guid) ? guid : null;
-	}
+	private static DateTime? GetEventDataDateTimeValue(string? data) =>
+		 DateTime.TryParse(data, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime result) ? result : null;
 
 	#endregion
 }

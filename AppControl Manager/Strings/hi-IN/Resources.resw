@@ -4684,55 +4684,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Intune में नीति को असाइन करने के लिए सुरक्षा समूह(ओं) चुनें</value>
   </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>साइन किए गए XML नीति फ़ाइल(ओं) का चयन करें</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>सिस्टम पर साइन और परिनियोजित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>सिस्टम पर साइन और परिनियोजित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>सिस्टम पर साइन और परिनियोजित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>CIP बाइनरी फ़ाइल(ओं) का चयन करें</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>सिस्टम पर परिनियोजित करने के लिए CIP बाइनरी फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>सिस्टम पर परिनियोजित करने के लिए CIP बाइनरी फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>सिस्टम पर परिनियोजित करने के लिए CIP बाइनरी फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>XML नीति फ़ाइल(ओं) का चयन करें</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>CIP फ़ाइल(ओं) में रूपांतरित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>CIP फ़ाइल(ओं) में रूपांतरित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>CIP फ़ाइल(ओं) में रूपांतरित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>बिना साइन की गई XML नीति फ़ाइल(ओं) का चयन करें</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>सिस्टम पर बिना साइन किए परिनियोजित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>सिस्टम पर बिना साइन किए परिनियोजित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>सिस्टम पर बिना साइन किए परिनियोजित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
-  </data>
-   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>विषय नाम खंड रिक्त है।</value>
 </data>
 <data name="NoCertificatesFoundInStore" xml:space="preserve">
@@ -6319,5 +6271,53 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>फ़ैक्टरी डिफ़ॉल्ट कुंजी विनिमय कुंजी (KEKDefault) डेटाबेस प्राप्त करें, जिसमें सिस्टम निर्माता द्वारा डेटाबेस अपडेट के लिए विश्वसनीय कुंजियों का प्रारंभिक सेट शामिल है।</value>
+  </data>
+    <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>XML नीतियां परिनियोजित करें (हस्ताक्षरित)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>सिस्टम पर साइन और परिनियोजित करने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर साइन और परिनियोजित करने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर साइन और परिनियोजित करने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>XML नीतियां परिनियोजित करें (अहस्ताक्षरित)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>सिस्टम पर अहस्ताक्षरित परिनियोजित करने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर अहस्ताक्षरित परिनियोजित करने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर अहस्ताक्षरित परिनियोजित करने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>CIP फ़ाइलें परिनियोजित करें</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>सिस्टम पर परिनियोजित करने के लिए CIP बाइनरी फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर परिनियोजित करने के लिए CIP बाइनरी फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर परिनियोजित करने के लिए CIP बाइनरी फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>XML नीति फ़ाइलों को CIP फ़ाइलों में बदलें</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>CIP बाइनरी फ़ाइलों में बदलने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>CIP बाइनरी फ़ाइलों में बदलने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>CIP बाइनरी फ़ाइलों में बदलने के लिए XML नीति फ़ाइलें ब्राउज़ करें</value>
   </data>
 </root>

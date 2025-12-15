@@ -79,7 +79,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
 
 		LVController = new(
-			registryKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults,
 			applyWidthCallback: (index, width) =>
 			{
 				switch (index)
@@ -341,8 +340,13 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						GenericIncrementalCollection<FileIdentityIncrementalSource, FileIdentity> incrementalCollection =
-							new(new FileIdentityIncrementalSource(LVController.FullSource));
+						// Creating collection using a simple delegate to fetch pages from the full source
+						GenericIncrementalCollection<FileIdentity> incrementalCollection = new(
+							async (pageIndex, pageSize, ct) =>
+							{
+								// in-memory paging over the FullSource list
+								return await Task.FromResult(LVController.FullSource.Skip(pageIndex * pageSize).Take(pageSize));
+							});
 
 						// Replaces the ItemsSource for the results ListView with the incremental collection.
 						LVController.UpdateCollection(incrementalCollection);
@@ -353,9 +357,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 						//   and will re-debounce/recompute widths again as items realize (via ContainerContentChanging/scroll hooks).
 						_ = incrementalCollection.RefreshDataAsync();
 
-						// Recompute visible column widths right away (headers + any realized rows).
-						// This ensures the header grid columns get an immediate, sane size before/while the first page appears.
-						// Subsequent realization/scroll events will trigger debounced recalcs for smooth adjustments.
+						// Schedule width recompute
 						LVController.RecalculateVisibleColumnWidths();
 
 						LVController.NotifyFullSourceChanged();
@@ -499,10 +501,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 	}
 
-	internal void FilesAndFoldersViewFileDetailsSettingsCard_Click()
-	{
+	internal void FilesAndFoldersViewFileDetailsSettingsCard_Click() =>
 		ViewModelProvider.NavigationService.Navigate(typeof(CreateDenyPolicyFilesAndFoldersScanResults), null);
-	}
 
 	/// <summary>
 	/// Button to clear the list of selected folder paths

@@ -898,7 +898,7 @@ jobs:
     steps:
 
       - name: Downloading all Artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: Downloaded-Artifacts # Download all artifacts in this folder
           merge-multiple: true
@@ -923,7 +923,7 @@ jobs:
     steps:
 
       - name: Downloading all Artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: Downloaded-Artifacts # Download all artifacts in this folder
           merge-multiple: true

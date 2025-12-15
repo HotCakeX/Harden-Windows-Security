@@ -4684,54 +4684,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz grupy zabezpieczeń do przypisania do polityki w Intune</value>
   </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>Wybierz podpisane pliki polityki XML</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby je podpisać i wdrożyć w systemie</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby je podpisać i wdrożyć w systemie</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby je podpisać i wdrożyć w systemie</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>Wybierz pliki binarne CIP</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>Przeglądaj pliki binarne CIP, aby je wdrożyć w systemie</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przeglądaj pliki binarne CIP, aby je wdrożyć w systemie</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przeglądaj pliki binarne CIP, aby je wdrożyć w systemie</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>Wybierz pliki polityki XML</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby przekonwertować je na pliki CIP</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby przekonwertować je na pliki CIP</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby przekonwertować je na pliki CIP</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>Wybierz niepodpisane pliki polityki XML</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby wdrożyć je niepodpisane w systemie</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby wdrożyć je niepodpisane w systemie</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przeglądaj pliki polityki XML, aby wdrożyć je niepodpisane w systemie</value>
-  </data>
   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
     <value>Fragment nazwy podmiotu jest pusty.</value>
   </data>
@@ -6319,5 +6271,53 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pobierz fabryczną domyślną bazę kluczy wymiany kluczy (KEKDefault), zawierającą początkowy zestaw kluczy zaufanych do aktualizacji bazy danych, dostarczonych przez producenta systemu.</value>
+  </data>
+    <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>Wdróż zasady XML (podpisane)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do podpisania i wdrożenia w systemie</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do podpisania i wdrożenia w systemie</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do podpisania i wdrożenia w systemie</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>Wdróż zasady XML (niepodpisane)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do wdrożenia w systemie bez podpisu</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do wdrożenia w systemie bez podpisu</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do wdrożenia w systemie bez podpisu</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>Wdróż pliki CIP</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików binarnych CIP do wdrożenia w systemie</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików binarnych CIP do wdrożenia w systemie</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików binarnych CIP do wdrożenia w systemie</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>Konwertuj pliki zasad XML na pliki CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do konwersji na pliki binarne CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do konwersji na pliki binarne CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików zasad XML do konwersji na pliki binarne CIP</value>
   </data>
 </root>

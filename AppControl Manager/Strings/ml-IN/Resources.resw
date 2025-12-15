@@ -4684,55 +4684,7 @@
 <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Intune-ൽ പോളിസിക്ക് നിയോഗിക്കാൻ സുരക്ഷാ ഗ്രൂപ്പുകൾ തിരഞ്ഞെടുക്കുക</value>
 </data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>സൈൻ ചെയ്ത XML പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ സൈൻ ചെയ്ത് ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ സൈൻ ചെയ്ത് ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ സൈൻ ചെയ്ത് ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>CIP ബൈനറി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ ഡിപ്ലോയ് ചെയ്യാൻ CIP ബൈനറി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ ഡിപ്ലോയ് ചെയ്യാൻ CIP ബൈനറി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ ഡിപ്ലോയ് ചെയ്യാൻ CIP ബൈനറി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>XML പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>CIP ഫയലുകളായി പരിവർത്തനം ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>CIP ഫയലുകളായി പരിവർത്തനം ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>CIP ഫയലുകളായി പരിവർത്തനം ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>അസൈൻ ചെയ്തിട്ടില്ലാത്ത XML പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ അസൈൻ ചെയ്‌തിട്ടില്ലാതെ ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ അസൈൻ ചെയ്‌തിട്ടില്ലാതെ ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ അസൈൻ ചെയ്‌തിട്ടില്ലാതെ ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
-</data>
- <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+<data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>വിഷയ നാമ ശകലം ശൂന്യമാണ്.</value>
 </data>
 <data name="NoCertificatesFoundInStore" xml:space="preserve">
@@ -6319,5 +6271,53 @@
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന ഡാറ്റാബേസ് അപ്‌ഡേറ്റുകൾക്കായി വിശ്വസനീയമായ കീകളുടെ പ്രാരംഭ സെറ്റ് അടങ്ങുന്ന ഫാക്ടറി ഡിഫോൾട്ട് കീ എക്‌സ്‌ചേഞ്ച് കീ (KEKDefault) ഡാറ്റാബേസ് വീണ്ടെടുക്കുക.</value>
+  </data>
+    <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>XML പോളിസികൾ വിന്യസിക്കുക (ഒപ്പിട്ടവ)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഒപ്പിട്ടു വിന്യസിക്കുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഒപ്പിട്ടു വിന്യസിക്കുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഒപ്പിട്ടു വിന്യസിക്കുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>XML പോളിസികൾ വിന്യസിക്കുക (ഒപ്പിടാത്തവ)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഒപ്പിടാതെ വിന്യസിക്കുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഒപ്പിടാതെ വിന്യസിക്കുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഒപ്പിടാതെ വിന്യസിക്കുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>CIP ഫയലുകൾ വിന്യസിക്കുക</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ വിന്യസിക്കുന്നതിനായി CIP ബൈനറി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ വിന്യസിക്കുന്നതിനായി CIP ബൈനറി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ വിന്യസിക്കുന്നതിനായി CIP ബൈനറി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>XML പോളിസി ഫയലുകൾ CIP ഫയലുകളാക്കി മാറ്റുക</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>CIP ബൈനറി ഫയലുകളാക്കി മാറ്റുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>CIP ബൈനറി ഫയലുകളാക്കി മാറ്റുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>CIP ബൈനറി ഫയലുകളാക്കി മാറ്റുന്നതിനായി XML പോളിസി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
   </data>
 </root>

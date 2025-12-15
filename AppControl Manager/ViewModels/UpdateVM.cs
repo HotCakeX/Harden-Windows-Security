@@ -76,10 +76,9 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// <summary>
 	/// Navigate to the extra sub-page
 	/// </summary>
-	internal void CheckForUpdate_Click()
-	{
+	internal void CheckForUpdate_Click() =>
 		ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePageCustomMSIXPath), null);
-	}
+
 #endif
 
 	/// <summary>

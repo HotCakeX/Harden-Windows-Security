@@ -1,1 +1,7 @@
 * Updated dependencies to the latest versions.
+
+* Improved the performance of incremental collection ListViews in Supplemental and Deny policy creation result pages.
+
+* Improved UI texts in the Deployment page to enhance clarity, fixes this issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/958
+
+* In the MDE Advanced Hunting and Event Log Policy Creation pages, the Date filter is now always applied when it is set; That means the data will be consistently filtered based on Date when you sort the data, search through the data or reload new data, without requiring you to reapply the Date filter each time. This improves UX and addresses this issue: https://github.com/HotCakeX/Harden-Windows-Security/discussions/956

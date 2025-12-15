@@ -643,7 +643,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 			AreElementsEnabled = true;
 		}
-
 	}
 
 	public void Dispose()

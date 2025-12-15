@@ -270,12 +270,12 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 		{
 			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
 			maxWidth2 = ListViewHelper.MeasureText(item.TimeCreated.ToString(), maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.SignatureStatus.ToString(), maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.Action.ToString(), maxWidth4);
+			maxWidth3 = ListViewHelper.MeasureText(item.SignatureStatus_String, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.Action_String, maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth5);
 			maxWidth6 = ListViewHelper.MeasureText(item.InternalName, maxWidth6);
 			maxWidth7 = ListViewHelper.MeasureText(item.FileDescription, maxWidth7);
-			maxWidth8 = ListViewHelper.MeasureText(item.FileVersion?.ToString(), maxWidth8);
+			maxWidth8 = ListViewHelper.MeasureText(item.FileVersion_String, maxWidth8);
 			maxWidth9 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth9);
 			maxWidth10 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth10);
 			maxWidth11 = ListViewHelper.MeasureText(item.SHA256FlatHash, maxWidth11);
@@ -283,7 +283,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 			maxWidth13 = ListViewHelper.MeasureText(item.SISigningScenario.ToString(), maxWidth13);
 			maxWidth14 = ListViewHelper.MeasureText(item.FilePath, maxWidth14);
 			maxWidth15 = ListViewHelper.MeasureText(item.ComputerName, maxWidth15);
-			maxWidth16 = ListViewHelper.MeasureText(item.PolicyGUID.ToString(), maxWidth16);
+			maxWidth16 = ListViewHelper.MeasureText(item.PolicyGUID, maxWidth16);
 			maxWidth17 = ListViewHelper.MeasureText(item.PolicyName, maxWidth17);
 			maxWidth18 = ListViewHelper.MeasureText(item.FilePublishersToDisplay, maxWidth18);
 		}
@@ -555,11 +555,10 @@ DeviceEvents
 			// Store all of the data in the List
 			AllFileIdentities.AddRange(Output);
 
-			// Store all of the data in the ObservableCollection
-			foreach (FileIdentity item in Output)
-			{
-				FileIdentities.Add(item);
-			}
+			// Instead of manually adding items to the ObservableCollection, we call ApplyFilters.
+			// This ensures that if there's an existing search text or date filter,
+			// the new data respects it immediately.
+			ApplyFilters();
 
 			CalculateColumnWidths();
 		}
@@ -915,11 +914,8 @@ DeviceEvents
 				// Store all of the data in the List
 				AllFileIdentities.AddRange(Output);
 
-				// Store all of the data in the ObservableCollection
-				foreach (FileIdentity item in Output)
-				{
-					FileIdentities.Add(item);
-				}
+				// Adds data from the List to Observable collection and makes sure filters are respected
+				ApplyFilters();
 
 				CalculateColumnWidths();
 			}
@@ -962,7 +958,8 @@ DeviceEvents
 					sortState: SortState,
 					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting,
-					propertyFilterValue: PropertyFilterValue);
+					propertyFilterValue: PropertyFilterValue,
+					selectedDate: DatePickerDate);
 			}
 		}
 	}

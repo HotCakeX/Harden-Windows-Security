@@ -27,6 +27,22 @@ namespace AppControlManager.IntelGathering;
 
 internal sealed class FileIdentity
 {
+	#region String representations of Enums for UI display purposes and to avoid calling ToString on actual enum properties when we need the string. Improves performance and lowers allocations. Tested with benchmarks on .NET 10.1
+	// Their order mUST match the order of the enum definitions.
+
+	private static readonly string[] SignatureStatusString =
+	[
+		nameof(SignatureStatus.IsSigned),
+		nameof(SignatureStatus.IsUnsigned)
+	];
+	private static readonly string[] EventActionString =
+	[
+		nameof(EventAction.Audit),
+		nameof(EventAction.Block)
+	];
+
+	#endregion
+
 	// The origin of this File Identity object, where it came from and how it was compiled
 	[JsonInclude]
 	internal FileIdentityOrigin Origin { get; init; }
@@ -35,9 +51,15 @@ internal sealed class FileIdentity
 	[JsonInclude]
 	internal SignatureStatus SignatureStatus { get; set; }
 
+	[JsonIgnore]
+	internal string SignatureStatus_String => SignatureStatusString[(int)SignatureStatus];
+
 	// Properties related to logs
 	[JsonInclude]
 	internal EventAction Action { get; init; }
+
+	[JsonIgnore]
+	internal string Action_String => EventActionString[(int)Action];
 
 	[JsonInclude]
 	internal int EventID { get; init; }
@@ -49,7 +71,7 @@ internal sealed class FileIdentity
 	internal string? ComputerName { get; init; }
 
 	[JsonInclude]
-	internal Guid? PolicyGUID { get; init; }
+	internal string? PolicyGUID { get; init; }
 
 	[JsonInclude]
 	internal bool? UserWriteable { get; init; }
@@ -122,19 +144,22 @@ internal sealed class FileIdentity
 	internal string? ProductName { get; set; }
 
 	[JsonInclude]
-	internal Version? FileVersion { get; set; }
+	internal Version? FileVersion { get; set => FileVersion_String = field?.ToString(); }
+
+	[JsonIgnore]
+	internal string? FileVersion_String { get; private set; }
 
 	[JsonInclude]
 	internal string? PackageFamilyName { get; set; }
 
 	// Signer and certificate information with a custom comparer to ensure data with the same PublisherTBSHash and IssuerTBSHash do not exist
 	[JsonIgnore]
-	internal HashSet<FileSignerInfo> FileSignerInfos { get; set; } = new HashSet<FileSignerInfo>(new FileSignerInfoComparer());
+	internal HashSet<FileSignerInfo> FileSignerInfos { get; set; } = new(new FileSignerInfoComparer());
 
 	// Just for display purposes, only contains CNs of the signers
 	// FileSignerInfos is the one that has actual signing data.
 	[JsonIgnore]
-	internal HashSet<string> FilePublishers { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+	internal HashSet<string> FilePublishers { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
 	// Computed property to join FilePublishers into a comma-separated string
 	[JsonInclude]
@@ -172,35 +197,35 @@ internal sealed class FileIdentity
 			   Action == other.Action &&
 			   EventID == other.EventID &&
 			   Nullable.Equals(TimeCreated, other.TimeCreated) &&
-			   CompareStrings(ComputerName, other.ComputerName) &&
-			   Nullable.Equals(PolicyGUID, other.PolicyGUID) &&
+			   string.Equals(ComputerName, other.ComputerName, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(PolicyGUID, other.PolicyGUID, StringComparison.OrdinalIgnoreCase) &&
 			   Nullable.Equals(UserWriteable, other.UserWriteable) &&
-			   CompareStrings(ProcessName, other.ProcessName) &&
-			   CompareStrings(RequestedSigningLevel, other.RequestedSigningLevel) &&
-			   CompareStrings(ValidatedSigningLevel, other.ValidatedSigningLevel) &&
-			   CompareStrings(Status, other.Status) &&
+			   string.Equals(ProcessName, other.ProcessName, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(RequestedSigningLevel, other.RequestedSigningLevel, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(ValidatedSigningLevel, other.ValidatedSigningLevel, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(Status, other.Status, StringComparison.OrdinalIgnoreCase) &&
 			   Nullable.Equals(USN, other.USN) &&
-			   CompareStrings(PolicyName, other.PolicyName) &&
-			   CompareStrings(PolicyID, other.PolicyID) &&
-			   CompareStrings(PolicyHash, other.PolicyHash) &&
-			   CompareStrings(UserID, other.UserID) &&
-			   CompareStrings(FilePath, other.FilePath) &&
-			   CompareStrings(FileName, other.FileName) &&
-			   CompareStrings(SHA1Hash, other.SHA1Hash) &&
-			   CompareStrings(SHA256Hash, other.SHA256Hash) &&
-			   CompareStrings(SHA1PageHash, other.SHA1PageHash) &&
-			   CompareStrings(SHA256PageHash, other.SHA256PageHash) &&
-			   CompareStrings(SHA1FlatHash, other.SHA1FlatHash) &&
-			   CompareStrings(SHA256FlatHash, other.SHA256FlatHash) &&
+			   string.Equals(PolicyName, other.PolicyName, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(PolicyID, other.PolicyID, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(PolicyHash, other.PolicyHash, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(UserID, other.UserID, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(FilePath, other.FilePath, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(FileName, other.FileName, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(SHA1Hash, other.SHA1Hash, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(SHA256Hash, other.SHA256Hash, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(SHA1PageHash, other.SHA1PageHash, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(SHA256PageHash, other.SHA256PageHash, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(SHA1FlatHash, other.SHA1FlatHash, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(SHA256FlatHash, other.SHA256FlatHash, StringComparison.OrdinalIgnoreCase) &&
 			   SISigningScenario == other.SISigningScenario &&
-			   CompareStrings(OriginalFileName, other.OriginalFileName) &&
-			   CompareStrings(InternalName, other.InternalName) &&
-			   CompareStrings(FileDescription, other.FileDescription) &&
-			   CompareStrings(ProductName, other.ProductName) &&
+			   string.Equals(OriginalFileName, other.OriginalFileName, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(InternalName, other.InternalName, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(FileDescription, other.FileDescription, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(ProductName, other.ProductName, StringComparison.OrdinalIgnoreCase) &&
 			   Equals(FileVersion, other.FileVersion) &&
-			   CompareStrings(PackageFamilyName, other.PackageFamilyName) &&
-			   CompareHashSets(FileSignerInfos, other.FileSignerInfos) &&
-			   CompareStringSets(FilePublishers, other.FilePublishers) &&
+			   string.Equals(PackageFamilyName, other.PackageFamilyName, StringComparison.OrdinalIgnoreCase) &&
+			   FileSignerInfos.SetEquals(other.FileSignerInfos) &&
+			   FilePublishers.SetEquals(other.FilePublishers) &&
 			   Nullable.Equals(HasWHQLSigner, other.HasWHQLSigner) &&
 			   Nullable.Equals(IsECCSigned, other.IsECCSigned);
 	}
@@ -249,46 +274,6 @@ internal sealed class FileIdentity
 		hash.Add(HasWHQLSigner);
 		hash.Add(IsECCSigned);
 		return hash.ToHashCode();
-	}
-
-	/// <summary>
-	/// Compares two strings using ordinal ignore case.
-	/// If both strings are null, they are considered equal.
-	/// </summary>
-	/// <param name="s1">First string.</param>
-	/// <param name="s2">Second string.</param>
-	/// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-	private static bool CompareStrings(string? s1, string? s2)
-	{
-		if (s1 is null && s2 is null)
-			return true;
-		if (s1 is null || s2 is null)
-			return false;
-		return string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase);
-	}
-
-	/// <summary>
-	/// Compares two hash sets of FileSignerInfo for equality.
-	/// Two sets are considered equal if they contain the same elements.
-	/// </summary>
-	/// <param name="set1">First hash set.</param>
-	/// <param name="set2">Second hash set.</param>
-	/// <returns><c>true</c> if the sets are equal, <c>false</c> otherwise.</returns>
-	private static bool CompareHashSets(HashSet<FileSignerInfo> set1, HashSet<FileSignerInfo> set2)
-	{
-		return set1.SetEquals(set2);
-	}
-
-	/// <summary>
-	/// Compares two hash sets of strings for equality using ordinal ignore case.
-	/// Two sets are considered equal if they contain the same elements.
-	/// </summary>
-	/// <param name="set1">First hash set.</param>
-	/// <param name="set2">Second hash set.</param>
-	/// <returns><c>true</c> if the sets are equal, <c>false</c> otherwise.</returns>
-	private static bool CompareStringSets(HashSet<string> set1, HashSet<string> set2)
-	{
-		return set1.SetEquals(set2);
 	}
 
 	/// <summary>

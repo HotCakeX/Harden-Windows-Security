@@ -23,7 +23,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Common.Collections;
 using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
 
@@ -53,7 +52,7 @@ internal interface IBatchReloadable
 /// Generic, UI-bindable incremental-loading collection.
 ///
 /// Data flow and responsibilities:
-/// - Wraps an IIncrementalSource<TDataType> (TDataSource) that knows how to fetch "pages" of data.
+/// - Wraps a Func delegate that knows how to fetch "pages" of data.
 /// - Exposes ObservableCollection<TDataType> to XAML (ItemsSource), so UI updates automatically on Add/Clear/Reset.
 /// - Implements ISupportIncrementalLoading so a ListView/GridView can request more data on demand (LoadMoreItemsAsync).
 /// - Provides bulk update capabilities (IBulkUpdatableCollection) to avoid O(N) change notifications (e.g., on large sorts).
@@ -61,12 +60,11 @@ internal interface IBatchReloadable
 /// - Maintains paging state (ActivePageIndex), "busy" state (IsCurrentlyLoading), and "has more" state (HasAdditionalItems).
 /// - Uses a SemaphoreSlim to serialize overlapping load/refresh/reload requests and prevent re-entrancy.
 /// </summary>
-internal sealed partial class GenericIncrementalCollection<TDataSource, TDataType> : ObservableCollection<TDataType>,
+internal sealed partial class GenericIncrementalCollection<TDataType> : ObservableCollection<TDataType>,
 	ISupportIncrementalLoading,
 	IDisposable,
 	IBulkUpdatableCollection<TDataType>,
 	IBatchReloadable
-	where TDataSource : IIncrementalSource<TDataType>
 {
 	// Single concurrency guard for all operations that mutate this collection or paging state.
 	// Ensures that UI-triggered incremental loads and programmatic refresh/reset cannot overlap.
@@ -105,9 +103,10 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	internal event Action? CollectionCleared;
 
 	/// <summary>
-	/// Data source provider for incremental loading operations. Supplies the "paged" data.
+	/// Data source delegate for incremental loading operations. Supplies the "paged" data.
+	/// Args: PageIndex, PageSize, CancellationToken. Returns: Enumerable of items.
 	/// </summary>
-	private TDataSource DataProvider { get; }
+	private readonly Func<int, int, CancellationToken, Task<IEnumerable<TDataType>>> _dataFetcher;
 
 	/// <summary>
 	/// Number of items to load per page during incremental loading.
@@ -210,16 +209,21 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	/// <summary>
 	/// Creates a new instance of the incremental collection.
 	/// </summary>
-	/// <param name="dataProvider">The backing page provider (IIncrementalSource).</param>
+	/// <param name="dataFetcher">The delegate that fetches data pages.</param>
 	/// <param name="pageSize">Default page size when the UI does not specify itemCount.</param>
 	/// <param name="onLoadingStarted">Optional start callback.</param>
 	/// <param name="onLoadingCompleted">Optional completion callback.</param>
 	/// <param name="onLoadingError">Optional error callback.</param>
-	internal GenericIncrementalCollection(TDataSource dataProvider, int pageSize = 20, Action? onLoadingStarted = null, Action? onLoadingCompleted = null, Action<Exception>? onLoadingError = null)
+	internal GenericIncrementalCollection(
+		Func<int, int, CancellationToken, Task<IEnumerable<TDataType>>> dataFetcher,
+		int pageSize = 20,
+		Action? onLoadingStarted = null,
+		Action? onLoadingCompleted = null,
+		Action<Exception>? onLoadingError = null)
 	{
-		ArgumentNullException.ThrowIfNull(dataProvider);
+		ArgumentNullException.ThrowIfNull(dataFetcher);
 
-		DataProvider = dataProvider;
+		_dataFetcher = dataFetcher;
 
 		OnLoadingStarted = onLoadingStarted;
 		OnLoadingCompleted = onLoadingCompleted;
@@ -285,8 +289,8 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	/// <returns>Materialized page items.</returns>
 	private async Task<IEnumerable<TDataType>> LoadPageDataAsync(int requestedItemCount, CancellationToken cancellationToken)
 	{
-		// Fetch next page directly; the constraint guarantees this method exists.
-		IEnumerable<TDataType> page = await DataProvider.GetPagedItemsAsync(ActivePageIndex, requestedItemCount, cancellationToken);
+		// Fetch next page via delegate.
+		IEnumerable<TDataType> page = await _dataFetcher(ActivePageIndex, requestedItemCount, cancellationToken);
 
 		// Only advance page index if not cancelled.
 		if (!cancellationToken.IsCancellationRequested)
@@ -346,14 +350,9 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 
 					loadedItemCount = (uint)batch.Count;
 
-					// Suppress per-item notifications to avoid reentrancy during incremental loads.
-					using (BeginBulkUpdate())
+					foreach (TDataType item in CollectionsMarshal.AsSpan(batch))
 					{
-						foreach (TDataType item in CollectionsMarshal.AsSpan(batch))
-						{
-							// Add will be suppressed; a single Reset is emitted when the scope disposes.
-							Add(item);
-						}
+						Add(item);
 					}
 
 					// One-shot notification for "a page just arrived", enabling smarter UI reactions.
@@ -400,7 +399,7 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	/// </summary>
 	/// <remarks>
 	/// This API is intended for scenarios where the logical dataset is fully recomputed externally
-	/// (e.g., a global sort over the backing list) and the bound collection should reflect it atomically.
+	/// (e.g., a global sort of the backing list) and the bound collection should reflect it atomically.
 	/// </remarks>
 	public void BulkReplace(IList<TDataType> items)
 	{
@@ -450,9 +449,9 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 	/// </summary>
 	private sealed partial class BulkUpdateScope : IDisposable
 	{
-		private GenericIncrementalCollection<TDataSource, TDataType>? _owner;
+		private GenericIncrementalCollection<TDataType>? _owner;
 
-		internal BulkUpdateScope(GenericIncrementalCollection<TDataSource, TDataType> owner) => _owner = owner;
+		internal BulkUpdateScope(GenericIncrementalCollection<TDataType> owner) => _owner = owner;
 
 		public void Dispose()
 		{
@@ -461,7 +460,7 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 				return;
 			}
 
-			GenericIncrementalCollection<TDataSource, TDataType> local = _owner;
+			GenericIncrementalCollection<TDataType> local = _owner;
 			_owner = null;
 
 			// End suppression and emit a single Reset if we performed any changes while suppressed.
@@ -478,7 +477,7 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 				}
 			}
 
-			static void EmitReset(GenericIncrementalCollection<TDataSource, TDataType> collection)
+			static void EmitReset(GenericIncrementalCollection<TDataType> collection)
 			{
 				// The typical ObservableCollection reset pattern:
 				// - Notify Count and indexer changed so bindings refresh.

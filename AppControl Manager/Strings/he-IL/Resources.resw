@@ -4685,55 +4685,7 @@
 <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>בחר את קבוצות האבטחה שיוקצו למדיניות ב-Intune</value>
 </data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>בחר את קובצי מדיניות ה-XML החתומים</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>עיין בקבצי מדיניות XML כדי לחתום ולפרוס אותם במערכת</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בקבצי מדיניות XML כדי לחתום ולפרוס אותם במערכת</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בקבצי מדיניות XML כדי לחתום ולפרוס אותם במערכת</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>בחר את קובצי הבינארי של CIP</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>עיין בקבצי הבינארי של CIP כדי לפרוסם במערכת</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בקבצי הבינארי של CIP כדי לפרוסם במערכת</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בקבצי הבינארי של CIP כדי לפרוסם במערכת</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>בחר את קובצי מדיניות ה-XML</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>עיין בקובצי מדיניות XML כדי להמיר אותם לקובצי CIP</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בקובצי מדיניות XML כדי להמיר אותם לקובצי CIP</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בקובצי מדיניות XML כדי להמיר אותם לקובצי CIP</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>בחר את קובצי מדיניות ה-XML הלא חתומים</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>עיין בקובצי מדיניות XML כדי לפרוסם במערכת ללא חתימה</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בקובצי מדיניות XML כדי לפרוסם במערכת ללא חתימה</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בקובצי מדיניות XML כדי לפרוסם במערכת ללא חתימה</value>
-</data>
- <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+<data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>פרגמנט שם הנושא ריק.</value>
 </data>
 <data name="NoCertificatesFoundInStore" xml:space="preserve">
@@ -6320,5 +6272,53 @@
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>אחזר את מסד הנתונים של מפתח החלפת המפתחות המוגדר כברירת מחדל (KEKDefault), המכיל את הסט הראשוני של מפתחות המהימנים לעדכוני מסד נתונים שסופקו על ידי יצרן המערכת.</value>
+  </data>
+    <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>פריסת קובצי מדיניות XML (חתומים)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML לחתימה ופריסה במערכת</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML לחתימה ופריסה במערכת</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML לחתימה ופריסה במערכת</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>פריסת קובצי מדיניות XML (לא חתומים)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML לפריסה במערכת ללא חתימה</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML לפריסה במערכת ללא חתימה</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML לפריסה במערכת ללא חתימה</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>פריסת קובצי CIP</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>אתר קובצי CIP בינאריים לפריסה במערכת</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר קובצי CIP בינאריים לפריסה במערכת</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר קובצי CIP בינאריים לפריסה במערכת</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>המרת קובצי מדיניות XML לקובצי CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML להמרה לקובצי CIP בינאריים</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML להמרה לקובצי CIP בינאריים</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר קובצי מדיניות XML להמרה לקובצי CIP בינאריים</value>
   </data>
 </root>

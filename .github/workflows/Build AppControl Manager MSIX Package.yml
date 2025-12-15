@@ -840,7 +840,7 @@ jobs:
           }
 
       - name: Uploading Artifact 1
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           retention-days: 1
           compression-level: 0
@@ -848,7 +848,7 @@ jobs:
           path: ${{ env.MSIXBundle_PATH }}
 
       - name: Uploading Artifact 2
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           retention-days: 1
           compression-level: 0
@@ -856,7 +856,7 @@ jobs:
           path: ${{ env.X64MSBuildLog_PATH }}
 
       - name: Uploading Artifact 3
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           retention-days: 1
           compression-level: 0
@@ -864,7 +864,7 @@ jobs:
           path: ${{ env.ARM64MSBuildLog_PATH }}
 
       - name: Uploading Artifact 4
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           retention-days: 1
           compression-level: 0
@@ -872,7 +872,7 @@ jobs:
           path: ${{ env.X64Symbol_PATH }}
 
       - name: Uploading Artifact 5
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           retention-days: 1
           compression-level: 0
@@ -880,7 +880,7 @@ jobs:
           path: ${{ env.ARM64Symbol_PATH }}
 
       - name: Uploading Artifact 6
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           retention-days: 1
           compression-level: 0

@@ -485,13 +485,13 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		{
 			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
 			maxWidth2 = ListViewHelper.MeasureText(item.TimeCreated.ToString(), maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.SignatureStatus.ToString(), maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.Action.ToString(), maxWidth4);
+			maxWidth3 = ListViewHelper.MeasureText(item.SignatureStatus_String, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.Action_String, maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth5);
 			maxWidth6 = ListViewHelper.MeasureText(item.InternalName, maxWidth6);
 			maxWidth7 = ListViewHelper.MeasureText(item.FileDescription, maxWidth7);
 			maxWidth8 = ListViewHelper.MeasureText(item.ProductName, maxWidth8);
-			maxWidth9 = ListViewHelper.MeasureText(item.FileVersion?.ToString(), maxWidth9);
+			maxWidth9 = ListViewHelper.MeasureText(item.FileVersion_String, maxWidth9);
 			maxWidth10 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth10);
 			maxWidth11 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth11);
 			maxWidth12 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth12);
@@ -501,7 +501,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			maxWidth16 = ListViewHelper.MeasureText(item.SHA256FlatHash, maxWidth16);
 			maxWidth17 = ListViewHelper.MeasureText(item.FilePublishersToDisplay, maxWidth17);
 			maxWidth18 = ListViewHelper.MeasureText(item.Opus, maxWidth18);
-			maxWidth19 = ListViewHelper.MeasureText(item.PolicyGUID.ToString(), maxWidth19);
+			maxWidth19 = ListViewHelper.MeasureText(item.PolicyGUID, maxWidth19);
 			maxWidth20 = ListViewHelper.MeasureText(item.PolicyName, maxWidth20);
 			maxWidth21 = ListViewHelper.MeasureText(item.ComputerName, maxWidth21);
 		}
@@ -588,12 +588,12 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		foreach (FileIdentity item in LocalFilesFileIdentities)
 		{
 			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.SignatureStatus.ToString(), maxWidth2);
+			maxWidth2 = ListViewHelper.MeasureText(item.SignatureStatus_String, maxWidth2);
 			maxWidth3 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth3);
 			maxWidth4 = ListViewHelper.MeasureText(item.InternalName, maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.FileDescription, maxWidth5);
 			maxWidth6 = ListViewHelper.MeasureText(item.ProductName, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.FileVersion?.ToString(), maxWidth7);
+			maxWidth7 = ListViewHelper.MeasureText(item.FileVersion_String, maxWidth7);
 			maxWidth8 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth8);
 			maxWidth9 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth9);
 			maxWidth10 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth10);

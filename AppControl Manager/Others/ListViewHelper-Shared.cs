@@ -292,6 +292,12 @@ internal static partial class ListViewHelper
 	/// <param name="regKey">
 	/// Used to find the ListView's ScrollViewer in the cache.
 	/// </param>
+	/// <param name="propertyFilterValue">
+	/// The value of the property filter, if applicable.
+	/// </param>
+	/// <param name="selectedDate">
+	/// The value of the date picker filter, if applicable.
+	/// </param>
 	internal static void SortColumn<TElement>(
 		Func<TElement, object?> keySelector,
 		string? searchBoxText,
@@ -300,7 +306,8 @@ internal static partial class ListViewHelper
 		SortState sortState,
 		string newKey,
 		ListViewsRegistry regKey,
-		string? propertyFilterValue = null)
+		string? propertyFilterValue = null,
+		DateTimeOffset? selectedDate = null)
 	{
 		// Get the ListView ScrollViewer info
 		ScrollViewer? Sv = GetScrollViewerFromCache(regKey);
@@ -323,8 +330,8 @@ internal static partial class ListViewHelper
 		}
 
 		// Choose the source (filtered vs. original)
-		// If either the property search has text or the regular search box has text then use the Obvs Collection because that means the user is currently seeing a filtered data.
-		bool isSearchEmpty = string.IsNullOrEmpty(searchBoxText) && string.IsNullOrEmpty(propertyFilterValue);
+		// If either the property search, regular search box, or date picker has value then use the Obvs Collection because that means the user is currently seeing a filtered data.
+		bool isSearchEmpty = string.IsNullOrEmpty(searchBoxText) && string.IsNullOrEmpty(propertyFilterValue) && selectedDate is null;
 		List<TElement> sourceData = isSearchEmpty
 			? originalList
 			: observableCollection.ToList();

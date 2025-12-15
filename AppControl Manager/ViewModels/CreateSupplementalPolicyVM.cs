@@ -58,7 +58,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
 
 		LVController = new(
-			registryKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults,
 			applyWidthCallback: (index, width) =>
 			{
 				switch (index)
@@ -339,10 +338,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Link to the page that shows scanned file details
 	/// </summary>
-	internal void FilesAndFoldersViewFileDetailsSettingsCard_Click()
-	{
+	internal void FilesAndFoldersViewFileDetailsSettingsCard_Click() =>
 		ViewModelProvider.NavigationService.Navigate(typeof(CreateSupplementalPolicyFilesAndFoldersScanResults), null);
-	}
 
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
@@ -460,8 +457,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						GenericIncrementalCollection<FileIdentityIncrementalSource, FileIdentity> incrementalCollection =
-							new(new FileIdentityIncrementalSource(LVController.FullSource));
+						// Creating collection using a simple delegate to fetch pages from the full source
+						GenericIncrementalCollection<FileIdentity> incrementalCollection = new(
+							async (pageIndex, pageSize, ct) =>
+							{
+								// Simple in-memory paging over the FullSource list
+								return await Task.FromResult(LVController.FullSource.Skip(pageIndex * pageSize).Take(pageSize));
+							});
 
 						// Replaces the ItemsSource for the results ListView with the incremental collection.
 						LVController.UpdateCollection(incrementalCollection);
@@ -1191,12 +1193,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		foreach (FileIdentity item in StrictKernelModeScanResults)
 		{
 			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.SignatureStatus.ToString(), maxWidth2);
+			maxWidth2 = ListViewHelper.MeasureText(item.SignatureStatus_String, maxWidth2);
 			maxWidth3 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth3);
 			maxWidth4 = ListViewHelper.MeasureText(item.InternalName, maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.FileDescription, maxWidth5);
 			maxWidth6 = ListViewHelper.MeasureText(item.ProductName, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.FileVersion?.ToString(), maxWidth7);
+			maxWidth7 = ListViewHelper.MeasureText(item.FileVersion_String, maxWidth7);
 			maxWidth8 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth8);
 			maxWidth9 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth9);
 			maxWidth10 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth10);
@@ -1271,15 +1273,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	private string? _StrictKernelModeSupplementalPolicyPath;
 
-	internal void StrictKernelModeScanButton_Click()
-	{
-		StrictKernelModePerformScans(false);
-	}
+	internal void StrictKernelModeScanButton_Click() => StrictKernelModePerformScans(false);
 
-	internal void DetectedKernelModeFilesDetailsSettingsCard_Click()
-	{
+	internal void DetectedKernelModeFilesDetailsSettingsCard_Click() =>
 		ViewModelProvider.NavigationService.Navigate(typeof(StrictKernelPolicyScanResults), null);
-	}
 
 	/// <summary>
 	/// Browse for Base Policy - Button Click

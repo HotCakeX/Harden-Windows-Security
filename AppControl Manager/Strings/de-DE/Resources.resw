@@ -4684,54 +4684,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wählen Sie die Sicherheitsgruppe(n) aus, die der Richtlinie in Intune zugewiesen werden sollen</value>
   </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>Signierte XML-Richtliniendatei(en) auswählen</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie zu signieren und auf dem System bereitzustellen</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie zu signieren und auf dem System bereitzustellen</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie zu signieren und auf dem System bereitzustellen</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>CIP-Binärdatei(en) auswählen</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>Nach CIP-Binärdatei(en) suchen, um sie auf dem System bereitzustellen</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach CIP-Binärdatei(en) suchen, um sie auf dem System bereitzustellen</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach CIP-Binärdatei(en) suchen, um sie auf dem System bereitzustellen</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>XML-Richtliniendatei(en) auswählen</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie in CIP-Datei(en) zu konvertieren</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie in CIP-Datei(en) zu konvertieren</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie in CIP-Datei(en) zu konvertieren</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>Unsignierte XML-Richtliniendatei(en) auswählen</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie unsigniert auf dem System bereitzustellen</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie unsigniert auf dem System bereitzustellen</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach XML-Richtliniendatei(en) suchen, um sie unsigniert auf dem System bereitzustellen</value>
-  </data>
   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>Betreffnamensfragment ist leer.</value>
 </data>
@@ -6319,5 +6271,53 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Rufen Sie die werkseitige Standard-Key Exchange Key-Datenbank (KEKDefault) ab, welche den ursprünglichen Satz an Schlüsseln enthält, die für Datenbankaktualisierungen vertrauenswürdig sind und vom Systemhersteller bereitgestellt wurden.</value>
+  </data>
+    <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>XML-Richtlinien bereitstellen (Signiert)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zum Signieren und Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zum Signieren und Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zum Signieren und Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>XML-Richtlinien bereitstellen (Unsigniert)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zum unsignierten Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zum unsignierten Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zum unsignierten Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>CIP-Dateien bereitstellen</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>Durchsuchen Sie nach CIP-Binärdatei(en) zum Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie nach CIP-Binärdatei(en) zum Bereitstellen auf dem System</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie nach CIP-Binärdatei(en) zum Bereitstellen auf dem System</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>XML-Richtliniendateien in CIP-Dateien konvertieren</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zur Konvertierung in CIP-Binärdatei(en)</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zur Konvertierung in CIP-Binärdatei(en)</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zur Konvertierung in CIP-Binärdatei(en)</value>
   </data>
 </root>

@@ -4684,55 +4684,7 @@
 <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>حدد مجموعة (أو مجموعات) الأمان لتعيينها للسياسة في Intune</value>
 </data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>حدد ملف(ملفات) سياسة XML الموقَّعة</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتوقيع والنشر على النظام</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتوقيع والنشر على النظام</value>
-</data>
-<data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتوقيع والنشر على النظام</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>حدد ملف(ملفات) ثنائية CIP</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) ثنائية CIP للنشر على النظام</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) ثنائية CIP للنشر على النظام</value>
-</data>
-<data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) ثنائية CIP للنشر على النظام</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>حدد ملف(ملفات) سياسة XML</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتحويل إلى ملفات CIP</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتحويل إلى ملفات CIP</value>
-</data>
-<data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتحويل إلى ملفات CIP</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>حدد ملف(ملفات) سياسة XML غير موقَّعة</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للنشر على النظام بدون توقيع</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للنشر على النظام بدون توقيع</value>
-</data>
-<data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>استعرض للعثور على ملف(ملفات) سياسة XML للنشر على النظام بدون توقيع</value>
-</data>
- <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+<data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>جزء اسم الموضوع فارغ.</value>
 </data>
 <data name="NoCertificatesFoundInStore" xml:space="preserve">
@@ -6319,5 +6271,53 @@
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>استرداد قاعدة بيانات مفتاح تبادل المفاتيح الافتراضية للمصنع (KEKDefault)، التي تحتوي على المجموعة الأولية من المفاتيح الموثوقة لتحديثات قاعدة البيانات المقدمة من قبل الشركة المصنعة للنظام.</value>
+  </data>
+    <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>نشر سياسات XML (موقعة)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لتوقيعها ونشرها على النظام</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لتوقيعها ونشرها على النظام</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لتوقيعها ونشرها على النظام</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>نشر سياسات XML (غير موقعة)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لنشرها غير موقعة على النظام</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لنشرها غير موقعة على النظام</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لنشرها غير موقعة على النظام</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>نشر ملفات CIP</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>استعرض ملفات CIP الثنائية لنشرها على النظام</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض ملفات CIP الثنائية لنشرها على النظام</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض ملفات CIP الثنائية لنشرها على النظام</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>تحويل ملفات سياسة XML إلى ملفات CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لتحويلها إلى ملفات CIP ثنائية</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لتحويلها إلى ملفات CIP ثنائية</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض ملفات سياسة XML لتحويلها إلى ملفات CIP ثنائية</value>
   </data>
 </root>

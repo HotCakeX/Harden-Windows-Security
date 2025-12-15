@@ -133,13 +133,13 @@ internal static partial class ListViewHelper
 		{
 			filteredResults = filteredResults.Where(output =>
 				(output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				output.SignatureStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-				output.Action.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				output.SignatureStatus_String.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				output.Action_String.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				(output.OriginalFileName is not null && output.OriginalFileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.InternalName is not null && output.InternalName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.FileDescription is not null && output.FileDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.ProductName is not null && output.ProductName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FileVersion is not null && output.FileVersion.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(output.FileVersion_String is not null && output.FileVersion_String.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.PackageFamilyName is not null && output.PackageFamilyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||

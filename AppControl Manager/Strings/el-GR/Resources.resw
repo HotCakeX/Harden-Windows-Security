@@ -4684,55 +4684,7 @@
   <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Επιλέξτε την/τις ομάδα(-ες) ασφαλείας για ανάθεση στην πολιτική στο Intune</value>
   </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>Επιλέξτε υπογεγραμμένα αρχεία XML πολιτικής</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς υπογραφή και ανάπτυξη στο σύστημα</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς υπογραφή και ανάπτυξη στο σύστημα</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς υπογραφή και ανάπτυξη στο σύστημα</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>Επιλέξτε αρχεία CIP Binary</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία CIP Binary προς ανάπτυξη στο σύστημα</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία CIP Binary προς ανάπτυξη στο σύστημα</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία CIP Binary προς ανάπτυξη στο σύστημα</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>Επιλέξτε αρχεία XML πολιτικής</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς μετατροπή σε αρχεία CIP</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς μετατροπή σε αρχεία CIP</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς μετατροπή σε αρχεία CIP</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>Επιλέξτε μη υπογεγραμμένα αρχεία XML πολιτικής</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση για αρχεία XML πολιτικής προς ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
-  </data>
-   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>Το τμήμα ονόματος θέματος είναι κενό.</value>
 </data>
 <data name="NoCertificatesFoundInStore" xml:space="preserve">
@@ -6319,5 +6271,53 @@
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ανάκτηση της εργοστασιακής προεπιλεγμένης βάσης δεδομένων Κλειδιών ανταλλαγής κλειδιών (KEKDefault), η οποία περιέχει το αρχικό σύνολο κλειδιών που είναι αξιόπιστα για ενημερώσεις βάσεων δεδομένων και παρέχονται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+    <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>Ανάπτυξη πολιτικών XML (Υπογεγραμμένες)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για υπογραφή και ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για υπογραφή και ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για υπογραφή και ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>Ανάπτυξη πολιτικών XML (Μη υπογεγραμμένες)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>Ανάπτυξη αρχείων CIP</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>Αναζητήστε δυαδικά αρχεία CIP για ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε δυαδικά αρχεία CIP για ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε δυαδικά αρχεία CIP για ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>Μετατροπή αρχείων πολιτικής XML σε αρχεία CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για μετατροπή σε δυαδικά αρχεία CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για μετατροπή σε δυαδικά αρχεία CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικής XML για μετατροπή σε δυαδικά αρχεία CIP</value>
   </data>
 </root>

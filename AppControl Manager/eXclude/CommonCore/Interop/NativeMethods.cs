@@ -2130,4 +2130,32 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint GetFirmwareEnvironmentVariableExW(string lpName, string lpGuid, IntPtr pBuffer, uint nSize, out uint pdwAttrib);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-setcomputernameexw
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetComputerNameExW(
+		COMPUTER_NAME_FORMAT NameType,
+		string lpBuffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/ioapiset/nf-ioapiset-deviceiocontrol
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DeviceIoControl(
+		IntPtr hDevice,
+		uint dwIoControlCode,
+		void* lpInBuffer,
+		uint nInBufferSize,
+		void* lpOutBuffer,
+		uint nOutBufferSize,
+		ref uint lpBytesReturned,
+		IntPtr lpOverlapped);
+
 }

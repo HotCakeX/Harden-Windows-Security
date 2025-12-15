@@ -19,7 +19,6 @@ using System.Runtime.InteropServices;
 
 namespace CommonCore.Interop;
 
-
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-token_privileges
 /// </summary>
@@ -831,4 +830,73 @@ internal struct VARIABLE_HEADER
 	internal uint DataSize;
 	internal uint Attributes;
 	internal Guid VendorGuid;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/ne-sysinfoapi-computer_name_format
+/// </summary>
+internal enum COMPUTER_NAME_FORMAT
+{
+	ComputerNameNetBIOS,
+	ComputerNameDnsHostname,
+	ComputerNameDnsDomain,
+	ComputerNameDnsFullyQualified,
+	ComputerNamePhysicalNetBIOS,
+	ComputerNamePhysicalDnsHostname,
+	ComputerNamePhysicalDnsDomain,
+	ComputerNamePhysicalDnsFullyQualified,
+	ComputerNameMax
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddstor/ns-ntddstor-_storage_predict_failure
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct STORAGE_PREDICT_FAILURE
+{
+	internal uint PredictFailure;
+	internal fixed byte VendorSpecific[512];
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddstor/ns-ntddstor-_storage_property_query
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct STORAGE_PROPERTY_QUERY
+{
+	internal uint PropertyId;
+	internal uint QueryType;
+	internal fixed byte AdditionalParameters[1];
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddstor/ns-ntddstor-_storage_temperature_data_descriptor
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct STORAGE_TEMPERATURE_DATA_DESCRIPTOR
+{
+	internal uint Version;
+	internal uint Size;
+	internal short CriticalTemperature;
+	internal short WarningTemperature;
+	internal ushort InfoCount;
+	internal fixed byte Reserved0[2];
+	internal fixed uint Reserved1[2];
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddstor/ns-ntddstor-_storage_temperature_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct STORAGE_TEMPERATURE_INFO
+{
+	internal ushort Index;
+	internal short Temperature;
+	internal short OverThreshold;
+	internal short UnderThreshold;
+	internal byte OverThresholdChangable;
+	internal byte UnderThresholdChangable;
+	internal byte EventGenerated;
+	internal byte Reserved0;
+	internal uint Reserved1;
 }

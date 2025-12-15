@@ -6146,9 +6146,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="SystemTime.Text" xml:space="preserve">
     <value>सिस्टम समय</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>समय क्षेत्र</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>उपयोगकर्ता</value>
   </data>

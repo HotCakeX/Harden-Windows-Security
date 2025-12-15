@@ -6146,9 +6146,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SystemTime.Text" xml:space="preserve">
     <value>System Time</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Time Zone</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>User</value>
   </data>
@@ -6319,5 +6316,45 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Browse for XML policy file(s) to convert to CIP binary file(s)</value>
+  </data>
+  <!--NEW-->
+  <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Last Boot Time</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>System Model</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Open Network Ports</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Enter a new name</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>New Computer Name</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>You must run this application as an Administrator to rename the computer.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Enter a new name for this computer. A restart will be required for changes to take effect.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Rename Computer</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>The computer name has been set to '{0}'. You must restart your computer for the changes to take full effect.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Failed to set computer name. Error code: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>GPU Details</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Power Plan</value>
   </data>
 </root>

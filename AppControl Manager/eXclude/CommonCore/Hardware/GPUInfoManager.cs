@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace HardenSystemSecurity.Hardware;
+namespace CommonCore.Hardware;
 
 internal static class GPUInfoManager
 {
@@ -28,7 +28,7 @@ internal static class GPUInfoManager
 	/// Retrieves a list of all GPUs in the system.
 	/// </summary>
 	/// <returns></returns>
-	private static unsafe List<GpuInfo> GetSystemGPUs()
+	internal static unsafe List<GpuInfo> GetSystemGPUs()
 	{
 		// If the list is already populated, return it.
 		if (GPUsList.Count > 0)

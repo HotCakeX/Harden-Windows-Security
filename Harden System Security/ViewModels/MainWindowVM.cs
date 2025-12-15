@@ -697,7 +697,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{
 			IsPowerPlanConfigButtonEnabled = false;
 
-			await Task.Run(Power.PowerPlan.EnableUltimateScheme);
+			await Task.Run(CommonCore.Power.PowerPlan.EnableUltimateScheme);
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("UltimatePerfPlanEnabledAndActive"));
 		}
@@ -720,7 +720,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{
 			IsPowerPlanConfigButtonEnabled = false;
 
-			await Task.Run(Power.PowerPlan.DeleteUltimateSchemes);
+			await Task.Run(CommonCore.Power.PowerPlan.DeleteUltimateSchemes);
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("UltimatePerfPlanDisabledAndRemoved"));
 		}

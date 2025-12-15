@@ -6146,9 +6146,6 @@
   <data name="SystemTime.Text" xml:space="preserve">
     <value>സിസ്റ്റം സമയം</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>സമയം മേഖല</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>ഉപയോക്താവ്</value>
   </data>

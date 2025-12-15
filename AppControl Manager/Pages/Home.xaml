@@ -17,13 +17,28 @@
             <!-- Base Border Style for Cards -->
             <Style x:Key="OverviewCardBorderStyle" TargetType="Border">
                 <Setter Property="CornerRadius" Value="8"/>
-                <Setter Property="Padding" Value="16"/>
+                <Setter Property="Padding" Value="10"/>
                 <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
                 <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Width" Value="274"/>
                 <Setter Property="Height" Value="96"/>
                 <Setter Property="Margin" Value="0,0,8,8"/>
+            </Style>
+
+            <!-- Style for Card-like Buttons - Matches OverviewCardBorderStyle but applies to Button properties -->
+            <Style x:Key="CardButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+                <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="10"/>
+                <Setter Property="Width" Value="274"/>
+                <Setter Property="Height" Value="96"/>
+                <Setter Property="Margin" Value="0,0,8,8"/>
+                <!-- It's important to stretch content so the inner Grid fills the button like it does the Border -->
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
             </Style>
 
             <!-- Grid Layout for Card Content -->
@@ -42,6 +57,7 @@
             <Style x:Key="CardHeaderStackStyle" TargetType="StackPanel">
                 <Setter Property="Orientation" Value="Horizontal"/>
                 <Setter Property="Spacing" Value="12"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
 
             <!-- Header TextBlock Style (inherits from BodyStrong but adds vertical alignment) -->
@@ -55,6 +71,9 @@
                 <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="TextAlignment" Value="Center"/>
             </Style>
 
         </ResourceDictionary>
@@ -91,11 +110,11 @@
 
             <!-- Overview-style sections -->
             <ScrollViewer Grid.Row="2">
-                <Grid Margin="24,24,24,24">
+                <Grid Margin="8">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="36"/>
+                        <RowDefinition Height="20"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
@@ -113,8 +132,8 @@
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VariableSizedWrapGrid Orientation="Horizontal"
-                                                       ItemWidth="274"
-                                                       ItemHeight="96"/>
+                                                       ItemWidth="282"
+                                                       ItemHeight="104"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
 
@@ -134,25 +153,6 @@
                                 <TextBlock Grid.Row="1"
                                            Style="{StaticResource CardBodyTextStyle}"
                                            Text="{x:Bind ViewModel.SystemTimeText, Mode=OneWay}"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- TIME ZONE -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}">
-                            <Grid Style="{StaticResource CardContentGridStyle}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
-                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
-                                              Glyph="&#xE707;"/>
-                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               x:Uid="TimeZone"/>
-                                </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind ViewModel.TimeZoneText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
@@ -176,7 +176,7 @@
                         </Border>
 
                         <!-- COMPUTER NAME -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                        <Button Style="{StaticResource CardButtonStyle}" Click="{x:Bind ViewModel.OnComputerNameClick}">
                             <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -190,8 +190,34 @@
                                 </StackPanel>
                                 <TextBlock Grid.Row="1"
                                            Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind ViewModel.ComputerNameText,Mode=OneWay}"
-                                           IsTextSelectionEnabled="True"/>
+                                           Text="{x:Bind ViewModel.ComputerNameText,Mode=OneWay}" />
+                            </Grid>
+                        </Button>
+
+                        <!-- SYSTEM MODEL -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xF712;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="SystemModel"/>
+                                </StackPanel>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.SystemInfoText, Mode=OneWay}"
+                                               IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
                             </Grid>
                         </Border>
 
@@ -238,6 +264,25 @@
                                 <TextBlock Grid.Row="1"
                                            Style="{StaticResource CardBodyTextStyle}"
                                            Text="{x:Bind ViewModel.UptimeText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Last Boot Time -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE916;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="LastBootTime"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.BiosBootTimeText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
@@ -293,17 +338,21 @@
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
                                                x:Uid="StorageSize"/>
                                 </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"/>
+                                <StackPanel Grid.Row="1" 
+                                            VerticalAlignment="Center" 
+                                            Spacing="2">
+                                    <TextBlock Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"/>
+                                    <TextBlock Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.DiskTemperatureText, Mode=OneWay}"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
 
                         <!-- INTERNET SPEED -->
                         <Border Style="{StaticResource OverviewCardBorderStyle}">
-                            <Grid RowSpacing="6">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
@@ -313,12 +362,14 @@
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
                                                x:Uid="InternetSpeed"/>
                                 </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind ViewModel.InternetSpeedText, Mode=OneWay}"/>
-                                <TextBlock Grid.Row="2"
-                                           Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind ViewModel.InternetTotalText, Mode=OneWay}"/>
+                                <StackPanel Grid.Row="1" 
+                                            VerticalAlignment="Center" 
+                                            Spacing="2">
+                                    <TextBlock Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.InternetSpeedText, Mode=OneWay}"/>
+                                    <TextBlock Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.InternetTotalText, Mode=OneWay}"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
 
@@ -349,6 +400,33 @@
                             </Grid>
                         </Border>
 
+                        <!-- GPU -->
+                        <Button Style="{StaticResource CardButtonStyle}" Click="{x:Bind ViewModel.OnGpuClick}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xEC5C;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="GPU"
+                                               Text="GPU"/>
+                                </StackPanel>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.GpuNamesText, Mode=OneWay}"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Button>
+
                         <!-- CPU TEMPERATURE -->
                         <Border Style="{StaticResource OverviewCardBorderStyle}">
                             <Grid Style="{StaticResource CardContentGridStyle}">
@@ -365,6 +443,45 @@
                                 <TextBlock Grid.Row="1"
                                            Style="{StaticResource CardBodyTextStyle}"
                                            Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Open Network Ports -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xEC05;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="OpenNetworkPorts"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           IsTextSelectionEnabled="True"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.OpenPortsText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- POWER PLAN -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE7E8;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="PowerPlan"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.PowerPlanText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
@@ -386,8 +503,8 @@
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VariableSizedWrapGrid Orientation="Horizontal"
-                                                       ItemWidth="274"
-                                                       ItemHeight="96"/>
+                                                       ItemWidth="282"
+                                                       ItemHeight="104"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
 

@@ -6146,9 +6146,6 @@
   <data name="SystemTime.Text" xml:space="preserve">
     <value>وقت النظام</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>المنطقة الزمنية</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>المستخدم</value>
   </data>

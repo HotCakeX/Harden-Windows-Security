@@ -1,17 +1,1 @@
-* Updated dependencies to the latest versions.
-
-* Changed the "Boot-Start Driver Initialization Policy" to "Good and Unknown" instead of "Good only" in the Miscellaneous configurations category.
-
-   * Added a new sub-category that will set it to "Good only". As with all sub-categories, this will not be applied by default when you apply the Miscellaneous category and you will have to check an extra box to apply it.
-     
-   * The "Good only" policy applies to the "Business", "Specialized Access Workstation" and "Privileged Access Workstation" device usage intents.
-
-* Added a new toggle button to the Microsoft Security Baselines page, it is on/toggled by default. This toggle will apply the Optional Overrides that are recommended for enhanced user experience when using the Microsoft Security Baselines.
-
-   * The reason for this change is that users usually apply the Microsoft Security Baseline on their system, which is mostly geared towards enterprise use, but then they find that some settings are not user-friendly for personal use. These optional overrides help to mitigate that situation. You can of course disable this toggle if you want to stick strictly to the Microsoft Security Baseline without any modifications.
-
-* Added a new policy to the Optional Overrides to allow elevation on Secure Desktop for Standard user accounts.
-
-* Added new Firewall Rules Management!
-
-Please make sure to visit GitHub repository's release section for full info.
+* Added showing last boot time on the Home page.

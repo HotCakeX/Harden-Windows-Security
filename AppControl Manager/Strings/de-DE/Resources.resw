@@ -6146,9 +6146,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Systemzeit</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Zeitzone</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Benutzer</value>
   </data>

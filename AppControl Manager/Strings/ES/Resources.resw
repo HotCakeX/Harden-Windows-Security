@@ -6146,9 +6146,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Hora del sistema</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Zona horaria</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Usuario</value>
   </data>

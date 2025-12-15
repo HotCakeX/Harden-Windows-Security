@@ -18,15 +18,23 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using AppControlManager.CustomUIElements;
+using CommonCore.Hardware;
+using CommonCore.Interop;
+using CommonCore.Power;
 using CommonCore.ThermalMonitors;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 
 namespace AppControlManager.ViewModels;
@@ -58,6 +66,16 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				// Initialize and start the app RAM usage updater that fires every 2 seconds.
 				InitializeAppRamUpdater();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
+			try
+			{
+				// Initialize and start the open ports updater that fires every 4 seconds.
+				InitializeOpenPortsUpdater();
 			}
 			catch (Exception ex)
 			{
@@ -105,7 +123,21 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
-				TimeZoneText = GetLocalUtcOffsetString();
+				GpuNamesText = GetGpuNamesString();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
+		});
+
+		_ = Task.Run(() =>
+		{
+
+			try
+			{
+				UptimeText = GetSystemUptimeString();
 			}
 			catch (Exception ex)
 			{
@@ -114,7 +146,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
-				UptimeText = GetSystemUptimeString();
+				BiosBootTimeText = GetBiosBootTimeString();
 			}
 			catch (Exception ex)
 			{
@@ -141,7 +173,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
-
 				OsInfoText = GetOsDetailsString();
 			}
 			catch (Exception ex)
@@ -160,7 +191,25 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
+				SystemInfoText = GetSystemModelInfoString();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
+			try
+			{
 				UserKindText = Environment.IsPrivilegedProcess ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
+			try
+			{
+				PowerPlanText = PowerPlan.GetActivePowerPlanFriendlyName();
 			}
 			catch (Exception ex)
 			{
@@ -193,6 +242,14 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			_appRamTimer = null;
 		}
 
+		// Clean up the open ports timer
+		if (_portsTimer is not null)
+		{
+			_portsTimer.Stop();
+			_portsTimer.Tick -= OnOpenPortsTick;
+			_portsTimer = null;
+		}
+
 		// Dispose CPU temperature sampler if active
 		_temperatureSampler?.Dispose();
 		_temperatureSampler = null;
@@ -200,18 +257,23 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 	// Textblock sources bound to the UI for system info HUDs.
 	internal string? SystemTimeText { get; private set => SP(ref field, value); }
-	internal string? TimeZoneText { get; private set => SP(ref field, value); }
 	internal string? UserKindText { get; private set => SP(ref field, value); }
 	internal string? UptimeText { get; private set => SP(ref field, value); }
+	internal string? BiosBootTimeText { get; private set => SP(ref field, value); }
 	internal string? SystemRamText { get; private set => SP(ref field, value); }
 	internal string? AppRamText { get; private set => SP(ref field, value); }
 	internal string? DiskSizeText { get; private set => SP(ref field, value); }
+	internal string? DiskTemperatureText { get; private set => SP(ref field, value); } = "Storage Temp: Unavailable";
 	internal string? InternetSpeedText { get; private set => SP(ref field, value); }
 	internal string? InternetTotalText { get; private set => SP(ref field, value); } = "Total: 0.0 GB ↓ / 0.0 GB ↑";
 	internal string? CpuTemperatureText { get; private set => SP(ref field, value); } = "CPU Temp: Unavailable";
+	internal string? OpenPortsText { get; private set => SP(ref field, value); } = "TCP: 0 / UDP: 0";
+	internal string? PowerPlanText { get; private set => SP(ref field, value); }
 	internal string? OsInfoText { get; private set => SP(ref field, value); }
 	internal string? CpuDetailsText { get; private set => SP(ref field, value); }
+	internal string? GpuNamesText { get; private set => SP(ref field, value); }
 	internal string? ComputerNameText { get; private set => SP(ref field, value); }
+	internal string? SystemInfoText { get; private set => SP(ref field, value); }
 
 	/// <summary>
 	/// Timer first used as one-shot to align to next minute, then switched to repeating every minute.
@@ -224,6 +286,11 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	private DispatcherQueueTimer? _appRamTimer;
 
 	/// <summary>
+	/// Timer that updates the open ports count.
+	/// </summary>
+	private DispatcherQueueTimer? _portsTimer;
+
+	/// <summary>
 	/// CPU temperature sampler instance
 	/// </summary>
 	private TemperatureSampler? _temperatureSampler;
@@ -234,26 +301,19 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void InitializeSystemTimeUpdater()
 	{
-		try
-		{
-			// Always set the initial value immediately.
-			UpdateSystemTime();
+		// Always set the initial value immediately.
+		UpdateSystemTime();
 
-			// Compute due time until the next minute boundary.
-			DateTime now = DateTime.Now;
-			int msIntoMinute = now.Second * 1000 + now.Millisecond;
-			TimeSpan due = TimeSpan.FromMilliseconds(60000 - msIntoMinute);
+		// Compute due time until the next minute boundary.
+		DateTime now = DateTime.Now;
+		int msIntoMinute = now.Second * 1000 + now.Millisecond;
+		TimeSpan due = TimeSpan.FromMilliseconds(60000 - msIntoMinute);
 
-			_clockTimer = Dispatcher.CreateTimer();
-			_clockTimer.IsRepeating = false; // one-shot to align to the next minute
-			_clockTimer.Interval = due;
-			_clockTimer.Tick += OnClockInitialTick;
-			_clockTimer.Start();
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
+		_clockTimer = Dispatcher.CreateTimer();
+		_clockTimer.IsRepeating = false; // one-shot to align to the next minute
+		_clockTimer.Interval = due;
+		_clockTimer.Tick += OnClockInitialTick;
+		_clockTimer.Start();
 	}
 
 	/// <summary>
@@ -262,21 +322,30 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void InitializeAppRamUpdater()
 	{
-		try
-		{
-			// Always set the initial value immediately.
-			AppRamText = GetAppPrivateWorkingSetBytes_Native();
+		// Always set the initial values immediately.
+		AppRamText = GetAppPrivateWorkingSetBytes_Native();
+		UpdateStorageTemperature();
 
-			_appRamTimer = Dispatcher.CreateTimer();
-			_appRamTimer.IsRepeating = true; // repeating update
-			_appRamTimer.Interval = TimeSpan.FromSeconds(2);
-			_appRamTimer.Tick += OnAppRamTick;
-			_appRamTimer.Start();
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
+		_appRamTimer = Dispatcher.CreateTimer();
+		_appRamTimer.IsRepeating = true; // repeating update
+		_appRamTimer.Interval = TimeSpan.FromSeconds(2);
+		_appRamTimer.Tick += OnAppRamTick;
+		_appRamTimer.Start();
+	}
+
+	/// <summary>
+	/// Initializes and starts the repeating timer that updates the open ports count every 4 seconds.
+	/// </summary>
+	private void InitializeOpenPortsUpdater()
+	{
+		// Set initial value
+		OpenPortsText = GetOpenPortsString();
+
+		_portsTimer = Dispatcher.CreateTimer();
+		_portsTimer.IsRepeating = true;
+		_portsTimer.Interval = TimeSpan.FromSeconds(4);
+		_portsTimer.Tick += OnOpenPortsTick;
+		_portsTimer.Start();
 	}
 
 	/// <summary>
@@ -322,30 +391,38 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 	/// <summary>
 	/// Repeating 2-second timer tick updates the app RAM usage and Internet speed.
-	/// Also updates CPU temperature.
+	/// Also updates CPU temperature and Storage temperature.
 	/// </summary>
 	private void OnAppRamTick(DispatcherQueueTimer sender, object args)
 	{
 		AppRamText = GetAppPrivateWorkingSetBytes_Native();
 		UpdateInternetSpeed(first: false);
 		UpdateCpuTemperature();
+		UpdateStorageTemperature();
 	}
 
 	/// <summary>
+	/// Repeating 4-second timer tick updates the open ports count.
+	/// </summary>
+	private void OnOpenPortsTick(DispatcherQueueTimer sender, object args) => OpenPortsText = GetOpenPortsString();
+
+	/// <summary>
 	/// Formats and sets the current system time text with hour and minute only.
-	/// Respects system 12/24-hour preference.
+	/// Respects system 12/24-hour preference and appends the UTC offset.
 	/// </summary>
 	private void UpdateSystemTime()
 	{
 		DateTime now = DateTime.Now;
-		DateTimeFormatInfo dfi = CultureInfo.CurrentCulture.DateTimeFormat;
 
 		// Detect 24-hour vs 12-hour from the current culture's short time pattern.
-		bool is24Hour = dfi.ShortTimePattern.Contains('H', StringComparison.Ordinal);
+		bool is24Hour = CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern.Contains('H', StringComparison.Ordinal);
 
 		string format = is24Hour ? "HH:mm" : "h:mm tt";
 
-		SystemTimeText = now.ToString(format, CultureInfo.CurrentCulture);
+		string timeString = now.ToString(format, CultureInfo.CurrentCulture);
+		string timeZoneString = GetLocalUtcOffsetString();
+
+		SystemTimeText = $"{timeString}  ( {timeZoneString} )";
 	}
 
 	/// <summary>
@@ -362,6 +439,32 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			return;
 
 		CpuTemperatureText = celsius.ToString("0.0", CultureInfo.InvariantCulture) + " °C";
+	}
+
+	/// <summary>
+	/// Samples current Storage temperatures and updates bound text.
+	/// </summary>
+	private void UpdateStorageTemperature()
+	{
+		try
+		{
+			List<int> temps = StorageTemperature.GetDriveTemperatures();
+
+			if (temps.Count > 0)
+			{
+				// Join disk temperatures
+				DiskTemperatureText = string.Join(" - ", temps.Select(t => t.ToString(CultureInfo.InvariantCulture) + " °C"));
+			}
+			else
+			{
+				DiskTemperatureText = "Storage Temp: Unavailable";
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			DiskTemperatureText = "Storage Temp: Unavailable";
+		}
 	}
 
 	/// <summary>
@@ -393,10 +496,32 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		int minutes = uptime.Minutes;
 
 		string result = days > 0
-			? string.Format(CultureInfo.InvariantCulture, "{0}d {1:D2}h {2:D2}m", days, hours, minutes)
-			: string.Format(CultureInfo.InvariantCulture, "{0:D2}h {1:D2}m", hours, minutes);
+			? string.Format(CultureInfo.InvariantCulture, "{0} days {1:D2} hours {2:D2} minutes", days, hours, minutes)
+			: string.Format(CultureInfo.InvariantCulture, "{0:D2} hours {1:D2} minutes", hours, minutes);
 
 		return result;
+	}
+
+	/// <summary>
+	/// Returns the BIOS Boot Time (POST duration) as a formatted string.
+	/// Reads from the registry key that Windows populates during boot.
+	/// </summary>
+	/// <returns></returns>
+	private static string GetBiosBootTimeString()
+	{
+		try
+		{
+			// FwPOSTTime is stored in milliseconds in the Registry
+			const string keyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Power";
+			object? value = Registry.GetValue(keyName, "FwPOSTTime", null);
+			if (value is int ms)
+			{
+				TimeSpan t = TimeSpan.FromMilliseconds(ms);
+				return $"{t.TotalSeconds:N1} seconds";
+			}
+		}
+		catch { }
+		return "Unavailable";
 	}
 
 	/// <summary>
@@ -858,17 +983,17 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 		StringBuilder sb = new(96);
 		_ = sb.Append(brand);
-		_ = sb.Append(" | ");
+		_ = sb.Append(" - ");
 		_ = sb.Append(physicalCores.ToString(CultureInfo.InvariantCulture));
 		_ = sb.Append(" Core / ");
 		_ = sb.Append(logicalThreads.ToString(CultureInfo.InvariantCulture));
-		_ = sb.Append(" Thread | ");
+		_ = sb.Append(" Thread - ");
 		_ = sb.Append(archText);
-		_ = sb.Append(" | ");
+		_ = sb.Append(" - ");
 		_ = sb.Append(baseClock);
-		_ = sb.Append(" | ");
+		_ = sb.Append(" - ");
 		_ = sb.Append(cachePart);
-		_ = sb.Append(" | ");
+		_ = sb.Append(" - ");
 		_ = sb.Append(packageCount.ToString(CultureInfo.InvariantCulture));
 		_ = sb.Append(" Socket");
 
@@ -907,7 +1032,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		{
 			return sizeText;
 		}
-		return sizeText + " | " + genSpeed;
+		return sizeText + " - " + genSpeed;
 	}
 
 	/// <summary>
@@ -1154,13 +1279,13 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			if (installationType.Contains("Server", StringComparison.OrdinalIgnoreCase))
 			{
 				string productName = key.GetValue("ProductName") as string ?? "Windows Server";
-				return $"{productName} | Build {currentBuild}";
+				return $"{productName} - Build {currentBuild}";
 			}
 			else
 			{
 				string editionId = key.GetValue("EditionID") as string ?? "Unknown";
 				string displayVersion = key.GetValue("DisplayVersion") as string ?? "Unknown";
-				return $"Microsoft Windows | {editionId} | Version {displayVersion} | Build {currentBuild}";
+				return $"Microsoft Windows - {editionId} - Version {displayVersion} - Build {currentBuild}";
 			}
 		}
 		catch
@@ -1169,7 +1294,297 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		}
 	}
 
+	/// <summary>
+	/// Retrieves the System Manufacturer and Product Name (Model).
+	/// </summary>
+	private static string GetSystemModelInfoString()
+	{
+		string manufacturer = "Unknown Manufacturer";
+		string model = "Unknown Model";
+
+		try
+		{
+			const string keyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SystemInformation";
+
+			object? manVal = Registry.GetValue(keyName, "SystemManufacturer", null);
+			if (manVal is string sMan && !string.IsNullOrWhiteSpace(sMan))
+			{
+				manufacturer = sMan;
+			}
+
+			object? modVal = Registry.GetValue(keyName, "SystemProductName", null);
+			if (modVal is string sMod && !string.IsNullOrWhiteSpace(sMod))
+			{
+				model = sMod;
+			}
+		}
+		catch { }
+
+		return $"{manufacturer} - {model}";
+	}
+
 	#endregion
+
+	#region Open Ports
+
+	private static string GetOpenPortsString()
+	{
+		try
+		{
+			IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
+			// Get Active TCP Listeners
+			int tcpCount = properties.GetActiveTcpListeners().Length;
+			// Get Active UDP Listeners
+			int udpCount = properties.GetActiveUdpListeners().Length;
+
+			return $"TCP: {tcpCount} - UDP: {udpCount}";
+		}
+		catch
+		{
+			return "TCP: 0 - UDP: 0";
+		}
+	}
+
+	#endregion
+
+	#region GPU
+
+	/// <summary>
+	/// Retrieves a formatted string of available GPU names.
+	/// </summary>
+	/// <returns></returns>
+	private static string GetGpuNamesString()
+	{
+		List<GpuInfo> gpus = GPUInfoManager.GetSystemGPUs();
+		return gpus.Count > 0 ? string.Join(" - ", gpus.Select(g => g.Name)) : "Unavailable";
+	}
+
+	#endregion
+
+	/// <summary>
+	/// Handler for the Computer Name button click event.
+	/// Opens a dialog to allow the user to rename the computer.
+	/// </summary>
+	internal async void OnComputerNameClick(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			if (!Environment.IsPrivilegedProcess)
+			{
+				using ContentDialogV2 errorDialog = new()
+				{
+					Title = GlobalVars.GetStr("AppElevationNoticeTitle"),
+					Content = GlobalVars.GetStr("NeedAdminToRenamePCMsg"),
+					CloseButtonText = GlobalVars.GetStr("OK"),
+					DefaultButton = ContentDialogButton.Close
+				};
+				_ = await errorDialog.ShowAsync();
+				return;
+			}
+
+			// The input dialog
+			TextBox nameInput = new()
+			{
+				Header = GlobalVars.GetStr("NewComputerName"),
+				PlaceholderText = GlobalVars.GetStr("EnterNewName"),
+				Text = ComputerNameText ?? string.Empty,
+				HorizontalAlignment = HorizontalAlignment.Stretch
+			};
+
+			StackPanel contentPanel = new()
+			{
+				Spacing = 10,
+				Children =
+			{
+				new TextBlock {
+					Text = GlobalVars.GetStr("EnterANameForThisPCMsg"),
+					TextWrapping = TextWrapping.Wrap
+				},
+				nameInput
+			}
+			};
+
+			using ContentDialogV2 renameDialog = new()
+			{
+				Title = GlobalVars.GetStr("RenameComputer"),
+				Content = contentPanel,
+				PrimaryButtonText = GlobalVars.GetStr("Rename"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Primary
+			};
+
+			ContentDialogResult result = await renameDialog.ShowAsync();
+
+			if (result == ContentDialogResult.Primary)
+			{
+				string newName = nameInput.Text.Trim();
+
+				if (string.IsNullOrWhiteSpace(newName))
+				{
+					return;
+				}
+
+				// Set the computer name
+				bool success = NativeMethods.SetComputerNameExW(
+					COMPUTER_NAME_FORMAT.ComputerNamePhysicalDnsHostname,
+					newName);
+
+				if (success)
+				{
+					using ContentDialogV2 successDialog = new()
+					{
+						Title = GlobalVars.GetStr("SuccessText"),
+						Content = string.Format(GlobalVars.GetStr("SuccessfullyRenamedPCTo"), newName),
+						CloseButtonText = GlobalVars.GetStr("OK"),
+						DefaultButton = ContentDialogButton.Close
+					};
+					_ = await successDialog.ShowAsync();
+				}
+				else
+				{
+					int errorCode = Marshal.GetLastPInvokeError();
+					using ContentDialogV2 failDialog = new()
+					{
+						Title = GlobalVars.GetStr("ErrorTitle"),
+						Content = string.Format(GlobalVars.GetStr("FailedToRenamePCError"), errorCode),
+						CloseButtonText = GlobalVars.GetStr("OK"),
+						DefaultButton = ContentDialogButton.Close
+					};
+					_ = await failDialog.ShowAsync();
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Handler for the GPU button click event.
+	/// Opens a dialog to allow the user to see detailed GPU information.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal async void OnGpuClick(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			List<GpuInfo> gpus = GPUInfoManager.GetSystemGPUs();
+
+			StackPanel contentPanel = new()
+			{
+				Spacing = 16,
+				Width = 450,
+				Padding = new Thickness(10, 0, 16, 0)
+			};
+
+			if (gpus.Count == 0)
+			{
+				contentPanel.Children.Add(new TextBlock { Text = "No GPU information detected." });
+			}
+			else
+			{
+				foreach (GpuInfo gpu in gpus)
+				{
+					// Group for one GPU
+					StackPanel gpuGroup = new() { Spacing = 6 };
+
+					// Title
+					gpuGroup.Children.Add(new TextBlock
+					{
+						Text = gpu.Name,
+						FontSize = 18,
+						FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+						TextWrapping = TextWrapping.Wrap
+					});
+
+					// Details
+					gpuGroup.Children.Add(CreateGpuDetailRow("Brand", gpu.Brand));
+					gpuGroup.Children.Add(CreateGpuDetailRow("Manufacturer", gpu.Manufacturer));
+					gpuGroup.Children.Add(CreateGpuDetailRow("Description", gpu.Description));
+					gpuGroup.Children.Add(CreateGpuDetailRow("Device ID", $"0x{gpu.DeviceId:X}"));
+					gpuGroup.Children.Add(CreateGpuDetailRow("Vendor ID", $"0x{gpu.VendorId:X}"));
+					gpuGroup.Children.Add(CreateGpuDetailRow("Driver Version", gpu.DriverVersion));
+					gpuGroup.Children.Add(CreateGpuDetailRow("Driver Date", FormatWmiDate(gpu.DriverDate)));
+					gpuGroup.Children.Add(CreateGpuDetailRow("PNP Device ID", gpu.PnpDeviceId));
+
+					if (gpu.ErrorCode != 0)
+					{
+						gpuGroup.Children.Add(CreateGpuDetailRow("Error Code", gpu.ErrorCode.ToString(CultureInfo.InvariantCulture)));
+						gpuGroup.Children.Add(CreateGpuDetailRow("Error Message", gpu.ErrorMessage));
+					}
+
+					contentPanel.Children.Add(gpuGroup);
+
+					// Separator between GPUs
+					if (gpus.IndexOf(gpu) < gpus.Count - 1)
+					{
+						contentPanel.Children.Add(new MenuFlyoutSeparator());
+					}
+				}
+			}
+
+			// ScrollViewer for the content
+			ScrollViewer scrollViewer = new()
+			{
+				Content = contentPanel,
+				VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+				HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+			};
+
+			using ContentDialogV2 gpuDialog = new()
+			{
+				Title = GlobalVars.GetStr("GPUDetails"),
+				Content = scrollViewer,
+				CloseButtonText = GlobalVars.GetStr("OK"),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			_ = await gpuDialog.ShowAsync();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Helper to create a TextBlock with a bold Label and normal Value.
+	/// </summary>
+	private static TextBlock CreateGpuDetailRow(string label, string value)
+	{
+		TextBlock tb = new()
+		{
+			TextWrapping = TextWrapping.Wrap,
+			IsTextSelectionEnabled = true
+		};
+		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = label + ": ", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = string.IsNullOrEmpty(value) ? "N/A" : value });
+		return tb;
+	}
+
+	/// <summary>
+	/// Formats the WMI date string (yyyyMMdd...) into a user-friendly date format.
+	/// </summary>
+	/// <param name="wmiDate">The raw WMI date string.</param>
+	/// <returns>Formatted date string or original if parsing fails.</returns>
+	private static string FormatWmiDate(string wmiDate)
+	{
+		// Valid WMI date starts with 4 digit year, 2 digit month, 2 digit day
+		// We only need the first 8 characters for the date.
+		if (!string.IsNullOrWhiteSpace(wmiDate) && wmiDate.Length >= 8)
+		{
+			// Try to parse the yyyyMMdd part
+			if (DateTime.TryParseExact(wmiDate.AsSpan(0, 8), "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+			{
+				// Return in Long Date pattern
+				return dt.ToString("D", CultureInfo.CurrentCulture);
+			}
+		}
+
+		return wmiDate;
+	}
 
 	public void Dispose()
 	{

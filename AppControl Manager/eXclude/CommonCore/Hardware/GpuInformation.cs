@@ -17,11 +17,23 @@
 
 using System.Runtime.InteropServices;
 
-namespace HardenSystemSecurity.Hardware;
+namespace CommonCore.Hardware;
 
 [StructLayout(LayoutKind.Sequential)]
-internal struct GpuInformationCollection
+internal struct GpuInformation
 {
-	internal IntPtr gpu_information;
-	internal int total_count;
+	internal IntPtr name;
+	internal IntPtr brand;
+	internal uint vendor_id;
+	internal uint device_id;
+	internal IntPtr description;
+	internal IntPtr manufacturer;
+	internal IntPtr pnp_device_id;
+	internal uint adapter_ram;
+	internal IntPtr driver_version;
+	internal IntPtr driver_date;
+	internal int is_available; // Using int for better interop (bool -> int)
+	internal uint config_manager_error_code;
+	internal int error_code;
+	internal IntPtr error_message;
 }

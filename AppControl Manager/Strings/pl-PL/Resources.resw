@@ -6146,9 +6146,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Czas systemowy</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Strefa czasowa</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Użytkownik</value>
   </data>

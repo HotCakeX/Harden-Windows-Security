@@ -22,6 +22,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DISM\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Firmware.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hardware\GpuInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hardware\GPUInfoManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hardware\GpuInformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hardware\GpuInformationCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods_RustInterop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />
@@ -41,8 +45,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Others\LogLine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\LanguageOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\NoValidFilesSelectedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Power\PowerPlan.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\BinaryProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThermalMonitors\StorageTemperature.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThermalMonitors\TemperatureSampler.cs" />
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->

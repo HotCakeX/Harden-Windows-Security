@@ -4684,54 +4684,6 @@
   <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Sélectionnez le(s) groupe(s) de sécurité à assigner à la politique dans Intune</value>
   </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
-    <value>Sélectionner le(s) fichier(s) de politique XML signé(s)</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à signer et déployer sur le système</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à signer et déployer sur le système</value>
-  </data>
-  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à signer et déployer sur le système</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
-    <value>Sélectionner le(s) fichier(s) binaire(s) CIP</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
-    <value>Recherchez des fichiers binaires CIP à déployer sur le système</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Recherchez des fichiers binaires CIP à déployer sur le système</value>
-  </data>
-  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Recherchez des fichiers binaires CIP à déployer sur le système</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
-    <value>Sélectionner le(s) fichier(s) de politique XML</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à convertir en fichiers CIP</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à convertir en fichiers CIP</value>
-  </data>
-  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à convertir en fichiers CIP</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
-    <value>Sélectionner le(s) fichier(s) de politique XML non signé(s)</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à déployer sans signature sur le système</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à déployer sans signature sur le système</value>
-  </data>
-  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Recherchez des fichiers de politique XML à déployer sans signature sur le système</value>
-  </data>
   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
   <value>Le fragment de nom de sujet est vide.</value>
 </data>
@@ -6194,9 +6146,6 @@
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Heure Système</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Fuseau Horaire</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Utilisateur</value>
   </data>
@@ -6214,9 +6163,6 @@
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>Utilisation RAM de l'App</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Taille de Stockage</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Vitesse Internet</value>
@@ -6319,5 +6265,95 @@
   </data>
   <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Récupérer la base de données Key Exchange Key par défaut d'usine (KEKDefault), contenant l'ensemble initial de clés de confiance pour les mises à jour de la base de données fournies par le fabricant du système.</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Heure du dernier démarrage</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>Modèle du système</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Ports réseau ouverts</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Entrer un nouveau nom</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>Nouveau nom d'ordinateur</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>Vous devez exécuter cette application en tant qu'administrateur pour renommer l'ordinateur.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Entrez un nouveau nom pour cet ordinateur. Un redémarrage sera nécessaire pour que les modifications prennent effet.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Renommer l'ordinateur</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>Le nom de l'ordinateur a été défini sur '{0}'. Vous devez redémarrer votre ordinateur pour que les modifications prennent pleinement effet.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Échec de la définition du nom de l'ordinateur. Code d'erreur : {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>Détails du GPU</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Mode de gestion de l'alimentation</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Taille du stockage et température</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>Déployer des stratégies XML (signées)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à signer et à déployer sur le système</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à signer et à déployer sur le système</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à signer et à déployer sur le système</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+     <value>Déployer des stratégies XML (non signées)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à déployer sans signature sur le système</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à déployer sans signature sur le système</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à déployer sans signature sur le système</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>Déployer des fichiers CIP</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers binaires CIP à déployer sur le système</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers binaires CIP à déployer sur le système</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers binaires CIP à déployer sur le système</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>Convertir des fichiers de stratégie XML en fichiers CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à convertir en fichiers binaires CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à convertir en fichiers binaires CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rechercher un ou plusieurs fichiers de stratégie XML à convertir en fichiers binaires CIP</value>
   </data>
 </root>

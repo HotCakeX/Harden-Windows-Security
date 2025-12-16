@@ -4304,9 +4304,6 @@ Fingerabdruck: {3}</value>
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Systemzeit</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Zeitzone</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Benutzer</value>
   </data>
@@ -4324,9 +4321,6 @@ Fingerabdruck: {3}</value>
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>RAM-Nutzung der Anwendung</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Speicherkapazität</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Internetgeschwindigkeit</value>
@@ -5022,7 +5016,7 @@ Fingerabdruck: {3}</value>
   </data>
   <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
     <value>Keine Datei zum Erstellen von Firewallregeln ausgewählt.</value>
-  </data> 
+  </data>
   <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
     <value>Firewallregeln wurden erfolgreich für {0} ausgewählte Dateien erstellt.</value>
   </data>
@@ -5056,5 +5050,47 @@ Fingerabdruck: {3}</value>
   </data>
   <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
     <value>{0} von der App Harden System Security erstellte Firewallregeln wurden erfolgreich abgerufen.</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Letzte Startzeit</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>Systemmodell</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Offene Netzwerkports</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Neuen Namen eingeben</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>Neuer Computername</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>Sie müssen diese Anwendung als Administrator ausführen, um den Computer umzubenennen.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Geben Sie einen neuen Namen für diesen Computer ein. Ein Neustart ist erforderlich, damit die Änderungen wirksam werden.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Computer umbenennen</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>Der Computername wurde auf '{0}' festgelegt. Sie müssen Ihren Computer neu starten, damit die Änderungen vollständig wirksam werden.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Festlegen des Computernamens fehlgeschlagen. Fehlercode: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>GPU-Details</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Energiesparplan</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Speichergröße und Temperatur</value>
   </data>
 </root>

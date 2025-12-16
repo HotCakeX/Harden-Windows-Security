@@ -4304,9 +4304,6 @@
   <data name="SystemTime.Text" xml:space="preserve">
     <value>सिस्टम समय</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>समय क्षेत्र</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>उपयोगकर्ता</value>
   </data>
@@ -4324,9 +4321,6 @@
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>ऐप RAM उपयोग</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>संग्रहण क्षमता</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>इंटरनेट गति</value>
@@ -5022,7 +5016,7 @@
   </data>
   <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
     <value>फ़ायरवॉल नियम बनाने के लिए कोई फ़ाइल चयनित नहीं है।</value>
-  </data> 
+  </data>
   <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
     <value>{0} चयनित फ़ाइलों के लिए फ़ायरवॉल नियम सफलतापूर्वक बनाए गए।</value>
   </data>
@@ -5056,5 +5050,47 @@
   </data>
   <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
     <value>Harden System Security ऐप द्वारा बनाई गई {0} फ़ायरवॉल नियम सफलतापूर्वक प्राप्त की गईं।</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>पिछला बूट समय</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>सिस्टम मॉडल</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>खुले नेटवर्क पोर्ट</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>नया नाम दर्ज करें</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>नया कंप्यूटर नाम</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>कंप्यूटर का नाम बदलने के लिए आपको इस एप्लिकेशन को प्रशासक (Administrator) के रूप में चलाना होगा।</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>इस कंप्यूटर के लिए एक नया नाम दर्ज करें। परिवर्तनों को प्रभावी होने के लिए पुनः आरंभ (restart) की आवश्यकता होगी।</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>कंप्यूटर का नाम बदलें</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>नाम बदलें</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>कंप्यूटर का नाम '{0}' पर सेट कर दिया गया है। परिवर्तनों को पूरी तरह से प्रभावी करने के लिए आपको अपने कंप्यूटर को पुनः आरंभ करना होगा।</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>कंप्यूटर का नाम सेट करने में विफल। त्रुटि कोड: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>GPU विवरण</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>पावर योजना</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>भंडारण आकार और तापमान</value>
   </data>
 </root>

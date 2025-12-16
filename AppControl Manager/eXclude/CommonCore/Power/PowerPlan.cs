@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace HardenSystemSecurity.Power;
+namespace CommonCore.Power;
 
 internal static class PowerPlan
 {
@@ -46,6 +46,23 @@ internal static class PowerPlan
 	/// https://learn.microsoft.com/windows/win32/api/powrprof/nf-powrprof-powerenumerate
 	/// </summary>
 	private const uint ACCESS_SCHEME = 16;
+
+	/// <summary>
+	/// Retrieves the friendly name of the currently active power plan.
+	/// </summary>
+	/// <returns>The friendly name, or "Unavailable" if retrieval fails.</returns>
+	internal static string GetActivePowerPlanFriendlyName()
+	{
+		if (TryGetActiveScheme(out Guid activeGuid))
+		{
+			string name = ReadSchemeFriendlyName(activeGuid, out uint rc);
+			if (rc == ERROR_SUCCESS && !string.IsNullOrWhiteSpace(name))
+			{
+				return name;
+			}
+		}
+		return "Unavailable";
+	}
 
 	private static bool TryFindExistingUltimate(out Guid schemeGuid)
 	{

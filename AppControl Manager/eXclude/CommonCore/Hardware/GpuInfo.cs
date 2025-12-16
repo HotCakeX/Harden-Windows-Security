@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.Hardware;
+namespace CommonCore.Hardware;
 
 /// <summary>
 /// Class that holds the GPU information in managed form from our Rust library that gives us <see cref="GpuInformation"/> Struct.

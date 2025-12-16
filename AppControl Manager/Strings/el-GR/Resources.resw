@@ -6146,9 +6146,6 @@
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Ώρα συστήματος</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Ζώνη ώρας</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Χρήστης</value>
   </data>
@@ -6166,9 +6163,6 @@
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>Χρήση μνήμης RAM εφαρμογής</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Χωρητικότητα αποθήκευσης</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Ταχύτητα διαδικτύου</value>
@@ -6319,5 +6313,47 @@
   </data>
   <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αναζητήστε αρχεία πολιτικής XML για μετατροπή σε δυαδικά αρχεία CIP</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Τελευταία ώρα εκκίνησης</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>Μοντέλο συστήματος</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Ανοιχτές θύρες δικτύου</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Εισαγάγετε νέο όνομα</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>Νέο όνομα υπολογιστή</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>Πρέπει να εκτελέσετε αυτήν την εφαρμογή ως Διαχειριστής για να μετονομάσετε τον υπολογιστή.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Εισαγάγετε ένα νέο όνομα για αυτόν τον υπολογιστή. Θα απαιτηθεί επανεκκίνηση για να τεθούν σε ισχύ οι αλλαγές.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Μετονομασία υπολογιστή</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Μετονομασία</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>Το όνομα του υπολογιστή ορίστηκε σε '{0}'. Πρέπει να επανεκκινήσετε τον υπολογιστή σας για να εφαρμοστούν πλήρως οι αλλαγές.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Απέτυχε ο ορισμός του ονόματος υπολογιστή. Κωδικός σφάλματος: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>Λεπτομέρειες GPU</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Σχέδιο παροχής ενέργειας</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Μέγεθος αποθήκευσης και θερμοκρασία</value>
   </data>
 </root>

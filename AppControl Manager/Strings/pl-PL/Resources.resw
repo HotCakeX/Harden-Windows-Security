@@ -6146,9 +6146,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Czas systemowy</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Strefa czasowa</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Użytkownik</value>
   </data>
@@ -6166,9 +6163,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>Wykorzystanie pamięci RAM przez aplikację</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Pojemność pamięci masowej</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Prędkość internetu</value>
@@ -6319,5 +6313,47 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przeglądaj w poszukiwaniu plików zasad XML do konwersji na pliki binarne CIP</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Czas ostatniego uruchomienia</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>Model systemu</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Otwarte porty sieciowe</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Wprowadź nową nazwę</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>Nowa nazwa komputera</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>Musisz uruchomić tę aplikację jako Administrator, aby zmienić nazwę komputera.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Wprowadź nową nazwę dla tego komputera. Aby zmiany zostały wprowadzone, wymagane będzie ponowne uruchomienie.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Zmień nazwę komputera</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Zmień nazwę</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>Nazwa komputera została ustawiona na '{0}'. Musisz ponownie uruchomić komputer, aby zmiany zostały w pełni wprowadzone.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Nie udało się ustawić nazwy komputera. Kod błędu: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>Szczegóły GPU</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Plan zasilania</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Rozmiar pamięci i temperatura</value>
   </data>
 </root>

@@ -5,3 +5,23 @@
 * Improved UI texts in the Deployment page to enhance clarity, fixes this issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/958
 
 * In the MDE Advanced Hunting and Event Log Policy Creation pages, the Date filter is now always applied when it is set; That means the data will be consistently filtered based on Date when you sort the data, search through the data or reload new data, without requiring you to reapply the Date filter each time. This improves UX and addresses this issue: https://github.com/HotCakeX/Harden-Windows-Security/discussions/956
+
+* Added French language support.
+
+* Added displaying Last Boot Time to the home page.
+
+* Added displaying System Manufacturer and Model to the home page.
+
+* Added displaying Open Network Ports counts to the home page.
+
+* Added the ability to change Computer Name in the home page.
+
+* Added displaying the names of all of the available GPUs on the system to the home page. 
+
+* The information titles on the Home page now have proper rounded corners.
+
+* The system time and time zone now display in the same tile on the Home page.
+
+* Added displaying the currently active Power Plan's name on the Home page.
+
+* Added displaying the real time SSD Temperature on the Home page. It is updated every 2 seconds.

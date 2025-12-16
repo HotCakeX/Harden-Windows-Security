@@ -4304,9 +4304,6 @@
   <data name="SystemTime.Text" xml:space="preserve">
     <value>وقت النظام</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>المنطقة الزمنية</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>المستخدم</value>
   </data>
@@ -4324,9 +4321,6 @@
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>استخدام ذاكرة RAM للتطبيق</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>سعة التخزين</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>سرعة الإنترنت</value>
@@ -5022,7 +5016,7 @@
   </data>
   <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
     <value>لم يتم تحديد أي ملف لإنشاء قواعد جدار الحماية.</value>
-  </data> 
+  </data>
   <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
     <value>تم إنشاء قواعد جدار الحماية بنجاح لـ {0} من الملفات المحددة.</value>
   </data>
@@ -5056,5 +5050,47 @@
   </data>
   <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
     <value>تم استرداد {0} من قواعد جدار الحماية التي تم إنشاؤها بواسطة تطبيق Harden System Security بنجاح.</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>وقت التمهيد الأخير</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>طراز النظام</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>منافذ الشبكة المفتوحة</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>أدخل اسماً جديداً</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>اسم الكمبيوتر الجديد</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>يجب تشغيل هذا التطبيق كمسؤول لإعادة تسمية الكمبيوتر.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>أدخل اسماً جديداً لهذا الكمبيوتر. ستكون إعادة التشغيل مطلوبة لتصبح التغييرات سارية المفعول.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>إعادة تسمية الكمبيوتر</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>إعادة تسمية</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>تم تعيين اسم الكمبيوتر إلى '{0}'. يجب إعادة تشغيل الكمبيوتر لتصبح التغييرات سارية المفعول بالكامل.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>فشل تعيين اسم الكمبيوتر. رمز الخطأ: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>تفاصيل GPU</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>خطة الطاقة</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>حجم التخزين ودرجة الحرارة</value>
   </data>
 </root>

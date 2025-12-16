@@ -6164,9 +6164,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>App RAM Usage</value>
   </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Storage Size</value>
-  </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Internet Speed</value>
   </data>
@@ -6317,7 +6314,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Browse for XML policy file(s) to convert to CIP binary file(s)</value>
   </data>
-  <!--NEW-->
   <data name="LastBootTime.Text" xml:space="preserve">
     <value>Last Boot Time</value>
   </data>
@@ -6356,5 +6352,8 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PowerPlan.Text" xml:space="preserve">
     <value>Power Plan</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Storage Size and Temperature</value>
   </data>
 </root>

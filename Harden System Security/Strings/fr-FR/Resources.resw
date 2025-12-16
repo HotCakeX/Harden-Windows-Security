@@ -4304,9 +4304,6 @@ Empreinte : {3}</value>
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Heure système</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Fuseau horaire</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Utilisateur</value>
   </data>
@@ -4324,9 +4321,6 @@ Empreinte : {3}</value>
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>Utilisation RAM de l'application</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Taille de stockage</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Vitesse Internet</value>
@@ -5022,7 +5016,7 @@ Empreinte : {3}</value>
   </data>
   <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
     <value>Aucun fichier sélectionné pour la création de règles de pare-feu.</value>
-  </data> 
+  </data>
   <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
     <value>Règles de pare-feu créées avec succès pour {0} fichiers sélectionnés.</value>
   </data>
@@ -5056,5 +5050,47 @@ Empreinte : {3}</value>
   </data>
   <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
     <value>Récupération réussie de {0} règles de pare-feu créées par l'application Harden System Security.</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Heure du dernier démarrage</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>Modèle du système</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Ports réseau ouverts</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Entrer un nouveau nom</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>Nouveau nom d'ordinateur</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>Vous devez exécuter cette application en tant qu'administrateur pour renommer l'ordinateur.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Entrez un nouveau nom pour cet ordinateur. Un redémarrage sera nécessaire pour que les modifications prennent effet.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Renommer l'ordinateur</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>Le nom de l'ordinateur a été défini sur '{0}'. Vous devez redémarrer votre ordinateur pour que les modifications prennent pleinement effet.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Échec de la définition du nom de l'ordinateur. Code d'erreur : {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>Détails du GPU</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Mode de gestion de l'alimentation</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Taille du stockage et température</value>
   </data>
 </root>

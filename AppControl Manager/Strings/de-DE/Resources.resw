@@ -6164,9 +6164,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>RAM-Nutzung der Anwendung</value>
   </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Speicherkapazität</value>
-  </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Internetgeschwindigkeit</value>
   </data>
@@ -6316,5 +6313,47 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Durchsuchen Sie nach XML-Richtliniendatei(en) zur Konvertierung in CIP-Binärdatei(en)</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Letzte Startzeit</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>Systemmodell</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Offene Netzwerkports</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Neuen Namen eingeben</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>Neuer Computername</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>Sie müssen diese Anwendung als Administrator ausführen, um den Computer umzubenennen.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Geben Sie einen neuen Namen für diesen Computer ein. Ein Neustart ist erforderlich, damit die Änderungen wirksam werden.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Computer umbenennen</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>Der Computername wurde auf '{0}' festgelegt. Sie müssen Ihren Computer neu starten, damit die Änderungen vollständig wirksam werden.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Festlegen des Computernamens fehlgeschlagen. Fehlercode: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>GPU-Details</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Energiesparplan</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Speichergröße und Temperatur</value>
   </data>
 </root>

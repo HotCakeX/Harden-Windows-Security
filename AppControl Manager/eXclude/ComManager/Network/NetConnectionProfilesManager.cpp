@@ -19,7 +19,7 @@ namespace NetworkProfiles
 	// 0 = Public
 	// 1 = Private
 	// 2 = DomainAuthenticated (read-only; cannot be set manually)
-	// 
+	//
 	// Internal enumeration helper:
 	//   Collects the __PATH of each MSFT_NetConnectionProfile instance and computes whether all are Public.
 	//   Outputs:

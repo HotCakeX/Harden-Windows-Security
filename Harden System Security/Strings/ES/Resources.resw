@@ -4304,9 +4304,6 @@ Huella Digital: {3}</value>
   <data name="SystemTime.Text" xml:space="preserve">
     <value>Hora del sistema</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>Zona horaria</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>Usuario</value>
   </data>
@@ -4324,9 +4321,6 @@ Huella Digital: {3}</value>
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>Uso de RAM de la aplicación</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>Capacidad de almacenamiento</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>Velocidad de Internet</value>
@@ -5022,7 +5016,7 @@ Huella Digital: {3}</value>
   </data>
   <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
     <value>No se seleccionó ningún archivo para crear reglas del Firewall.</value>
-  </data> 
+  </data>
   <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
     <value>Las reglas del Firewall se crearon correctamente para {0} archivos seleccionados.</value>
   </data>
@@ -5056,5 +5050,47 @@ Huella Digital: {3}</value>
   </data>
   <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
     <value>Se recuperaron correctamente {0} reglas del Firewall creadas por la app Harden System Security.</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>Hora del último inicio</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>Modelo del sistema</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>Puertos de red abiertos</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>Ingrese un nombre nuevo</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>Nuevo nombre del equipo</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>Debe ejecutar esta aplicación como Administrador para cambiar el nombre del equipo.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>Ingrese un nuevo nombre para este equipo. Se requerirá un reinicio para que los cambios surtan efecto.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>Cambiar nombre del equipo</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Cambiar nombre</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>El nombre del equipo se ha establecido en '{0}'. Debe reiniciar su equipo para que los cambios surtan efecto por completo.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>Error al establecer el nombre del equipo. Código de error: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>Detalles de GPU</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>Plan de energía</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>Tamaño de almacenamiento y temperatura</value>
   </data>
 </root>

@@ -325,7 +325,7 @@
                             </Grid>
                         </Border>
 
-                        <!-- STORAGE SIZE -->
+                        <!-- STORAGE SIZE And TEMP -->
                         <Border Style="{StaticResource OverviewCardBorderStyle}">
                             <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
@@ -336,10 +336,10 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xEDA2;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               x:Uid="StorageSize"/>
+                                               x:Uid="StorageSizeAndTemp"/>
                                 </StackPanel>
-                                <StackPanel Grid.Row="1" 
-                                            VerticalAlignment="Center" 
+                                <StackPanel Grid.Row="1"
+                                            VerticalAlignment="Center"
                                             Spacing="2">
                                     <TextBlock Style="{StaticResource CardBodyTextStyle}"
                                                Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"/>
@@ -362,8 +362,8 @@
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
                                                x:Uid="InternetSpeed"/>
                                 </StackPanel>
-                                <StackPanel Grid.Row="1" 
-                                            VerticalAlignment="Center" 
+                                <StackPanel Grid.Row="1"
+                                            VerticalAlignment="Center"
                                             Spacing="2">
                                     <TextBlock Style="{StaticResource CardBodyTextStyle}"
                                                Text="{x:Bind ViewModel.InternetSpeedText, Mode=OneWay}"/>

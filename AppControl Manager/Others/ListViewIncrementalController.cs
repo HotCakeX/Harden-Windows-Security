@@ -780,7 +780,7 @@ internal sealed partial class ListViewIncrementalController(
 			// Filter cleared: resume loads and refresh to page 1 of the original (unfiltered) data.
 			filteredCollection.SuspendLoads(false);
 
-			// Kick paging: let the incremental collection repopulate from its data source.		
+			// Kick paging: let the incremental collection repopulate from its data source.
 			await filteredCollection.ForceReloadAsync();
 		}
 	}

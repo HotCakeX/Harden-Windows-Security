@@ -6165,9 +6165,6 @@
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>שימוש בזיכרון RAM של היישום</value>
   </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>גודל האחסון</value>
-  </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>מהירות אינטרנט</value>
   </data>
@@ -6317,5 +6314,47 @@
   </data>
   <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>אתר קובצי מדיניות XML להמרה לקובצי CIP בינאריים</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>זמן אתחול אחרון</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>דגם המערכת</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>יציאות רשת פתוחות</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>הזן שם חדש</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>שם מחשב חדש</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>עליך להפעיל יישום זה כמנהל מערכת כדי לשנות את שם המחשב.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>הזן שם חדש למחשב זה. תידרש הפעלה מחדש כדי שהשינויים ייכנסו לתוקף.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>שינוי שם מחשב</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>שנה שם</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>שם המחשב הוגדר כ-'{0}'. עליך להפעיל מחדש את המחשב כדי שהשינויים ייכנסו לתוקף באופן מלא.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>הגדרת שם המחשב נכשלה. קוד שגיאה: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>פרטי מעבד גרפי</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>תוכנית צריכת חשמל</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>נפח אחסון וטמפרטורה</value>
   </data>
 </root>

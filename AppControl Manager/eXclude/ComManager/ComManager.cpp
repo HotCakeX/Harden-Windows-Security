@@ -322,7 +322,7 @@ int wmain(int argc, wchar_t* argv[])
 		return 0;
 	}
 
-	// Primary: FIREWALLPROGRAM	
+	// Primary: FIREWALLPROGRAM
 	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewallprogram"))
 	{
 		// Minimum 7 args: firewallprogram, Name, Path, Direction, Action, Description

@@ -1,1 +1,21 @@
-* Added showing last boot time on the Home page.
+* Added displaying Last Boot Time to the home page.
+
+* Added displaying System Manufacturer and Model to the home page.
+
+* Added displaying Open Network Ports counts to the home page. It displays both TCP and UDP ports counts that are currently open on the system. It is updated every 4 seconds and just like other real-time info on the Home page, it will not run in the background when you navigate away from the Home page, so it won't use any unnecessary system resources.
+
+* Added the ability to change Computer Name in the home page. The Computer Name tile is now clickable and when you press it, you will be able to set a new Computer Name. This feature will only be available when you run the app as Administrator and after changing the Computer Name, a system restart will be required for the changes to take effect.
+
+* Added displaying the names of all of the available GPUs on the system to the home page. The GPU tile is clickable so if you click on it, a new area will open displaying the full technical details of every GPU on the system.
+
+* The information titles on the Home page now have proper rounded corners.
+
+* Reduced the amount of empty spaces in the Home page.
+
+* The system time and time zone now display in the same tile on the Home page.
+
+* Added displaying the currently active Power Plan's name on the Home page.
+
+* Added displaying the real time SSD Temperature on the Home page.
+
+* Added French language support.

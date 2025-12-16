@@ -4304,9 +4304,6 @@
   <data name="SystemTime.Text" xml:space="preserve">
     <value>സിസ്റ്റം സമയം</value>
   </data>
-  <data name="TimeZone.Text" xml:space="preserve">
-    <value>സമയം മേഖല</value>
-  </data>
   <data name="User.Text" xml:space="preserve">
     <value>ഉപയോക്താവ്</value>
   </data>
@@ -4324,9 +4321,6 @@
   </data>
   <data name="AppRAMUsage.Text" xml:space="preserve">
     <value>ആപ്പ് RAM ഉപയോഗം</value>
-  </data>
-  <data name="StorageSize.Text" xml:space="preserve">
-    <value>സംഭരണ ശേഷി</value>
   </data>
   <data name="InternetSpeed.Text" xml:space="preserve">
     <value>ഇന്റർനെറ്റ് വേഗം</value>
@@ -5022,7 +5016,7 @@
   </data>
   <data name="WindowsFirewallNoFilesSelectedWarningMessage" xml:space="preserve">
     <value>ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിന് ഒരു ഫയലും തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല.</value>
-  </data> 
+  </data>
   <data name="WindowsFirewallRulesCreatedSuccessMessage" xml:space="preserve">
     <value>{0} തിരഞ്ഞെടുക്കപ്പെട്ട ഫയലുകൾക്ക് ഫയർവാൾ നിയമങ്ങൾ വിജയകരമായി സൃഷ്ടിച്ചു.</value>
   </data>
@@ -5056,5 +5050,47 @@
   </data>
   <data name="SuccessfullyRetrievedFirewallRulesMessage" xml:space="preserve">
     <value>Harden System Security ആപ്പ് സൃഷ്ടിച്ച {0} ഫയർവാൾ നിയമങ്ങൾ വിജയകരമായി നേടി.</value>
+  </data>
+    <data name="LastBootTime.Text" xml:space="preserve">
+    <value>അവസാന ബൂട്ട് സമയം</value>
+  </data>
+  <data name="SystemModel.Text" xml:space="preserve">
+    <value>സിസ്റ്റം മോഡൽ</value>
+  </data>
+  <data name="OpenNetworkPorts.Text" xml:space="preserve">
+    <value>തുറന്ന നെറ്റ്‌വർക്ക് പോർട്ടുകൾ</value>
+  </data>
+  <data name="EnterNewName" xml:space="preserve">
+    <value>പുതിയ പേര് നൽകുക</value>
+  </data>
+  <data name="NewComputerName" xml:space="preserve">
+    <value>പുതിയ കമ്പ്യൂട്ടർ പേര്</value>
+  </data>
+  <data name="NeedAdminToRenamePCMsg" xml:space="preserve">
+    <value>കമ്പ്യൂട്ടറിന്റെ പേര് മാറ്റുന്നതിന് നിങ്ങൾ ഈ ആപ്ലിക്കേഷൻ ഒരു അഡ്മിനിസ്ട്രേറ്ററായി പ്രവർത്തിപ്പിക്കണം.</value>
+  </data>
+  <data name="EnterANameForThisPCMsg" xml:space="preserve">
+    <value>ഈ കമ്പ്യൂട്ടറിനായി ഒരു പുതിയ പേര് നൽകുക. മാറ്റങ്ങൾ പ്രാബല്യത്തിൽ വരുന്നതിന് റീസ്റ്റാർട്ട് ആവശ്യമാണ്.</value>
+  </data>
+  <data name="RenameComputer" xml:space="preserve">
+    <value>കമ്പ്യൂട്ടർ പേരുമാറ്റുക</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>പേരുമാറ്റുക</value>
+  </data>
+  <data name="SuccessfullyRenamedPCTo" xml:space="preserve">
+    <value>കമ്പ്യൂട്ടർ പേര് '{0}' എന്ന് സജ്ജീകരിച്ചു. മാറ്റങ്ങൾ പൂർണ്ണമായി പ്രാബല്യത്തിൽ വരുന്നതിന് നിങ്ങളുടെ കമ്പ്യൂട്ടർ റീസ്റ്റാർട്ട് ചെയ്യണം.</value>
+  </data>
+  <data name="FailedToRenamePCError" xml:space="preserve">
+    <value>കമ്പ്യൂട്ടർ പേര് സജ്ജീകരിക്കുന്നതിൽ പരാജയപ്പെട്ടു. പിശക് കോഡ്: {0}</value>
+  </data>
+  <data name="GPUDetails" xml:space="preserve">
+    <value>GPU വിശദാംശങ്ങൾ</value>
+  </data>
+  <data name="PowerPlan.Text" xml:space="preserve">
+    <value>പവർ പ്ലാൻ</value>
+  </data>
+  <data name="StorageSizeAndTemp.Text" xml:space="preserve">
+    <value>സ്റ്റോറേജ് വലുപ്പവും താപനിലയും</value>
   </data>
 </root>

@@ -1732,12 +1732,6 @@
 <data name="ProcessingAfterDependencies" xml:space="preserve">
   <value>ऑपरेशन {1} के लिए {0} पश्च-निर्भरताओं को प्रसंस्करण कर रहे हैं</value>
 </data>
-<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
-  <value>समूह नीति M यूनिट्स को बल्क में प्रसंस्करण करने में त्रुटि।</value>
-</data>
-<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
-  <value>रजिस्ट्री M यूनिट्स को बल्क में प्रसंस्करण करने में त्रुटि।</value>
-</data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>फॉलबैक सत्यापन: {0}\{1} = {2}</value>
 </data>

@@ -17,9 +17,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
+using HardenSystemSecurity.SecurityPolicy;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -49,7 +51,68 @@ internal sealed partial class MicrosoftBaseLinesOverridesVM : MUnitListViewModel
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
 		new(() =>
 		{
-			return MUnit.CreateMUnitsFromPolicies(Categories.MSFTSecBaselines_OptionalOverrides);
+			// Create MUnits from Group Policies.
+			List<MUnit> temp = MUnit.CreateMUnitsFromPolicies(Categories.MSFTSecBaselines_OptionalOverrides);
+
+			#region Create MUnit that is not for Group Policies.
+
+			temp.Add(new(
+				category: Categories.MSFTSecBaselines_OptionalOverrides,
+				name: GlobalVars.GetSecurityStr("SeDenyRemoteInteractiveLogonRight-OptionalOverrides"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					Dictionary<string, string[]> SeDenyRemoteInteractiveLogonRight = new() {
+
+						// Anonymous logon, NetworkService, Guests
+						{"SeDenyRemoteInteractiveLogonRight", ["*S-1-5-7", "*S-1-5-32-546", "*S-1-5-20"] }
+					};
+
+					SecurityPolicyWriter.SetPrivilegeRights(SeDenyRemoteInteractiveLogonRight);
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					// Get current privilege rights of the system.
+					Dictionary<string, string[]> currentPrivileges = SecurityPolicyReader.GetPrivilegeRights();
+
+					string[] targetPrivileges = ["*S-1-5-7", "*S-1-5-32-546", "*S-1-5-20"];
+
+					if (currentPrivileges.TryGetValue("SeDenyRemoteInteractiveLogonRight", out string[]? privsOutput))
+					{
+						return privsOutput.Length == targetPrivileges.Length &&
+							   privsOutput.All(expected => targetPrivileges.Contains(expected, StringComparer.OrdinalIgnoreCase));
+					}
+
+					return false;
+				}),
+
+				removeStrategy: new DefaultRemove(() =>
+				{
+					Dictionary<string, string[]> SeDenyRemoteInteractiveLogonRight = new() {
+
+						// By default it has None.
+						{"SeDenyRemoteInteractiveLogonRight", [] }
+					};
+
+					SecurityPolicyWriter.SetPrivilegeRights(SeDenyRemoteInteractiveLogonRight);
+				}),
+
+				url: "https://learn.microsoft.com/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/deny-log-on-through-remote-desktop-services",
+
+				deviceIntents: [
+					DeviceIntents.Intent.Development,
+					DeviceIntents.Intent.Gaming,
+					DeviceIntents.Intent.School
+				],
+
+				id: new("019b2afa-abd8-7b8f-8136-de0baf0d50fc")
+			));
+
+			#endregion
+
+			return temp;
+
 		}, LazyThreadSafetyMode.ExecutionAndPublication);
 
 	/// <summary>

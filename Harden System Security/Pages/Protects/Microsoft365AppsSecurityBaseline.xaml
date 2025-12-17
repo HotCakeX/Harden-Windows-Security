@@ -229,6 +229,18 @@
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
+
+                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.Microsoft365AppsSecurityBaselineVM.DeleteSelectedPolicies_Click}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMs:ViewModelProvider.Microsoft365AppsSecurityBaselineVM.DeleteSelectedPolicies_Click}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE74D;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSeparator />
+
                                 <MenuFlyoutItem x:Uid="CopyRow"
                                                 Click="{x:Bind VMs:ViewModelProvider.Microsoft365AppsSecurityBaselineVM.CopySelectedVerificationResults_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>

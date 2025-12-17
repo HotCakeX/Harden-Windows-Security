@@ -74,15 +74,15 @@ internal enum DependencyType
 /// <summary>
 /// Represents a dependency relationship between MUnits.
 /// </summary>
-internal sealed class MUnitDependency(string dependentMUnitId, DependencyType type, ExecutionTiming timing)
+internal sealed class MUnitDependency(Guid dependentMUnitId, DependencyType type, ExecutionTiming timing)
 {
 	/// <summary>
 	/// The unique identifier of the dependent MUnit.
 	/// </summary>
-	internal string DependentMUnitId => dependentMUnitId;
+	internal Guid DependentMUnitId => dependentMUnitId;
 
 	/// <summary>
-	/// The type of dependency (Apply, Remove, or Both).
+	/// The type of dependency.
 	/// </summary>
 	internal DependencyType Type => type;
 
@@ -93,24 +93,24 @@ internal sealed class MUnitDependency(string dependentMUnitId, DependencyType ty
 }
 
 /// <summary>
-/// Registry for managing MUnit dependencies specifically for JSON-based policies.
+/// Registry for managing MUnit dependencies.
 /// </summary>
 internal static class MUnitDependencyRegistry
 {
 	/// <summary>
-	/// Key: Primary MUnit identifier (KeyName|ValueName pattern)
+	/// Key: Primary MUnit identifier (ID)
 	/// Value: List of dependent MUnit identifiers with their types
 	/// </summary>
-	private static readonly Dictionary<string, List<MUnitDependency>> _dependencies = new(StringComparer.OrdinalIgnoreCase);
+	private static readonly Dictionary<Guid, List<MUnitDependency>> _dependencies = [];
 
 	/// <summary>
-	/// Registers a dependency relationship between two JSON-based MUnits using KeyName|ValueName pattern
+	/// Registers a dependency relationship between two <see cref="MUnit"/> using their <see cref="MUnit.ID"/>.
 	/// </summary>
-	/// <param name="primaryMUnitId">The identifier of the primary MUnit (KeyName|ValueName format)</param>
-	/// <param name="dependentMUnitId">The identifier of the dependent MUnit (KeyName|ValueName format)</param>
+	/// <param name="primaryMUnitId">The identifier of the primary MUnit</param>
+	/// <param name="dependentMUnitId">The identifier of the dependent MUnit</param>
 	/// <param name="type">The type of dependency</param>
 	/// <param name="timing">When the dependency should be executed</param>
-	internal static void RegisterDependency(string primaryMUnitId, string dependentMUnitId, DependencyType type, ExecutionTiming timing)
+	internal static void RegisterDependency(Guid primaryMUnitId, Guid dependentMUnitId, DependencyType type, ExecutionTiming timing)
 	{
 		ref List<MUnitDependency>? listRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_dependencies, primaryMUnitId, out _);
 		listRef ??= [];
@@ -119,13 +119,13 @@ internal static class MUnitDependencyRegistry
 	}
 
 	/// <summary>
-	/// Gets dependencies for a specific JSON-based MUnit and operation
+	/// Gets dependencies for a specific MUnit and operation
 	/// </summary>
-	/// <param name="mUnitId">The MUnit identifier (KeyName|ValueName format)</param>
+	/// <param name="mUnitId">The MUnit identifier</param>
 	/// <param name="operation">The operation being performed</param>
 	/// <param name="timing">The execution timing</param>
 	/// <returns>List of dependent MUnit identifiers</returns>
-	internal static List<string> GetDependencies(string mUnitId, MUnitOperation operation, ExecutionTiming timing)
+	internal static List<Guid> GetDependencies(Guid mUnitId, MUnitOperation operation, ExecutionTiming timing)
 	{
 		if (!_dependencies.TryGetValue(mUnitId, out List<MUnitDependency>? dependencies))
 			return [];
@@ -149,46 +149,46 @@ internal interface IApplyStrategy
 }
 
 /// <summary>
-/// A marker + payload strategy for bulk Group Policy application.
+/// A marker + payload strategy for Group Policy application.
 /// </summary>
 internal interface IApplyGroupPolicy : IApplyStrategy
 {
 	/// <summary>
-	/// One or more Group Policies that need to be applied for one specific protection measure.
+	/// The Group Policy that needs to be applied for this specific protection measure.
 	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
+	RegistryPolicyEntry Policy { get; }
 }
 
 /// <summary>
 /// Implementation of the <see cref="IApplyGroupPolicy"/> strategy.
 /// </summary>
-/// <param name="policies"></param>
-internal sealed class GroupPolicyApply(List<RegistryPolicyEntry> policies) : IApplyGroupPolicy
+/// <param name="policy"></param>
+internal sealed class GroupPolicyApply(RegistryPolicyEntry policy) : IApplyGroupPolicy
 {
-	public List<RegistryPolicyEntry> Policies => policies;
+	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own: we bulk-invoke ApplyPolicies instead.
 	public void Apply() => throw new InvalidOperationException(GlobalVars.GetStr("GroupPolicyApplyBulkInvokeError"));
 }
 
 /// <summary>
-/// A marker + payload strategy for bulk Registry application.
+/// A marker + payload strategy for Registry application.
 /// </summary>
 internal interface IApplyRegistry : IApplyStrategy
 {
 	/// <summary>
-	/// One or more Registry policies that need to be applied for one specific protection measure.
+	/// The Registry policy that needs to be applied for this specific protection measure.
 	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
+	RegistryPolicyEntry Policy { get; }
 }
 
 /// <summary>
 /// Implementation of the <see cref="IApplyRegistry"/> strategy.
 /// </summary>
-/// <param name="policies"></param>
-internal sealed class RegistryApply(List<RegistryPolicyEntry> policies) : IApplyRegistry
+/// <param name="policy"></param>
+internal sealed class RegistryApply(RegistryPolicyEntry policy) : IApplyRegistry
 {
-	public List<RegistryPolicyEntry> Policies => policies;
+	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own: we bulk-invoke ApplyPolicies instead.
 	public void Apply() => throw new InvalidOperationException(GlobalVars.GetStr("RegistryApplyBulkInvokeError"));
@@ -256,23 +256,23 @@ internal interface ISpecializedRemoveStrategy
 }
 
 /// <summary>
-/// A marker + payload strategy for bulk Group Policy verification.
+/// A marker + payload strategy for Group Policy verification.
 /// </summary>
 internal interface IVerifyGroupPolicy : IVerifyStrategy
 {
 	/// <summary>
-	/// One or more Group Policies that need to be verified for one specific protection measure.
+	/// The Group Policy that needs to be verified for this specific protection measure.
 	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
+	RegistryPolicyEntry Policy { get; }
 }
 
 /// <summary>
 /// Implementation of the <see cref="IVerifyGroupPolicy"/> strategy.
 /// </summary>
-/// <param name="policies"></param>
-internal sealed class GroupPolicyVerify(List<RegistryPolicyEntry> policies) : IVerifyGroupPolicy
+/// <param name="policy"></param>
+internal sealed class GroupPolicyVerify(RegistryPolicyEntry policy) : IVerifyGroupPolicy
 {
-	public List<RegistryPolicyEntry> Policies => policies;
+	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own.
 	public bool Verify() =>
@@ -280,23 +280,23 @@ internal sealed class GroupPolicyVerify(List<RegistryPolicyEntry> policies) : IV
 }
 
 /// <summary>
-/// A marker + payload strategy for bulk Registry verification.
+/// A marker + payload strategy for Registry verification.
 /// </summary>
 internal interface IVerifyRegistry : IVerifyStrategy
 {
 	/// <summary>
-	/// One or more Registry policies that need to be verified for one specific protection measure.
+	/// The Registry policy that needs to be verified for this specific protection measure.
 	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
+	RegistryPolicyEntry Policy { get; }
 }
 
 /// <summary>
 /// Implementation of the <see cref="IVerifyRegistry"/> strategy.
 /// </summary>
-/// <param name="policies"></param>
-internal sealed class RegistryVerify(List<RegistryPolicyEntry> policies) : IVerifyRegistry
+/// <param name="policy"></param>
+internal sealed class RegistryVerify(RegistryPolicyEntry policy) : IVerifyRegistry
 {
-	public List<RegistryPolicyEntry> Policies => policies;
+	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own.
 	public bool Verify() =>
@@ -328,23 +328,23 @@ internal sealed class DefaultRemove(Action action) : IRemoveStrategy
 }
 
 /// <summary>
-/// A marker + payload strategy for bulk Group Policy removal.
+/// A marker + payload strategy for Group Policy removal.
 /// </summary>
 internal interface IRemoveGroupPolicy : IRemoveStrategy
 {
 	/// <summary>
-	/// One or more Group Policies that need to be removed for one specific protection measure.
+	/// The Group Policy that needs to be removed for this specific protection measure.
 	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
+	RegistryPolicyEntry Policy { get; }
 }
 
 /// <summary>
 /// Implementation of the <see cref="IRemoveGroupPolicy"/> strategy.
 /// </summary>
-/// <param name="policies"></param>
-internal sealed class GroupPolicyRemove(List<RegistryPolicyEntry> policies) : IRemoveGroupPolicy
+/// <param name="policy"></param>
+internal sealed class GroupPolicyRemove(RegistryPolicyEntry policy) : IRemoveGroupPolicy
 {
-	public List<RegistryPolicyEntry> Policies => policies;
+	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own.
 	public void Remove() =>
@@ -352,23 +352,23 @@ internal sealed class GroupPolicyRemove(List<RegistryPolicyEntry> policies) : IR
 }
 
 /// <summary>
-/// A marker + payload strategy for bulk Registry removal.
+/// A marker + payload strategy for Registry removal.
 /// </summary>
 internal interface IRemoveRegistry : IRemoveStrategy
 {
 	/// <summary>
-	/// One or more Registry policies that need to be removed for one specific protection measure.
+	/// The Registry policy that needs to be removed for this specific protection measure.
 	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
+	RegistryPolicyEntry Policy { get; }
 }
 
 /// <summary>
 /// Implementation of the <see cref="IRemoveRegistry"/> strategy.
 /// </summary>
-/// <param name="policies"></param>
-internal sealed class RegistryRemove(List<RegistryPolicyEntry> policies) : IRemoveRegistry
+/// <param name="policy"></param>
+internal sealed class RegistryRemove(RegistryPolicyEntry policy) : IRemoveRegistry
 {
-	public List<RegistryPolicyEntry> Policies => policies;
+	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own.
 	public void Remove() =>
@@ -380,9 +380,9 @@ internal sealed class RegistryRemove(List<RegistryPolicyEntry> policies) : IRemo
 /// </summary>
 internal static class SpecializedStrategiesRegistry
 {
-	private static readonly Dictionary<string, ISpecializedVerificationStrategy> _verificationStrategies = new(StringComparer.OrdinalIgnoreCase);
-	private static readonly Dictionary<string, List<ISpecializedApplyStrategy>> _applyStrategies = new(StringComparer.OrdinalIgnoreCase);
-	private static readonly Dictionary<string, List<ISpecializedRemoveStrategy>> _removeStrategies = new(StringComparer.OrdinalIgnoreCase);
+	internal static readonly Dictionary<string, ISpecializedVerificationStrategy> _verificationStrategies = new(StringComparer.OrdinalIgnoreCase);
+	internal static readonly Dictionary<string, List<ISpecializedApplyStrategy>> _applyStrategies = new(StringComparer.OrdinalIgnoreCase);
+	internal static readonly Dictionary<string, List<ISpecializedRemoveStrategy>> _removeStrategies = new(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Registers a specialized verification strategy for a specific policy.
@@ -414,57 +414,6 @@ internal static class SpecializedStrategiesRegistry
 		ref List<ISpecializedRemoveStrategy>? removeListRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_removeStrategies, policyKey, out _);
 		removeListRef ??= [];
 		removeListRef.Add(strategy);
-	}
-
-	/// <summary>
-	/// Gets a specialized verification strategy for a specific policy.
-	/// </summary>
-	/// <param name="policyKey">The policy key in format "KeyName|ValueName"</param>
-	/// <returns>The specialized verification strategy or null if not found</returns>
-	internal static ISpecializedVerificationStrategy? GetSpecializedVerification(string policyKey)
-	{
-		_ = _verificationStrategies.TryGetValue(policyKey, out ISpecializedVerificationStrategy? strategy);
-		return strategy;
-	}
-
-	/// <summary>
-	/// Gets specialized apply strategies for a specific policy filtered by timing.
-	/// </summary>
-	/// <param name="policyKey">The policy key in format "KeyName|ValueName"</param>
-	/// <param name="timing">The timing filter</param>
-	/// <returns>List of specialized apply strategies with the specified timing</returns>
-	internal static List<ISpecializedApplyStrategy> GetSpecializedApply(string policyKey, ExecutionTiming timing)
-	{
-		if (_applyStrategies.TryGetValue(policyKey, out List<ISpecializedApplyStrategy>? strategies))
-		{
-			return strategies.Where(s => s.Timing == timing).ToList();
-		}
-		return [];
-	}
-
-	/// <summary>
-	/// Gets specialized remove strategies for a specific policy filtered by timing.
-	/// </summary>
-	/// <param name="policyKey">The policy key in format "KeyName|ValueName"</param>
-	/// <param name="timing">The timing filter</param>
-	/// <returns>List of specialized remove strategies with the specified timing</returns>
-	internal static List<ISpecializedRemoveStrategy> GetSpecializedRemove(string policyKey, ExecutionTiming timing)
-	{
-		if (_removeStrategies.TryGetValue(policyKey, out List<ISpecializedRemoveStrategy>? strategies))
-		{
-			return strategies.Where(s => s.Timing == timing).ToList();
-		}
-		return [];
-	}
-
-	/// <summary>
-	/// Clears all registered specialized strategies in the repository.
-	/// </summary>
-	internal static void Clear()
-	{
-		_verificationStrategies.Clear();
-		_applyStrategies.Clear();
-		_removeStrategies.Clear();
 	}
 
 	/// <summary>
@@ -789,15 +738,13 @@ internal sealed partial class MUnit(
 		get
 		{
 			// Return the registry-based ID for JSON-based MUnits
-			if (ApplyStrategy is IApplyGroupPolicy groupPolicyApply && groupPolicyApply.Policies.Count > 0)
+			if (ApplyStrategy is IApplyGroupPolicy groupPolicyApply)
 			{
-				RegistryPolicyEntry policy = groupPolicyApply.Policies[0];
-				return $"{policy.KeyName}|{policy.ValueName}";
+				return $"{groupPolicyApply.Policy.KeyName}|{groupPolicyApply.Policy.ValueName}";
 			}
-			else if (ApplyStrategy is IApplyRegistry registryApply && registryApply.Policies.Count > 0)
+			else if (ApplyStrategy is IApplyRegistry registryApply)
 			{
-				RegistryPolicyEntry policy = registryApply.Policies[0];
-				return $"{policy.KeyName}|{policy.ValueName}";
+				return $"{registryApply.Policy.KeyName}|{registryApply.Policy.ValueName}";
 			}
 
 			// Return null for non-JSON based MUnits
@@ -878,83 +825,6 @@ internal sealed partial class MUnit(
 	}
 
 	/// <summary>
-	/// Resolves dependencies for JSON-based MUnits and returns additional MUnits (aka dependencies) to process.
-	/// </summary>
-	/// <param name="originalMUnits">The original MUnits requested by the user</param>
-	/// <param name="allAvailableMUnits">All available MUnits in the category</param>
-	/// <param name="operation">The operation being performed</param>
-	/// <param name="timing">The execution timing</param>
-	/// <param name="cancellationToken">Optional cancellation token</param>
-	/// <returns>Additional MUnits to process due to dependencies</returns>
-	private static List<MUnit> ResolveDependencies(List<MUnit> originalMUnits, List<MUnit> allAvailableMUnits, MUnitOperation operation, ExecutionTiming timing, CancellationToken? cancellationToken = null)
-	{
-		cancellationToken?.ThrowIfCancellationRequested();
-
-		List<MUnit> dependentMUnits = [];
-		HashSet<string> processedJsonIds = new(StringComparer.OrdinalIgnoreCase);
-		HashSet<string> visitedForCycleDetection = new(StringComparer.OrdinalIgnoreCase);
-
-		// First, collect all JSON-based policy IDs from original MUnits to avoid duplicates
-		foreach (MUnit mUnit in CollectionsMarshal.AsSpan(originalMUnits))
-		{
-			if (mUnit.JsonPolicyId != null)
-			{
-				_ = processedJsonIds.Add(mUnit.JsonPolicyId);
-			}
-		}
-
-		// Process dependencies only for JSON-based MUnits
-		foreach (MUnit mUnit in CollectionsMarshal.AsSpan(originalMUnits))
-		{
-			cancellationToken?.ThrowIfCancellationRequested();
-
-			if (mUnit.JsonPolicyId == null) continue;
-
-			List<string> dependencyIds = MUnitDependencyRegistry.GetDependencies(mUnit.JsonPolicyId, operation, timing);
-
-			foreach (string dependencyId in CollectionsMarshal.AsSpan(dependencyIds))
-			{
-				cancellationToken?.ThrowIfCancellationRequested();
-
-				// Cycle detection
-				if (visitedForCycleDetection.Contains(dependencyId))
-				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencyCycleDetected"), dependencyId));
-					continue;
-				}
-
-				_ = visitedForCycleDetection.Add(dependencyId);
-
-				// Skip if already in the original batch
-				if (processedJsonIds.Contains(dependencyId))
-				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencySkip"), dependencyId));
-					continue;
-				}
-
-				// Find the dependent MUnit by its JsonPolicyId in the same category
-				MUnit? dependentMUnit = allAvailableMUnits.FirstOrDefault(m =>
-					m.Category == mUnit.Category &&
-					m.JsonPolicyId != null &&
-					string.Equals(m.JsonPolicyId, dependencyId, StringComparison.OrdinalIgnoreCase));
-
-				if (dependentMUnit != null)
-				{
-					dependentMUnits.Add(dependentMUnit);
-					_ = processedJsonIds.Add(dependencyId);
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencyResolved"), mUnit.JsonPolicyId, dependencyId, operation, timing));
-				}
-				else
-				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencyNotFound"), dependencyId, mUnit.JsonPolicyId));
-				}
-			}
-		}
-
-		return dependentMUnits;
-	}
-
-	/// <summary>
 	/// Executes specialized strategies for the given policies at the specified timing.
 	/// </summary>
 	/// <param name="policies">The policies to process</param>
@@ -973,24 +843,28 @@ internal sealed partial class MUnit(
 			{
 				if (operation == MUnitOperation.Apply)
 				{
-					List<ISpecializedApplyStrategy> applyStrategies = SpecializedStrategiesRegistry.GetSpecializedApply(policyKey, timing);
-					foreach (ISpecializedApplyStrategy strategy in applyStrategies)
+					if (SpecializedStrategiesRegistry._applyStrategies.TryGetValue(policyKey, out List<ISpecializedApplyStrategy>? strategies))
 					{
-						cancellationToken?.ThrowIfCancellationRequested();
+						foreach (ISpecializedApplyStrategy strategy in strategies.Where(s => s.Timing == timing))
+						{
+							cancellationToken?.ThrowIfCancellationRequested();
 
-						strategy.Apply();
-						Logger.Write(string.Format(GlobalVars.GetStr("SpecializedApplySuccess"), timing, policy.KeyName, policy.ValueName));
+							strategy.Apply();
+							Logger.Write(string.Format(GlobalVars.GetStr("SpecializedApplySuccess"), timing, policy.KeyName, policy.ValueName));
+						}
 					}
 				}
 				else if (operation == MUnitOperation.Remove)
 				{
-					List<ISpecializedRemoveStrategy> removeStrategies = SpecializedStrategiesRegistry.GetSpecializedRemove(policyKey, timing);
-					foreach (ISpecializedRemoveStrategy strategy in removeStrategies)
+					if (SpecializedStrategiesRegistry._removeStrategies.TryGetValue(policyKey, out List<ISpecializedRemoveStrategy>? strategies))
 					{
-						cancellationToken?.ThrowIfCancellationRequested();
+						foreach (ISpecializedRemoveStrategy strategy in strategies.Where(s => s.Timing == timing))
+						{
+							cancellationToken?.ThrowIfCancellationRequested();
 
-						strategy.Remove();
-						Logger.Write(string.Format(GlobalVars.GetStr("SpecializedRemoveSuccess"), timing, policy.KeyName, policy.ValueName));
+							strategy.Remove();
+							Logger.Write(string.Format(GlobalVars.GetStr("SpecializedRemoveSuccess"), timing, policy.KeyName, policy.ValueName));
+						}
 					}
 				}
 			}
@@ -1004,49 +878,7 @@ internal sealed partial class MUnit(
 	}
 
 	/// <summary>
-	/// Processes Group Policy MUnits in bulk.
-	/// </summary>
-	/// <param name="groupPolicyMUnits">The Group Policy MUnits to process</param>
-	/// <param name="operation">The operation to perform</param>
-	/// <param name="allAvailableMUnits">All available MUnits for dependency resolution</param>
-	/// <param name="cancellationToken">Optional cancellation token</param>
-	private static void ProcessGroupPolicyMUnitsBulk(List<MUnit> groupPolicyMUnits, MUnitOperation operation, List<MUnit> allAvailableMUnits, CancellationToken? cancellationToken = null)
-	{
-		try
-		{
-			ProcessMUnitsBulkUnified(groupPolicyMUnits, operation, allAvailableMUnits, isGroupPolicy: true, cancellationToken);
-		}
-		catch (Exception ex)
-		{
-			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-			Logger.Write(GlobalVars.GetStr("ErrorProcessingGroupPolicyMUnits"));
-			throw;
-		}
-	}
-
-	/// <summary>
-	/// Processes Registry MUnits in bulk.
-	/// </summary>
-	/// <param name="registryMUnits">The Registry MUnits to process</param>
-	/// <param name="operation">The operation to perform</param>
-	/// <param name="allAvailableMUnits">All available MUnits for dependency resolution</param>
-	/// <param name="cancellationToken">Optional cancellation token</param>
-	private static void ProcessRegistryMUnitsBulk(List<MUnit> registryMUnits, MUnitOperation operation, List<MUnit> allAvailableMUnits, CancellationToken? cancellationToken = null)
-	{
-		try
-		{
-			ProcessMUnitsBulkUnified(registryMUnits, operation, allAvailableMUnits, isGroupPolicy: false, cancellationToken);
-		}
-		catch (Exception ex)
-		{
-			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-			Logger.Write(GlobalVars.GetStr("ErrorProcessingRegistryMUnits"));
-			throw;
-		}
-	}
-
-	/// <summary>
-	/// Processes JSON-based dependencies for a given timing and operation.
+	/// Processes dependencies for a given timing and operation.
 	/// </summary>
 	/// <param name="mUnits">The primary MUnits being processed</param>
 	/// <param name="allAvailableMUnits">All available MUnits for dependency resolution</param>
@@ -1060,16 +892,95 @@ internal sealed partial class MUnit(
 		ExecutionTiming timing,
 		CancellationToken? cancellationToken = null)
 	{
-		List<MUnit> dependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, timing, cancellationToken);
-		if (dependencies.Count == 0)
+		cancellationToken?.ThrowIfCancellationRequested();
+
+		// Lists to accumulate dependencies by type
+		List<MUnit> groupPolicyDeps = [];
+		List<MUnit> registryDeps = [];
+		List<MUnit> regularDeps = [];
+		int totalDependencies = 0;
+
+		HashSet<Guid> processedIds = [];
+		HashSet<Guid> visitedForCycleDetection = [];
+
+		// First, collect all IDs from original MUnits to avoid duplicates
+		foreach (MUnit mUnit in CollectionsMarshal.AsSpan(mUnits))
+		{
+			_ = processedIds.Add(mUnit.ID);
+		}
+
+		// Process dependencies
+		foreach (MUnit mUnit in CollectionsMarshal.AsSpan(mUnits))
+		{
+			cancellationToken?.ThrowIfCancellationRequested();
+
+			List<Guid> dependencyIds = MUnitDependencyRegistry.GetDependencies(mUnit.ID, operation, timing);
+
+			foreach (Guid dependencyId in CollectionsMarshal.AsSpan(dependencyIds))
+			{
+				cancellationToken?.ThrowIfCancellationRequested();
+
+				// Cycle detection				
+				if (!visitedForCycleDetection.Add(dependencyId))
+				{
+					Logger.Write(string.Format(GlobalVars.GetStr("DependencyCycleDetected"), dependencyId));
+					continue;
+				}
+
+				// Skip if already in the original batch
+				if (processedIds.Contains(dependencyId))
+				{
+					Logger.Write(string.Format(GlobalVars.GetStr("DependencySkip"), dependencyId));
+					continue;
+				}
+
+				// Find the dependent MUnit by its ID.
+				MUnit? dependentMUnit = allAvailableMUnits.FirstOrDefault(m => m.ID == dependencyId);
+
+				if (dependentMUnit != null)
+				{
+					// Categorize
+					if (IsGroupPolicyMUnit(dependentMUnit))
+					{
+						groupPolicyDeps.Add(dependentMUnit);
+					}
+					else if (IsRegistryMUnit(dependentMUnit))
+					{
+						registryDeps.Add(dependentMUnit);
+					}
+					else
+					{
+						regularDeps.Add(dependentMUnit);
+					}
+
+					totalDependencies++;
+					_ = processedIds.Add(dependencyId);
+					Logger.Write(string.Format(GlobalVars.GetStr("DependencyResolved"), mUnit.ID, dependencyId, operation, timing));
+				}
+				else
+				{
+					Logger.Write(string.Format(GlobalVars.GetStr("DependencyNotFound"), dependencyId, mUnit.ID));
+				}
+			}
+		}
+
+		if (totalDependencies == 0)
 			return;
 
 		string resourceKey = timing == ExecutionTiming.Before ? "ProcessingBeforeDependencies" : "ProcessingAfterDependencies";
-		Logger.Write(string.Format(GlobalVars.GetStr(resourceKey), dependencies.Count, operation));
+		Logger.Write(string.Format(GlobalVars.GetStr(resourceKey), totalDependencies, operation));
 
-		ProcessGroupPolicyMUnitsBulk(dependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-		ProcessRegistryMUnitsBulk(dependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-		foreach (MUnit regularDep in dependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
+		if (groupPolicyDeps.Count > 0)
+		{
+			ProcessMUnitsBulkUnified(groupPolicyDeps, operation, allAvailableMUnits, isGroupPolicy: true, cancellationToken);
+		}
+
+		if (registryDeps.Count > 0)
+		{
+			ProcessMUnitsBulkUnified(registryDeps, operation, allAvailableMUnits, isGroupPolicy: false, cancellationToken);
+		}
+
+		foreach (MUnit regularDep in regularDeps)
 		{
 			ProcessRegularMUnit(regularDep, operation, cancellationToken);
 		}
@@ -1091,26 +1002,26 @@ internal sealed partial class MUnit(
 		{
 			cancellationToken?.ThrowIfCancellationRequested();
 
-			List<RegistryPolicyEntry>? policies = operation switch
+			RegistryPolicyEntry? policy = operation switch
 			{
 				// Apply
-				MUnitOperation.Apply when isGroupPolicy && mUnit.ApplyStrategy is IApplyGroupPolicy applyGp => applyGp.Policies,
-				MUnitOperation.Apply when !isGroupPolicy && mUnit.ApplyStrategy is IApplyRegistry applyReg => applyReg.Policies,
+				MUnitOperation.Apply when isGroupPolicy && mUnit.ApplyStrategy is IApplyGroupPolicy applyGp => applyGp.Policy,
+				MUnitOperation.Apply when !isGroupPolicy && mUnit.ApplyStrategy is IApplyRegistry applyReg => applyReg.Policy,
 
 				// Remove
-				MUnitOperation.Remove when isGroupPolicy && mUnit.RemoveStrategy is IRemoveGroupPolicy removeGp => removeGp.Policies,
-				MUnitOperation.Remove when !isGroupPolicy && mUnit.RemoveStrategy is IRemoveRegistry removeReg => removeReg.Policies,
+				MUnitOperation.Remove when isGroupPolicy && mUnit.RemoveStrategy is IRemoveGroupPolicy removeGp => removeGp.Policy,
+				MUnitOperation.Remove when !isGroupPolicy && mUnit.RemoveStrategy is IRemoveRegistry removeReg => removeReg.Policy,
 
 				// Verify
-				MUnitOperation.Verify when isGroupPolicy && mUnit.VerifyStrategy is IVerifyGroupPolicy verifyGp => verifyGp.Policies,
-				MUnitOperation.Verify when !isGroupPolicy && mUnit.VerifyStrategy is IVerifyRegistry verifyReg => verifyReg.Policies,
+				MUnitOperation.Verify when isGroupPolicy && mUnit.VerifyStrategy is IVerifyGroupPolicy verifyGp => verifyGp.Policy,
+				MUnitOperation.Verify when !isGroupPolicy && mUnit.VerifyStrategy is IVerifyRegistry verifyReg => verifyReg.Policy,
 
 				_ => null
 			};
 
-			if (policies != null)
+			if (policy != null)
 			{
-				allPolicies.AddRange(policies);
+				allPolicies.Add(policy);
 			}
 		}
 
@@ -1124,7 +1035,7 @@ internal sealed partial class MUnit(
 		{
 			case MUnitOperation.Apply:
 				{
-					// Process Before dependencies for JSON-based MUnits
+					// Process Before dependencies
 					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
 
 					// Execute-Before specialized apply strategies
@@ -1145,7 +1056,7 @@ internal sealed partial class MUnit(
 					// Execute-After specialized apply strategies
 					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
 
-					// Process After dependencies for JSON-based MUnits
+					// Process After dependencies
 					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
 
 					// Mark all as applied
@@ -1158,7 +1069,7 @@ internal sealed partial class MUnit(
 
 			case MUnitOperation.Remove:
 				{
-					// Process Before dependencies for JSON-based MUnits
+					// Process Before dependencies
 					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
 
 					// Execute-Before specialized remove strategies
@@ -1179,7 +1090,7 @@ internal sealed partial class MUnit(
 					// Execute-After specialized remove strategies
 					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
 
-					// Process After dependencies for JSON-based MUnits
+					// Process After dependencies
 					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
 
 					// Mark all as not applied
@@ -1211,94 +1122,56 @@ internal sealed partial class MUnit(
 
 							if (mUnit.VerifyStrategy is IVerifyGroupPolicy verifyStrategy)
 							{
-								// Determine if all of this MUnit's policies are compliant via POL
-								bool allPoliciesAppliedViaPol = true;
-								foreach (RegistryPolicyEntry policy in verifyStrategy.Policies)
-								{
-									if (!verificationResults.TryGetValue(policy, out (bool IsCompliant, RegistryPolicyEntry? SystemEntry) resultTuple) || !resultTuple.IsCompliant)
-									{
-										allPoliciesAppliedViaPol = false;
-										break;
-									}
-								}
+								// Check compliance of the policy
+								RegistryPolicyEntry policy = verifyStrategy.Policy;
 
-								if (allPoliciesAppliedViaPol)
+								if (verificationResults.TryGetValue(policy, out (bool IsCompliant, RegistryPolicyEntry? SystemEntry) resultTuple) && resultTuple.IsCompliant)
 								{
 									mUnit.IsApplied = true;
 									continue;
 								}
 
 								// 3) Fallback: verify via Registry (treat as Source = Registry)
-								List<RegistryPolicyEntry> fallbackRegistryPolicies = new(verifyStrategy.Policies.Count);
-								foreach (RegistryPolicyEntry policy in verifyStrategy.Policies)
+								// Clone as a Registry entry and set hive + RegValue (compute if missing)
+								RegistryPolicyEntry fallbackEntry = new(
+									source: Source.Registry,
+									keyName: policy.KeyName,
+									valueName: policy.ValueName,
+									type: policy.Type,
+									size: policy.Size,
+									data: policy.Data,
+									hive: policy.Hive,
+									id: policy.ID)
 								{
-									cancellationToken?.ThrowIfCancellationRequested();
+									// Ensure we have the string form expected by Registry verification if it's missing
+									RegValue = policy.RegValue ?? RegistryManager.Manager.BuildRegValueFromParsedValue(policy)
+								};
 
-									// Clone as a Registry entry and set hive + RegValue (compute if missing)
-									RegistryPolicyEntry fallbackEntry = new(
-										source: Source.Registry,
-										keyName: policy.KeyName,
-										valueName: policy.ValueName,
-										type: policy.Type,
-										size: policy.Size,
-										data: policy.Data,
-										hive: policy.Hive,
-										id: policy.ID)
-									{
-										// Ensure we have the string form expected by Registry verification if it's missing
-										RegValue = policy.RegValue ?? RegistryManager.Manager.BuildRegValueFromParsedValue(policy)
-									};
-
-									fallbackRegistryPolicies.Add(fallbackEntry);
-								}
-
-								Dictionary<RegistryPolicyEntry, bool> fallbackResults = RegistryManager.Manager.VerifyPoliciesInSystem(fallbackRegistryPolicies);
+								Dictionary<RegistryPolicyEntry, bool> fallbackResults = RegistryManager.Manager.VerifyPoliciesInSystem([fallbackEntry]);
 
 #if DEBUG
 								// Log policies that failed POL verification but passed Registry fallback
-								for (int i = 0; i < verifyStrategy.Policies.Count && i < fallbackRegistryPolicies.Count; i++)
+								bool registryCompliant = false;
+								if (fallbackResults.TryGetValue(fallbackEntry, out bool ok) && ok)
 								{
-									RegistryPolicyEntry originalPolicy = verifyStrategy.Policies[i];
-									RegistryPolicyEntry fallbackEntry = fallbackRegistryPolicies[i];
+									registryCompliant = true;
+								}
 
-									bool polCompliant = false;
-									if (verificationResults.TryGetValue(originalPolicy, out (bool IsCompliant, RegistryPolicyEntry? SystemEntry) polTuple) && polTuple.IsCompliant)
-									{
-										polCompliant = true;
-									}
-
-									bool registryCompliant = false;
-									if (fallbackResults.TryGetValue(fallbackEntry, out bool ok) && ok)
-									{
-										registryCompliant = true;
-									}
-
-									if (!polCompliant && registryCompliant)
-									{
-										Logger.Write($"Verified via Registry fallback (GroupPolicy=>Registry): {originalPolicy.KeyName}\\{originalPolicy.ValueName} (Context: {contextForVerification})");
-									}
+								if (registryCompliant)
+								{
+									Logger.Write($"Verified via Registry fallback (GroupPolicy=>Registry): {policy.KeyName}\\{policy.ValueName} (Context: {contextForVerification})");
 								}
 #endif
 
-								bool allPoliciesAppliedViaRegistry = true;
-								foreach (KeyValuePair<RegistryPolicyEntry, bool> kvp in fallbackResults)
+								if (fallbackResults.TryGetValue(fallbackEntry, out bool isFallbackCompliant) && isFallbackCompliant)
 								{
-									if (!kvp.Value)
-									{
-										allPoliciesAppliedViaRegistry = false;
-										break;
-									}
-								}
-
-								if (allPoliciesAppliedViaRegistry)
-								{
-									Logger.Write($"MUnit '{mUnit.Name}' verified via Registry fallback for all policies (Context: {contextForVerification}).");
+									Logger.Write($"MUnit '{mUnit.Name}' verified via Registry fallback (Context: {contextForVerification}).");
 									mUnit.IsApplied = true;
 									continue;
 								}
 
 								// 4) Final fallback: specialized verification
-								bool specializedFallback = TryFallbackVerification(verifyStrategy.Policies, cancellationToken);
+								bool specializedFallback = TryFallbackVerification(verifyStrategy.Policy, cancellationToken);
 								mUnit.IsApplied = specializedFallback;
 							}
 						}
@@ -1316,25 +1189,17 @@ internal sealed partial class MUnit(
 
 							if (mUnit.VerifyStrategy is IVerifyRegistry verifyStrategy)
 							{
-								bool allPoliciesApplied = true;
-								foreach (RegistryPolicyEntry policy in verifyStrategy.Policies)
-								{
-									if (!verificationResults.TryGetValue(policy, out bool isApplied) || !isApplied)
-									{
-										allPoliciesApplied = false;
-										break;
-									}
-								}
+								RegistryPolicyEntry policy = verifyStrategy.Policy;
 
-								// If primary verification is false, try fallback verification
-								if (!allPoliciesApplied)
+								if (verificationResults.TryGetValue(policy, out bool isApplied) && isApplied)
 								{
-									bool fallbackResult = TryFallbackVerification(verifyStrategy.Policies, cancellationToken);
-									mUnit.IsApplied = fallbackResult;
+									mUnit.IsApplied = true;
 								}
 								else
 								{
-									mUnit.IsApplied = true;
+									// If primary verification is false, try fallback verification
+									bool fallbackResult = TryFallbackVerification(verifyStrategy.Policy, cancellationToken);
+									mUnit.IsApplied = fallbackResult;
 								}
 							}
 						}
@@ -1348,51 +1213,44 @@ internal sealed partial class MUnit(
 	}
 
 	/// <summary>
-	/// Tries fallback verification for policies whose Primary verification strategy results in false.
+	/// Tries fallback verification for a policy whose Primary verification strategy results in false.
 	/// These are used for cases where a security measure is applied via Group Policy or Registry,
 	/// But the verification must be able to also detect it if it's applied via COM, Intune and/or other means.
 	/// </summary>
-	/// <param name="policies">The policies to check for fallback verification</param>
+	/// <param name="policy">The policy to check for fallback verification</param>
 	/// <param name="cancellationToken">Optional cancellation token</param>
-	/// <returns>True if any fallback verification succeeds, false otherwise</returns>
-	private static bool TryFallbackVerification(List<RegistryPolicyEntry> policies, CancellationToken? cancellationToken = null)
+	/// <returns>True if the fallback verification succeeds, false otherwise</returns>
+	private static bool TryFallbackVerification(RegistryPolicyEntry policy, CancellationToken? cancellationToken = null)
 	{
-		foreach (RegistryPolicyEntry policy in policies)
+		cancellationToken?.ThrowIfCancellationRequested();
+
+		string policyKey = $"{policy.KeyName}|{policy.ValueName}";
+
+		_ = SpecializedStrategiesRegistry._verificationStrategies.TryGetValue(policyKey, out ISpecializedVerificationStrategy? fallbackStrategy);
+
+		if (fallbackStrategy != null)
 		{
-			cancellationToken?.ThrowIfCancellationRequested();
-
-			string policyKey = $"{policy.KeyName}|{policy.ValueName}";
-			ISpecializedVerificationStrategy? fallbackStrategy = SpecializedStrategiesRegistry.GetSpecializedVerification(policyKey);
-
-			if (fallbackStrategy != null)
+			try
 			{
-				try
-				{
-					// Pass the specific policy entry so the strategy knows exactly what values to expect
-					bool fallbackResult = fallbackStrategy.Verify(policy);
-					Logger.Write(string.Format(GlobalVars.GetStr("FallbackVerifyResult"), policy.KeyName, policy.ValueName, fallbackResult ? GlobalVars.GetStr("SUCCESS") : GlobalVars.GetStr("FAILED")));
+				// Pass the specific policy entry so the strategy knows exactly what values to expect
+				bool fallbackResult = fallbackStrategy.Verify(policy);
+				Logger.Write(string.Format(GlobalVars.GetStr("FallbackVerifyResult"), policy.KeyName, policy.ValueName, fallbackResult ? GlobalVars.GetStr("SUCCESS") : GlobalVars.GetStr("FAILED")));
 
-					if (fallbackResult)
-					{
-						return true; // At least one fallback succeeded
-					}
-				}
-				catch (Exception ex)
-				{
-					if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-					Logger.Write(string.Format(GlobalVars.GetStr("ErrorInFallbackVerification"), policy.KeyName, policy.ValueName, ex.Message));
-					throw;
-				}
+				return fallbackResult;
+			}
+			catch (Exception ex)
+			{
+				if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
+				Logger.Write(string.Format(GlobalVars.GetStr("ErrorInFallbackVerification"), policy.KeyName, policy.ValueName, ex.Message));
+				throw;
 			}
 		}
 
-		return false; // No fallbacks succeeded
+		return false;
 	}
 
 	/// <summary>
-	/// Processes a regular (non-Group Policy/Registry/Security Policy Registry) MUnit individually
-	/// Note: Regular MUnits (DefaultApply/DefaultRemove) do not support dependency resolution (yet) as they are not JSON-based.
-	/// That can be implemented later if needed.
+	/// Processes a regular (non-Group Policy/Registry) MUnit individually.
 	/// </summary>
 	/// <param name="mUnit">The MUnit to process</param>
 	/// <param name="operation">The operation to perform</param>
@@ -1463,17 +1321,8 @@ internal sealed partial class MUnit(
 				};
 				viewModel.MainInfoBar.WriteInfo(string.Format(operationText, mUnits.Count));
 
-				// Get all available MUnits for dependency resolution (same category as the first MUnit)
-				// Mixed category inputs are not applicable, processors run per category, and this code builds the catalog for mUnits[0].Category, so it's safe.
-				List<MUnit> allAvailableMUnits = [];
-
-				// JSON dependency resolution needs the full list of MUnits for the category to look up dependent JsonPolicyId values.
-				if (mUnits.Count > 0)
-				{
-					allAvailableMUnits = viewModel.AllMUnits
-						.Where(m => m.Category == mUnits[0].Category)
-						.ToList();
-				}
+				// Use the global catalog to ensure dependencies can be resolved across different categories.
+				List<MUnit> allAvailableMUnits = Traverse.MUnitCatalog.All.Values.ToList();
 
 				cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1503,19 +1352,31 @@ internal sealed partial class MUnit(
 				// Process Group Policy MUnits in bulk with dependency support
 				if (groupPolicyMUnits.Count > 0)
 				{
-					ProcessGroupPolicyMUnitsBulk(groupPolicyMUnits, operation, allAvailableMUnits, cancellationToken);
+					ProcessMUnitsBulkUnified(groupPolicyMUnits, operation, allAvailableMUnits, isGroupPolicy: true, cancellationToken);
 				}
 
 				// Process Registry MUnits in bulk with dependency support
 				if (registryMUnits.Count > 0)
 				{
-					ProcessRegistryMUnitsBulk(registryMUnits, operation, allAvailableMUnits, cancellationToken);
+					ProcessMUnitsBulkUnified(registryMUnits, operation, allAvailableMUnits, isGroupPolicy: false, cancellationToken);
 				}
 
-				// Process regular MUnits individually (no dependency support for these as they are not JSON-based)
+				// Process regular MUnits individually with dependency support
 				foreach (MUnit mUnit in regularMUnits)
 				{
+					// Process Before dependencies
+					if (operation == MUnitOperation.Apply || operation == MUnitOperation.Remove)
+					{
+						ProcessDependenciesPhase([mUnit], allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
+					}
+
 					ProcessRegularMUnit(mUnit, operation, cancellationToken);
+
+					// Process After dependencies
+					if (operation == MUnitOperation.Apply || operation == MUnitOperation.Remove)
+					{
+						ProcessDependenciesPhase([mUnit], allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
+					}
 				}
 
 				string operationText2 = operation switch
@@ -1537,7 +1398,7 @@ internal sealed partial class MUnit(
 
 	/// <summary>
 	/// Creates MUnits from RegistryPolicyEntry items for a specific category.
-	/// Automatically loads the JSON file based on the category and handles Group Policy, Registry, and Security Policy Registry sources.
+	/// Automatically loads the JSON file based on the category and handles Group Policy and Registry sources.
 	/// </summary>
 	/// <param name="category">Category to create MUnits for</param>
 	/// <returns>List of MUnits</returns>
@@ -1571,9 +1432,9 @@ internal sealed partial class MUnit(
 					mUnit = new(
 						category: category,
 						name: entry.FriendlyName,
-						applyStrategy: new GroupPolicyApply([entry]),
-						verifyStrategy: new GroupPolicyVerify([entry]),
-						removeStrategy: new GroupPolicyRemove([entry]),
+						applyStrategy: new GroupPolicyApply(entry),
+						verifyStrategy: new GroupPolicyVerify(entry),
+						removeStrategy: new GroupPolicyRemove(entry),
 						subCategory: entry.SubCategory,
 						url: entry.URL,
 						deviceIntents: entry.DeviceIntents,
@@ -1585,9 +1446,9 @@ internal sealed partial class MUnit(
 					mUnit = new(
 						category: category,
 						name: entry.FriendlyName,
-						applyStrategy: new RegistryApply([entry]),
-						verifyStrategy: new RegistryVerify([entry]),
-						removeStrategy: new RegistryRemove([entry]),
+						applyStrategy: new RegistryApply(entry),
+						verifyStrategy: new RegistryVerify(entry),
+						removeStrategy: new RegistryRemove(entry),
 						subCategory: entry.SubCategory,
 						url: entry.URL,
 						deviceIntents: entry.DeviceIntents,

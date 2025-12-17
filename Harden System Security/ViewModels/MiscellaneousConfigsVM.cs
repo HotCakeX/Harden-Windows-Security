@@ -23,6 +23,7 @@ using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.SecurityPolicy;
+using Microsoft.Win32;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -225,6 +226,99 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 			));
 		}
 
+		// Show .url file extension
+		output.Add(new(
+				category: Categories.MiscellaneousConfigurations,
+				name: GlobalVars.GetSecurityStr("DisplayURLFileExtension-Miscellaneous"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					// To show the extension, we must delete the 'NeverShowExt' value.
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("InternetShortcut", true);
+					key?.DeleteValue("NeverShowExt", throwOnMissingValue: false);
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("InternetShortcut", false);
+					// If GetValue returns null, the value does not exist, which means the extension is displayed.
+					return key?.GetValue("NeverShowExt") is null;
+				}),
+
+				removeStrategy: new DefaultRemove(() =>
+				{
+					// To hide the extension (default behavior), we must add the 'NeverShowExt' value.
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("InternetShortcut", true);
+					key?.SetValue("NeverShowExt", string.Empty, RegistryValueKind.String);
+				}),
+
+				deviceIntents: [
+					DeviceIntents.Intent.All
+				],
+				id: new("019b2d4b-8bdc-78cc-afd2-02f21007f008"),
+				url: "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2016-3353"
+			));
+
+		// Show .lnk file extension
+		output.Add(new(
+				category: Categories.MiscellaneousConfigurations,
+				name: GlobalVars.GetSecurityStr("DisplayLNKFileExtension-Miscellaneous"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("lnkfile", true);
+					key?.DeleteValue("NeverShowExt", throwOnMissingValue: false);
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("lnkfile", false);
+					return key?.GetValue("NeverShowExt") is null;
+				}),
+
+				removeStrategy: new DefaultRemove(() =>
+				{
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("lnkfile", true);
+					key?.SetValue("NeverShowExt", string.Empty, RegistryValueKind.String);
+				}),
+
+				deviceIntents: [
+					DeviceIntents.Intent.All
+				],
+				id: new("019b2d4b-57e2-79e4-9a23-6515027b353c"),
+
+				url: "https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/"
+			));
+
+		// Show .pif file extension
+		output.Add(new(
+				category: Categories.MiscellaneousConfigurations,
+				name: GlobalVars.GetSecurityStr("DisplayPIFFileExtension-Miscellaneous"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("piffile", true);
+					key?.DeleteValue("NeverShowExt", throwOnMissingValue: false);
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("piffile", false);
+					return key?.GetValue("NeverShowExt") is null;
+				}),
+
+				removeStrategy: new DefaultRemove(() =>
+				{
+					using RegistryKey? key = Registry.ClassesRoot.OpenSubKey("piffile", true);
+					key?.SetValue("NeverShowExt", string.Empty, RegistryValueKind.String);
+				}),
+
+				deviceIntents: [
+					DeviceIntents.Intent.All
+				],
+				id: new("019b2d62-724c-7a01-a037-050d83b74faf")
+			));
+
 		return output;
 	}
 
@@ -243,6 +337,30 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
 			"System\\CurrentControlSet\\Control\\FileSystem|LongPathsEnabled",
 			new LongPathsEnabledPostRemoveCleanup()
+		);
+
+		// HideFileExt needs to be applied for .url file extension to be shown
+		MUnitDependencyRegistry.RegisterDependency(
+			primaryMUnitId: new("019b2d4b-8bdc-78cc-afd2-02f21007f008"),
+			dependentMUnitId: new("019a8dfa-26df-7083-ba8d-99ca9fbc4daa"),
+			type: DependencyType.Apply,
+			timing: ExecutionTiming.Before
+		);
+
+		// HideFileExt needs to be applied for .lnk file extension to be shown
+		MUnitDependencyRegistry.RegisterDependency(
+			primaryMUnitId: new("019b2d4b-57e2-79e4-9a23-6515027b353c"),
+			dependentMUnitId: new("019a8dfa-26df-7083-ba8d-99ca9fbc4daa"),
+			type: DependencyType.Apply,
+			timing: ExecutionTiming.Before
+		);
+
+		// HideFileExt needs to be applied for .pif file extension to be shown
+		MUnitDependencyRegistry.RegisterDependency(
+			primaryMUnitId: new("019b2d62-724c-7a01-a037-050d83b74faf"),
+			dependentMUnitId: new("019a8dfa-26df-7083-ba8d-99ca9fbc4daa"),
+			type: DependencyType.Apply,
+			timing: ExecutionTiming.Before
 		);
 	}
 

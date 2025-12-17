@@ -1,27 +1,6 @@
 [
     {
         "Source": 0,
-        "KeyName": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\LAPS",
-        "ValueName": "**del.BackupDirectory",
-        "Type": 1,
-        "Size": 4,
-        "Data": "IAAAAA==",
-        "RegValue": " ",
-        "Hive": 0,
-        "PolicyAction": 1,
-        "FriendlyName": "BackupDirectory-OptionalOverrides",
-        "URL": "",
-        "Category": 0,
-        "SubCategory": null,
-        "DefaultRegValue": null,
-        "DeviceIntents": [
-            0,
-            1
-        ],
-        "ID": "019a8dfa-263a-79c0-9c99-10a8b46cc4a9"
-    },
-    {
-        "Source": 0,
         "KeyName": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "LocalAccountTokenFilterPolicy",
         "Type": 4,

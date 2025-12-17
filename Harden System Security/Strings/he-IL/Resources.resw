@@ -1732,12 +1732,6 @@
   <data name="ProcessingAfterDependencies" xml:space="preserve">
     <value>מעבד {0} אחרי-תלויות עבור פעולת {1}</value>
   </data>
-  <data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
-    <value>שגיאה בעיבוד Group Policy MUnits באצווה.</value>
-  </data>
-  <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
-    <value>שגיאה בעיבוד Registry MUnits באצווה.</value>
-  </data>
   <data name="FallbackVerifyResult" xml:space="preserve">
     <value>אימות חלופי: {0}\{1} = {2}</value>
   </data>

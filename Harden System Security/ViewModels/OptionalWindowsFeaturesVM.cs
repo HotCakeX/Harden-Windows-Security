@@ -1108,6 +1108,12 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			if (_dismServiceClient == null)
 			{
+				// Since we copy the DISMService.exe outside of the package, it will be considered unsigned by ASR rules so we have to add it to exception.
+				await Task.Run(() =>
+				{
+					Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{DismServiceClient.SecureDISMServicePath}\" "));
+				});
+
 				_dismServiceClient = new();
 
 				// Subscribe to item-specific progress updates
@@ -2474,6 +2480,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		try
 		{
+			// Remove the ASR exclusion for DISMService.exe during disposal. This dispose method automatically runs during app exit.
+			Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions \"{DismServiceClient.SecureDISMServicePath}\" "));
+
 			_dismServiceClient?.Dispose();
 		}
 		catch (Exception ex)

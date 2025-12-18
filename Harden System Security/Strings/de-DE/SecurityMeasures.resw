@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>Anzeige von Erinnerungen und eingehenden VoIP-Anrufen auf dem Sperrbildschirm deaktivieren</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>Sicherung des Kennworts des lokalen Administratorkontos in Active Directory deaktivieren.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>UAC-Einschränkungen auf lokale Konten bei Netzwerkanmeldungen anwenden</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>Initialisierungsrichtlinie für Boot-Start-Treiber auf „Gut“ und „Unbekannt“ festgelegt</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Ermöglichen Sie die Anmeldung über Remotedesktopdienste. Dies ermöglicht es Ihnen, Remotedesktop (RDP) lokal zu verwenden, um sich an Ihrem Computer anzumelden.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Dateierweiterung für Verknüpfungsdateien (.lnk) im Datei-Explorer anzeigen. Angreifer verlassen sich häufig auf den standardmäßig ausgeblendeten Status von Verknüpfungen, um schädliche Payloads als harmlose Dokumente zu tarnen. Das Einblenden der Erweiterung ermöglicht es Ihnen, den wahren Dateityp zu überprüfen und irreführende Verknüpfungen vor der Ausführung zu identifizieren.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Dateierweiterung für (.url)-Dateien im Datei-Explorer anzeigen. Verhindert, dass sich Internetverknüpfungen als legitime Dateien tarnen. Dies mindert Sicherheitsrisiken, bei denen Angreifer versteckte Erweiterungen verwenden, um Phishing-Links oder schädliche Weiterleitungen als sichere Dokumente zu tarnen.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Dateierweiterung für (.pif)-Dateien im Datei-Explorer anzeigen. Programminformationsdateien (PIF) funktionieren ähnlich wie .exe-Dateien und werden häufig von Angreifern verwendet, um Malware hinter einem weniger bekannten Dateityp zu verbergen.</value>
 </data>
 </root>

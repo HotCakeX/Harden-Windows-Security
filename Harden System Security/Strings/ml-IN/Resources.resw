@@ -1732,12 +1732,6 @@
 <data name="ProcessingAfterDependencies" xml:space="preserve">
   <value>പ്രവർത്തനം {1}-നുള്ള {0} ശേഷം-ആശ്രിതത്വങ്ങൾ പ്രോസസ് ചെയ്യുന്നു</value>
 </data>
-<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
-  <value>ഗ്രൂപ്പ് പോളിസി M യൂണിറ്റുകൾ ബൾക്കിൽ പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്.</value>
-</data>
-<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
-  <value>രജിസ്ട്രി M യൂണിറ്റുകൾ ബൾക്കിൽ പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്.</value>
-</data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>ഫാൾബാക്ക് പരിശോധന: {0}\{1} = {2}</value>
 </data>

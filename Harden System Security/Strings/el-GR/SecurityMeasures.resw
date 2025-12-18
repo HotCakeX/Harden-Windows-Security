@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>Απενεργοποίηση εμφάνισης υπενθυμίσεων και εισερχόμενων κλήσεων VoIP στην οθόνη κλειδώματος</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>Απενεργοποίηση δημιουργίας αντιγράφων ασφαλείας κωδικού πρόσβασης τοπικού λογαριασμού διαχειριστή στο Active Directory.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>Εφαρμογή περιορισμών UAC σε τοπικούς λογαριασμούς κατά τις συνδέσεις δικτύου</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>Η πολιτική προετοιμασίας προγραμμάτων οδήγησης εκκίνησης ορίστηκε σε Καλά και Άγνωστα</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται η είσοδος μέσω των Υπηρεσιών απομακρυσμένης επιφάνειας εργασίας. Αυτό θα σας επιτρέψει να χρησιμοποιήσετε την Απομακρυσμένη επιφάνεια εργασίας (RDP) τοπικά για να συνδεθείτε στον υπολογιστή σας.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Εμφάνιση της επέκτασης αρχείου για αρχεία συντόμευσης (.lnk) στην Εξερεύνηση αρχείων. Οι επιτιθέμενοι βασίζονται συχνά στην προεπιλεγμένη κρυφή κατάσταση των συντομεύσεων για να μεταμφιέσουν κακόβουλα φορτία ως αβλαβή έγγραφα. Η αποκάλυψη της επέκτασης σάς επιτρέπει να επαληθεύσετε τον πραγματικό τύπο αρχείου και να εντοπίσετε παραπλανητικές συντομεύσεις πριν από την εκτέλεση.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Εμφάνιση της επέκτασης αρχείου για αρχεία (.url) στην Εξερεύνηση αρχείων. Αποτρέπει τις συντομεύσεις διαδικτύου από το να εμφανίζονται ως νόμιμα αρχεία. Αυτό μετριάζει τους κινδύνους ασφαλείας όπου οι επιτιθέμενοι χρησιμοποιούν κρυφές επεκτάσεις για να μεταμφιέσουν συνδέσμους phishing ή κακόβουλες ανακατευθύνσεις ως ασφαλή έγγραφα.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Εμφάνιση της επέκτασης αρχείου για αρχεία (.pif) στην Εξερεύνηση αρχείων. Τα Αρχεία Πληροφοριών Προγράμματος (PIF) λειτουργούν παρόμοια με τα αρχεία .exe και χρησιμοποιούνται συχνά από επιτιθέμενους για να κρύψουν κακόβουλο λογισμικό πίσω από έναν λιγότερο γνωστό τύπο αρχείου.</value>
 </data>
 </root>

@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>ביטול הצגת תזכורות ושיחות VoIP נכנסות במסך הנעילה</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>ביטול גיבוי סיסמת חשבון מנהל מקומי ל-Active Directory.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>החלת הגבלות UAC על חשבונות מקומיים בכניסות רשת</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>מדיניות אתחול מנהלי התקנים בטעינת מערכת הוגדרה כטובים ולא ידועים</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>אפשר כניסה דרך שירותי שולחן עבודה מרוחק. זה יאפשר לך להשתמש בשולחן עבודה מרוחק (RDP) באופן מקומי כדי להיכנס למחשב שלך.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>הצג את סיומת הקובץ עבור קבצי קיצור דרך (.lnk) בסייר הקבצים. תוקפים לעתים קרובות מסתמכים על מצב ברירת המחדל המוסתר של קיצורי דרך כדי להסוות מטענים זדוניים כמסמכים לא מזיקים. חשיפת הסיומת מאפשרת לך לאמת את סוג הקובץ האמיתי ולזהות קיצורי דרך מטעים לפני ההפעלה.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>הצג את סיומת הקובץ עבור קבצי (.url) בסייר הקבצים. מונע מקיצורי דרך לאינטרנט להתחזות לקבצים לגיטימיים. פעולה זו מפחיתה סיכוני אבטחה שבהם תוקפים משתמשים בסיומות מוסתרות כדי להסוות קישורי דיוג או הפניות זדוניות כמסמכים בטוחים.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>הצג את סיומת הקובץ עבור קבצי (.pif) בסייר הקבצים. קבצי מידע של תוכניות (PIF) מתפקדים בדומה לקבצי .exe ומשמשים לעתים קרובות תוקפים כדי להסתיר תוכנות זדוניות מאחורי סוג קובץ פחות מוכר.</value>
 </data>
 </root>

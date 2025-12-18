@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>लॉक स्क्रीन पर रिमाइंडर और इनकमिंग VoIP कॉल दिखाना अक्षम करें</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>Active Directory में स्थानीय व्यवस्थापक खाता पासवर्ड का बैकअप अक्षम करें।</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>नेटवर्क लॉगऑन पर स्थानीय खातों पर UAC प्रतिबंध लागू करें</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>बूट-स्टार्ट ड्राइवर आरंभीकरण नीति को अच्छा और अज्ञात पर सेट किया गया है</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>रिमोट डेस्कटॉप सेवाओं के माध्यम से साइन इन करने की अनुमति दें। यह आपको अपनी मशीन में साइन इन करने के लिए स्थानीय रूप से रिमोट डेस्कटॉप (RDP) का उपयोग करने की अनुमति देगा।</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में शॉर्टकट (.lnk) फ़ाइलों के लिए फ़ाइल एक्सटेंशन प्रदर्शित करें। हमलावर अक्सर हानिकारक पेलोड्स को हानिरहित दस्तावेज़ों के रूप में छिपाने के लिए शॉर्टकट्स की डिफ़ॉल्ट छिपी हुई स्थिति पर भरोसा करते हैं। एक्सटेंशन को प्रकट करना आपको फ़ाइल के वास्तविक प्रकार को सत्यापित करने और निष्पादन से पहले भ्रामक शॉर्टकट्स की पहचान करने की अनुमति देता है।</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में (.url) फ़ाइलों के लिए फ़ाइल एक्सटेंशन प्रदर्शित करें। इंटरनेट शॉर्टकट्स को वैध फ़ाइलों के रूप में प्रस्तुत करने से रोकता है। यह सुरक्षा जोखिमों को कम करता है जहाँ हमलावर फ़िशिंग लिंक या दुर्भावनापूर्ण पुनर्निर्देशनों को सुरक्षित दस्तावेज़ों के रूप में छिपाने के लिए छिपे हुए एक्सटेंशन का उपयोग करते हैं।</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में (.pif) फ़ाइलों के लिए फ़ाइल एक्सटेंशन प्रदर्शित करें। प्रोग्राम सूचना फ़ाइलें (PIF) .exe फ़ाइलों के समान कार्य करती हैं और अक्सर हमलावरों द्वारा मैलवेयर को एक कम परिचित फ़ाइल प्रकार के पीछे छिपाने के लिए उपयोग की जाती हैं।</value>
 </data>
 </root>

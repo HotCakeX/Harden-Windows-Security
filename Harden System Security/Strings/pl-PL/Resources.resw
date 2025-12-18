@@ -1732,12 +1732,6 @@
 <data name="ProcessingAfterDependencies" xml:space="preserve">
   <value>Przetwarzanie {0} zależności po dla operacji {1}</value>
 </data>
-<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
-  <value>Błąd podczas masowego przetwarzania jednostek M zasad grupy.</value>
-</data>
-<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
-  <value>Błąd podczas masowego przetwarzania jednostek M rejestru.</value>
-</data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>Weryfikacja zapasowa: {0}\{1} = {2}</value>
 </data>

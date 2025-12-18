@@ -147,20 +147,6 @@ Computer Configuration\Administrative Templates\Windows Components\Cloud Content
 
 <br>
 
-## Disabled "Configure password backup directory"
-
-Microsoft Security Baselines set its value to "Active Directory", but since the Harden System Security app does not apply to computers managed by domain controllers or Entra ID, there is no need for this policy to be active.
-
-```
-Computer Configuration\Administrative Templates\System\LAPS
-```
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
 ## Enabled "Apply UAC restrictions to local accounts on network logons"
 
 A [Security feature](https://learn.microsoft.com/en-US/troubleshoot/windows-server/windows-security/user-account-control-and-remote-restriction) that is enabled by default and should stay enabled.
@@ -181,6 +167,33 @@ Microsoft Security baselines disable the usage of [Sudo](https://devblogs.micros
 
 ```
 Computer Configuration\Administrative Templates\System\Configure the behavior of the sudo command --> Maximum allowed sudo mode
+```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Allow signing in through Remote Desktop Services
+
+Restores the functionality of signing in through [Remote Desktop Services](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/deny-log-on-through-remote-desktop-services) (RDP) locally. By default, all accounts can sign into the machine through Remote Desktop Services, but Microsoft Security Baselines set that policy to block for all kinds of accounts.
+
+```
+Computer Configuration\Windows Settings\Security Settings\Local Policies\User Rights Assignment\Deny log on through Remote Desktop Services
+```
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Allow elevation from Standard user accounts
+
+Microsoft Security Baselines completely disable elevation from Standard user accounts for security reasons, but this override allows elevation as long as user knows and provides both username and credentials of an admin account. This is only to provide more flexibility for non-enterprise users who might need this functionality. By default, Windows allows elevation from Standard user accounts.
+
+```
+Computer Configuration\Windows Settings\Security Settings\Local Policies\Security Options\User Account Control: Behavior of the elevation prompt for standard users -> Prompt for credentials on the Secure Desktop.
 ```
 
 <br>

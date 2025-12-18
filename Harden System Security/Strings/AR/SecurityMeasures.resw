@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>تعطيل إظهار التذكيرات ومكالمات VoIP الواردة على شاشة القفل</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>تعطيل النسخ الاحتياطي لكلمة مرور حساب المسؤول المحلي إلى Active Directory.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>تطبيق قيود UAC على الحسابات المحلية في عمليات تسجيل الدخول عبر الشبكة</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>تم تعيين سياسة تهيئة برامج تشغيل بدء التمهيد إلى "جيد" و "غير معروف"</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>السماح بتسجيل الدخول من خلال خدمات سطح المكتب البعيد. سيسمح لك هذا باستخدام سطح المكتب البعيد (RDP) محلياً لتسجيل الدخول إلى جهازك.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>عرض ملحق الملف لملفات الاختصار (.lnk) في مستكشف الملفات. يعتمد المهاجمون بشكل متكرر على الحالة المخفية الافتراضية للاختصارات لتمويه الحمولات الضارة كمستندات غير ضارة. يتيح لك الكشف عن الملحق التحقق من نوع الملف الحقيقي وتحديد الاختصارات الخادعة قبل التنفيذ.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>عرض ملحق الملف لملفات (.url) في مستكشف الملفات. يمنع اختصارات الإنترنت من التنكر كملفات مشروعة. يخفف هذا من المخاطر الأمنية حيث يستخدم المهاجمون ملحقات مخفية لتمويه روابط التصيد الاحتيالي أو عمليات إعادة التوجيه الضارة كمستندات آمنة.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>عرض ملحق الملف لملفات (.pif) في مستكشف الملفات. تعمل ملفات معلومات البرنامج (PIF) بشكل مشابه لملفات .exe وغالباً ما يستخدمها المهاجمون لإخفاء البرامج الضارة خلف نوع ملف أقل شيوعاً.</value>
 </data>
 </root>

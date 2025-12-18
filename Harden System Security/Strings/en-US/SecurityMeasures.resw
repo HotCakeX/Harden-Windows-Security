@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>Disables show reminders and incoming VoIP calls on the lock screen</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>Disable backing up local admin account password to Active Directory.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>Apply UAC restrictions to local accounts on network logons</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>Boot-Start Driver Initialization Policy set to Good and Unknown</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Allow signing in through Remote Desktop Services. This will allow you to use Remote Desktop (RDP) locally to sign into your machine.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Display the file extension for shortcut (.lnk) files in the File Explorer. Attackers frequently rely on the default hidden state of shortcuts to disguise malicious payloads as harmless documents. Revealing the extension allows you to verify the true file type and identify deceptive shortcuts before execution.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Display the file extension for (.url) files in the File Explorer. Prevents internet shortcuts from masquerading as legitimate files. This mitigates security risks where attackers use hidden extensions to disguise phishing links or malicious redirects as safe documents.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Display the file extension for (.pif) files in the File Explorer. Program Information Files (PIF) function similarly to .exe files and are frequently used by attackers to hide malware behind a less familiar file type.</value>
 </data>
 </root>

@@ -40,7 +40,6 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
-
 	private NavigationService Nav { get; } = ViewModelProvider.NavigationService;
 
 	internal SettingsVM()

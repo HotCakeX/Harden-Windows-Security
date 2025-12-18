@@ -128,3 +128,13 @@
    * Do not allow web search. [More Info](https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services#21-cortana-and-search-group-policies)
 
 <br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Displays the following file extensions in File Explorer which are not displayed by default, not even when you enable "Show known file extensions" in File Explorer settings:
+
+   * `.url` - Prevents internet shortcuts from masquerading as legitimate files. This [mitigates security risks](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2016-3353) where attackers use hidden extensions to disguise phishing links or malicious redirects as safe documents.
+
+   * `.pif` - Program Information Files (PIF) function similarly to .exe files and are frequently used by attackers to hide malware behind a less familiar file type.
+
+   * `.link` - [Attackers frequently rely](https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/) on the default hidden state of shortcuts to disguise malicious payloads as harmless documents. Revealing the extension allows you to verify the true file type and identify deceptive shortcuts before execution.
+
+<br>

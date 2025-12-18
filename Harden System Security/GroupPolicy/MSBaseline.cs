@@ -1184,12 +1184,12 @@ internal static class MSBaseline
 			// Find user registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "User", userPolicyFiles);
 
-			// Don't process audit CSV files or security INF files during removal.
+			// Find audit.csv files
+			FindAuditCsvFiles(extractedFiles, guidDir, auditCsvFiles);
+
+			// Don't process security INF files during removal.
 			if (action == PolicyAction.Apply)
 			{
-				// Find audit.csv files
-				FindAuditCsvFiles(extractedFiles, guidDir, auditCsvFiles);
-
 				cancellationToken?.ThrowIfCancellationRequested();
 
 				// Find GptTmpl.inf files
@@ -1333,18 +1333,17 @@ internal static class MSBaseline
 	{
 		string actionText = action == PolicyAction.Apply ? "Applying" : "Removing";
 		Logger.Write($"{actionText} security baseline policies:");
-		Logger.Write($"  Machine POL files: {machinePolicyFiles.Count}");
-		Logger.Write($"  User POL files: {userPolicyFiles.Count}");
+		Logger.Write($"Machine POL files: {machinePolicyFiles.Count}");
+		Logger.Write($"User POL files: {userPolicyFiles.Count}");
+		Logger.Write($"Audit CSV files: {auditCsvFiles.Count}");
 
 		if (action == PolicyAction.Apply)
 		{
-			Logger.Write($"  Audit CSV files: {auditCsvFiles.Count}");
-			Logger.Write($"  Security INF files: {securityInfFiles.Count}");
+			Logger.Write($"Security INF files: {securityInfFiles.Count}");
 		}
 		else
 		{
-			Logger.Write($"  Audit CSV files: {auditCsvFiles.Count} (skipped during removal)");
-			Logger.Write($"  Security INF files: {securityInfFiles.Count} (skipped during removal)");
+			Logger.Write($"Security INF files: {securityInfFiles.Count} (skipped during removal)");
 		}
 
 		cancellationToken?.ThrowIfCancellationRequested();
@@ -1367,22 +1366,23 @@ internal static class MSBaseline
 
 		cancellationToken?.ThrowIfCancellationRequested();
 
-		// Only process audit CSV and security INF files when applying (not when removing)
+		// Apply/Remove audit CSV files
+		if (auditCsvFiles.Count > 0)
+		{
+			string auditActionText = action == PolicyAction.Apply ? "Applying" : "Removing (Disabling)";
+			Logger.Write($"{auditActionText} audit CSV files...");
+			foreach (InMemoryFile auditCsvFile in auditCsvFiles)
+			{
+				cancellationToken?.ThrowIfCancellationRequested();
+
+				ApplyAuditPoliciesFromMemory(auditCsvFile, action, filterIds);
+				Logger.Write($"Processed audit policies from: {auditCsvFile.RelativePath}");
+			}
+		}
+
+		// Only process security INF files when applying (not when removing)
 		if (action == PolicyAction.Apply)
 		{
-			// Apply audit CSV files
-			if (auditCsvFiles.Count > 0)
-			{
-				Logger.Write("Applying audit CSV files...");
-				foreach (InMemoryFile auditCsvFile in auditCsvFiles)
-				{
-					cancellationToken?.ThrowIfCancellationRequested();
-
-					ApplyAuditPoliciesFromMemory(auditCsvFile, filterIds);
-					Logger.Write($"Applied audit policies from: {auditCsvFile.RelativePath}");
-				}
-			}
-
 			// Apply security INF files
 			if (securityInfFiles.Count > 0)
 			{
@@ -1393,7 +1393,7 @@ internal static class MSBaseline
 			}
 		}
 
-		string completionText = action == PolicyAction.Apply ? "applied" : "removed";
+		string completionText = action == PolicyAction.Apply ? "applied" : "processed";
 		Logger.Write($"All security baseline policies {completionText} successfully");
 	}
 
@@ -1457,12 +1457,13 @@ internal static class MSBaseline
 	}
 
 	/// <summary>
-	/// Applies audit policies from a CSV file in memory to the system.
+	/// Applies or removes (disables) audit policies from a CSV file in memory.
 	/// </summary>
 	/// <param name="csvFile">In-memory CSV file containing audit policies</param>
+	/// <param name="action">Whether to Apply (use CSV value) or Remove (use 0/None)</param>
 	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
 	/// <exception cref="InvalidOperationException">Thrown when policy application fails</exception>
-	private static void ApplyAuditPoliciesFromMemory(InMemoryFile csvFile, HashSet<string>? filterIds = null)
+	private static void ApplyAuditPoliciesFromMemory(InMemoryFile csvFile, PolicyAction action, HashSet<string>? filterIds = null)
 	{
 		using MemoryStream stream = new(csvFile.Content);
 		using StreamReader reader = new(stream, Encoding.UTF8);
@@ -1489,10 +1490,27 @@ internal static class MSBaseline
 			}
 		}
 
-		// Apply the audit policies
-		AuditPolicyManager.SetAuditPolicies(AuditPolicyManager.ConvertCSVEntriesToAuditPolicyInfo(filteredEntries));
+		// Convert CSV entries to AUDIT_POLICY_INFORMATION.
+		// If applying, use the CSV value.
+		// If removing, use POLICY_AUDIT_EVENT_NONE (0) to disable auditing.
+		AUDIT_POLICY_INFORMATION[] auditPolicies = new AUDIT_POLICY_INFORMATION[filteredEntries.Count];
+		for (int i = 0; i < filteredEntries.Count; i++)
+		{
+			uint settingValue = action == PolicyAction.Apply ? filteredEntries[i].SettingValue : (uint)AuditBitFlags.POLICY_AUDIT_EVENT_NONE;
 
-		Logger.Write($"Successfully applied {filteredEntries.Count} audit policies from {csvFile.RelativePath}");
+			auditPolicies[i] = new AUDIT_POLICY_INFORMATION
+			{
+				AuditSubCategoryGuid = filteredEntries[i].SubcategoryGuid,
+				AuditingInformation = settingValue,
+				AuditCategoryGuid = AuditPolicyManager.GetCategoryGuidForSubcategory(filteredEntries[i].SubcategoryGuid)
+			};
+		}
+
+		// Apply the audit policies
+		AuditPolicyManager.SetAuditPolicies(auditPolicies);
+
+		string actionDesc = action == PolicyAction.Apply ? "applied" : "removed (disabled)";
+		Logger.Write($"Successfully {actionDesc} {filteredEntries.Count} audit policies from {csvFile.RelativePath}");
 	}
 
 	/// <summary>

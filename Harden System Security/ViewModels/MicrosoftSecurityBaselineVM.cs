@@ -662,4 +662,73 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 
 	#endregion
 
+	#region Delete
+
+	/// <summary>
+	/// Deletes/Removes the selected policies from the system.
+	/// Supports:
+	/// - Group Policy (Registry.pol removal)
+	/// - Audit Policy (Setting to No Auditing)
+	/// </summary>
+	internal async void DeleteSelectedPolicies_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MicrosoftSecurityBaseline);
+
+		if (lv is null || lv.SelectedItems.Count == 0)
+		{
+			MainInfoBar.WriteWarning("No policies selected for deletion.");
+			return;
+		}
+
+		// Collect IDs of the selected items
+		HashSet<string> idsToRemove = new(StringComparer.OrdinalIgnoreCase);
+		foreach (object item in lv.SelectedItems)
+		{
+			if (item is VerificationResult res)
+			{
+				_ = idsToRemove.Add(res.ID);
+			}
+		}
+
+		if (idsToRemove.Count == 0)
+		{
+			return;
+		}
+
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+			MainInfoBar.WriteInfo($"Removing {idsToRemove.Count} selected policies...");
+
+			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
+			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
+				? new Uri(CustomBaselineFilePath)
+				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
+
+			// Perform removal with IDs filtering
+			_ = await MSBaseline.DownloadAndProcessSecurityBaseline(
+				sourceUri,
+				MSBaseline.Action.Remove,
+				cancellationToken: CancellationToken.None,
+				filterIds: idsToRemove);
+
+			MainInfoBar.WriteSuccess("Selected policies removed successfully.");
+
+			// Verify again to show the updated state
+			await VerifyInternal();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	#endregion
+
 }

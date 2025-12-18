@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>Désactiver l'affichage des rappels et des appels VoIP entrants sur l'écran de verrouillage</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>Désactiver la sauvegarde du mot de passe du compte administrateur local vers Active Directory.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>Appliquer les restrictions UAC aux comptes locaux lors des ouvertures de session réseau</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>Politique d'initialisation des pilotes de démarrage définie sur Bon et Inconnu</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Autoriser la connexion via les services Bureau à distance. Cela vous permettra d'utiliser le Bureau à distance (RDP) localement pour vous connecter à votre ordinateur.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Afficher l'extension de fichier pour les fichiers de raccourci (.lnk) dans l'Explorateur de fichiers. Les attaquants comptent fréquemment sur l'état masqué par défaut des raccourcis pour déguiser des charges utiles malveillantes en documents inoffensifs. Révéler l'extension vous permet de vérifier le véritable type de fichier et d'identifier les raccourcis trompeurs avant l'exécution.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Afficher l'extension de fichier pour les fichiers (.url) dans l'Explorateur de fichiers. Empêche les raccourcis Internet de se faire passer pour des fichiers légitimes. Cela atténue les risques de sécurité où les attaquants utilisent des extensions masquées pour déguiser des liens de phishing ou des redirections malveillantes en documents sûrs.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Afficher l'extension de fichier pour les fichiers (.pif) dans l'Explorateur de fichiers. Les fichiers d'informations sur les programmes (PIF) fonctionnent de manière similaire aux fichiers .exe et sont fréquemment utilisés par les attaquants pour dissimuler des logiciels malveillants derrière un type de fichier moins familier.</value>
 </data>
 </root>

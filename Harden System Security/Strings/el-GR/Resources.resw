@@ -1732,12 +1732,6 @@
 <data name="ProcessingAfterDependencies" xml:space="preserve">
   <value>Επεξεργασία {0} εξαρτήσεων-μετά για λειτουργία {1}</value>
 </data>
-<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
-  <value>Σφάλμα επεξεργασίας μονάδων M πολιτικής ομάδας μαζικά.</value>
-</data>
-<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
-  <value>Σφάλμα επεξεργασίας μονάδων M μητρώου μαζικά.</value>
-</data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>Εφεδρική επαλήθευση: {0}\{1} = {2}</value>
 </data>

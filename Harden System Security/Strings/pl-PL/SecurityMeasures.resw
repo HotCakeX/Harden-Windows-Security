@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>Wyłącz pokazywanie przypomnień i przychodzących połączeń VoIP na ekranie blokady</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>Wyłącz tworzenie kopii zapasowej hasła lokalnego konta administratora w Active Directory.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>Wymuś ograniczenia UAC na konta lokalne podczas logowań sieciowych</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>Zasada inicjowania sterowników rozruchowych ustawiona na Dobre i Nieznane</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól na logowanie przez Usługi pulpitu zdalnego. Pozwoli to na lokalne użycie Pulpitu zdalnego (RDP) w celu zalogowania się do komputera.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Wyświetlaj rozszerzenie pliku dla skrótów (.lnk) w Eksploratorze plików. Atakujący często polegają na domyślnym ukrywaniu skrótów, aby maskować złośliwe ładunki jako nieszkodliwe dokumenty. Ujawnienie rozszerzenia pozwala zweryfikować prawdziwy typ pliku i zidentyfikować mylące skróty przed ich uruchomieniem.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Wyświetlaj rozszerzenie pliku dla plików (.url) w Eksploratorze plików. Zapobiega to maskowaniu skrótów internetowych jako legalnych plików. Zmniejsza to ryzyko bezpieczeństwa, w którym atakujący wykorzystują ukryte rozszerzenia do maskowania linków phishingowych lub złośliwych przekierowań jako bezpiecznych dokumentów.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Wyświetlaj rozszerzenie pliku dla plików (.pif) w Eksploratorze plików. Pliki informacji o programie (PIF) działają podobnie do plików .exe i są często wykorzystywane przez atakujących do ukrywania złośliwego oprogramowania pod mniej znanym typem pliku.</value>
 </data>
 </root>

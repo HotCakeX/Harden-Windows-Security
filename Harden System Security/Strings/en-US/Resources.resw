@@ -1732,12 +1732,6 @@
 <data name="ProcessingAfterDependencies" xml:space="preserve">
   <value>PROCESSING {0} AFTER-DEPENDENCIES for {1} operation</value>
 </data>
-<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
-  <value>Error processing Group Policy MUnits in bulk.</value>
-</data>
-<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
-  <value>Error processing Registry MUnits in bulk.</value>
-</data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>FALLBACK VERIFY: {0}\{1} = {2}</value>
 </data>

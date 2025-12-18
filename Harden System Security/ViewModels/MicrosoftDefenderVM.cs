@@ -89,15 +89,15 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 			// Apply/Remove Diagnostic data when Smart App Control gets enabled/disabled.
 			MUnitDependencyRegistry.RegisterDependency(
-				primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
-				dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|AllowTelemetry",  // Dependent MUnit (KeyName|ValueName)
+				primaryMUnitId: new("019a8dfa-253e-767c-b531-de109f3929d8"), // SAC-MSDefender (SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState)
+				dependentMUnitId: new("019a8dfa-253e-764f-acd5-d26c2c0e3d6c"), // AllowTelemetry-MSDefender (Software\\Policies\\Microsoft\\Windows\\DataCollection|AllowTelemetry)
 				type: DependencyType.Both,
 				timing: ExecutionTiming.After
 			);
 
 			MUnitDependencyRegistry.RegisterDependency(
-				primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
-				dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|DisableTelemetryOptInSettingsUx",  // Dependent MUnit (KeyName|ValueName)
+				primaryMUnitId: new("019a8dfa-253e-767c-b531-de109f3929d8"), // SAC-MSDefender (SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState)
+				dependentMUnitId: new("019a8dfa-253e-7bef-95cc-a7277deae4cd"),  // DisableTelemetryOptInSettingsUx-MSDefender (Software\\Policies\\Microsoft\\Windows\\DataCollection|DisableTelemetryOptInSettingsUx)
 				type: DependencyType.Both,
 				timing: ExecutionTiming.After
 			);

@@ -724,9 +724,6 @@
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>ലോക്ക് സ്‌ക്രീനിൽ റിമൈൻഡറുകളും ഇൻകമിംഗ് VoIP കോളുകളും കാണിക്കുന്നത് അപ്രാപ്തമാക്കുക</value>
 </data>
-<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
-    <value>Active Directory-യിൽ പ്രാദേശിക അഡ്മിനിസ്‌ട്രേറ്റർ അക്കൗണ്ട് പാസ്‌വേഡ് ബാക്കപ്പ് അപ്രാപ്തമാക്കുക.</value>
-</data>
 <data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
     <value>നെറ്റ്‌വർക്ക് ലോഗ്ഓണുകളിൽ പ്രാദേശിക അക്കൗണ്ടുകളിൽ UAC നിയന്ത്രണങ്ങൾ പ്രയോഗിക്കുക</value>
 </data>
@@ -969,5 +966,17 @@
 </data>
 <data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
     <value>ബൂട്ട്-സ്റ്റാർട്ട് ഡ്രൈവർ ഇനീഷ്യലൈസേഷൻ പോളിസി 'നല്ലത്', 'അജ്ഞാതം' എന്നിങ്ങനെ സജ്ജീകരിച്ചു</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>റിമോട്ട് ഡെസ്‌ക്‌ടോപ്പ് സേവനങ്ങളിലൂടെ സൈൻ ഇൻ ചെയ്യുന്നത് അനുവദിക്കുക. നിങ്ങളുടെ മെഷീനിലേക്ക് സൈൻ ഇൻ ചെയ്യുന്നതിന് പ്രാദേശികമായി റിമോട്ട് ഡെസ്‌ക്‌ടോപ്പ് (RDP) ഉപയോഗിക്കാൻ ഇത് നിങ്ങളെ അനുവദിക്കും.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>ഫയൽ എക്സ്പ്ലോററിൽ കുറുക്കുവഴി (.lnk) ഫയലുകൾക്കുള്ള ഫയൽ എക്സ്റ്റൻഷൻ പ്രദർശിപ്പിക്കുക. ക്ഷുദ്രകരമായ പേലോഡുകളെ ദോഷകരമല്ലാത്ത രേഖകളായി തെറ്റിദ്ധരിപ്പിക്കുന്നതിന് ആക്രമണകാരികൾ പലപ്പോഴും കുറുക്കുവഴികളുടെ മറഞ്ഞിരിക്കുന്ന സ്വഭാവം ഉപയോഗിക്കുന്നു. എക്സ്റ്റൻഷൻ വെളിപ്പെടുത്തുന്നത് യഥാർത്ഥ ഫയൽ തരം പരിശോധിക്കാനും എക്സിക്യൂഷന് മുമ്പ് വഞ്ചനാപരമായ കുറുക്കുവഴികൾ തിരിച്ചറിയാനും നിങ്ങളെ അനുവദിക്കുന്നു.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>ഫയൽ എക്സ്പ്ലോററിൽ (.url) ഫയലുകൾക്കുള്ള ഫയൽ എക്സ്റ്റൻഷൻ പ്രദർശിപ്പിക്കുക. ഇന്റർനെറ്റ് കുറുക്കുവഴികൾ നിയമപരമായ ഫയലുകളായി ആൾമാറാട്ടം നടത്തുന്നത് തടയുന്നു. ഫിഷിംഗ് ലിങ്കുകളോ ക്ഷുദ്രകരമായ റീഡയറക്‌ടുകളോ സുരക്ഷിത പ്രമാണങ്ങളായി മറച്ചുവെക്കാൻ ആക്രമണകാരികൾ മറഞ്ഞിരിക്കുന്ന എക്സ്റ്റൻഷനുകൾ ഉപയോഗിക്കുന്ന സുരക്ഷാ അപകടസാധ്യതകളെ ഇത് ലഘൂകരിക്കുന്നു.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>ഫയൽ എക്സ്പ്ലോററിൽ (.pif) ഫയലുകൾക്കുള്ള ഫയൽ എക്സ്റ്റൻഷൻ പ്രദർശിപ്പിക്കുക. പ്രോഗ്രാം ഇൻഫർമേഷൻ ഫയലുകൾ (PIF) .exe ഫയലുകൾക്ക് സമാനമായി പ്രവർത്തിക്കുന്നു, കൂടാതെ കുറഞ്ഞ പരിചിതമായ ഫയൽ തരത്തിന് പിന്നിൽ മാൽവെയർ മറയ്ക്കാൻ ആക്രമണകാരികൾ ഇത് frequently ഉപയോഗിക്കുന്നു.</value>
 </data>
 </root>

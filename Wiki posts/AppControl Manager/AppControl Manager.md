@@ -137,6 +137,7 @@ The AppControl Manager fully supports the following languages. You can request f
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/mexico.svg" width="25" alt="Country flag"> Spanish
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/poland.svg" width="25" alt="Country flag"> Polish
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/2f006adff77201f244cacdbe7c3ad8ac34f50199/Pictures/Country%20Flags/icons8-germany.svg" width="25" alt="Country flag"> German
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/2fd2894faa6e16175cb5088323a452bb90b08ea8/Pictures/Country%20Flags/france.svg" width="25" alt="Country flag"> French
 
 <br>
 

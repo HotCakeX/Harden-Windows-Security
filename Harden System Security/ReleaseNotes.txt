@@ -1,21 +1,9 @@
-* Added displaying Last Boot Time to the home page.
+* Removed a policy from the Optional Overrides category, named: "Disabled Configure password backup directory".
 
-* Added displaying System Manufacturer and Model to the home page.
+   * This is to increase compatibility with Windows Servers. This was the policy's description in the document: Microsoft Security Baselines set its value to "Active Directory", but since the Harden System Security app does not apply to computers managed by domain controllers or Entra ID, there is no need for this policy to be active.
+ 
+* Added a new policy to the Optional Overrides category: Allow signing in through Remote Desktop Services. This will allow you to use Remote Desktop (RDP) locally to sign into your machine. For Device Usage intents, it only applies to Developer, Gaming and School intents. By default, all accounts can sign into the machine through Remote Desktop Services, but Microsoft Security Baselines set that policy to block for all kinds of accounts.
 
-* Added displaying Open Network Ports counts to the home page. It displays both TCP and UDP ports counts that are currently open on the system. It is updated every 4 seconds and just like other real-time info on the Home page, it will not run in the background when you navigate away from the Home page, so it won't use any unnecessary system resources.
+* Fixed an issue in the Optional Windows Features category by adding the `DismService.exe` component of the Harden System Security app to Attack Surface Reduction rules exclusions, only for the duration of the app's runtime, which is automatically removed when you close the app. Please refer to my comment here for further explanation: https://github.com/HotCakeX/Harden-Windows-Security/issues/970#issuecomment-3664355080
 
-* Added the ability to change Computer Name in the home page. The Computer Name tile is now clickable and when you press it, you will be able to set a new Computer Name. This feature will only be available when you run the app as Administrator and after changing the Computer Name, a system restart will be required for the changes to take effect.
-
-* Added displaying the names of all of the available GPUs on the system to the home page. The GPU tile is clickable so if you click on it, a new area will open displaying the full technical details of every GPU on the system.
-
-* The information titles on the Home page now have proper rounded corners.
-
-* Reduced the amount of empty spaces in the Home page.
-
-* The system time and time zone now display in the same tile on the Home page.
-
-* Added displaying the currently active Power Plan's name on the Home page.
-
-* Added displaying the real time SSD Temperature on the Home page.
-
-* Added French language support.
+* Added 3 new security measures to the Miscellaneous Category responsible for showing the extension of `.url`, `.pif` and `.lnk` files in File Explorer.

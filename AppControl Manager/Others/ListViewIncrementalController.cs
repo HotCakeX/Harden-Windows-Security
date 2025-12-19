@@ -725,7 +725,7 @@ internal sealed partial class ListViewIncrementalController(
 					// 1. Date Filter
 					if (selectedDate.HasValue)
 					{
-						if (!item.TimeCreated.HasValue || item.TimeCreated.Value < selectedDate.Value)
+						if (!item.TimeCreated.HasValue || item.TimeCreated.Value.Date < selectedDate.Value.Date)
 							continue;
 					}
 

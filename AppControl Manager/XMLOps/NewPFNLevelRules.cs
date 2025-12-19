@@ -16,102 +16,170 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
 internal static class NewPFNLevelRules
 {
 	/// <summary>
-	/// Creates PFN rules and adds them to an App Control policy XML file
+	/// Creates PFN rules and adds them to the SiPolicy object
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="siPolicy"></param>
 	/// <param name="PFNData"></param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateAllow(string xmlFilePath, List<PFNRuleCreator> PFNData)
+	/// <returns>Modified SiPolicy object</returns>
+	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy siPolicy, List<PFNRuleCreator> PFNData)
 	{
-
 		if (PFNData.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoPackageFamilyNamesDetectedAllowMessage"));
-			return;
+			return siPolicy;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		// Ensure the FileRules list is initialized
+		List<object> fileRulesList = siPolicy.FileRules != null ? [.. siPolicy.FileRules] : [];
+
+		// Find the User Mode Signing Scenario (Value 12)
+		SigningScenario? umci = siPolicy.SigningScenarios.FirstOrDefault(s => s.Value == 12);
+
+		// Ensure UMCI exists
+		if (umci == null)
+		{
+			umci = new SigningScenario
+			{
+				Value = 12,
+				ID = "ID_SIGNINGSCENARIO_UMCI",
+				FriendlyName = "User Mode Signing Scenario",
+				ProductSigners = new ProductSigners
+				{
+					FileRulesRef = new FileRulesRef()
+				}
+			};
+
+			List<SigningScenario> scenarios = siPolicy.SigningScenarios != null ? [.. siPolicy.SigningScenarios] : [];
+			scenarios.Add(umci);
+			siPolicy.SigningScenarios = [.. scenarios];
+		}
+		else
+		{
+			// Ensure nested objects exist
+			umci.ProductSigners ??= new ProductSigners();
+			umci.ProductSigners.FileRulesRef ??= new FileRulesRef();
+		}
+
+		List<FileRuleRef> umciFileRuleRefs = umci.ProductSigners.FileRulesRef.FileRuleRef != null ? [.. umci.ProductSigners.FileRulesRef.FileRuleRef] : [];
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{
 			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 			string ID = $"ID_ALLOW_A_{guid}";
 
 			// Create new PackageFamilyName rule
-			XmlElement newPFNRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
+			Allow newPFNRule = new()
+			{
+				ID = ID,
+				FriendlyName = GlobalVars.GetStr("AllowingPackagedAppFriendlyName"),
+				MinimumFileVersion = PFN.MinimumFileVersion,
+				PackageFamilyName = PFN.PackageFamilyName
+			};
 
-			// Fill it with the required attributes
-			newPFNRule.SetAttribute("ID", ID);
-			newPFNRule.SetAttribute("FriendlyName", GlobalVars.GetStr("AllowingPackagedAppFriendlyName"));
-			newPFNRule.SetAttribute("MinimumFileVersion", PFN.MinimumFileVersion);
-			newPFNRule.SetAttribute("PackageFamilyName", PFN.PackageFamilyName);
+			fileRulesList.Add(newPFNRule);
 
-			// Add the new element which is a node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newPFNRule);
+			// Create FileRuleRef for the PFN
+			FileRuleRef newRef = new()
+			{
+				RuleID = ID
+			};
 
-			// Create FileRuleRef for the PFN inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-			newUMCIFileRuleRefNode.SetAttribute("RuleID", ID);
-			_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(newUMCIFileRuleRefNode);
+			umciFileRuleRefs.Add(newRef);
 		}
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update the policy object
+		siPolicy.FileRules = [.. fileRulesList];
+		umci.ProductSigners.FileRulesRef.FileRuleRef = [.. umciFileRuleRefs];
+
+		return siPolicy;
 	}
 
-
 	/// <summary>
-	/// Creates PFN rules and adds them to an App Control policy XML file
+	/// Creates PFN rules and adds them to the SiPolicy object
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="siPolicy"></param>
 	/// <param name="PFNData"></param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateDeny(string xmlFilePath, List<PFNRuleCreator> PFNData)
+	/// <returns>Modified SiPolicy object</returns>
+	internal static SiPolicy.SiPolicy CreateDenyEx(SiPolicy.SiPolicy siPolicy, List<PFNRuleCreator> PFNData)
 	{
-
 		if (PFNData.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoPackageFamilyNamesDetectedDenyMessage"));
-			return;
+			return siPolicy;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		// Ensure the FileRules list is initialized
+		List<object> fileRulesList = siPolicy.FileRules != null ? [.. siPolicy.FileRules] : [];
+
+		// Find the User Mode Signing Scenario (Value 12)
+		SigningScenario? umci = siPolicy.SigningScenarios.FirstOrDefault(s => s.Value == 12);
+
+		// Ensure UMCI exists
+		if (umci == null)
+		{
+			umci = new SigningScenario
+			{
+				Value = 12,
+				ID = "ID_SIGNINGSCENARIO_UMCI",
+				FriendlyName = "User Mode Signing Scenario",
+				ProductSigners = new ProductSigners
+				{
+					FileRulesRef = new FileRulesRef()
+				}
+			};
+
+			List<SigningScenario> scenarios = siPolicy.SigningScenarios != null ? [.. siPolicy.SigningScenarios] : [];
+			scenarios.Add(umci);
+			siPolicy.SigningScenarios = [.. scenarios];
+		}
+		else
+		{
+			umci.ProductSigners ??= new ProductSigners();
+			umci.ProductSigners.FileRulesRef ??= new FileRulesRef();
+		}
+
+		List<FileRuleRef> umciFileRuleRefs = umci.ProductSigners.FileRulesRef.FileRuleRef != null ? [.. umci.ProductSigners.FileRulesRef.FileRuleRef] : [];
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{
 			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 			string ID = $"ID_DENY_A_{guid}";
 
 			// Create new PackageFamilyName rule
-			XmlElement newPFNRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
+			Deny newPFNRule = new()
+			{
+				ID = ID,
+				FriendlyName = GlobalVars.GetStr("DenyingPackagedAppFriendlyName"),
+				MinimumFileVersion = PFN.MinimumFileVersion,
+				PackageFamilyName = PFN.PackageFamilyName
+			};
 
-			// Fill it with the required attributes
-			newPFNRule.SetAttribute("ID", ID);
-			newPFNRule.SetAttribute("FriendlyName", GlobalVars.GetStr("DenyingPackagedAppFriendlyName"));
-			newPFNRule.SetAttribute("MinimumFileVersion", PFN.MinimumFileVersion);
-			newPFNRule.SetAttribute("PackageFamilyName", PFN.PackageFamilyName);
+			fileRulesList.Add(newPFNRule);
 
-			// Add the new element which is a node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newPFNRule);
+			// Create FileRuleRef for the PFN
+			FileRuleRef newRef = new()
+			{
+				RuleID = ID
+			};
 
-			// Create FileRuleRef for the PFN inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-			newUMCIFileRuleRefNode.SetAttribute("RuleID", ID);
-			_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(newUMCIFileRuleRefNode);
+			umciFileRuleRefs.Add(newRef);
 		}
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update the policy object
+		siPolicy.FileRules = [.. fileRulesList];
+		umci.ProductSigners.FileRulesRef.FileRuleRef = [.. umciFileRuleRefs];
+
+		return siPolicy;
 	}
 
 }

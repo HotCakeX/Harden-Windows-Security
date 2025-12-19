@@ -17,8 +17,10 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
@@ -43,70 +45,77 @@ internal static class NewWHQLFilePublisherLevelRules
 	private const string EKUFriendlyName = "Windows Hardware Driver Verification";
 
 	/// <summary>
-	/// Creates new Allow WHQLFilePublisher level rules in an XML file
+	/// Creates new Allow WHQLFilePublisher level rules in the SiPolicy object
 	/// Each rule includes the FileAttribs, Signers, AllowedSigners, and CiSigners(depending on kernel/user mode), EKU.
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="policyObj"></param>
 	/// <param name="whqlFilePublisherSigners"> The WHQLFilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method.</param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateAllow(string xmlFilePath, List<WHQLFilePublisherSignerCreator> whqlFilePublisherSigners)
+	/// <returns>SiPolicy</returns>
+	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<WHQLFilePublisherSignerCreator> whqlFilePublisherSigners)
 	{
-
 		if (whqlFilePublisherSigners.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoWHQLFilePublisherSignersDetectedAllowMessage"));
-			return;
+			return policyObj;
 		}
-
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
+		// Get or Initialize lists
+		List<object> fileRules = policyObj.FileRules?.ToList() ?? [];
+		List<Signer> signers = policyObj.Signers?.ToList() ?? [];
+		List<CiSigner> ciSigners = policyObj.CiSigners?.ToList() ?? [];
+		List<EKU> ekus = policyObj.EKUs?.ToList() ?? [];
+
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
+		SigningScenario kmciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 131);
+
+		// Ensure ProductSigners exist
+		umciScenario.ProductSigners ??= new ProductSigners();
+		kmciScenario.ProductSigners ??= new ProductSigners();
+
+		// Ensure AllowedSigners exist
+		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
+		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
+
+		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
+		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
+
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in whqlFilePublisherSigners)
 		{
-
 			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
 
 			#region Creating File <FileAttrib> node
 
-			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
-			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"));
-
-			#region Creating File Attributes with automatic fallback
+			FileAttrib newFileAttrib = new()
+			{
+				ID = FileAttribID,
+				FriendlyName = GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
+				MinimumFileVersion = whqlFilePublisherData.FileVersion!.ToString()
+			};
 
 			if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.OriginalFileName))
 			{
-				newFileAttribNode.SetAttribute("FileName", whqlFilePublisherData.OriginalFileName);
+				newFileAttrib.FileName = whqlFilePublisherData.OriginalFileName;
 			}
-
 			else if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.InternalName))
 			{
-				newFileAttribNode.SetAttribute("InternalName", whqlFilePublisherData.InternalName);
+				newFileAttrib.InternalName = whqlFilePublisherData.InternalName;
 			}
-
 			else if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.FileDescription))
 			{
-				newFileAttribNode.SetAttribute("FileDescription", whqlFilePublisherData.FileDescription);
+				newFileAttrib.FileDescription = whqlFilePublisherData.FileDescription;
 			}
-
 			else if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.ProductName))
 			{
-				newFileAttribNode.SetAttribute("ProductName", whqlFilePublisherData.ProductName);
+				newFileAttrib.ProductName = whqlFilePublisherData.ProductName;
 			}
 
-			#endregion Creating File Attributes with automatic fallback
+			fileRules.Add(newFileAttrib);
 
-			newFileAttribNode.SetAttribute("MinimumFileVersion", whqlFilePublisherData.FileVersion!.ToString());
-
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileAttribNode);
-
-			#endregion Creating File Attributes
-
+			#endregion
 
 			#region Creating Signers
 
@@ -115,158 +124,141 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			foreach (CertificateDetailsCreator signerData in whqlFilePublisherData.CertificateDetails)
 			{
-				// Only keeping certificates with WHQL TBS Hash, it's Intermediate.
 				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 				string signerID = $"ID_SIGNER_A_{guid2}";
 
-				// Create the new Signer element
-				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
-				newSignerNode.SetAttribute("ID", signerID);
-				newSignerNode.SetAttribute("Name", signerData.IntermediateCertName);
+				Signer newSigner = new()
+				{
+					ID = signerID,
+					Name = signerData.IntermediateCertName,
+					CertRoot = new CertRoot
+					{
+						Type = CertEnumType.TBS,
+						Value = Convert.FromHexString(signerData.IntermediateCertTBS)
+					},
+					CertEKU = [new CertEKU { ID = EKUID }],
+					CertOemID = new CertOemID { Value = whqlFilePublisherData.Opus },
+					FileAttribRef = [new FileAttribRef { RuleID = FileAttribID }]
+				};
 
-				// Create the CertRoot element and add it to the Signer element
-				XmlElement newCertRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
-				newCertRootNode.SetAttribute("Type", "TBS");
-				newCertRootNode.SetAttribute("Value", signerData.IntermediateCertTBS);
-				_ = newSignerNode.AppendChild(newCertRootNode);
-
-				// Create the CertEKU element and add it to the Signer element
-				XmlElement newCertEKUNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertEKU", GlobalVars.SiPolicyNamespace);
-				newCertEKUNode.SetAttribute("ID", EKUID);
-				_ = newSignerNode.AppendChild(newCertEKUNode);
-
-				// Create the CertOemID element and add it to the Signer element
-				XmlElement newCertOemIDNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertOemID", GlobalVars.SiPolicyNamespace);
-				newCertOemIDNode.SetAttribute("Value", whqlFilePublisherData.Opus);
-				_ = newSignerNode.AppendChild(newCertOemIDNode);
-
-				// Create the FileAttribRef element and add it to the Signer element
-				XmlElement newFileAttribRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttribRef", GlobalVars.SiPolicyNamespace);
-				newFileAttribRefNode.SetAttribute("RuleID", FileAttribID);
-				_ = newSignerNode.AppendChild(newFileAttribRefNode);
-
-				// Add the new Signer element to the Signers node
-				_ = codeIntegrityPolicy.SignersNode.AppendChild(newSignerNode);
-
-
-				#region Adding signer to the Signer Scenario and CiSigners
+				signers.Add(newSigner);
 
 				// For User-Mode files
 				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
-					XmlElement newUMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
-					newUMCIAllowedSignerNode.SetAttribute("SignerId", signerID);
-					_ = codeIntegrityPolicy.UMCI_ProductSigners_AllowedSigners_Node.AppendChild(newUMCIAllowedSignerNode);
-
-					// Create a CI Signer for the User Mode Signer
-					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
-					newCiSignerNode.SetAttribute("SignerId", signerID);
-					_ = codeIntegrityPolicy.CiSignersNode.AppendChild(newCiSignerNode);
+					umciAllowedSigners.Add(new AllowedSigner { SignerId = signerID });
+					ciSigners.Add(new CiSigner { SignerId = signerID });
 				}
-
 				// For Kernel-Mode files
 				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
-					XmlElement newKMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
-					newKMCIAllowedSignerNode.SetAttribute("SignerId", signerID);
-					_ = codeIntegrityPolicy.KMCI_ProductSigners_AllowedSigners_Node.AppendChild(newKMCIAllowedSignerNode);
-
-					// Kernel-Mode signers don't need CI Signers
+					kmciAllowedSigners.Add(new AllowedSigner { SignerId = signerID });
 				}
-
-				#endregion Adding signer to the Signer Scenario and CiSigners
 			}
 
-			#endregion Creating Signers
+			#endregion
 		}
 
 		#region Add EKU
 
-		// Create the new EKU element
-		XmlElement newEKUNode = codeIntegrityPolicy.XmlDocument.CreateElement("EKU", GlobalVars.SiPolicyNamespace);
-		newEKUNode.SetAttribute("ID", EKUID);
-		newEKUNode.SetAttribute("Value", EKUValue);
-		newEKUNode.SetAttribute("FriendlyName", EKUFriendlyName);
-
-		// Add the EKU to the policy
-		_ = codeIntegrityPolicy.EKUsNode.AppendChild(newEKUNode);
+		if (!ekus.Any(e => e.ID == EKUID))
+		{
+			ekus.Add(new EKU
+			{
+				ID = EKUID,
+				Value = Convert.FromHexString(EKUValue),
+				FriendlyName = EKUFriendlyName
+			});
+		}
 
 		#endregion
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update Policy Object
+		policyObj.FileRules = fileRules.ToArray();
+		policyObj.Signers = signers.ToArray();
+		policyObj.CiSigners = ciSigners.ToArray();
+		policyObj.EKUs = ekus.ToArray();
+
+		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners.ToArray();
+		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners.ToArray();
+
+		return policyObj;
 	}
 
-
 	/// <summary>
-	/// Creates new Deny WHQLFilePublisher level rules in an XML file
+	/// Creates new Deny WHQLFilePublisher level rules in the SiPolicy object
 	/// Each rules includes the FileAttribs, Signers, DeniedSigners, and CiSigners(depending on kernel/user mode), EKU.
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="policyObj"></param>
 	/// <param name="whqlFilePublisherSigners"> The WHQLFilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method.</param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateDeny(string xmlFilePath, List<WHQLFilePublisherSignerCreator> whqlFilePublisherSigners)
+	/// <returns>SiPolicy</returns>
+	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy policyObj, List<WHQLFilePublisherSignerCreator> whqlFilePublisherSigners)
 	{
-
 		if (whqlFilePublisherSigners.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoWHQLFilePublisherSignersDetectedDenyMessage"));
-			return;
+			return policyObj;
 		}
-
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
+		// Get or Initialize lists
+		List<object> fileRules = policyObj.FileRules?.ToList() ?? [];
+		List<Signer> signers = policyObj.Signers?.ToList() ?? [];
+		List<CiSigner> ciSigners = policyObj.CiSigners?.ToList() ?? [];
+		List<EKU> ekus = policyObj.EKUs?.ToList() ?? [];
+
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
+		SigningScenario kmciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 131);
+
+		// Ensure ProductSigners exist
+		umciScenario.ProductSigners ??= new ProductSigners();
+		kmciScenario.ProductSigners ??= new ProductSigners();
+
+		// Ensure DeniedSigners exist
+		umciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners();
+		kmciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners();
+
+		List<DeniedSigner> umciDeniedSigners = umciScenario.ProductSigners.DeniedSigners.DeniedSigner?.ToList() ?? [];
+		List<DeniedSigner> kmciDeniedSigners = kmciScenario.ProductSigners.DeniedSigners.DeniedSigner?.ToList() ?? [];
+
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in whqlFilePublisherSigners)
 		{
-
 			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
 
 			#region Creating File <FileAttrib> node
 
-			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
-			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"));
-
-			#region Creating File Attributes with automatic fallback
+			FileAttrib newFileAttrib = new()
+			{
+				ID = FileAttribID,
+				FriendlyName = GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
+				MinimumFileVersion = whqlFilePublisherData.FileVersion!.ToString()
+			};
 
 			if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.OriginalFileName))
 			{
-				newFileAttribNode.SetAttribute("FileName", whqlFilePublisherData.OriginalFileName);
+				newFileAttrib.FileName = whqlFilePublisherData.OriginalFileName;
 			}
-
 			else if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.InternalName))
 			{
-				newFileAttribNode.SetAttribute("InternalName", whqlFilePublisherData.InternalName);
+				newFileAttrib.InternalName = whqlFilePublisherData.InternalName;
 			}
-
 			else if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.FileDescription))
 			{
-				newFileAttribNode.SetAttribute("FileDescription", whqlFilePublisherData.FileDescription);
+				newFileAttrib.FileDescription = whqlFilePublisherData.FileDescription;
 			}
-
 			else if (!string.IsNullOrWhiteSpace(whqlFilePublisherData.ProductName))
 			{
-				newFileAttribNode.SetAttribute("ProductName", whqlFilePublisherData.ProductName);
+				newFileAttrib.ProductName = whqlFilePublisherData.ProductName;
 			}
 
-			#endregion Creating File Attributes with automatic fallback
+			fileRules.Add(newFileAttrib);
 
-			newFileAttribNode.SetAttribute("MinimumFileVersion", whqlFilePublisherData.FileVersion!.ToString());
-
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileAttribNode);
-
-			#endregion Creating File Attributes
-
+			#endregion
 
 			#region Creating Signers
 
@@ -275,91 +267,66 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			foreach (CertificateDetailsCreator signerData in whqlFilePublisherData.CertificateDetails)
 			{
-				// Only keeping certificates with WHQL TBS Hash, it's Intermediate.
 				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 				string signerID = $"ID_SIGNER_A_{guid2}";
 
-				// Create the new Signer element
-				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
-				newSignerNode.SetAttribute("ID", signerID);
-				newSignerNode.SetAttribute("Name", signerData.IntermediateCertName);
+				Signer newSigner = new()
+				{
+					ID = signerID,
+					Name = signerData.IntermediateCertName,
+					CertRoot = new CertRoot
+					{
+						Type = CertEnumType.TBS,
+						Value = Convert.FromHexString(signerData.IntermediateCertTBS)
+					},
+					CertEKU = [new CertEKU { ID = EKUID }],
+					CertOemID = new CertOemID { Value = whqlFilePublisherData.Opus },
+					FileAttribRef = [new FileAttribRef { RuleID = FileAttribID }]
+				};
 
-				// Create the CertRoot element and add it to the Signer element
-				XmlElement newCertRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
-				newCertRootNode.SetAttribute("Type", "TBS");
-				newCertRootNode.SetAttribute("Value", signerData.IntermediateCertTBS);
-				_ = newSignerNode.AppendChild(newCertRootNode);
-
-				// Create the CertEKU element and add it to the Signer element
-				XmlElement newCertEKUNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertEKU", GlobalVars.SiPolicyNamespace);
-				newCertEKUNode.SetAttribute("ID", EKUID);
-				_ = newSignerNode.AppendChild(newCertEKUNode);
-
-				// Create the CertOemID element and add it to the Signer element
-				XmlElement newCertOemIDNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertOemID", GlobalVars.SiPolicyNamespace);
-				newCertOemIDNode.SetAttribute("Value", whqlFilePublisherData.Opus);
-				_ = newSignerNode.AppendChild(newCertOemIDNode);
-
-				// Create the FileAttribRef element and add it to the Signer element
-				XmlElement newFileAttribRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttribRef", GlobalVars.SiPolicyNamespace);
-				newFileAttribRefNode.SetAttribute("RuleID", FileAttribID);
-				_ = newSignerNode.AppendChild(newFileAttribRefNode);
-
-				// Add the new Signer element to the Signers node
-				_ = codeIntegrityPolicy.SignersNode.AppendChild(newSignerNode);
-
-
-				#region Adding signer to the Signer Scenario and CiSigners
+				signers.Add(newSigner);
 
 				// For User-Mode files
 				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
-					XmlElement newUMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
-					newUMCIDeniedSignerNode.SetAttribute("SignerId", signerID);
-					_ = codeIntegrityPolicy.UMCI_ProductSigners_DeniedSigners_Node.AppendChild(newUMCIDeniedSignerNode);
-
-					// Create a CI Signer for the User Mode Signer
-					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
-					newCiSignerNode.SetAttribute("SignerId", signerID);
-					_ = codeIntegrityPolicy.CiSignersNode.AppendChild(newCiSignerNode);
+					umciDeniedSigners.Add(new DeniedSigner { SignerId = signerID });
+					ciSigners.Add(new CiSigner { SignerId = signerID });
 				}
-
 				// For Kernel-Mode files
 				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
-					XmlElement newKMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
-					newKMCIDeniedSignerNode.SetAttribute("SignerId", signerID);
-					_ = codeIntegrityPolicy.KMCI_ProductSigners_DeniedSigners_Node.AppendChild(newKMCIDeniedSignerNode);
-
-
-					// Kernel-Mode signers don't need CI Signers
+					kmciDeniedSigners.Add(new DeniedSigner { SignerId = signerID });
 				}
-
-				#endregion Adding signer to the Signer Scenario and CiSigners
 			}
 
-			#endregion Creating Signers
+			#endregion
 		}
 
 		#region Add EKU
 
-		// Create the new EKU element
-		XmlElement newEKUNode = codeIntegrityPolicy.XmlDocument.CreateElement("EKU", GlobalVars.SiPolicyNamespace);
-		newEKUNode.SetAttribute("ID", EKUID);
-		newEKUNode.SetAttribute("Value", EKUValue);
-		newEKUNode.SetAttribute("FriendlyName", EKUFriendlyName);
-
-		// Add the EKU to the policy
-		_ = codeIntegrityPolicy.EKUsNode.AppendChild(newEKUNode);
+		if (!ekus.Any(e => e.ID == EKUID))
+		{
+			ekus.Add(new EKU
+			{
+				ID = EKUID,
+				Value = Convert.FromHexString(EKUValue),
+				FriendlyName = EKUFriendlyName
+			});
+		}
 
 		#endregion
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
-	}
+		// Update Policy Object
+		policyObj.FileRules = fileRules.ToArray();
+		policyObj.Signers = signers.ToArray();
+		policyObj.CiSigners = ciSigners.ToArray();
+		policyObj.EKUs = ekus.ToArray();
 
+		umciScenario.ProductSigners.DeniedSigners.DeniedSigner = umciDeniedSigners.ToArray();
+		kmciScenario.ProductSigners.DeniedSigners.DeniedSigner = kmciDeniedSigners.ToArray();
+
+		return policyObj;
+	}
 }

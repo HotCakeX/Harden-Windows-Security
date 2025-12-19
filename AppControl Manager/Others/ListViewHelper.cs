@@ -125,7 +125,7 @@ internal static partial class ListViewHelper
 		if (selectedDate is not null)
 		{
 			filteredResults = filteredResults.Where(item =>
-				item.TimeCreated.HasValue && item.TimeCreated.Value >= selectedDate);
+				item.TimeCreated.HasValue && item.TimeCreated.Value.Date >= selectedDate.Value.Date);
 		}
 
 		// Filter results further to match the search term across multiple properties, case-insensitively

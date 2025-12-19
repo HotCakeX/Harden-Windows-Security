@@ -16,34 +16,60 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
 internal static class NewFilePathRules
 {
-
 	/// <summary>
-	/// Create a new Allow FilePath rule (including Wildcards) in the XML file
+	/// Create a new Allow FilePath rule (including Wildcards) in the SiPolicy object
 	/// Rules will only be created for User-Mode files as Kernel-mode drivers do not support FilePath rules
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="policyObj"></param>
 	/// <param name="data"></param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateAllow(string xmlFilePath, List<FilePathCreator> data)
+	/// <returns>SiPolicy</returns>
+	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<FilePathCreator> data)
 	{
-
 		if (data.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoFilePathRulesDetectedAllowMessage"));
-			return;
+			return policyObj;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, xmlFilePath));
+		// Initialize FileRules list
+		List<object> fileRules = policyObj.FileRules?.ToList() ?? [];
+
+		// Ensure UMCI Scenario exists
+		SigningScenario? umciScenario = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
+		if (umciScenario is null)
+		{
+			umciScenario = new SigningScenario
+			{
+				Value = 12,
+				ID = "ID_SIGNINGSCENARIO_UMCI",
+				FriendlyName = "User Mode Signing Scenario",
+				ProductSigners = new ProductSigners()
+			};
+
+			List<SigningScenario> scenarios = policyObj.SigningScenarios?.ToList() ?? [];
+			scenarios.Add(umciScenario);
+			policyObj.SigningScenarios = scenarios.ToArray();
+		}
+
+		// Ensure ProductSigners exists
+		umciScenario.ProductSigners ??= new ProductSigners();
+
+		// Ensure FileRulesRef exists
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef();
+
+		// Prepare FileRuleRef list
+		List<FileRuleRef> umciFileRuleRefs = umciScenario.ProductSigners.FileRulesRef.FileRuleRef?.ToList() ?? [];
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
@@ -54,21 +80,20 @@ internal static class NewFilePathRules
 			string allowRuleID = $"ID_ALLOW_A_{guid}";
 
 			// Create a new Allow FilePath rule
-			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
-			newFileRule.SetAttribute("ID", allowRuleID);
-			newFileRule.SetAttribute("FriendlyName", GlobalVars.GetStr("FilePathRuleTypeFriendlyName"));
-			newFileRule.SetAttribute("MinimumFileVersion", item.MinimumFileVersion);
-			newFileRule.SetAttribute("FilePath", item.FilePath);
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
+			Allow newAllowRule = new()
+			{
+				ID = allowRuleID,
+				FriendlyName = GlobalVars.GetStr("FilePathRuleTypeFriendlyName"),
+				MinimumFileVersion = item.MinimumFileVersion,
+				FilePath = item.FilePath
+			};
+
+			fileRules.Add(newAllowRule);
 
 			// For User-Mode files only as FilePath rules are not applicable to Kernel-Mode drivers
 			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewUMCIFileRuleRefNode.SetAttribute("RuleID", allowRuleID);
-				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
+				umciFileRuleRefs.Add(new FileRuleRef { RuleID = allowRuleID });
 			}
 			else
 			{
@@ -76,29 +101,58 @@ internal static class NewFilePathRules
 			}
 		}
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update the policy object
+		policyObj.FileRules = fileRules.ToArray();
+		umciScenario.ProductSigners.FileRulesRef.FileRuleRef = umciFileRuleRefs.ToArray();
+
+		return policyObj;
 	}
 
 
 	/// <summary>
-	/// Creates a new Deny FilePath rule (including Wildcards) in the XML file
+	/// Creates a new Deny FilePath rule (including Wildcards) in the SiPolicy object
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="policyObj"></param>
 	/// <param name="data"></param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateDeny(string xmlFilePath, List<FilePathCreator> data)
+	/// <returns>SiPolicy</returns>
+	internal static SiPolicy.SiPolicy CreateDenyEx(SiPolicy.SiPolicy policyObj, List<FilePathCreator> data)
 	{
-
 		if (data.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoFilePathRulesDetectedDenyMessage"));
-			return;
+			return policyObj;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, xmlFilePath));
+		// Initialize FileRules list
+		List<object> fileRules = policyObj.FileRules?.ToList() ?? [];
+
+		// Ensure UMCI Scenario exists
+		SigningScenario? umciScenario = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
+		if (umciScenario is null)
+		{
+			umciScenario = new SigningScenario
+			{
+				Value = 12,
+				ID = "ID_SIGNINGSCENARIO_UMCI",
+				FriendlyName = "User Mode Signing Scenario",
+				ProductSigners = new ProductSigners()
+			};
+
+			List<SigningScenario> scenarios = policyObj.SigningScenarios?.ToList() ?? [];
+			scenarios.Add(umciScenario);
+			policyObj.SigningScenarios = scenarios.ToArray();
+		}
+
+		// Ensure ProductSigners exists
+		umciScenario.ProductSigners ??= new ProductSigners();
+
+		// Ensure FileRulesRef exists
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef();
+
+		// Prepare FileRuleRef list
+		List<FileRuleRef> umciFileRuleRefs = umciScenario.ProductSigners.FileRulesRef.FileRuleRef?.ToList() ?? [];
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
@@ -109,20 +163,19 @@ internal static class NewFilePathRules
 			string denyRuleID = $"ID_DENY_A_{guid}";
 
 			// Create a new Deny FilePath rule
-			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
-			newFileRule.SetAttribute("ID", denyRuleID);
-			newFileRule.SetAttribute("FriendlyName", GlobalVars.GetStr("FilePathRuleTypeFriendlyName"));
-			newFileRule.SetAttribute("FilePath", item.FilePath);
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
+			Deny newDenyRule = new()
+			{
+				ID = denyRuleID,
+				FriendlyName = GlobalVars.GetStr("FilePathRuleTypeFriendlyName"),
+				FilePath = item.FilePath
+			};
+
+			fileRules.Add(newDenyRule);
 
 			// For User-Mode files
 			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewUMCIFileRuleRefNode.SetAttribute("RuleID", denyRuleID);
-				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
+				umciFileRuleRefs.Add(new FileRuleRef { RuleID = denyRuleID });
 			}
 			else
 			{
@@ -130,7 +183,11 @@ internal static class NewFilePathRules
 			}
 		}
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update the policy object
+		policyObj.FileRules = fileRules.ToArray();
+		umciScenario.ProductSigners.FileRulesRef.FileRuleRef = umciFileRuleRefs.ToArray();
+
+		return policyObj;
 	}
 
 }

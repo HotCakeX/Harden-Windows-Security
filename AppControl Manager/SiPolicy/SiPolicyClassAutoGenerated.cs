@@ -32,20 +32,11 @@
 
 namespace AppControlManager.SiPolicy
 {
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class Macros
+	public sealed class Macros
 	{
 
 		private MacrosMacro[] macroField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("Macro")]
 		public MacrosMacro[] Macro
 		{
 			get
@@ -59,21 +50,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	public partial class MacrosMacro
+	public sealed class MacrosMacro
 	{
 
 		private string idField;
 
 		private string valueField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Id
 		{
 			get
@@ -86,8 +69,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Value
 		{
 			get
@@ -101,21 +82,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	public partial class AppSetting
+	public sealed class AppSetting
 	{
 
 		private string[] valueField;
 
 		private string nameField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("Value")]
 		public string[] Value
 		{
 			get
@@ -128,8 +101,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Name
 		{
 			get
@@ -143,21 +114,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	public partial class AppRoot
+	public sealed class AppRoot
 	{
 
 		private AppSetting[] settingField;
 
 		private string manifestField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("Setting")]
 		public AppSetting[] Setting
 		{
 			get
@@ -170,7 +133,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "anyURI")]
 		public string Manifest
 		{
@@ -185,19 +147,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	public partial class AppSettingRegion
+	public sealed class AppSettingRegion
 	{
 
 		private AppRoot[] appField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("App")]
 		public AppRoot[] App
 		{
 			get
@@ -211,19 +165,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	public partial class RuleType
+	public sealed class RuleType
 	{
 
 		private OptionType itemField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("Option")]
 		public OptionType Item
 		{
 			get
@@ -237,122 +183,39 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
 	public enum OptionType
 	{
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:UMCI")]
 		EnabledUMCI,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Boot Menu Protection")]
 		EnabledBootMenuProtection,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Intelligent Security Graph Authorization")]
 		EnabledIntelligentSecurityGraphAuthorization,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Invalidate EAs on Reboot")]
 		EnabledInvalidateEAsonReboot,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Required:WHQL")]
 		RequiredWHQL,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Developer Mode Dynamic Code Trust")]
 		EnabledDeveloperModeDynamicCodeTrust,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Allow Supplemental Policies")]
 		EnabledAllowSupplementalPolicies,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Disabled:Runtime FilePath Rule Protection")]
 		DisabledRuntimeFilePathRuleProtection,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Revoked Expired As Unsigned")]
 		EnabledRevokedExpiredAsUnsigned,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Audit Mode")]
 		EnabledAuditMode,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Disabled:Flight Signing")]
 		DisabledFlightSigning,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Inherit Default Policy")]
 		EnabledInheritDefaultPolicy,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Unsigned System Integrity Policy")]
 		EnabledUnsignedSystemIntegrityPolicy,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Dynamic Code Security")]
 		EnabledDynamicCodeSecurity,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Required:EV Signers")]
 		RequiredEVSigners,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Boot Audit On Failure")]
 		EnabledBootAuditOnFailure,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Advanced Boot Options Menu")]
 		EnabledAdvancedBootOptionsMenu,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Disabled:Script Enforcement")]
 		DisabledScriptEnforcement,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Required:Enforce Store Applications")]
 		RequiredEnforceStoreApplications,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Secure Setting Policy")]
 		EnabledSecureSettingPolicy,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Managed Installer")]
 		EnabledManagedInstaller,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Update Policy No Reboot")]
 		EnabledUpdatePolicyNoReboot,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Conditional Windows Lockdown Policy")]
 		EnabledConditionalWindowsLockdownPolicy,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Disabled:Default Windows Certificate Remapping")]
 		DisabledDefaultWindowsCertificateRemapping
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	public partial class SettingValueType
+	public sealed class SettingValueType
 	{
 
 		private object itemField;
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlElementAttribute("Binary", typeof(byte[]), DataType = "hexBinary")]
 		[System.Xml.Serialization.XmlElementAttribute("Boolean", typeof(bool))]
 		[System.Xml.Serialization.XmlElementAttribute("DWord", typeof(uint))]
@@ -370,14 +233,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class Setting
+	public sealed class Setting
 	{
 
 		private SettingValueType valueField;
@@ -388,7 +244,6 @@ namespace AppControlManager.SiPolicy
 
 		private string valueNameField;
 
-		/// <remarks/>
 		public SettingValueType Value
 		{
 			get
@@ -401,8 +256,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Provider
 		{
 			get
@@ -415,8 +268,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Key
 		{
 			get
@@ -429,8 +280,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ValueName
 		{
 			get
@@ -444,20 +293,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class Settings
+	public sealed class Settings
 	{
 
 		private Setting[] itemsField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("Setting")]
 		public Setting[] Items
 		{
 			get
@@ -471,20 +311,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class CertEKU
+	public sealed class CertEKU
 	{
 
 		private string idField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -498,20 +329,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class CertOemID
+	public sealed class CertOemID
 	{
 
 		private string valueField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Value
 		{
 			get
@@ -525,20 +347,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class CertPublisher
+	public sealed class CertPublisher
 	{
 
 		private string valueField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Value
 		{
 			get
@@ -552,20 +365,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class CertIssuer
+	public sealed class CertIssuer
 	{
 
 		private string valueField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Value
 		{
 			get
@@ -579,22 +383,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class CertRoot
+	public sealed class CertRoot
 	{
 
 		private CertEnumType typeField;
 
 		private byte[] valueField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public CertEnumType Type
 		{
 			get
@@ -607,7 +402,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "hexBinary")]
 		public byte[] Value
 		{
@@ -622,28 +416,15 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
 	public enum CertEnumType
 	{
 
-		/// <remarks/>
 		TBS,
 
-		/// <remarks/>
 		Wellknown,
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class ProductSigners
+	public sealed class ProductSigners
 	{
 
 		private AllowedSigners allowedSignersField;
@@ -652,7 +433,6 @@ namespace AppControlManager.SiPolicy
 
 		private FileRulesRef fileRulesRefField;
 
-		/// <remarks/>
 		public AllowedSigners AllowedSigners
 		{
 			get
@@ -665,7 +445,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public DeniedSigners DeniedSigners
 		{
 			get
@@ -678,7 +457,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public FileRulesRef FileRulesRef
 		{
 			get
@@ -692,22 +470,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class AllowedSigners
+	public sealed class AllowedSigners
 	{
 
 		private AllowedSigner[] allowedSignerField;
 
 		private string workaroundField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("AllowedSigner")]
 		public AllowedSigner[] AllowedSigner
 		{
 			get
@@ -720,8 +489,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Workaround
 		{
 			get
@@ -735,22 +502,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class AllowedSigner
+	public sealed class AllowedSigner
 	{
 
 		private ExceptDenyRule[] exceptDenyRuleField;
 
 		private string signerIdField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("ExceptDenyRule")]
 		public ExceptDenyRule[] ExceptDenyRule
 		{
 			get
@@ -763,8 +521,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string SignerId
 		{
 			get
@@ -778,20 +534,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class ExceptDenyRule
+	public sealed class ExceptDenyRule
 	{
 
 		private string denyRuleIDField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string DenyRuleID
 		{
 			get
@@ -805,22 +552,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class DeniedSigners
+	public sealed class DeniedSigners
 	{
 
 		private DeniedSigner[] deniedSignerField;
 
 		private string workaroundField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("DeniedSigner")]
 		public DeniedSigner[] DeniedSigner
 		{
 			get
@@ -833,8 +571,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Workaround
 		{
 			get
@@ -848,22 +584,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class DeniedSigner
+	public sealed class DeniedSigner
 	{
 
 		private ExceptAllowRule[] exceptAllowRuleField;
 
 		private string signerIdField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("ExceptAllowRule")]
 		public ExceptAllowRule[] ExceptAllowRule
 		{
 			get
@@ -876,8 +603,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string SignerId
 		{
 			get
@@ -891,20 +616,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class ExceptAllowRule
+	public sealed class ExceptAllowRule
 	{
 
 		private string allowRuleIDField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string AllowRuleID
 		{
 			get
@@ -918,22 +634,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class FileRulesRef
+	public sealed class FileRulesRef
 	{
 
 		private FileRuleRef[] fileRuleRefField;
 
 		private string workaroundField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("FileRuleRef")]
 		public FileRuleRef[] FileRuleRef
 		{
 			get
@@ -946,8 +653,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Workaround
 		{
 			get
@@ -961,20 +666,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class FileRuleRef
+	public sealed class FileRuleRef
 	{
 
 		private string ruleIDField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string RuleID
 		{
 			get
@@ -988,14 +684,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class TestSigners
+	public sealed class TestSigners
 	{
 
 		private AllowedSigners allowedSignersField;
@@ -1004,7 +693,6 @@ namespace AppControlManager.SiPolicy
 
 		private FileRulesRef fileRulesRefField;
 
-		/// <remarks/>
 		public AllowedSigners AllowedSigners
 		{
 			get
@@ -1017,7 +705,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public DeniedSigners DeniedSigners
 		{
 			get
@@ -1030,7 +717,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public FileRulesRef FileRulesRef
 		{
 			get
@@ -1044,14 +730,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class TestSigningSigners
+	public sealed class TestSigningSigners
 	{
 
 		private AllowedSigners allowedSignersField;
@@ -1060,7 +739,6 @@ namespace AppControlManager.SiPolicy
 
 		private FileRulesRef fileRulesRefField;
 
-		/// <remarks/>
 		public AllowedSigners AllowedSigners
 		{
 			get
@@ -1073,7 +751,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public DeniedSigners DeniedSigners
 		{
 			get
@@ -1086,7 +763,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public FileRulesRef FileRulesRef
 		{
 			get
@@ -1100,22 +776,13 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class AppIDTag
+	public sealed class AppIDTag
 	{
 
 		private string keyField;
 
 		private string valueField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Key
 		{
 			get
@@ -1128,8 +795,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Value
 		{
 			get
@@ -1143,14 +808,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class AppIDTags
+	public sealed class AppIDTags
 	{
 
 		private AppIDTag[] appIDTagField;
@@ -1159,8 +817,6 @@ namespace AppControlManager.SiPolicy
 
 		private bool enforceDLLFieldSpecified;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("AppIDTag")]
 		public AppIDTag[] AppIDTag
 		{
 			get
@@ -1173,8 +829,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public bool EnforceDLL
 		{
 			get
@@ -1187,8 +841,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlIgnoreAttribute()]
 		public bool EnforceDLLSpecified
 		{
 			get
@@ -1202,20 +854,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class FileAttribRef
+	public sealed class FileAttribRef
 	{
 
 		private string ruleIDField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string RuleID
 		{
 			get
@@ -1229,20 +872,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class EKUs
+	public sealed class EKUs
 	{
 
 		private EKU[] itemsField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("EKU")]
 		public EKU[] Items
 		{
 			get
@@ -1256,14 +890,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class EKU
+	public sealed class EKU
 	{
 
 		private string idField;
@@ -1272,8 +899,6 @@ namespace AppControlManager.SiPolicy
 
 		private string friendlyNameField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -1286,7 +911,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "hexBinary")]
 		public byte[] Value
 		{
@@ -1300,8 +924,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FriendlyName
 		{
 			get
@@ -1315,19 +937,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class FileRules
+	public sealed class FileRules
 	{
 
 		private object[] itemsField;
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlElementAttribute("Allow", typeof(Allow))]
 		[System.Xml.Serialization.XmlElementAttribute("Deny", typeof(Deny))]
 		[System.Xml.Serialization.XmlElementAttribute("FileAttrib", typeof(FileAttrib))]
@@ -1345,14 +959,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class Allow
+	public sealed class Allow
 	{
 
 		private string idField;
@@ -1381,8 +988,6 @@ namespace AppControlManager.SiPolicy
 
 		private string filePathField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -1395,8 +1000,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FriendlyName
 		{
 			get
@@ -1409,8 +1012,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileName
 		{
 			get
@@ -1423,8 +1024,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string InternalName
 		{
 			get
@@ -1437,8 +1036,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileDescription
 		{
 			get
@@ -1451,8 +1048,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ProductName
 		{
 			get
@@ -1465,8 +1060,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageFamilyName
 		{
 			get
@@ -1479,8 +1072,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageVersion
 		{
 			get
@@ -1493,8 +1084,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MinimumFileVersion
 		{
 			get
@@ -1507,8 +1096,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MaximumFileVersion
 		{
 			get
@@ -1521,7 +1108,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "hexBinary")]
 		public byte[] Hash
 		{
@@ -1535,8 +1121,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string AppIDs
 		{
 			get
@@ -1549,8 +1133,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FilePath
 		{
 			get
@@ -1564,14 +1146,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class Deny
+	public sealed class Deny
 	{
 
 		private string idField;
@@ -1600,8 +1175,6 @@ namespace AppControlManager.SiPolicy
 
 		private string filePathField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -1614,8 +1187,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FriendlyName
 		{
 			get
@@ -1628,8 +1199,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileName
 		{
 			get
@@ -1642,8 +1211,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string InternalName
 		{
 			get
@@ -1656,8 +1223,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileDescription
 		{
 			get
@@ -1670,8 +1235,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ProductName
 		{
 			get
@@ -1684,8 +1247,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageFamilyName
 		{
 			get
@@ -1698,8 +1259,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageVersion
 		{
 			get
@@ -1712,8 +1271,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MinimumFileVersion
 		{
 			get
@@ -1726,8 +1283,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MaximumFileVersion
 		{
 			get
@@ -1740,7 +1295,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "hexBinary")]
 		public byte[] Hash
 		{
@@ -1754,8 +1308,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string AppIDs
 		{
 			get
@@ -1768,8 +1320,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FilePath
 		{
 			get
@@ -1783,14 +1333,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class FileAttrib
+	public sealed class FileAttrib
 	{
 
 		private string idField;
@@ -1819,8 +1362,6 @@ namespace AppControlManager.SiPolicy
 
 		private string filePathField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -1833,8 +1374,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FriendlyName
 		{
 			get
@@ -1847,8 +1386,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileName
 		{
 			get
@@ -1861,8 +1398,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string InternalName
 		{
 			get
@@ -1875,8 +1410,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileDescription
 		{
 			get
@@ -1889,8 +1422,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ProductName
 		{
 			get
@@ -1903,8 +1434,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageFamilyName
 		{
 			get
@@ -1917,8 +1446,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageVersion
 		{
 			get
@@ -1931,8 +1458,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MinimumFileVersion
 		{
 			get
@@ -1945,8 +1470,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MaximumFileVersion
 		{
 			get
@@ -1959,7 +1482,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "hexBinary")]
 		public byte[] Hash
 		{
@@ -1973,8 +1495,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string AppIDs
 		{
 			get
@@ -1987,8 +1507,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FilePath
 		{
 			get
@@ -2002,14 +1520,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class FileRule
+	public sealed class FileRule
 	{
 
 		private string idField;
@@ -2040,8 +1551,6 @@ namespace AppControlManager.SiPolicy
 
 		private RuleTypeType typeField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -2054,8 +1563,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FriendlyName
 		{
 			get
@@ -2068,8 +1575,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileName
 		{
 			get
@@ -2082,8 +1587,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string InternalName
 		{
 			get
@@ -2096,8 +1599,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FileDescription
 		{
 			get
@@ -2110,8 +1611,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ProductName
 		{
 			get
@@ -2124,8 +1623,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageFamilyName
 		{
 			get
@@ -2138,8 +1635,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string PackageVersion
 		{
 			get
@@ -2152,8 +1647,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MinimumFileVersion
 		{
 			get
@@ -2166,8 +1659,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string MaximumFileVersion
 		{
 			get
@@ -2180,7 +1671,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlAttributeAttribute(DataType = "hexBinary")]
 		public byte[] Hash
 		{
@@ -2194,8 +1684,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string AppIDs
 		{
 			get
@@ -2208,8 +1696,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FilePath
 		{
 			get
@@ -2222,8 +1708,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public RuleTypeType Type
 		{
 			get
@@ -2237,37 +1721,21 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
 	public enum RuleTypeType
 	{
 
-		/// <remarks/>
 		Match,
 
-		/// <remarks/>
 		Exclude,
 
-		/// <remarks/>
 		Attribute,
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class UpdatePolicySigner
+	public sealed class UpdatePolicySigner
 	{
 
 		private string signerIdField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string SignerId
 		{
 			get
@@ -2281,20 +1749,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class UpdatePolicySigners
+	public sealed class UpdatePolicySigners
 	{
 
 		private UpdatePolicySigner[] itemsField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("UpdatePolicySigner")]
 		public UpdatePolicySigner[] Items
 		{
 			get
@@ -2308,20 +1767,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class SupplementalPolicySigner
+	public sealed class SupplementalPolicySigner
 	{
 
 		private string signerIdField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string SignerId
 		{
 			get
@@ -2335,20 +1785,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class SupplementalPolicySigners
+	public sealed class SupplementalPolicySigners
 	{
 
 		private SupplementalPolicySigner[] itemsField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("SupplementalPolicySigner")]
 		public SupplementalPolicySigner[] Items
 		{
 			get
@@ -2362,20 +1803,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class CiSigner
+	public sealed class CiSigner
 	{
 
 		private string signerIdField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string SignerId
 		{
 			get
@@ -2389,20 +1821,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class CiSigners
+	public sealed class CiSigners
 	{
 
 		private CiSigner[] itemsField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("CiSigner")]
 		public CiSigner[] Items
 		{
 			get
@@ -2416,20 +1839,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class Signers
+	public sealed class Signers
 	{
 
 		private Signer[] itemsField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("Signer")]
 		public Signer[] Items
 		{
 			get
@@ -2443,14 +1857,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class Signer
+	public sealed class Signer
 	{
 
 		private CertRoot certRootField;
@@ -2473,7 +1880,6 @@ namespace AppControlManager.SiPolicy
 
 		private bool signTimeAfterFieldSpecified;
 
-		/// <remarks/>
 		public CertRoot CertRoot
 		{
 			get
@@ -2486,8 +1892,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("CertEKU")]
 		public CertEKU[] CertEKU
 		{
 			get
@@ -2500,7 +1904,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public CertIssuer CertIssuer
 		{
 			get
@@ -2513,7 +1916,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public CertPublisher CertPublisher
 		{
 			get
@@ -2526,7 +1928,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public CertOemID CertOemID
 		{
 			get
@@ -2539,8 +1940,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("FileAttribRef")]
 		public FileAttribRef[] FileAttribRef
 		{
 			get
@@ -2553,8 +1952,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string Name
 		{
 			get
@@ -2567,8 +1964,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -2581,8 +1976,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public System.DateTime SignTimeAfter
 		{
 			get
@@ -2595,8 +1988,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlIgnoreAttribute()]
 		public bool SignTimeAfterSpecified
 		{
 			get
@@ -2610,20 +2001,11 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class SigningScenarios
+	public sealed class SigningScenarios
 	{
 
 		private SigningScenario[] itemsField;
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlElementAttribute("SigningScenario")]
 		public SigningScenario[] Items
 		{
 			get
@@ -2637,14 +2019,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class SigningScenario
+	public sealed class SigningScenario
 	{
 
 		private ProductSigners productSignersField;
@@ -2667,7 +2042,6 @@ namespace AppControlManager.SiPolicy
 
 		private bool minimumHashAlgorithmFieldSpecified;
 
-		/// <remarks/>
 		public ProductSigners ProductSigners
 		{
 			get
@@ -2680,7 +2054,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public TestSigners TestSigners
 		{
 			get
@@ -2693,7 +2066,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public TestSigningSigners TestSigningSigners
 		{
 			get
@@ -2706,7 +2078,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public AppIDTags AppIDTags
 		{
 			get
@@ -2719,8 +2090,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string ID
 		{
 			get
@@ -2733,8 +2102,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FriendlyName
 		{
 			get
@@ -2747,8 +2114,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public byte Value
 		{
 			get
@@ -2761,8 +2126,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string InheritedScenarios
 		{
 			get
@@ -2775,8 +2138,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public ushort MinimumHashAlgorithm
 		{
 			get
@@ -2789,8 +2150,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlIgnoreAttribute()]
 		public bool MinimumHashAlgorithmSpecified
 		{
 			get
@@ -2804,14 +2163,7 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:schemas-microsoft-com:sipolicy")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy", IsNullable = false)]
-	public partial class SiPolicy
+	public sealed class SiPolicy
 	{
 
 		private string versionExField;
@@ -2856,7 +2208,6 @@ namespace AppControlManager.SiPolicy
 
 		private bool policyTypeFieldSpecified;
 
-		/// <remarks/>
 		public string VersionEx
 		{
 			get
@@ -2869,7 +2220,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public string PolicyTypeID
 		{
 			get
@@ -2882,7 +2232,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public string PlatformID
 		{
 			get
@@ -2895,7 +2244,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public string PolicyID
 		{
 			get
@@ -2908,7 +2256,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public string BasePolicyID
 		{
 			get
@@ -2921,7 +2268,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("Rule", IsNullable = false)]
 		public RuleType[] Rules
 		{
@@ -2935,7 +2281,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("EKU", IsNullable = false)]
 		public EKU[] EKUs
 		{
@@ -2949,7 +2294,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("Allow", typeof(Allow), IsNullable = false)]
 		[System.Xml.Serialization.XmlArrayItemAttribute("Deny", typeof(Deny), IsNullable = false)]
 		[System.Xml.Serialization.XmlArrayItemAttribute("FileAttrib", typeof(FileAttrib), IsNullable = false)]
@@ -2966,7 +2310,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("Signer", IsNullable = false)]
 		public Signer[] Signers
 		{
@@ -2980,7 +2323,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("SigningScenario", IsNullable = false)]
 		public SigningScenario[] SigningScenarios
 		{
@@ -2994,7 +2336,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("UpdatePolicySigner", IsNullable = false)]
 		public UpdatePolicySigner[] UpdatePolicySigners
 		{
@@ -3008,7 +2349,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("CiSigner", IsNullable = false)]
 		public CiSigner[] CiSigners
 		{
@@ -3022,7 +2362,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public uint HvciOptions
 		{
 			get
@@ -3035,8 +2374,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlIgnoreAttribute()]
 		public bool HvciOptionsSpecified
 		{
 			get
@@ -3049,7 +2386,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("Setting", IsNullable = false)]
 		public Setting[] Settings
 		{
@@ -3063,7 +2399,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("Macro", IsNullable = false)]
 		public MacrosMacro[] Macros
 		{
@@ -3077,7 +2412,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		[System.Xml.Serialization.XmlArrayItemAttribute("SupplementalPolicySigner", IsNullable = false)]
 		public SupplementalPolicySigner[] SupplementalPolicySigners
 		{
@@ -3091,7 +2425,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
 		public AppSettingRegion AppSettings
 		{
 			get
@@ -3104,8 +2437,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public string FriendlyName
 		{
 			get
@@ -3118,8 +2449,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlAttributeAttribute()]
 		public PolicyType PolicyType
 		{
 			get
@@ -3132,8 +2461,6 @@ namespace AppControlManager.SiPolicy
 			}
 		}
 
-		/// <remarks/>
-		[System.Xml.Serialization.XmlIgnoreAttribute()]
 		public bool PolicyTypeSpecified
 		{
 			get
@@ -3147,23 +2474,10 @@ namespace AppControlManager.SiPolicy
 		}
 	}
 
-	/// <remarks/>
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:schemas-microsoft-com:sipolicy")]
 	public enum PolicyType
 	{
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Base Policy")]
 		BasePolicy,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("Supplemental Policy")]
 		SupplementalPolicy,
-
-		/// <remarks/>
-		[System.Xml.Serialization.XmlEnumAttribute("AppID Tagging Policy")]
 		AppIDTaggingPolicy,
 	}
 }

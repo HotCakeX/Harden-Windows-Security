@@ -16,195 +16,195 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
 internal static class NewPublisherLevelRules
 {
-
 	/// <summary>
-	/// Creates new Allow Publisher level rules in an XML file
+	/// Creates new Allow Publisher level rules in the SiPolicy object
 	/// Each rules includes the Signers, AllowedSigners, and CiSigners(depending on kernel/user mode)
 	/// </summary>
-	/// <param name="xmlFilePath">The path to the XML file to be modified</param>
+	/// <param name="policyObj"></param>
 	/// <param name="publisherSigners">The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method</param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateAllow(string xmlFilePath, List<PublisherSignerCreator> publisherSigners)
+	/// <returns>SiPolicy</returns>
+	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<PublisherSignerCreator> publisherSigners)
 	{
-
 		if (publisherSigners.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoPublisherSignersDetectedAllowMessage"));
-			return;
+			return policyObj;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
 
-		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, xmlFilePath));
+		// Get or Initialize lists
+		List<Signer> signers = policyObj.Signers?.ToList() ?? [];
+		List<CiSigner> ciSigners = policyObj.CiSigners?.ToList() ?? [];
+
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = EnsureScenario(policyObj, 12);
+		SigningScenario kmciScenario = EnsureScenario(policyObj, 131);
+
+		// Ensure ProductSigners exist
+		umciScenario.ProductSigners ??= new ProductSigners();
+		kmciScenario.ProductSigners ??= new ProductSigners();
+
+		// Ensure AllowedSigners exist
+		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
+		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
+
+		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
+		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
 
 		foreach (PublisherSignerCreator publisherData in publisherSigners)
 		{
-
-			// Create signer for each certificate details in the PublisherSigners
-			// Some files are signed by multiple signers
 			foreach (CertificateDetailsCreator signerData in publisherData.CertificateDetails)
 			{
-
 				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 				string SignerID = $"ID_SIGNER_B_{guid}";
 
-				// Create the new Signer element
+				Signer newSigner = new()
+				{
+					ID = SignerID,
+					Name = signerData.IntermediateCertName,
+					CertRoot = new CertRoot
+					{
+						Type = CertEnumType.TBS,
+						Value = Convert.FromHexString(signerData.IntermediateCertTBS)
+					},
+					CertPublisher = new CertPublisher { Value = signerData.LeafCertName }
+				};
 
-				// Create a new Signer node
-				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
-				// Set the attributes for the new Signer node
-				newSignerNode.SetAttribute("ID", SignerID);
-				newSignerNode.SetAttribute("Name", signerData.IntermediateCertName);
-
-				// Create the CertRoot element and add it to the Signer element
-				XmlElement certRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
-				certRootNode.SetAttribute("Type", "TBS");
-				certRootNode.SetAttribute("Value", signerData.IntermediateCertTBS);
-				_ = newSignerNode.AppendChild(certRootNode);
-
-				// Create the CertPublisher element and add it to the Signer element
-				XmlElement certPublisherNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertPublisher", GlobalVars.SiPolicyNamespace);
-				certPublisherNode.SetAttribute("Value", signerData.LeafCertName);
-				_ = newSignerNode.AppendChild(certPublisherNode);
-
-				// Add the new Signer element to the Signers node
-				_ = codeIntegrityPolicy.SignersNode.AppendChild(newSignerNode);
-
-
-				// Adding signer to the Signer Scenario and CiSigners
+				signers.Add(newSigner);
 
 				// For User-Mode files
 				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					// Create AllowedSigner nodes inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
-					XmlElement newUMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
-					newUMCIAllowedSignerNode.SetAttribute("SignerId", SignerID);
-					_ = codeIntegrityPolicy.UMCI_ProductSigners_AllowedSigners_Node.AppendChild(newUMCIAllowedSignerNode);
-
-
-					// Create a CI Signer for the User Mode Signer
-					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
-					newCiSignerNode.SetAttribute("SignerId", SignerID);
-					_ = codeIntegrityPolicy.CiSignersNode.AppendChild(newCiSignerNode);
+					umciAllowedSigners.Add(new AllowedSigner { SignerId = SignerID });
+					ciSigners.Add(new CiSigner { SignerId = SignerID });
 				}
-
 				// For Kernel-Mode files
 				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					// Create AllowedSigner nodes inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
-					XmlElement newKMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
-					newKMCIAllowedSignerNode.SetAttribute("SignerId", SignerID);
-					_ = codeIntegrityPolicy.KMCI_ProductSigners_AllowedSigners_Node.AppendChild(newKMCIAllowedSignerNode);
-
-
-					// Kernel-Mode signers don't need CI Signers
+					kmciAllowedSigners.Add(new AllowedSigner { SignerId = SignerID });
 				}
 			}
 		}
 
-		// Save the XML file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update Policy Object
+		policyObj.Signers = signers.ToArray();
+		policyObj.CiSigners = ciSigners.ToArray();
+
+		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners.ToArray();
+		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners.ToArray();
+
+		return policyObj;
 	}
 
-
 	/// <summary>
-	/// Creates new Deny Publisher level rules in an XML file
+	/// Creates new Deny Publisher level rules in the SiPolicy object
 	/// Each rules includes the Signers, DeniedSigners, and CiSigners(depending on kernel/user mode)
 	/// </summary>
-	/// <param name="xmlFilePath">The path to the XML file to be modified</param>
+	/// <param name="policyObj"></param>
 	/// <param name="publisherSigners">The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method</param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateDeny(string xmlFilePath, List<PublisherSignerCreator> publisherSigners)
+	/// <returns>SiPolicy</returns>
+	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy policyObj, List<PublisherSignerCreator> publisherSigners)
 	{
-
 		if (publisherSigners.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoPublisherSignersDetectedDenyMessage"));
-			return;
+			return policyObj;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
 
-		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, xmlFilePath));
+		// Get or Initialize lists
+		List<Signer> signers = policyObj.Signers?.ToList() ?? [];
+		List<CiSigner> ciSigners = policyObj.CiSigners?.ToList() ?? [];
+
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = EnsureScenario(policyObj, 12);
+		SigningScenario kmciScenario = EnsureScenario(policyObj, 131);
+
+		// Ensure ProductSigners exist
+		umciScenario.ProductSigners ??= new ProductSigners();
+		kmciScenario.ProductSigners ??= new ProductSigners();
+
+		// Ensure DeniedSigners exist
+		umciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners();
+		kmciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners();
+
+		List<DeniedSigner> umciDeniedSigners = umciScenario.ProductSigners.DeniedSigners.DeniedSigner?.ToList() ?? [];
+		List<DeniedSigner> kmciDeniedSigners = kmciScenario.ProductSigners.DeniedSigners.DeniedSigner?.ToList() ?? [];
 
 		foreach (PublisherSignerCreator publisherData in publisherSigners)
 		{
-
-			// Create signer for each certificate details in the PublisherSigners
-			// Some files are signed by multiple signers
 			foreach (CertificateDetailsCreator signerData in publisherData.CertificateDetails)
 			{
-
 				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 				string SignerID = $"ID_SIGNER_B_{guid}";
 
-				// Create the new Signer element
+				Signer newSigner = new()
+				{
+					ID = SignerID,
+					Name = signerData.IntermediateCertName,
+					CertRoot = new CertRoot
+					{
+						Type = CertEnumType.TBS,
+						Value = Convert.FromHexString(signerData.IntermediateCertTBS)
+					},
+					CertPublisher = new CertPublisher { Value = signerData.LeafCertName }
+				};
 
-				// Create a new Signer node
-				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
-				// Set the attributes for the new Signer node
-				newSignerNode.SetAttribute("ID", SignerID);
-				newSignerNode.SetAttribute("Name", signerData.IntermediateCertName);
-
-				// Create the CertRoot element and add it to the Signer element
-				XmlElement certRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
-				certRootNode.SetAttribute("Type", "TBS");
-				certRootNode.SetAttribute("Value", signerData.IntermediateCertTBS);
-				_ = newSignerNode.AppendChild(certRootNode);
-
-				// Create the CertPublisher element and add it to the Signer element
-				XmlElement certPublisherNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertPublisher", GlobalVars.SiPolicyNamespace);
-				certPublisherNode.SetAttribute("Value", signerData.LeafCertName);
-				_ = newSignerNode.AppendChild(certPublisherNode);
-
-				// Add the new Signer element to the Signers node
-				_ = codeIntegrityPolicy.SignersNode.AppendChild(newSignerNode);
-
-
-				// Adding signer to the Signer Scenario and CiSigners
+				signers.Add(newSigner);
 
 				// For User-Mode files
 				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					// Create DeniedSigner nodes inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
-					XmlElement newUMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
-					newUMCIDeniedSignerNode.SetAttribute("SignerId", SignerID);
-					_ = codeIntegrityPolicy.UMCI_ProductSigners_DeniedSigners_Node.AppendChild(newUMCIDeniedSignerNode);
-
-
-					// Create a CI Signer for the User Mode Signer
-					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
-					newCiSignerNode.SetAttribute("SignerId", SignerID);
-					_ = codeIntegrityPolicy.CiSignersNode.AppendChild(newCiSignerNode);
+					umciDeniedSigners.Add(new DeniedSigner { SignerId = SignerID });
+					ciSigners.Add(new CiSigner { SignerId = SignerID });
 				}
-
 				// For Kernel-Mode files
 				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					// Create DeniedSigner nodes inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
-					XmlElement newKMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
-					newKMCIDeniedSignerNode.SetAttribute("SignerId", SignerID);
-					_ = codeIntegrityPolicy.KMCI_ProductSigners_DeniedSigners_Node.AppendChild(newKMCIDeniedSignerNode);
-
-
-					// Kernel-Mode signers don't need CI Signers
+					kmciDeniedSigners.Add(new DeniedSigner { SignerId = SignerID });
 				}
 			}
 		}
 
-		// Save the XML file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update Policy Object
+		policyObj.Signers = signers.ToArray();
+		policyObj.CiSigners = ciSigners.ToArray();
+
+		umciScenario.ProductSigners.DeniedSigners.DeniedSigner = umciDeniedSigners.ToArray();
+		kmciScenario.ProductSigners.DeniedSigners.DeniedSigner = kmciDeniedSigners.ToArray();
+
+		return policyObj;
+	}
+
+	internal static SigningScenario EnsureScenario(SiPolicy.SiPolicy policyObj, byte scenarioValue)
+	{
+		SigningScenario? scenario = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == scenarioValue);
+		if (scenario is null)
+		{
+			scenario = new SigningScenario
+			{
+				Value = scenarioValue,
+				ID = scenarioValue == 12 ? "ID_SIGNINGSCENARIO_UMCI" : "ID_SIGNINGSCENARIO_KMCI",
+				FriendlyName = scenarioValue == 12 ? "User Mode Signing Scenario" : "Kernel Mode Signing Scenario",
+				ProductSigners = new ProductSigners()
+			};
+
+			List<SigningScenario> scenarios = policyObj.SigningScenarios?.ToList() ?? [];
+			scenarios.Add(scenario);
+			policyObj.SigningScenarios = scenarios.ToArray();
+		}
+		return scenario;
 	}
 
 }

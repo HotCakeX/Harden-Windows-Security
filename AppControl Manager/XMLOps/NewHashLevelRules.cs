@@ -16,34 +16,83 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
 internal static class NewHashLevelRules
 {
-	/// <summary>
-	/// Creates new Allow Hash level rules in an XML file
-	/// For each hash data, it creates 2 Hash rules, one for Authenticode SHA2-256 and one for SHA1 hash
-	/// It also adds the FileRulesRef for each hash to the ProductSigners node of the correct signing scenario(Kernel/User mode)
-	/// </summary>
-	/// <param name="xmlFilePath"></param>
-	/// <param name="hashes"> The Hashes to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method </param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateAllow(string xmlFilePath, List<HashCreator> hashes)
-	{
 
+	/// <summary>
+	/// Creates new Allow Hash level rules in the SiPolicy object
+	/// </summary>
+	/// <param name="siPolicy"></param>
+	/// <param name="hashes"> The Hashes to be used for creating the rules </param>
+	/// <returns>Modified SiPolicy object</returns>
+	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy siPolicy, List<HashCreator> hashes)
+	{
 		if (hashes.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoHashesDetectedAllowMessage"));
-			return;
+			return siPolicy;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		Logger.Write(string.Format(GlobalVars.GetStr("HashRulesToAddMessage"), hashes.Count, "SiPolicy Object"));
 
-		Logger.Write(string.Format(GlobalVars.GetStr("HashRulesToAddMessage"), hashes.Count, xmlFilePath));
+		// Ensure FileRules list
+		List<object> fileRulesList = siPolicy.FileRules != null ? [.. siPolicy.FileRules] : [];
+
+		// Ensure Signing Scenarios exist
+
+		// UMCI (User Mode - 12)
+		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
+		if (umci == null)
+		{
+			umci = new SigningScenario
+			{
+				Value = 12,
+				ID = "ID_SIGNINGSCENARIO_UMCI",
+				FriendlyName = "User Mode Signing Scenario",
+				ProductSigners = new ProductSigners { FileRulesRef = new FileRulesRef() }
+			};
+			List<SigningScenario> scenarios = siPolicy.SigningScenarios != null ? [.. siPolicy.SigningScenarios] : [];
+			scenarios.Add(umci);
+			siPolicy.SigningScenarios = [.. scenarios];
+		}
+		else
+		{
+			umci.ProductSigners ??= new ProductSigners();
+			umci.ProductSigners.FileRulesRef ??= new FileRulesRef();
+		}
+
+		// KMCI (Kernel Mode - 131)
+		SigningScenario? kmci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
+		if (kmci == null)
+		{
+			kmci = new SigningScenario
+			{
+				Value = 131,
+				ID = "ID_SIGNINGSCENARIO_KMCI",
+				FriendlyName = "Kernel Mode Signing Scenario",
+				ProductSigners = new ProductSigners { FileRulesRef = new FileRulesRef() }
+			};
+			// Re-fetch scenarios as we might have updated the array above
+			List<SigningScenario> scenarios = siPolicy.SigningScenarios != null ? [.. siPolicy.SigningScenarios] : [];
+			scenarios.Add(kmci);
+			siPolicy.SigningScenarios = [.. scenarios];
+		}
+		else
+		{
+			kmci.ProductSigners ??= new ProductSigners();
+			kmci.ProductSigners.FileRulesRef ??= new FileRulesRef();
+		}
+
+		// Prepare Ref Lists
+		List<FileRuleRef> umciRefs = umci.ProductSigners.FileRulesRef.FileRuleRef != null ? [.. umci.ProductSigners.FileRulesRef.FileRuleRef] : [];
+		List<FileRuleRef> kmciRefs = kmci.ProductSigners.FileRulesRef.FileRuleRef != null ? [.. kmci.ProductSigners.FileRulesRef.FileRuleRef] : [];
 
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in hashes)
@@ -55,83 +104,120 @@ internal static class NewHashLevelRules
 			string HashSHA1RuleID = $"ID_ALLOW_B_{guid}";
 
 			// Create new Allow Hash rule for Authenticode SHA256
-			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
-			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.GetStr("Sha256HashFriendlyName"), hash.FileName));
-			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
+			Allow newAuth256Rule = new()
+			{
+				ID = HashSHA256RuleID,
+				FriendlyName = string.Format(GlobalVars.GetStr("Sha256HashFriendlyName"), hash.FileName),
+				Hash = Convert.FromHexString(hash.AuthenticodeSHA256)
+			};
+			fileRulesList.Add(newAuth256Rule);
 
 			// Create new Allow Hash rule for Authenticode SHA1
-			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
-			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.GetStr("Sha1HashFriendlyName"), hash.FileName));
-			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
+			Allow newAuth1Rule = new()
+			{
+				ID = HashSHA1RuleID,
+				FriendlyName = string.Format(GlobalVars.GetStr("Sha1HashFriendlyName"), hash.FileName),
+				Hash = Convert.FromHexString(hash.AuthenticodeSHA1)
+			};
+			fileRulesList.Add(newAuth1Rule);
 
 			// For User-Mode files
 			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewUMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
-				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor256);
-
-				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewUMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
-				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor1);
+				umciRefs.Add(new FileRuleRef { RuleID = HashSHA256RuleID });
+				umciRefs.Add(new FileRuleRef { RuleID = HashSHA1RuleID });
 			}
 
 			// For Kernel-Mode files
 			else if (hash.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
-
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
-				// Since MDE does not record the Signing information events (Id 8038) for MSI files so we must create Hash based rules for them
 				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
 					Logger.Write(string.Format(GlobalVars.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
-				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewKMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
-				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor256);
-
-				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewKMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
-				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor1);
+				kmciRefs.Add(new FileRuleRef { RuleID = HashSHA256RuleID });
+				kmciRefs.Add(new FileRuleRef { RuleID = HashSHA1RuleID });
 			}
 		}
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update the SiPolicy object
+		siPolicy.FileRules = [.. fileRulesList];
+		umci.ProductSigners.FileRulesRef.FileRuleRef = [.. umciRefs];
+		kmci.ProductSigners.FileRulesRef.FileRuleRef = [.. kmciRefs];
+
+		return siPolicy;
 	}
 
-
 	/// <summary>
-	/// Creates new Deny Hash level rules in an XML file
-	/// For each hash data, it creates 2 Hash rules, one for Authenticode SHA2-256 and one for SHA1 hash
-	/// It also adds the FileRulesRef for each hash to the ProductSigners node of the correct signing scenario(Kernel/User mode)
+	/// Creates new Deny Hash level rules in the SiPolicy object
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
-	/// <param name="hashes"> The Hashes to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method </param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void CreateDeny(string xmlFilePath, List<HashCreator> hashes)
+	/// <param name="siPolicy"></param>
+	/// <param name="hashes"> The Hashes to be used for creating the rules </param>
+	/// <returns>Modified SiPolicy object</returns>
+	internal static SiPolicy.SiPolicy CreateDenyEx(SiPolicy.SiPolicy siPolicy, List<HashCreator> hashes)
 	{
-
 		if (hashes.Count is 0)
 		{
 			Logger.Write(GlobalVars.GetStr("NoHashesDetectedDenyMessage"));
-			return;
+			return siPolicy;
 		}
 
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
+		Logger.Write(string.Format(GlobalVars.GetStr("HashRulesToAddMessage"), hashes.Count, "SiPolicy Object"));
 
-		Logger.Write(string.Format(GlobalVars.GetStr("HashRulesToAddMessage"), hashes.Count, xmlFilePath));
+		// Ensure FileRules list
+		List<object> fileRulesList = siPolicy.FileRules != null ? [.. siPolicy.FileRules] : [];
+
+		// Ensure Signing Scenarios exist
+
+		// UMCI (User Mode - 12)
+		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
+		if (umci == null)
+		{
+			umci = new SigningScenario
+			{
+				Value = 12,
+				ID = "ID_SIGNINGSCENARIO_UMCI",
+				FriendlyName = "User Mode Signing Scenario",
+				ProductSigners = new ProductSigners { FileRulesRef = new FileRulesRef() }
+			};
+			List<SigningScenario> scenarios = siPolicy.SigningScenarios != null ? [.. siPolicy.SigningScenarios] : [];
+			scenarios.Add(umci);
+			siPolicy.SigningScenarios = [.. scenarios];
+		}
+		else
+		{
+			umci.ProductSigners ??= new ProductSigners();
+			umci.ProductSigners.FileRulesRef ??= new FileRulesRef();
+		}
+
+		// KMCI (Kernel Mode - 131)
+		SigningScenario? kmci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
+		if (kmci == null)
+		{
+			kmci = new SigningScenario
+			{
+				Value = 131,
+				ID = "ID_SIGNINGSCENARIO_KMCI",
+				FriendlyName = "Kernel Mode Signing Scenario",
+				ProductSigners = new ProductSigners { FileRulesRef = new FileRulesRef() }
+			};
+			// Re-fetch scenarios as we might have updated the array above
+			List<SigningScenario> scenarios = siPolicy.SigningScenarios != null ? [.. siPolicy.SigningScenarios] : [];
+			scenarios.Add(kmci);
+			siPolicy.SigningScenarios = [.. scenarios];
+		}
+		else
+		{
+			kmci.ProductSigners ??= new ProductSigners();
+			kmci.ProductSigners.FileRulesRef ??= new FileRulesRef();
+		}
+
+		// Prepare Ref Lists
+		List<FileRuleRef> umciRefs = umci.ProductSigners.FileRulesRef.FileRuleRef != null ? [.. umci.ProductSigners.FileRulesRef.FileRuleRef] : [];
+		List<FileRuleRef> kmciRefs = kmci.ProductSigners.FileRulesRef.FileRuleRef != null ? [.. kmci.ProductSigners.FileRulesRef.FileRuleRef] : [];
+
 
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in hashes)
@@ -143,59 +229,50 @@ internal static class NewHashLevelRules
 			string HashSHA1RuleID = $"ID_DENY_B_{guid}";
 
 			// Create new Deny Hash rule for Authenticode SHA256
-			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
-			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.GetStr("Sha256HashFriendlyName"), hash.FileName));
-			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
+			Deny newAuth256Rule = new()
+			{
+				ID = HashSHA256RuleID,
+				FriendlyName = string.Format(GlobalVars.GetStr("Sha256HashFriendlyName"), hash.FileName),
+				Hash = Convert.FromHexString(hash.AuthenticodeSHA256)
+			};
+			fileRulesList.Add(newAuth256Rule);
 
 			// Create new Deny Hash rule for Authenticode SHA1
-			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
-			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.GetStr("Sha1HashFriendlyName"), hash.FileName));
-			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
-			// Add the new node to the FileRules node
-			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
+			Deny newAuth1Rule = new()
+			{
+				ID = HashSHA1RuleID,
+				FriendlyName = string.Format(GlobalVars.GetStr("Sha1HashFriendlyName"), hash.FileName),
+				Hash = Convert.FromHexString(hash.AuthenticodeSHA1)
+			};
+			fileRulesList.Add(newAuth1Rule);
 
 			// For User-Mode files
 			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewUMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
-				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor256);
-
-				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewUMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
-				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor1);
+				umciRefs.Add(new FileRuleRef { RuleID = HashSHA256RuleID });
+				umciRefs.Add(new FileRuleRef { RuleID = HashSHA1RuleID });
 			}
 
 			// For Kernel-Mode files
 			else if (hash.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
-
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
-				// Since MDE does not record the Signing information events (Id 8038) for MSI files so we must create Hash based rules for them
 				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
 					Logger.Write(string.Format(GlobalVars.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
-				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewKMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
-				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor256);
-
-				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
-				NewKMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
-				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor1);
+				kmciRefs.Add(new FileRuleRef { RuleID = HashSHA256RuleID });
+				kmciRefs.Add(new FileRuleRef { RuleID = HashSHA1RuleID });
 			}
 		}
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
+		// Update the SiPolicy object
+		siPolicy.FileRules = [.. fileRulesList];
+		umci.ProductSigners.FileRulesRef.FileRuleRef = [.. umciRefs];
+		kmci.ProductSigners.FileRulesRef.FileRuleRef = [.. kmciRefs];
+
+		return siPolicy;
 	}
 
 }

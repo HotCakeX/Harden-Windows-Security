@@ -834,7 +834,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				if (certificateResults.Count > 0)
 				{
 					// Generating signer rules
-					NewCertificateSignerRules.CreateAllow(EmptyPolicyPath, certificateResults);
+					SiPolicy.SiPolicy policyObj = Management.Initialize(EmptyPolicyPath, null);
+					policyObj = NewCertificateSignerRules.CreateAllow(policyObj, certificateResults);
+					Management.SavePolicyToFile(policyObj, EmptyPolicyPath);
 				}
 				else
 				{

@@ -144,7 +144,14 @@ internal sealed class FileIdentity
 	internal string? ProductName { get; set; }
 
 	[JsonInclude]
-	internal Version? FileVersion { get; set => FileVersion_String = field?.ToString(); }
+	internal Version? FileVersion
+	{
+		get; set
+		{
+			field = value;
+			FileVersion_String = field?.ToString();
+		}
+	}
 
 	[JsonIgnore]
 	internal string? FileVersion_String { get; private set; }

@@ -17,6 +17,7 @@
 
 using System.IO;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
@@ -40,25 +41,31 @@ internal static class Master
 	{
 		Logger.Write(GlobalVars.GetStr("MergingRulesMessage"));
 
+		SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFilePath, null);
+
 		if (authorization is SiPolicyIntel.Authorization.Allow)
 		{
-			NewWHQLFilePublisherLevelRules.CreateAllow(xmlFilePath, incomingData.WHQLFilePublisherSigners);
-			NewFilePublisherLevelRules.CreateAllow(xmlFilePath, incomingData.FilePublisherSigners);
-			NewPublisherLevelRules.CreateAllow(xmlFilePath, incomingData.PublisherSigners);
-			NewHashLevelRules.CreateAllow(xmlFilePath, incomingData.CompleteHashes);
-			NewFilePathRules.CreateAllow(xmlFilePath, incomingData.FilePaths);
-			NewPFNLevelRules.CreateAllow(xmlFilePath, incomingData.PFNRules);
+			policyObj = NewWHQLFilePublisherLevelRules.CreateAllow(policyObj, incomingData.WHQLFilePublisherSigners);
+			policyObj = NewFilePublisherLevelRules.CreateAllow(policyObj, incomingData.FilePublisherSigners);
+			policyObj = NewPublisherLevelRules.CreateAllow(policyObj, incomingData.PublisherSigners);
+			policyObj = NewHashLevelRules.CreateAllow(policyObj, incomingData.CompleteHashes);
+			policyObj = NewFilePathRules.CreateAllow(policyObj, incomingData.FilePaths);
+			policyObj = NewPFNLevelRules.CreateAllow(policyObj, incomingData.PFNRules);
+
+			Management.SavePolicyToFile(policyObj, xmlFilePath);
 
 			SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath]);
 		}
 		else
 		{
-			NewWHQLFilePublisherLevelRules.CreateDeny(xmlFilePath, incomingData.WHQLFilePublisherSigners);
-			NewFilePublisherLevelRules.CreateDeny(xmlFilePath, incomingData.FilePublisherSigners);
-			NewPublisherLevelRules.CreateDeny(xmlFilePath, incomingData.PublisherSigners);
-			NewHashLevelRules.CreateDeny(xmlFilePath, incomingData.CompleteHashes);
-			NewFilePathRules.CreateDeny(xmlFilePath, incomingData.FilePaths);
-			NewPFNLevelRules.CreateDeny(xmlFilePath, incomingData.PFNRules);
+			policyObj = NewWHQLFilePublisherLevelRules.CreateDeny(policyObj, incomingData.WHQLFilePublisherSigners);
+			policyObj = NewFilePublisherLevelRules.CreateDeny(policyObj, incomingData.FilePublisherSigners);
+			policyObj = NewPublisherLevelRules.CreateDeny(policyObj, incomingData.PublisherSigners);
+			policyObj = NewHashLevelRules.CreateDenyEx(policyObj, incomingData.CompleteHashes);
+			policyObj = NewFilePathRules.CreateDenyEx(policyObj, incomingData.FilePaths);
+			policyObj = NewPFNLevelRules.CreateDenyEx(policyObj, incomingData.PFNRules);
+
+			Management.SavePolicyToFile(policyObj, xmlFilePath);
 
 			string finalAllowAllFilePath = Path.Combine(stagingArea!, "AllowAll.xml");
 			File.Copy(GlobalVars.AllowAllTemplatePolicyPath, finalAllowAllFilePath, true);

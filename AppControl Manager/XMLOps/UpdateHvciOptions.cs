@@ -29,7 +29,6 @@ internal static class UpdateHvciOptions
 		// Instantiate the policy
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
 
-		policyObj.HvciOptionsSpecified = true;
 		policyObj.HvciOptions = 2;
 
 		// Save the modified XML document

@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -35,6 +36,10 @@ namespace CommonCore.MicrosoftGraph;
 [JsonSerializable(typeof(DeviceManagementConfigurationPolicy))]
 [JsonSerializable(typeof(DeviceManagementConfigurationPoliciesResponse))]
 [JsonSerializable(typeof(ConfigurationPolicyAssignmentsEnvelope))]
+[JsonSerializable(typeof(DeviceHealthScript))]
+[JsonSerializable(typeof(DeviceHealthScriptsResponse))]
+[JsonSerializable(typeof(DeviceHealthScriptStringParameter))]
+[JsonSerializable(typeof(List<DeviceHealthScriptStringParameter>))]
 internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {
 }

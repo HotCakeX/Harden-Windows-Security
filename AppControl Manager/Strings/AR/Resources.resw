@@ -3158,10 +3158,6 @@
     <comment>Policy validation error</comment>
     <value>تم الكشف عن سياسة أساسية موقعة، وهي تسمح بوجود سياسات تكميلية، ولكن لم يتم العثور على موقعي سياسات تكميلية فيها.</value>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>توجد قاعدة سماح بدون معرف!</value>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>يوجد أكثر من قاعدة سماح واحدة بنفس المعرف</value>
@@ -3170,33 +3166,17 @@
     <comment>Policy validation error</comment>
     <value>يوجد أكثر من قاعدة رفض واحدة بنفس المعرف</value>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>توجد سمة ملف بدون معرف!</value>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>يوجد أكثر من سمة ملف واحدة بنفس المعرف</value>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>توجد قاعدة ملف بدون معرف!</value>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>يوجد أكثر من قاعدة ملف واحدة بنفس المعرف</value>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>يوجد موقع بدون معرف!</value>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>يوجد أكثر من موقع واحد بنفس المعرف</value>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>يوجد سيناريو توقيع بدون معرف!</value>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
@@ -3523,9 +3503,6 @@
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>يجب توفير مسار الملف أو مستند XML لإلغاء التسلسل</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>يجب أن تحتوي قاعدة الرفض على معرف.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>تحتوي قاعدة الرفض بالمعرف {0} على خاصية تجزئة ولكنها تحتوي أيضًا على خصائص ملف أخرى، مما يجعلها غير صالحة.</value>
   </data>
@@ -3538,17 +3515,11 @@
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>لا تحتوي قاعدة سمة الملف بالمعرف {0} على خاصية تجزئة ولا أي خصائص ملف أخرى، مما يجعلها غير صالحة.</value>
   </data>
-    <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>تم العثور على جذر شهادة لا يحتوي على نوع TBS ولا WellKnown، مما يجعله غير صالح.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>لا يحتوي الموقع بالمعرف {0} على عنصر جذر شهادة، مما يجعله غير صالح.</value>
   </data>
     <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>تم العثور على إعداد سياسة لا يحتوي على عنصر قيمة صالح.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>تم العثور على إعداد سياسة لا يحتوي على عناصر الموفر أو المفتاح أو اسم القيمة الضرورية.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>المعرف "{0}": minimumVersion "{1}" غير صالح.</value>
@@ -6355,5 +6326,14 @@
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>حجم التخزين ودرجة الحرارة</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>إنشاء مثبّت مُدار</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بإنشاء وتحميل سياسة المثبّت المُدار في المستأجر الخاص بك والتي ستسمح للتطبيقات التي يتم نشرها عبر Intune بأن تكون مسموحة تلقائياً على الأجهزة التي تستخدم سياسات التحكم في التطبيقات.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بإنشاء وتحميل سياسة المثبّت المُدار في المستأجر الخاص بك والتي ستسمح للتطبيقات التي يتم نشرها عبر Intune بأن تكون مسموحة تلقائياً على الأجهزة التي تستخدم سياسات التحكم في التطبيقات.</value>
   </data>
 </root>

@@ -59,7 +59,7 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 		}
 
 		if (_innerButton is null)
-			return;   // no button → nothing to do
+			return;   // no button -> nothing to do
 
 		// Hook card-level events
 		RightTapped += Card_RightTapped;

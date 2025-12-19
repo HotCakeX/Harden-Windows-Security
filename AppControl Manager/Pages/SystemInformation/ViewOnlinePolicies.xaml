@@ -68,6 +68,12 @@
                     </StackPanel>
                 </Border>
 
+                <Button HorizontalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.DeployManagedInstallerPolicy_Click}" 
+                        VerticalAlignment="Center"
+                        x:Uid="CreateManagedInstallerButton"/>
+
                 <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.RemovePolicy_Click}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Remove any non-system policy from the system">
                     <Button.Content>

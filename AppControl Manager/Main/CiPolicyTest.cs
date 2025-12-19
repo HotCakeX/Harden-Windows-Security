@@ -31,7 +31,6 @@ internal static class CiPolicyTest
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void TestCiPolicy(string xmlFilePath)
 	{
-
 		// Get the Code Integrity Schema file path
 		string schemaPath = GlobalVars.CISchemaPath;
 

@@ -3158,10 +3158,6 @@
     <value>Politique de base signée détectée, elle permet d'avoir des politiques supplémentaires, mais aucun signataire de politique supplémentaire n'a été trouvé.</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>Il y a une règle Allow sans ID !</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <value>Il y a plus d'une règle Allow avec le même ID</value>
     <comment>Policy validation error</comment>
@@ -3170,32 +3166,16 @@
     <value>Il y a plus d'une règle Deny avec le même ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>Il y a un FileAttrib sans ID !</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <value>Il y a plus d'un FileAttrib avec le même ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <value>Il y a une règle FileRule sans ID !</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <value>Il y a plus d'une règle FileRule avec le même ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <value>Il y a un Signer sans ID !</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <value>Il y a plus d'un Signer avec le même ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <value>Il y a un SigningScenario sans ID !</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3523,9 +3503,6 @@
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>Le chemin de fichier ou le document XML doit être fourni pour la désérialisation</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>La règle Deny doit avoir un ID.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>La règle Deny avec l'ID {0} a une propriété Hash mais a aussi d'autres propriétés de fichier, ce qui la rend invalide.</value>
   </data>
@@ -3538,17 +3515,11 @@
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>La règle FileAttrib avec l'ID {0} n'a ni Hash ni autres propriétés de fichier, ce qui la rend invalide.</value>
   </data>
-    <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>Racine de certificat rencontrée qui n'a ni TBS ni type WellKnown, ce qui la rend invalide.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>Le Signataire avec l'ID {0} n'a pas d'élément Racine de Certificat, ce qui le rend invalide.</value>
   </data>
     <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>Paramètre de politique rencontré sans élément Value valide.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>Paramètre de politique rencontré sans les éléments Provider, Key ou ValueName nécessaires.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ID '{0}' : minimumVersion '{1}' invalide.</value>
@@ -6355,5 +6326,14 @@
   </data>
   <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Rechercher un ou plusieurs fichiers de stratégie XML à convertir en fichiers binaires CIP</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>Créer un programme d'installation géré</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Créez et chargez une stratégie de programme d'installation géré dans votre locataire qui permettra aux applications déployées via Intune d'être automatiquement autorisées sur les appareils utilisant des stratégies de contrôle d'application.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Créez et chargez une stratégie de programme d'installation géré dans votre locataire qui permettra aux applications déployées via Intune d'être automatiquement autorisées sur les appareils utilisant des stratégies de contrôle d'application.</value>
   </data>
 </root>

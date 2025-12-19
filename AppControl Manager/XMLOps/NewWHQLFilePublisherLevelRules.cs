@@ -19,6 +19,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
@@ -62,10 +63,10 @@ internal static class NewWHQLFilePublisherLevelRules
 		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
 		// Get or Initialize lists
-		List<object> fileRules = policyObj.FileRules?.ToList() ?? [];
-		List<Signer> signers = policyObj.Signers?.ToList() ?? [];
-		List<CiSigner> ciSigners = policyObj.CiSigners?.ToList() ?? [];
-		List<EKU> ekus = policyObj.EKUs?.ToList() ?? [];
+		List<object> fileRules = policyObj.FileRules ?? [];
+		List<Signer> signers = policyObj.Signers ?? [];
+		List<CiSigner> ciSigners = policyObj.CiSigners ?? [];
+		List<EKU> ekus = policyObj.EKUs ?? [];
 
 		// Ensure Scenarios exist
 		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
@@ -76,11 +77,11 @@ internal static class NewWHQLFilePublisherLevelRules
 		kmciScenario.ProductSigners ??= new ProductSigners();
 
 		// Ensure AllowedSigners exist
-		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
-		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
+		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
+		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
 
-		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
-		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
+		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
+		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
 
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in whqlFilePublisherSigners)
 		{
@@ -89,9 +90,8 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			#region Creating File <FileAttrib> node
 
-			FileAttrib newFileAttrib = new()
+			FileAttrib newFileAttrib = new(id: FileAttribID)
 			{
-				ID = FileAttribID,
 				FriendlyName = GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
 				MinimumFileVersion = whqlFilePublisherData.FileVersion!.ToString()
 			};
@@ -129,18 +129,18 @@ internal static class NewWHQLFilePublisherLevelRules
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string signerID = $"ID_SIGNER_A_{guid2}";
 
-				Signer newSigner = new()
+				Signer newSigner = new(
+					id: signerID,
+					name: signerData.IntermediateCertName,
+					certRoot: new CertRoot
+					(
+						type: CertEnumType.TBS,
+						value: Convert.FromHexString(signerData.IntermediateCertTBS)
+					))
 				{
-					ID = signerID,
-					Name = signerData.IntermediateCertName,
-					CertRoot = new CertRoot
-					{
-						Type = CertEnumType.TBS,
-						Value = Convert.FromHexString(signerData.IntermediateCertTBS)
-					},
-					CertEKU = [new CertEKU { ID = EKUID }],
-					CertOemID = new CertOemID { Value = whqlFilePublisherData.Opus },
-					FileAttribRef = [new FileAttribRef { RuleID = FileAttribID }]
+					CertEKU = [new CertEKU(id: EKUID)],
+					CertOemID = new CertOemID(value: whqlFilePublisherData.Opus),
+					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]
 				};
 
 				signers.Add(newSigner);
@@ -148,13 +148,13 @@ internal static class NewWHQLFilePublisherLevelRules
 				// For User-Mode files
 				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					umciAllowedSigners.Add(new AllowedSigner { SignerId = signerID });
-					ciSigners.Add(new CiSigner { SignerId = signerID });
+					umciAllowedSigners.Add(new AllowedSigner(signerId: signerID, exceptDenyRule: null));
+					ciSigners.Add(new CiSigner(signerID: signerID));
 				}
 				// For Kernel-Mode files
 				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					kmciAllowedSigners.Add(new AllowedSigner { SignerId = signerID });
+					kmciAllowedSigners.Add(new AllowedSigner(signerId: signerID, exceptDenyRule: null));
 				}
 			}
 
@@ -166,23 +166,23 @@ internal static class NewWHQLFilePublisherLevelRules
 		if (!ekus.Any(e => e.ID == EKUID))
 		{
 			ekus.Add(new EKU
-			{
-				ID = EKUID,
-				Value = Convert.FromHexString(EKUValue),
-				FriendlyName = EKUFriendlyName
-			});
+			(
+				id: EKUID,
+				value: Convert.FromHexString(EKUValue),
+				friendlyName: EKUFriendlyName
+			));
 		}
 
 		#endregion
 
 		// Update Policy Object
-		policyObj.FileRules = fileRules.ToArray();
-		policyObj.Signers = signers.ToArray();
-		policyObj.CiSigners = ciSigners.ToArray();
-		policyObj.EKUs = ekus.ToArray();
+		policyObj.FileRules = fileRules;
+		policyObj.Signers = signers;
+		policyObj.CiSigners = ciSigners;
+		policyObj.EKUs = ekus;
 
-		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners.ToArray();
-		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners.ToArray();
+		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners;
+		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners;
 
 		return policyObj;
 	}
@@ -205,10 +205,10 @@ internal static class NewWHQLFilePublisherLevelRules
 		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
 		// Get or Initialize lists
-		List<object> fileRules = policyObj.FileRules?.ToList() ?? [];
-		List<Signer> signers = policyObj.Signers?.ToList() ?? [];
-		List<CiSigner> ciSigners = policyObj.CiSigners?.ToList() ?? [];
-		List<EKU> ekus = policyObj.EKUs?.ToList() ?? [];
+		List<object> fileRules = policyObj.FileRules ?? [];
+		List<Signer> signers = policyObj.Signers ?? [];
+		List<CiSigner> ciSigners = policyObj.CiSigners ?? [];
+		List<EKU> ekus = policyObj.EKUs ?? [];
 
 		// Ensure Scenarios exist
 		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
@@ -219,11 +219,11 @@ internal static class NewWHQLFilePublisherLevelRules
 		kmciScenario.ProductSigners ??= new ProductSigners();
 
 		// Ensure DeniedSigners exist
-		umciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners();
-		kmciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners();
+		umciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners([]);
+		kmciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners([]);
 
-		List<DeniedSigner> umciDeniedSigners = umciScenario.ProductSigners.DeniedSigners.DeniedSigner?.ToList() ?? [];
-		List<DeniedSigner> kmciDeniedSigners = kmciScenario.ProductSigners.DeniedSigners.DeniedSigner?.ToList() ?? [];
+		List<DeniedSigner> umciDeniedSigners = umciScenario.ProductSigners.DeniedSigners.DeniedSigner ?? [];
+		List<DeniedSigner> kmciDeniedSigners = kmciScenario.ProductSigners.DeniedSigners.DeniedSigner ?? [];
 
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in whqlFilePublisherSigners)
 		{
@@ -232,9 +232,8 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			#region Creating File <FileAttrib> node
 
-			FileAttrib newFileAttrib = new()
+			FileAttrib newFileAttrib = new(id: FileAttribID)
 			{
-				ID = FileAttribID,
 				FriendlyName = GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
 				MinimumFileVersion = whqlFilePublisherData.FileVersion!.ToString()
 			};
@@ -272,18 +271,18 @@ internal static class NewWHQLFilePublisherLevelRules
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string signerID = $"ID_SIGNER_A_{guid2}";
 
-				Signer newSigner = new()
+				Signer newSigner = new(
+					id: signerID,
+					name: signerData.IntermediateCertName,
+					certRoot: new CertRoot
+					(
+						type: CertEnumType.TBS,
+						value: Convert.FromHexString(signerData.IntermediateCertTBS)
+					))
 				{
-					ID = signerID,
-					Name = signerData.IntermediateCertName,
-					CertRoot = new CertRoot
-					{
-						Type = CertEnumType.TBS,
-						Value = Convert.FromHexString(signerData.IntermediateCertTBS)
-					},
-					CertEKU = [new CertEKU { ID = EKUID }],
-					CertOemID = new CertOemID { Value = whqlFilePublisherData.Opus },
-					FileAttribRef = [new FileAttribRef { RuleID = FileAttribID }]
+					CertEKU = [new CertEKU(id: EKUID)],
+					CertOemID = new CertOemID(value: whqlFilePublisherData.Opus),
+					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]
 				};
 
 				signers.Add(newSigner);
@@ -291,13 +290,13 @@ internal static class NewWHQLFilePublisherLevelRules
 				// For User-Mode files
 				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					umciDeniedSigners.Add(new DeniedSigner { SignerId = signerID });
-					ciSigners.Add(new CiSigner { SignerId = signerID });
+					umciDeniedSigners.Add(new DeniedSigner(signerId: signerID, exceptAllowRule: null));
+					ciSigners.Add(new CiSigner(signerID: signerID));
 				}
 				// For Kernel-Mode files
 				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					kmciDeniedSigners.Add(new DeniedSigner { SignerId = signerID });
+					kmciDeniedSigners.Add(new DeniedSigner(signerId: signerID, exceptAllowRule: null));
 				}
 			}
 
@@ -309,23 +308,23 @@ internal static class NewWHQLFilePublisherLevelRules
 		if (!ekus.Any(e => e.ID == EKUID))
 		{
 			ekus.Add(new EKU
-			{
-				ID = EKUID,
-				Value = Convert.FromHexString(EKUValue),
-				FriendlyName = EKUFriendlyName
-			});
+			(
+				id: EKUID,
+				value: Convert.FromHexString(EKUValue),
+				friendlyName: EKUFriendlyName
+			));
 		}
 
 		#endregion
 
 		// Update Policy Object
-		policyObj.FileRules = fileRules.ToArray();
-		policyObj.Signers = signers.ToArray();
-		policyObj.CiSigners = ciSigners.ToArray();
-		policyObj.EKUs = ekus.ToArray();
+		policyObj.FileRules = fileRules;
+		policyObj.Signers = signers;
+		policyObj.CiSigners = ciSigners;
+		policyObj.EKUs = ekus;
 
-		umciScenario.ProductSigners.DeniedSigners.DeniedSigner = umciDeniedSigners.ToArray();
-		kmciScenario.ProductSigners.DeniedSigners.DeniedSigner = kmciDeniedSigners.ToArray();
+		umciScenario.ProductSigners.DeniedSigners.DeniedSigner = umciDeniedSigners;
+		kmciScenario.ProductSigners.DeniedSigners.DeniedSigner = kmciDeniedSigners;
 
 		return policyObj;
 	}

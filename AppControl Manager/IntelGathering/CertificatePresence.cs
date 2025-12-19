@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -58,37 +59,41 @@ internal static class CertificatePresence
 		}
 
 		// Get the ID of all of the UpdatePolicySigners elements
-		IEnumerable<string> updatePolicySignerIDs = policyObject.UpdatePolicySigners.Select(x => x.SignerId);
+		IEnumerable<string>? updatePolicySignerIDs = policyObject.UpdatePolicySigners?.Select(x => x.SignerId);
 
 		// Get all of the <Signer> elements from the policy
 		Dictionary<string, Signer> signerDictionary = [];
-		foreach (Signer signer in policyObject.Signers)
+		if (policyObject.Signers is not null)
 		{
-			_ = signerDictionary.TryAdd(signer.ID, signer);
+			foreach (Signer signer in CollectionsMarshal.AsSpan(policyObject.Signers))
+			{
+				_ = signerDictionary.TryAdd(signer.ID, signer);
+			}
 		}
 
 		// Loop over each updatePolicySignerID in the policy
-		foreach (string updatePolicySigner in updatePolicySignerIDs)
-		{
-			// Try to find a signer that is for UpdatePolicySigners
-			if (signerDictionary.TryGetValue(updatePolicySigner, out Signer? signerForUpdateSigner))
+		if (updatePolicySignerIDs is not null)
+			foreach (string updatePolicySigner in updatePolicySignerIDs)
 			{
-				// If signer is TBS Signer
-				if (signerForUpdateSigner.CertRoot.Type is CertEnumType.TBS)
+				// Try to find a signer that is for UpdatePolicySigners
+				if (signerDictionary.TryGetValue(updatePolicySigner, out Signer? signerForUpdateSigner))
 				{
-					// Get the string value of the CertRoot which is the TBS Hash
-					string certRootTBS = Convert.ToHexString(signerForUpdateSigner.CertRoot.Value);
-
-					// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
-					// Also compare the Signer's name with the selected certificate's Common Name
-					if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase))
+					// If signer is TBS Signer
+					if (signerForUpdateSigner.CertRoot.Type is CertEnumType.TBS)
 					{
-						return true;
+						// Get the string value of the CertRoot which is the TBS Hash
+						string certRootTBS = Convert.ToHexString(signerForUpdateSigner.CertRoot.Value.Span);
+
+						// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
+						// Also compare the Signer's name with the selected certificate's Common Name
+						if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase))
+						{
+							return true;
+						}
 					}
 				}
 			}
-		}
 
 		Logger.Write(GlobalVars.GetStr("NoMatchingUpdatePolicySignerMessage"));
 		return false;
@@ -128,4 +133,3 @@ internal static class CertificatePresence
 	}
 
 }
-

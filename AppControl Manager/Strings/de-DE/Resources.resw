@@ -3158,10 +3158,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Signierte Basisrichtlinie erkannt; sie erlaubt Ergänzungsrichtlinien, jedoch wurden darin keine Signer für Ergänzungsrichtlinien gefunden.</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>Es gibt eine Allow-Regel ohne ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <value>Es gibt mehr als eine Allow-Regel mit derselben ID</value>
     <comment>Policy validation error</comment>
@@ -3170,32 +3166,16 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Es gibt mehr als eine Deny-Regel mit derselben ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>Es gibt eine FileAttrib-Regel ohne ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <value>Es gibt mehr als eine FileAttrib-Regel mit derselben ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <value>Es gibt eine FileRule ohne ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <value>Es gibt mehr als eine FileRule mit derselben ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <value>Es gibt einen Signer ohne ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <value>Es gibt mehr als einen Signer mit derselben ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <value>Es gibt ein SigningScenario ohne ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3523,9 +3503,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>Für die Deserialisierung muss ein Dateipfad oder ein XML-Dokument angegeben werden</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>Die Deny-Regel muss eine ID haben.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>Die Deny-Regel mit der ID {0} besitzt eine Hash-Eigenschaft, hat jedoch auch andere Dateieigenschaften und ist daher ungültig.</value>
   </data>
@@ -3538,17 +3515,11 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>Die FileAttrib-Regel mit der ID {0} besitzt weder eine Hash-Eigenschaft noch andere Dateieigenschaften und ist daher ungültig.</value>
   </data>
-    <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>Es wurde eine Zertifizierungsstelle (Cert Root) festgestellt, die weder den Typ TBS noch WellKnown hat und daher ungültig ist.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>Der Signer mit der ID {0} weist kein Cert-Root-Element auf und ist daher ungültig.</value>
   </data>
     <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>Es wurde eine Richtlinieneinstellung ohne gültiges Value-Element festgestellt.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>Es wurde eine Richtlinieneinstellung festgestellt, der die erforderlichen Elemente Provider, Key oder ValueName fehlen.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ID '{0}': Ungültige minimumVersion '{1}'.</value>
@@ -6355,5 +6326,14 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Speichergröße und Temperatur</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>Verwaltetes Installationsprogramm erstellen</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erstellen und laden Sie eine Richtlinie für verwaltete Installationsprogramme in Ihren Mandanten hoch, die es ermöglicht, dass über Intune bereitgestellte Apps auf Geräten, die App Control-Richtlinien verwenden, automatisch zugelassen werden.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erstellen und laden Sie eine Richtlinie für verwaltete Installationsprogramme in Ihren Mandanten hoch, die es ermöglicht, dass über Intune bereitgestellte Apps auf Geräten, die App Control-Richtlinien verwenden, automatisch zugelassen werden.</value>
   </data>
 </root>

@@ -43,6 +43,11 @@ internal static class Main
 	private static readonly Uri DeviceConfigurationsURL = new("https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations");
 
 	/// <summary>
+	/// URL for Device Health Scripts
+	/// </summary>
+	private static readonly Uri DeviceHealthScriptsURL = new("https://graph.microsoft.com/beta/deviceManagement/deviceHealthScripts");
+
+	/// <summary>
 	/// URL for M365 Groups
 	/// </summary>
 	private static readonly Uri GroupsUrl = new("https://graph.microsoft.com/v1.0/groups");
@@ -94,7 +99,8 @@ internal static class Main
 		// https://learn.microsoft.com/graph/permissions-reference
 		{ AuthenticationContext.Intune, [
 		"Group.ReadWrite.All", // For Groups enumeration, deletion and addition.
-		"DeviceManagementConfiguration.ReadWrite.All" // For uploading and removing policies.
+		"DeviceManagementConfiguration.ReadWrite.All", // For uploading and removing policies and scripts.
+		"DeviceManagementScripts.ReadWrite.All" // AppLocker Managed Installer policy read/write
 		]},
 
 		// Scopes required to retrieve MDE Advanced Hunting results
@@ -1267,6 +1273,160 @@ DeviceEvents
 			throw new InvalidOperationException(string.Format(
 				GlobalVars.GetStr("ErrorDetailsMessage"),
 				errorContent));
+		}
+	}
+
+	/// <summary>
+	/// Retrieves Device Health Scripts (for Managed Installer policies).
+	/// </summary>
+	/// <param name="account"></param>
+	/// <returns></returns>
+	internal static async Task<List<DeviceHealthScript>> RetrieveDeviceHealthScripts(AuthenticatedAccounts account)
+	{
+		List<DeviceHealthScript> allScripts = [];
+
+		using SecHttpClient httpClient = new();
+
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+		// Filter for Managed Installer scripts
+		string nextLink = $"{DeviceHealthScriptsURL.OriginalString}?$filter=deviceHealthScriptType eq 'managedInstallerScript'";
+
+		while (!string.IsNullOrEmpty(nextLink))
+		{
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"RetrieveDeviceHealthScripts",
+				() => new HttpRequestMessage(HttpMethod.Get, new Uri(nextLink)),
+				httpClient
+			);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				string errorContent = await response.Content.ReadAsStringAsync();
+				Logger.Write(string.Format(
+					GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
+					response.StatusCode));
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.GetStr("ErrorDetailsMessage"),
+					errorContent));
+			}
+
+			string jsonResponse = await response.Content.ReadAsStringAsync();
+
+			// Parse response
+			JsonElement root = JsonSerializer.Deserialize(jsonResponse, MSGraphJsonContext.Default.JsonElement);
+			DeviceHealthScriptsResponse? page = JsonSerializer.Deserialize(jsonResponse, MSGraphJsonContext.Default.DeviceHealthScriptsResponse);
+
+			if (page?.Value is not null)
+			{
+				allScripts.AddRange(page.Value);
+			}
+
+			nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement)
+				? nextLinkElement.GetString() ?? string.Empty
+				: string.Empty;
+		}
+
+		return allScripts;
+	}
+
+	/// <summary>
+	/// Creates the specific Managed Installer policy/script in Intune.
+	/// </summary>
+	/// <param name="account"></param>
+	/// <returns>The ID of the created policy</returns>
+	internal static async Task<string?> CreateManagedInstallerPolicy(AuthenticatedAccounts account)
+	{
+		if (account is null) return null;
+
+		using SecHttpClient httpClient = new();
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+		// Create the payload for the Managed Installer policy
+		DeviceHealthScript payload = new()
+		{
+			DeviceHealthScriptType = "managedInstallerScript",
+			DisplayName = "Managed Installer Policy",
+			Description = "Enables or disables Intune Management Extensions as the Managed Installer on the targeted devices. Deployed by the AppControl Manager.",
+			RunAsAccount = "system",
+			EnforceSignatureCheck = true,
+			Publisher = "AppControl Manager",
+			RunAs32Bit = true,
+			DetectionScriptParameters =
+			[
+				new DeviceHealthScriptStringParameter
+				{
+					Name = "Enabled",
+					Description = "Enable Managed Installer. Deployed by the AppControl Manager.",
+					IsRequired = true,
+					ApplyDefaultValueWhenNotAssigned = true,
+					DefaultValue = "True"
+				}
+			]
+		};
+
+		string jsonPayload = JsonSerializer.Serialize(payload, MSGraphJsonContext.Default.DeviceHealthScript);
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"CreateManagedInstallerPolicy",
+			() => new HttpRequestMessage(HttpMethod.Post, DeviceHealthScriptsURL)
+			{
+				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+			},
+			httpClient
+		);
+
+		string responseContent = await response.Content.ReadAsStringAsync();
+
+		if (response.IsSuccessStatusCode)
+		{
+			Logger.Write("Managed Installer Policy created successfully.");
+			JsonElement root = JsonSerializer.Deserialize(responseContent, MSGraphJsonContext.Default.JsonElement);
+			return root.TryGetProperty("id", out JsonElement idEl) ? idEl.GetString() : null;
+		}
+		else
+		{
+			Logger.Write($"Failed to create Managed Installer Policy: {response.StatusCode}");
+			throw new InvalidOperationException($"Error details: {responseContent}");
+		}
+	}
+
+	/// <summary>
+	/// Deletes a Managed Installer policy (device health script).
+	/// </summary>
+	/// <param name="account"></param>
+	/// <param name="policyId"></param>
+	internal static async Task DeleteManagedInstallerPolicy(AuthenticatedAccounts? account, string policyId)
+	{
+		if (account is null) return;
+
+		using SecHttpClient httpClient = new();
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+		Uri deleteUri = new($"{DeviceHealthScriptsURL.OriginalString}/{policyId}");
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"DeleteManagedInstallerPolicy",
+			() => new HttpRequestMessage(HttpMethod.Delete, deleteUri),
+			httpClient
+		);
+
+		if (response.IsSuccessStatusCode)
+		{
+			Logger.Write($"Deleted managed installer policy {policyId}");
+		}
+		else
+		{
+			string errorContent = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException($"Failed to delete policy {policyId}: {response.StatusCode} - {errorContent}");
 		}
 	}
 

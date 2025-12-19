@@ -3158,10 +3158,6 @@
     <value>Ανιχνεύθηκε υπογεγραμμένη βασική πολιτική, επιτρέπει να έχει Συμπληρωματικές πολιτικές, αλλά δεν βρέθηκαν Υπογράφοντες Συμπληρωματικής Πολιτικής σε αυτήν.</value>
     <comment>Σφάλμα επικύρωσης πολιτικής</comment>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>Υπάρχει ένας κανόνας Allow χωρίς ID!</value>
-    <comment>Σφάλμα επικύρωσης πολιτικής</comment>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <value>Υπάρχουν περισσότεροι από 1 κανόνες Allow με το ίδιο ID</value>
     <comment>Σφάλμα επικύρωσης πολιτικής</comment>
@@ -3170,32 +3166,16 @@
     <value>Υπάρχουν περισσότεροι από 1 κανόνες Deny με το ίδιο ID</value>
     <comment>Σφάλμα επικύρωσης πολιτικής</comment>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>Υπάρχει ένα FileAttrib χωρίς ID!</value>
-    <comment>Σφάλμα επικύρωσης πολιτικής</comment>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <value>Υπάρχουν περισσότερα από 1 FileAttribs με το ίδιο ID</value>
-    <comment>Σφάλμα επικύρωσης πολιτικής</comment>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <value>Υπάρχει ένα FileRule χωρίς ID!</value>
     <comment>Σφάλμα επικύρωσης πολιτικής</comment>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <value>Υπάρχουν περισσότερα από 1 FileRules με το ίδιο ID</value>
     <comment>Σφάλμα επικύρωσης πολιτικής</comment>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <value>Υπάρχει ένας Signer χωρίς ID!</value>
-    <comment>Σφάλμα επικύρωσης πολιτικής</comment>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <value>Υπάρχουν περισσότεροι από 1 Signers με το ίδιο ID</value>
-    <comment>Σφάλμα επικύρωσης πολιτικής</comment>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <value>Υπάρχει ένα SigningScenario χωρίς ID!</value>
     <comment>Σφάλμα επικύρωσης πολιτικής</comment>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3523,9 +3503,6 @@
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>Πρέπει να παρέχεται είτε η διαδρομή αρχείου είτε το έγγραφο XML για αποσειριοποίηση</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>Ο κανόνας Deny πρέπει να έχει ένα ID.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>Ο κανόνας Deny με το ID {0} έχει μια ιδιότητα Hash αλλά έχει επίσης άλλες ιδιότητες αρχείου, καθιστώντας τον άκυρο.</value>
   </data>
@@ -3538,17 +3515,11 @@
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>Ο κανόνας FileAttrib με το ID {0} δεν έχει ούτε Hash ούτε άλλες ιδιότητες αρχείου, καθιστώντας τον άκυρο.</value>
   </data>
-  <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>Αντιμετωπίστηκε ένα Cert Root που δεν έχει ούτε TBS ούτε τύπο WellKnown, καθιστώντας το άκυρο.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>Ο Signer με το ID {0} δεν έχει στοιχείο Cert Root, καθιστώντας τον άκυρο.</value>
   </data>
   <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>Αντιμετωπίστηκε μια Ρύθμιση Πολιτικής που δεν έχει έγκυρο στοιχείο Value.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>Αντιμετωπίστηκε μια Ρύθμιση Πολιτικής που δεν έχει τα απαραίτητα στοιχεία Provider, Key ή ValueName.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ID '{0}': άκυρη minimumVersion '{1}'.</value>
@@ -6355,5 +6326,14 @@
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Μέγεθος αποθήκευσης και θερμοκρασία</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>Δημιουργία διαχειριζόμενου προγράμματος εγκατάστασης</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε και αποστείλετε μια πολιτική διαχειριζόμενου προγράμματος εγκατάστασης στον μισθωτή σας που θα επιτρέπει στις εφαρμογές που αναπτύσσονται μέσω του Intune να επιτρέπονται αυτόματα σε συσκευές που χρησιμοποιούν πολιτικές ελέγχου εφαρμογών.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε και αποστείλετε μια πολιτική διαχειριζόμενου προγράμματος εγκατάστασης στον μισθωτή σας που θα επιτρέπει στις εφαρμογές που αναπτύσσονται μέσω του Intune να επιτρέπονται αυτόματα σε συσκευές που χρησιμοποιούν πολιτικές ελέγχου εφαρμογών.</value>
   </data>
 </root>

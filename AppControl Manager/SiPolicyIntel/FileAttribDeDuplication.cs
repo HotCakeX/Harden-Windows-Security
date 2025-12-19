@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
@@ -190,9 +191,9 @@ internal static class FileAttribDeDuplication
 
 		// If a signer ends up with multiple FileAttribRef objects pointing to the same FileAttrib,
 		// this ensures only one reference is retained.
-		foreach (Signer signer in signers)
+		foreach (Signer signer in CollectionsMarshal.AsSpan(signers))
 		{
-			if (signer.FileAttribRef is not null && signer.FileAttribRef.Length > 1)
+			if (signer.FileAttribRef is not null && signer.FileAttribRef.Count > 1)
 			{
 				signer.FileAttribRef = [.. signer.FileAttribRef
 					.GroupBy(r => r.RuleID)
@@ -359,7 +360,7 @@ internal static class FileAttribDeDuplication
 							if (signer.FileAttribRef is not null)
 							{
 								// Update each FileAttribRef that references the duplicate by swapping its RuleID.
-								foreach (FileAttribRef fileAttribRef in signer.FileAttribRef)
+								foreach (FileAttribRef fileAttribRef in CollectionsMarshal.AsSpan(signer.FileAttribRef))
 								{
 									if (fileAttribRef.RuleID == duplicate.ID)
 									{

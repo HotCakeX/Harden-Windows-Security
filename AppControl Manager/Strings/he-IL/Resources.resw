@@ -3158,48 +3158,24 @@
   <value>זוהתה מדיניות בסיס חתומה, המאפשרת מדיניות משלימה, אך לא נמצאו חתמי מדיניות משלימה בה.</value>
   <comment>Policy validation error</comment>
 </data>
-<data name="AllowRuleNoIDValidationError" xml:space="preserve">
-  <value>קיים כלל Allow ללא מזהה!</value>
-  <comment>Policy validation error</comment>
-</data>
 <data name="AllowRuleDupIDValidationError" xml:space="preserve">
   <value>יש יותר מ-1 כלל Allow עם אותו מזהה</value>
-  <comment>Policy validation error</comment>
-</data>
-<data name="DenyRuleNoIDValidationError" xml:space="preserve">
-  <value>קיים כלל Deny ללא מזהה!</value>
   <comment>Policy validation error</comment>
 </data>
 <data name="DenyRuleDupIDValidationError" xml:space="preserve">
   <value>יש יותר מ-1 כלל Deny עם אותו מזהה</value>
   <comment>Policy validation error</comment>
 </data>
-<data name="FileAttribNoIDValidationError" xml:space="preserve">
-  <value>קיים FileAttrib ללא מזהה!</value>
-  <comment>Policy validation error</comment>
-</data>
 <data name="FileAttribDupIDValidationError" xml:space="preserve">
   <value>יש יותר מ-1 FileAttrib עם אותו מזהה</value>
-  <comment>Policy validation error</comment>
-</data>
-<data name="FileRuleNoIDValidationError" xml:space="preserve">
-  <value>קיים FileRule ללא מזהה!</value>
   <comment>Policy validation error</comment>
 </data>
 <data name="FileRuleDupIDValidationError" xml:space="preserve">
   <value>יש יותר מ-1 FileRule עם אותו מזהה</value>
   <comment>Policy validation error</comment>
 </data>
-<data name="SignerNoIDValidationError" xml:space="preserve">
-  <value>קיים Signer ללא מזהה!</value>
-  <comment>Policy validation error</comment>
-</data>
 <data name="SignerDupIDValidationError" xml:space="preserve">
   <value>יש יותר מ-1 Signer עם אותו מזהה</value>
-  <comment>Policy validation error</comment>
-</data>
-<data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-  <value>קיים SigningScenario ללא מזהה!</value>
   <comment>Policy validation error</comment>
 </data>
 <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3539,17 +3515,11 @@
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>לכלל FileAttrib עם ה-ID {0} אין מאפיין Hash או מאפייני קובץ אחרים, מה שהופך אותו ללא חוקי.</value>
   </data>
-  <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>נתגלה Cert Root שאין לו סוג TBS או WellKnown, מה שהופך אותו ללא חוקי.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>ל-Signer עם ה-ID {0} אין אלמנט Cert Root, מה שהופך אותו ללא חוקי.</value>
   </data>
   <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>נתגלה הגדרת מדיניות שאין לה אלמנט Value תקין.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>נתגלה הגדרת מדיניות שאין לה את אלמנטים Provider, Key או ValueName הנחוצים.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>מזהה '{0}': minimumVersion '{1}' אינו חוקי.</value>
@@ -6356,5 +6326,14 @@
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>נפח אחסון וטמפרטורה</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>צור מתקין מנוהל</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור והעלה מדיניות מתקין מנוהל בדייר שלך שתאפשר לאפליקציות שנפרסו דרך Intune להיות מותרות אוטומטית במכשירים המשתמשים במדיניות בקרת יישומים.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור והעלה מדיניות מתקין מנוהל בדייר שלך שתאפשר לאפליקציות שנפרסו דרך Intune להיות מותרות אוטומטית במכשירים המשתמשים במדיניות בקרת יישומים.</value>
   </data>
 </root>

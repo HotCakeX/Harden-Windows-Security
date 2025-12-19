@@ -62,9 +62,9 @@ internal sealed class DenyRuleComparer : IEqualityComparer<DenyRule>
 		}
 
 		// Rule 2: Use Hash for hash calculation
-		if (deny.Hash is not null)
+		if (!deny.Hash.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(deny.Hash)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(deny.Hash.Span)) % Merger.modulus;
 		}
 
 		// Rule 3: Use FilePath for hash calculation

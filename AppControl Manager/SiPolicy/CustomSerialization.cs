@@ -15,7 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Xml;
 
 namespace AppControlManager.SiPolicy;
@@ -41,8 +43,8 @@ internal static class CustomSerialization
 		// Set attributes for the root element
 		if (!string.IsNullOrEmpty(policy.FriendlyName))
 			root.SetAttribute("FriendlyName", policy.FriendlyName);
-		if (policy.PolicyTypeSpecified)
-			root.SetAttribute("PolicyType", ConvertPolicyType(policy.PolicyType));
+
+		root.SetAttribute("PolicyType", ConvertPolicyType(policy.PolicyType));
 
 		// VersionEx, PolicyID, BasePolicyID, PlatformID
 		if (!AppendTextElement(xmlDoc, root, "VersionEx", policy.VersionEx))
@@ -67,14 +69,10 @@ internal static class CustomSerialization
 		XmlElement rulesElement = xmlDoc.CreateElement("Rules", GlobalVars.SiPolicyNamespace);
 		_ = root.AppendChild(rulesElement);
 
-		if (policy.Rules is { Length: > 0 })
+		if (policy.Rules is { Count: > 0 })
 		{
 			foreach (RuleType rule in policy.Rules)
 			{
-
-				if (rule is null)
-					continue;
-
 				XmlElement ruleElement = xmlDoc.CreateElement("Rule", GlobalVars.SiPolicyNamespace);
 
 				if (!AppendTextElement(xmlDoc, ruleElement, "Option", ConvertOptionType(rule.Item)))
@@ -89,7 +87,7 @@ internal static class CustomSerialization
 		XmlElement ekusElement = xmlDoc.CreateElement("EKUs", GlobalVars.SiPolicyNamespace);
 		_ = root.AppendChild(ekusElement);
 
-		if (policy.EKUs is { Length: > 0 })
+		if (policy.EKUs is { Count: > 0 })
 		{
 			foreach (EKU eku in policy.EKUs)
 			{
@@ -109,18 +107,15 @@ internal static class CustomSerialization
 		}
 
 		// FileRules
+		// Adding this first so if there are no FileRules, an empty FileRules node will exist to satisfy the schema validation.
 		XmlElement fileRulesElement = xmlDoc.CreateElement("FileRules", GlobalVars.SiPolicyNamespace);
 		_ = root.AppendChild(fileRulesElement);
 
-		if (policy.FileRules is { Length: > 0 })
+		if (policy.FileRules is { Count: > 0 })
 		{
 			// Detect the types of each FileRule
-			foreach (object fr in policy.FileRules)
+			foreach (object fr in CollectionsMarshal.AsSpan(policy.FileRules))
 			{
-
-				if (fr is null)
-					continue;
-
 				if (fr is Allow allow)
 				{
 					AppendAllow(xmlDoc, fileRulesElement, allow);
@@ -141,25 +136,22 @@ internal static class CustomSerialization
 		}
 
 		// Signers
-		XmlElement signersElement = xmlDoc.CreateElement("Signers", GlobalVars.SiPolicyNamespace);
-		_ = root.AppendChild(signersElement);
-
-		if (policy.Signers is { Length: > 0 })
+		if (policy.Signers is { Count: > 0 })
 		{
+			// Only create the <Signers> block if there are any signers since it is nullable (can be absent in the XML) according to the Schema.
+			XmlElement signersElement = xmlDoc.CreateElement("Signers", GlobalVars.SiPolicyNamespace);
+			_ = root.AppendChild(signersElement);
+
 			foreach (Signer signer in policy.Signers)
 			{
-
-				if (signer is null)
-					continue;
-
 				XmlElement signerElement = xmlDoc.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
 				signerElement.SetAttribute("ID", signer.ID);
 				signerElement.SetAttribute("Name", signer.Name);
-				if (signer.SignTimeAfterSpecified)
-					signerElement.SetAttribute("SignTimeAfter", signer.SignTimeAfter.ToString("o"));
+				if (signer.SignTimeAfter is not null)
+					signerElement.SetAttribute("SignTimeAfter", signer.SignTimeAfter.Value.ToString("o"));
 
 				// CertRoot
-				if (signer.CertRoot is not null && signer.CertRoot.Value is not null)
+				if (signer.CertRoot is not null && !signer.CertRoot.Value.IsEmpty)
 				{
 					XmlElement certRootElement = xmlDoc.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
 					certRootElement.SetAttribute("Type", signer.CertRoot.Type.ToString());
@@ -168,9 +160,9 @@ internal static class CustomSerialization
 				}
 
 				// CertEKU(s)
-				if (signer.CertEKU is { Length: > 0 })
+				if (signer.CertEKU is { Count: > 0 })
 				{
-					foreach (CertEKU certEku in signer.CertEKU)
+					foreach (CertEKU certEku in CollectionsMarshal.AsSpan(signer.CertEKU))
 					{
 						XmlElement certEkuElement = xmlDoc.CreateElement("CertEKU", GlobalVars.SiPolicyNamespace);
 						certEkuElement.SetAttribute("ID", certEku.ID);
@@ -202,7 +194,7 @@ internal static class CustomSerialization
 				}
 
 				// FileAttribRef(s)
-				if (signer.FileAttribRef is { Length: > 0 })
+				if (signer.FileAttribRef is { Count: > 0 })
 				{
 					foreach (FileAttribRef far in signer.FileAttribRef)
 					{
@@ -216,17 +208,13 @@ internal static class CustomSerialization
 		}
 
 		// SigningScenarios
-		if (policy.SigningScenarios is { Length: > 0 })
+		if (policy.SigningScenarios is { Count: > 0 })
 		{
 			XmlElement signingScenariosElement = xmlDoc.CreateElement("SigningScenarios", GlobalVars.SiPolicyNamespace);
 			_ = root.AppendChild(signingScenariosElement);
 
 			foreach (SigningScenario scenario in policy.SigningScenarios)
 			{
-
-				if (scenario is null)
-					continue;
-
 				XmlElement scenarioElement = xmlDoc.CreateElement("SigningScenario", GlobalVars.SiPolicyNamespace);
 				scenarioElement.SetAttribute("Value", scenario.Value.ToString());
 				scenarioElement.SetAttribute("ID", scenario.ID);
@@ -237,8 +225,9 @@ internal static class CustomSerialization
 				if (!string.IsNullOrEmpty(scenario.InheritedScenarios))
 					scenarioElement.SetAttribute("InheritedScenarios", scenario.InheritedScenarios);
 
-				if (scenario.MinimumHashAlgorithmSpecified)
-					scenarioElement.SetAttribute("MinimumHashAlgorithm", scenario.MinimumHashAlgorithm.ToString());
+				string? possibleMinimumHashAlgorithm = scenario.MinimumHashAlgorithm.ToString();
+				if (!string.IsNullOrEmpty(possibleMinimumHashAlgorithm))
+					scenarioElement.SetAttribute("MinimumHashAlgorithm", possibleMinimumHashAlgorithm);
 
 				// ProductSigners
 				if (scenario.ProductSigners is not null)
@@ -265,17 +254,13 @@ internal static class CustomSerialization
 				if (scenario.AppIDTags is not null)
 				{
 					XmlElement appIDTagsElement = xmlDoc.CreateElement("AppIDTags", GlobalVars.SiPolicyNamespace);
-					if (scenario.AppIDTags.EnforceDLLSpecified)
-						appIDTagsElement.SetAttribute("EnforceDLL", scenario.AppIDTags.EnforceDLL.ToString().ToLowerInvariant()); // Only lowercase "true" is considered valid by the schema
+					if (scenario.AppIDTags.EnforceDLL is not null)
+						appIDTagsElement.SetAttribute("EnforceDLL", scenario.AppIDTags.EnforceDLL.ToString()?.ToLowerInvariant()); // Only lowercase "true" is considered valid by the schema
 
 					if (scenario.AppIDTags.AppIDTag is not null)
 					{
-						foreach (AppIDTag tag in scenario.AppIDTags.AppIDTag)
+						foreach (AppIDTag tag in CollectionsMarshal.AsSpan(scenario.AppIDTags.AppIDTag))
 						{
-
-							if (tag is null)
-								continue;
-
 							XmlElement tagElement = xmlDoc.CreateElement("AppIDTag", GlobalVars.SiPolicyNamespace);
 							tagElement.SetAttribute("Key", tag.Key);
 							tagElement.SetAttribute("Value", tag.Value);
@@ -292,13 +277,10 @@ internal static class CustomSerialization
 		XmlElement upsElement = xmlDoc.CreateElement("UpdatePolicySigners", GlobalVars.SiPolicyNamespace);
 		_ = root.AppendChild(upsElement);
 
-		if (policy.UpdatePolicySigners is { Length: > 0 })
+		if (policy.UpdatePolicySigners is { Count: > 0 })
 		{
 			foreach (UpdatePolicySigner ups in policy.UpdatePolicySigners)
 			{
-				if (ups is null)
-					continue;
-
 				XmlElement upsChild = xmlDoc.CreateElement("UpdatePolicySigner", GlobalVars.SiPolicyNamespace);
 				upsChild.SetAttribute("SignerId", ups.SignerId);
 				_ = upsElement.AppendChild(upsChild);
@@ -309,14 +291,10 @@ internal static class CustomSerialization
 		XmlElement ciElement = xmlDoc.CreateElement("CiSigners", GlobalVars.SiPolicyNamespace);
 		_ = root.AppendChild(ciElement);
 
-		if (policy.CiSigners is { Length: > 0 })
+		if (policy.CiSigners is { Count: > 0 })
 		{
-			foreach (CiSigner ci in policy.CiSigners)
+			foreach (CiSigner ci in CollectionsMarshal.AsSpan(policy.CiSigners))
 			{
-
-				if (ci is null)
-					continue;
-
 				XmlElement ciSignerElement = xmlDoc.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
 				ciSignerElement.SetAttribute("SignerId", ci.SignerId);
 				_ = ciElement.AppendChild(ciSignerElement);
@@ -324,21 +302,20 @@ internal static class CustomSerialization
 		}
 
 		// HvciOptions
-		if (policy.HvciOptionsSpecified)
+		if (policy.HvciOptions is not null)
 			if (!AppendTextElement(xmlDoc, root, "HvciOptions", policy.HvciOptions.ToString()))
 			{
 				throw new InvalidOperationException("Could not get the HVCI Optons value");
 			}
 
 		// Settings
-		if (policy.Settings is { Length: > 0 })
+		if (policy.Settings is { Count: > 0 })
 		{
 			XmlElement settingsElement = xmlDoc.CreateElement("Settings", GlobalVars.SiPolicyNamespace);
 			_ = root.AppendChild(settingsElement);
 
-			foreach (Setting setting in policy.Settings)
+			foreach (Setting setting in CollectionsMarshal.AsSpan(policy.Settings))
 			{
-
 				// If the Setting's value is null we shouldn't create any setting at all because it would be against the schema guidelines
 				if (setting is null || setting.Value is null || setting.Value.Item is null)
 					continue;
@@ -348,11 +325,10 @@ internal static class CustomSerialization
 				settingElement.SetAttribute("Key", setting.Key);
 				settingElement.SetAttribute("ValueName", setting.ValueName);
 
-
 				XmlElement valueElement = xmlDoc.CreateElement("Value", GlobalVars.SiPolicyNamespace);
-				if (setting.Value.Item is byte[] b)
+				if (setting.Value.Item is ReadOnlyMemory<byte> bMem)
 				{
-					if (!AppendTextElement(xmlDoc, valueElement, "Binary", ConvertByteArrayToHex(b)))
+					if (!AppendTextElement(xmlDoc, valueElement, "Binary", ConvertByteArrayToHex(bMem)))
 					{
 						continue;
 					}
@@ -392,15 +368,12 @@ internal static class CustomSerialization
 		}
 
 		// Macros
-		if (policy.Macros is { Length: > 0 })
+		if (policy.Macros is { Count: > 0 })
 		{
 			XmlElement macrosElement = xmlDoc.CreateElement("Macros", GlobalVars.SiPolicyNamespace);
 			_ = root.AppendChild(macrosElement);
-			foreach (MacrosMacro macro in policy.Macros)
+			foreach (MacrosMacro macro in CollectionsMarshal.AsSpan(policy.Macros))
 			{
-				if (macro is null)
-					continue;
-
 				XmlElement macroElement = xmlDoc.CreateElement("Macro", GlobalVars.SiPolicyNamespace);
 				macroElement.SetAttribute("Id", macro.Id);
 				macroElement.SetAttribute("Value", macro.Value);
@@ -409,15 +382,12 @@ internal static class CustomSerialization
 		}
 
 		// Supplemental policy signers
-		if (policy.SupplementalPolicySigners is { Length: > 0 })
+		if (policy.SupplementalPolicySigners is { Count: > 0 })
 		{
 			XmlElement suppElement = xmlDoc.CreateElement("SupplementalPolicySigners", GlobalVars.SiPolicyNamespace);
 			_ = root.AppendChild(suppElement);
-			foreach (SupplementalPolicySigner sps in policy.SupplementalPolicySigners)
+			foreach (SupplementalPolicySigner sps in CollectionsMarshal.AsSpan(policy.SupplementalPolicySigners))
 			{
-				if (sps is null)
-					continue;
-
 				XmlElement spsElement = xmlDoc.CreateElement("SupplementalPolicySigner", GlobalVars.SiPolicyNamespace);
 				spsElement.SetAttribute("SignerId", sps.SignerId);
 				_ = suppElement.AppendChild(spsElement);
@@ -433,30 +403,19 @@ internal static class CustomSerialization
 			{
 				foreach (AppRoot app in policy.AppSettings.App)
 				{
-
-					if (app is null)
-						continue;
-
 					XmlElement appElement = xmlDoc.CreateElement("App", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(app.Manifest))
 						appElement.SetAttribute("Manifest", app.Manifest);
-					if (app.Setting is { Length: > 0 })
+					if (app.Setting is { Count: > 0 })
 					{
-						foreach (AppSetting appSetting in app.Setting)
+						foreach (AppSetting appSetting in CollectionsMarshal.AsSpan(app.Setting))
 						{
-
-							if (appSetting is null)
-								continue;
-
 							XmlElement settingElem = xmlDoc.CreateElement("Setting", GlobalVars.SiPolicyNamespace);
 							settingElem.SetAttribute("Name", appSetting.Name);
-							if (appSetting.Value is { Length: > 0 })
+							if (appSetting.Value is { Count: > 0 })
 							{
-								foreach (string val in appSetting.Value)
+								foreach (string val in CollectionsMarshal.AsSpan(appSetting.Value))
 								{
-									if (val is null)
-										continue;
-
 									if (!AppendTextElement(xmlDoc, settingElem, "Value", val))
 									{
 										continue;
@@ -532,7 +491,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(allow.PackageVersion)) element.SetAttribute("PackageVersion", allow.PackageVersion);
 		if (!string.IsNullOrEmpty(allow.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", allow.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(allow.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", allow.MaximumFileVersion);
-		if (allow.Hash is { Length: > 0 }) element.SetAttribute("Hash", ConvertByteArrayToHex(allow.Hash));
+		if (!allow.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(allow.Hash));
 		if (!string.IsNullOrEmpty(allow.AppIDs)) element.SetAttribute("AppIDs", allow.AppIDs);
 		if (!string.IsNullOrEmpty(allow.FilePath)) element.SetAttribute("FilePath", allow.FilePath);
 		_ = parent.AppendChild(element);
@@ -551,7 +510,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(deny.PackageVersion)) element.SetAttribute("PackageVersion", deny.PackageVersion);
 		if (!string.IsNullOrEmpty(deny.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", deny.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(deny.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", deny.MaximumFileVersion);
-		if (deny.Hash is { Length: > 0 }) element.SetAttribute("Hash", ConvertByteArrayToHex(deny.Hash));
+		if (!deny.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(deny.Hash));
 		if (!string.IsNullOrEmpty(deny.AppIDs)) element.SetAttribute("AppIDs", deny.AppIDs);
 		if (!string.IsNullOrEmpty(deny.FilePath)) element.SetAttribute("FilePath", deny.FilePath);
 		_ = parent.AppendChild(element);
@@ -570,7 +529,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(fileAttrib.PackageVersion)) element.SetAttribute("PackageVersion", fileAttrib.PackageVersion);
 		if (!string.IsNullOrEmpty(fileAttrib.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", fileAttrib.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(fileAttrib.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", fileAttrib.MaximumFileVersion);
-		if (fileAttrib.Hash is { Length: > 0 }) element.SetAttribute("Hash", ConvertByteArrayToHex(fileAttrib.Hash));
+		if (!fileAttrib.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(fileAttrib.Hash));
 		if (!string.IsNullOrEmpty(fileAttrib.AppIDs)) element.SetAttribute("AppIDs", fileAttrib.AppIDs);
 		if (!string.IsNullOrEmpty(fileAttrib.FilePath)) element.SetAttribute("FilePath", fileAttrib.FilePath);
 		_ = parent.AppendChild(element);
@@ -589,7 +548,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(fileRule.PackageVersion)) element.SetAttribute("PackageVersion", fileRule.PackageVersion);
 		if (!string.IsNullOrEmpty(fileRule.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", fileRule.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(fileRule.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", fileRule.MaximumFileVersion);
-		if (fileRule.Hash is { Length: > 0 }) element.SetAttribute("Hash", ConvertByteArrayToHex(fileRule.Hash));
+		if (!fileRule.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(fileRule.Hash));
 		if (!string.IsNullOrEmpty(fileRule.AppIDs)) element.SetAttribute("AppIDs", fileRule.AppIDs);
 		if (!string.IsNullOrEmpty(fileRule.FilePath)) element.SetAttribute("FilePath", fileRule.FilePath);
 		element.SetAttribute("Type", fileRule.Type.ToString());
@@ -606,22 +565,15 @@ internal static class CustomSerialization
 				allowedElement.SetAttribute("Workaround", ps.AllowedSigners.Workaround);
 			if (ps.AllowedSigners.AllowedSigner is not null)
 			{
-				foreach (AllowedSigner aSigner in ps.AllowedSigners.AllowedSigner)
+				foreach (AllowedSigner aSigner in CollectionsMarshal.AsSpan(ps.AllowedSigners.AllowedSigner))
 				{
-
-					if (aSigner is null)
-						continue;
-
 					XmlElement aSignerElement = doc.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(aSigner.SignerId))
 						aSignerElement.SetAttribute("SignerId", aSigner.SignerId);
 					if (aSigner.ExceptDenyRule is not null)
 					{
-						foreach (ExceptDenyRule rule in aSigner.ExceptDenyRule)
+						foreach (ExceptDenyRule rule in CollectionsMarshal.AsSpan(aSigner.ExceptDenyRule))
 						{
-							if (rule is null)
-								continue;
-
 							XmlElement ruleElem = doc.CreateElement("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.DenyRuleID))
 								ruleElem.SetAttribute("DenyRuleID", rule.DenyRuleID);
@@ -640,23 +592,15 @@ internal static class CustomSerialization
 				deniedElement.SetAttribute("Workaround", ps.DeniedSigners.Workaround);
 			if (ps.DeniedSigners.DeniedSigner is not null)
 			{
-				foreach (DeniedSigner dSigner in ps.DeniedSigners.DeniedSigner)
+				foreach (DeniedSigner dSigner in CollectionsMarshal.AsSpan(ps.DeniedSigners.DeniedSigner))
 				{
-
-					if (dSigner is null)
-						continue;
-
 					XmlElement dSignerElement = doc.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(dSigner.SignerId))
 						dSignerElement.SetAttribute("SignerId", dSigner.SignerId);
 					if (dSigner.ExceptAllowRule is not null)
 					{
-						foreach (ExceptAllowRule rule in dSigner.ExceptAllowRule)
+						foreach (ExceptAllowRule rule in CollectionsMarshal.AsSpan(dSigner.ExceptAllowRule))
 						{
-
-							if (rule is null)
-								continue;
-
 							XmlElement ruleElem = doc.CreateElement("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.AllowRuleID))
 								ruleElem.SetAttribute("AllowRuleID", rule.AllowRuleID);
@@ -675,12 +619,8 @@ internal static class CustomSerialization
 				fileRulesRefElement.SetAttribute("Workaround", ps.FileRulesRef.Workaround);
 			if (ps.FileRulesRef.FileRuleRef is not null)
 			{
-				foreach (FileRuleRef fr in ps.FileRulesRef.FileRuleRef)
+				foreach (FileRuleRef fr in CollectionsMarshal.AsSpan(ps.FileRulesRef.FileRuleRef))
 				{
-
-					if (fr is null)
-						continue;
-
 					XmlElement frElement = doc.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(fr.RuleID))
 						frElement.SetAttribute("RuleID", fr.RuleID);
@@ -700,22 +640,15 @@ internal static class CustomSerialization
 				allowedElement.SetAttribute("Workaround", ts.AllowedSigners.Workaround);
 			if (ts.AllowedSigners.AllowedSigner is not null)
 			{
-				foreach (AllowedSigner aSigner in ts.AllowedSigners.AllowedSigner)
+				foreach (AllowedSigner aSigner in CollectionsMarshal.AsSpan(ts.AllowedSigners.AllowedSigner))
 				{
-
-					if (aSigner is null)
-						continue;
-
 					XmlElement aSignerElement = doc.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(aSigner.SignerId))
 						aSignerElement.SetAttribute("SignerId", aSigner.SignerId);
 					if (aSigner.ExceptDenyRule is not null)
 					{
-						foreach (ExceptDenyRule rule in aSigner.ExceptDenyRule)
+						foreach (ExceptDenyRule rule in CollectionsMarshal.AsSpan(aSigner.ExceptDenyRule))
 						{
-							if (rule is null)
-								continue;
-
 							XmlElement ruleElem = doc.CreateElement("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.DenyRuleID))
 								ruleElem.SetAttribute("DenyRuleID", rule.DenyRuleID);
@@ -734,23 +667,15 @@ internal static class CustomSerialization
 				deniedElement.SetAttribute("Workaround", ts.DeniedSigners.Workaround);
 			if (ts.DeniedSigners.DeniedSigner is not null)
 			{
-				foreach (DeniedSigner dSigner in ts.DeniedSigners.DeniedSigner)
+				foreach (DeniedSigner dSigner in CollectionsMarshal.AsSpan(ts.DeniedSigners.DeniedSigner))
 				{
-
-					if (dSigner is null)
-						continue;
-
 					XmlElement dSignerElement = doc.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(dSigner.SignerId))
 						dSignerElement.SetAttribute("SignerId", dSigner.SignerId);
 					if (dSigner.ExceptAllowRule is not null)
 					{
-						foreach (ExceptAllowRule rule in dSigner.ExceptAllowRule)
+						foreach (ExceptAllowRule rule in CollectionsMarshal.AsSpan(dSigner.ExceptAllowRule))
 						{
-
-							if (rule is null)
-								continue;
-
 							XmlElement ruleElem = doc.CreateElement("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.AllowRuleID))
 								ruleElem.SetAttribute("AllowRuleID", rule.AllowRuleID);
@@ -769,12 +694,8 @@ internal static class CustomSerialization
 				fileRulesRefElement.SetAttribute("Workaround", ts.FileRulesRef.Workaround);
 			if (ts.FileRulesRef.FileRuleRef is not null)
 			{
-				foreach (FileRuleRef fr in ts.FileRulesRef.FileRuleRef)
+				foreach (FileRuleRef fr in CollectionsMarshal.AsSpan(ts.FileRulesRef.FileRuleRef))
 				{
-
-					if (fr is null)
-						continue;
-
 					XmlElement frElement = doc.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(fr.RuleID))
 						frElement.SetAttribute("RuleID", fr.RuleID);
@@ -794,23 +715,15 @@ internal static class CustomSerialization
 				allowedElement.SetAttribute("Workaround", tss.AllowedSigners.Workaround);
 			if (tss.AllowedSigners.AllowedSigner is not null)
 			{
-				foreach (AllowedSigner aSigner in tss.AllowedSigners.AllowedSigner)
+				foreach (AllowedSigner aSigner in CollectionsMarshal.AsSpan(tss.AllowedSigners.AllowedSigner))
 				{
-
-					if (aSigner is null)
-						continue;
-
 					XmlElement aSignerElement = doc.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(aSigner.SignerId))
 						aSignerElement.SetAttribute("SignerId", aSigner.SignerId);
 					if (aSigner.ExceptDenyRule is not null)
 					{
-						foreach (ExceptDenyRule rule in aSigner.ExceptDenyRule)
+						foreach (ExceptDenyRule rule in CollectionsMarshal.AsSpan(aSigner.ExceptDenyRule))
 						{
-
-							if (rule is null)
-								continue;
-
 							XmlElement ruleElem = doc.CreateElement("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.DenyRuleID))
 								ruleElem.SetAttribute("DenyRuleID", rule.DenyRuleID);
@@ -829,23 +742,15 @@ internal static class CustomSerialization
 				deniedElement.SetAttribute("Workaround", tss.DeniedSigners.Workaround);
 			if (tss.DeniedSigners.DeniedSigner is not null)
 			{
-				foreach (DeniedSigner dSigner in tss.DeniedSigners.DeniedSigner)
+				foreach (DeniedSigner dSigner in CollectionsMarshal.AsSpan(tss.DeniedSigners.DeniedSigner))
 				{
-
-					if (dSigner is null)
-						continue;
-
 					XmlElement dSignerElement = doc.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(dSigner.SignerId))
 						dSignerElement.SetAttribute("SignerId", dSigner.SignerId);
 					if (dSigner.ExceptAllowRule is not null)
 					{
-						foreach (ExceptAllowRule rule in dSigner.ExceptAllowRule)
+						foreach (ExceptAllowRule rule in CollectionsMarshal.AsSpan(dSigner.ExceptAllowRule))
 						{
-
-							if (rule is null)
-								continue;
-
 							XmlElement ruleElem = doc.CreateElement("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.AllowRuleID))
 								ruleElem.SetAttribute("AllowRuleID", rule.AllowRuleID);
@@ -864,12 +769,8 @@ internal static class CustomSerialization
 				fileRulesRefElement.SetAttribute("Workaround", tss.FileRulesRef.Workaround);
 			if (tss.FileRulesRef.FileRuleRef is not null)
 			{
-				foreach (FileRuleRef fr in tss.FileRulesRef.FileRuleRef)
+				foreach (FileRuleRef fr in CollectionsMarshal.AsSpan(tss.FileRulesRef.FileRuleRef))
 				{
-
-					if (fr is null)
-						continue;
-
 					XmlElement frElement = doc.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(fr.RuleID))
 						frElement.SetAttribute("RuleID", fr.RuleID);
@@ -925,7 +826,6 @@ internal static class CustomSerialization
 		return false;
 	}
 
-
 	/*
 	internal static string ConvertByteArrayToHex(byte[]? data)
 	{
@@ -933,51 +833,40 @@ internal static class CustomSerialization
 	}
 	*/
 
-
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static unsafe string ConvertByteArrayToHex(byte[]? data)
+	internal static unsafe string ConvertByteArrayToHex(ReadOnlyMemory<byte>? data)
 	{
-		// If the input data is null or has no elements,
-		// return an empty string immediately.
-		if (data is null || data.Length == 0)
+		// If the input data is null or empty, return an empty string immediately.
+		if (!data.HasValue || data.Value.IsEmpty)
 			return string.Empty;
+
+		ReadOnlySpan<byte> byteSpan = data.Value.Span;
+		int length = byteSpan.Length;
 
 		// Pre-allocate a string to hold the hexadecimal representation.
 		// Each byte will be represented by 2 hexadecimal characters.
-		// The string is initially filled with null characters ('\0').
-		string result = new('\0', data.Length * 2);
+		string result = new('\0', length * 2);
 
-		// Use the 'fixed' statement to pin the data array and the result string in memory.
+		// Use the 'fixed' statement to pin the data span and the result string in memory.
 		// This prevents the garbage collector from relocating them while we work with pointers.
-		fixed (byte* dataPtr = data)
+		fixed (byte* dataPtr = byteSpan)
 		fixed (char* resultPtr = result)
 		{
 			// Create local pointer variables for clarity:
-			// pData points to the start of the byte array.
-			// pResult points to the start of the pre-allocated result string.
 			byte* pData = dataPtr;
 			char* pResult = resultPtr;
 
-			// Loop through each byte in the input array.
-			for (int i = 0; i < data.Length; i++)
+			// Loop through each byte in the input span.
+			for (int i = 0; i < length; i++)
 			{
-				// Retrieve the current byte from the array.
+				// Retrieve the current byte from the pointer.
 				byte b = pData[i];
 
-				// Process the high nibble (upper 4 bits) of the byte:
-				// Right-shift by 4 to isolate the high nibble.
-				// If the value is less than 10, convert it to its corresponding ASCII numeral ('0'-'9')
-				// by adding the ASCII value of '0'. Otherwise, convert to an uppercase hexadecimal letter ('A'-'F')
-				// by subtracting 10 and adding the ASCII value of 'A'.
-				// The resulting character is stored at position i*2 in the result string.
+				// Process the high nibble (upper 4 bits)
 				pResult[i * 2] = (char)(b >> 4 < 10 ? (b >> 4) + '0' : (b >> 4) - 10 + 'A');
 
-				// Process the low nibble (lower 4 bits) of the byte:
-				// Use bitwise AND with 0xF to isolate the lower nibble.
-				// Similar to the high nibble, if the value is less than 10, convert it to a numeral;
-				// otherwise, convert it to an uppercase letter.
-				// The resulting character is stored at position i*2 + 1 in the result string.
-				pResult[i * 2 + 1] = (char)(((b & 0xF) < 10) ? ((b & 0xF) + '0') : ((b & 0xF) - 10 + 'A'));
+				// Process the low nibble (lower 4 bits)
+				pResult[i * 2 + 1] = (char)((b & 0xF) < 10 ? (b & 0xF) + '0' : (b & 0xF) - 10 + 'A');
 			}
 		}
 		// After processing all bytes, return the constructed hexadecimal string.

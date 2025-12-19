@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
@@ -42,8 +43,8 @@ internal static class NewCertificateSignerRules
 		}
 
 		// Get or Initialize lists
-		List<Signer> signers = policyObj.Signers?.ToList() ?? [];
-		List<CiSigner> ciSigners = policyObj.CiSigners?.ToList() ?? [];
+		List<Signer> signers = policyObj.Signers ?? [];
+		List<CiSigner> ciSigners = policyObj.CiSigners ?? [];
 
 		// Ensure Scenarios exist
 		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
@@ -54,49 +55,47 @@ internal static class NewCertificateSignerRules
 		kmciScenario.ProductSigners ??= new ProductSigners();
 
 		// Ensure AllowedSigners exist
-		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
-		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners();
+		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
+		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
 
-		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
-		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner?.ToList() ?? [];
+		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
+		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
 
 		foreach (CertificateSignerCreator signer in signerData)
 		{
 			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 			string SignerID = $"ID_SIGNER_R_{guid}";
 
-			Signer newSigner = new()
-			{
-				ID = SignerID,
-				Name = signer.SignerName,
-				CertRoot = new CertRoot
-				{
-					Type = CertEnumType.TBS,
-					Value = Convert.FromHexString(signer.TBS)
-				}
-			};
+			Signer newSigner = new(
+				id: SignerID,
+				name: signer.SignerName,
+				certRoot: new CertRoot
+				(
+					type: CertEnumType.TBS,
+					value: Convert.FromHexString(signer.TBS)
+				));
 
 			signers.Add(newSigner);
 
 			// For User-Mode files
 			if (signer.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umciAllowedSigners.Add(new AllowedSigner { SignerId = SignerID });
-				ciSigners.Add(new CiSigner { SignerId = SignerID });
+				umciAllowedSigners.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
+				ciSigners.Add(new CiSigner(signerID: SignerID));
 			}
 			// For Kernel-Mode files - they don't need CI Signers
 			else if (signer.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
-				kmciAllowedSigners.Add(new AllowedSigner { SignerId = SignerID });
+				kmciAllowedSigners.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
 			}
 		}
 
 		// Update Policy Object
-		policyObj.Signers = signers.ToArray();
-		policyObj.CiSigners = ciSigners.ToArray();
+		policyObj.Signers = signers;
+		policyObj.CiSigners = ciSigners;
 
-		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners.ToArray();
-		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners.ToArray();
+		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners;
+		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners;
 
 		return policyObj;
 	}

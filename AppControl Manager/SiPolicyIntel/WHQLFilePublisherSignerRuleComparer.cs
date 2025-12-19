@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
@@ -90,7 +91,7 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
@@ -106,15 +107,15 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 		// Rule 3: Include EKU Values
 		foreach (EKU eku in obj.Ekus)
 		{
-			if (eku.Value is not null)
+			if (!eku.Value.IsEmpty)
 			{
-				hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(eku.Value)) % Merger.modulus;
+				hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(eku.Value.Span)) % Merger.modulus;
 			}
 		}
 
@@ -131,20 +132,14 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 		if (newRule.FileAttribElements is null || existing.FileAttribElements is null)
 			return;
 
-		foreach (FileAttrib fileAttrib in newRule.FileAttribElements)
+		if (existing.SignerElement.FileAttribRef is null)
+			existing.SignerElement.FileAttribRef = [];
+
+		foreach (FileAttrib fileAttrib in CollectionsMarshal.AsSpan(newRule.FileAttribElements))
 		{
 			existing.FileAttribElements.Add(fileAttrib);
 
-			FileAttribRef fileAttribRef = new()
-			{
-				RuleID = fileAttrib.ID
-			};
-
-			List<FileAttribRef> List1 = [.. existing.SignerElement.FileAttribRef];
-
-			List1.Add(fileAttribRef);
-
-			existing.SignerElement.FileAttribRef = [.. List1];
+			existing.SignerElement.FileAttribRef.Add(new(ruleID: fileAttrib.ID));
 		}
 	}
 }

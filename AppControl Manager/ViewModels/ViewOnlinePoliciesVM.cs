@@ -142,9 +142,14 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 
 	/// <summary>
+	/// Event handler for the UI button.
+	/// </summary>
+	internal async void GetOnlinePolicies() => await GetOnlinePoliciesInternal();
+
+	/// <summary>
 	/// Retrieves the online Intune policies
 	/// </summary>
-	internal async void GetOnlinePolicies()
+	private async Task GetOnlinePoliciesInternal()
 	{
 		try
 		{
@@ -156,6 +161,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			if (AuthCompanionCLS.CurrentActiveAccount is null)
 				return;
 
+			// Retrieve Custom Device Configurations
 			DeviceConfigurationPoliciesResponse? result = await CommonCore.MicrosoftGraph.Main.RetrieveDeviceConfigurations(AuthCompanionCLS.CurrentActiveAccount);
 
 			if (result is not null && result.Value is not null)
@@ -248,6 +254,34 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 				}
 			}
 
+			// Retrieve Managed Installer Policies (Device Health Scripts)
+			List<DeviceHealthScript> managedInstallers = await CommonCore.MicrosoftGraph.Main.RetrieveDeviceHealthScripts(AuthCompanionCLS.CurrentActiveAccount);
+
+			foreach (DeviceHealthScript script in managedInstallers)
+			{
+				CiPolicyInfo miPolicy = new(
+					policyID: script.Id,
+					basePolicyID: null,
+					friendlyName: script.DisplayName,
+					version: null,
+					versionString: script.Version,
+					isSystemPolicy: script.IsGlobalScript ?? false,
+					isSignedPolicy: script.EnforceSignatureCheck ?? false,
+					isOnDisk: false,
+					isEnforced: true,
+					isAuthorized: true,
+					policyOptions: ["Managed Installer"]
+				)
+				{
+					IntunePolicyObjectID = script.Id, // Using the Script ID as the Intune Object ID
+					IsManagedInstaller = true
+				};
+
+				AllPolicies.Add(miPolicy);
+				AllPoliciesOutput.Add(miPolicy);
+			}
+
+
 			CalculateColumnWidths();
 		}
 		catch (Exception ex)
@@ -307,7 +341,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 				savedHorizontal = Sv.HorizontalOffset;
 			}
 
-
 			IEnumerable<CiPolicyInfo> filteredResults = [];
 
 			await Task.Run(() =>
@@ -353,8 +386,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 		try
 		{
-
 			MainInfoBarIsClosable = false;
+			AreElementsEnabled = false;
 
 			if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
 			{
@@ -362,17 +395,56 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 					GlobalVars.GetStr("IntunePolicyObjectIdNullMessage"));
 			}
 
-			AreElementsEnabled = false;
-
-			await CommonCore.MicrosoftGraph.Main.DeletePolicy(
-				AuthCompanionCLS.CurrentActiveAccount,
-				ListViewSelectedPolicy.IntunePolicyObjectID);
+			// Check if it is a Managed Installer policy and call the appropriate delete method
+			if (ListViewSelectedPolicy.IsManagedInstaller)
+			{
+				await CommonCore.MicrosoftGraph.Main.DeleteManagedInstallerPolicy(
+					AuthCompanionCLS.CurrentActiveAccount,
+					ListViewSelectedPolicy.IntunePolicyObjectID);
+			}
+			else
+			{
+				await CommonCore.MicrosoftGraph.Main.DeletePolicy(
+					AuthCompanionCLS.CurrentActiveAccount,
+					ListViewSelectedPolicy.IntunePolicyObjectID);
+			}
 
 			MainInfoBar.WriteInfo($"Successfully removed the policy with the name '{ListViewSelectedPolicy.FriendlyName}' and ID '{ListViewSelectedPolicy.PolicyID}' from Intune.");
 
-			// Remove the policy from the Lists after removal from Intune
-			_ = AllPolicies.Remove(ListViewSelectedPolicy);
-			_ = AllPoliciesOutput.Remove(ListViewSelectedPolicy);
+			// Refresh the policies
+			await GetOnlinePoliciesInternal();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Deploys the predefined Managed Installer Policy
+	/// </summary>
+	internal async void DeployManagedInstallerPolicy_Click()
+	{
+		try
+		{
+			MainInfoBarIsClosable = false;
+			AreElementsEnabled = false;
+
+			if (AuthCompanionCLS.CurrentActiveAccount is null)
+				return;
+
+			string? policyId = await CommonCore.MicrosoftGraph.Main.CreateManagedInstallerPolicy(AuthCompanionCLS.CurrentActiveAccount);
+
+			if (policyId is not null)
+			{
+				MainInfoBar.WriteSuccess($"Successfully deployed Managed Installer Policy with ID: {policyId}");
+				await GetOnlinePoliciesInternal(); // Refresh the list
+			}
 		}
 		catch (Exception ex)
 		{

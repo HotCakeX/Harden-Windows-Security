@@ -26,7 +26,7 @@ namespace AppControlManager.SiPolicyIntel;
 /// of the following property-based matching rules holds true:
 ///
 /// Rule 1: Both Allow elements have non-empty PackageFamilyName values that are equal (case-insensitive).
-/// Rule 2: Both Allow elements have non-null Hash values that are equal (using <see cref="BytesArrayComparer.AreByteArraysEqual"/>).
+/// Rule 2: Both Allow elements have non-null Hash values that are equal.
 /// Rule 3: Both Allow elements have non-empty FilePath values that are equal (case-insensitive).
 /// Special Rule: Both Allow elements have a FileName value equal to "*" (wildcard, case-insensitive).
 /// Rule 4: If both Allow elements specify MinimumFileVersion or both specify MaximumFileVersion,
@@ -74,9 +74,9 @@ internal sealed class AllowRuleComparer : IEqualityComparer<AllowRule>
 		}
 
 		// Rule 2: Use Hash for hash calculation
-		if (allow.Hash is not null)
+		if (!allow.Hash.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(allow.Hash)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(allow.Hash.Span)) % Merger.modulus;
 		}
 
 		// Rule 3: Use FilePath for hash calculation

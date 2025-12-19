@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Xml;
 using AppControlManager.SiPolicy;
 
@@ -39,7 +40,7 @@ internal static partial class GetFileHashes
 		if (policyObj.FileRules is not null)
 		{
 			// Get the hash from the Allow rules
-			foreach (object item in policyObj.FileRules)
+			foreach (object item in CollectionsMarshal.AsSpan(policyObj.FileRules))
 			{
 				if (item is Allow allowItem)
 				{

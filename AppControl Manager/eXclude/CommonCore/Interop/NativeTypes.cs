@@ -731,7 +731,6 @@ internal struct SAMPR_USER_NAME_INFORMATION
 	internal LSA_UNICODE_STRING FullName;
 }
 
-
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winnt/ne-winnt-logical_processor_relationship
 /// </summary>
@@ -748,7 +747,6 @@ internal enum LOGICAL_PROCESSOR_RELATIONSHIP
 	RelationAll = 0xffff
 }
 
-
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winnt/ne-winnt-processor_cache_type
 /// </summary>
@@ -760,7 +758,6 @@ internal enum PROCESSOR_CACHE_TYPE
 	CacheTrace = 3,
 	CacheUnknown
 }
-
 
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-group_affinity
@@ -774,7 +771,6 @@ internal struct GROUP_AFFINITY
 	internal ushort Reserved2;
 	internal ushort Reserved3;
 }
-
 
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-cache_relationship
@@ -790,7 +786,6 @@ internal struct CACHE_RELATIONSHIP
 	internal GROUP_AFFINITY GroupMask;
 }
 
-
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-processor_relationship
 /// </summary>
@@ -802,9 +797,7 @@ internal struct PROCESSOR_RELATIONSHIP
 	[MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
 	internal byte[] Reserved;
 	internal ushort GroupCount;
-
 }
-
 
 [StructLayout(LayoutKind.Sequential)]
 internal struct PDH_FMT_COUNTERVALUE_DOUBLE
@@ -813,14 +806,12 @@ internal struct PDH_FMT_COUNTERVALUE_DOUBLE
 	internal double Value;
 }
 
-
 [StructLayout(LayoutKind.Sequential)]
 internal struct PDH_FMT_COUNTERVALUE_ITEM_DOUBLE
 {
 	internal IntPtr NamePtr;
 	internal PDH_FMT_COUNTERVALUE_DOUBLE Value;
 }
-
 
 [StructLayout(LayoutKind.Sequential)]
 internal struct VARIABLE_HEADER
@@ -899,4 +890,188 @@ internal struct STORAGE_TEMPERATURE_INFO
 	internal byte EventGenerated;
 	internal byte Reserved0;
 	internal uint Reserved1;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct VS_FIXEDFILEINFO
+{
+	internal uint dwSignature;
+	internal uint dwStrucVersion;
+	internal uint dwFileVersionMS;
+	internal uint dwFileVersionLS;
+	internal uint dwProductVersionMS;
+	internal uint dwProductVersionLS;
+	internal uint dwFileFlagsMask;
+	internal uint dwFileFlags;
+	internal uint dwFileOS;
+	internal uint dwFileType;
+	internal uint dwFileSubtype;
+	internal uint dwFileDateMS;
+	internal uint dwFileDateLS;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct CryptProviderSigner
+{
+	private readonly uint cbStruct;   // Size of structure
+	private System.Runtime.InteropServices.ComTypes.FILETIME sftVerifyAsOf;   // Verification time
+	private readonly uint csCertChain;   // Number of certificates in the chain
+	private readonly IntPtr pasCertChain;   // Pointer to certificate chain
+	private readonly uint dwSignerType;   // Type of signer
+	private readonly IntPtr psSigner;   // Pointer to signer
+	private readonly uint dwError;   // Error code
+	internal uint csCounterSigners;   // Number of countersigners
+	internal IntPtr pasCounterSigners;   // Pointer to countersigners
+	internal IntPtr pChainContext;   // Pointer to chain context
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_data
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct CryptProviderData
+{
+	internal uint cbStruct;                        // Size of structure
+	internal IntPtr pWintrustData;                 // WINTRUST_DATA*
+	internal int fOpenedFile;                      // BOOL
+	internal IntPtr hWndParent;                    // HWND
+	internal IntPtr pgActionId;                    // GUID*
+	internal IntPtr hProv;                         // HCRYPTPROV
+	internal uint dwError;                         // DWORD
+	internal uint dwRegSecuritySettings;           // DWORD
+	internal uint dwRegPolicySettings;             // DWORD
+	internal IntPtr psPfns;                        // CRYPT_PROVIDER_FUNCTIONS*
+	internal uint cdwTrustStepErrors;              // DWORD
+	internal IntPtr padwTrustStepErrors;           // DWORD*
+	internal uint chStores;                        // DWORD
+	internal IntPtr pahStores;                     // HCERTSTORE*
+	internal uint dwEncoding;                      // DWORD
+	internal IntPtr hMsg;                          // HCRYPTMSG
+	internal uint csSigners;                       // DWORD
+	internal IntPtr pasSigners;                    // CRYPT_PROVIDER_SGNR*
+	internal uint csProvPrivData;                  // DWORD
+	internal IntPtr pasProvPrivData;               // CRYPT_PROVIDER_PRIVDATA*
+	internal uint dwSubjectChoice;                 // DWORD
+	internal IntPtr pPDSip;                        // _PROVDATA_SIP*
+	internal IntPtr pszUsageOID;                   // char*
+	internal int fRecallWithState;                 // BOOL
+	internal System.Runtime.InteropServices.ComTypes.FILETIME sftSystemTime; // FILETIME
+	internal IntPtr pszCTLSignerUsageOID;          // char*
+	internal uint dwProvFlags;                     // DWORD
+	internal uint dwFinalError;                    // DWORD
+	internal IntPtr pRequestUsage;                 // PCERT_USAGE_MATCH
+	internal uint dwTrustPubSettings;              // DWORD
+	internal uint dwUIStateFlags;                  // DWORD
+	internal IntPtr pSigState;                     // CRYPT_PROVIDER_SIGSTATE*
+	internal IntPtr pSigSettings;                  // WINTRUST_SIGNATURE_SETTINGS*
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_signature_settings
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct WINTRUST_SIGNATURE_SETTINGS
+{
+	internal uint cbStruct;   // Size of structure
+	internal uint dwIndex;   // Index of the signature
+	internal uint dwFlags;   // Flags for signature verification
+	internal uint SecondarySignersCount;   // Number of secondary signatures
+	internal uint dwVerifiedSigIndex;   // Index of verified signature
+	internal IntPtr pCryptoPolicy;   // Pointer to cryptographic policy
+
+	// Default constructor initializes dwIndex to unsigned integer 0
+	public WINTRUST_SIGNATURE_SETTINGS()
+	{
+		cbStruct = (uint)sizeof(WINTRUST_SIGNATURE_SETTINGS);
+		dwIndex = 0U;
+		dwFlags = 3;
+		SecondarySignersCount = 0;
+		dwVerifiedSigIndex = 0;
+		pCryptoPolicy = IntPtr.Zero;
+	}
+
+	// Constructor initializes with given index
+	internal WINTRUST_SIGNATURE_SETTINGS(uint index)
+	{
+		cbStruct = (uint)sizeof(WINTRUST_SIGNATURE_SETTINGS);
+		dwIndex = index;
+		dwFlags = 3;
+		SecondarySignersCount = 0;
+		dwVerifiedSigIndex = 0;
+		pCryptoPolicy = IntPtr.Zero;
+	}
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_file_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct WINTRUST_FILE_INFO
+{
+	internal uint StructSize;   // Size of structure
+	internal IntPtr FilePath;   // File path pointer (LPCWSTR)
+	internal IntPtr hFile;   // File handle pointer
+	internal IntPtr pgKnownSubject;   // Pointer to known subject
+
+	// Default constructor initializes FilePath to null
+	public WINTRUST_FILE_INFO()
+	{
+		StructSize = (uint)sizeof(WINTRUST_FILE_INFO);
+		FilePath = IntPtr.Zero;
+		hFile = IntPtr.Zero;
+		pgKnownSubject = IntPtr.Zero;
+	}
+
+	// Constructor initializes FilePath with the given filePath
+	internal WINTRUST_FILE_INFO(IntPtr filePathPtr)
+	{
+		StructSize = (uint)sizeof(WINTRUST_FILE_INFO);
+		FilePath = filePathPtr;
+		hFile = IntPtr.Zero;
+		pgKnownSubject = IntPtr.Zero;
+	}
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_data
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct WINTRUST_DATA
+{
+	internal uint StructSize;   // Size of structure
+	internal IntPtr PolicyCallbackData;   // Pointer to policy callback data
+	internal IntPtr SIPClientData;   // Pointer to SIP client data
+	internal uint UIChoice;   // UI choice for trust verification
+	internal uint RevocationChecks;   // Revocation checks
+	internal uint UnionChoice;   // Union choice for trust verification
+	internal IntPtr FileInfoPtr;   // Pointer to file information
+	internal uint StateAction;   // State action for trust verification
+	internal IntPtr StateData;   // Pointer to state data
+	internal IntPtr URLReference;   // URL reference for trust verification
+	internal uint ProvFlags;   // Provider flags for trust verification
+	internal uint UIContext;   // UI context for trust verification
+	internal IntPtr pSignatureSettings;   // Pointer to signature settings
+
+	internal WINTRUST_DATA(IntPtr fileInfoPtr, IntPtr signatureSettingsPtr)
+	{
+		StructSize = (uint)sizeof(WINTRUST_DATA);
+		PolicyCallbackData = IntPtr.Zero;
+		SIPClientData = IntPtr.Zero;
+		UIChoice = 2;
+		RevocationChecks = 0;
+		UnionChoice = 1;
+		FileInfoPtr = fileInfoPtr;
+		StateAction = 1;
+		StateData = IntPtr.Zero;
+		URLReference = IntPtr.Zero;
+		ProvFlags = 4112;
+		UIContext = 0;
+		pSignatureSettings = signatureSettingsPtr;
+	}
 }

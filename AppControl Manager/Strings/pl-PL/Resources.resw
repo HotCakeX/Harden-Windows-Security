@@ -3158,10 +3158,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Wykryto podpisane zasady podstawowe, które pozwalają na posiadanie zasad uzupełniających, ale nie znaleziono w nich żadnych podpisujących zasad uzupełniających.</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>Istnieje reguła Zezwalaj bez identyfikatora!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <value>Istnieje więcej niż 1 reguła Zezwalaj o tym samym identyfikatorze</value>
     <comment>Policy validation error</comment>
@@ -3170,32 +3166,16 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Istnieje więcej niż 1 reguła Odmów o tym samym identyfikatorze</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>Istnieje atrybut pliku bez identyfikatora!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <value>Istnieje więcej niż 1 atrybut pliku o tym samym identyfikatorze</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <value>Istnieje reguła pliku bez identyfikatora!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <value>Istnieje więcej niż 1 reguła pliku o tym samym identyfikatorze</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <value>Istnieje podpisujący bez identyfikatora!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <value>Istnieje więcej niż 1 podpisujący o tym samym identyfikatorze</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <value>Istnieje scenariusz podpisywania bez identyfikatora!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3523,9 +3503,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>Do deserializacji należy podać ścieżkę pliku lub dokument XML</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>Reguła Odmów musi mieć identyfikator.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>Reguła Odmów o identyfikatorze {0} ma właściwość Hash, ale także inne właściwości pliku, co czyni ją nieprawidłową.</value>
   </data>
@@ -3538,17 +3515,11 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>Reguła FileAttrib o identyfikatorze {0} nie ma ani właściwości Hash, ani żadnych innych właściwości pliku, co czyni ją nieprawidłową.</value>
   </data>
-    <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>Napotkano główny certyfikat, który nie ma ani typu TBS, ani WellKnown, co czyni go nieprawidłowym.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>Podpisujący o identyfikatorze {0} nie ma elementu głównego certyfikatu, co czyni go nieprawidłowym.</value>
   </data>
     <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>Napotkano ustawienie zasad, które nie ma prawidłowego elementu Value.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>Napotkano ustawienie zasad, które nie ma niezbędnych elementów Provider, Key lub ValueName.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ID „{0}”: nieprawidłowa minimalna wersja „{1}”.</value>
@@ -6355,5 +6326,14 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Rozmiar pamięci i temperatura</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>Utwórz zarządzany instalator</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz i prześlij zasadę zarządzanego instalatora do dzierżawy, co pozwoli aplikacjom wdrożonym przez Intune na automatyczne zatwierdzanie na urządzeniach korzystających z zasad kontroli aplikacji.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz i prześlij zasadę zarządzanego instalatora do dzierżawy, co pozwoli aplikacjom wdrożonym przez Intune na automatyczne zatwierdzanie na urządzeniach korzystających z zasad kontroli aplikacji.</value>
   </data>
 </root>

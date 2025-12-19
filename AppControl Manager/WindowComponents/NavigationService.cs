@@ -506,12 +506,41 @@ internal sealed class NavigationService
 	{
 		if (MainNavigation is null) return;
 
-		mainWindowVM.allNavigationItems =
-			MainNavigation.MenuItems.OfType<NavigationViewItem>()
-							 .SelectMany(GetAllChildren).Concat(MainNavigation.FooterMenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren)).ToList();
+		List<NavigationViewItem> allItems = [];
 
-		static IEnumerable<NavigationViewItem> GetAllChildren(NavigationViewItem parent) =>
-			new[] { parent }.Concat(parent.MenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren));
+		// Recursively collects NavigationViewItems
+		void CollectItems(NavigationViewItem item)
+		{
+			allItems.Add(item);
+
+			foreach (object child in item.MenuItems)
+			{
+				if (child is NavigationViewItem childItem)
+				{
+					CollectItems(childItem);
+				}
+			}
+		}
+
+		// Process Main MenuItems
+		foreach (object item in MainNavigation.MenuItems)
+		{
+			if (item is NavigationViewItem navItem)
+			{
+				CollectItems(navItem);
+			}
+		}
+
+		// Process Footer MenuItems
+		foreach (object item in MainNavigation.FooterMenuItems)
+		{
+			if (item is NavigationViewItem navItem)
+			{
+				CollectItems(navItem);
+			}
+		}
+
+		mainWindowVM.allNavigationItems = allItems;
 
 #if HARDEN_SYSTEM_SECURITY
 

@@ -14,11 +14,13 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
+
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace AppControlManager.SiPolicy;
@@ -59,12 +61,12 @@ internal static class Helper
 	{
 		{
 			OptionType.DisabledDefaultWindowsCertificateRemapping,
-			new Setting()
-			{
-				Provider = "Microsoft",
-				Key = "PolicySettings",
-				ValueName = "DisabledDefaultWindowsCertificateRemappingValueName"
-			}
+			new Setting(
+				provider: "Microsoft",
+				key: "PolicySettings",
+				valueName: "DisabledDefaultWindowsCertificateRemappingValueName",
+				value: new SettingValueType(item: true)
+			)
 		}
 	};
 
@@ -109,14 +111,14 @@ internal static class Helper
 	/// <summary>
 	/// Compare two byte arrays lexicographically, then by length.
 	/// </summary>
-	private static int CompareByteArrays(byte[]? x, byte[]? y)
+	private static int CompareByteArrays(ReadOnlyMemory<byte>? x, ReadOnlyMemory<byte>? y)
 	{
 		if (x is null && y is null) return 0;
 		if (x is null) return -1;
 		if (y is null) return 1;
 
 		// lexicographical compare, then by length
-		return x.AsSpan().SequenceCompareTo(y);
+		return x.Value.Span.SequenceCompareTo(y.Value.Span);
 	}
 
 	/// <summary>
@@ -125,13 +127,13 @@ internal static class Helper
 	internal static int CompareFileRuleObjects(object x, object y)
 	{
 		static (int RuleType,
-				string FileName,
-				string InternalName,
-				string FileDescription,
-				string ProductName,
-				string PackageFamilyName,
-				string FilePath,
-				byte[] Hash) DeconstructRule(object o) => o switch
+				string? FileName,
+				string? InternalName,
+				string? FileDescription,
+				string? ProductName,
+				string? PackageFamilyName,
+				string? FilePath,
+				ReadOnlyMemory<byte>? Hash) DeconstructRule(object o) => o switch
 				{
 					Deny d => (0, d.FileName, d.InternalName, d.FileDescription, d.ProductName, d.PackageFamilyName, d.FilePath, d.Hash),
 					Allow a => (1, a.FileName, a.InternalName, a.FileDescription, a.ProductName, a.PackageFamilyName, a.FilePath, a.Hash),
@@ -177,9 +179,8 @@ internal static class Helper
 	{
 		return rule.Type switch
 		{
-			RuleTypeType.Match => new Allow()
+			RuleTypeType.Match => new Allow(id: rule.ID)
 			{
-				ID = rule.ID,
 				FriendlyName = rule.FriendlyName,
 				FileName = rule.FileName,
 				InternalName = rule.InternalName,
@@ -193,9 +194,8 @@ internal static class Helper
 				AppIDs = rule.AppIDs,
 				FilePath = rule.FilePath
 			},
-			RuleTypeType.Exclude => new Deny()
+			RuleTypeType.Exclude => new Deny(id: rule.ID)
 			{
-				ID = rule.ID,
 				FriendlyName = rule.FriendlyName,
 				FileName = rule.FileName,
 				InternalName = rule.InternalName,
@@ -209,9 +209,8 @@ internal static class Helper
 				AppIDs = rule.AppIDs,
 				FilePath = rule.FilePath
 			},
-			RuleTypeType.Attribute => new FileAttrib()
+			RuleTypeType.Attribute => new FileAttrib(id: rule.ID)
 			{
-				ID = rule.ID,
 				FriendlyName = rule.FriendlyName,
 				FileName = rule.FileName,
 				InternalName = rule.InternalName,
@@ -230,56 +229,33 @@ internal static class Helper
 	}
 
 	/// <summary>
-	/// Returns a Setting object for the default policy for AppId Tagging.
-	/// </summary>
-	internal static Setting CreateDefaultPolicySettingForAppIdTagging()
-	{
-		return new Setting
-		{
-			Provider = "WDACAppId",
-			Key = "TaggingSettings",
-			ValueName = "DefaultPolicy",
-			Value = new SettingValueType { Item = true }
-		};
-	}
-
-	/// <summary>
 	/// Converts AppIDTags into a list of secure Settings.
 	/// </summary>
 	internal static List<Setting> MapAppIdTagsToSecureSettings(AppIDTags Tags)
 	{
 		List<Setting> secureSettings = [];
-		if (Tags.EnforceDLLSpecified && Tags.EnforceDLL)
+		if (Tags.EnforceDLL == true)
 		{
-			Setting setting = new()
-			{
-				Provider = "WDACAppId",
-				Key = "TaggingSettings",
-				ValueName = "EnforceDLL",
-				Value = new SettingValueType()
-			};
-			setting.Value.Item = Tags.EnforceDLL;
+			Setting setting = new(
+				provider: "WDACAppId",
+				key: "TaggingSettings",
+				valueName: "EnforceDLL",
+				value: new SettingValueType(item: Tags.EnforceDLL)
+			);
 			secureSettings.Add(setting);
 		}
-		foreach (AppIDTag appIdTag in Tags.AppIDTag)
+		foreach (AppIDTag appIdTag in CollectionsMarshal.AsSpan(Tags.AppIDTag))
 		{
-			Setting setting = new()
-			{
-				Provider = "WDACAppId",
-				Key = "Tagging",
-				ValueName = appIdTag.Key,
-				Value = new SettingValueType()
-			};
-			setting.Value.Item = appIdTag.Value;
+			Setting setting = new(
+				provider: "WDACAppId",
+				key: "Tagging",
+				valueName: appIdTag.Key,
+				value: new SettingValueType(item: appIdTag.Value)
+			);
 			secureSettings.Add(setting);
 		}
 		return secureSettings;
 	}
-
-	/// <summary>
-	/// Converts a Signer object to a CiSigner object.
-	/// </summary>
-	internal static CiSigner ProjectSignerToCiSigner(Signer signer) => new() { SignerId = signer.ID };
 
 	/// <summary>
 	/// Converts a version string of up to four "."-separated numeric segments
@@ -290,7 +266,7 @@ internal static class Helper
 	/// </summary>
 	internal unsafe static ulong ConvertStringVersionToUInt64(string? version)
 	{
-		// If the caller passed null, there is nothing to parse → version 0.0.0.0
+		// If the caller passed null, there is nothing to parse -> version 0.0.0.0
 		if (version is null)
 			return 0UL;
 
@@ -332,7 +308,7 @@ internal static class Helper
 					p++;
 			}
 
-			// Too many segments → malformed version
+			// Too many segments -> malformed version
 			if (segmentCount > MaxSegments)
 				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("MalformedVersionDetected"), version));
 
@@ -346,7 +322,7 @@ internal static class Helper
 				while (ptr < end && *ptr == '.')
 					ptr++;
 
-				// No more characters → done
+				// No more characters -> done
 				if (ptr >= end)
 					break;
 
@@ -369,12 +345,12 @@ internal static class Helper
 				// Parse as unsigned 16‐bit integer using invariant culture (no signs, no hex)
 				if (!ushort.TryParse(part, NumberStyles.None, CultureInfo.InvariantCulture, out ushort segment))
 				{
-					// Parsing failed (non‐numeric / overflow) → invalid format
+					// Parsing failed (non‐numeric / overflow) -> invalid format
 					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
 				}
 
 				// Determine how many bits this segment occupies in the 64-bit result:
-				// Segment 0 (major) → shift 48 bits; segment 1 → shift 32; segment 2 → shift 16; segment 3 → shift 0.
+				// Segment 0 (major) -> shift 48 bits; segment 1 -> shift 32; segment 2 -> shift 16; segment 3 -> shift 0.
 				int shiftBits = (MaxSegments - 1 - segmentsParsed) * 16;
 
 				// Pack this segment into the result
@@ -397,9 +373,9 @@ internal static class Helper
 	/// </summary>
 	internal static void CalculateScenarioValueArray(SiPolicy siPolicy, ref uint[] scenarioIndex2Value)
 	{
-		int scenarioCount = siPolicy.SigningScenarios.Length;
+		if (siPolicy.SigningScenarios is null) return;
 
-		for (int i = 0; i < scenarioCount; i++)
+		for (int i = 0; i < siPolicy.SigningScenarios.Count; i++)
 		{
 			scenarioIndex2Value[i] = siPolicy.SigningScenarios[i].Value;
 		}
@@ -412,7 +388,7 @@ internal static class Helper
 	{
 		uint flags = 0;
 
-		foreach (RuleType rule in Policy.Rules)
+		foreach (RuleType rule in CollectionsMarshal.AsSpan(Policy.Rules))
 		{
 			if (rule.Item is OptionType key
 				&& !RuleToSettingMapping.ContainsKey(key)
@@ -430,14 +406,14 @@ internal static class Helper
 	/// </summary>
 	internal static void AppendSettingFromRule(List<Setting> SettingsList, SiPolicy Policy)
 	{
-		foreach (RuleType rule in Policy.Rules)
+		foreach (RuleType rule in CollectionsMarshal.AsSpan(Policy.Rules))
 		{
 			if (rule.Item is OptionType option && RuleToSettingMapping.TryGetValue(option, out Setting? setting))
 			{
 				setting.Value = new SettingValueType
-				{
-					Item = true
-				};
+				(
+					item: true
+				);
 
 				SettingsList.Add(setting);
 			}

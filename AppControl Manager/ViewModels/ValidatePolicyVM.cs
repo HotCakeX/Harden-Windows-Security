@@ -27,7 +27,6 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class ValidatePolicyVM : ViewModelBase
 {
-
 	internal ValidatePolicyVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
@@ -55,11 +54,32 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			{
 				ProgressRingVisibility = field ? Visibility.Collapsed : Visibility.Visible;
 				MainInfoBarIsClosable = field;
+				// Re-evaluate refresh button state when elements are re-enabled
+				OnPropertyChanged(nameof(RefreshButtonEnabled));
 			}
 		}
 	} = true;
 
 	internal Visibility ProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	/// <summary>
+	/// The path of the currently selected policy file
+	/// </summary>
+	internal string? SelectedPolicyPath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(RefreshButtonEnabled));
+			}
+		}
+	}
+
+	/// <summary>
+	/// Only enable refresh if elements are enabled and we have a valid path
+	/// </summary>
+	internal bool RefreshButtonEnabled => ElementsAreEnabled && !string.IsNullOrWhiteSpace(SelectedPolicyPath);
 
 	// Level 2
 	internal bool Level2Test
@@ -68,7 +88,6 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				// אם כיבינו את רמת 2 ⇒ ממטירים את 3 ו־4
 				if (!field)
 				{
 					Level3Test = false;
@@ -87,12 +106,10 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			{
 				if (field)
 				{
-					// אם הדלקנו רמת 3 ⇒ נבטיח שרמת 2 דולקת
 					Level2Test = true;
 				}
 				else
 				{
-					// אם כיבינו רמת 3 ⇒ נבטיח שרמת 4 כבוייה
 					Level4Test = false;
 				}
 			}
@@ -108,96 +125,106 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			{
 				if (field)
 				{
-					// אם הדלקנו רמת 4 ⇒ נדאג שגם 2 וגם 3 דלוקים
 					Level2Test = true;
 					Level3Test = true;
 				}
-				// אם כיבינו רמת 4 ⇒ אין פעולות נוספות
 			}
 		}
 	} = true;
 
-
 	#endregion
 
 	/// <summary>
-	/// Validates an App Control XML policy file by allowing the user to select a file and checking its validity.
+	/// Opens the file picker to select a policy, then validates it.
 	/// </summary>
-	internal async void ValidateXML()
+	internal async void BrowseAndValidate()
+	{
+		SelectedPolicyPath = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		if (SelectedPolicyPath is null) return;
+		await ValidateLogic();
+	}
+
+	/// <summary>
+	/// Re-runs validation on the currently selected policy.
+	/// </summary>
+	internal async void RefreshValidation() => await ValidateLogic();
+
+	/// <summary>
+	/// Clears the selected policy path from the UI.
+	/// </summary>
+	internal void ClearSelectedPolicy() => SelectedPolicyPath = null;
+
+	/// <summary>
+	/// Core logic to validate the XML policy file.
+	/// </summary>
+	private async Task ValidateLogic()
 	{
 		string? stagingArea = null;
 
 		try
 		{
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("BrowseForAppControlPolicy"),
-				GlobalVars.GetStr("CurrentStatusInfoBar/Title"));
-
 			ElementsAreEnabled = false;
 
-			double CIPSize = 0;
-
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-			bool IsValid = false;
-
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("Validating"));
-
-			if (!string.IsNullOrEmpty(selectedFile))
+			if (string.IsNullOrWhiteSpace(SelectedPolicyPath) && !File.Exists(SelectedPolicyPath))
 			{
-				await Task.Run(() =>
-				{
-					// Throws if the policy is invalid.
-					CiPolicyTest.TestCiPolicy(selectedFile);
-
-					IsValid = true;
-
-					if (IsValid && Level2Test)
-					{
-						SiPolicy.SiPolicy temp = SiPolicy.CustomDeserialization.DeserializeSiPolicy(selectedFile, null);
-
-						if (Level3Test)
-						{
-							XmlDocument xmlObj = SiPolicy.CustomSerialization.CreateXmlFromSiPolicy(temp);
-
-							if (!App.IsElevated)
-							{
-								string tempDir = Path.GetTempPath();
-								string randomFolderName = Path.GetRandomFileName();
-								string fullPath = Path.Combine(tempDir, randomFolderName);
-
-								stagingArea = Directory.CreateDirectory(fullPath).FullName;
-							}
-							else
-							{
-								stagingArea = StagingArea.NewStagingArea("Level4Validation").FullName;
-							}
-
-							string tempPolicyCIPPath = Path.Combine(stagingArea, $"test.cip");
-							string tempPolicyXMLPath = Path.Combine(stagingArea, $"test.xml");
-
-							xmlObj.Save(tempPolicyXMLPath);
-
-							if (Level4Test)
-							{
-								SiPolicy.Management.ConvertXMLToBinary(tempPolicyXMLPath, null, tempPolicyCIPPath);
-
-								FileInfo fileInfo = new(tempPolicyCIPPath);
-
-								CIPSize = Math.Round(fileInfo.Length / 1024.0, 2);
-							}
-						}
-					}
-				});
-			}
-			else
-			{
-				MainInfoBarIsOpen = false;
+				SelectedPolicyPath = null;
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAppControlPolicyFirstMessage"));
 				return;
 			}
 
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("Validating"), GlobalVars.GetStr("CurrentStatusInfoBar/Title"));
+
+			double CIPSize = 0;
+			bool IsValid = false;
+
+			await Task.Run(() =>
+			{
+				// Throws if the policy is invalid.
+				CiPolicyTest.TestCiPolicy(SelectedPolicyPath);
+
+				IsValid = true;
+
+				if (IsValid && Level2Test)
+				{
+					SiPolicy.SiPolicy temp = SiPolicy.CustomDeserialization.DeserializeSiPolicy(SelectedPolicyPath, null);
+
+					if (Level3Test)
+					{
+						XmlDocument xmlObj = SiPolicy.CustomSerialization.CreateXmlFromSiPolicy(temp);
+
+						if (!App.IsElevated)
+						{
+							string tempDir = Path.GetTempPath();
+							string randomFolderName = Path.GetRandomFileName();
+							string fullPath = Path.Combine(tempDir, randomFolderName);
+
+							stagingArea = Directory.CreateDirectory(fullPath).FullName;
+						}
+						else
+						{
+							stagingArea = StagingArea.NewStagingArea("Level4Validation").FullName;
+						}
+
+						string tempPolicyCIPPath = Path.Combine(stagingArea, $"test.cip");
+						string tempPolicyXMLPath = Path.Combine(stagingArea, $"test.xml");
+
+						xmlObj.Save(tempPolicyXMLPath);
+
+						if (Level4Test)
+						{
+							SiPolicy.Management.ConvertXMLToBinary(tempPolicyXMLPath, null, tempPolicyCIPPath);
+
+							FileInfo fileInfo = new(tempPolicyCIPPath);
+
+							CIPSize = Math.Round(fileInfo.Length / 1024.0, 2);
+						}
+					}
+				}
+			});
+
 			if (IsValid)
 			{
-				string msg = GlobalVars.GetStr("IsValid") + selectedFile;
+				string msg = GlobalVars.GetStr("IsValid") + SelectedPolicyPath;
 
 				if (Level4Test)
 				{
@@ -217,7 +244,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("IsNotValid") + selectedFile, GlobalVars.GetStr("Invalid"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("IsNotValid") + SelectedPolicyPath, GlobalVars.GetStr("Invalid"));
 			}
 		}
 		catch (Exception ex)
@@ -227,10 +254,15 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
 
 			if (Directory.Exists(stagingArea))
 			{
-				Directory.Delete(stagingArea, true);
+				try
+				{
+					Directory.Delete(stagingArea, true);
+				}
+				catch { }
 			}
 		}
 	}

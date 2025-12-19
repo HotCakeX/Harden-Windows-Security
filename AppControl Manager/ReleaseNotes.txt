@@ -1,3 +1,17 @@
-* Improved the performance of policy creations.
+🎁✨ Merry Christmas! 🎄❄️
 
-* Improved the accuracy of filtering scan results by date, they no longer let time zone offsets affect the results.
+* Added creating, retrieving and removing Managed Installed policies for Intune. This has been a community request that is now complete: https://github.com/HotCakeX/Harden-Windows-Security/issues/976
+
+   * Easily deploy a Managed Installer policy so apps deployed via Intune will be automatically allowed in your App Control policies.
+
+* Updated dependencies to the latest versions.
+
+* Made improvements to the performance of policy creations, especially when dealing with thousands of files.
+
+* Fixed a bug/regression related to Policy Editor: When removing a file attribute from a policy, the references to that file attribute from the Signers that were referencing it were not being removed, which is fixed now in this update.
+
+* Fixed an issue related to retrieving attributes of files during file scans: sometimes, the OriginalFileName or version of the files could not be retrieved successfully, it's been fixed in this update.
+
+* In the Merge App Control Policies page, you can now right-click or tap + hold on the cards or browse buttons to view the files you've selected. They will also be highlighted when something has been selected.
+
+* Added a refresh button to the "Validate App Control Policies" page so you can quickly re-validate after making changes to your policy without having to browse for it again. You can also right-click or tap + hold on the policy card to view the selected policy file with the option to clear it if you want.

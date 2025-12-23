@@ -77,7 +77,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 	// How much larger the dot is compared to the arc stroke width
 	private const double DotScaleFactor = 0.7;
 
-	// For angle→radians conversion
+	// For angle->radians conversion
 	private const double Degrees2Radians = Math.PI / 180.0;
 
 	protected override void OnApplyTemplate()

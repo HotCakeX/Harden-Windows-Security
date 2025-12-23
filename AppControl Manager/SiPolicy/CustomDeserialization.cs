@@ -60,15 +60,11 @@ internal static class CustomDeserialization
 				GlobalVars.GetStr("FilePathOrXmlRequiredMessage"));
 		}
 
-		SiPolicy policy = new();
-
 		// Friendly Name
-		if (root.HasAttribute("FriendlyName"))
-			policy.FriendlyName = root.GetAttribute("FriendlyName");
+		string? friendlyName = root.HasAttribute("FriendlyName") ? root.GetAttribute("FriendlyName") : null;
 
 		// Policy Type - if missing, Base policy type is assigned
-		policy.PolicyTypeSpecified = true;
-		policy.PolicyType = root.HasAttribute("PolicyType") ? ConvertStringToPolicyType(root.GetAttribute("PolicyType")) : PolicyType.BasePolicy;
+		PolicyType policyType = root.HasAttribute("PolicyType") ? ConvertStringToPolicyType(root.GetAttribute("PolicyType")) : PolicyType.BasePolicy;
 
 		// Generate a new GUID
 		Guid newRandomGUID = Guid.CreateVersion7();
@@ -76,68 +72,73 @@ internal static class CustomDeserialization
 		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
 
 		// Read basic text elements
-		string version = GetElementText(root, "VersionEx");
-		policy.VersionEx = string.IsNullOrEmpty(version) ? "1.0.0.0" : version;
+		string versionText = GetElementText(root, "VersionEx");
+		string versionEx = string.IsNullOrEmpty(versionText) ? "1.0.0.0" : versionText;
 
-		string policyID = GetElementText(root, "PolicyID");
-		policy.PolicyID = string.IsNullOrEmpty(policyID) ? newRandomGUIDString : policyID;
+		string policyIDText = GetElementText(root, "PolicyID");
+		string policyID = string.IsNullOrEmpty(policyIDText) ? newRandomGUIDString : policyIDText;
 
-		string basePolicyID = GetElementText(root, "BasePolicyID");
-		policy.BasePolicyID = string.IsNullOrEmpty(basePolicyID) ? newRandomGUIDString : basePolicyID;
+		string basePolicyIDText = GetElementText(root, "BasePolicyID");
+		string basePolicyID = string.IsNullOrEmpty(basePolicyIDText) ? newRandomGUIDString : basePolicyIDText;
 
-		string platformID = GetElementText(root, "PlatformID");
-		policy.PlatformID = string.IsNullOrEmpty(platformID) ? "{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}" : platformID;
+		string platformIDText = GetElementText(root, "PlatformID");
+		string platformID = string.IsNullOrEmpty(platformIDText) ? "{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}" : platformIDText;
 
-		if (string.IsNullOrEmpty(policy.PolicyID) || string.IsNullOrEmpty(policy.BasePolicyID))
+		if (string.IsNullOrEmpty(policyID) || string.IsNullOrEmpty(basePolicyID))
 		{
 			throw new InvalidOperationException(GlobalVars.GetStr("NeedBothIDsValidationError"));
 		}
 
 		if (
-			(policy.PolicyType is PolicyType.BasePolicy && !string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.PolicyType is not PolicyType.BasePolicy && string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
+			(policyType is PolicyType.BasePolicy && !string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase)) ||
+			(policyType is not PolicyType.BasePolicy && string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase))
 			)
 		{
 			throw new InvalidOperationException(GlobalVars.GetStr("IDsMismatchValidationError"));
 		}
 
-		// PolicyTypeID used to be for old version of WDAC policies that didn't have support for Supplemental policies.
-		// Now policies have BasePolicyID and PolicyID values instead.
-		// A policy cannot have a PolicyTypeID and also have PolicyID or BasePolicyID. In such situations, the value of the PolicyTypeID must be used for both PolicyID and BasePolicyID. These situations only happen when parsing very old WDAC policies.
-		policy.PolicyTypeID = null;
-
 		// Deserialize Rules
 		// Make sure it exists even empty
-		policy.Rules = [];
+		List<RuleType> rules = [];
 		HashSet<OptionType> policyRules = [];
 		XmlElement? rulesElement = root["Rules", GlobalVars.SiPolicyNamespace];
 		if (rulesElement is not null)
 		{
-			List<RuleType> rules = [];
-			foreach (XmlElement ruleElem in rulesElement.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in rulesElement.ChildNodes)
 			{
-				string optionText = GetElementText(ruleElem, "Option");
-				OptionType opt = ConvertStringToOptionType(optionText);
-
-				if (!policyRules.Add(opt))
+				if (node is XmlElement ruleElem)
 				{
-					throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateRuleOptionValidationError")}: {opt}");
-				}
+					string optionText = GetElementText(ruleElem, "Option");
+					OptionType opt = ConvertStringToOptionType(optionText);
 
-				RuleType rule = new() { Item = opt };
-				rules.Add(rule);
+					if (!policyRules.Add(opt))
+					{
+						throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateRuleOptionValidationError")}: {opt}");
+					}
+
+					rules.Add(new RuleType(item: opt));
+				}
 			}
-			policy.Rules = [.. rules];
 		}
 
-		if (policy.PolicyType is PolicyType.SupplementalPolicy && policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies))
+		if (policyType is PolicyType.SupplementalPolicy && policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies))
 		{
 			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SupplementalPolicyWithInvalidRuleOption"), PolicyType.SupplementalPolicy, OptionType.EnabledAllowSupplementalPolicies, PolicyType.BasePolicy));
 		}
 
-		// Deserialize EKUs
-		// Make sure it exists even empty
-		policy.EKUs = [];
+		SiPolicy policy = new(versionEx, platformID, policyID, basePolicyID, rules, policyType)
+		{
+			FriendlyName = friendlyName,
+
+			// PolicyTypeID used to be for old version of WDAC policies that didn't have support for Supplemental policies.
+			// Now policies have BasePolicyID and PolicyID values instead.
+			// A policy cannot have a PolicyTypeID and also have PolicyID or BasePolicyID. In such situations, the value of the PolicyTypeID must be used for both PolicyID and BasePolicyID.
+			// These situations only happen when parsing very old WDAC policies.
+			PolicyTypeID = null,
+			// Deserialize EKUs
+			// Make sure it exists even empty
+			EKUs = []
+		};
 
 		HashSet<string> EKUIDsCol = [];
 
@@ -145,20 +146,26 @@ internal static class CustomDeserialization
 		if (ekusElement is not null)
 		{
 			List<EKU> ekus = [];
-			foreach (XmlElement ekuElem in ekusElement.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in ekusElement.ChildNodes)
 			{
-				EKU eku = new();
-				if (ekuElem.HasAttribute("ID"))
-					eku.ID = ekuElem.GetAttribute("ID");
-				if (ekuElem.HasAttribute("FriendlyName"))
-					eku.FriendlyName = ekuElem.GetAttribute("FriendlyName");
-				if (ekuElem.HasAttribute("Value"))
-					eku.Value = ConvertHexStringToByteArray(ekuElem.GetAttribute("Value"));
-				ekus.Add(eku);
-
-				if (!EKUIDsCol.Add(eku.ID))
+				if (node is XmlElement ekuElem)
 				{
-					throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateEKUIDsValidationError")}: {eku.ID}");
+					string? ekuFriendlyName = null;
+					if (ekuElem.HasAttribute("FriendlyName"))
+						ekuFriendlyName = ekuElem.GetAttribute("FriendlyName");
+
+					string id = ekuElem.GetAttribute("ID");
+
+					ekus.Add(new EKU(
+						id: id,
+						value: ConvertHexStringToByteArray(ekuElem.GetAttribute("Value")),
+						friendlyName: ekuFriendlyName
+						));
+
+					if (!EKUIDsCol.Add(id))
+					{
+						throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateEKUIDsValidationError")}: {id}");
+					}
 				}
 			}
 			policy.EKUs = [.. ekus];
@@ -177,44 +184,46 @@ internal static class CustomDeserialization
 		if (fileRulesElement is not null)
 		{
 			List<object> fileRules = [];
-			foreach (XmlElement ruleElem in fileRulesElement.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in fileRulesElement.ChildNodes)
 			{
-				switch (ruleElem.LocalName)
+				if (node is XmlElement ruleElem)
 				{
-					case "Allow":
-						fileRules.Add(DeserializeAllow(ruleElem, AllowRulesIDsCol));
-						break;
-					case "Deny":
-						fileRules.Add(DeserializeDeny(ruleElem, DenyRulesIDsCol));
-						break;
-					case "FileAttrib":
-						fileRules.Add(DeserializeFileAttrib(ruleElem, FileAttribRulesIDsCol));
-						break;
-					case "FileRule":
-						fileRules.Add(DeserializeFileRule(ruleElem, FileRulesIDsCol));
-						break;
-					default:
-						break;
+					switch (ruleElem.LocalName)
+					{
+						case "Allow":
+							fileRules.Add(DeserializeAllow(ruleElem, AllowRulesIDsCol));
+							break;
+						case "Deny":
+							fileRules.Add(DeserializeDeny(ruleElem, DenyRulesIDsCol));
+							break;
+						case "FileAttrib":
+							fileRules.Add(DeserializeFileAttrib(ruleElem, FileAttribRulesIDsCol));
+							break;
+						case "FileRule":
+							fileRules.Add(DeserializeFileRule(ruleElem, FileRulesIDsCol));
+							break;
+						default:
+							break;
+					}
 				}
 			}
-			policy.FileRules = [.. fileRules];
+			policy.FileRules = fileRules;
 		}
 
 		// Deserialize Signers
-		// Make sure it exists even empty
-		policy.Signers = [];
-
-		HashSet<string> SignersIDsCol = [];
-
 		XmlElement? signersElement = root["Signers", GlobalVars.SiPolicyNamespace];
 		if (signersElement is not null)
 		{
+			HashSet<string> SignersIDsCol = [];
 			List<Signer> signers = [];
-			foreach (XmlElement signerElem in signersElement.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in signersElement.ChildNodes)
 			{
-				signers.Add(DeserializeSigner(signerElem, SignersIDsCol));
+				if (node is XmlElement signerElem)
+				{
+					signers.Add(DeserializeSigner(signerElem, SignersIDsCol));
+				}
 			}
-			policy.Signers = [.. signers];
+			policy.Signers = signers;
 		}
 
 		// Deserialize SigningScenarios
@@ -228,26 +237,29 @@ internal static class CustomDeserialization
 		if (signingScenariosElement is not null)
 		{
 			List<SigningScenario> scenarios = [];
-			foreach (XmlElement scenarioElem in signingScenariosElement.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in signingScenariosElement.ChildNodes)
 			{
-				SigningScenario signingScenario = DeserializeSigningScenario(scenarioElem, SigningScenariosIDs);
-
-				if (policy.PolicyType is PolicyType.AppIDTaggingPolicy)
+				if (node is XmlElement scenarioElem)
 				{
-					if (signingScenario.Value != 12)
+					SigningScenario signingScenario = DeserializeSigningScenario(scenarioElem, SigningScenariosIDs);
+
+					if (policy.PolicyType is PolicyType.AppIDTaggingPolicy)
 					{
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyInvalidSigningScenarioID"), PolicyType.AppIDTaggingPolicy, signingScenario.Value));
+						if (signingScenario.Value != 12)
+						{
+							throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyInvalidSigningScenarioID"), PolicyType.AppIDTaggingPolicy, signingScenario.Value));
+						}
+
+						if (signingScenario.AppIDTags is null || signingScenario.AppIDTags.AppIDTag is null || signingScenario.AppIDTags.AppIDTag.Count == 0)
+						{
+							throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyMissingAppIDTags"), PolicyType.AppIDTaggingPolicy));
+						}
 					}
 
-					if (signingScenario.AppIDTags is null || signingScenario.AppIDTags.AppIDTag is null || signingScenario.AppIDTags.AppIDTag.Length == 0)
-					{
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyMissingAppIDTags"), PolicyType.AppIDTaggingPolicy));
-					}
+					scenarios.Add(signingScenario);
 				}
-
-				scenarios.Add(signingScenario);
 			}
-			policy.SigningScenarios = [.. scenarios];
+			policy.SigningScenarios = scenarios;
 		}
 
 		// Deserialize UpdatePolicySigners
@@ -257,18 +269,18 @@ internal static class CustomDeserialization
 		if (upsElement is not null)
 		{
 			List<UpdatePolicySigner> upsList = [];
-			foreach (XmlElement upsChild in upsElement.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in upsElement.ChildNodes)
 			{
-				UpdatePolicySigner ups = new();
-				if (upsChild.HasAttribute("SignerId"))
-					ups.SignerId = upsChild.GetAttribute("SignerId");
-				upsList.Add(ups);
+				if (node is XmlElement upsChild)
+				{
+					upsList.Add(new UpdatePolicySigner(signerID: upsChild.GetAttribute("SignerId")));
+				}
 			}
-			policy.UpdatePolicySigners = [.. upsList];
+			policy.UpdatePolicySigners = upsList;
 		}
 
 		// If policy requires to be Signed
-		if (!policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy) && policy.UpdatePolicySigners.Length == 0)
+		if (!policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy) && policy.UpdatePolicySigners.Count == 0)
 		{
 			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("PolicyNeedsSigningButNoUpdateSigner"), OptionType.EnabledUnsignedSystemIntegrityPolicy));
 		}
@@ -280,14 +292,14 @@ internal static class CustomDeserialization
 		if (ciElement is not null)
 		{
 			List<CiSigner> ciList = [];
-			foreach (XmlElement ciChild in ciElement.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in ciElement.ChildNodes)
 			{
-				CiSigner ci = new();
-				if (ciChild.HasAttribute("SignerId"))
-					ci.SignerId = ciChild.GetAttribute("SignerId");
-				ciList.Add(ci);
+				if (node is XmlElement ciChild)
+				{
+					ciList.Add(new CiSigner(signerID: ciChild.GetAttribute("SignerId")));
+				}
 			}
-			policy.CiSigners = [.. ciList];
+			policy.CiSigners = ciList;
 		}
 
 		// Deserialize HvciOptions
@@ -295,7 +307,6 @@ internal static class CustomDeserialization
 		if (!string.IsNullOrEmpty(hvciText))
 		{
 			policy.HvciOptions = uint.Parse(hvciText, CultureInfo.InvariantCulture);
-			policy.HvciOptionsSpecified = true;
 		}
 
 		// Deserialize Settings
@@ -305,14 +316,17 @@ internal static class CustomDeserialization
 		if (settingsElem is not null)
 		{
 			List<Setting> settings = [];
-			foreach (XmlElement settingElem in settingsElem.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in settingsElem.ChildNodes)
 			{
-				settings.Add(DeserializeSetting(settingElem));
+				if (node is XmlElement settingElem)
+				{
+					settings.Add(DeserializeSetting(settingElem));
+				}
 			}
-			policy.Settings = [.. settings];
+			policy.Settings = settings;
 		}
 
-		if (policy.Settings.Length > ushort.MaxValue)
+		if (policy.Settings.Count > ushort.MaxValue)
 		{
 			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SettingsAndAppIDTagsCountExceeded"), ushort.MaxValue));
 		}
@@ -327,21 +341,22 @@ internal static class CustomDeserialization
 		if (macrosElem is not null)
 		{
 			List<MacrosMacro> macros = [];
-			foreach (XmlElement macroElem in macrosElem.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in macrosElem.ChildNodes)
 			{
-				MacrosMacro macro = new();
-				if (macroElem.HasAttribute("Id"))
-					macro.Id = macroElem.GetAttribute("Id");
-				if (macroElem.HasAttribute("Value"))
-					macro.Value = macroElem.GetAttribute("Value");
-				macros.Add(macro);
-
-				if (!MacrosIDsCol.Add(macro.Id))
+				if (node is XmlElement macroElem)
 				{
-					throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateMacroIDsValidationError")}: {macro.Id}");
+					string id = macroElem.GetAttribute("Id");
+					string value = macroElem.GetAttribute("Value");
+					MacrosMacro macro = new(id, value);
+					macros.Add(macro);
+
+					if (!MacrosIDsCol.Add(macro.Id))
+					{
+						throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateMacroIDsValidationError")}: {macro.Id}");
+					}
 				}
 			}
-			policy.Macros = [.. macros];
+			policy.Macros = macros;
 		}
 
 		// Deserialize SupplementalPolicySigners
@@ -351,17 +366,17 @@ internal static class CustomDeserialization
 		if (suppElem is not null)
 		{
 			List<SupplementalPolicySigner> spsList = [];
-			foreach (XmlElement spsElem in suppElem.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in suppElem.ChildNodes)
 			{
-				SupplementalPolicySigner sps = new();
-				if (spsElem.HasAttribute("SignerId"))
-					sps.SignerId = spsElem.GetAttribute("SignerId");
-				spsList.Add(sps);
+				if (node is XmlElement spsElem)
+				{
+					spsList.Add(new SupplementalPolicySigner(signerID: spsElem.GetAttribute("SignerId")));
+				}
 			}
-			policy.SupplementalPolicySigners = [.. spsList];
+			policy.SupplementalPolicySigners = spsList;
 		}
 
-		if (policy.PolicyType is PolicyType.SupplementalPolicy && policy.SupplementalPolicySigners.Length != 0)
+		if (policy.PolicyType is PolicyType.SupplementalPolicy && policy.SupplementalPolicySigners.Count != 0)
 		{
 			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SupplementalPolicyWithSupplementalSigners"), PolicyType.SupplementalPolicy));
 		}
@@ -370,7 +385,7 @@ internal static class CustomDeserialization
 		if (policy.PolicyType is PolicyType.BasePolicy && !policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy))
 		{
 			// If it allows for Supplemental policies but no Supplemental policy Signers have been specified
-			if (policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies) && policy.SupplementalPolicySigners.Length == 0)
+			if (policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies) && policy.SupplementalPolicySigners.Count == 0)
 			{
 				// If policy ID is not "{5951A96A-E0B5-4D3D-8FB8-3E5B61030784}" which is for S-Mode in Windows.
 				// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/inbox-appcontrol-policies
@@ -385,14 +400,15 @@ internal static class CustomDeserialization
 		XmlElement? appSettingsElem = root["AppSettings", GlobalVars.SiPolicyNamespace];
 		if (appSettingsElem is not null)
 		{
-			AppSettingRegion appSettingRegion = new();
 			List<AppRoot> apps = [];
-			foreach (XmlElement appElem in appSettingsElem.ChildNodes.OfType<XmlElement>())
+			foreach (XmlNode node in appSettingsElem.ChildNodes)
 			{
-				apps.Add(DeserializeAppRoot(appElem));
+				if (node is XmlElement appElem)
+				{
+					apps.Add(DeserializeAppRoot(appElem));
+				}
 			}
-			appSettingRegion.App = [.. apps];
-			policy.AppSettings = appSettingRegion;
+			policy.AppSettings = new(app: apps);
 		}
 
 		return policy;
@@ -487,9 +503,7 @@ internal static class CustomDeserialization
 
 	private static Allow DeserializeAllow(XmlElement elem, HashSet<string> IDsCollection)
 	{
-		Allow allow = new();
-		string idValue = elem.GetAttribute("ID");
-		allow.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		Allow allow = new(id: elem.GetAttribute("ID"));
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		allow.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -515,17 +529,10 @@ internal static class CustomDeserialization
 		string filePathValue = elem.GetAttribute("FilePath");
 		allow.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
-		if (allow.ID is null)
-		{
-			throw new InvalidOperationException(GlobalVars.GetStr("AllowRuleNoIDValidationError"));
-		}
-
 		if (!IDsCollection.Add(allow.ID))
 		{
 			throw new InvalidOperationException($"{GlobalVars.GetStr("AllowRuleDupIDValidationError")}: {allow.ID}");
 		}
-
-		bool HashExists = allow.Hash is not null;
 
 		bool APropertyExists = allow.FileName is not null
 						 || allow.PackageFamilyName is not null
@@ -544,7 +551,7 @@ internal static class CustomDeserialization
 						&& allow.ProductName is null
 						&& allow.FilePath is null;
 
-		if (HashExists)
+		if (!allow.Hash.IsEmpty)
 		{
 			if (APropertyExists)
 			{
@@ -563,9 +570,7 @@ internal static class CustomDeserialization
 
 	private static Deny DeserializeDeny(XmlElement elem, HashSet<string> IDsCollection)
 	{
-		Deny deny = new();
-		string idValue = elem.GetAttribute("ID");
-		deny.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		Deny deny = new(id: elem.GetAttribute("ID"));
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		deny.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -591,20 +596,12 @@ internal static class CustomDeserialization
 		string filePathValue = elem.GetAttribute("FilePath");
 		deny.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
-		if (deny.ID is null)
-		{
-			throw new InvalidOperationException(
-				GlobalVars.GetStr("DenyRuleNoIDValidationError"));
-		}
-
 		if (!IDsCollection.Add(deny.ID))
 		{
 			throw new InvalidOperationException(string.Format(
 				GlobalVars.GetStr("DenyRuleDupIDValidationError"),
 				deny.ID));
 		}
-
-		bool HashExists = deny.Hash is not null;
 
 		bool APropertyExists = deny.FileName is not null
 							 || deny.FileDescription is not null
@@ -623,7 +620,7 @@ internal static class CustomDeserialization
 							&& deny.ProductName is null
 							&& deny.FilePath is null;
 
-		if (HashExists)
+		if (!deny.Hash.IsEmpty)
 		{
 			if (APropertyExists)
 			{
@@ -646,9 +643,7 @@ internal static class CustomDeserialization
 
 	private static FileAttrib DeserializeFileAttrib(XmlElement elem, HashSet<string> IDsCollection)
 	{
-		FileAttrib fa = new();
-		string idValue = elem.GetAttribute("ID");
-		fa.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		FileAttrib fa = new(id: elem.GetAttribute("ID"));
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		fa.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -674,20 +669,12 @@ internal static class CustomDeserialization
 		string filePathValue = elem.GetAttribute("FilePath");
 		fa.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
-		if (fa.ID is null)
-		{
-			throw new InvalidOperationException(
-				GlobalVars.GetStr("FileAttribNoIDValidationError"));
-		}
-
 		if (!IDsCollection.Add(fa.ID))
 		{
 			throw new InvalidOperationException(string.Format(
 				GlobalVars.GetStr("FileAttribDupIDValidationError"),
 				fa.ID));
 		}
-
-		bool HashExists = fa.Hash is not null;
 
 		bool APropertyExists = fa.FileName is not null
 							|| fa.FileDescription is not null
@@ -706,7 +693,7 @@ internal static class CustomDeserialization
 							&& fa.PackageFamilyName is null
 							&& fa.ProductName is null;
 
-		if (HashExists)
+		if (!fa.Hash.IsEmpty)
 		{
 			if (APropertyExists)
 			{
@@ -729,9 +716,7 @@ internal static class CustomDeserialization
 
 	private static FileRule DeserializeFileRule(XmlElement elem, HashSet<string> IDsCollection)
 	{
-		FileRule fr = new();
-		string idValue = elem.GetAttribute("ID");
-		fr.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		FileRule fr = new(id: elem.GetAttribute("ID"), type: ConvertStringToRuleTypeType(elem.GetAttribute("Type")));
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		fr.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -756,13 +741,6 @@ internal static class CustomDeserialization
 		fr.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
 		string filePathValue = elem.GetAttribute("FilePath");
 		fr.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
-		if (elem.HasAttribute("Type"))
-			fr.Type = ConvertStringToRuleTypeType(elem.GetAttribute("Type"));
-
-		if (fr.ID is null)
-		{
-			throw new InvalidOperationException(GlobalVars.GetStr("FileRuleNoIDValidationError"));
-		}
 
 		if (!IDsCollection.Add(fr.ID))
 		{
@@ -774,106 +752,77 @@ internal static class CustomDeserialization
 
 	private static Signer DeserializeSigner(XmlElement elem, HashSet<string> IDsCollection)
 	{
-		Signer signer = new();
-		if (elem.HasAttribute("ID"))
-			signer.ID = elem.GetAttribute("ID");
+		// Retrieve ID
+		string id = elem.GetAttribute("ID");
 
-		if (signer.ID is null)
-		{
-			throw new InvalidOperationException(GlobalVars.GetStr("SignerNoIDValidationError"));
-		}
+		// Check duplicate ID
+		if (!IDsCollection.Add(id))
+			throw new InvalidOperationException($"{GlobalVars.GetStr("SignerDupIDValidationError")}: {id}");
 
-		if (!IDsCollection.Add(signer.ID))
-		{
-			throw new InvalidOperationException($"{GlobalVars.GetStr("SignerDupIDValidationError")}: {signer.ID}");
-		}
-
+		// Retrieve Name
+		string name = string.Empty;
 		if (elem.HasAttribute("Name"))
-			signer.Name = elem.GetAttribute("Name");
+			name = elem.GetAttribute("Name");
+
+		// Retrieve CertRoot
+		XmlElement certRootElem = elem["CertRoot", GlobalVars.SiPolicyNamespace] ?? throw new InvalidOperationException(
+			string.Format(GlobalVars.GetStr("SignerNoCertRootError"), id));
+
+		CertRoot certRoot = new(
+				type: ConvertStringToCertEnumType(certRootElem.GetAttribute("Type")),
+				value: ConvertHexStringToByteArray(certRootElem.GetAttribute("Value")));
+
+		Signer signer = new(id, name, certRoot);
 
 		if (elem.HasAttribute("SignTimeAfter"))
 		{
 			signer.SignTimeAfter = DateTime.Parse(elem.GetAttribute("SignTimeAfter"), null, DateTimeStyles.RoundtripKind);
-			signer.SignTimeAfterSpecified = true;
-		}
-
-		XmlElement? certRootElem = elem["CertRoot", GlobalVars.SiPolicyNamespace];
-		if (certRootElem is not null)
-		{
-			CertRoot cr = new();
-			if (certRootElem.HasAttribute("Type"))
-				cr.Type = ConvertStringToCertEnumType(certRootElem.GetAttribute("Type"));
-			if (certRootElem.HasAttribute("Value"))
-				cr.Value = ConvertHexStringToByteArray(certRootElem.GetAttribute("Value"));
-
-			if (cr.Type is not CertEnumType.TBS and not CertEnumType.Wellknown)
-			{
-				throw new InvalidOperationException(
-					GlobalVars.GetStr("InvalidCertRootTypeError"));
-			}
-
-			signer.CertRoot = cr;
-		}
-		else
-		{
-			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("SignerNoCertRootError"),
-				signer.ID));
 		}
 
 		XmlNodeList certEkuNodes = elem.GetElementsByTagName("CertEKU", GlobalVars.SiPolicyNamespace);
 		if (certEkuNodes.Count > 0)
 		{
 			List<CertEKU> ekus = [];
-			foreach (XmlElement ekuElem in certEkuNodes.OfType<XmlElement>())
+			foreach (XmlNode node in certEkuNodes)
 			{
-				CertEKU certEku = new();
-				if (ekuElem.HasAttribute("ID"))
-					certEku.ID = ekuElem.GetAttribute("ID");
-				ekus.Add(certEku);
+				if (node is XmlElement ekuElem)
+				{
+					ekus.Add(new CertEKU(id: ekuElem.GetAttribute("ID")));
+				}
 			}
-			signer.CertEKU = [.. ekus];
+			signer.CertEKU = ekus;
 		}
 
 		XmlElement? certIssuerElem = elem["CertIssuer", GlobalVars.SiPolicyNamespace];
 		if (certIssuerElem is not null)
 		{
-			CertIssuer ci = new();
-			if (certIssuerElem.HasAttribute("Value"))
-				ci.Value = certIssuerElem.GetAttribute("Value");
-			signer.CertIssuer = ci;
+			signer.CertIssuer = new CertIssuer(value: certIssuerElem.GetAttribute("Value"));
 		}
 
 		XmlElement? certPublisherElem = elem["CertPublisher", GlobalVars.SiPolicyNamespace];
 		if (certPublisherElem is not null)
 		{
-			CertPublisher cp = new();
-			if (certPublisherElem.HasAttribute("Value"))
-				cp.Value = certPublisherElem.GetAttribute("Value");
-			signer.CertPublisher = cp;
+			signer.CertPublisher = new CertPublisher(value: certPublisherElem.GetAttribute("Value"));
 		}
 
 		XmlElement? certOemIDElem = elem["CertOemID", GlobalVars.SiPolicyNamespace];
 		if (certOemIDElem is not null)
 		{
-			CertOemID co = new();
-			if (certOemIDElem.HasAttribute("Value"))
-				co.Value = certOemIDElem.GetAttribute("Value");
-			signer.CertOemID = co;
+			signer.CertOemID = new CertOemID(value: certOemIDElem.GetAttribute("Value"));
 		}
 
 		XmlNodeList farNodes = elem.GetElementsByTagName("FileAttribRef", GlobalVars.SiPolicyNamespace);
 		if (farNodes.Count > 0)
 		{
 			List<FileAttribRef> fars = [];
-			foreach (XmlElement farElem in farNodes.OfType<XmlElement>())
+			foreach (XmlNode node in farNodes)
 			{
-				FileAttribRef far = new();
-				if (farElem.HasAttribute("RuleID"))
-					far.RuleID = farElem.GetAttribute("RuleID");
-				fars.Add(far);
+				if (node is XmlElement farElem)
+				{
+					fars.Add(new FileAttribRef(ruleID: farElem.GetAttribute("RuleID")));
+				}
 			}
-			signer.FileAttribRef = [.. fars];
+			signer.FileAttribRef = fars;
 		}
 
 		return signer;
@@ -881,52 +830,62 @@ internal static class CustomDeserialization
 
 	private static SigningScenario DeserializeSigningScenario(XmlElement elem, HashSet<string> IDsCollection)
 	{
-		SigningScenario scenario = new();
-		if (elem.HasAttribute("ID"))
-			scenario.ID = elem.GetAttribute("ID");
+		// Retrieve ID
+		string id = elem.GetAttribute("ID");
 
-		if (scenario.ID is null)
+		// Check for duplicate ID
+		if (!IDsCollection.Add(id))
+			throw new InvalidOperationException($"{GlobalVars.GetStr("SigningScenarioDupIDValidationError")}: {id}");
+
+		// Retrieve Value
+		byte value = byte.Parse(elem.GetAttribute("Value"), CultureInfo.InvariantCulture);
+
+		// Value cannot be 0
+		if (value == 0)
+			throw new InvalidOperationException($"The SigningScenario with the ID {id} has a value of 0, making it invalid.");
+
+		// Retrieve ProductSigners
+		// Default to empty ProductSigners if element is missing
+		ProductSigners productSigners = new();
+		XmlElement? prodSignersElem = elem["ProductSigners", GlobalVars.SiPolicyNamespace];
+		if (prodSignersElem is not null)
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("SigningScenarioNoIDValidationError"));
+			productSigners = DeserializeProductSigners(prodSignersElem);
 		}
 
-		if (!IDsCollection.Add(scenario.ID))
-		{
-			throw new InvalidOperationException($"{GlobalVars.GetStr("SigningScenarioDupIDValidationError")}: {scenario.ID}");
-		}
+		// Instantiate SigningScenario
+		SigningScenario scenario = new(id, value, productSigners);
 
 		if (elem.HasAttribute("FriendlyName"))
-			scenario.FriendlyName = elem.GetAttribute("FriendlyName");
-
-		if (elem.HasAttribute("Value"))
-			scenario.Value = byte.Parse(elem.GetAttribute("Value"), CultureInfo.InvariantCulture);
-		if (scenario.Value == 0)
 		{
-			throw new InvalidOperationException($"The SigningScenario with the ID {scenario.ID} has a value of 0, making it invalid.");
+			scenario.FriendlyName = elem.GetAttribute("FriendlyName");
 		}
 
 		if (elem.HasAttribute("InheritedScenarios"))
+		{
 			scenario.InheritedScenarios = elem.GetAttribute("InheritedScenarios");
+		}
+
 		if (elem.HasAttribute("MinimumHashAlgorithm"))
 		{
 			scenario.MinimumHashAlgorithm = ushort.Parse(elem.GetAttribute("MinimumHashAlgorithm"), CultureInfo.InvariantCulture);
-			scenario.MinimumHashAlgorithmSpecified = true;
 		}
 
-		// Make sure it exists even empty - Without a ProductSigners in a SigningScenario it would be invalid.
-		scenario.ProductSigners = new ProductSigners();
-		XmlElement? prodSignersElem = elem["ProductSigners", GlobalVars.SiPolicyNamespace];
-		if (prodSignersElem is not null)
-			scenario.ProductSigners = DeserializeProductSigners(prodSignersElem);
-
+		// Deserialize TestSigners
 		XmlElement? testSignersElem = elem["TestSigners", GlobalVars.SiPolicyNamespace];
 		if (testSignersElem is not null)
+		{
 			scenario.TestSigners = DeserializeTestSigners(testSignersElem);
+		}
 
+		// Deserialize TestSigningSigners
 		XmlElement? testSigningSignersElem = elem["TestSigningSigners", GlobalVars.SiPolicyNamespace];
 		if (testSigningSignersElem is not null)
+		{
 			scenario.TestSigningSigners = DeserializeTestSigningSigners(testSigningSignersElem);
+		}
 
+		// Deserialize AppIDTags
 		XmlElement? appIDTagsElem = elem["AppIDTags", GlobalVars.SiPolicyNamespace];
 		if (appIDTagsElem is not null)
 		{
@@ -947,79 +906,67 @@ internal static class CustomDeserialization
 		XmlElement? allowedElem = elem["AllowedSigners", GlobalVars.SiPolicyNamespace];
 		if (allowedElem is not null)
 		{
-			AllowedSigners allowed = new();
+			string? workAround = null;
 			if (allowedElem.HasAttribute("Workaround"))
-				allowed.Workaround = allowedElem.GetAttribute("Workaround");
+				workAround = allowedElem.GetAttribute("Workaround");
 			List<AllowedSigner> asList = [];
 			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
 			{
-				AllowedSigner aSigner = new();
-				if (aSignerElem.HasAttribute("SignerId"))
-					aSigner.SignerId = aSignerElem.GetAttribute("SignerId");
 				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
+				List<ExceptDenyRule>? rules = null;
 				if (edrNodes.Count > 0)
 				{
-					List<ExceptDenyRule> rules = [];
-					foreach (XmlElement ruleElem in edrNodes.OfType<XmlElement>())
+					rules = [];
+					foreach (XmlNode node in edrNodes)
 					{
-						ExceptDenyRule rule = new();
-						if (ruleElem.HasAttribute("DenyRuleID"))
-							rule.DenyRuleID = ruleElem.GetAttribute("DenyRuleID");
-						rules.Add(rule);
+						if (node is XmlElement ruleElem)
+						{
+							rules.Add(new ExceptDenyRule(ruleElem.GetAttribute("DenyRuleID")));
+						}
 					}
-					aSigner.ExceptDenyRule = [.. rules];
 				}
-				asList.Add(aSigner);
+				asList.Add(new AllowedSigner(signerId: aSignerElem.GetAttribute("SignerId"), exceptDenyRule: rules));
 			}
-			allowed.AllowedSigner = [.. asList];
-			ps.AllowedSigners = allowed;
+			ps.AllowedSigners = new AllowedSigners(allowedSigner: asList) { Workaround = workAround };
 		}
 		XmlElement? deniedElem = elem["DeniedSigners", GlobalVars.SiPolicyNamespace];
 		if (deniedElem is not null)
 		{
-			DeniedSigners denied = new();
+			string? workAround = null;
 			if (deniedElem.HasAttribute("Workaround"))
-				denied.Workaround = deniedElem.GetAttribute("Workaround");
+				workAround = deniedElem.GetAttribute("Workaround");
 			List<DeniedSigner> dsList = [];
 			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
 			{
-				DeniedSigner dSigner = new();
-				if (dSignerElem.HasAttribute("SignerId"))
-					dSigner.SignerId = dSignerElem.GetAttribute("SignerId");
 				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
+				List<ExceptAllowRule>? rules = null;
 				if (earNodes.Count > 0)
 				{
-					List<ExceptAllowRule> rules = [];
-					foreach (XmlElement ruleElem in earNodes.OfType<XmlElement>())
+					rules = [];
+					foreach (XmlNode node in earNodes)
 					{
-						ExceptAllowRule rule = new();
-						if (ruleElem.HasAttribute("AllowRuleID"))
-							rule.AllowRuleID = ruleElem.GetAttribute("AllowRuleID");
-						rules.Add(rule);
+						if (node is XmlElement ruleElem)
+						{
+							rules.Add(new ExceptAllowRule(allowRuleID: ruleElem.GetAttribute("AllowRuleID")));
+						}
 					}
-					dSigner.ExceptAllowRule = [.. rules];
 				}
-				dsList.Add(dSigner);
+				dsList.Add(new DeniedSigner(signerId: dSignerElem.GetAttribute("SignerId"), exceptAllowRule: rules));
 			}
-			denied.DeniedSigner = [.. dsList];
-			ps.DeniedSigners = denied;
+			ps.DeniedSigners = new DeniedSigners(deniedSigner: dsList) { Workaround = workAround };
 		}
 		XmlElement? fileRulesRefElem = elem["FileRulesRef", GlobalVars.SiPolicyNamespace];
 		if (fileRulesRefElem is not null)
 		{
-			FileRulesRef frr = new();
+			string? workAround = null;
 			if (fileRulesRefElem.HasAttribute("Workaround"))
-				frr.Workaround = fileRulesRefElem.GetAttribute("Workaround");
+				workAround = fileRulesRefElem.GetAttribute("Workaround");
 			List<FileRuleRef> frrList = [];
 			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef"))
 			{
-				FileRuleRef frRef = new();
-				if (frElem.HasAttribute("RuleID"))
-					frRef.RuleID = frElem.GetAttribute("RuleID");
-				frrList.Add(frRef);
+				frrList.Add(new FileRuleRef(ruleID: frElem.GetAttribute("RuleID")));
 			}
-			frr.FileRuleRef = [.. frrList];
-			ps.FileRulesRef = frr;
+			ps.FileRulesRef = new FileRulesRef(fileRuleRef: frrList) { Workaround = workAround };
 		}
 		return ps;
 	}
@@ -1030,79 +977,68 @@ internal static class CustomDeserialization
 		XmlElement? allowedElem = elem["AllowedSigners", GlobalVars.SiPolicyNamespace];
 		if (allowedElem is not null)
 		{
-			AllowedSigners allowed = new();
+			string? workAround = null;
 			if (allowedElem.HasAttribute("Workaround"))
-				allowed.Workaround = allowedElem.GetAttribute("Workaround");
+				workAround = allowedElem.GetAttribute("Workaround");
 			List<AllowedSigner> asList = [];
 			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
 			{
-				AllowedSigner aSigner = new();
-				if (aSignerElem.HasAttribute("SignerId"))
-					aSigner.SignerId = aSignerElem.GetAttribute("SignerId");
 				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
+				List<ExceptDenyRule>? rules = null;
 				if (edrNodes.Count > 0)
 				{
-					List<ExceptDenyRule> rules = [];
-					foreach (XmlElement ruleElem in edrNodes.OfType<XmlElement>())
+					rules = [];
+					foreach (XmlNode node in edrNodes)
 					{
-						ExceptDenyRule rule = new();
-						if (ruleElem.HasAttribute("DenyRuleID"))
-							rule.DenyRuleID = ruleElem.GetAttribute("DenyRuleID");
-						rules.Add(rule);
+						if (node is XmlElement ruleElem)
+						{
+							rules.Add(new ExceptDenyRule(ruleElem.GetAttribute("DenyRuleID")));
+						}
 					}
-					aSigner.ExceptDenyRule = [.. rules];
 				}
-				asList.Add(aSigner);
+				asList.Add(new AllowedSigner(signerId: aSignerElem.GetAttribute("SignerId"), exceptDenyRule: rules));
 			}
-			allowed.AllowedSigner = [.. asList];
-			ts.AllowedSigners = allowed;
+			ts.AllowedSigners = new AllowedSigners(allowedSigner: asList) { Workaround = workAround };
 		}
 		XmlElement? deniedElem = elem["DeniedSigners", GlobalVars.SiPolicyNamespace];
 		if (deniedElem is not null)
 		{
-			DeniedSigners denied = new();
+			string? workAround = null;
 			if (deniedElem.HasAttribute("Workaround"))
-				denied.Workaround = deniedElem.GetAttribute("Workaround");
+				workAround = deniedElem.GetAttribute("Workaround");
 			List<DeniedSigner> dsList = [];
 			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
 			{
-				DeniedSigner dSigner = new();
-				if (dSignerElem.HasAttribute("SignerId"))
-					dSigner.SignerId = dSignerElem.GetAttribute("SignerId");
 				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
+				List<ExceptAllowRule>? rules = null;
 				if (earNodes.Count > 0)
 				{
-					List<ExceptAllowRule> rules = [];
-					foreach (XmlElement ruleElem in earNodes.OfType<XmlElement>())
+					rules = [];
+					foreach (XmlNode node in earNodes)
 					{
-						ExceptAllowRule rule = new();
-						if (ruleElem.HasAttribute("AllowRuleID"))
-							rule.AllowRuleID = ruleElem.GetAttribute("AllowRuleID");
-						rules.Add(rule);
+						if (node is XmlElement ruleElem)
+						{
+							rules.Add(new ExceptAllowRule(allowRuleID: ruleElem.GetAttribute("AllowRuleID")));
+						}
 					}
-					dSigner.ExceptAllowRule = [.. rules];
 				}
-				dsList.Add(dSigner);
+				dsList.Add(new DeniedSigner(signerId: dSignerElem.GetAttribute("SignerId"), exceptAllowRule: rules));
 			}
-			denied.DeniedSigner = [.. dsList];
-			ts.DeniedSigners = denied;
+			ts.DeniedSigners = new DeniedSigners(deniedSigner: dsList) { Workaround = workAround };
 		}
 		XmlElement? fileRulesRefElem = elem["FileRulesRef", GlobalVars.SiPolicyNamespace];
 		if (fileRulesRefElem is not null)
 		{
-			FileRulesRef frr = new();
+			string? workAround = null;
 			if (fileRulesRefElem.HasAttribute("Workaround"))
-				frr.Workaround = fileRulesRefElem.GetAttribute("Workaround");
+				workAround = fileRulesRefElem.GetAttribute("Workaround");
 			List<FileRuleRef> frrList = [];
 			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef"))
 			{
-				FileRuleRef frRef = new();
-				if (frElem.HasAttribute("RuleID"))
-					frRef.RuleID = frElem.GetAttribute("RuleID");
-				frrList.Add(frRef);
+				frrList.Add(new FileRuleRef(ruleID: frElem.GetAttribute("RuleID")));
 			}
-			frr.FileRuleRef = [.. frrList];
-			ts.FileRulesRef = frr;
+
+			ts.FileRulesRef = new FileRulesRef(fileRuleRef: frrList) { Workaround = workAround };
 		}
 		return ts;
 	}
@@ -1113,172 +1049,128 @@ internal static class CustomDeserialization
 		XmlElement? allowedElem = elem["AllowedSigners", GlobalVars.SiPolicyNamespace];
 		if (allowedElem is not null)
 		{
-			AllowedSigners allowed = new();
+			string? workAround = null;
 			if (allowedElem.HasAttribute("Workaround"))
-				allowed.Workaround = allowedElem.GetAttribute("Workaround");
+				workAround = allowedElem.GetAttribute("Workaround");
 			List<AllowedSigner> asList = [];
 			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
 			{
-				AllowedSigner aSigner = new();
-				if (aSignerElem.HasAttribute("SignerId"))
-					aSigner.SignerId = aSignerElem.GetAttribute("SignerId");
 				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
+				List<ExceptDenyRule>? rules = null;
 				if (edrNodes.Count > 0)
 				{
-					List<ExceptDenyRule> rules = [];
-					foreach (XmlElement ruleElem in edrNodes.OfType<XmlElement>())
+					rules = [];
+					foreach (XmlNode node in edrNodes)
 					{
-						ExceptDenyRule rule = new();
-						if (ruleElem.HasAttribute("DenyRuleID"))
-							rule.DenyRuleID = ruleElem.GetAttribute("DenyRuleID");
-						rules.Add(rule);
+						if (node is XmlElement ruleElem)
+						{
+							rules.Add(new ExceptDenyRule(ruleElem.GetAttribute("DenyRuleID")));
+						}
 					}
-					aSigner.ExceptDenyRule = [.. rules];
 				}
-				asList.Add(aSigner);
+				asList.Add(new AllowedSigner(signerId: aSignerElem.GetAttribute("SignerId"), exceptDenyRule: rules));
 			}
-			allowed.AllowedSigner = [.. asList];
-			tss.AllowedSigners = allowed;
+			tss.AllowedSigners = new AllowedSigners(allowedSigner: asList) { Workaround = workAround };
 		}
 		XmlElement? deniedElem = elem["DeniedSigners", GlobalVars.SiPolicyNamespace];
 		if (deniedElem is not null)
 		{
-			DeniedSigners denied = new();
+			string? workAround = null;
 			if (deniedElem.HasAttribute("Workaround"))
-				denied.Workaround = deniedElem.GetAttribute("Workaround");
+				workAround = deniedElem.GetAttribute("Workaround");
 			List<DeniedSigner> dsList = [];
 			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
 			{
-				DeniedSigner dSigner = new();
-				if (dSignerElem.HasAttribute("SignerId"))
-					dSigner.SignerId = dSignerElem.GetAttribute("SignerId");
 				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
+				List<ExceptAllowRule>? rules = null;
 				if (earNodes.Count > 0)
 				{
-					List<ExceptAllowRule> rules = [];
-					foreach (XmlElement ruleElem in earNodes.OfType<XmlElement>())
+					rules = [];
+					foreach (XmlNode node in earNodes)
 					{
-						ExceptAllowRule rule = new();
-						if (ruleElem.HasAttribute("AllowRuleID"))
-							rule.AllowRuleID = ruleElem.GetAttribute("AllowRuleID");
-						rules.Add(rule);
+						if (node is XmlElement ruleElem)
+						{
+							rules.Add(new ExceptAllowRule(allowRuleID: ruleElem.GetAttribute("AllowRuleID")));
+						}
 					}
-					dSigner.ExceptAllowRule = [.. rules];
 				}
-				dsList.Add(dSigner);
+				dsList.Add(new DeniedSigner(signerId: dSignerElem.GetAttribute("SignerId"), exceptAllowRule: rules));
 			}
-			denied.DeniedSigner = [.. dsList];
-			tss.DeniedSigners = denied;
+			tss.DeniedSigners = new DeniedSigners(deniedSigner: dsList) { Workaround = workAround };
 		}
 		XmlElement? fileRulesRefElem = elem["FileRulesRef", GlobalVars.SiPolicyNamespace];
 		if (fileRulesRefElem is not null)
 		{
-			FileRulesRef frr = new();
+			string? workAround = null;
 			if (fileRulesRefElem.HasAttribute("Workaround"))
-				frr.Workaround = fileRulesRefElem.GetAttribute("Workaround");
+				workAround = fileRulesRefElem.GetAttribute("Workaround");
 			List<FileRuleRef> frrList = [];
 			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef"))
 			{
-				FileRuleRef frRef = new();
-				if (frElem.HasAttribute("RuleID"))
-					frRef.RuleID = frElem.GetAttribute("RuleID");
-				frrList.Add(frRef);
+				frrList.Add(new FileRuleRef(ruleID: frElem.GetAttribute("RuleID")));
 			}
-			frr.FileRuleRef = [.. frrList];
-			tss.FileRulesRef = frr;
+			tss.FileRulesRef = new FileRulesRef(fileRuleRef: frrList) { Workaround = workAround };
 		}
 		return tss;
 	}
 
 	private static AppRoot DeserializeAppRoot(XmlElement elem)
 	{
-		AppRoot app = new();
-		if (elem.HasAttribute("Manifest"))
-			app.Manifest = elem.GetAttribute("Manifest");
+
+		string manifest = elem.GetAttribute("Manifest");
 		List<AppSetting> settings = [];
-		foreach (XmlElement settingElem in elem.ChildNodes.OfType<XmlElement>())
+		foreach (XmlNode node in elem.ChildNodes)
 		{
-			settings.Add(DeserializeAppSetting(settingElem));
+			if (node is XmlElement settingElem)
+			{
+				settings.Add(DeserializeAppSetting(settingElem));
+			}
 		}
-		app.Setting = [.. settings];
-		return app;
+		return new(manifest: manifest, setting: settings);
 	}
 
 	private static AppSetting DeserializeAppSetting(XmlElement elem)
 	{
-		AppSetting appSetting = new();
+		string? name = null;
 		if (elem.HasAttribute("Name"))
-			appSetting.Name = elem.GetAttribute("Name");
+			name = elem.GetAttribute("Name");
+
 		List<string> values = [];
 		foreach (XmlElement valueElem in elem.GetElementsByTagName("Value"))
 		{
 			values.Add(valueElem.InnerText);
 		}
-		appSetting.Value = [.. values];
-		return appSetting;
+		return new AppSetting(name: name, value: values);
 	}
 
 	private static Setting DeserializeSetting(XmlElement elem)
 	{
-		Setting setting = new();
-		if (elem.HasAttribute("Provider"))
-			setting.Provider = elem.GetAttribute("Provider");
+		string provider = elem.GetAttribute("Provider");
+		string key = elem.GetAttribute("Key");
+		string valueName = elem.GetAttribute("ValueName");
 
-		if (elem.HasAttribute("Key"))
-			setting.Key = elem.GetAttribute("Key");
+		XmlElement valueElem = elem["Value", GlobalVars.SiPolicyNamespace] ?? throw new InvalidOperationException("There is a Setting in the policy that has no Value");
 
-		if (elem.HasAttribute("ValueName"))
-			setting.ValueName = elem.GetAttribute("ValueName");
+		SettingValueType settingValue = valueElem["Binary", GlobalVars.SiPolicyNamespace] is not null
+			? new SettingValueType(
+				item: ConvertHexStringToByteArray(GetElementText(valueElem, "Binary"))
+			)
+			: valueElem["Boolean", GlobalVars.SiPolicyNamespace] is not null
+				? new SettingValueType(
+				item: bool.Parse(GetElementText(valueElem, "Boolean"))
+			)
+				: valueElem["DWord", GlobalVars.SiPolicyNamespace] is not null
+				? new SettingValueType(
+				item: uint.Parse(GetElementText(valueElem, "DWord"), CultureInfo.InvariantCulture)
+			)
+				: valueElem["String", GlobalVars.SiPolicyNamespace] is not null
+				? new SettingValueType(
+				item: GetElementText(valueElem, "String")
+			)
+				: throw new InvalidOperationException(
+				GlobalVars.GetStr("PolicySettingInvalidValueElementMessage"));
 
-		XmlElement? valueElem = elem["Value", GlobalVars.SiPolicyNamespace];
-		if (valueElem is not null)
-		{
-			if (valueElem["Binary", GlobalVars.SiPolicyNamespace] is not null)
-			{
-				SettingValueType sv = new()
-				{
-					Item = ConvertHexStringToByteArray(GetElementText(valueElem, "Binary"))
-				};
-				setting.Value = sv;
-			}
-			else if (valueElem["Boolean", GlobalVars.SiPolicyNamespace] is not null)
-			{
-				SettingValueType sv = new()
-				{
-					Item = bool.Parse(GetElementText(valueElem, "Boolean"))
-				};
-				setting.Value = sv;
-			}
-			else if (valueElem["DWord", GlobalVars.SiPolicyNamespace] is not null)
-			{
-				SettingValueType sv = new()
-				{
-					Item = uint.Parse(GetElementText(valueElem, "DWord"), CultureInfo.InvariantCulture)
-				};
-				setting.Value = sv;
-			}
-			else if (valueElem["String", GlobalVars.SiPolicyNamespace] is not null)
-			{
-				SettingValueType sv = new()
-				{
-					Item = GetElementText(valueElem, "String")
-				};
-				setting.Value = sv;
-			}
-			else
-			{
-				throw new InvalidOperationException(
-					GlobalVars.GetStr("PolicySettingInvalidValueElementMessage"));
-			}
-		}
-
-		if (string.IsNullOrEmpty(setting.Key) || string.IsNullOrEmpty(setting.Provider) || string.IsNullOrEmpty(setting.ValueName))
-		{
-			throw new InvalidOperationException(
-				GlobalVars.GetStr("PolicySettingMissingProviderKeyValueNameMessage"));
-		}
-
-		return setting;
+		return new Setting(settingValue, provider, key, valueName);
 	}
 
 
@@ -1293,7 +1185,6 @@ internal static class CustomDeserialization
 			if (bool.TryParse(enforceDLLStr, out bool enforceDLL))
 			{
 				appIDTags.EnforceDLL = enforceDLL;
-				appIDTags.EnforceDLLSpecified = true;
 			}
 		}
 
@@ -1302,14 +1193,9 @@ internal static class CustomDeserialization
 		List<AppIDTag> tags = [];
 		foreach (XmlElement tagElem in appIDTagNodes)
 		{
-			AppIDTag tag = new();
-			if (tagElem.HasAttribute("Key"))
-				tag.Key = tagElem.GetAttribute("Key");
-			if (tagElem.HasAttribute("Value"))
-				tag.Value = tagElem.GetAttribute("Value");
-			tags.Add(tag);
+			tags.Add(new AppIDTag(key: tagElem.GetAttribute("Key"), value: tagElem.GetAttribute("Value")));
 		}
-		appIDTags.AppIDTag = [.. tags];
+		appIDTags.AppIDTag = tags;
 
 		return appIDTags;
 	}

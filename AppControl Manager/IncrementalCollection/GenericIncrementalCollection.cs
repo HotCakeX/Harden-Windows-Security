@@ -606,7 +606,7 @@ internal sealed partial class GenericIncrementalCollection<TDataType> : Observab
 					}
 					else
 					{
-						// No items → no more pages.
+						// No items -> no more pages.
 						HasAdditionalItems = false;
 					}
 				}

@@ -90,7 +90,7 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
@@ -106,16 +106,16 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 
 		// Rule 3: Include EKU Values
 		foreach (EKU eku in obj.Ekus)
 		{
-			if (eku.Value is not null)
+			if (!eku.Value.IsEmpty)
 			{
-				hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(eku.Value)) % Merger.modulus;
+				hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(eku.Value.Span)) % Merger.modulus;
 			}
 		}
 

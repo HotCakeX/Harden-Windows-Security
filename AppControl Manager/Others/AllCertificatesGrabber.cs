@@ -27,150 +27,8 @@ namespace AppControlManager.Others;
 internal static class AllCertificatesGrabber
 {
 	// Constants related to WinTrust
-	private const uint StateActionVerify = 1;
 	private const uint StateActionClose = 2;
 	private static Guid GenericWinTrustVerifyActionGuid = new("{00AAC56B-CD44-11d0-8CC2-00C04FC295EE}");
-
-	// Structure defining signer information for cryptographic providers
-	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct CryptProviderSigner
-	{
-		private readonly uint cbStruct;   // Size of structure
-		private System.Runtime.InteropServices.ComTypes.FILETIME sftVerifyAsOf;   // Verification time
-		private readonly uint csCertChain;   // Number of certificates in the chain
-		private readonly IntPtr pasCertChain;   // Pointer to certificate chain
-		private readonly uint dwSignerType;   // Type of signer
-		private readonly IntPtr psSigner;   // Pointer to signer
-		private readonly uint dwError;   // Error code
-		internal uint csCounterSigners;   // Number of countersigners
-		internal IntPtr pasCounterSigners;   // Pointer to countersigners
-		internal IntPtr pChainContext;   // Pointer to chain context
-	}
-
-	// Structure defining provider data for cryptographic operations
-	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_data
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct CryptProviderData
-	{
-		private readonly uint cbStruct;   // Size of structure
-		private readonly IntPtr pWintrustData;   // Pointer to WinTrustData
-		private readonly int fOpenedFile;   // Flag indicating if file is open (BOOL -> int for blittability)
-		private readonly IntPtr hWndParent;   // Handle to parent window
-		private readonly IntPtr pgActionId;   // Pointer to action ID
-		private readonly IntPtr hProv;   // Handle to provider
-		private readonly uint dwError;   // Error code
-		private readonly uint dwRegSecuritySettings;   // Security settings
-		private readonly uint dwRegPolicySettings;   // Policy settings
-		private readonly IntPtr psPfns;   // Pointer to provider functions
-		private readonly uint cdwTrustStepErrors;   // Number of trust step errors
-		private readonly IntPtr padwTrustStepErrors;   // Pointer to trust step errors
-		private readonly uint chStores;   // Number of stores
-		private readonly IntPtr pahStores;   // Pointer to stores
-		private readonly uint dwEncoding;   // Encoding type
-		internal IntPtr hMsg;   // Handle to message
-		internal uint csSigners;   // Number of signers
-		internal IntPtr pasSigners;   // Pointer to signers
-	}
-
-	// Structure defining signature settings for WinTrust
-	[StructLayout(LayoutKind.Sequential)]
-	internal unsafe struct WinTrustSignatureSettings
-	{
-		internal uint cbStruct;   // Size of structure
-		internal uint dwIndex;   // Index of the signature
-		internal uint dwFlags;   // Flags for signature verification
-		internal uint SecondarySignersCount;   // Number of secondary signatures
-		internal uint dwVerifiedSigIndex;   // Index of verified signature
-		internal IntPtr pCryptoPolicy;   // Pointer to cryptographic policy
-
-		// Default constructor initializes dwIndex to unsigned integer 0
-		public WinTrustSignatureSettings()
-		{
-			cbStruct = (uint)sizeof(WinTrustSignatureSettings);
-			dwIndex = 0U;
-			dwFlags = 3;
-			SecondarySignersCount = 0;
-			dwVerifiedSigIndex = 0;
-			pCryptoPolicy = IntPtr.Zero;
-		}
-
-		// Constructor initializes with given index
-		internal WinTrustSignatureSettings(uint index)
-		{
-			cbStruct = (uint)sizeof(WinTrustSignatureSettings);
-			dwIndex = index;
-			dwFlags = 3;
-			SecondarySignersCount = 0;
-			dwVerifiedSigIndex = 0;
-			pCryptoPolicy = IntPtr.Zero;
-		}
-	}
-
-	// Structure defining file information for WinTrust
-	[StructLayout(LayoutKind.Sequential)]
-	internal unsafe struct FileInfoForWinTrust
-	{
-		internal uint StructSize;   // Size of structure
-		internal IntPtr FilePath;   // File path pointer (LPCWSTR)
-		internal IntPtr hFile;   // File handle pointer
-		internal IntPtr pgKnownSubject;   // Pointer to known subject
-
-		// Default constructor initializes FilePath to null
-		public FileInfoForWinTrust()
-		{
-			StructSize = (uint)sizeof(FileInfoForWinTrust);
-			FilePath = IntPtr.Zero;
-			hFile = IntPtr.Zero;
-			pgKnownSubject = IntPtr.Zero;
-		}
-
-		// Constructor initializes FilePath with the given filePath
-		internal FileInfoForWinTrust(IntPtr filePathPtr)
-		{
-			StructSize = (uint)sizeof(FileInfoForWinTrust);
-			FilePath = filePathPtr;
-			hFile = IntPtr.Zero;
-			pgKnownSubject = IntPtr.Zero;
-		}
-	}
-
-	// Structure defining overall trust data for WinTrust
-	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_data
-	[StructLayout(LayoutKind.Sequential)]
-	internal unsafe struct WinTrustData
-	{
-		internal uint StructSize;   // Size of structure
-		internal IntPtr PolicyCallbackData;   // Pointer to policy callback data
-		internal IntPtr SIPClientData;   // Pointer to SIP client data
-		internal uint UIChoice;   // UI choice for trust verification
-		internal uint RevocationChecks;   // Revocation checks
-		internal uint UnionChoice;   // Union choice for trust verification
-		internal IntPtr FileInfoPtr;   // Pointer to file information
-		internal uint StateAction;   // State action for trust verification
-		internal IntPtr StateData;   // Pointer to state data
-		internal IntPtr URLReference;   // URL reference for trust verification
-		internal uint ProvFlags;   // Provider flags for trust verification
-		internal uint UIContext;   // UI context for trust verification
-		internal IntPtr pSignatureSettings;   // Pointer to signature settings
-
-		internal WinTrustData(IntPtr fileInfoPtr, IntPtr signatureSettingsPtr)
-		{
-			StructSize = (uint)sizeof(WinTrustData);
-			PolicyCallbackData = IntPtr.Zero;
-			SIPClientData = IntPtr.Zero;
-			UIChoice = 2;
-			RevocationChecks = 0;
-			UnionChoice = 1;
-			FileInfoPtr = fileInfoPtr;
-			StateAction = StateActionVerify;
-			StateData = IntPtr.Zero;
-			URLReference = IntPtr.Zero;
-			ProvFlags = 4112;
-			UIContext = 0;
-			pSignatureSettings = signatureSettingsPtr;
-		}
-	}
 
 	// This is the main method used to retrieve all signers for a given file
 	internal static unsafe List<AllFileSigners> GetAllFileSigners(string FilePath, bool includeInvalidCerts = false)
@@ -195,21 +53,21 @@ internal static class AllCertificatesGrabber
 				filePathPtr = Marshal.StringToHGlobalUni(FilePath);
 
 				// Build FileInfoForWinTrust in unmanaged memory
-				fileInfoPtr = Marshal.AllocHGlobal(sizeof(FileInfoForWinTrust));
-				FileInfoForWinTrust fileInfo = new(filePathPtr);
-				*(FileInfoForWinTrust*)fileInfoPtr = fileInfo;
+				fileInfoPtr = Marshal.AllocHGlobal(sizeof(WINTRUST_FILE_INFO));
+				WINTRUST_FILE_INFO fileInfo = new(filePathPtr);
+				*(WINTRUST_FILE_INFO*)fileInfoPtr = fileInfo;
 
 				// Build WinTrustSignatureSettings (per-signer index) in unmanaged memory
-				sigSettingsPtr = Marshal.AllocHGlobal(sizeof(WinTrustSignatureSettings));
-				WinTrustSignatureSettings sigSettings = (Index == 0)
-					? new WinTrustSignatureSettings()
-					: new WinTrustSignatureSettings(Index);
-				*(WinTrustSignatureSettings*)sigSettingsPtr = sigSettings;
+				sigSettingsPtr = Marshal.AllocHGlobal(sizeof(WINTRUST_SIGNATURE_SETTINGS));
+				WINTRUST_SIGNATURE_SETTINGS sigSettings = (Index == 0)
+					? new WINTRUST_SIGNATURE_SETTINGS()
+					: new WINTRUST_SIGNATURE_SETTINGS(Index);
+				*(WINTRUST_SIGNATURE_SETTINGS*)sigSettingsPtr = sigSettings;
 
 				// Allocate and initialize WinTrustData
-				winTrustDataPointer = Marshal.AllocHGlobal(sizeof(WinTrustData));
-				WinTrustData wtd = new(fileInfoPtr, sigSettingsPtr);
-				*(WinTrustData*)winTrustDataPointer = wtd;
+				winTrustDataPointer = Marshal.AllocHGlobal(sizeof(WINTRUST_DATA));
+				WINTRUST_DATA wtd = new(fileInfoPtr, sigSettingsPtr);
+				*(WINTRUST_DATA*)winTrustDataPointer = wtd;
 
 				// Call WinVerifyTrust to verify trust on the file
 				WinVerifyTrustResult verifyTrustResult = NativeMethods.WinVerifyTrust(
@@ -219,14 +77,14 @@ internal static class AllCertificatesGrabber
 				);
 
 				// Reload updated data from unmanaged memory
-				wtd = *(WinTrustData*)winTrustDataPointer;
+				wtd = *(WINTRUST_DATA*)winTrustDataPointer;
 
 				// Check signature settings and process the signer's certificate
 				if (maxSigners == uint.MaxValue)
 				{
 					if (wtd.pSignatureSettings != IntPtr.Zero)
 					{
-						WinTrustSignatureSettings* signatureSettings = (WinTrustSignatureSettings*)wtd.pSignatureSettings;
+						WINTRUST_SIGNATURE_SETTINGS* signatureSettings = (WINTRUST_SIGNATURE_SETTINGS*)wtd.pSignatureSettings;
 						if (signatureSettings != null)
 						{
 							// Reading SecondarySignersCount directly from unmanaged struct
@@ -258,7 +116,7 @@ internal static class AllCertificatesGrabber
 					IntPtr providerDataBase = NativeMethods.WTHelperProvDataFromStateData(wtd.StateData);
 					if (providerDataBase != IntPtr.Zero)
 					{
-						CryptProviderData providerData = *(CryptProviderData*)providerDataBase;
+						CommonCore.Interop.CryptProviderData providerData = *(CommonCore.Interop.CryptProviderData*)providerDataBase;
 
 						int pcbData = 0;   // Size of data in bytes
 
@@ -302,7 +160,7 @@ internal static class AllCertificatesGrabber
 									// Otherwise, get the CryptProviderSigner structure from pasSigners pointer
 									if (providerData.pasSigners != IntPtr.Zero)
 									{
-										CryptProviderSigner signer = *(CryptProviderSigner*)providerData.pasSigners;
+										CommonCore.Interop.CryptProviderSigner signer = *(CommonCore.Interop.CryptProviderSigner*)providerData.pasSigners;
 
 										// Create AllFileSigners with the native chain context pointer
 										AllFileSigners.Add(new AllFileSigners(signerCertificate, signer.pChainContext));
@@ -319,7 +177,7 @@ internal static class AllCertificatesGrabber
 				if (winTrustDataPointer != IntPtr.Zero)
 				{
 					// Set StateAction to close the WinTrustData structure directly in unmanaged memory
-					((WinTrustData*)winTrustDataPointer)->StateAction = StateActionClose;
+					((WINTRUST_DATA*)winTrustDataPointer)->StateAction = StateActionClose;
 					_ = NativeMethods.WinVerifyTrust(IntPtr.Zero, ref GenericWinTrustVerifyActionGuid, winTrustDataPointer);
 				}
 

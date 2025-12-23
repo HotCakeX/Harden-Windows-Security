@@ -27,7 +27,7 @@ namespace AppControlManager.SiPolicyIntel;
 /// 1. Their <see cref="FileRuleRule.SigningScenario"/> values match.
 /// 2. Their underlying <see cref="FileRuleRule.FileRuleElement"/> objects match based on:
 ///    - Rule 1: If both have a non-empty <see cref="FileRule.PackageFamilyName"/> and these values are equal (case-insensitive).
-///    - Rule 2: If both have non-null <see cref="FileRule.Hash"/> values that are equal according to <see cref="BytesArrayComparer.AreByteArraysEqual"/>.
+///    - Rule 2: If both have non-null <see cref="FileRule.Hash"/> values that are equal.
 ///    - Rule 3: If both have a non-empty <see cref="FileRule.FilePath"/> and these values are equal (case-insensitive).
 ///    - Special Rule: If both have <see cref="FileRule.FileName"/> equal to "*" (case-insensitive).
 ///    - Rule 4: If both have a non-empty <see cref="FileRule.MinimumFileVersion"/> or <see cref="FileRule.MaximumFileVersion"/>,
@@ -75,9 +75,9 @@ internal sealed class FileRuleRuleComparer : IEqualityComparer<FileRuleRule>
 		}
 
 		// Rule 2: Incorporate Hash if available.
-		if (fileRule.Hash is not null)
+		if (!fileRule.Hash.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(fileRule.Hash)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(fileRule.Hash.Span)) % Merger.modulus;
 		}
 
 		// Rule 3: Incorporate FilePath if available.

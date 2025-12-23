@@ -920,7 +920,7 @@ internal sealed partial class MUnit(
 			{
 				cancellationToken?.ThrowIfCancellationRequested();
 
-				// Cycle detection				
+				// Cycle detection
 				if (!visitedForCycleDetection.Add(dependencyId))
 				{
 					Logger.Write(string.Format(GlobalVars.GetStr("DependencyCycleDetected"), dependencyId));

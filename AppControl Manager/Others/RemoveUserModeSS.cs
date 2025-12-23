@@ -31,14 +31,8 @@ internal static class RemoveUserModeSS
 		// Instantiate the policy
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
 
-		// Convert the array to a list for easy manipulation
-		List<SiPolicy.SigningScenario> signingScenarios = [.. policyObj.SigningScenarios];
-
 		// Remove any signing scenario with the value 12 representing User-Mode
-		_ = signingScenarios.RemoveAll(scenario => string.Equals(scenario.Value.ToString(), "12", StringComparison.OrdinalIgnoreCase));
-
-		// Convert the list back to array in order to save it in the policyObj
-		policyObj.SigningScenarios = [.. signingScenarios];
+		_ = policyObj.SigningScenarios?.RemoveAll(scenario => string.Equals(scenario.Value.ToString(), "12", StringComparison.OrdinalIgnoreCase));
 
 		// Save the changes back to the file
 		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);

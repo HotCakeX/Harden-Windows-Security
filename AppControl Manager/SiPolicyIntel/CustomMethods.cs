@@ -22,7 +22,7 @@ namespace AppControlManager.SiPolicyIntel;
 internal static class CustomMethods
 {
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static int GetByteArrayHashCode(byte[] data)
+	internal static int GetByteArrayHashCode(ReadOnlySpan<byte> data)
 	{
 		int hash = 17;
 

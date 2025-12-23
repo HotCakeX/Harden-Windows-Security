@@ -18,6 +18,7 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 
@@ -155,10 +156,10 @@ internal static class CiRuleOptions
 		}
 
 		// Store the current policy rules
-		if (policyObj.Rules.Length > 0)
+		if (policyObj.Rules.Count > 0)
 		{
 			// Iterating through each <Rule> node in the supplied XML file
-			foreach (RuleType rule in policyObj.Rules)
+			foreach (RuleType rule in CollectionsMarshal.AsSpan(policyObj.Rules))
 			{
 				// Add the option text and its corresponding int value to the dictionary
 				_ = ExistingRuleOptions.Add(rule.Item);
@@ -302,11 +303,11 @@ internal static class CiRuleOptions
 		// Create new Rules
 		foreach (OptionType rule in RuleOptionsToImplement)
 		{
-			finalRuleToImplement.Add(new RuleType() { Item = rule });
+			finalRuleToImplement.Add(new RuleType(item: rule));
 		}
 
 		// Assign the new rules to implement on the policy object, replacing any existing rules
-		policyObj.Rules = [.. finalRuleToImplement];
+		policyObj.Rules = finalRuleToImplement;
 
 		// Save the XML
 		Management.SavePolicyToFile(policyObj, filePath);

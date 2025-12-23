@@ -23,8 +23,8 @@ internal sealed partial class PolicySettings(
 	PolicyEditorVM parentViewModel,
 	string provider,
 	string key,
-	object? value,
-	string? valueStr,
+	object value,
+	string valueStr,
 	string valueName,
 	int type) : ViewModelBase
 {
@@ -35,8 +35,8 @@ internal sealed partial class PolicySettings(
 
 	internal string Provider { get; set => SP(ref field, value); } = provider;
 	internal string Key { get; set => SP(ref field, value); } = key;
-	internal object? Value { get; set => SP(ref field, value); } = value;
-	internal string? ValueStr { get; set => SP(ref field, value); } = valueStr;
+	internal object Value { get; set => SP(ref field, value); } = value;
+	internal string ValueStr { get; set => SP(ref field, value); } = valueStr;
 	internal string ValueName { get; set => SP(ref field, value); } = valueName;
 	internal int Type { get; set => SP(ref field, value); } = type;
 }

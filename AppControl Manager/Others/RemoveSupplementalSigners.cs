@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
@@ -34,7 +35,7 @@ internal static class CiPolicyHandler
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(path, null);
 
 		// Check if SupplementalPolicySigners exists and has child nodes
-		if (policyObj.SupplementalPolicySigners.Length > 0)
+		if (policyObj.SupplementalPolicySigners?.Count > 0)
 		{
 			Logger.Write(
 				GlobalVars.GetStr("RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage")
@@ -44,20 +45,13 @@ internal static class CiPolicyHandler
 			HashSet<string> signerIdsToRemove = new(StringComparer.OrdinalIgnoreCase);
 
 			// Loop through each SupplementalPolicySigner
-			foreach (SiPolicy.SupplementalPolicySigner supplementalPolicySigner in policyObj.SupplementalPolicySigners)
+			foreach (SiPolicy.SupplementalPolicySigner supplementalPolicySigner in CollectionsMarshal.AsSpan(policyObj.SupplementalPolicySigners))
 			{
 				_ = signerIdsToRemove.Add(supplementalPolicySigner.SignerId);
 			}
 
-			if (policyObj.Signers.Length > 0)
-			{
-				List<SiPolicy.Signer> signers = [.. policyObj.Signers];
-
-				// Remove the corresponding signers for the SupplementalPolicySigners
-				_ = signers.RemoveAll(signer => signerIdsToRemove.Contains(signer.ID));
-
-				policyObj.Signers = [.. signers];
-			}
+			// Remove the corresponding signers for the SupplementalPolicySigners
+			_ = policyObj.Signers?.RemoveAll(signer => signerIdsToRemove.Contains(signer.ID));
 
 			// Remove the entire SupplementalPolicySigners block by clearing its array.
 			policyObj.SupplementalPolicySigners = [];

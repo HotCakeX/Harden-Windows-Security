@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
@@ -245,14 +246,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		};
 
 
-	private static string GetHVCIOptionKey(uint value) =>
+	private static string GetHVCIOptionKey(uint? value) =>
 		value switch
 		{
 			2 => "Enabled - Strict",
 			1 => "Enabled",
 			4 => "Debug Mode",
 			8 => "Disable is Allowed",
-			0 => "None",
+			0 or null => "None",
 			_ => throw new ArgumentException($"Invalid HVCI option value: {value}", nameof(value))
 		};
 
@@ -260,7 +261,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	// All of these must be nullified/emptied during policy load
 
 	// To store the EKUs, will use them during policy creation
-	private static IEnumerable<EKU> ekusToUse = [];
+	private static List<EKU> ekusToUse = [];
 
 	// To store the user-selected XML policy objectified
 	private static SiPolicy.SiPolicy? PolicyObj;
@@ -278,7 +279,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	private void CalculateFileBasedListViewColumnWidths()
 	{
-
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("IDHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
@@ -331,7 +331,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		FileBasedColumnWidth14 = new(maxWidth14);
 	}
 
-
 	/// <summary>
 	/// For Signature Based rules
 	/// Calculates the maximum required width for each column (including header text)
@@ -341,7 +340,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	private void CalculateSignatureBasedListViewColumnWidths()
 	{
-
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("IDHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText("Name");
@@ -441,13 +439,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			IEnumerable<DeniedSigner> userModeDeniedSigners = [];
 			IEnumerable<AllowedSigner> kernelModeAllowedSigners = [];
 			IEnumerable<DeniedSigner> kernelModeDeniedSigners = [];
-			IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol = [];
-			IEnumerable<UpdatePolicySigner> updatePolicySignersCol = [];
+			List<SupplementalPolicySigner> supplementalPolicySignersCol = [];
+			List<UpdatePolicySigner> updatePolicySignersCol = [];
 			HashSet<FileRuleRule> fileRules = [];
 			HashSet<DenyRule> denyRules = [];
 			HashSet<AllowRule> allowRules = [];
-			IEnumerable<FileRuleRef> kernelModeFileRulesRefs = [];
-			IEnumerable<FileRuleRef> userModeFileRulesRefs = [];
+			List<FileRuleRef> kernelModeFileRulesRefs = [];
+			List<FileRuleRef> userModeFileRulesRefs = [];
 
 			await Task.Run(() =>
 			{
@@ -479,7 +477,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					PolicyInfoIDTextBox = policyIDInfo;
 				});
 
-				_ = PolicyObj.HvciOptionsSpecified
+				_ = PolicyObj.HvciOptions is not null
 					? Dispatcher.TryEnqueue(() =>
 					{
 						HVCIOptionComboBox = GetHVCIOptionKey(PolicyObj.HvciOptions);
@@ -616,7 +614,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				FileAttributesCount = $"• File Attributes count: {fileAttribs.Count}";
 
 				// Add each FileAttrib to the ListView
-				foreach (FileAttrib item in fileAttribs)
+				foreach (FileAttrib item in CollectionsMarshal.AsSpan(fileAttribs))
 				{
 					PolicyEditor.FileBasedRulesForListView temp4 = new
 					(
@@ -770,13 +768,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					CalculateSignatureBasedListViewColumnWidths();
 				}
 
-
 				if (PolicyObj is not null)
-					foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(PolicyObj.Settings, this))
+				{
+					foreach (PolicyEditor.PolicySettings item in CollectionsMarshal.AsSpan(PolicySettingsManager.GetPolicySettings(PolicyObj.Settings, this)))
 					{
 						PolicySettingsCollection.Add(item);
 					}
-
+				}
 			});
 
 			await Dispatcher.EnqueueAsync(() =>
@@ -871,11 +869,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the Clear selected policy button
 	/// </summary>
-	internal void ClearButton_Click()
-	{
-		SelectedPolicyFile = null;
-	}
-
+	internal void ClearButton_Click() => SelectedPolicyFile = null;
 
 	/// <summary>
 	/// To set the count of File-based rules ListView collection in the TabView's header in real time
@@ -897,10 +891,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the UI toggle button to enable/disable text selection in the ListViews
 	/// </summary>
-	internal void ChangeTextSelectionsState()
-	{
+	internal void ChangeTextSelectionsState() =>
 		TextsAreSelectableToggleState = !TextsAreSelectableToggleState;
-	}
 
 
 	#region Custom HashSet comparers so that when processing FilePublisher and WHQLFilePublisher rules, we don't add duplicate signers to the policy.
@@ -974,7 +966,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	#endregion
 
-
 	/// <summary>
 	/// Saves the changes made to the policy file.
 	/// </summary>
@@ -1011,7 +1002,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				// Collecting the data from the FileRulesCollectionList that is the backing list of the ObservableCollection
 				// So that the search feature won't affect what will be added to the policy
 				// However, removal of data will apply correctly since it's removed from both collections
-				foreach (PolicyEditor.FileBasedRulesForListView item in FileRulesCollectionList)
+				foreach (PolicyEditor.FileBasedRulesForListView item in CollectionsMarshal.AsSpan(FileRulesCollectionList))
 				{
 					switch (item.SourceType)
 					{
@@ -1091,33 +1082,36 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 								{
 									// If the signer has at least one FileAttribRef the ID of which matches the current FileAttrib
 									// Then keep that signer
-									if (item3.SignerElement.FileAttribRef.Any(x => string.Equals(x.RuleID, item2.ID, StringComparison.OrdinalIgnoreCase)))
+									if (item3.SignerElement.FileAttribRef is not null &&
+										item3.SignerElement.FileAttribRef.Any(x => string.Equals(x.RuleID, item2.ID, StringComparison.OrdinalIgnoreCase)))
 									{
 										_ = signers.Add(item3.SignerElement);
 
 										if (item3.SigningScenario is SSType.UserMode)
 										{
-											_ = ciSigners.Add(item3.CiSignerElement!);
-
-
-											if (item3.Auth is Authorization.Allow)
+											if (item3.CiSignerElement is not null)
 											{
-												_ = userModeAllowedSigners.Add(item3.AllowedSignerElement!);
+												_ = ciSigners.Add(item3.CiSignerElement);
 											}
-											else if (item3.Auth is Authorization.Deny)
+
+											if (item3.Auth is Authorization.Allow && item3.AllowedSignerElement is not null)
 											{
-												_ = userModeDeniedSigners.Add(item3.DeniedSignerElement!);
+												_ = userModeAllowedSigners.Add(item3.AllowedSignerElement);
+											}
+											else if (item3.Auth is Authorization.Deny && item3.DeniedSignerElement is not null)
+											{
+												_ = userModeDeniedSigners.Add(item3.DeniedSignerElement);
 											}
 										}
 										else if (item3.SigningScenario is SSType.KernelMode)
 										{
-											if (item3.Auth is Authorization.Allow)
+											if (item3.Auth is Authorization.Allow && item3.AllowedSignerElement is not null)
 											{
-												_ = kernelModeAllowedSigners.Add(item3.AllowedSignerElement!);
+												_ = kernelModeAllowedSigners.Add(item3.AllowedSignerElement);
 											}
-											else if (item3.Auth is Authorization.Deny)
+											else if (item3.Auth is Authorization.Deny && item3.DeniedSignerElement is not null)
 											{
-												_ = kernelModeDeniedSigners.Add(item3.DeniedSignerElement!);
+												_ = kernelModeDeniedSigners.Add(item3.DeniedSignerElement);
 											}
 										}
 
@@ -1130,36 +1124,38 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 								{
 									// If the signer has at least one FileAttribRef the ID of which matches the current FileAttrib
 									// Then keep that signer
-									if (item3.SignerElement.FileAttribRef.Any(x => string.Equals(x.RuleID, item2.ID, StringComparison.OrdinalIgnoreCase)))
+									if (item3.SignerElement.FileAttribRef is not null &&
+										item3.SignerElement.FileAttribRef.Any(x => string.Equals(x.RuleID, item2.ID, StringComparison.OrdinalIgnoreCase)))
 									{
 										_ = signers.Add(item3.SignerElement);
 
 										if (item3.SigningScenario is SSType.UserMode)
 										{
-											_ = ciSigners.Add(item3.CiSignerElement!);
-
-
-											if (item3.Auth is Authorization.Allow)
+											if (item3.CiSignerElement is not null)
 											{
-												_ = userModeAllowedSigners.Add(item3.AllowedSignerElement!);
+												_ = ciSigners.Add(item3.CiSignerElement);
 											}
-											else if (item3.Auth is Authorization.Deny)
+
+											if (item3.Auth is Authorization.Allow && item3.AllowedSignerElement is not null)
 											{
-												_ = userModeDeniedSigners.Add(item3.DeniedSignerElement!);
+												_ = userModeAllowedSigners.Add(item3.AllowedSignerElement);
+											}
+											else if (item3.Auth is Authorization.Deny && item3.DeniedSignerElement is not null)
+											{
+												_ = userModeDeniedSigners.Add(item3.DeniedSignerElement);
 											}
 										}
 										else if (item3.SigningScenario is SSType.KernelMode)
 										{
-											if (item3.Auth is Authorization.Allow)
+											if (item3.Auth is Authorization.Allow && item3.AllowedSignerElement is not null)
 											{
-												_ = kernelModeAllowedSigners.Add(item3.AllowedSignerElement!);
+												_ = kernelModeAllowedSigners.Add(item3.AllowedSignerElement);
 											}
-											else if (item3.Auth is Authorization.Deny)
+											else if (item3.Auth is Authorization.Deny && item3.DeniedSignerElement is not null)
 											{
-												_ = kernelModeDeniedSigners.Add(item3.DeniedSignerElement!);
+												_ = kernelModeDeniedSigners.Add(item3.DeniedSignerElement);
 											}
 										}
-
 									}
 								}
 
@@ -1173,7 +1169,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 
 				// Collecting the data from the SignatureBasedRulesForListView
-				foreach (PolicyEditor.SignatureBasedRulesForListView item in SignatureRulesCollectionList)
+				foreach (PolicyEditor.SignatureBasedRulesForListView item in CollectionsMarshal.AsSpan(SignatureRulesCollectionList))
 				{
 					switch (item.SourceType)
 					{
@@ -1184,27 +1180,29 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 								if (item2.SigningScenario is SSType.UserMode)
 								{
-									_ = ciSigners.Add(item2.CiSignerElement!);
-
-
-									if (item2.Auth is Authorization.Allow)
+									if (item2.CiSignerElement is not null)
 									{
-										_ = userModeAllowedSigners.Add(item2.AllowedSignerElement!);
+										_ = ciSigners.Add(item2.CiSignerElement);
 									}
-									else if (item2.Auth is Authorization.Deny)
+
+									if (item2.Auth is Authorization.Allow && item2.AllowedSignerElement is not null)
 									{
-										_ = userModeDeniedSigners.Add(item2.DeniedSignerElement!);
+										_ = userModeAllowedSigners.Add(item2.AllowedSignerElement);
+									}
+									else if (item2.Auth is Authorization.Deny && item2.DeniedSignerElement is not null)
+									{
+										_ = userModeDeniedSigners.Add(item2.DeniedSignerElement);
 									}
 								}
 								else if (item2.SigningScenario is SSType.KernelMode)
 								{
-									if (item2.Auth is Authorization.Allow)
+									if (item2.Auth is Authorization.Allow && item2.AllowedSignerElement is not null)
 									{
-										_ = kernelModeAllowedSigners.Add(item2.AllowedSignerElement!);
+										_ = kernelModeAllowedSigners.Add(item2.AllowedSignerElement);
 									}
-									else if (item2.Auth is Authorization.Deny)
+									else if (item2.Auth is Authorization.Deny && item2.DeniedSignerElement is not null)
 									{
-										_ = kernelModeDeniedSigners.Add(item2.DeniedSignerElement!);
+										_ = kernelModeDeniedSigners.Add(item2.DeniedSignerElement);
 									}
 								}
 
@@ -1218,27 +1216,29 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 								if (item2.SigningScenario is SSType.UserMode)
 								{
-									_ = ciSigners.Add(item2.CiSignerElement!);
-
-
-									if (item2.Auth is Authorization.Allow)
+									if (item2.CiSignerElement is not null)
 									{
-										_ = userModeAllowedSigners.Add(item2.AllowedSignerElement!);
+										_ = ciSigners.Add(item2.CiSignerElement);
 									}
-									else if (item2.Auth is Authorization.Deny)
+
+									if (item2.Auth is Authorization.Allow && item2.AllowedSignerElement is not null)
 									{
-										_ = userModeDeniedSigners.Add(item2.DeniedSignerElement!);
+										_ = userModeAllowedSigners.Add(item2.AllowedSignerElement);
+									}
+									else if (item2.Auth is Authorization.Deny && item2.DeniedSignerElement is not null)
+									{
+										_ = userModeDeniedSigners.Add(item2.DeniedSignerElement);
 									}
 								}
 								else if (item2.SigningScenario is SSType.KernelMode)
 								{
-									if (item2.Auth is Authorization.Allow)
+									if (item2.Auth is Authorization.Allow && item2.AllowedSignerElement is not null)
 									{
-										_ = kernelModeAllowedSigners.Add(item2.AllowedSignerElement!);
+										_ = kernelModeAllowedSigners.Add(item2.AllowedSignerElement);
 									}
-									else if (item2.Auth is Authorization.Deny)
+									else if (item2.Auth is Authorization.Deny && item2.DeniedSignerElement is not null)
 									{
-										_ = kernelModeDeniedSigners.Add(item2.DeniedSignerElement!);
+										_ = kernelModeDeniedSigners.Add(item2.DeniedSignerElement);
 									}
 								}
 
@@ -1269,7 +1269,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							throw new InvalidOperationException("Invalid rule type");
 					}
 				}
-
 
 				#region Policy details
 
@@ -1314,12 +1313,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				// If the user selected an HVCI option, set it in the policy
 				if (!string.IsNullOrEmpty(HVCIOptionComboBox))
 				{
-					PolicyObj.HvciOptionsSpecified = true;
 					PolicyObj.HvciOptions = GetHVCIOptionValue(HVCIOptionComboBox);
 				}
 
 				#endregion
-
 
 				string? fileToSaveTheChangesTo = null;
 
@@ -1340,9 +1337,32 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					fileToSaveTheChangesTo = SelectedPolicyFile;
 				}
 
-
 				// Anything that has to do with Settings must be applied by this method because it always overwrites any other changes as it writes the final settings block to the policy.
-				Setting[] _policySettings = PolicySettingsManager.ConvertPolicyEditorSettingToSiPolicySetting(PolicySettingsCollection, PolicyNameTextBox, PolicyInfoIDTextBox);
+				List<Setting> _policySettings = PolicySettingsManager.ConvertPolicyEditorSettingToSiPolicySetting(PolicySettingsCollection, PolicyNameTextBox, PolicyInfoIDTextBox);
+
+
+				// Ensure the signers only have FileAttribRefs that point to existing FileAttribs
+				// This is critical because when we remove a FileAttrib from the UI, the Signer in the backend cache still points to it.
+				// We must remove these stale references before generating the policy.
+
+				// 1. Collect all IDs of the FileAttribs that will actually be in the policy
+				HashSet<string> validFileAttribIDs = new(
+					fileRulesNode.OfType<FileAttrib>().Select(fa => fa.ID),
+					StringComparer.OrdinalIgnoreCase
+				);
+
+				// 2. Iterate through all signers and filter their FileAttribRef lists
+				foreach (Signer signer in signers)
+				{
+					if (signer.FileAttribRef is not null && signer.FileAttribRef.Count > 0)
+					{
+						// Keep only the refs whose RuleID exists in our valid set
+						signer.FileAttribRef = signer.FileAttribRef
+							.Where(refItem => validFileAttribIDs.Contains(refItem.RuleID))
+							.ToList();
+					}
+				}
+
 
 				// Generate the policy
 				Merger.PolicyGenerator(
@@ -1525,7 +1545,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			FileRulesCollection.Clear();
 
-			foreach (PolicyEditor.FileBasedRulesForListView item in filteredResults)
+			foreach (PolicyEditor.FileBasedRulesForListView item in CollectionsMarshal.AsSpan(filteredResults))
 			{
 				FileRulesCollection.Add(item);
 			}
@@ -1557,7 +1577,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			SignatureRulesCollection.Clear();
 
-			foreach (PolicyEditor.SignatureBasedRulesForListView item in filteredResults2)
+			foreach (PolicyEditor.SignatureBasedRulesForListView item in CollectionsMarshal.AsSpan(filteredResults2))
 			{
 				SignatureRulesCollection.Add(item);
 			}
@@ -1614,7 +1634,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		List<PolicyEditor.FileBasedRulesForListView> itemsToDelete = lv.SelectedItems.Cast<PolicyEditor.FileBasedRulesForListView>().ToList();
 
 		// Iterate over the copy to remove each item
-		foreach (PolicyEditor.FileBasedRulesForListView item in itemsToDelete)
+		foreach (PolicyEditor.FileBasedRulesForListView item in CollectionsMarshal.AsSpan(itemsToDelete))
 		{
 			RemoveFileRuleFromCollection(item);
 		}
@@ -1634,7 +1654,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		List<PolicyEditor.SignatureBasedRulesForListView> itemsToDelete = lv.SelectedItems.Cast<PolicyEditor.SignatureBasedRulesForListView>().ToList();
 
 		// Iterate over the copy to remove each item
-		foreach (PolicyEditor.SignatureBasedRulesForListView item in itemsToDelete)
+		foreach (PolicyEditor.SignatureBasedRulesForListView item in CollectionsMarshal.AsSpan(itemsToDelete))
 		{
 			RemoveSignatureRuleFromCollection(item);
 		}

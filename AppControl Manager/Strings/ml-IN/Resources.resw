@@ -3158,10 +3158,6 @@
     <comment>Policy validation error</comment>
     <value>ഒപ്പിട്ട അടിസ്ഥാന നയം കണ്ടെത്തി, ഇതിന് അനുബന്ധ നയങ്ങൾ ഉണ്ടാകാൻ അനുമതിയുണ്ട്, എന്നാൽ അതിൽ അനുബന്ധ നയ ഒപ്പിട്ടവരെ കണ്ടെത്തിയില്ല.</value>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>ഐഡിയില്ലാത്ത ഒരു അനുവദിക്കൽ നിയമമുണ്ട്!</value>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>ഒരേ ഐഡിയുള്ള ഒന്നിൽ കൂടുതൽ അനുവദിക്കൽ നിയമങ്ങളുണ്ട്</value>
@@ -3170,33 +3166,17 @@
     <comment>Policy validation error</comment>
     <value>ഒരേ ഐഡിയുള്ള ഒന്നിൽ കൂടുതൽ നിഷേധിക്കൽ നിയമങ്ങളുണ്ട്</value>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>ഐഡിയില്ലാത്ത ഒരു FileAttrib ഉണ്ട്!</value>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>ഒരേ ഐഡിയുള്ള ഒന്നിൽ കൂടുതൽ FileAttribs ഉണ്ട്</value>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>ഐഡിയില്ലാത്ത ഒരു FileRule ഉണ്ട്!</value>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>ഒരേ ഐഡിയുള്ള ഒന്നിൽ കൂടുതൽ FileRules ഉണ്ട്</value>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>ഐഡിയില്ലാത്ത ഒരു സൈനർ ഉണ്ട്!</value>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
     <value>ഒരേ ഐഡിയുള്ള ഒന്നിൽ കൂടുതൽ സൈനർമാർ ഉണ്ട്</value>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <comment>Policy validation error</comment>
-    <value>ഐഡിയില്ലാത്ത ഒരു സൈനിംഗ് സിനാരിയോ ഉണ്ട്!</value>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
     <comment>Policy validation error</comment>
@@ -3523,9 +3503,6 @@
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>ഡീസീരിയലൈസേഷനായി ഫയൽ പാത അല്ലെങ്കിൽ XML ഡോക്യുമെന്റ് നൽകണം</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>നിഷേധിക്കൽ നിയമത്തിന് ഒരു ഐഡി ഉണ്ടായിരിക്കണം.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>{0} ഐഡിയുള്ള നിഷേധിക്കൽ നിയമത്തിന് ഒരു ഹാഷ് പ്രോപ്പർട്ടി ഉണ്ട്, എന്നാൽ മറ്റ് ഫയൽ പ്രോപ്പർട്ടികളും ഉണ്ട്, ഇത് അസാധുവാക്കുന്നു.</value>
   </data>
@@ -3538,17 +3515,11 @@
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>{0} ഐഡിയുള്ള FileAttrib നിയമത്തിന് ഒരു ഹാഷോ മറ്റ് ഫയൽ പ്രോപ്പർട്ടികളോ ഇല്ല, ഇത് അസാധുവാക്കുന്നു.</value>
   </data>
-  <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>TBS അല്ലെങ്കിൽ WellKnown തരം ഇല്ലാത്ത ഒരു Cert Root കണ്ടെത്തി, ഇത് അസാധുവാക്കുന്നു.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>{0} ഐഡിയുള്ള സൈനറിന് Cert Root ഘടകം ഇല്ല, ഇത് അസാധുവാക്കുന്നു.</value>
   </data>
   <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>സാധുവായ മൂല്യ ഘടകം ഇല്ലാത്ത ഒരു നയ ക്രമീകരണം കണ്ടെത്തി.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>ആവശ്യമായ ദാതാവ്, കീ അല്ലെങ്കിൽ മൂല്യനാമ ഘടകങ്ങൾ ഇല്ലാത്ത ഒരു നയ ക്രമീകരണം കണ്ടെത്തി.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ഐഡി '{0}': അസാധുവായ minimumVersion '{1}'.</value>
@@ -6355,5 +6326,14 @@
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>സ്റ്റോറേജ് വലുപ്പവും താപനിലയും</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>മാനേജ്ഡ് ഇൻസ്റ്റാളർ സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് കൺട്രോൾ പോളിസികൾ ഉപയോഗിക്കുന്ന ഉപകരണങ്ങളിൽ Intune വഴി വിന്യസിച്ചിരിക്കുന്ന ആപ്പുകൾക്ക് സ്വയമേവ അനുമതി നൽകുന്നതിനായി നിങ്ങളുടെ ടെനന്റിൽ ഒരു മാനേജ്ഡ് ഇൻസ്റ്റാളർ പോളിസി സൃഷ്ടിച്ച് അപ്‌ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് കൺട്രോൾ പോളിസികൾ ഉപയോഗിക്കുന്ന ഉപകരണങ്ങളിൽ Intune വഴി വിന്യസിച്ചിരിക്കുന്ന ആപ്പുകൾക്ക് സ്വയമേവ അനുമതി നൽകുന്നതിനായി നിങ്ങളുടെ ടെനന്റിൽ ഒരു മാനേജ്ഡ് ഇൻസ്റ്റാളർ പോളിസി സൃഷ്ടിച്ച് അപ്‌ലോഡ് ചെയ്യുക.</value>
   </data>
 </root>

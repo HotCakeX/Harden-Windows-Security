@@ -128,6 +128,12 @@ internal sealed class CiPolicyInfo(
 	internal string? IntunePolicyObjectID { get; set; }
 
 	/// <summary>
+	/// Indicates if this is a Managed Installer policy from Intune
+	/// </summary>
+	[JsonIgnore]
+	internal bool IsManagedInstaller { get; init; } = false;
+
+	/// <summary>
 	/// Serializes the given <see cref="CiPolicyInfo"/> instance to a JSON string using source-generated JSON.
 	/// </summary>
 	/// <param name="policy">The policy instance to serialize.</param>
@@ -184,6 +190,7 @@ internal sealed class CiPolicyInfo(
 			   IsOnDisk == other.IsOnDisk &&
 			   IsEnforced == other.IsEnforced &&
 			   IsAuthorized == other.IsAuthorized &&
+			   IsManagedInstaller == other.IsManagedInstaller &&
 			   CompareStringLists(PolicyOptions, other.PolicyOptions);
 	}
 
@@ -206,6 +213,7 @@ internal sealed class CiPolicyInfo(
 			hash = hash * 23 + IsOnDisk.GetHashCode();
 			hash = hash * 23 + IsEnforced.GetHashCode();
 			hash = hash * 23 + IsAuthorized.GetHashCode();
+			hash = hash * 23 + IsManagedInstaller.GetHashCode();
 			if (PolicyOptions != null)
 			{
 				foreach (string option in PolicyOptions)

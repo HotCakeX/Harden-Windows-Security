@@ -3158,10 +3158,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>साइन की गई मूल नीति पूरक नीतियों की अनुमति देती है, लेकिन इसमें कोई पूरक नीति साइनर्स नहीं मिले।</value>
     <comment>नीति मान्यता त्रुटि</comment>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>एक Allow नियम बिना ID के है!</value>
-    <comment>नीति मान्यता त्रुटि</comment>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <value>एक ही ID वाले अधिक से अधिक 1 Allow नियम हैं</value>
     <comment>नीति मान्यता त्रुटि</comment>
@@ -3170,32 +3166,16 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>एक ही ID वाले अधिक से अधिक 1 Deny नियम हैं</value>
     <comment>नीति मान्यता त्रुटि</comment>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>एक FileAttrib बिना ID के है!</value>
-    <comment>नीति मान्यता त्रुटि</comment>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <value>एक ही ID वाले अधिक से अधिक 1 FileAttribs हैं</value>
-    <comment>नीति मान्यता त्रुटि</comment>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <value>एक FileRule बिना ID के है!</value>
     <comment>नीति मान्यता त्रुटि</comment>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <value>एक ही ID वाले अधिक से अधिक 1 FileRules हैं</value>
     <comment>नीति मान्यता त्रुटि</comment>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <value>एक Signer बिना ID के है!</value>
-    <comment>नीति मान्यता त्रुटि</comment>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <value>एक ही ID वाले अधिक से अधिक 1 Signers हैं</value>
-    <comment>नीति मान्यता त्रुटि</comment>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <value>एक SigningScenario बिना ID के है!</value>
     <comment>नीति मान्यता त्रुटि</comment>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3523,9 +3503,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>डिसीरियलाइज़ेशन के लिए फ़ाइल पथ या XML दस्तावेज़ प्रदान करना आवश्यक है</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>Deny नियम में ID होना आवश्यक है।</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>ID {0} वाले Deny नियम में Hash गुण और अन्य फ़ाइल गुण दोनों हैं, जो इसे अमान्य बनाता है।</value>
   </data>
@@ -3538,17 +3515,11 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>ID {0} वाले FileAttrib नियम में न तो Hash है और न ही कोई अन्य फ़ाइल गुण, जो इसे अमान्य बनाता है।</value>
   </data>
-  <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>कोई Cert Root TBS या WellKnown प्रकार का नहीं है, जो इसे अमान्य बनाता है।</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>ID {0} वाले Signer में कोई Cert Root तत्व नहीं है, जो इसे अमान्य बनाता है।</value>
   </data>
   <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>एक Policy Setting मिला जिसमें मान्य Value तत्व नहीं है।</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>एक Policy Setting मिला जिसमें आवश्यक Provider, Key या ValueName तत्व नहीं हैं।</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ID '{0}': अवैध minimumVersion '{1}'.</value>
@@ -6355,5 +6326,14 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>भंडारण आकार और तापमान</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>प्रबंधित इंस्टॉलर बनाएँ</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अपने टेरेंट में एक प्रबंधित इंस्टॉलर नीति बनाएँ और अपलोड करें जो Intune के माध्यम से तैनात ऐप्स को ऐप नियंत्रण नीतियों का उपयोग करने वाले उपकरणों पर स्वचालित रूप से अनुमति देने की सुविधा देगी।</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अपने टेरेंट में एक प्रबंधित इंस्टॉलर नीति बनाएँ और अपलोड करें जो Intune के माध्यम से तैनात ऐप्स को ऐप नियंत्रण नीतियों का उपयोग करने वाले उपकरणों पर स्वचालित रूप से अनुमति देने की सुविधा देगी।</value>
   </data>
 </root>

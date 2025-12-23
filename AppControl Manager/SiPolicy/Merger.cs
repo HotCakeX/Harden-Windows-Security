@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using AppControlManager.SiPolicyIntel;
@@ -75,7 +76,7 @@ internal static class Merger
 		allPolicies.Add(mainXML);
 
 		// Collections used to store the data and pass between methods
-		IEnumerable<EKU> ekusToUse = [];
+		List<EKU> ekusToUse = [];
 		List<object> fileRulesNode = [];
 		List<Signer> signers = [];
 		IEnumerable<CiSigner> ciSigners = [];
@@ -83,14 +84,14 @@ internal static class Merger
 		IEnumerable<DeniedSigner> userModeDeniedSigners = [];
 		IEnumerable<AllowedSigner> kernelModeAllowedSigners = [];
 		IEnumerable<DeniedSigner> kernelModeDeniedSigners = [];
-		IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol = [];
-		IEnumerable<UpdatePolicySigner> updatePolicySignersCol = [];
+		List<SupplementalPolicySigner> supplementalPolicySignersCol = [];
+		List<UpdatePolicySigner> updatePolicySignersCol = [];
 		HashSet<FileRuleRule> fileRules = []; // Not used by the policy generator method in here
 		HashSet<DenyRule> denyRules = []; // Not used by the policy generator method in here
 		HashSet<AllowRule> allowRules = []; // Not used by the policy generator method in here
 		SignerCollection? signerCollection = null; // Not used by the policy generator method in here
-		IEnumerable<FileRuleRef> kernelModeFileRulesRefs = [];
-		IEnumerable<FileRuleRef> userModeFileRulesRefs = [];
+		List<FileRuleRef> kernelModeFileRulesRefs = [];
+		List<FileRuleRef> userModeFileRulesRefs = [];
 
 
 		// Deserialize, de-duplicate, merge
@@ -158,7 +159,7 @@ internal static class Merger
 	/// <param name="userModeFileRulesRefs">Output data</param>
 	internal static void PolicyDeserializer(
 		List<SiPolicy> allPolicies,
-		ref IEnumerable<EKU> ekusToUse,
+		ref List<EKU> ekusToUse,
 		ref List<object> fileRulesNode,
 		ref List<Signer> signers,
 		ref IEnumerable<CiSigner> ciSigners,
@@ -166,14 +167,14 @@ internal static class Merger
 		ref IEnumerable<DeniedSigner> userModeDeniedSigners,
 		ref IEnumerable<AllowedSigner> kernelModeAllowedSigners,
 		ref IEnumerable<DeniedSigner> kernelModeDeniedSigners,
-		ref IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol,
-		ref IEnumerable<UpdatePolicySigner> updatePolicySignersCol,
+		ref List<SupplementalPolicySigner> supplementalPolicySignersCol,
+		ref List<UpdatePolicySigner> updatePolicySignersCol,
 		ref HashSet<FileRuleRule> fileRules,
 		ref HashSet<DenyRule> denyRules,
 		ref HashSet<AllowRule> allowRules,
 		ref SignerCollection? signerCollection,
-		ref IEnumerable<FileRuleRef> kernelModeFileRulesRefs,
-		ref IEnumerable<FileRuleRef> userModeFileRulesRefs
+		ref List<FileRuleRef> kernelModeFileRulesRefs,
+		ref List<FileRuleRef> userModeFileRulesRefs
 		)
 	{
 		// Data aggregation
@@ -195,115 +196,250 @@ internal static class Merger
 		fileRules = taskFileRules.Result;
 		signerCollection = taskSignerRules.Result;
 
-		HashSet<AllowRule> _allowRules = taskAllowRules.Result;
-		HashSet<DenyRule> _denyRules = taskDenyRules.Result;
-		HashSet<FileRuleRule> _fileRules = taskFileRules.Result;
-		SignerCollection? _signerCollection = taskSignerRules.Result;
+		// Initialize temporary lists for output collections
+		// Their ref types are IEnumerable because of HashSets
+		List<CiSigner> tempCiSigners = [];
+		List<AllowedSigner> tempUserModeAllowed = [];
+		List<DeniedSigner> tempUserModeDenied = [];
+		List<AllowedSigner> tempKernelModeAllowed = [];
+		List<DeniedSigner> tempKernelModeDenied = [];
 
-		// ---------- Using the retrieved data to populate the rest of the collections. ----------
-		// ---------- Ones that will be used to generate the policy. ----------
 
-		// Get all of the EKUs from rule types that generate them
-		Task<IEnumerable<EKU>> taskEkusToUse = Task.Run(() => _signerCollection.WHQLFilePublishers.SelectMany(x => x.Ekus).Concat(_signerCollection.WHQLPublishers.SelectMany(x => x.Ekus)));
-
-		// Get all FileRules that go to <FileRules>
-		Task<IEnumerable<object>> taskFileRulesNode = Task.Run(() =>
+		// Process AllowRules
+		//  - Add AllowElement to FileRulesNode
+		//  - Add FileRuleRefElement to User/Kernel lists based on Scenario
+		foreach (AllowRule item in allowRules)
 		{
-			return _allowRules.Select(x => x.AllowElement).Cast<object>().
-				Concat(_denyRules.Select(x => x.DenyElement)).
-				Concat(_fileRules.Select(x => x.FileRuleElement)).
-				Concat(_signerCollection.FilePublisherSigners.SelectMany(x => x.FileAttribElements)).
-				Concat(_signerCollection.WHQLFilePublishers.SelectMany(x => x.FileAttribElements));
-		});
+			fileRulesNode.Add(item.AllowElement);
 
+			if (item.SigningScenario is SSType.UserMode)
+			{
+				userModeFileRulesRefs.Add(item.FileRuleRefElement);
+			}
+			else
+			{
+				kernelModeFileRulesRefs.Add(item.FileRuleRefElement);
+			}
+		}
 
-		// Get all FileRuleRefs - User Mode - that go to <FileRulesRef> in ProductSigners
-		userModeFileRulesRefs = _allowRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.FileRuleRefElement).
-			Concat(_denyRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.FileRuleRefElement)).
-			Concat(_fileRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.FileRuleRefElement));
-
-		// Get all FileRuleRefs - Kernel Mode - that go to <FileRulesRef> in ProductSigners
-		kernelModeFileRulesRefs = _allowRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement).
-			Concat(_denyRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement)).
-			Concat(_fileRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement));
-
-
-		// Get all Signers
-		Task<IEnumerable<Signer>> taskSigners = Task.Run(() =>
+		// Process DenyRules
+		//  - Add DenyElement to FileRulesNode
+		//  - Add FileRuleRefElement to User/Kernel lists based on Scenario
+		foreach (DenyRule item in denyRules)
 		{
-			return _signerCollection.FilePublisherSigners.Select(x => x.SignerElement).
-				Concat(_signerCollection.WHQLFilePublishers.Select(x => x.SignerElement)).
-				Concat(_signerCollection.WHQLPublishers.Select(x => x.SignerElement)).
-				Concat(_signerCollection.SignerRules.Select(x => x.SignerElement)).
-				Concat(_signerCollection.SupplementalPolicySigners.Select(x => x.SignerElement)).
-				Concat(_signerCollection.UpdatePolicySigners.Select(x => x.SignerElement));
-		});
+			fileRulesNode.Add(item.DenyElement);
 
+			if (item.SigningScenario is SSType.UserMode)
+			{
+				userModeFileRulesRefs.Add(item.FileRuleRefElement);
+			}
+			else
+			{
+				kernelModeFileRulesRefs.Add(item.FileRuleRefElement);
+			}
+		}
 
-		// Get all CiSigners
-		Task<IEnumerable<CiSigner>> taskCiSigners = Task.Run(() =>
+		// Process FileRuleRules (Base FileRules)
+		//  - Add FileRuleElement to FileRulesNode
+		//  - Add FileRuleRefElement to User/Kernel lists based on Scenario
+		foreach (FileRuleRule item in fileRules)
 		{
-			return _signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!).
-			Concat(_signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!).
-			Concat(_signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!))).
-			Concat(_signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!));
-		});
+			fileRulesNode.Add(item.FileRuleElement);
 
-		// Get all of the AllowedSigners - User Mode
-		Task<IEnumerable<AllowedSigner>> taskUserModeAllowedSigners = Task.Run(() =>
+			if (item.SigningScenario is SSType.UserMode)
+			{
+				userModeFileRulesRefs.Add(item.FileRuleRefElement);
+			}
+			else
+			{
+				kernelModeFileRulesRefs.Add(item.FileRuleRefElement);
+			}
+		}
+
+		// Process FilePublisherSigners
+		//  - Add SignerElement
+		//  - Add FileAttribElements to FileRulesNode
+		//  - Process Auth (Allow/Deny) and CiSigners for User/Kernel modes
+		foreach (FilePublisherSignerRule item in signerCollection.FilePublisherSigners)
 		{
-			return _signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!).
-			Concat(_signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
-			Concat(_signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
-			Concat(_signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!));
-		});
+			signers.Add(item.SignerElement);
 
+			// Add associated file attributes
+			fileRulesNode.AddRange(item.FileAttribElements);
 
-		// Get all of the DeniedSigners - User Mode
-		Task<IEnumerable<DeniedSigner>> taskUserModeDeniedSigners = Task.Run(() =>
+			// Scenario-specific logic
+			if (item.SigningScenario is SSType.UserMode)
+			{
+				if (item.CiSignerElement is not null)
+				{
+					tempCiSigners.Add(item.CiSignerElement);
+				}
+
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempUserModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempUserModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+			else // KernelMode
+			{
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempKernelModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+		}
+
+		// Process WHQLFilePublishers
+		//  - Add SignerElement
+		//  - Add EKUs
+		//  - Add FileAttribElements to FileRulesNode
+		//  - Process Auth (Allow/Deny) and CiSigners for User/Kernel modes
+		foreach (WHQLFilePublisher item in signerCollection.WHQLFilePublishers)
 		{
-			return _signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!).
-			Concat(_signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
-			Concat(_signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
-			Concat(_signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!));
-		});
+			signers.Add(item.SignerElement);
 
+			// Add associated EKUs
+			ekusToUse.AddRange(item.Ekus);
 
-		// Get all of the AllowedSigners - Kernel Mode
-		Task<IEnumerable<AllowedSigner>> taskKernelModeAllowedSigners = Task.Run(() =>
+			// Add associated file attributes
+			fileRulesNode.AddRange(item.FileAttribElements);
+
+			// Scenario-specific logic
+			if (item.SigningScenario is SSType.UserMode)
+			{
+				if (item.CiSignerElement is not null)
+				{
+					tempCiSigners.Add(item.CiSignerElement);
+				}
+
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempUserModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempUserModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+			else // KernelMode
+			{
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempKernelModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+		}
+
+		// Process WHQLPublishers
+		//  - Add SignerElement
+		//  - Add EKUs
+		//  - Process Auth (Allow/Deny) and CiSigners for User/Kernel modes
+		foreach (WHQLPublisher item in signerCollection.WHQLPublishers)
 		{
-			return _signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!).
-			Concat(_signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
-			Concat(_signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
-			Concat(_signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!));
-		});
+			signers.Add(item.SignerElement);
 
+			// Add associated EKUs
+			ekusToUse.AddRange(item.Ekus);
 
-		// Get all of the DeniedSigners - Kernel Mode
-		Task<IEnumerable<DeniedSigner>> taskKernelModeDeniedSigners = Task.Run(() =>
+			// Scenario-specific logic
+			if (item.SigningScenario is SSType.UserMode)
+			{
+				if (item.CiSignerElement is not null)
+				{
+					tempCiSigners.Add(item.CiSignerElement);
+				}
+
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempUserModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempUserModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+			else // KernelMode
+			{
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempKernelModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+		}
+
+		// Process Generic SignerRules
+		//  - Add SignerElement
+		//  - Process Auth (Allow/Deny) and CiSigners for User/Kernel modes
+		foreach (SignerRule item in signerCollection.SignerRules)
 		{
-			return _signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!).
-			Concat(_signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
-			Concat(_signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
-			Concat(_signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!));
-		});
+			signers.Add(item.SignerElement);
 
-		supplementalPolicySignersCol = _signerCollection.SupplementalPolicySigners.Select(x => x.SupplementalPolicySigner);
+			// Scenario-specific logic
+			if (item.SigningScenario is SSType.UserMode)
+			{
+				if (item.CiSignerElement is not null)
+				{
+					tempCiSigners.Add(item.CiSignerElement);
+				}
 
-		updatePolicySignersCol = _signerCollection.UpdatePolicySigners.Select(x => x.UpdatePolicySigner);
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempUserModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempUserModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+			else // KernelMode
+			{
+				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
+				{
+					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+				}
+				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
+				{
+					tempKernelModeDenied.Add(item.DeniedSignerElement);
+				}
+			}
+		}
 
-		// Wait for all tasks to complete
-		Task.WaitAll(taskEkusToUse, taskFileRulesNode, taskSigners, taskCiSigners, taskUserModeAllowedSigners, taskUserModeDeniedSigners, taskKernelModeAllowedSigners, taskKernelModeDeniedSigners);
+		// Process SupplementalPolicySigners
+		foreach (SupplementalPolicySignerRule item in signerCollection.SupplementalPolicySigners)
+		{
+			signers.Add(item.SignerElement);
+			supplementalPolicySignersCol.Add(item.SupplementalPolicySigner);
+		}
 
-		ekusToUse = taskEkusToUse.Result;
-		fileRulesNode = taskFileRulesNode.Result.ToList();
-		signers = [.. taskSigners.Result];
-		ciSigners = taskCiSigners.Result;
-		userModeAllowedSigners = taskUserModeAllowedSigners.Result;
-		userModeDeniedSigners = taskUserModeDeniedSigners.Result;
-		kernelModeAllowedSigners = taskKernelModeAllowedSigners.Result;
-		kernelModeDeniedSigners = taskKernelModeDeniedSigners.Result;
+		// Process UpdatePolicySigners
+		foreach (UpdatePolicySignerRule item in signerCollection.UpdatePolicySigners)
+		{
+			signers.Add(item.SignerElement);
+			updatePolicySignersCol.Add(item.UpdatePolicySigner);
+		}
 
+		// Assign aggregated results to ref parameters
+		ciSigners = tempCiSigners;
+		userModeAllowedSigners = tempUserModeAllowed;
+		userModeDeniedSigners = tempUserModeDenied;
+		kernelModeAllowedSigners = tempKernelModeAllowed;
+		kernelModeDeniedSigners = tempKernelModeDenied;
 
 		FileAttribDeDuplication.EnsureUniqueFileAttributes(
 			ref fileRulesNode,
@@ -314,7 +450,6 @@ internal static class Merger
 			kernelModeDeniedSigners
 			);
 	}
-
 
 	/// <summary>
 	/// Creates an App Control policy from the deserialized data
@@ -336,19 +471,19 @@ internal static class Merger
 	internal static void PolicyGenerator(
 		string? mainXmlFilePath,
 		SiPolicy? mainXML,
-		IEnumerable<EKU> ekusToUse,
-		IEnumerable<object> fileRulesNode,
+		List<EKU> ekusToUse,
+		List<object> fileRulesNode,
 		List<Signer> signers,
 		IEnumerable<CiSigner> ciSigners,
 		IEnumerable<AllowedSigner> userModeAllowedSigners,
 		IEnumerable<DeniedSigner> userModeDeniedSigners,
 		IEnumerable<AllowedSigner> kernelModeAllowedSigners,
 		IEnumerable<DeniedSigner> kernelModeDeniedSigners,
-		IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol,
-		IEnumerable<UpdatePolicySigner> updatePolicySignersCol,
-		IEnumerable<FileRuleRef> kernelModeFileRulesRefs,
-		IEnumerable<FileRuleRef> userModeFileRulesRefs,
-		IEnumerable<Setting> policySettings
+		List<SupplementalPolicySigner> supplementalPolicySignersCol,
+		List<UpdatePolicySigner> updatePolicySignersCol,
+		List<FileRuleRef> kernelModeFileRulesRefs,
+		List<FileRuleRef> userModeFileRulesRefs,
+		List<Setting>? policySettings
 		)
 	{
 
@@ -357,43 +492,37 @@ internal static class Merger
 
 		// Get any possible SigningScenario from XML1 (main)
 		// Will use some of its rare details when building the new policy
-		SigningScenario? mainXMLUserModeSigningScenario = mainXML.SigningScenarios
+		SigningScenario? mainXMLUserModeSigningScenario = mainXML.SigningScenarios?
 		  .FirstOrDefault(s => s.Value == 12);
 
-		SigningScenario? mainXMLKernelModeSigningScenario = mainXML.SigningScenarios
+		SigningScenario? mainXMLKernelModeSigningScenario = mainXML.SigningScenarios?
 			.FirstOrDefault(s => s.Value == 131);
 
 		// Construct the User Mode Signing Scenario
-		SigningScenario UMCISigningScenario = new()
-		{
-			Value = 12,
-			ID = "ID_SIGNINGSCENARIO_WINDOWS",
-			FriendlyName = "User Mode Code Integrity",
-
-			ProductSigners = new ProductSigners
+		SigningScenario UMCISigningScenario = new(
+			value: 12,
+			id: "ID_SIGNINGSCENARIO_WINDOWS",
+			productSigners: new ProductSigners
 			{
 				AllowedSigners = new AllowedSigners
-				{
-					AllowedSigner = [.. userModeAllowedSigners]
-				},
+				(
+					allowedSigner: [.. userModeAllowedSigners]
+				),
 				DeniedSigners = new DeniedSigners
-				{
-					DeniedSigner = [.. userModeDeniedSigners]
-				},
+				(
+					deniedSigner: [.. userModeDeniedSigners]
+				),
 				FileRulesRef = new FileRulesRef
-				{
-					FileRuleRef = [.. userModeFileRulesRefs]
-				}
+				(
+					fileRuleRef: userModeFileRulesRefs
+				)
 			}
-		};
-
-		// Add miscellaneous settings to the User Mode Signing Scenario from the Main XML
-		if (mainXMLUserModeSigningScenario is { MinimumHashAlgorithmSpecified: true })
+			)
 		{
-			UMCISigningScenario.MinimumHashAlgorithmSpecified = true;
-			UMCISigningScenario.MinimumHashAlgorithm = mainXMLUserModeSigningScenario.MinimumHashAlgorithm;
-		}
-
+			FriendlyName = "User Mode Code Integrity",
+			// Add miscellaneous settings to the User Mode Signing Scenario from the Main XML
+			MinimumHashAlgorithm = mainXMLUserModeSigningScenario?.MinimumHashAlgorithm
+		};
 
 		if (mainXMLUserModeSigningScenario is { InheritedScenarios: not null })
 			UMCISigningScenario.InheritedScenarios = mainXMLUserModeSigningScenario.InheritedScenarios;
@@ -409,36 +538,30 @@ internal static class Merger
 
 
 		// Construct the Kernel Mode Signing Scenario
-		SigningScenario KMCISigningScenario = new()
-		{
-			Value = 131,
-			ID = "ID_SIGNINGSCENARIO_DRIVERS_1",
-			FriendlyName = "Kernel Mode Code Integrity",
-
-			ProductSigners = new ProductSigners
+		SigningScenario KMCISigningScenario = new(
+			value: 131,
+			id: "ID_SIGNINGSCENARIO_DRIVERS_1",
+			productSigners: new ProductSigners
 			{
 				AllowedSigners = new AllowedSigners
-				{
-					AllowedSigner = [.. kernelModeAllowedSigners]
-				},
+				(
+					allowedSigner: [.. kernelModeAllowedSigners]
+				),
 				DeniedSigners = new DeniedSigners
-				{
-					DeniedSigner = [.. kernelModeDeniedSigners]
-				},
+				(
+					deniedSigner: [.. kernelModeDeniedSigners]
+				),
 				FileRulesRef = new FileRulesRef
-				{
-					FileRuleRef = [.. kernelModeFileRulesRefs]
-				}
+				(
+					fileRuleRef: kernelModeFileRulesRefs
+				)
 			}
-		};
-
-
-		// Add miscellaneous settings to the Kernel Mode Signing Scenario from the Main XML
-		if (mainXMLKernelModeSigningScenario is { MinimumHashAlgorithmSpecified: true })
+			)
 		{
-			KMCISigningScenario.MinimumHashAlgorithmSpecified = true;
-			KMCISigningScenario.MinimumHashAlgorithm = mainXMLKernelModeSigningScenario.MinimumHashAlgorithm;
-		}
+			FriendlyName = "Kernel Mode Code Integrity",
+			// Add miscellaneous settings to the Kernel Mode Signing Scenario from the Main XML
+			MinimumHashAlgorithm = mainXMLKernelModeSigningScenario?.MinimumHashAlgorithm
+		};
 
 		if (mainXMLKernelModeSigningScenario is { InheritedScenarios: not null })
 			KMCISigningScenario.InheritedScenarios = mainXMLKernelModeSigningScenario.InheritedScenarios;
@@ -454,29 +577,28 @@ internal static class Merger
 
 
 		// Create the final policy data, it will replace the content in the main XML file
-		SiPolicy output = new()
+		SiPolicy output = new(
+			versionEx: mainXML.VersionEx, // Main policy takes priority
+			platformID: mainXML.PlatformID, // Main policy takes priority
+			policyID: mainXML.PolicyID, // Main policy takes priority
+			basePolicyID: mainXML.BasePolicyID, // Main policy takes priority
+			rules: mainXML.Rules, // Main policy takes priority
+			policyType: mainXML.PolicyType // Main policy takes priority
+		)
 		{
-			VersionEx = mainXML.VersionEx, // Main policy takes priority
 			PolicyTypeID = mainXML.PolicyTypeID, // Main policy takes priority
-			PlatformID = mainXML.PlatformID, // Main policy takes priority
-			PolicyID = mainXML.PolicyID, // Main policy takes priority
-			BasePolicyID = mainXML.BasePolicyID, // Main policy takes priority
-			Rules = mainXML.Rules, // Main policy takes priority
-			EKUs = [.. ekusToUse], // Aggregated data
-			FileRules = [.. fileRulesNode], // Aggregated data
-			Signers = [.. signers], // Aggregated data
+			EKUs = ekusToUse, // Aggregated data
+			FileRules = fileRulesNode, // Aggregated data
+			Signers = signers, // Aggregated data
 			SigningScenarios = [UMCISigningScenario, KMCISigningScenario], // Aggregated data
-			UpdatePolicySigners = [.. updatePolicySignersCol], // Aggregated data
+			UpdatePolicySigners = updatePolicySignersCol, // Aggregated data
 			CiSigners = [.. ciSigners], // Aggregated data
 			HvciOptions = mainXML.HvciOptions, // Main policy takes priority
-			HvciOptionsSpecified = mainXML.HvciOptionsSpecified, // Main policy takes priority
-			Settings = [.. policySettings], // Depends
+			Settings = policySettings, // Depends
 			Macros = mainXML.Macros, // Main policy takes priority
-			SupplementalPolicySigners = [.. supplementalPolicySignersCol], // Aggregated data
+			SupplementalPolicySigners = supplementalPolicySignersCol, // Aggregated data
 			AppSettings = mainXML.AppSettings, // Main policy takes priority
-			FriendlyName = mainXML.FriendlyName, // Main policy takes priority
-			PolicyType = mainXML.PolicyType, // Main policy takes priority
-			PolicyTypeSpecified = mainXML.PolicyTypeSpecified // Main policy takes priority
+			FriendlyName = mainXML.FriendlyName // Main policy takes priority
 		};
 
 		// Save the changes to the main XML File
@@ -553,7 +675,7 @@ internal static class Merger
 		return !string.IsNullOrWhiteSpace(signerX.Name) &&
 			   !string.IsNullOrWhiteSpace(signerY.Name) &&
 			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value) &&
+			   signerX.CertRoot is not null && signerY.CertRoot is not null && signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span) &&
 			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
 	}
 
@@ -568,7 +690,7 @@ internal static class Merger
 		return !string.IsNullOrWhiteSpace(signerX.Name) &&
 			   !string.IsNullOrWhiteSpace(signerY.Name) &&
 			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value);
+			   signerX.CertRoot is not null && signerY.CertRoot is not null && signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span);
 	}
 
 	/// <summary>
@@ -581,9 +703,9 @@ internal static class Merger
 	{
 
 		// Extract EKU values and ignore IDs
-		HashSet<int> ekuValuesX = [.. ekusX.Where(e => e.Value is not null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
+		HashSet<int> ekuValuesX = [.. ekusX.Where(e => !e.Value.IsEmpty).Select(e => CustomMethods.GetByteArrayHashCode(e.Value.Span))];
 
-		HashSet<int> ekuValuesY = [.. ekusY.Where(e => e.Value is not null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
+		HashSet<int> ekuValuesY = [.. ekusY.Where(e => !e.Value.IsEmpty).Select(e => CustomMethods.GetByteArrayHashCode(e.Value.Span))];
 
 		// Compare sets of EKU values
 		return ekuValuesX.SetEquals(ekuValuesY);
@@ -621,7 +743,7 @@ internal static class Merger
 	SSType? signingScenarioX, SSType? signingScenarioY,
 	RuleTypeType? ruleTypeX, RuleTypeType? ruleTypeY, // Ony for FileRule type
 	string? packageFamilyNameX, string? packageFamilyNameY,
-	byte[]? hashX, byte[]? hashY,
+	ReadOnlyMemory<byte>? hashX, ReadOnlyMemory<byte>? hashY,
 	string? filePathX, string? filePathY,
 	string? fileNameX, string? fileNameY,
 	string? minimumFileVersionX, string? minimumFileVersionY,
@@ -657,7 +779,7 @@ internal static class Merger
 		}
 
 		// Rule 2: If both have non-null Hash values that are byte-for-byte equal, consider them equal.
-		if (hashX is not null && hashY is not null && BytesArrayComparer.AreByteArraysEqual(hashX, hashY))
+		if (hashX is not null && hashY is not null && hashX.Value.Span.SequenceEqual(hashY.Value.Span))
 		{
 			return true;
 		}
@@ -712,11 +834,11 @@ internal static class Merger
 
 	/// <summary>
 	/// Helper method to check if two strings are both whitespace or exactly equal
-	/// ✅ " " and " " → Equal
-	/// ✅ "text" and "text" → Equal
-	/// ❌ "text" and " text " → Not Equal
-	/// ❌ null and " " → Not Equal
-	/// ❌ null and null → Not Equal
+	/// ✅ " " and " " -> Equal
+	/// ✅ "text" and "text" -> Equal
+	/// ❌ "text" and " text " -> Not Equal
+	/// ❌ null and " " -> Not Equal
+	/// ❌ null and null -> Not Equal
 	/// </summary>
 	/// <param name="a"></param>
 	/// <param name="b"></param>
@@ -742,4 +864,3 @@ internal static class Merger
 
 	internal const long modulus = 0x7FFFFFFF; // A prime modulus to prevent overflow and ensure a non-negative int.
 }
-

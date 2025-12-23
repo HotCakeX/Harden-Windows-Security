@@ -43,7 +43,7 @@ internal static class BinaryOpsReverse
 		SiPolicy policy = ParseSiPolicy(reader);
 
 		// PolicyTypeID is not needed in the XML, clear it
-		policy.PolicyTypeID = string.Empty;
+		policy.PolicyTypeID = null;
 
 		// Serialize it it because we need to pass the SiPolicy obj to
 		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
@@ -80,7 +80,6 @@ internal static class BinaryOpsReverse
 	private static SiPolicy ParseSiPolicy(BinaryReader reader)
 	{
 		const ulong DefaultMaxVersionNumber = ulong.MaxValue;
-		SiPolicy policy = new();
 
 		// HEADER PARSING
 		_ = reader.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -88,15 +87,15 @@ internal static class BinaryOpsReverse
 		// magic/version = which blocks follow
 		uint version = reader.ReadUInt32();
 
-		policy.PolicyTypeID = policy.BasePolicyID = new Guid(reader.ReadBytes(16)).ToString();
-		policy.PlatformID = new Guid(reader.ReadBytes(16)).ToString("B");
+		string basePolicyID = new Guid(reader.ReadBytes(16)).ToString();
+		string platformID = new Guid(reader.ReadBytes(16)).ToString("B");
 		uint flags = reader.ReadUInt32();
 
 		// Parse Rules from flag bits
-		policy.Rules = Helper.Options
+		List<RuleType> rules = Helper.Options
 			.Where(kvp => (flags & kvp.Value) != 0)
-			.Select(kvp => new RuleType { Item = kvp.Key })
-			.ToArray();
+			.Select(kvp => new RuleType(item: kvp.Key))
+			.ToList();
 
 		// Header counts for later parsing
 		uint ekuCount = reader.ReadUInt32();
@@ -107,7 +106,7 @@ internal static class BinaryOpsReverse
 		// Policy version
 		ulong verLow = reader.ReadUInt32();
 		ulong verHigh = reader.ReadUInt32();
-		policy.VersionEx = NumberToStringVersionFixed((verHigh << 32) | verLow);
+		string versionEx = NumberToStringVersionFixed((verHigh << 32) | verLow);
 
 		// Offset to main data body
 		uint bodyOffset = reader.ReadUInt32();
@@ -115,6 +114,19 @@ internal static class BinaryOpsReverse
 		{
 			throw new InvalidOperationException(GlobalVars.GetStr("ErrorBodyOffsetInvalid"));
 		}
+
+		SiPolicy policy = new(
+			versionEx: versionEx,
+			platformID: platformID,
+			policyID: basePolicyID,
+			basePolicyID: basePolicyID,
+			rules: rules,
+			policyType: PolicyType.BasePolicy
+		)
+		{
+			PolicyTypeID = basePolicyID
+		};
+
 		_ = reader.BaseStream.Seek(bodyOffset, SeekOrigin.Begin);
 		_ = reader.ReadUInt32(); // skip body length
 
@@ -124,9 +136,9 @@ internal static class BinaryOpsReverse
 		{
 			byte[] value = ReadCountedAlignedBytes(reader);
 			string id = $"ID_EKU_E_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
-			ekuList.Add(new EKU { ID = id, FriendlyName = string.Empty, Value = value });
+			ekuList.Add(new EKU(id: id, friendlyName: null, value: value));
 		}
-		policy.EKUs = ekuList.ToArray();
+		policy.EKUs = ekuList;
 		string[] ekuIds = ekuList.Select(e => e.ID).ToArray();
 
 		// FILERULES SECTION
@@ -153,14 +165,14 @@ internal static class BinaryOpsReverse
 			fileRuleIds[i] = id;
 			object fr = type switch
 			{
-				0 => new Deny { ID = id, FileName = fn, MinimumFileVersion = minVer, Hash = hash },
-				1 => new Allow { ID = id, FileName = fn, MinimumFileVersion = minVer, Hash = hash },
-				2 => new FileAttrib { ID = id, FileName = fn, MinimumFileVersion = minVer, Hash = hash },
+				0 => new Deny(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
+				1 => new Allow(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
+				2 => new FileAttrib(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
 				_ => throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorUnknownFileRuleType"), type))
 			};
 			fileRules[i] = fr;
 		}
-		policy.FileRules = fileRules;
+		policy.FileRules = fileRules.ToList();
 
 		// SIGNERS SECTION
 		List<Signer> signerList = [];
@@ -173,29 +185,37 @@ internal static class BinaryOpsReverse
 			signerIds[idx] = id;
 			signerList.Add(s);
 		}
-		policy.Signers = signerList.ToArray();
+		policy.Signers = signerList;
 
 		// UPDATE POLICY SIGNERS
 		uint upCount = reader.ReadUInt32();
 		policy.UpdatePolicySigners = Enumerable.Range(0, (int)upCount)
-			.Select(_ => new UpdatePolicySigner { SignerId = signerIds[reader.ReadUInt32()] })
-			.ToArray();
+			.Select(_ => new UpdatePolicySigner(signerID: signerIds[reader.ReadUInt32()]))
+			.ToList();
 
 		// CI SIGNERS
 		uint ciCount = reader.ReadUInt32();
 		policy.CiSigners = Enumerable.Range(0, (int)ciCount)
-			.Select(_ => new CiSigner { SignerId = signerIds[reader.ReadUInt32()] })
-			.ToArray();
+			.Select(_ => new CiSigner(signerID: signerIds[reader.ReadUInt32()]))
+			.ToList();
 
 		// SIGNING SCENARIOS
+		// Pre-generate schema-compliant SigningScenario IDs and use them consistently,
+		// and map inherited scenario indices to these real IDs.
 		List<SigningScenario> scenList = [];
+		string[] scenarioIds = new string[scenarioCount];
 		for (int si = 0; si < scenarioCount; si++)
-			scenList.Add(ParseScenario(reader, signerIds, fileRuleIds, si));
-		policy.SigningScenarios = scenList.ToArray();
+		{
+			scenarioIds[si] = $"ID_SIGNINGSCENARIO_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
+		}
+		for (int si = 0; si < scenarioCount; si++)
+		{
+			scenList.Add(ParseScenario(reader, signerIds, fileRuleIds, si, scenarioIds));
+		}
+		policy.SigningScenarios = scenList;
 
 		// HVCI OPTIONS
 		policy.HvciOptions = reader.ReadUInt32();
-		policy.HvciOptionsSpecified = true;
 
 		// SETTINGS SECTION
 		uint setCount = reader.ReadUInt32();
@@ -214,9 +234,13 @@ internal static class BinaryOpsReverse
 				3 => ReadStringValue(reader),
 				_ => throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorUnknownSettingType"), t))
 			};
-			sets.Add(new Setting { Provider = prov, Key = key, ValueName = valName, Value = new SettingValueType { Item = data } });
+
+			if (prov is null || key is null || valName is null || data is null)
+				continue;
+
+			sets.Add(new Setting(provider: prov, key: key, valueName: valName, value: new SettingValueType(item: data)));
 		}
-		policy.Settings = sets.ToArray();
+		policy.Settings = sets;
 
 		// Version‐specific blocks:
 		if (version >= 3)
@@ -328,11 +352,10 @@ internal static class BinaryOpsReverse
 			policy.PolicyType = (policy.PolicyID == policy.BasePolicyID)
 				? PolicyType.BasePolicy
 				: PolicyType.SupplementalPolicy;
-			policy.PolicyTypeSpecified = true;
 			uint supCount = reader.ReadUInt32();
 			policy.SupplementalPolicySigners = Enumerable.Range(0, (int)supCount)
-				.Select(_ => new SupplementalPolicySigner { SignerId = signerIds[reader.ReadUInt32()] })
-				.ToArray();
+				.Select(_ => new SupplementalPolicySigner(signerID: signerIds[reader.ReadUInt32()]))
+				.ToList();
 		}
 
 		if (version >= 7)
@@ -375,40 +398,56 @@ internal static class BinaryOpsReverse
 	/// </summary>
 	private static Signer ParseSigner(BinaryReader reader, string[] ekuIds, string[] fileRuleIds)
 	{
-		Signer signer = new();
-
 		uint ind = reader.ReadUInt32();
-		signer.CertRoot = ind == 0
-			? new CertRoot { Type = CertEnumType.TBS, Value = ReadCountedAlignedBytes(reader) }
-			: new CertRoot { Type = CertEnumType.Wellknown, Value = [(byte)reader.ReadUInt32()] };
+
+		byte[] certValue = ind == 0
+			? ReadCountedAlignedBytes(reader)
+			: [(byte)reader.ReadUInt32()];
+
+		CertRoot certRoot = ind == 0
+			? new CertRoot(type: CertEnumType.TBS, value: certValue)
+			: new CertRoot(type: CertEnumType.Wellknown, value: certValue);
+
+		// ID is populated later in the calling method ParseSiPolicy
+		// Name is empty because CIP binaries don't store names.
+		Signer signer = new(id: string.Empty, name: string.Empty, certRoot: certRoot);
 
 		uint ekuRefCount = reader.ReadUInt32();
-		signer.CertEKU = new CertEKU[ekuRefCount];
+		signer.CertEKU = new((int)ekuRefCount);
+
 		for (uint j = 0; j < ekuRefCount; j++)
 		{
 			uint ekuIndex = reader.ReadUInt32();
 			if (ekuIndex >= ekuIds.Length)
 				throw new InvalidOperationException($"Invalid CertEKU index {ekuIndex}.");
-			signer.CertEKU[j] = new CertEKU { ID = ekuIds[ekuIndex] };
+
+			signer.CertEKU.Add(new CertEKU(id: ekuIds[ekuIndex]));
 		}
 
-		signer.CertIssuer = new CertIssuer { Value = ReadStringValue(reader) };
-		signer.CertPublisher = new CertPublisher { Value = ReadStringValue(reader) };
-		signer.CertOemID = new CertOemID { Value = ReadStringValue(reader) };
+		string? possibleCertIssuer = ReadStringValue(reader);
+		if (possibleCertIssuer is not null)
+			signer.CertIssuer = new CertIssuer(value: possibleCertIssuer);
+
+		string? possibleCertPublisher = ReadStringValue(reader);
+		if (possibleCertPublisher is not null)
+			signer.CertPublisher = new CertPublisher(value: possibleCertPublisher);
+
+		string? possibleCertOemID = ReadStringValue(reader);
+		if (possibleCertOemID is not null)
+			signer.CertOemID = new CertOemID(value: possibleCertOemID);
 
 		uint faCount = reader.ReadUInt32();
-		signer.FileAttribRef = new FileAttribRef[faCount];
+		signer.FileAttribRef = new((int)faCount);
 		for (uint j = 0; j < faCount; j++)
 		{
 			uint ridx = reader.ReadUInt32();
 			if (ridx >= fileRuleIds.Length)
 				throw new InvalidOperationException($"Invalid FileAttribRef index {ridx}.");
-			signer.FileAttribRef[j] = new FileAttribRef { RuleID = fileRuleIds[ridx] };
+			signer.FileAttribRef.Add(new FileAttribRef(ruleID: fileRuleIds[ridx]));
 		}
 
 		signer.Name = string.Empty;
 		signer.SignTimeAfter = DateTime.MinValue;
-		signer.SignTimeAfterSpecified = false;
 		return signer;
 	}
 
@@ -416,55 +455,76 @@ internal static class BinaryOpsReverse
 	{
 		long ft = reader.ReadInt64();
 		signer.SignTimeAfter = ft != 0 ? DateTime.FromFileTime(ft) : DateTime.MinValue;
-		signer.SignTimeAfterSpecified = ft != 0;
 	}
 
+	/// <summary>
+	/// Parses a SigningScenario from binary.
+	/// </summary>
 	private static SigningScenario ParseScenario(
 		BinaryReader reader,
 		string[] signerIds,
 		string[] fileRuleIds,
-		int scenarioIndex)
+		int scenarioIndex,
+		string[] scenarioIds)
 	{
-		SigningScenario scen = new()
-		{
-			ID = $"ID_SIGNINGSCENARIO_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
-			Value = (byte)reader.ReadUInt32()
-		};
+		// Use a pre-generated valid ID for this scenario
+		string id = scenarioIds[scenarioIndex];
 
+		// Scenario Value
+		byte value = (byte)reader.ReadUInt32();
+
+		// Inherited Scenarios: map indices to real scenario IDs
 		uint inhCount = reader.ReadUInt32();
-		List<string> inhList = [];
+		List<string> inheritedIds = [];
 		for (uint i = 0; i < inhCount; i++)
 		{
 			uint idx = reader.ReadUInt32();
-			string inheritedId = $"ID_SIGNINGSCENARIO_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}-{idx}";
-			inhList.Add(inheritedId);
-		}
-		scen.InheritedScenarios = inhCount > 0 ? string.Join(",", inhList) : string.Empty;
+			if (idx >= scenarioIds.Length)
+			{
+				throw new InvalidOperationException($"Encountered an invalid inherited scenario index: {idx}.");
+			}
 
+			string inheritedId = scenarioIds[idx];
+			inheritedIds.Add(inheritedId);
+		}
+
+		// If none, keep it null so serializer will omit the attribute
+		string? inheritedScenarios = inheritedIds.Count > 0
+			? string.Join(",", inheritedIds)
+			: null;
+
+		// Minimum hash algorithm
 		uint minHash = reader.ReadUInt32();
-		scen.MinimumHashAlgorithm = (minHash is not 32780U and <= ushort.MaxValue)
+		ushort minimumHashAlgorithm = (minHash is not 32780U and <= ushort.MaxValue)
 			? (ushort)minHash
 			: (ushort)0;
-		scen.MinimumHashAlgorithmSpecified = minHash != 32780U;
 
-		scen.ProductSigners = new ProductSigners
+		// ProductSigners
+		ProductSigners productSigners = new()
 		{
 			AllowedSigners = ParseAllowedSigners(reader, signerIds, fileRuleIds),
 			DeniedSigners = ParseDeniedSigners(reader, signerIds, fileRuleIds),
 			FileRulesRef = ParseFileRulesRef(reader, fileRuleIds)
 		};
-		scen.TestSigners = new TestSigners
+
+		SigningScenario scen = new(id, value, productSigners)
 		{
-			AllowedSigners = ParseAllowedSigners(reader, signerIds, fileRuleIds),
-			DeniedSigners = ParseDeniedSigners(reader, signerIds, fileRuleIds),
-			FileRulesRef = ParseFileRulesRef(reader, fileRuleIds)
+			InheritedScenarios = inheritedScenarios,
+			MinimumHashAlgorithm = minimumHashAlgorithm,
+			TestSigners = new TestSigners
+			{
+				AllowedSigners = ParseAllowedSigners(reader, signerIds, fileRuleIds),
+				DeniedSigners = ParseDeniedSigners(reader, signerIds, fileRuleIds),
+				FileRulesRef = ParseFileRulesRef(reader, fileRuleIds)
+			},
+			TestSigningSigners = new TestSigningSigners
+			{
+				AllowedSigners = ParseAllowedSigners(reader, signerIds, fileRuleIds),
+				DeniedSigners = ParseDeniedSigners(reader, signerIds, fileRuleIds),
+				FileRulesRef = ParseFileRulesRef(reader, fileRuleIds)
+			}
 		};
-		scen.TestSigningSigners = new TestSigningSigners
-		{
-			AllowedSigners = ParseAllowedSigners(reader, signerIds, fileRuleIds),
-			DeniedSigners = ParseDeniedSigners(reader, signerIds, fileRuleIds),
-			FileRulesRef = ParseFileRulesRef(reader, fileRuleIds)
-		};
+
 		return scen;
 	}
 
@@ -486,15 +546,15 @@ internal static class BinaryOpsReverse
 			for (uint j = 0; j < exc; j++)
 			{
 				uint ridx = reader.ReadUInt32();
-				exArr[j] = new ExceptDenyRule { DenyRuleID = fileRuleIds[ridx] };
+				exArr[j] = new ExceptDenyRule(denyRuleID: fileRuleIds[ridx]);
 			}
-			arr[i] = new AllowedSigner
-			{
-				SignerId = signerIds[sid],
-				ExceptDenyRule = exArr
-			};
+			arr[i] = new AllowedSigner(
+
+				signerId: signerIds[sid],
+				exceptDenyRule: exArr.ToList()
+			);
 		}
-		return new AllowedSigners { AllowedSigner = arr };
+		return new AllowedSigners(allowedSigner: arr.ToList());
 	}
 
 	/// <summary>
@@ -515,15 +575,15 @@ internal static class BinaryOpsReverse
 			for (uint j = 0; j < exc; j++)
 			{
 				uint ridx = reader.ReadUInt32();
-				exArr[j] = new ExceptAllowRule { AllowRuleID = fileRuleIds[ridx] };
+				exArr[j] = new ExceptAllowRule(allowRuleID: fileRuleIds[ridx]);
 			}
 			arr[i] = new DeniedSigner
-			{
-				SignerId = signerIds[sid],
-				ExceptAllowRule = exArr
-			};
+			(
+				signerId: signerIds[sid],
+				exceptAllowRule: exArr.ToList()
+			);
 		}
-		return new DeniedSigners { DeniedSigner = arr };
+		return new DeniedSigners(deniedSigner: arr.ToList());
 	}
 
 	/// <summary>
@@ -538,9 +598,9 @@ internal static class BinaryOpsReverse
 		for (uint i = 0; i < c; i++)
 		{
 			uint ridx = reader.ReadUInt32();
-			arr[i] = new FileRuleRef { RuleID = fileRuleIds[ridx] };
+			arr[i] = new FileRuleRef(ruleID: fileRuleIds[ridx]);
 		}
-		return new FileRulesRef { FileRuleRef = arr };
+		return new FileRulesRef(fileRuleRef: arr.ToList());
 	}
 
 	/// <summary>
@@ -570,11 +630,16 @@ internal static class BinaryOpsReverse
 					_ => throw new InvalidOperationException($"Unknown app setting tag {tag}")
 				};
 				_ = reader.ReadUInt32(); // audit flag, currently ignored
-				settings.Add(new AppSetting { Name = name, Value = values });
+
+				// If the list/array only has null values then the entire list must be repalced with null.
+				List<string>? filtered = values.Where(s => s is not null).Cast<string>().ToList();
+				if (filtered.Count == 0) filtered = null;
+				settings.Add(new AppSetting(name: name, value: filtered));
 			}
-			arr[i] = new AppRoot { Manifest = mid, Setting = settings.ToArray() };
+			if (mid is null) continue;
+			arr[i] = new AppRoot(manifest: mid, setting: settings);
 		}
-		return new AppSettingRegion { App = arr };
+		return new AppSettingRegion(app: arr.ToList());
 	}
 
 	/// <summary>

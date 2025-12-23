@@ -3158,10 +3158,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Signed base policy detected, it allows to have Supplemental policies, but no Supplemental Policy Signers were found in it.</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>There is an Allow rule without an ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <value>There are more than 1 Allow rules with the same ID</value>
     <comment>Policy validation error</comment>
@@ -3170,32 +3166,16 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>There are more than 1 Deny rules with the same ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>There is a FileAttrib without an ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <value>There are more than 1 FileAttribs with the same ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <value>There is a FileRule without an ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <value>There are more than 1 FileRules with the same ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <value>There is a Signer without an ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <value>There are more than 1 Signers with the same ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <value>There is a SigningScenario without an ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3523,9 +3503,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>File path or XML document must be provided for deserialization</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>Deny rule must have an ID.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>The Deny rule with the ID {0} has a Hash property but also has other file properties, making it invalid.</value>
   </data>
@@ -3538,17 +3515,11 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>The FileAttrib rule with the ID {0} neither has a Hash nor any other file properties, making it invalid.</value>
   </data>
-    <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>Encountered a Cert Root that neither has TBS nor WellKnown type, making it invalid.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>The Signer with the ID {0} has no Cert Root element, making it invalid.</value>
   </data>
     <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>Encountered a Policy Setting that doesn't have a valid Value element.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>Encountered a Policy Setting that doesn't have the necessary Provider, Key or ValueName elements.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ID '{0}': invalid minimumVersion '{1}'.</value>
@@ -6355,5 +6326,14 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Storage Size and Temperature</value>
+  </data>
+  <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>Create Managed Installer</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Created and upload a Managed Installer policy in your tenant that will allow apps deployed via Intune to be automatically allowed on devices that utilize App Control policies.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Created and upload a Managed Installer policy in your tenant that will allow apps deployed via Intune to be automatically allowed on devices that utilize App Control policies.</value>
   </data>
 </root>

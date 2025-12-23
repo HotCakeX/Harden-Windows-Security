@@ -16,6 +16,8 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
@@ -35,7 +37,7 @@ internal static class PolicySettingsManager
 
 		string? PolicyName = null;
 
-		foreach (Setting item in PolicyObjToUse.Settings)
+		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObjToUse.Settings))
 		{
 			if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
 				string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
@@ -65,7 +67,7 @@ internal static class PolicySettingsManager
 		bool nameSettingFound = false;
 
 		// Set the policy name
-		foreach (Setting item in PolicyObj.Settings)
+		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObj.Settings))
 		{
 			if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
 			string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
@@ -82,20 +84,16 @@ internal static class PolicySettingsManager
 		// If the Setting node with ValueName="Name" does not exist, create it
 		if (!nameSettingFound)
 		{
-			Setting newNameSetting = new()
-			{
-				Provider = "PolicyInfo",
-				Key = "Information",
-				ValueName = "Name",
-				Value = new SettingValueType()
-				{
-					Item = name
-				}
-			};
+			PolicyObj.Settings ??= [];
 
-			List<Setting> settings = [.. PolicyObj.Settings];
-			settings.Add(newNameSetting);
-			PolicyObj.Settings = [.. settings];
+			PolicyObj.Settings.Add(new(
+				provider: "PolicyInfo",
+				key: "Information",
+				valueName: "Name",
+				value: new SettingValueType(
+					item: name
+				)
+			));
 		}
 	}
 
@@ -112,7 +110,7 @@ internal static class PolicySettingsManager
 
 		string? PolicyIDInfo = null;
 
-		foreach (Setting item in PolicyObjToUse.Settings)
+		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObjToUse.Settings))
 		{
 			if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) &&
 				string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
@@ -143,7 +141,7 @@ internal static class PolicySettingsManager
 		bool policyInfoIDSettingFound = false;
 
 		// Set the PolicyInfoID if the setting for it exist
-		foreach (Setting item in PolicyObj.Settings)
+		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObj.Settings))
 		{
 			if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) &&
 			string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
@@ -160,20 +158,16 @@ internal static class PolicySettingsManager
 		// If the setting for PolicyInfoID does not exist, create it
 		if (!policyInfoIDSettingFound)
 		{
-			Setting newPolicyInfoIDSetting = new()
-			{
-				Provider = "PolicyInfo",
-				Key = "Information",
-				ValueName = "Id",
-				Value = new SettingValueType()
-				{
-					Item = PolicyIDInfo
-				}
-			};
+			PolicyObj.Settings ??= [];
 
-			List<Setting> settings = [.. PolicyObj.Settings];
-			settings.Add(newPolicyInfoIDSetting);
-			PolicyObj.Settings = [.. settings];
+			PolicyObj.Settings.Add(new(
+				provider: "PolicyInfo",
+				key: "Information",
+				valueName: "Id",
+				value: new SettingValueType(
+					item: PolicyIDInfo
+				)
+			));
 		}
 	}
 
@@ -183,13 +177,12 @@ internal static class PolicySettingsManager
 	/// <param name="PolicyObj"></param>
 	/// <param name="VMRef"></param>
 	/// <returns></returns>
-	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(Setting[] policySettings, ViewModels.PolicyEditorVM VMRef)
+	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(List<Setting>? policySettings, ViewModels.PolicyEditorVM VMRef)
 	{
 		List<AppControlManager.PolicyEditor.PolicySettings> output = [];
 
-		foreach (Setting item in policySettings)
+		foreach (Setting item in CollectionsMarshal.AsSpan(policySettings))
 		{
-
 			// To prevent Policy Name and Policy Info ID to be displayed in Policy Editor's Custom Settings section
 			// Because they have to be modified via the Policy Details Tab only.
 			if (string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
@@ -202,22 +195,20 @@ internal static class PolicySettingsManager
 				}
 			}
 
-
 			try
 			{
 				output.Add(new AppControlManager.PolicyEditor.PolicySettings(
 					parentViewModel: VMRef,
 					provider: item.Provider,
 					key: item.Key,
-					value: item.Value?.Item,
-					valueStr: item.Value?.Item?.ToString(),
+					value: item.Value.Item,
+					valueStr: item.Value.Item.ToString() ?? string.Empty,
 					valueName: item.ValueName,
 					type: GetValueType(item.Value)
 					));
 			}
 			catch { }
 		}
-
 
 		return output;
 	}
@@ -234,26 +225,22 @@ internal static class PolicySettingsManager
 		};
 	}
 
-	private static SettingValueType SetValueType(int type, object? value)
+	private static SettingValueType SetValueType(int type, object value)
 	{
-		// If there's no value, just return an empty SettingValueType
-		if (value is null)
-			return new SettingValueType();
-
 		// Map the integer index to the actual CLR type
 		return type switch
 		{
 			// 0 = byte[]  (Binary)
-			0 => new SettingValueType { Item = (byte[])value },
+			0 => new SettingValueType(item: (byte[])value),
 
 			// 1 = bool    (Boolean)
-			1 => new SettingValueType { Item = Convert.ToBoolean(value) },
+			1 => new SettingValueType(item: Convert.ToBoolean(value)),
 
 			// 2 = uint    (DWord)
-			2 => new SettingValueType { Item = Convert.ToUInt32(value) },
+			2 => new SettingValueType(item: Convert.ToUInt32(value)),
 
 			// 3 = string  (String)
-			3 => new SettingValueType { Item = Convert.ToString(value) },
+			3 => new SettingValueType(item: Convert.ToString(value)!),
 
 			_ => throw new ArgumentOutOfRangeException(
 					 nameof(type),
@@ -268,7 +255,7 @@ internal static class PolicySettingsManager
 	/// </summary>
 	/// <param name="Objects"></param>
 	/// <returns></returns>
-	internal static Setting[] ConvertPolicyEditorSettingToSiPolicySetting(
+	internal static List<Setting> ConvertPolicyEditorSettingToSiPolicySetting(
 		IEnumerable<AppControlManager.PolicyEditor.PolicySettings> Objects,
 		string policyName,
 		string? policyInfo)
@@ -297,52 +284,45 @@ internal static class PolicySettingsManager
 
 			if (seenKeys.Add(uniqueKey))
 			{
-				output.Add(new Setting()
-				{
-					Key = item.Key,
-					Value = settingValue,
-					Provider = item.Provider,
-					ValueName = item.ValueName
-				});
+				output.Add(new Setting(
+					key: item.Key,
+					value: settingValue,
+					provider: item.Provider,
+					valueName: item.ValueName
+				));
 			}
 		}
 
-
 		#region Always add these to the Settings list, used by the Policy Editor VM
 
-		Setting newNameSetting = new()
-		{
-			Provider = "PolicyInfo",
-			Key = "Information",
-			ValueName = "Name",
-			Value = new SettingValueType()
-			{
-				Item = policyName
-			}
-		};
+		Setting newNameSetting = new(
+			provider: "PolicyInfo",
+			key: "Information",
+			valueName: "Name",
+			value: new SettingValueType(
+				item: policyName
+			)
+		);
 
 		output.Add(newNameSetting);
 
 		if (policyInfo is not null)
 		{
-			Setting newPolicyInfoIDSetting = new()
-			{
-				Provider = "PolicyInfo",
-				Key = "Information",
-				ValueName = "Id",
-				Value = new SettingValueType()
-				{
-					Item = policyInfo
-				}
-			};
+			Setting newPolicyInfoIDSetting = new(
+				provider: "PolicyInfo",
+				key: "Information",
+				valueName: "Id",
+				value: new SettingValueType(
+					item: policyInfo
+				)
+			);
 
 			output.Add(newPolicyInfoIDSetting);
 		}
 
 		#endregion
 
-
-		return output.ToArray();
+		return output;
 	}
 
 	private static string GetValueString(SettingValueType? settingValue)

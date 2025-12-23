@@ -29,7 +29,7 @@ internal static class PolicyFileSigningStatusDetection
 	{
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(policyXMLPath, null);
 
-		return (policyObj.SupplementalPolicySigners.Length > 0 || policyObj.UpdatePolicySigners.Length > 0)
+		return (policyObj.SupplementalPolicySigners?.Count > 0 || policyObj.UpdatePolicySigners?.Count > 0)
 			? IntelGathering.SignatureStatus.IsSigned
 			: IntelGathering.SignatureStatus.IsUnsigned;
 	}

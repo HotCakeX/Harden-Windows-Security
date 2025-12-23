@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 using AppControlManager.SiPolicyIntel;
 
 namespace AppControlManager.SiPolicy;
@@ -51,58 +52,55 @@ internal static class Factory
 			}
 
 			// Find all FileRuleRefs in SigningScenarios and map them to Allow rules
-			foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
-			{
-				// Get all possible FileRuleRef items from the current signing scenario
-				FileRuleRef[]? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
-
-				if (possibleFileRuleRef is { Length: > 0 })
+			if (siPolicy.SigningScenarios is not null)
+				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
 				{
-					// Loop over each FileRuleRef in the current Signing Scenario
-					foreach (FileRuleRef fileRuleRef in possibleFileRuleRef)
+					// Get all possible FileRuleRef items from the current signing scenario
+					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
+
+					if (possibleFileRuleRef is { Count: > 0 })
 					{
-						// See if the current FileRuleRef has a corresponding Allow rule in the <FileRules> node so we know it's valid
-						if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out Allow? allowElement))
+						// Loop over each FileRuleRef in the current Signing Scenario
+						foreach (FileRuleRef fileRuleRef in CollectionsMarshal.AsSpan(possibleFileRuleRef))
 						{
-							// Create a new ID
-							string rand = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
-
-							// Create a new Allow rule
-							// We don't wanna modify the original one, otherwise we end up with Allow rules with duplicate IDs
-							Allow allowElementCopy = new()
+							// See if the current FileRuleRef has a corresponding Allow rule in the <FileRules> node so we know it's valid
+							if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out Allow? allowElement))
 							{
-								ID = rand,
-								FriendlyName = allowElement.FriendlyName,
-								FileName = allowElement.FileName,
-								InternalName = allowElement.InternalName,
-								FileDescription = allowElement.FileDescription,
-								ProductName = allowElement.ProductName,
-								PackageFamilyName = allowElement.PackageFamilyName,
-								PackageVersion = allowElement.PackageVersion,
-								MinimumFileVersion = allowElement.MinimumFileVersion,
-								MaximumFileVersion = allowElement.MaximumFileVersion,
-								Hash = allowElement.Hash,
-								AppIDs = allowElement.AppIDs,
-								FilePath = allowElement.FilePath
-							};
+								// Create a new ID
+								string rand = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
-							// Create a new FileRuleRef
-							FileRuleRef fileRuleRefCopy = new()
-							{
-								RuleID = rand
-							};
+								// Create a new Allow rule
+								// We don't wanna modify the original one, otherwise we end up with Allow rules with duplicate IDs
+								Allow allowElementCopy = new(id: rand)
+								{
+									FriendlyName = allowElement.FriendlyName,
+									FileName = allowElement.FileName,
+									InternalName = allowElement.InternalName,
+									FileDescription = allowElement.FileDescription,
+									ProductName = allowElement.ProductName,
+									PackageFamilyName = allowElement.PackageFamilyName,
+									PackageVersion = allowElement.PackageVersion,
+									MinimumFileVersion = allowElement.MinimumFileVersion,
+									MaximumFileVersion = allowElement.MaximumFileVersion,
+									Hash = allowElement.Hash,
+									AppIDs = allowElement.AppIDs,
+									FilePath = allowElement.FilePath
+								};
 
-							AllowRule allowRule = new(
-								allowElement: allowElementCopy,
-								fileRuleRefElement: fileRuleRefCopy,
-								signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode);
+								// Create a new FileRuleRef
+								FileRuleRef fileRuleRefCopy = new(ruleID: rand);
 
-							_ = allowRules.Add(allowRule);
+								AllowRule allowRule = new(
+									allowElement: allowElementCopy,
+									fileRuleRefElement: fileRuleRefCopy,
+									signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode);
 
+								_ = allowRules.Add(allowRule);
+
+							}
 						}
 					}
 				}
-			}
 		}
 
 		return allowRules;
@@ -135,54 +133,51 @@ internal static class Factory
 			}
 
 			// Find all FileRuleRefs in SigningScenarios and map them to DenyRules
-			foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
-			{
-				// Get all possible FileRuleRef items from the current signing scenario
-				FileRuleRef[]? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
-
-				if (possibleFileRuleRef is { Length: > 0 })
+			if (siPolicy.SigningScenarios is not null)
+				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
 				{
-					foreach (FileRuleRef fileRuleRef in possibleFileRuleRef)
+					// Get all possible FileRuleRef items from the current signing scenario
+					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
+
+					if (possibleFileRuleRef is { Count: > 0 })
 					{
-						if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out Deny? denyElement))
+						foreach (FileRuleRef fileRuleRef in CollectionsMarshal.AsSpan(possibleFileRuleRef))
 						{
-
-							string rand = $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
-
-							// Create a new Deny rule
-							Deny denyElementCopy = new()
+							if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out Deny? denyElement))
 							{
-								ID = rand,
-								FriendlyName = denyElement.FriendlyName,
-								FileName = denyElement.FileName,
-								InternalName = denyElement.InternalName,
-								FileDescription = denyElement.FileDescription,
-								ProductName = denyElement.ProductName,
-								PackageFamilyName = denyElement.PackageFamilyName,
-								PackageVersion = denyElement.PackageVersion,
-								MinimumFileVersion = denyElement.MinimumFileVersion,
-								MaximumFileVersion = denyElement.MaximumFileVersion,
-								Hash = denyElement.Hash,
-								AppIDs = denyElement.AppIDs,
-								FilePath = denyElement.FilePath
-							};
 
-							// Create a new FileRuleRef
-							FileRuleRef fileRuleRefCopy = new()
-							{
-								RuleID = rand
-							};
+								string rand = $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
-							DenyRule allowRule = new(
-								denyElement: denyElementCopy,
-								fileRuleRefElement: fileRuleRefCopy,
-								signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode);
+								// Create a new Deny rule
+								Deny denyElementCopy = new(id: rand)
+								{
+									FriendlyName = denyElement.FriendlyName,
+									FileName = denyElement.FileName,
+									InternalName = denyElement.InternalName,
+									FileDescription = denyElement.FileDescription,
+									ProductName = denyElement.ProductName,
+									PackageFamilyName = denyElement.PackageFamilyName,
+									PackageVersion = denyElement.PackageVersion,
+									MinimumFileVersion = denyElement.MinimumFileVersion,
+									MaximumFileVersion = denyElement.MaximumFileVersion,
+									Hash = denyElement.Hash,
+									AppIDs = denyElement.AppIDs,
+									FilePath = denyElement.FilePath
+								};
 
-							_ = denyRules.Add(allowRule);
+								// Create a new FileRuleRef
+								FileRuleRef fileRuleRefCopy = new(ruleID: rand);
+
+								DenyRule allowRule = new(
+									denyElement: denyElementCopy,
+									fileRuleRefElement: fileRuleRefCopy,
+									signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode);
+
+								_ = denyRules.Add(allowRule);
+							}
 						}
 					}
 				}
-			}
 
 		}
 
@@ -204,7 +199,6 @@ internal static class Factory
 		// Loop over each policy input data
 		foreach (SiPolicy siPolicy in CollectionsMarshal.AsSpan(siPolicies))
 		{
-
 			// Index FileRules by their ID for quick lookup
 			// ID will be key and FileRule rule itself will be the value
 			Dictionary<string, FileRule>? fileRuleDictionary = siPolicy.FileRules?.OfType<FileRule>()
@@ -217,55 +211,51 @@ internal static class Factory
 			}
 
 			// Find all FileRuleRefs in SigningScenarios and map them to FileRules
-			foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
-			{
-				// Get all possible FileRuleRef items from the current signing scenario
-				FileRuleRef[]? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
-
-				if (possibleFileRuleRef is { Length: > 0 })
+			if (siPolicy.SigningScenarios is not null)
+				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
 				{
-					foreach (FileRuleRef fileRuleRef in possibleFileRuleRef)
+					// Get all possible FileRuleRef items from the current signing scenario
+					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
+
+					if (possibleFileRuleRef is { Count: > 0 })
 					{
-						if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out FileRule? fileRuleElement))
+						foreach (FileRuleRef fileRuleRef in CollectionsMarshal.AsSpan(possibleFileRuleRef))
 						{
-
-							string rand = $"ID_FILE_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
-
-							FileRule fileRuleElementCopy = new()
+							if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out FileRule? fileRuleElement))
 							{
-								ID = rand,
-								FriendlyName = fileRuleElement.FriendlyName,
-								FileName = fileRuleElement.FileName,
-								InternalName = fileRuleElement.InternalName,
-								FileDescription = fileRuleElement.FileDescription,
-								ProductName = fileRuleElement.ProductName,
-								PackageFamilyName = fileRuleElement.PackageFamilyName,
-								PackageVersion = fileRuleElement.PackageVersion,
-								MinimumFileVersion = fileRuleElement.MinimumFileVersion,
-								MaximumFileVersion = fileRuleElement.MaximumFileVersion,
-								Hash = fileRuleElement.Hash,
-								AppIDs = fileRuleElement.AppIDs,
-								FilePath = fileRuleElement.FilePath,
-								Type = fileRuleElement.Type
-							};
 
-							// Create a new FileRuleRef
-							FileRuleRef fileRuleRefCopy = new()
-							{
-								RuleID = rand
-							};
+								string rand = $"ID_FILE_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
-							FileRuleRule fileRuleNew = new(
-								fileRuleElement: fileRuleElementCopy,
-								fileRuleRefElement: fileRuleRefCopy,
-								signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode
-							);
-							_ = fileRuleRules.Add(fileRuleNew);
+								FileRule fileRuleElementCopy = new(id: rand, type: fileRuleElement.Type)
+								{
+									FriendlyName = fileRuleElement.FriendlyName,
+									FileName = fileRuleElement.FileName,
+									InternalName = fileRuleElement.InternalName,
+									FileDescription = fileRuleElement.FileDescription,
+									ProductName = fileRuleElement.ProductName,
+									PackageFamilyName = fileRuleElement.PackageFamilyName,
+									PackageVersion = fileRuleElement.PackageVersion,
+									MinimumFileVersion = fileRuleElement.MinimumFileVersion,
+									MaximumFileVersion = fileRuleElement.MaximumFileVersion,
+									Hash = fileRuleElement.Hash,
+									AppIDs = fileRuleElement.AppIDs,
+									FilePath = fileRuleElement.FilePath
+								};
 
+								// Create a new FileRuleRef
+								FileRuleRef fileRuleRefCopy = new(ruleID: rand);
+
+								FileRuleRule fileRuleNew = new(
+									fileRuleElement: fileRuleElementCopy,
+									fileRuleRefElement: fileRuleRefCopy,
+									signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode
+								);
+								_ = fileRuleRules.Add(fileRuleNew);
+
+							}
 						}
 					}
 				}
-			}
 		}
 
 		return fileRuleRules;
@@ -300,14 +290,16 @@ internal static class Factory
 			// Get all of the <Signer> elements from the policy
 			Dictionary<string, Signer> signerDictionary = [];
 
-			foreach (Signer signer in siPolicy.Signers)
+			if (siPolicy.Signers is not null)
 			{
-				if (!signerDictionary.TryAdd(signer.ID, signer))
+				foreach (Signer signer in CollectionsMarshal.AsSpan(siPolicy.Signers))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DuplicateSignerIdMessage"), signer.ID));
+					if (!signerDictionary.TryAdd(signer.ID, signer))
+					{
+						Logger.Write(string.Format(GlobalVars.GetStr("DuplicateSignerIdMessage"), signer.ID));
+					}
 				}
 			}
-
 
 			// ID of all of the CiSigners if they exist
 			HashSet<string> ciSignerSet = [.. siPolicy.CiSigners?.Select(ciSigner => ciSigner.SignerId) ?? []];
@@ -330,66 +322,67 @@ internal static class Factory
 
 
 			// Step 2: Process SigningScenarios
-			foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
-			{
-				// If the signing scenario has product signers
-				ProductSigners? possibleProdSigners = signingScenario.ProductSigners;
-
-				if (possibleProdSigners is not null)
+			if (siPolicy.SigningScenarios is not null)
+				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
 				{
-					AllowedSigner[]? allowedSigners = possibleProdSigners.AllowedSigners?.AllowedSigner;
-					DeniedSigner[]? deniedSigners = possibleProdSigners.DeniedSigners?.DeniedSigner;
+					// If the signing scenario has product signers
+					ProductSigners? possibleProdSigners = signingScenario.ProductSigners;
 
-					if (allowedSigners is { Length: > 0 })
+					if (possibleProdSigners is not null)
 					{
-						// Process Allowed Signers
-						foreach (AllowedSigner item in allowedSigners)
+						List<AllowedSigner>? allowedSigners = possibleProdSigners.AllowedSigners?.AllowedSigner;
+						List<DeniedSigner>? deniedSigners = possibleProdSigners.DeniedSigners?.DeniedSigner;
+
+						if (allowedSigners is { Count: > 0 })
 						{
-							// Get the Signer element associated with the current AllowedSigner
-							if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+							// Process Allowed Signers
+							foreach (AllowedSigner item in CollectionsMarshal.AsSpan(allowedSigners))
 							{
-								AddSignerRule(
-									signer,
-									signingScenario,
-									Authorization.Allow,
-									item,
-									null,
-									ciSignerSet,
-									fileAttribDictionary,
-									filePublisherSigners,
-									signerRules,
-									wHQLPublishers,
-									whqlFilePublishers,
-									ekuDictionary);
+								// Get the Signer element associated with the current AllowedSigner
+								if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+								{
+									AddSignerRule(
+										signer,
+										signingScenario,
+										Authorization.Allow,
+										item,
+										null,
+										ciSignerSet,
+										fileAttribDictionary,
+										filePublisherSigners,
+										signerRules,
+										wHQLPublishers,
+										whqlFilePublishers,
+										ekuDictionary);
+								}
 							}
 						}
-					}
 
-					if (deniedSigners is { Length: > 0 })
-					{
-						// Process Denied Signers
-						foreach (DeniedSigner item in deniedSigners)
+						if (deniedSigners is { Count: > 0 })
 						{
-							if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+							// Process Denied Signers
+							foreach (DeniedSigner item in CollectionsMarshal.AsSpan(deniedSigners))
 							{
-								AddSignerRule(
-									signer,
-									signingScenario,
-									Authorization.Deny,
-									null,
-									item,
-									ciSignerSet,
-									fileAttribDictionary,
-									filePublisherSigners,
-									signerRules,
-									wHQLPublishers,
-									whqlFilePublishers,
-									ekuDictionary);
+								if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+								{
+									AddSignerRule(
+										signer,
+										signingScenario,
+										Authorization.Deny,
+										null,
+										item,
+										ciSignerSet,
+										fileAttribDictionary,
+										filePublisherSigners,
+										signerRules,
+										wHQLPublishers,
+										whqlFilePublishers,
+										ekuDictionary);
+								}
 							}
 						}
 					}
 				}
-			}
 
 		}
 
@@ -467,40 +460,38 @@ internal static class Factory
 			if (associatedEKUs.Count is not 0)
 			{
 				// Create the new signer element
-				Signer newSigner = new()
+				Signer newSigner = new(
+					id: newSignerID,
+					name: signer.Name,
+					certRoot: signer.CertRoot
+					)
 				{
-					CertRoot = signer.CertRoot,
 					CertEKU = signer.CertEKU,
 					CertIssuer = signer.CertIssuer,
 					CertPublisher = signer.CertPublisher,
 					CertOemID = signer.CertOemID,
 					FileAttribRef = signer.FileAttribRef,
-					Name = signer.Name,
-					ID = newSignerID,
-					SignTimeAfter = signer.SignTimeAfter,
-					SignTimeAfterSpecified = signer.SignTimeAfterSpecified
+					SignTimeAfter = signer.SignTimeAfter
 				};
 
 				// Create the new AllowedSigner element
 				AllowedSigner? newAllowedSigner = null;
 				if (allowedSigner is not null)
 				{
-					newAllowedSigner = new()
-					{
-						SignerId = newSignerID,
-						ExceptDenyRule = allowedSigner.ExceptDenyRule
-					};
+					newAllowedSigner = new(
+						signerId: newSignerID,
+						exceptDenyRule: allowedSigner.ExceptDenyRule
+					);
 				}
 
 				// Create the new DeniedSigner element
 				DeniedSigner? newDeniedSigner = null;
 				if (deniedSigner is not null)
 				{
-					newDeniedSigner = new()
-					{
-						SignerId = newSignerID,
-						ExceptAllowRule = deniedSigner.ExceptAllowRule
-					};
+					newDeniedSigner = new(
+						signerId: newSignerID,
+						exceptAllowRule: deniedSigner.ExceptAllowRule
+					);
 				}
 
 
@@ -516,9 +507,8 @@ internal static class Factory
 					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_FILEATTRIB_A_{tempGuid}";
 
-					newFileAttribs.Add(new()
+					newFileAttribs.Add(new(id: tempID)
 					{
-						ID = tempID,
 						FriendlyName = item.FriendlyName,
 						FileName = item.FileName,
 						InternalName = item.InternalName,
@@ -528,20 +518,17 @@ internal static class Factory
 						PackageVersion = item.PackageVersion,
 						MinimumFileVersion = item.MinimumFileVersion,
 						MaximumFileVersion = item.MaximumFileVersion,
-						Hash = item.Hash is null ? null : (byte[])item.Hash.Clone(),
+						Hash = item.Hash,
 						AppIDs = item.AppIDs,
 						FilePath = item.FilePath
 					});
 
 					// Create a new FileAttribRef for the FileAttrib with the new RuleID
-					signerFileAttribRefs.Add(new()
-					{
-						RuleID = tempID
-					});
+					signerFileAttribRefs.Add(new(ruleID: tempID));
 				}
 
 				// Replace the FileAttribRefs of the Signer with the new ones
-				newSigner.FileAttribRef = [.. signerFileAttribRefs];
+				newSigner.FileAttribRef = signerFileAttribRefs;
 				#endregion
 
 
@@ -555,21 +542,17 @@ internal static class Factory
 					string tempID = $"ID_EKU_E_{tempGuid}";
 
 					// Clone the EKU to avoid modifying the original object
-					newEKUs.Add(new()
-					{
-						ID = tempID,
-						Value = item.Value,
-						FriendlyName = item.FriendlyName
-					});
+					newEKUs.Add(new(
+						id: tempID,
+						value: item.Value,
+						friendlyName: item.FriendlyName
+					));
 
-					signerCertEKUs.Add(new()
-					{
-						ID = tempID
-					});
+					signerCertEKUs.Add(new(id: tempID));
 				}
 
 				// Replace the CertEKUs of the Signer with the new ones
-				newSigner.CertEKU = [.. signerCertEKUs];
+				newSigner.CertEKU = signerCertEKUs;
 				#endregion
 
 
@@ -578,7 +561,7 @@ internal static class Factory
 					fileAttribElements: newFileAttribs,
 					allowedSignerElement: newAllowedSigner,
 					deniedSignerElement: newDeniedSigner,
-					ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+					ciSignerElement: isCiSigner ? new CiSigner(signerID: newSignerID) : null,
 					signerElement: newSigner,
 					ekus: newEKUs,
 					signingScenario: scenarioType,
@@ -587,40 +570,38 @@ internal static class Factory
 			else
 			{
 				// Create the new signer element
-				Signer newSigner = new()
+				Signer newSigner = new(
+					name: signer.Name,
+					id: newSignerID,
+					certRoot: signer.CertRoot
+					)
 				{
-					CertRoot = signer.CertRoot,
 					CertEKU = signer.CertEKU,
 					CertIssuer = signer.CertIssuer,
 					CertPublisher = signer.CertPublisher,
 					CertOemID = signer.CertOemID,
 					FileAttribRef = signer.FileAttribRef,
-					Name = signer.Name,
-					ID = newSignerID,
-					SignTimeAfter = signer.SignTimeAfter,
-					SignTimeAfterSpecified = signer.SignTimeAfterSpecified
+					SignTimeAfter = signer.SignTimeAfter
 				};
 
 				// Create the new AllowedSigner element
 				AllowedSigner? newAllowedSigner = null;
 				if (allowedSigner is not null)
 				{
-					newAllowedSigner = new()
-					{
-						SignerId = newSignerID,
-						ExceptDenyRule = allowedSigner.ExceptDenyRule
-					};
+					newAllowedSigner = new(
+						signerId: newSignerID,
+						exceptDenyRule: allowedSigner.ExceptDenyRule
+					);
 				}
 
 				// Create the new DeniedSigner element
 				DeniedSigner? newDeniedSigner = null;
 				if (deniedSigner is not null)
 				{
-					newDeniedSigner = new()
-					{
-						SignerId = newSignerID,
-						ExceptAllowRule = deniedSigner.ExceptAllowRule
-					};
+					newDeniedSigner = new(
+						signerId: newSignerID,
+						exceptAllowRule: deniedSigner.ExceptAllowRule
+					);
 				}
 
 
@@ -633,13 +614,11 @@ internal static class Factory
 
 				foreach (FileAttrib item in associatedFileAttribs)
 				{
-
 					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_FILEATTRIB_A_{tempGuid}";
 
-					newFileAttribs.Add(new()
+					newFileAttribs.Add(new(id: tempID)
 					{
-						ID = tempID,
 						FriendlyName = item.FriendlyName,
 						FileName = item.FileName,
 						InternalName = item.InternalName,
@@ -649,20 +628,17 @@ internal static class Factory
 						PackageVersion = item.PackageVersion,
 						MinimumFileVersion = item.MinimumFileVersion,
 						MaximumFileVersion = item.MaximumFileVersion,
-						Hash = item.Hash is null ? null : (byte[])item.Hash.Clone(),
+						Hash = item.Hash,
 						AppIDs = item.AppIDs,
 						FilePath = item.FilePath
 					});
 
 					// Create a new FileAttribRef for the FileAttrib with the new RuleID
-					signerFileAttribRefs.Add(new()
-					{
-						RuleID = tempID
-					});
+					signerFileAttribRefs.Add(new(ruleID: tempID));
 				}
 
 				// Replace the FileAttribRefs of the Signer with the new ones
-				newSigner.FileAttribRef = [.. signerFileAttribRefs];
+				newSigner.FileAttribRef = signerFileAttribRefs;
 				#endregion
 
 
@@ -672,7 +648,7 @@ internal static class Factory
 					fileAttribElements: newFileAttribs,
 					allowedSignerElement: newAllowedSigner,
 					deniedSignerElement: newDeniedSigner,
-					ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+					ciSignerElement: isCiSigner ? new CiSigner(signerID: newSignerID) : null,
 					signerElement: newSigner,
 					signingScenario: scenarioType,
 					auth: auth
@@ -682,40 +658,38 @@ internal static class Factory
 		else if (associatedEKUs.Count is not 0)
 		{
 			// Create the new signer element
-			Signer newSigner = new()
+			Signer newSigner = new(
+				name: signer.Name,
+				id: newSignerID,
+				certRoot: signer.CertRoot
+				)
 			{
-				CertRoot = signer.CertRoot,
 				CertEKU = signer.CertEKU,
 				CertIssuer = signer.CertIssuer,
 				CertPublisher = signer.CertPublisher,
 				CertOemID = signer.CertOemID,
 				FileAttribRef = signer.FileAttribRef,
-				Name = signer.Name,
-				ID = newSignerID,
-				SignTimeAfter = signer.SignTimeAfter,
-				SignTimeAfterSpecified = signer.SignTimeAfterSpecified
+				SignTimeAfter = signer.SignTimeAfter
 			};
 
 			// Create the new AllowedSigner element
 			AllowedSigner? newAllowedSigner = null;
 			if (allowedSigner is not null)
 			{
-				newAllowedSigner = new()
-				{
-					SignerId = newSignerID,
-					ExceptDenyRule = allowedSigner.ExceptDenyRule
-				};
+				newAllowedSigner = new(
+					signerId: newSignerID,
+					exceptDenyRule: allowedSigner.ExceptDenyRule
+				);
 			}
 
 			// Create the new DeniedSigner element
 			DeniedSigner? newDeniedSigner = null;
 			if (deniedSigner is not null)
 			{
-				newDeniedSigner = new()
-				{
-					SignerId = newSignerID,
-					ExceptAllowRule = deniedSigner.ExceptAllowRule
-				};
+				newDeniedSigner = new(
+					signerId: newSignerID,
+					exceptAllowRule: deniedSigner.ExceptAllowRule
+				);
 			}
 
 			#region EKUs
@@ -728,21 +702,17 @@ internal static class Factory
 				string tempID = $"ID_EKU_E_{tempGuid}";
 
 				// Clone the EKU to avoid modifying the original object
-				newEKUs.Add(new()
-				{
-					ID = tempID,
-					Value = item.Value,
-					FriendlyName = item.FriendlyName
-				});
+				newEKUs.Add(new(
+					id: tempID,
+					value: item.Value,
+					friendlyName: item.FriendlyName
+				));
 
-				signerCertEKUs.Add(new()
-				{
-					ID = tempID
-				});
+				signerCertEKUs.Add(new(id: tempID));
 			}
 
 			// Replace the CertEKUs of the Signer with the new ones
-			newSigner.CertEKU = [.. signerCertEKUs];
+			newSigner.CertEKU = signerCertEKUs;
 			#endregion
 
 
@@ -750,7 +720,7 @@ internal static class Factory
 			_ = WHQLPublishers.Add(new WHQLPublisher(
 				allowedSignerElement: newAllowedSigner,
 				deniedSignerElement: newDeniedSigner,
-				ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+				ciSignerElement: isCiSigner ? new CiSigner(signerID: newSignerID) : null,
 				signerElement: newSigner,
 				ekus: newEKUs,
 				signingScenario: scenarioType,
@@ -759,40 +729,38 @@ internal static class Factory
 		else
 		{
 			// Create the new signer element
-			Signer newSigner = new()
+			Signer newSigner = new(
+				name: signer.Name,
+				id: newSignerID,
+				certRoot: signer.CertRoot
+				)
 			{
-				CertRoot = signer.CertRoot,
 				CertEKU = signer.CertEKU,
 				CertIssuer = signer.CertIssuer,
 				CertPublisher = signer.CertPublisher,
 				CertOemID = signer.CertOemID,
 				FileAttribRef = signer.FileAttribRef,
-				Name = signer.Name,
-				ID = newSignerID,
-				SignTimeAfter = signer.SignTimeAfter,
-				SignTimeAfterSpecified = signer.SignTimeAfterSpecified
+				SignTimeAfter = signer.SignTimeAfter
 			};
 
 			// Create the new AllowedSigner element
 			AllowedSigner? newAllowedSigner = null;
 			if (allowedSigner is not null)
 			{
-				newAllowedSigner = new()
-				{
-					SignerId = newSignerID,
-					ExceptDenyRule = allowedSigner.ExceptDenyRule
-				};
+				newAllowedSigner = new(
+					signerId: newSignerID,
+					exceptDenyRule: allowedSigner.ExceptDenyRule
+				);
 			}
 
 			// Create the new DeniedSigner element
 			DeniedSigner? newDeniedSigner = null;
 			if (deniedSigner is not null)
 			{
-				newDeniedSigner = new()
-				{
-					SignerId = newSignerID,
-					ExceptAllowRule = deniedSigner.ExceptAllowRule
-				};
+				newDeniedSigner = new(
+					signerId: newSignerID,
+					exceptAllowRule: deniedSigner.ExceptAllowRule
+				);
 			}
 
 			// Generic SignerRule
@@ -801,7 +769,7 @@ internal static class Factory
 				signerElement: newSigner,
 				allowedSignerElement: newAllowedSigner,
 				deniedSignerElement: newDeniedSigner,
-				ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+				ciSignerElement: isCiSigner ? new CiSigner(signerID: newSignerID) : null,
 				signingScenario: scenarioType,
 				auth: auth
 			));
@@ -824,31 +792,27 @@ internal static class Factory
 		{
 			if (Signers.TryGetValue(ID, out Signer? possibleSupplementalPolicySigner))
 			{
-
 				// Create random ID for the signer and its corresponding SupplementalPolicySigner element
 				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string newSignerID = $"ID_SIGNER_A_{guid}";
 
 				// Create the new signer element
-				Signer newSigner = new()
+				Signer newSigner = new(
+					id: newSignerID,
+					name: possibleSupplementalPolicySigner.Name,
+					certRoot: possibleSupplementalPolicySigner.CertRoot
+					)
 				{
-					CertRoot = possibleSupplementalPolicySigner.CertRoot,
 					CertEKU = possibleSupplementalPolicySigner.CertEKU,
 					CertIssuer = possibleSupplementalPolicySigner.CertIssuer,
 					CertPublisher = possibleSupplementalPolicySigner.CertPublisher,
 					CertOemID = possibleSupplementalPolicySigner.CertOemID,
 					FileAttribRef = possibleSupplementalPolicySigner.FileAttribRef,
-					Name = possibleSupplementalPolicySigner.Name,
-					ID = newSignerID,
-					SignTimeAfter = possibleSupplementalPolicySigner.SignTimeAfter,
-					SignTimeAfterSpecified = possibleSupplementalPolicySigner.SignTimeAfterSpecified
+					SignTimeAfter = possibleSupplementalPolicySigner.SignTimeAfter
 				};
 
 				// Create a new SupplementalPolicySigner element with the new ID
-				SupplementalPolicySigner suppRule = new()
-				{
-					SignerId = newSignerID
-				};
+				SupplementalPolicySigner suppRule = new(signerID: newSignerID);
 
 				_ = supplementalPolicySignersSet.Add(new SupplementalPolicySignerRule(
 					signerElement: newSigner,
@@ -873,31 +837,27 @@ internal static class Factory
 		{
 			if (Signers.TryGetValue(ID, out Signer? possibleUpdatePolicySigner))
 			{
-
 				// Create random ID for the signer and its corresponding UpdatePolicySigner element
 				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string newSignerID = $"ID_SIGNER_A_{guid}";
 
 				// Create the new signer element
-				Signer newSigner = new()
+				Signer newSigner = new(
+					id: newSignerID,
+					name: possibleUpdatePolicySigner.Name,
+					certRoot: possibleUpdatePolicySigner.CertRoot
+					)
 				{
-					CertRoot = possibleUpdatePolicySigner.CertRoot,
 					CertEKU = possibleUpdatePolicySigner.CertEKU,
 					CertIssuer = possibleUpdatePolicySigner.CertIssuer,
 					CertPublisher = possibleUpdatePolicySigner.CertPublisher,
 					CertOemID = possibleUpdatePolicySigner.CertOemID,
 					FileAttribRef = possibleUpdatePolicySigner.FileAttribRef,
-					Name = possibleUpdatePolicySigner.Name,
-					ID = newSignerID,
-					SignTimeAfter = possibleUpdatePolicySigner.SignTimeAfter,
-					SignTimeAfterSpecified = possibleUpdatePolicySigner.SignTimeAfterSpecified
+					SignTimeAfter = possibleUpdatePolicySigner.SignTimeAfter
 				};
 
 				// Create a new UpdatePolicySigner element with the new ID
-				UpdatePolicySigner uppRule = new()
-				{
-					SignerId = newSignerID
-				};
+				UpdatePolicySigner uppRule = new(signerID: newSignerID);
 
 				_ = updatePolicySignersSet.Add(new UpdatePolicySignerRule(
 					signerElement: newSigner,

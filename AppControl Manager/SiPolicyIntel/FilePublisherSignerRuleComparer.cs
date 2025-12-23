@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
@@ -89,7 +90,7 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
@@ -105,7 +106,7 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash value
@@ -119,24 +120,15 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 		if (newRule.FileAttribElements is null || existing.FileAttribElements is null)
 			return;
 
-		foreach (FileAttrib newFileAttrib in newRule.FileAttribElements)
-		{
+		if (existing.SignerElement.FileAttribRef is null)
+			existing.SignerElement.FileAttribRef = [];
 
+		foreach (FileAttrib newFileAttrib in CollectionsMarshal.AsSpan(newRule.FileAttribElements))
+		{
 			// Add the new rule's file attrib to the existing rule
 			existing.FileAttribElements.Add(newFileAttrib);
 
-			FileAttribRef fileAttribRef = new()
-			{
-				RuleID = newFileAttrib.ID
-			};
-
-			// Convert the array to list for easy modification
-			List<FileAttribRef> List1 = [.. existing.SignerElement.FileAttribRef];
-
-			List1.Add(fileAttribRef);
-
-			// Convert the list back to array
-			existing.SignerElement.FileAttribRef = [.. List1];
+			existing.SignerElement.FileAttribRef.Add(new(ruleID: newFileAttrib.ID));
 		}
 	}
 }

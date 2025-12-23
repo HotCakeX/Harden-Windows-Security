@@ -82,7 +82,7 @@ internal sealed class PublisherSignerRuleComparer : IEqualityComparer<SignerRule
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
@@ -98,7 +98,7 @@ internal sealed class PublisherSignerRuleComparer : IEqualityComparer<SignerRule
 
 		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
 
 		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash value

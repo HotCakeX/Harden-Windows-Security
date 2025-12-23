@@ -3158,10 +3158,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Se detectó una directiva base firmada, permite tener directivas Suplementarias, pero no se encontraron Firmantes de Directiva Suplementaria en ella.</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>¡Hay una regla de Permiso sin ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
     <value>Hay más de 1 regla de Permiso con el mismo ID</value>
     <comment>Policy validation error</comment>
@@ -3170,32 +3166,16 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Hay más de 1 regla de Denegación con el mismo ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>¡Hay un FileAttrib sin ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
     <value>Hay más de 1 FileAttribs con el mismo ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="FileRuleNoIDValidationError" xml:space="preserve">
-    <value>¡Hay una FileRule sin ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileRuleDupIDValidationError" xml:space="preserve">
     <value>Hay más de 1 FileRules con el mismo ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="SignerNoIDValidationError" xml:space="preserve">
-    <value>¡Hay un Firmante sin ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="SignerDupIDValidationError" xml:space="preserve">
     <value>Hay más de 1 Firmante con el mismo ID</value>
-    <comment>Policy validation error</comment>
-  </data>
-  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
-    <value>¡Hay un EscenarioDeFirma sin ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
@@ -3523,9 +3503,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
     <value>Se debe proporcionar la ruta del archivo o el documento XML para la deserialización</value>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>La regla de Denegación debe tener un ID.</value>
-  </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
     <value>La regla de Denegación con el ID {0} tiene una propiedad Hash pero también tiene otras propiedades de archivo, lo que la invalida.</value>
   </data>
@@ -3538,17 +3515,11 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="FileAttribNoPropsError" xml:space="preserve">
     <value>La regla FileAttrib con el ID {0} no tiene ni una propiedad Hash ni ninguna otra propiedad de archivo, lo que la invalida.</value>
   </data>
-    <data name="InvalidCertRootTypeError" xml:space="preserve">
-    <value>Se encontró una Raíz de Certificado que no tiene tipo TBS ni WellKnown, lo que la invalida.</value>
-  </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
     <value>El Firmante con el ID {0} no tiene elemento Raíz de Certificado, lo que lo invalida.</value>
   </data>
     <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
     <value>Se encontró una Configuración de Directiva que no tiene un elemento Valor válido.</value>
-  </data>
-  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
-    <value>Se encontró una Configuración de Directiva que no tiene los elementos necesarios Proveedor, Clave o NombreValor.</value>
   </data>
   <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
     <value>ID '{0}': minimumVersion '{1}' inválida.</value>
@@ -6355,5 +6326,14 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Tamaño de almacenamiento y temperatura</value>
+  </data>
+   <data name="CreateManagedInstallerButton.Content" xml:space="preserve">
+    <value>Crear instalador administrado</value>
+  </data>
+  <data name="CreateManagedInstallerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cree y cargue una directiva de instalador administrado en su inquilino que permitirá que las aplicaciones implementadas a través de Intune se permitan automáticamente en los dispositivos que utilizan directivas de control de aplicaciones.</value>
+  </data>
+  <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cree y cargue una directiva de instalador administrado en su inquilino que permitirá que las aplicaciones implementadas a través de Intune se permitan automáticamente en los dispositivos que utilizan directivas de control de aplicaciones.</value>
   </data>
 </root>

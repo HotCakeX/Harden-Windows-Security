@@ -47,55 +47,38 @@ internal static class AddSigningDetails
 		SiPolicy.SiPolicy policyObject = Management.Initialize(xmlPolicyFile, null);
 
 		// Create a Cert root object that will be used by signers
-		CertRoot certRoot = new()
-		{
-			Type = CertEnumType.TBS,
+		CertRoot certRoot = new(
+			type: CertEnumType.TBS,
+			value: Convert.FromHexString(CertTBS)
+		);
 
-			// Parses the hexadecimal string (CertTBS) into a byte array by processing 2 characters at a time
-			Value = [.. Enumerable.Range(0, CertTBS.Length / 2).Select(x => Convert.ToByte(CertTBS.Substring(x * 2, 2), 16))]
-		};
+		Signer supplementalPolicySigner = new(
+			id: $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
+			name: CertCommonName,
+			certRoot: certRoot
+		);
 
-		Signer supplementalPolicySigner = new()
-		{
-			ID = $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
-			Name = CertCommonName,
-			CertRoot = certRoot
-		};
+		Signer updatePolicySigner = new(
+			id: $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
+			name: CertCommonName,
+			certRoot: certRoot
+		);
 
-		Signer updatePolicySigner = new()
-		{
-			ID = $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
-			Name = CertCommonName,
-			CertRoot = certRoot
-		};
+		SupplementalPolicySigner supplementalPolicySigner1 = new(signerID: supplementalPolicySigner.ID);
 
-		SupplementalPolicySigner supplementalPolicySigner1 = new()
-		{
-			SignerId = supplementalPolicySigner.ID
-		};
-
-		UpdatePolicySigner updatePolicySigner1 = new()
-		{
-			SignerId = updatePolicySigner.ID
-		};
-
+		UpdatePolicySigner updatePolicySigner1 = new(signerID: updatePolicySigner.ID);
 
 		// If the policy has <Signers> node.
 		if (policyObject.Signers is not null)
 		{
-			// Convert the existing signers array to list for easy manipulation
-			List<Signer> currentSignersList = [.. policyObject.Signers];
-
-			currentSignersList.Add(updatePolicySigner);
+			policyObject.Signers.Add(updatePolicySigner);
 
 			// Only add the SupplementalPolicySigner if the policy is not a SupplementalPolicy
 			// Because only Base policies can have that
 			if (policyObject.PolicyType is not PolicyType.SupplementalPolicy)
 			{
-				currentSignersList.Add(supplementalPolicySigner);
+				policyObject.Signers.Add(supplementalPolicySigner);
 			}
-
-			policyObject.Signers = currentSignersList.ToArray();
 		}
 		// If the policy has no <Signers> node.
 		else
@@ -109,7 +92,7 @@ internal static class AddSigningDetails
 				signersList.Add(supplementalPolicySigner);
 			}
 
-			policyObject.Signers = signersList.ToArray();
+			policyObject.Signers = signersList;
 		}
 
 
@@ -117,9 +100,7 @@ internal static class AddSigningDetails
 		{
 			if (policyObject.SupplementalPolicySigners is not null)
 			{
-				List<SupplementalPolicySigner> currentSupplementalPolicySignersList = [.. policyObject.SupplementalPolicySigners];
-				currentSupplementalPolicySignersList.Add(supplementalPolicySigner1);
-				policyObject.SupplementalPolicySigners = [.. currentSupplementalPolicySignersList];
+				policyObject.SupplementalPolicySigners.Add(supplementalPolicySigner1);
 			}
 			else
 			{
@@ -130,9 +111,7 @@ internal static class AddSigningDetails
 
 		if (policyObject.UpdatePolicySigners is not null)
 		{
-			List<UpdatePolicySigner> currentUpdatePolicySignersList = [.. policyObject.UpdatePolicySigners];
-			currentUpdatePolicySignersList.Add(updatePolicySigner1);
-			policyObject.UpdatePolicySigners = [.. currentUpdatePolicySignersList];
+			policyObject.UpdatePolicySigners.Add(updatePolicySigner1);
 		}
 		else
 		{

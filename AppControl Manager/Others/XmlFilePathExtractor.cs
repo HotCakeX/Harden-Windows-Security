@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.Others;
@@ -38,7 +39,7 @@ internal static class XmlFilePathExtractor
 		// Select all Allow FileRules
 		if (policyObj.FileRules is not null)
 		{
-			foreach (object item in policyObj.FileRules)
+			foreach (object item in CollectionsMarshal.AsSpan(policyObj.FileRules))
 			{
 				if (item is Allow allowItem && !string.IsNullOrEmpty(allowItem.FilePath))
 				{

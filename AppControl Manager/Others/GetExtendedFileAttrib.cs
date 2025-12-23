@@ -41,9 +41,9 @@ internal static partial class GetExtendedFileAttrib
 	private const int FILE_VER_GET_NEUTRAL = 2;
 
 	/// <summary>
-	/// Represents an error code indicating that a specified resource type could not be found. The value is -2147023083.
+	/// Represents an error code indicating that a specified resource type could not be found. The value is 1813 (-2147023083).
 	/// </summary>
-	private const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
+	private const int ERROR_RESOURCE_TYPE_NOT_FOUND = 1813;
 
 	/// <summary>
 	/// Retrieves extended file information, including version, original file name, internal name, file description, and
@@ -139,7 +139,7 @@ internal static partial class GetExtendedFileAttrib
 			}
 
 			// Directly read the unmanaged VS_FIXEDFILEINFO structure (blittable)
-			FileVersionInfo fileInfo = *(FileVersionInfo*)buffer;
+			VS_FIXEDFILEINFO fileInfo = *(VS_FIXEDFILEINFO*)buffer;
 
 			// Construct Version object from version info
 			version = new Version(
@@ -218,7 +218,7 @@ internal static partial class GetExtendedFileAttrib
 				int lastError = Marshal.GetLastPInvokeError();
 
 				// If error is not resource type not found, throw the error
-				if (lastError != HR_ERROR_RESOURCE_TYPE_NOT_FOUND)
+				if (lastError != ERROR_RESOURCE_TYPE_NOT_FOUND)
 					throw new Win32Exception(lastError);
 			}
 		}
@@ -232,25 +232,4 @@ internal static partial class GetExtendedFileAttrib
 	/// <param name="value"></param>
 	/// <returns></returns>
 	private static string? CheckAndSetNull(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
-
-	/// <summary>
-	/// Structure to hold file version information
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	private struct FileVersionInfo
-	{
-		internal uint dwSignature;
-		internal uint dwStrucVersion;
-		internal uint dwFileVersionMS;
-		internal uint dwFileVersionLS;
-		internal uint dwProductVersionMS;
-		internal uint dwProductVersionLS;
-		internal uint dwFileFlagsMask;
-		internal uint dwFileFlags;
-		internal uint dwFileOS;
-		internal uint dwFileType;
-		internal uint dwFileSubtype;
-		internal uint dwFileDateMS;
-		internal uint dwFileDateLS;
-	}
 }

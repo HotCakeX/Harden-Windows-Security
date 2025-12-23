@@ -101,9 +101,11 @@ You can seamlessly swap any deployed policy on the System Information page. For 
 
 ## Online Policies
 
-Use the <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="30"> [**Microsoft Graph Button**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph) to sign into your account and then press the `Retrieve Online Policies` button to retrieve any available App Control policies from Intune. They will be populated in the List View where you can see them in detail, sort them, search through them and manage them.
+Use the <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="30"> [**Microsoft Graph Button**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph) to sign into your account and then press the `Retrieve Online Policies` button to retrieve any available App Control and Managed Installer policies from Intune. They will be populated in the List View where you can see them in detail, sort them, search through them and manage them.
 
-* **Remove Policy**: After selecting an Intune policy, use this button to remove it from Intune. The devices that this policy is deployed to will have to reboot in order for the policy to be fully removed from them.
+* **Remove Policy**: After selecting an Intune-deployed App Control or Managed Installer policy from the list, use this button to remove it from Intune. The devices that this policy is deployed to will have to reboot in order for the policy to be fully removed from them.
+
+* **Create Managed Installer**: Easily deploy a [Managed Installer policy](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/configure-authorized-apps-deployed-with-a-managed-installer) so apps deployed via Intune will be automatically allowed in your App Control policies. The created policy is seamlessly integrated with the rest of the Endpoint Security's design in the Intune portal, that means the policies the AppControl Manager deploys are visible in the [native section of the portal](https://intune.microsoft.com/#view/Microsoft_Intune_Workflows/SecurityManagementMenu/~/appControl).
 
 <br>
 

@@ -22,6 +22,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -315,12 +316,9 @@ internal static class MSBaseline
 			}
 		}
 
-		using HttpClient httpClient = new();
-		httpClient.Timeout = TimeSpan.FromMinutes(5); // 5 minutes timeout to work even with the slowest networks.
-
 		Logger.Write("Starting download of security baseline ZIP file into memory...");
 
-		HttpResponseMessage response = await httpClient.GetAsync(downloadUrl);
+		using HttpResponseMessage response = await SecHttpClient.Instance.GetAsync(downloadUrl);
 		_ = response.EnsureSuccessStatusCode();
 
 		byte[] content = await response.Content.ReadAsByteArrayAsync();
@@ -463,7 +461,7 @@ internal static class MSBaseline
 		// Ensure destination directory exists
 		_ = Directory.CreateDirectory(PolicyDefinitionsPath);
 
-		foreach (InMemoryFile templateFile in templateFiles)
+		foreach (InMemoryFile templateFile in CollectionsMarshal.AsSpan(templateFiles))
 		{
 			// Calculate relative path within Templates directory
 			string normalizedFilePath = templateFile.RelativePath.Replace('\\', '/');
@@ -495,7 +493,7 @@ internal static class MSBaseline
 
 		// Find all GUID directory paths
 		HashSet<string> guidDirectories = [];
-		foreach (InMemoryFile file in items)
+		foreach (InMemoryFile file in CollectionsMarshal.AsSpan(items))
 		{
 			string normalizedPath = file.RelativePath.Replace('\\', '/');
 			if (normalizedPath.StartsWith(gposPrefix, StringComparison.OrdinalIgnoreCase))
@@ -596,7 +594,7 @@ internal static class MSBaseline
 	{
 		List<VerificationResult> results = [];
 
-		foreach (InMemoryFile csvFile in auditCsvFiles)
+		foreach (InMemoryFile csvFile in CollectionsMarshal.AsSpan(auditCsvFiles))
 		{
 			try
 			{
@@ -609,7 +607,7 @@ internal static class MSBaseline
 				Guid[] guids = csvEntries.Select(e => e.SubcategoryGuid).ToArray();
 				Dictionary<Guid, uint> currentPolicies = AuditPolicyManager.GetSpecificAuditPolicies(guids);
 
-				foreach (CsvAuditPolicyEntry entry in csvEntries)
+				foreach (CsvAuditPolicyEntry entry in CollectionsMarshal.AsSpan(csvEntries))
 				{
 					bool isCompliant = currentPolicies.TryGetValue(entry.SubcategoryGuid, out uint currentValue) &&
 									  currentValue == entry.SettingValue;
@@ -658,7 +656,7 @@ internal static class MSBaseline
 		if (machinePolicyFiles.Count > 0)
 		{
 			List<RegistryPolicyEntry> machinePolicies = [];
-			foreach (InMemoryFile polFile in machinePolicyFiles)
+			foreach (InMemoryFile polFile in CollectionsMarshal.AsSpan(machinePolicyFiles))
 			{
 				using MemoryStream stream = new(polFile.Content);
 				RegistryPolicyFile policyFile = RegistryPolicyParser.ParseStream(stream);
@@ -713,7 +711,7 @@ internal static class MSBaseline
 		if (userPolicyFiles.Count > 0)
 		{
 			List<RegistryPolicyEntry> userPolicies = [];
-			foreach (InMemoryFile polFile in userPolicyFiles)
+			foreach (InMemoryFile polFile in CollectionsMarshal.AsSpan(userPolicyFiles))
 			{
 				using MemoryStream stream = new(polFile.Content);
 				RegistryPolicyFile policyFile = RegistryPolicyParser.ParseStream(stream);
@@ -777,7 +775,7 @@ internal static class MSBaseline
 
 		// Extract expected system access settings from INF files
 		Dictionary<string, string> expectedSettings = [];
-		foreach (InMemoryFile infFile in infFiles)
+		foreach (InMemoryFile infFile in CollectionsMarshal.AsSpan(infFiles))
 		{
 			using MemoryStream stream = new(infFile.Content);
 			using StreamReader reader = new(stream, Encoding.UTF8);
@@ -906,7 +904,7 @@ internal static class MSBaseline
 
 		// Extract expected privilege rights from INF files
 		Dictionary<string, string[]> expectedPrivileges = new(StringComparer.Ordinal);
-		foreach (InMemoryFile infFile in infFiles)
+		foreach (InMemoryFile infFile in CollectionsMarshal.AsSpan(infFiles))
 		{
 			using MemoryStream stream = new(infFile.Content);
 			using StreamReader reader = new(stream, Encoding.UTF8);
@@ -1017,7 +1015,7 @@ internal static class MSBaseline
 
 		// Extract expected registry policies from INF files
 		List<RegistryPolicyEntry> expectedPolicies = [];
-		foreach (InMemoryFile infFile in infFiles)
+		foreach (InMemoryFile infFile in CollectionsMarshal.AsSpan(infFiles))
 		{
 			using MemoryStream stream = new(infFile.Content);
 			using StreamReader reader = new(stream, Encoding.UTF8);
@@ -1371,7 +1369,7 @@ internal static class MSBaseline
 		{
 			string auditActionText = action == PolicyAction.Apply ? "Applying" : "Removing (Disabling)";
 			Logger.Write($"{auditActionText} audit CSV files...");
-			foreach (InMemoryFile auditCsvFile in auditCsvFiles)
+			foreach (InMemoryFile auditCsvFile in CollectionsMarshal.AsSpan(auditCsvFiles))
 			{
 				cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1414,7 +1412,7 @@ internal static class MSBaseline
 		List<RegistryPolicyEntry> accumulatedPolicies = [];
 
 		// Parse each POL file and accumulate entries
-		foreach (InMemoryFile polFile in polFiles)
+		foreach (InMemoryFile polFile in CollectionsMarshal.AsSpan(polFiles))
 		{
 			Logger.Write($"Parsing POL file from memory: {polFile.RelativePath}");
 
@@ -1479,7 +1477,7 @@ internal static class MSBaseline
 		else
 		{
 			filteredEntries = [];
-			foreach (CsvAuditPolicyEntry entry in csvEntries)
+			foreach (CsvAuditPolicyEntry entry in CollectionsMarshal.AsSpan(csvEntries))
 			{
 				// ID generation must match VerifyAuditPoliciesFromMemory
 				string id = $"AuditPolicy|{entry.SubcategoryGuid}";
@@ -1527,7 +1525,7 @@ internal static class MSBaseline
 		// Apply System Access policies from all INF files at once
 		Dictionary<string, string> systemAccessSettings = [];
 
-		foreach (InMemoryFile infFile in infFiles)
+		foreach (InMemoryFile infFile in CollectionsMarshal.AsSpan(infFiles))
 		{
 			Logger.Write($"Finding System Access policies in: {infFile.RelativePath}");
 
@@ -1596,7 +1594,7 @@ internal static class MSBaseline
 		Dictionary<string, string[]> privilegeRights = new(StringComparer.Ordinal);
 		List<RegistryPolicyEntry> registryPolicyEntries = [];
 
-		foreach (InMemoryFile infFile in infFiles)
+		foreach (InMemoryFile infFile in CollectionsMarshal.AsSpan(infFiles))
 		{
 			Logger.Write($"Parsing INF file from memory: {infFile.RelativePath}");
 

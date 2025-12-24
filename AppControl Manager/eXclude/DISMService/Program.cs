@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
@@ -242,7 +243,7 @@ internal sealed class Program
 			_writer.Write(0); // Chunk index 0
 			_writer.Write(results.Count); // Items in chunk
 
-			foreach (CommonCore.DISM.DISMOutput result in results)
+			foreach (CommonCore.DISM.DISMOutput result in CollectionsMarshal.AsSpan(results))
 			{
 				WriteString(result.Name);
 				_writer.Write((int)result.State);
@@ -279,7 +280,7 @@ internal sealed class Program
 			_writer.Write(0); // Chunk index 0
 			_writer.Write(results.Count); // Items in chunk
 
-			foreach (CommonCore.DISM.DISMOutput result in results)
+			foreach (CommonCore.DISM.DISMOutput result in CollectionsMarshal.AsSpan(results))
 			{
 				WriteString(result.Name);
 				_writer.Write((int)result.State);

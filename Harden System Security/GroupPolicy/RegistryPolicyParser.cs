@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 
@@ -260,7 +261,7 @@ internal static class RegistryPolicyParser
 		writer.Write(RegistryPolicyFile.REGISTRY_FILE_VERSION);
 
 		// Write entries
-		foreach (RegistryPolicyEntry entry in policyFile.Entries)
+		foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(policyFile.Entries))
 		{
 			WriteEntry(writer, entry);
 		}
@@ -356,7 +357,7 @@ internal static class RegistryPolicyParser
 		List<MergeOperation> operations = [];
 
 		// First add all entries from the main policy file (no operations recorded for these)
-		foreach (RegistryPolicyEntry entry in mainPolicyFile.Entries)
+		foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(mainPolicyFile.Entries))
 		{
 			string key = $"{entry.KeyName}|{entry.ValueName}";
 			mergedEntries[key] = entry;
@@ -366,7 +367,7 @@ internal static class RegistryPolicyParser
 		foreach (RegistryPolicyFile otherPolicyFile in otherPolicyFiles)
 		{
 
-			foreach (RegistryPolicyEntry entry in otherPolicyFile.Entries)
+			foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(otherPolicyFile.Entries))
 			{
 				string key = $"{entry.KeyName}|{entry.ValueName}";
 
@@ -461,14 +462,14 @@ internal static class RegistryPolicyParser
 				List<MergeOperation> operations = [];
 
 				// First add all entries from the main policy file (no operations recorded for these)
-				foreach (RegistryPolicyEntry entry in policyFile.Entries)
+				foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(policyFile.Entries))
 				{
 					string key = $"{entry.KeyName}|{entry.ValueName}";
 					mergedEntries[key] = entry;
 				}
 
 				// Then process entries from other policies
-				foreach (RegistryPolicyEntry entry in policies)
+				foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(policies))
 				{
 					string key = $"{entry.KeyName}|{entry.ValueName}";
 
@@ -504,7 +505,7 @@ internal static class RegistryPolicyParser
 				WriteFile(PolicyContextFilePath, mergedFile);
 
 				// Print merge operations
-				foreach (MergeOperation operation in operations)
+				foreach (MergeOperation operation in CollectionsMarshal.AsSpan(operations))
 				{
 					Logger.Write(operation.ToString());
 				}
@@ -546,7 +547,7 @@ internal static class RegistryPolicyParser
 				Logger.Write(GlobalVars.GetStr("PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified"));
 
 				// Mark all policies as unverified since the file doesn't exist
-				foreach (RegistryPolicyEntry policy in policies)
+				foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
 				{
 					verificationResults[policy] = (false, null);
 				}
@@ -560,14 +561,14 @@ internal static class RegistryPolicyParser
 
 			// Lookup dictionary for faster searches
 			Dictionary<string, RegistryPolicyEntry> systemPolicies = new(StringComparer.OrdinalIgnoreCase);
-			foreach (RegistryPolicyEntry entry in policyFile.Entries)
+			foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(policyFile.Entries))
 			{
 				string key = $"{entry.KeyName}|{entry.ValueName}";
 				systemPolicies[key] = entry;
 			}
 
 			// Verify each policy
-			foreach (RegistryPolicyEntry policy in policies)
+			foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
 			{
 				string key = $"{policy.KeyName}|{policy.ValueName}";
 
@@ -596,7 +597,7 @@ internal static class RegistryPolicyParser
 			Logger.Write(ex);
 
 			// Mark all policies as unverified on error
-			foreach (RegistryPolicyEntry policy in policies)
+			foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
 			{
 				verificationResults[policy] = (false, null);
 			}
@@ -646,7 +647,7 @@ internal static class RegistryPolicyParser
 
 		// Set of keys to remove
 		HashSet<string> policiesToRemove = new(StringComparer.OrdinalIgnoreCase);
-		foreach (RegistryPolicyEntry policy in policies)
+		foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
 		{
 			string key = $"{policy.KeyName}|{policy.ValueName}";
 			_ = policiesToRemove.Add(key);
@@ -656,7 +657,7 @@ internal static class RegistryPolicyParser
 		List<RegistryPolicyEntry> remainingEntries = [];
 		List<string> removedEntries = [];
 
-		foreach (RegistryPolicyEntry entry in policyFile.Entries)
+		foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(policyFile.Entries))
 		{
 			string key = $"{entry.KeyName}|{entry.ValueName}";
 			if (policiesToRemove.Contains(key))
@@ -679,7 +680,7 @@ internal static class RegistryPolicyParser
 		// Write the updated policy file
 		WriteFile(polFilePath, updatedFile);
 
-		foreach (string removedEntry in removedEntries)
+		foreach (string removedEntry in CollectionsMarshal.AsSpan(removedEntries))
 		{
 			Logger.Write(string.Format(GlobalVars.GetStr("RemovedPolicyEntry"), removedEntry));
 		}

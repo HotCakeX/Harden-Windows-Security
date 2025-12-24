@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity;
@@ -38,7 +39,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
 	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 
-	internal MUnitListViewControl() => this.InitializeComponent();
+	internal MUnitListViewControl() => InitializeComponent();
 
 	private bool _isDisposed;
 
@@ -337,7 +338,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		int notAppliedCount = 0;
 
 		// Count status from all MUnits in the backing field (not just filtered ones)
-		foreach (GroupInfoListForMUnit group in ViewModel.ListViewItemsSourceBackingField)
+		foreach (GroupInfoListForMUnit group in CollectionsMarshal.AsSpan(ViewModel.ListViewItemsSourceBackingField))
 		{
 			foreach (MUnit munit in group)
 			{
@@ -949,7 +950,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		// Pre-dedicate the max capacity to the list.
 		List<GroupInfoListForMUnit> filteredGroups = new(ViewModel.ListViewItemsSourceBackingField.Count);
 
-		foreach (GroupInfoListForMUnit group in ViewModel.ListViewItemsSourceBackingField)
+		foreach (GroupInfoListForMUnit group in CollectionsMarshal.AsSpan(ViewModel.ListViewItemsSourceBackingField))
 		{
 			// Filter items by status toggles and optional search.
 			IEnumerable<MUnit> filteredItemsEnum = group.Where(munit =>

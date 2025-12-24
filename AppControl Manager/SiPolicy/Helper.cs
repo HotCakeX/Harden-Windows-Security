@@ -19,7 +19,6 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -423,12 +422,12 @@ internal static class Helper
 	/// <summary>
 	/// Loads and parses an application manifest from a URI (file or web).
 	/// </summary>
-	internal static AppManifest RetrieveApplicationManifest(HttpClient c, Uri Manifest)
+	internal static AppManifest RetrieveApplicationManifest(Uri Manifest)
 	{
 		string content = Manifest.Scheme == Uri.UriSchemeFile
 			? File.ReadAllText(Manifest.AbsolutePath)
 			: Manifest.Scheme == Uri.UriSchemeHttp || Manifest.Scheme == Uri.UriSchemeHttps
-				? c.GetStringAsync(Manifest).GetAwaiter().GetResult()
+				? SecHttpClient.Instance.GetStringAsync(Manifest).GetAwaiter().GetResult()
 				: throw new InvalidOperationException(string.Format(GlobalVars.GetStr("InvalidUrlDetectedForAppManifest"), Manifest.Scheme));
 
 		using MemoryStream xmlStream = new(Encoding.UTF8.GetBytes(content));

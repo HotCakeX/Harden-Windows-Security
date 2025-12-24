@@ -165,16 +165,10 @@ internal static class Main
 		if (account is null)
 			return null;
 
-		using SecHttpClient httpClient = new();
-
 		string? output = null;
 
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		// Set up the HTTP headers
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		QueryPayload queryPayload;
 
@@ -208,11 +202,14 @@ DeviceEvents
 		// Make the POST request
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"RunMDEAdvancedHuntingQuery",
-			() => new HttpRequestMessage(HttpMethod.Post, MDEAH)
+			() =>
 			{
-				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
-			},
-			httpClient
+				HttpRequestMessage request = new(HttpMethod.Post, MDEAH);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			}
 		);
 
 		if (response.IsSuccessStatusCode)
@@ -247,14 +244,8 @@ DeviceEvents
 
 		List<IntuneGroupItemListView> output = [];
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		// Set up the HTTP headers
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Start with initial endpoint
 		string? nextLink = GroupsUrl.ToString();
@@ -263,8 +254,13 @@ DeviceEvents
 		{
 			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 				"FetchGroups",
-				() => new HttpRequestMessage(HttpMethod.Get, new Uri(nextLink)),
-				httpClient
+				() =>
+				{
+					HttpRequestMessage request = new(HttpMethod.Get, new Uri(nextLink));
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					return request;
+				}
 			);
 
 			if (response.IsSuccessStatusCode)
@@ -473,12 +469,6 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException">Thrown when the assignment fails for any of the groups.</exception>
 	private static async Task AssignIntunePolicyToGroup(string policyId, string accessToken, IEnumerable<string> groupIds)
 	{
-		using SecHttpClient httpClient = new();
-
-		// Set up the HTTP headers.
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
 		foreach (string groupId in groupIds)
 		{
 			// Create the payload for each group.
@@ -496,13 +486,17 @@ DeviceEvents
 			// Send the POST request to assign the policy to the group.
 			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 				"AssignIntunePolicyToGroup",
-				() => new HttpRequestMessage(
-					HttpMethod.Post,
-					new Uri($"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments"))
+				() =>
 				{
-					Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
-				},
-				httpClient
+					HttpRequestMessage request = new(
+						HttpMethod.Post,
+						new Uri($"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments"));
+
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+					return request;
+				}
 			);
 
 			// Process the response for the current group.
@@ -579,20 +573,17 @@ DeviceEvents
 		// Serialize the policy object to JSON
 		string jsonPayload = JsonSerializer.Serialize(customPolicy, MSGraphJsonContext.Default.Windows10CustomConfiguration);
 
-		using SecHttpClient httpClient = new();
-
-		// Set up the HTTP headers
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
 		// Send the POST request
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateCustomIntunePolicy",
-			() => new HttpRequestMessage(HttpMethod.Post, DeviceConfigurationsURL)
+			() =>
 			{
-				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
-			},
-			httpClient
+				HttpRequestMessage request = new(HttpMethod.Post, DeviceConfigurationsURL);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			}
 		);
 
 		// Process the response
@@ -731,18 +722,8 @@ DeviceEvents
 	internal static async Task<DeviceConfigurationPoliciesResponse?> RetrieveDeviceConfigurations(AuthenticatedAccounts account)
 	{
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization =
-			new AuthenticationHeaderValue(
-				"Bearer",
-				accessToken);
-
-		httpClient.DefaultRequestHeaders.Accept
-			.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Initial request URL.
 		// Applying a filter to retrieve only the policies for Windows custom configurations
@@ -759,10 +740,13 @@ DeviceEvents
 		{
 			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 				"RetrieveDeviceConfigurations",
-				() => new HttpRequestMessage(
-					HttpMethod.Get,
-					new Uri(nextLink)),
-				httpClient
+				() =>
+				{
+					HttpRequestMessage request = new(HttpMethod.Get, new Uri(nextLink));
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					return request;
+				}
 			);
 
 			if (!response.IsSuccessStatusCode)
@@ -847,14 +831,8 @@ DeviceEvents
 		if (account is null)
 			return;
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		// Set up the HTTP headers.
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Construct the DELETE URL using the base DeviceConfigurationsURL.
 		string deleteUrl = $"{DeviceConfigurationsURL.OriginalString}/{policyId}";
@@ -862,8 +840,13 @@ DeviceEvents
 		// Send the DELETE request.
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeletePolicy",
-			() => new HttpRequestMessage(HttpMethod.Delete, new Uri(deleteUrl)),
-			httpClient
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Delete, new Uri(deleteUrl));
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			}
 		);
 
 		// Process the response.
@@ -909,13 +892,8 @@ DeviceEvents
 			throw new ArgumentException(GlobalVars.GetStr("GroupDisplayNameEmptyError"), nameof(displayName));
 		}
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// mailNickname is required by Graph for group creation. Sanitize it.
 		string mailNickname = new(displayName.Where(char.IsLetterOrDigit).ToArray());
@@ -944,11 +922,14 @@ DeviceEvents
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateGroup",
-			() => new HttpRequestMessage(HttpMethod.Post, GroupsUrl)
+			() =>
 			{
-				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
-			},
-			httpClient
+				HttpRequestMessage request = new(HttpMethod.Post, GroupsUrl);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			}
 		);
 
 		if (response.IsSuccessStatusCode)
@@ -1004,22 +985,20 @@ DeviceEvents
 			throw new ArgumentException("groupId is null or empty", nameof(groupId));
 		}
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization =
-			new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(
-			new MediaTypeWithQualityHeaderValue("application/json"));
 
 		Uri deleteUri = new($"{GroupsUrl}/{groupId}");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeleteGroup",
-			() => new HttpRequestMessage(HttpMethod.Delete, deleteUri),
-			httpClient
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Delete, deleteUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			}
 		);
 
 		if (response.IsSuccessStatusCode)
@@ -1045,15 +1024,8 @@ DeviceEvents
 	{
 		List<DeviceManagementConfigurationPolicy> allPolicies = [];
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization =
-			new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept
-			.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Beta endpoint for configuration policies (standard, non-custom).
 		string nextLink = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies";
@@ -1062,8 +1034,13 @@ DeviceEvents
 		{
 			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 				"RetrieveConfigurationPolicies",
-				() => new HttpRequestMessage(HttpMethod.Get, new Uri(nextLink)),
-				httpClient
+				() =>
+				{
+					HttpRequestMessage request = new(HttpMethod.Get, new Uri(nextLink));
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					return request;
+				}
 			);
 
 			if (!response.IsSuccessStatusCode)
@@ -1123,26 +1100,22 @@ DeviceEvents
 		// Read JSON payload from disk (as-is). We post it directly to Graph.
 		string jsonPayload = await File.ReadAllTextAsync(jsonFilePath);
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization =
-			new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept
-			.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Beta endpoint for creating configuration policies.
 		Uri createUri = new("https://graph.microsoft.com/beta/deviceManagement/configurationPolicies");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateConfigurationPolicyFromJson",
-			() => new HttpRequestMessage(HttpMethod.Post, createUri)
+			() =>
 			{
-				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
-			},
-			httpClient
+				HttpRequestMessage request = new(HttpMethod.Post, createUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			}
 		);
 
 		string responseContent = await response.Content.ReadAsStringAsync();
@@ -1182,13 +1155,8 @@ DeviceEvents
 	/// <param name="groupIds">Group IDs to assign to.</param>
 	internal static async Task AssignConfigurationPolicyToGroups(AuthenticatedAccounts account, string policyId, List<string> groupIds)
 	{
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Build the assignments payload using strongly-typed envelope.
 		List<AssignmentPayload> assignments = new();
@@ -1215,11 +1183,14 @@ DeviceEvents
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"AssignConfigurationPolicyToGroups",
-			() => new HttpRequestMessage(HttpMethod.Post, assignUri)
+			() =>
 			{
-				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
-			},
-			httpClient
+				HttpRequestMessage request = new(HttpMethod.Post, assignUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			}
 		);
 
 		string responseContent = await response.Content.ReadAsStringAsync();
@@ -1246,20 +1217,20 @@ DeviceEvents
 	/// <param name="policyId">Policy ID to delete.</param>
 	internal static async Task DeleteConfigurationPolicy(AuthenticatedAccounts account, string policyId)
 	{
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		Uri deleteUri = new($"https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/{policyId}");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeleteConfigurationPolicy",
-			() => new HttpRequestMessage(HttpMethod.Delete, deleteUri),
-			httpClient
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Delete, deleteUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			}
 		);
 
 		if (response.IsSuccessStatusCode)
@@ -1285,13 +1256,8 @@ DeviceEvents
 	{
 		List<DeviceHealthScript> allScripts = [];
 
-		using SecHttpClient httpClient = new();
-
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Filter for Managed Installer scripts
 		string nextLink = $"{DeviceHealthScriptsURL.OriginalString}?$filter=deviceHealthScriptType eq 'managedInstallerScript'";
@@ -1300,8 +1266,13 @@ DeviceEvents
 		{
 			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 				"RetrieveDeviceHealthScripts",
-				() => new HttpRequestMessage(HttpMethod.Get, new Uri(nextLink)),
-				httpClient
+				() =>
+				{
+					HttpRequestMessage request = new(HttpMethod.Get, new Uri(nextLink));
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					return request;
+				}
 			);
 
 			if (!response.IsSuccessStatusCode)
@@ -1343,10 +1314,7 @@ DeviceEvents
 	{
 		if (account is null) return null;
 
-		using SecHttpClient httpClient = new();
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Create the payload for the Managed Installer policy
 		DeviceHealthScript payload = new()
@@ -1375,11 +1343,14 @@ DeviceEvents
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateManagedInstallerPolicy",
-			() => new HttpRequestMessage(HttpMethod.Post, DeviceHealthScriptsURL)
+			() =>
 			{
-				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
-			},
-			httpClient
+				HttpRequestMessage request = new(HttpMethod.Post, DeviceHealthScriptsURL);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			}
 		);
 
 		string responseContent = await response.Content.ReadAsStringAsync();
@@ -1406,17 +1377,19 @@ DeviceEvents
 	{
 		if (account is null) return;
 
-		using SecHttpClient httpClient = new();
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		Uri deleteUri = new($"{DeviceHealthScriptsURL.OriginalString}/{policyId}");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeleteManagedInstallerPolicy",
-			() => new HttpRequestMessage(HttpMethod.Delete, deleteUri),
-			httpClient
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Delete, deleteUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			}
 		);
 
 		if (response.IsSuccessStatusCode)

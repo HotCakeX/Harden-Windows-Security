@@ -113,8 +113,8 @@
     {
         "Source": 0,
         "KeyName": "SOFTWARE\\Policies\\Microsoft\\Windows\\Sudo",
-        "ValueName": "**del.Enabled",
-        "Type": 1,
+        "ValueName": "Enabled",
+        "Type": 4,
         "Size": 4,
         "Data": "IAAAAA==",
         "RegValue": " ",

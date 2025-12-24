@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using HardenSystemSecurity.DeviceIntents;
@@ -341,7 +342,7 @@ internal static class CategoryProcessorFactory
 			List<RegistryPolicyEntry> subset = new(capacity: all.Count);
 
 			// Parent policy must always be included for apply
-			foreach (RegistryPolicyEntry entry in all)
+			foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(all))
 			{
 				if (entry.ValueName != null &&
 					entry.ValueName.Equals("ExploitGuard_ASR_Rules", StringComparison.OrdinalIgnoreCase))
@@ -351,7 +352,7 @@ internal static class CategoryProcessorFactory
 				}
 			}
 
-			foreach (RegistryPolicyEntry entry in all)
+			foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(all))
 			{
 				// Skip parent (already added)
 				if (entry.ValueName != null &&
@@ -412,7 +413,7 @@ internal static class CategoryProcessorFactory
 			// Build a subset of rules to remove, excluding the parent policy key.
 			List<RegistryPolicyEntry> subset = new(capacity: all.Count);
 
-			foreach (RegistryPolicyEntry entry in all)
+			foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(all))
 			{
 				// Skip parent (only remove rules subset)
 				if (entry.ValueName != null &&

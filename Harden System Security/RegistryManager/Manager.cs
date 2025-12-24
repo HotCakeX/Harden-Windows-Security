@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using HardenSystemSecurity.GroupPolicy;
 using Microsoft.Win32;
 
@@ -148,7 +149,7 @@ internal static class Manager
 	{
 		List<string> appliedEntries = [];
 
-		foreach (RegistryPolicyEntry policy in policies)
+		foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
 		{
 			try
 			{

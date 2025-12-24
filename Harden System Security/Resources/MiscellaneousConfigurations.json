@@ -649,5 +649,30 @@
             5
         ],
         "ID": "019b0786-b318-7ee2-88a0-bdfafe8a0261"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Microsoft\\AMSI",
+        "ValueName": "FeatureBits",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AgAAAA==",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "AMSIFeatureBits-Miscellaneous",
+        "URL": "https://learn.microsoft.com/windows/win32/api/amsi/nn-amsi-iantimalwareprovider#remarks",
+        "Category": 12,
+        "SubCategory": null,
+        "DefaultRegValue": "1",
+        "DeviceIntents": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "ID": "019b4f4e-256f-73e9-8015-45896cac9a0a"
     }
 ]

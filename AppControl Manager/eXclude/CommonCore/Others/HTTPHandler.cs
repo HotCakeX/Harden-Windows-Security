@@ -40,7 +40,6 @@ internal static class HTTPHandler
 	internal static async Task<HttpResponseMessage> ExecuteHttpWithRetryAsync(
 		string operationName,
 		Func<HttpRequestMessage> requestFactory,
-		HttpClient client,
 		CancellationToken cancellationToken = default)
 	{
 
@@ -53,7 +52,7 @@ internal static class HTTPHandler
 
 			try
 			{
-				response = await client.SendAsync(
+				response = await SecHttpClient.Instance.SendAsync(
 					request,
 					HttpCompletionOption.ResponseHeadersRead,
 					cancellationToken).ConfigureAwait(false);

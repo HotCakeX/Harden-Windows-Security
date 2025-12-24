@@ -15,11 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +27,6 @@ using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
-using HardenSystemSecurity.SecurityPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -484,7 +483,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (firewallRules is not null)
 			{
-				foreach (FirewallRule item in firewallRules)
+				foreach (FirewallRule item in CollectionsMarshal.AsSpan(firewallRules))
 				{
 					FirewallRules.Add(item);
 					AllFirewallRules.Add(item);
@@ -535,7 +534,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		}
 
 		List<FirewallRule> filteredResults = [];
-		foreach (FirewallRule rule in AllFirewallRules)
+		foreach (FirewallRule rule in CollectionsMarshal.AsSpan(AllFirewallRules))
 		{
 			if (rule.DisplayString.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				rule.Direction.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -546,7 +545,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		}
 
 		FirewallRules.Clear();
-		foreach (FirewallRule rule in filteredResults)
+		foreach (FirewallRule rule in CollectionsMarshal.AsSpan(filteredResults))
 		{
 			FirewallRules.Add(rule);
 		}

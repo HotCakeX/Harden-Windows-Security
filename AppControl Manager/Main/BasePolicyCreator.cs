@@ -76,18 +76,17 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		{
 			// The returned date is based on the local system's time-zone
 
-			// Set variables
 			const string owner = "MicrosoftDocs";
 			const string repo = "windows-itpro-docs";
 			const string path = "windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md";
 
 			Uri apiUrl = new($"https://api.github.com/repos/{owner}/{repo}/commits?path={path}");
 
-			using HttpClient httpClient = new SecHttpClient();
-			httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
+			using HttpRequestMessage request = new(HttpMethod.Get, apiUrl);
+			request.Headers.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
 
-			// Call GitHub API to get commit details
-			string response = httpClient.GetStringAsync(apiUrl).GetAwaiter().GetResult();
+			using HttpResponseMessage httpResponse = SecHttpClient.Instance.Send(request);
+			string response = httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
 			// Use JsonDocument to parse the JSON response
 			using JsonDocument document = JsonDocument.Parse(response);
@@ -141,13 +140,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		string SiPolicyFinalDestination = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
 
 		// Download the zip file
-		using (HttpClient client = new())
-		{
-			// Download the file synchronously
-			byte[] fileBytes = client.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL)
-									 .GetAwaiter().GetResult();
-			File.WriteAllBytes(DownloadSaveLocation, fileBytes);
-		}
+		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL)
+								 .GetAwaiter().GetResult();
+		File.WriteAllBytes(DownloadSaveLocation, fileBytes);
 
 		// Extract the contents of the zip file, overwriting any existing files
 		ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
@@ -210,12 +205,8 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
 
 		// Download the zip file
-		using (HttpClient client = new())
-		{
-			// Download the file synchronously
-			byte[] fileBytes = client.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
-			File.WriteAllBytes(DownloadSaveLocation, fileBytes);
-		}
+		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
+		File.WriteAllBytes(DownloadSaveLocation, fileBytes);
 
 		// Extract the contents of the zip file, overwriting any existing files
 		ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
@@ -272,7 +263,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <returns>Returns the path to the created policy</returns>
 	internal static string BuildAllowMSFT(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
-
 		string policyName;
 
 		if (IsAudit)
@@ -373,7 +363,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <returns>Returns the path to the created Default Windows base policy</returns>
 	internal static string BuildDefaultWindows(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
-
 		string policyName;
 
 		if (IsAudit)
@@ -474,14 +463,10 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			policyName));
 
 		// Download the markdown page from GitHub containing the latest Microsoft recommended block rules (User Mode)
-		string msftUserModeBlockRulesAsString;
-		using (HttpClient client = new SecHttpClient())
-		{
-			msftUserModeBlockRulesAsString = client
+		string msftUserModeBlockRulesAsString = SecHttpClient.Instance
 				.GetStringAsync(GlobalVars.MSFTRecommendedBlockRulesURL)
 				.GetAwaiter()
 				.GetResult();
-		}
 
 		// Extracted the XML content from the markdown string will saved in this variable
 		string xmlContent = ExtractXmlFromHtml(msftUserModeBlockRulesAsString);

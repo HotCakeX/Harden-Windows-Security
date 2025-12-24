@@ -33,6 +33,10 @@ using Microsoft.UI.Xaml;
 
 namespace HardenSystemSecurity.Protect;
 
+// IMPORTANT NOTES
+// 1. DO NOT use "**del." for "ValueName" in JSON files for items with "Source": 0" (aka Group Policies) if the intent is to remove them from the system.
+//    Instead, set the "PolicyAction: 1" and keep the "ValueName" as is without the "**del." prefix. It will correctly be matched/found and removed from the POL file.
+
 /// <summary>
 /// Execution timing for specialized strategies so we can define what code runs before or after the main Remove/Apply codes.
 /// This is used only for Security Measures applied via JSON files, aka those that use Group Policy or Registry keys.
@@ -581,20 +585,16 @@ internal static class SpecializedStrategiesRegistry
 						// Support canonical "true"/"false" and numeric "1"/"0" representations.
 						if (!bool.TryParse(dv.Value, out bool desiredBool))
 						{
-							desiredBool = string.Equals(dv.Value, "1", StringComparison.OrdinalIgnoreCase)
-								? true
-								: string.Equals(dv.Value, "0", StringComparison.OrdinalIgnoreCase)
+							desiredBool = string.Equals(dv.Value, "1", StringComparison.OrdinalIgnoreCase) || (string.Equals(dv.Value, "0", StringComparison.OrdinalIgnoreCase)
 									? false
-									: throw new InvalidOperationException($"Unrecognized desired boolean format: '{dv.Value}'");
+									: throw new InvalidOperationException($"Unrecognized desired boolean format: '{dv.Value}'"));
 						}
 
 						if (!bool.TryParse(result, out bool actualBool))
 						{
-							actualBool = string.Equals(result, "1", StringComparison.OrdinalIgnoreCase)
-								? true
-								: string.Equals(result, "0", StringComparison.OrdinalIgnoreCase)
+							actualBool = string.Equals(result, "1", StringComparison.OrdinalIgnoreCase) || (string.Equals(result, "0", StringComparison.OrdinalIgnoreCase)
 									? false
-									: throw new InvalidOperationException($"Unrecognized actual boolean format: '{result}'");
+									: throw new InvalidOperationException($"Unrecognized actual boolean format: '{result}'"));
 						}
 
 						if (actualBool == desiredBool)
@@ -1044,13 +1044,51 @@ internal sealed partial class MUnit(
 					cancellationToken?.ThrowIfCancellationRequested();
 
 					// Execute main bulk apply operation
+					// Split policies based on their Action:
+					// Policies with Action=Apply should be Added/Set
+					// Policies with Action=Remove should be Removed
+					List<RegistryPolicyEntry> toAdd = allPolicies.Where(p => p.policyAction == PolicyAction.Apply).ToList();
+					List<RegistryPolicyEntry> toRemove = allPolicies.Where(p => p.policyAction == PolicyAction.Remove).ToList();
+
+					#region extra cleanup
+
+					// For removal, we handle both standard names and "**del." legacy names.
+					List<RegistryPolicyEntry> toRemoveProcessed = [];
+
+					foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(toRemove))
+					{
+						// Add the original entry
+						toRemoveProcessed.Add(entry);
+
+						toRemoveProcessed.Add(new(
+							entry.Source,
+							entry.KeyName,
+							$"**del.{entry.ValueName}",
+							entry.Type,
+							entry.Size,
+							entry.Data,
+							entry.Hive,
+							entry.ID
+						));
+					}
+
+					#endregion
+
 					if (isGroupPolicy)
 					{
-						RegistryPolicyParser.AddPoliciesToSystem(allPolicies, GroupPolicyContext.Machine);
+						if (toAdd.Count > 0)
+							RegistryPolicyParser.AddPoliciesToSystem(toAdd, GroupPolicyContext.Machine);
+
+						if (toRemoveProcessed.Count > 0)
+							RegistryPolicyParser.RemovePoliciesFromSystem(toRemoveProcessed, GroupPolicyContext.Machine);
 					}
 					else
 					{
-						RegistryManager.Manager.AddPoliciesToSystem(allPolicies);
+						if (toAdd.Count > 0)
+							RegistryManager.Manager.AddPoliciesToSystem(toAdd);
+
+						if (toRemove.Count > 0)
+							RegistryManager.Manager.RemovePoliciesFromSystem(toRemove);
 					}
 
 					// Execute-After specialized apply strategies
@@ -1078,13 +1116,21 @@ internal sealed partial class MUnit(
 					cancellationToken?.ThrowIfCancellationRequested();
 
 					// Execute main bulk remove operation
-					if (isGroupPolicy)
+					// For Remove operation:
+					// Policies with Action=Apply should be Removed
+					// Policies with Action=Remove should be Skipped
+					List<RegistryPolicyEntry> toUndo = allPolicies.Where(p => p.policyAction == PolicyAction.Apply).ToList();
+
+					if (toUndo.Count > 0)
 					{
-						RegistryPolicyParser.RemovePoliciesFromSystem(allPolicies, GroupPolicyContext.Machine);
-					}
-					else
-					{
-						RegistryManager.Manager.RemovePoliciesFromSystem(allPolicies);
+						if (isGroupPolicy)
+						{
+							RegistryPolicyParser.RemovePoliciesFromSystem(toUndo, GroupPolicyContext.Machine);
+						}
+						else
+						{
+							RegistryManager.Manager.RemovePoliciesFromSystem(toUndo);
+						}
 					}
 
 					// Execute-After specialized remove strategies
@@ -1094,7 +1140,7 @@ internal sealed partial class MUnit(
 					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
 
 					// Mark all as not applied
-					foreach (MUnit mUnit in mUnits)
+					foreach (MUnit mUnit in CollectionsMarshal.AsSpan(mUnits))
 					{
 						mUnit.IsApplied = false;
 					}
@@ -1116,7 +1162,7 @@ internal sealed partial class MUnit(
 									RegistryPolicyParser.VerifyPoliciesInSystem(allPolicies, contextForVerification);
 
 						// 2) Per‑MUnit evaluation with fallback to direct Registry verification when needed
-						foreach (MUnit mUnit in mUnits)
+						foreach (MUnit mUnit in CollectionsMarshal.AsSpan(mUnits))
 						{
 							cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1125,10 +1171,26 @@ internal sealed partial class MUnit(
 								// Check compliance of the policy
 								RegistryPolicyEntry policy = verifyStrategy.Policy;
 
-								if (verificationResults.TryGetValue(policy, out (bool IsCompliant, RegistryPolicyEntry? SystemEntry) resultTuple) && resultTuple.IsCompliant)
+								if (verificationResults.TryGetValue(policy, out (bool IsCompliant, RegistryPolicyEntry? SystemEntry) resultTuple))
 								{
-									mUnit.IsApplied = true;
-									continue;
+									bool isConsideredCompliant = false;
+
+									if (policy.policyAction == PolicyAction.Apply)
+									{
+										// Must be present and matching
+										isConsideredCompliant = resultTuple.IsCompliant;
+									}
+									else if (policy.policyAction == PolicyAction.Remove)
+									{
+										// Must be absent (SystemEntry is null if not found)
+										isConsideredCompliant = resultTuple.SystemEntry == null;
+									}
+
+									if (isConsideredCompliant)
+									{
+										mUnit.IsApplied = true;
+										continue;
+									}
 								}
 
 								// 3) Fallback: verify via Registry (treat as Source = Registry)
@@ -1183,7 +1245,7 @@ internal sealed partial class MUnit(
 						Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryManager.Manager.VerifyPoliciesInSystem(allPolicies);
 
 						// Update status based on verification results, with fallback support
-						foreach (MUnit mUnit in mUnits)
+						foreach (MUnit mUnit in CollectionsMarshal.AsSpan(mUnits))
 						{
 							cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1331,7 +1393,7 @@ internal sealed partial class MUnit(
 				List<MUnit> registryMUnits = [];
 				List<MUnit> regularMUnits = [];
 
-				foreach (MUnit mUnit in mUnits)
+				foreach (MUnit mUnit in CollectionsMarshal.AsSpan(mUnits))
 				{
 					cancellationToken?.ThrowIfCancellationRequested();
 

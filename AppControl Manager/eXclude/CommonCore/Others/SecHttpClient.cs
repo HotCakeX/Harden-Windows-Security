@@ -15,19 +15,33 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Net;
 using System.Net.Http;
 
 namespace CommonCore.Others;
 
 /// <summary>
-/// This class enforces minimum HTTP version of 2.0 and is future proof since it tries the highest available HTTP version by default
+/// This class acts as a centralized provider for a Singleton HttpClient instance.
+/// https://learn.microsoft.com/dotnet/fundamentals/networking/http/httpclient-guidelines
 /// </summary>
-internal sealed partial class SecHttpClient : HttpClient
+internal static class SecHttpClient
 {
-	internal SecHttpClient() : base()
+	private static readonly Lazy<HttpClient> _instance = new(() =>
 	{
-		DefaultRequestVersion = HttpVersion.Version20;
-		DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
-	}
+		SocketsHttpHandler handler = new()
+		{
+			// Recreates the connection every 15 minutes to handle any possible DNS changes
+			// This is to avoid communicating with stale IP addresses
+			PooledConnectionLifetime = TimeSpan.FromMinutes(15)
+		};
+
+		// Create and configure the client
+		HttpClient client = new(handler)
+		{
+			DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+		};
+
+		return client;
+	});
+
+	internal static HttpClient Instance => _instance.Value;
 }

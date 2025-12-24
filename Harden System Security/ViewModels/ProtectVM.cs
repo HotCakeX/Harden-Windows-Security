@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -702,7 +702,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			IsAdding = true;
 
-			foreach (ProtectionCategoryListViewItem item in ProtectionCategoriesListItemsSourceSelectedItems)
+			foreach (ProtectionCategoryListViewItem item in CollectionsMarshal.AsSpan(ProtectionCategoriesListItemsSourceSelectedItems))
 			{
 				UIListView?.SelectedItems.Add(item);
 			}

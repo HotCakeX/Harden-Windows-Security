@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -808,13 +807,11 @@ internal static partial class BinaryOpsForward
 			return;
 		}
 
-		using HttpClient httpClient = new();
-
 		BodyWriter.Write((uint)appSettingsRegion.App.Count);
 
 		foreach (AppRoot appRootItem in CollectionsMarshal.AsSpan(appSettingsRegion.App))
 		{
-			AppManifest applicationManifest = Helper.RetrieveApplicationManifest(httpClient, new Uri(appRootItem.Manifest));
+			AppManifest applicationManifest = Helper.RetrieveApplicationManifest(new Uri(appRootItem.Manifest));
 
 			if (appRootItem.Setting is not null)
 			{

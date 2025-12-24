@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -581,7 +582,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 		ASRItemsLVBound.Clear();
 
-		foreach (ASRRuleEntry item in filteredResults)
+		foreach (ASRRuleEntry item in CollectionsMarshal.AsSpan(filteredResults))
 		{
 			ASRItemsLVBound.Add(item);
 		}

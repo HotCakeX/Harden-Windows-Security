@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -198,7 +199,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		{
 			// Update the observable collection
 			CountryLists.Clear();
-			foreach (CountryData country in filteredCountries)
+			foreach (CountryData country in CollectionsMarshal.AsSpan(filteredCountries))
 			{
 				CountryLists.Add(country);
 			}

@@ -269,71 +269,64 @@ internal sealed partial class UpdateVM : ViewModelBase
 					// If user did not supply a custom MSIXBundle file path
 					if (!InstallLocalPackageConfirmation)
 					{
-
-						using (HttpClient client = new SecHttpClient())
-						{
-							// Store the download link to the latest available version
-							onlineDownloadURL = new Uri(await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
-						}
+						// Store the download link to the latest available version
+						onlineDownloadURL = new Uri(await SecHttpClient.Instance.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
 
 						AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
 						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadingPackage"));
 
-						using (HttpClient client = new SecHttpClient())
+						// Send an Async get request to the url and specify to stop reading after headers are received for better efficiently
+						using (HttpResponseMessage response = await SecHttpClient.Instance.GetAsync(onlineDownloadURL, HttpCompletionOption.ResponseHeadersRead))
 						{
-							// Send an Async get request to the url and specify to stop reading after headers are received for better efficiently
-							using (HttpResponseMessage response = await client.GetAsync(onlineDownloadURL, HttpCompletionOption.ResponseHeadersRead))
+							// Ensure that the response is successful (status code 2xx); otherwise, throw an exception
+							_ = response.EnsureSuccessStatusCode();
+
+							// Retrieve the total file size from the Content-Length header (if available)
+							long? totalBytes = response.Content.Headers.ContentLength;
+
+							// Open a stream to read the response content asynchronously
+							await using (Stream contentStream = await response.Content.ReadAsStreamAsync())
 							{
-								// Ensure that the response is successful (status code 2xx); otherwise, throw an exception
-								_ = response.EnsureSuccessStatusCode();
-
-								// Retrieve the total file size from the Content-Length header (if available)
-								long? totalBytes = response.Content.Headers.ContentLength;
-
-								// Open a stream to read the response content asynchronously
-								await using (Stream contentStream = await response.Content.ReadAsStreamAsync())
+								// Open a file stream to save the downloaded data locally
+								await using (FileStream fileStream = new(
+									AppControlManagerSavePath,       // Path to save the file
+									FileMode.Create,                 // Create a new file or overwrite if it exists
+									FileAccess.Write,                // Write-only access
+									FileShare.None,                  // Do not allow other processes to access the file
+									bufferSize: 8192,                // Set buffer size to 8 KB
+									useAsync: true))                 // Enable asynchronous operations for the file stream
 								{
-									// Open a file stream to save the downloaded data locally
-									await using (FileStream fileStream = new(
-										AppControlManagerSavePath,       // Path to save the file
-										FileMode.Create,                 // Create a new file or overwrite if it exists
-										FileAccess.Write,                // Write-only access
-										FileShare.None,                  // Do not allow other processes to access the file
-										bufferSize: 8192,                // Set buffer size to 8 KB
-										useAsync: true))                 // Enable asynchronous operations for the file stream
+									// Define a buffer to hold data chunks as they are read
+									byte[] buffer = new byte[8192];
+									long totalReadBytes = 0;         // Track the total number of bytes read
+									int readBytes;                   // Holds the count of bytes read in each iteration
+									double lastReportedProgress = 0; // Tracks the last reported download progress
+
+									// Loop to read from the content stream in chunks until no more data is available
+									while ((readBytes = await contentStream.ReadAsync(buffer)) > 0)
 									{
-										// Define a buffer to hold data chunks as they are read
-										byte[] buffer = new byte[8192];
-										long totalReadBytes = 0;         // Track the total number of bytes read
-										int readBytes;                   // Holds the count of bytes read in each iteration
-										double lastReportedProgress = 0; // Tracks the last reported download progress
+										// Write the buffer to the file stream
+										await fileStream.WriteAsync(buffer.AsMemory(0, readBytes));
+										totalReadBytes += readBytes;  // Update the total bytes read so far
 
-										// Loop to read from the content stream in chunks until no more data is available
-										while ((readBytes = await contentStream.ReadAsync(buffer)) > 0)
+										// If the total file size is known, calculate and report progress
+										if (totalBytes.HasValue)
 										{
-											// Write the buffer to the file stream
-											await fileStream.WriteAsync(buffer.AsMemory(0, readBytes));
-											totalReadBytes += readBytes;  // Update the total bytes read so far
+											// Calculate the current download progress as a percentage
+											double progressPercentage = (double)totalReadBytes / totalBytes.Value * 100;
 
-											// If the total file size is known, calculate and report progress
-											if (totalBytes.HasValue)
+											// Only update the ProgressBar if progress has increased by at least 1% to avoid constantly interacting with the UI thread
+											if (progressPercentage - lastReportedProgress >= 1)
 											{
-												// Calculate the current download progress as a percentage
-												double progressPercentage = (double)totalReadBytes / totalBytes.Value * 100;
+												// Update the last reported progress
+												lastReportedProgress = progressPercentage;
 
-												// Only update the ProgressBar if progress has increased by at least 1% to avoid constantly interacting with the UI thread
-												if (progressPercentage - lastReportedProgress >= 1)
+												// Update the UI ProgressBar value on the dispatcher thread
+												_ = Dispatcher.TryEnqueue(() =>
 												{
-													// Update the last reported progress
-													lastReportedProgress = progressPercentage;
-
-													// Update the UI ProgressBar value on the dispatcher thread
-													_ = Dispatcher.TryEnqueue(() =>
-													{
-														ProgressBarValue = progressPercentage;
-													});
-												}
+													ProgressBarValue = progressPercentage;
+												});
 											}
 										}
 									}
@@ -343,7 +336,6 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 						Logger.Write(GlobalVars.GetStr("DownloadSuccess") + AppControlManagerSavePath);
 					}
-
 					else
 					{
 						// Use the user-supplied MSIXBundle file path for installation source

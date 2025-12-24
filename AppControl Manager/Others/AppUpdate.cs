@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Services.Store;
 
@@ -54,9 +53,7 @@ internal static class AppUpdate
 	/// </summary>
 	internal static UpdateCheckResponse CheckGitHub()
 	{
-		using HttpClient client = new SecHttpClient();
-
-		string versionsResponse = client.GetStringAsync(GlobalVars.AppVersionLinkURL).GetAwaiter().GetResult().Trim();
+		string versionsResponse = SecHttpClient.Instance.GetStringAsync(GlobalVars.AppVersionLinkURL).GetAwaiter().GetResult().Trim();
 
 		Version onlineAvailableVersion = new(versionsResponse);
 		bool isUpdateAvailable = onlineAvailableVersion > App.currentAppVersion;

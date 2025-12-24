@@ -979,4 +979,7 @@
 <data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
     <value>عرض ملحق الملف لملفات (.pif) في مستكشف الملفات. تعمل ملفات معلومات البرنامج (PIF) بشكل مشابه لملفات .exe وغالباً ما يستخدمها المهاجمون لإخفاء البرامج الضارة خلف نوع ملف أقل شيوعاً.</value>
 </data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>قم بتكوين واجهة فحص مكافحة البرامج الضارة (AMSI) لفرض متطلبات توقيع التعليمات البرمجية لـ Authenticode بصرامة على جميع موفري برامج مكافحة البرامج الضارة التابعين لجهات خارجية.</value>
+</data>
 </root>

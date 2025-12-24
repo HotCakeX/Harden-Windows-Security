@@ -33,6 +33,7 @@ namespace AppControlManager.WindowComponents;
 using AppControlManager.WindowComponents;
 using HardenSystemSecurity.ViewModels;
 using System.Collections.Frozen;
+using System.Runtime.InteropServices;
 namespace HardenSystemSecurity.WindowComponents;
 #endif
 
@@ -547,7 +548,7 @@ internal sealed class NavigationService
 		// Build Type -> NavigationViewItem map using Tag -> Type map we already have.
 		Dictionary<Type, NavigationViewItem> typeToItem = new(capacity: mainWindowVM.allNavigationItems.Count);
 
-		foreach (NavigationViewItem item in mainWindowVM.allNavigationItems)
+		foreach (NavigationViewItem item in CollectionsMarshal.AsSpan(mainWindowVM.allNavigationItems))
 		{
 			// Tag is the non-localized identifier defined in XAML
 			string? tag = item.Tag?.ToString();

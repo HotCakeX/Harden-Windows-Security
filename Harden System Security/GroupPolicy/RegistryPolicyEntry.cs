@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -211,7 +212,7 @@ internal sealed class RegistryPolicyEntry(
 
 		List<RegistryPolicyEntry> result = JsonSerializer.Deserialize(json, PolicyInputJsonContext.Default.ListRegistryPolicyEntry) ?? throw new InvalidOperationException($"Could not load the JSON file: {path}");
 
-		foreach (RegistryPolicyEntry entry in result)
+		foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(result))
 		{
 			if (entry.FriendlyName is not null)
 			{

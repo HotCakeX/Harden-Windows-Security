@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
@@ -269,7 +270,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			).ToList();
 
 			NonStlCertificates.Clear();
-			foreach (NonStlRootCert cert in filteredResults)
+			foreach (NonStlRootCert cert in CollectionsMarshal.AsSpan(filteredResults))
 			{
 				NonStlCertificates.Add(cert);
 			}

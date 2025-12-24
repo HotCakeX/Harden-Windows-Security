@@ -979,4 +979,7 @@
 <data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
     <value>Εμφάνιση της επέκτασης αρχείου για αρχεία (.pif) στην Εξερεύνηση αρχείων. Τα Αρχεία Πληροφοριών Προγράμματος (PIF) λειτουργούν παρόμοια με τα αρχεία .exe και χρησιμοποιούνται συχνά από επιτιθέμενους για να κρύψουν κακόβουλο λογισμικό πίσω από έναν λιγότερο γνωστό τύπο αρχείου.</value>
 </data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>Διαμορφώστε το Antimalware Scan Interface (AMSI) ώστε να επιβάλλει αυστηρά τις απαιτήσεις υπογραφής κώδικα Authenticode για όλους τους τρίτους παρόχους προστασίας από κακόβουλο λογισμικό.</value>
+</data>
 </root>

@@ -18,7 +18,6 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Xml;
 using AppControlManager.Main;
 

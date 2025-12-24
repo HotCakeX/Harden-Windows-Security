@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -29,7 +28,6 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
 using CommonCore.Hardware;
-using CommonCore.Interop;
 using CommonCore.Power;
 using CommonCore.ThermalMonitors;
 using Microsoft.UI.Dispatching;
@@ -826,16 +824,8 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 		try
 		{
-			using HttpClient httpClient = new()
-			{
-				Timeout = TimeSpan.FromSeconds(8)
-			};
-
 			// Download XML
-
-			using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(10));
-			using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
-			string xml = await httpClient.GetStringAsync(OnlineMSDefenderStatusURL, linked.Token)
+			string xml = await SecHttpClient.Instance.GetStringAsync(OnlineMSDefenderStatusURL, cancellationToken)
 										 .ConfigureAwait(false);
 
 			// Parse

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
@@ -163,7 +164,7 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 
 					// Update total items count
 					int totalCount = 0;
-					foreach (GroupInfoListForMUnit group in viewModel.ListViewItemsSourceBackingField)
+					foreach (GroupInfoListForMUnit group in CollectionsMarshal.AsSpan(viewModel.ListViewItemsSourceBackingField))
 					{
 						totalCount += group.Count;
 					}
@@ -176,7 +177,7 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 					int applied = 0;
 					int notApplied = 0;
 
-					foreach (MUnit m in viewModel.AllMUnits)
+					foreach (MUnit m in CollectionsMarshal.AsSpan(viewModel.AllMUnits))
 					{
 						StatusState status = m.StatusState;
 						switch (status)

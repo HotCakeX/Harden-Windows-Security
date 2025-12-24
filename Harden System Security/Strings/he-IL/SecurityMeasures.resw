@@ -979,4 +979,7 @@
 <data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
     <value>הצג את סיומת הקובץ עבור קבצי (.pif) בסייר הקבצים. קבצי מידע של תוכניות (PIF) מתפקדים בדומה לקבצי .exe ומשמשים לעתים קרובות תוקפים כדי להסתיר תוכנות זדוניות מאחורי סוג קובץ פחות מוכר.</value>
 </data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>הגדר את ממשק סריקת התוכנות הזדוניות (AMSI) לאכיפה קפדנית של דרישות חתימת הקוד של Authenticode עבור כל ספקי ההגנה מפני תוכנות זדוניות מצד שלישי.</value>
+</data>
 </root>

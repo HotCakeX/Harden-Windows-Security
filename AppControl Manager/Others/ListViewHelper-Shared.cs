@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
+using System.Runtime.InteropServices;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity;
@@ -42,7 +43,6 @@ namespace AppControlManager.Others;
 /// </summary>
 internal static partial class ListViewHelper
 {
-
 	/// <summary>
 	/// A list of all of the ListViews in this or adjacent applications.
 	/// </summary>
@@ -342,7 +342,7 @@ internal static partial class ListViewHelper
 
 		// Re-populate the ObservableCollection
 		observableCollection.Clear();
-		foreach (TElement item in sortedData)
+		foreach (TElement item in CollectionsMarshal.AsSpan(sortedData))
 		{
 			observableCollection.Add(item);
 		}

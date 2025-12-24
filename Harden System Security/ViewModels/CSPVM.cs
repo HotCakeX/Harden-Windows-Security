@@ -22,7 +22,6 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
@@ -32,8 +31,6 @@ using System.Xml;
 using System.Xml.Linq;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.Pages;
-using HardenSystemSecurity.SecurityPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
@@ -122,8 +119,6 @@ internal sealed partial class CSPVM : ViewModelBase
 	/// https://learn.microsoft.com/en-us/windows/client-management/mdm/configuration-service-provider-ddf
 	/// </summary>
 	private static readonly Uri DDFPackageDownloadURL = new("https://download.microsoft.com/download/2ff2c8b9-2e3f-47af-89e6-11c19b7f0c2a/DDFv2Sept25.zip");
-
-	private static readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromMinutes(5) };
 
 	internal InfoBarSettings MainInfoBar { get; }
 
@@ -271,7 +266,7 @@ internal sealed partial class CSPVM : ViewModelBase
 						// Download Fresh
 						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadingDDFDefinitions"));
 
-						byte[] rawData = await _httpClient.GetByteArrayAsync(DDFPackageDownloadURL);
+						byte[] rawData = await SecHttpClient.Instance.GetByteArrayAsync(DDFPackageDownloadURL);
 
 						// Store in cache
 						CachedZipData = new(rawData);

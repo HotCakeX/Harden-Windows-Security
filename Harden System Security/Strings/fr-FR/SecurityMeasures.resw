@@ -979,4 +979,7 @@
 <data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
     <value>Afficher l'extension de fichier pour les fichiers (.pif) dans l'Explorateur de fichiers. Les fichiers d'informations sur les programmes (PIF) fonctionnent de manière similaire aux fichiers .exe et sont fréquemment utilisés par les attaquants pour dissimuler des logiciels malveillants derrière un type de fichier moins familier.</value>
 </data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>Configurez l'interface d'analyse anti-malware (AMSI) pour appliquer strictement les exigences de signature de code Authenticode pour tous les fournisseurs tiers de logiciels anti-malveillants.</value>
+</data>
 </root>

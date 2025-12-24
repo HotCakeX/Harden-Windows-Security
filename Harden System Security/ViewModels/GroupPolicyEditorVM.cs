@@ -187,6 +187,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			Policies.Add(item);
 		}
 
+		CalculateColumnWidths();
+
 		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position

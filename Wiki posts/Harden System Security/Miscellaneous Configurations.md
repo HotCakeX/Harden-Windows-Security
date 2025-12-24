@@ -138,3 +138,7 @@
    * `.link` - [Attackers frequently rely](https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/) on the default hidden state of shortcuts to disguise malicious payloads as harmless documents. Revealing the extension allows you to verify the true file type and identify deceptive shortcuts before execution.
 
 <br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures the Antimalware Scan Interface (AMSI) to strictly [enforce Authenticode code signing](https://learn.microsoft.com/windows/win32/api/amsi/nn-amsi-iantimalwareprovider#remarks) requirements for all third-party antimalware providers.
+
+<br>

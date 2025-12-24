@@ -15,8 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-
 namespace AppControlManager.Others;
 
 internal static class RemoveUserModeSS

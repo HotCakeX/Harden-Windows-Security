@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using HardenSystemSecurity.DeviceIntents;
@@ -79,7 +80,7 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 		}
 
 		List<MUnit> filtered = new(mUnits.Count);
-		foreach (MUnit m in mUnits)
+		foreach (MUnit m in CollectionsMarshal.AsSpan(mUnits))
 		{
 			// Include Intent.All when any selection exists
 			if (m.DeviceIntents.Any(di => di == Intent.All))

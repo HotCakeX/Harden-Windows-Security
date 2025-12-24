@@ -1441,15 +1441,6 @@
   <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
     <value>שגיאה בעת בדיקה עבור תהליכי DISMService קיימים: {0}</value>
   </data>
-  <data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-    <value>בדיקת שלמות קובץ שירות DISM נכשלה</value>
-  </data>
-  <data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-    <value>נכשל באימות שלמות שירות DISM: {0}</value>
-  </data>
-  <data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-    <value>אימות שלמות קובצי שירות DISM נכשל. לא ניתן להפעיל את השירות.</value>
-  </data>
   <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
     <value>נכשל ביצירת תהליך. שגיאת Win32: {0}</value>
   </data>
@@ -1461,9 +1452,6 @@
   </data>
   <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
     <value>נכשל בהפעלת שירות DISM. ודא ש-DismService.exe נמצא בתיקיית האפליקציה ושאתה מריץ כמנהל.</value>
-  </data>
-  <data name="FailedToInitializeDISMService" xml:space="preserve">
-    <value>נכשל באתחול שירות DISM: {0}</value>
   </data>
   <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
     <value>נטענו בהצלחה {0} תכונות ויכולות Windows.</value>
@@ -1531,9 +1519,6 @@
   <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
     <value>שגיאה במהלך פעולת ההשבתה המרובת</value>
   </data>
-  <data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-    <value>נכשל באתחול שירות DISM להקשחת אבטחה.</value>
-  </data>
   <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
     <value>מתחיל עם {0} תכונות ויכולות Windows אופציונליות...</value>
   </data>
@@ -1546,9 +1531,6 @@
   <data name="SecurityHardeningCompleted" xml:space="preserve">
     <value>הקשחת אבטחה הושלמה: {0} הצליחו, {1} נכשלו.</value>
   </data>
-  <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-    <value>נכשל באתחול שירות DISM לאימות.</value>
-  </data>
   <data name="VerifyingSecurityHardeningState" xml:space="preserve">
     <value>מאמת מצב הקשחת אבטחה עבור {0} תכונות ויכולות Windows אופציונליות...</value>
   </data>
@@ -1560,9 +1542,6 @@
   </data>
   <data name="IncorrectItems" xml:space="preserve">
     <value>פריטים לא נכונים: {0}</value>
-  </data>
-  <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-    <value>נכשל באתחול שירות DISM להסרת הקשחת אבטחה.</value>
   </data>
   <data name="RemovingSecurityHardening" xml:space="preserve">
     <value>מסיר הקשחת אבטחה עבור {0} תכונות ויכולות Windows אופציונליות...</value>

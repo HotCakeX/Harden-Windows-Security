@@ -2158,4 +2158,124 @@ internal static unsafe partial class NativeMethods
 		ref uint lpBytesReturned,
 		IntPtr lpOverlapped);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slopen
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("sppc.dll")]
+	internal static partial int SLOpen(ref IntPtr phSLC);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slclose
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("sppc.dll")]
+	internal static partial int SLClose(IntPtr hSLC);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slgetslidlist
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("sppc.dll")]
+	internal static partial int SLGetSLIDList(
+		IntPtr hSLC,
+		int eQueryId,
+		in Guid pQueryId,
+		int eReturnId,
+		ref uint pnReturnIds,
+		ref IntPtr ppReturnIds);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slgetproductskuinformation
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("sppc.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial int SLGetProductSkuInformation(
+		IntPtr hSLC,
+		in Guid pSkuId,
+		string pwszValueName,
+		ref uint peDataType,
+		ref uint pcbValue,
+		ref IntPtr ppbValue);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slgetpkeyinformation
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("sppc.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial int SLGetPKeyInformation(
+		IntPtr hSLC,
+		in Guid pPKeyId,
+		string pwszValueName,
+		ref uint peDataType,
+		ref uint pcbValue,
+		ref IntPtr ppbValue);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slgetlicensingstatusinformation
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("sppc.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial int SLGetLicensingStatusInformation(
+		IntPtr hSLC,
+		in Guid pAppId,
+		in Guid pSkuId,
+		string? pwszRightName,
+		ref uint pnStatusCount,
+		ref IntPtr ppStatus);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slgetwindowsinformation
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("slc.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial int SLGetWindowsInformation(
+		string pwszValueName,
+		ref uint peDataType,
+		ref uint pcbValue,
+		ref IntPtr ppbValue);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/slpublic/nf-slpublic-slgetwindowsinformationdword
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("slc.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial int SLGetWindowsInformationDWORD(
+		string pwszValueName,
+		ref int pdwValue);
+
+
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("slc.dll")]
+	internal static partial int SLIsWindowsGenuineLocal(ref int pdwGenuineState);
+
+
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("Clipc.dll")]
+	internal static partial int ClipGetSubscriptionStatus(ref IntPtr ppSubscriptionStatus);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogid
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("ole32.dll")]
+	internal static partial int CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string lpszProgID, out Guid lpclsid);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("ole32.dll", EntryPoint = "CoCreateInstance")]
+	internal static partial int CoCreateInstanceForLicensing(in Guid rclsid, IntPtr pUnkOuter, uint dwClsContext, in Guid riid, out IEditionUpgradeManager ppv);
+
 }

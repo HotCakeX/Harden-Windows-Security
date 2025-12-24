@@ -1441,15 +1441,6 @@
 <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
   <value>मौजूदा DISMService प्रक्रियाओं की जांच में त्रुटि: {0}</value>
 </data>
-<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-  <value>DISM सेवा फ़ाइल अखंडता जांच विफल</value>
-</data>
-<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-  <value>DISM सेवा अखंडता सत्यापित करने में विफल: {0}</value>
-</data>
-<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-  <value>DISM सेवा फ़ाइल अखंडता सत्यापन विफल। सेवा शुरू नहीं की जा सकती।</value>
-</data>
 <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
   <value>प्रक्रिया बनाने में विफल। Win32 त्रुटि: {0}</value>
 </data>
@@ -1461,9 +1452,6 @@
 </data>
 <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
   <value>DISM सेवा शुरू करने में विफल। सुनिश्चित करें कि DismService.exe एप्लिकेशन फ़ोल्डर में है और आप व्यवस्थापक के रूप में चला रहे हैं।</value>
-</data>
-<data name="FailedToInitializeDISMService" xml:space="preserve">
-  <value>DISM सेवा आरंभ करने में विफल: {0}</value>
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>{0} Windows सुविधाएं और क्षमताएं सफलतापूर्वक लोड की गईं।</value>
@@ -1531,9 +1519,6 @@
 <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
   <value>बल्क अक्षम ऑपरेशन के दौरान त्रुटि</value>
 </data>
-<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-  <value>सुरक्षा कठोरीकरण के लिए DISM सेवा आरंभ करने में विफल।</value>
-</data>
 <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
   <value>{0} वैकल्पिक Windows सुविधाओं और क्षमताओं के साथ शुरू कर रहे हैं...</value>
 </data>
@@ -1546,9 +1531,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>सुरक्षा कठोरीकरण पूर्ण: {0} सफल, {1} विफल।</value>
 </data>
-<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-  <value>सत्यापन के लिए DISM सेवा आरंभ करने में विफल।</value>
-</data>
 <data name="VerifyingSecurityHardeningState" xml:space="preserve">
   <value>{0} वैकल्पिक Windows सुविधाओं और क्षमताओं के लिए सुरक्षा कठोरीकरण स्थिति सत्यापित कर रहे हैं...</value>
 </data>
@@ -1560,9 +1542,6 @@
 </data>
 <data name="IncorrectItems" xml:space="preserve">
   <value>गलत आइटम: {0}</value>
-</data>
-<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-  <value>सुरक्षा कठोरीकरण हटाने के लिए DISM सेवा आरंभ करने में विफल।</value>
 </data>
 <data name="RemovingSecurityHardening" xml:space="preserve">
   <value>{0} वैकल्पिक Windows सुविधाओं और क्षमताओं के लिए सुरक्षा कठोरीकरण हटा रहे हैं...</value>

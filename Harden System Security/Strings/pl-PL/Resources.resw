@@ -1441,15 +1441,6 @@
 <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
   <value>Błąd podczas sprawdzania istniejących procesów DISMService: {0}</value>
 </data>
-<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-  <value>Sprawdzenie integralności pliku usługi DISM nie powiodło się</value>
-</data>
-<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-  <value>Nie udało się zweryfikować integralności usługi DISM: {0}</value>
-</data>
-<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-  <value>Weryfikacja integralności pliku usługi DISM nie powiodła się. Nie można uruchomić usługi.</value>
-</data>
 <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
   <value>Nie udało się utworzyć procesu. Błąd Win32: {0}</value>
 </data>
@@ -1461,9 +1452,6 @@
 </data>
 <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
   <value>Nie udało się uruchomić usługi DISM. Upewnij się, że DismService.exe znajduje się w folderze aplikacji i że działasz jako administrator.</value>
-</data>
-<data name="FailedToInitializeDISMService" xml:space="preserve">
-  <value>Nie udało się zainicjować usługi DISM: {0}</value>
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Pomyślnie załadowano {0} funkcji i możliwości Windows.</value>
@@ -1531,9 +1519,6 @@
 <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
   <value>Błąd podczas operacji masowego wyłączania</value>
 </data>
-<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-  <value>Nie udało się zainicjować usługi DISM dla wzmocnienia bezpieczeństwa.</value>
-</data>
 <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
   <value>Rozpoczynanie z {0} opcjonalnymi funkcjami i możliwościami Windows...</value>
 </data>
@@ -1546,9 +1531,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Wzmocnienie bezpieczeństwa zakończone: {0} udane, {1} nieudane.</value>
 </data>
-<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-  <value>Nie udało się zainicjować usługi DISM do weryfikacji.</value>
-</data>
 <data name="VerifyingSecurityHardeningState" xml:space="preserve">
   <value>Weryfikowanie stanu wzmocnienia bezpieczeństwa dla {0} opcjonalnych funkcji i możliwości Windows...</value>
 </data>
@@ -1560,9 +1542,6 @@
 </data>
 <data name="IncorrectItems" xml:space="preserve">
   <value>Niepoprawne elementy: {0}</value>
-</data>
-<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-  <value>Nie udało się zainicjować usługi DISM do usunięcia wzmocnienia bezpieczeństwa.</value>
 </data>
 <data name="RemovingSecurityHardening" xml:space="preserve">
   <value>Usuwanie wzmocnienia bezpieczeństwa dla {0} opcjonalnych funkcji i możliwości Windows...</value>

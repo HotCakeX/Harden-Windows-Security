@@ -1441,15 +1441,6 @@
 <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
   <value>Fehler beim Prüfen auf vorhandene DISMService-Prozesse: {0}</value>
 </data>
-<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-  <value>Integritätsprüfung der DISM-Dienstdatei fehlgeschlagen</value>
-</data>
-<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-  <value>Überprüfung der DISM-Dienstintegrität fehlgeschlagen: {0}</value>
-</data>
-<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-  <value>Überprüfung der Integrität der DISM-Dienstdatei fehlgeschlagen. Dienst kann nicht gestartet werden.</value>
-</data>
 <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
   <value>Prozess konnte nicht erstellt werden. Win32-Fehler: {0}</value>
 </data>
@@ -1461,9 +1452,6 @@
 </data>
 <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
   <value>DISM-Dienst konnte nicht gestartet werden. Stellen Sie sicher, dass sich DismService.exe im Anwendungsverzeichnis befindet und dass Sie die Anwendung als Administrator ausführen.</value>
-</data>
-<data name="FailedToInitializeDISMService" xml:space="preserve">
-  <value>Initialisierung des DISM-Dienstes fehlgeschlagen: {0}</value>
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Erfolgreich {0} Windows-Features und -Funktionen geladen.</value>
@@ -1531,9 +1519,6 @@
 <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
   <value>Fehler während der Massendeaktivierung</value>
 </data>
-<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-  <value>Initialisierung des DISM-Dienstes für Sicherheits-Härtung fehlgeschlagen.</value>
-</data>
 <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
   <value>Beginn mit {0} optionalen Windows-Features und -Funktionen...</value>
 </data>
@@ -1546,9 +1531,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Sicherheits-Härtung abgeschlossen: {0} erfolgreich, {1} fehlgeschlagen.</value>
 </data>
-<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-  <value>Initialisierung des DISM-Dienstes zur Überprüfung fehlgeschlagen.</value>
-</data>
 <data name="VerifyingSecurityHardeningState" xml:space="preserve">
   <value>Überprüfen des Zustands der Sicherheits-Härtung für {0} optionale Windows-Features und -Funktionen...</value>
 </data>
@@ -1560,9 +1542,6 @@
 </data>
 <data name="IncorrectItems" xml:space="preserve">
   <value>Nicht korrekte Elemente: {0}</value>
-</data>
-<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-  <value>Initialisierung des DISM-Dienstes zum Entfernen der Sicherheits-Härtung fehlgeschlagen.</value>
 </data>
 <data name="RemovingSecurityHardening" xml:space="preserve">
   <value>Sicherheits-Härtung für {0} optionale Windows-Features und -Funktionen wird entfernt...</value>

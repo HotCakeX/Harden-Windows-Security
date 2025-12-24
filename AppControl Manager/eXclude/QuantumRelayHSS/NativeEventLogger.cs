@@ -20,7 +20,7 @@ using System.Text;
 
 namespace QuantumRelayHSS;
 
-internal static partial class NativeEventLogger
+internal static class NativeEventLogger
 {
 	internal enum EventLogEntryType
 	{

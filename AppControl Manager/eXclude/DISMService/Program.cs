@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace DISMService;
 
-internal sealed class Program
+internal static class Program
 {
 	private static NamedPipeServerStream? _pipeServer;
 	private static BinaryWriter? _writer;

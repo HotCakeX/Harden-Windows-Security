@@ -1441,15 +1441,6 @@
 <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
   <value>Σφάλμα κατά τον έλεγχο υπαρχουσών διεργασιών DISMService: {0}</value>
 </data>
-<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-  <value>Ο έλεγχος ακεραιότητας αρχείου υπηρεσίας DISM απέτυχε</value>
-</data>
-<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-  <value>Αποτυχία επαλήθευσης ακεραιότητας υπηρεσίας DISM: {0}</value>
-</data>
-<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-  <value>Η επαλήθευση ακεραιότητας αρχείου υπηρεσίας DISM απέτυχε. Δεν είναι δυνατή η εκκίνηση της υπηρεσίας.</value>
-</data>
 <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
   <value>Αποτυχία δημιουργίας διεργασίας. Σφάλμα Win32: {0}</value>
 </data>
@@ -1461,9 +1452,6 @@
 </data>
 <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
   <value>Αποτυχία εκκίνησης υπηρεσίας DISM. Βεβαιωθείτε ότι το DismService.exe βρίσκεται στο φάκελο της εφαρμογής και ότι εκτελείστε ως διαχειριστής.</value>
-</data>
-<data name="FailedToInitializeDISMService" xml:space="preserve">
-  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM: {0}</value>
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Φορτώθηκαν επιτυχώς {0} χαρακτηριστικά και δυνατότητες Windows.</value>
@@ -1531,9 +1519,6 @@
 <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
   <value>Σφάλμα κατά τη λειτουργία μαζικής απενεργοποίησης</value>
 </data>
-<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για ενίσχυση ασφάλειας.</value>
-</data>
 <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
   <value>Έναρξη με {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows...</value>
 </data>
@@ -1546,9 +1531,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Η ενίσχυση ασφάλειας ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
 </data>
-<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για επαλήθευση.</value>
-</data>
 <data name="VerifyingSecurityHardeningState" xml:space="preserve">
   <value>Επαλήθευση κατάστασης ενίσχυσης ασφάλειας για {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows...</value>
 </data>
@@ -1560,9 +1542,6 @@
 </data>
 <data name="IncorrectItems" xml:space="preserve">
   <value>Εσφαλμένα στοιχεία: {0}</value>
-</data>
-<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για αφαίρεση ενίσχυσης ασφάλειας.</value>
 </data>
 <data name="RemovingSecurityHardening" xml:space="preserve">
   <value>Αφαίρεση ενίσχυσης ασφάλειας για {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows...</value>

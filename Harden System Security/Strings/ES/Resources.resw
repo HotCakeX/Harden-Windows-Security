@@ -1441,15 +1441,6 @@
 <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
   <value>Error verificando procesos DISMService existentes: {0}</value>
 </data>
-<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-  <value>Falló la verificación de integridad del archivo del servicio DISM</value>
-</data>
-<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-  <value>Falló al verificar la integridad del servicio DISM: {0}</value>
-</data>
-<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-  <value>Falló la verificación de integridad del archivo del servicio DISM. No se puede iniciar el servicio.</value>
-</data>
 <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
   <value>Falló al crear proceso. Error Win32: {0}</value>
 </data>
@@ -1461,9 +1452,6 @@
 </data>
 <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
   <value>Falló al iniciar el servicio DISM. Asegúrese de que DismService.exe esté en la carpeta de la aplicación y que esté ejecutando como administrador.</value>
-</data>
-<data name="FailedToInitializeDISMService" xml:space="preserve">
-  <value>Falló al inicializar el servicio DISM: {0}</value>
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Se cargaron exitosamente {0} características y capacidades de Windows.</value>
@@ -1531,9 +1519,6 @@
 <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
   <value>Error durante operación de deshabilitación masiva</value>
 </data>
-<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-  <value>Falló al inicializar el servicio DISM para endurecimiento de seguridad.</value>
-</data>
 <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
   <value>Iniciando con {0} características y capacidades opcionales de Windows...</value>
 </data>
@@ -1546,9 +1531,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Endurecimiento de seguridad completado: {0} exitosos, {1} fallidos.</value>
 </data>
-<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-  <value>Falló al inicializar el servicio DISM para verificación.</value>
-</data>
 <data name="VerifyingSecurityHardeningState" xml:space="preserve">
   <value>Verificando estado de endurecimiento de seguridad para {0} características y capacidades opcionales de Windows...</value>
 </data>
@@ -1560,9 +1542,6 @@
 </data>
 <data name="IncorrectItems" xml:space="preserve">
   <value>Elementos incorrectos: {0}</value>
-</data>
-<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-  <value>Falló al inicializar el servicio DISM para remover endurecimiento de seguridad.</value>
 </data>
 <data name="RemovingSecurityHardening" xml:space="preserve">
   <value>Removiendo endurecimiento de seguridad para {0} características y capacidades opcionales de Windows...</value>

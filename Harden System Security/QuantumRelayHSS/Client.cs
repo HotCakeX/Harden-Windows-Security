@@ -25,7 +25,6 @@ namespace HardenSystemSecurity.QuantumRelayHSS;
 
 internal static class Client
 {
-
 	/// <summary>
 	/// Runs a command via the QuantumRelayHSS service.
 	/// Streams all logs in real-time.
@@ -34,7 +33,44 @@ internal static class Client
 	/// </summary>
 	/// <param name="command">Executable/command to run.</param>
 	/// <param name="arguments">Optional arguments.</param>
-	internal static string RunCommand(string command, string? arguments)
+	internal static string RunCommand(string command, string? arguments) =>
+		ExecuteRequest((writer) =>
+		{
+			writer.Write((byte)RequestCommand.RunProcess);
+			CommonCore.QuantumRelay.Helpers.WriteString(writer, command);
+			CommonCore.QuantumRelay.Helpers.WriteString(writer, arguments ?? string.Empty);
+		});
+
+	/// <summary>
+	/// Copies a file using the QuantumRelayHSS service.
+	/// </summary>
+	/// <param name="source">Source file path.</param>
+	/// <param name="destination">Destination file path.</param>
+	/// <param name="overwrite">Whether to overwrite the destination if it exists.</param>
+	internal static void CopyFile(string source, string destination, bool overwrite) =>
+		ExecuteRequest((writer) =>
+		{
+			writer.Write((byte)RequestCommand.CopyFile);
+			CommonCore.QuantumRelay.Helpers.WriteString(writer, source);
+			CommonCore.QuantumRelay.Helpers.WriteString(writer, destination);
+			writer.Write(overwrite);
+		});
+
+	/// <summary>
+	/// Deletes a file using the QuantumRelayHSS service.
+	/// </summary>
+	/// <param name="path">File path to delete.</param>
+	internal static void DeleteFile(string path) =>
+		ExecuteRequest((writer) =>
+		{
+			writer.Write((byte)RequestCommand.DeleteFile);
+			CommonCore.QuantumRelay.Helpers.WriteString(writer, path);
+		});
+
+	/// <summary>
+	/// Helper method to encapsulate connection, request sending, and response loop logic.
+	/// </summary>
+	private static string ExecuteRequest(Action<BinaryWriter> sendRequest)
 	{
 		// Ensure the service is running.
 		ServiceStarter.StartServiceAsync(Atlas.QuantumRelayHSSServiceName, TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
@@ -57,10 +93,8 @@ internal static class Client
 		using BinaryWriter writer = new(client, Encoding.UTF8, leaveOpen: true);
 		using BinaryReader reader = new(client, Encoding.UTF8, leaveOpen: true);
 
-		// Send request
-		writer.Write((byte)RequestCommand.RunProcess);
-		CommonCore.QuantumRelay.Helpers.WriteString(writer, command);
-		CommonCore.QuantumRelay.Helpers.WriteString(writer, arguments ?? string.Empty);
+		// Send request using the provided action
+		sendRequest(writer);
 		writer.Flush();
 
 		// Keep receiving data and handle frames until Final or Error is received.

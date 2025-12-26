@@ -19,7 +19,9 @@ namespace CommonCore.QuantumRelay;
 
 internal enum RequestCommand : byte
 {
-	RunProcess = 1
+	RunProcess = 1,
+	CopyFile = 2,
+	DeleteFile = 3
 }
 
 internal enum ResponseType : byte

@@ -1,9 +1,5 @@
-🎁✨ Merry Christmas! 🎄❄️
+* The home page now has a new section that shows whether your Windows is activated and if so how. It shows detailed information about activation method being used, license status, expiration date (if applicable), and more.
 
-* Updated the dependencies to the latest versions.
+* The Firewall rules that you create in the Windows Firewall page are now instantly made effective instead of waiting for Group Policy engine to apply them on the next cycle.
 
-* Added a new security measure to the Miscellaneous Category: Configure the Antimalware Scan Interface (AMSI) to strictly enforce Authenticode code signing requirements for all third-party antimalware providers: https://learn.microsoft.com/windows/win32/api/amsi/nn-amsi-iantimalwareprovider#remarks
-
-* In the Group Policy Editor page, the columns now dynamically resize when you perform search, improving the user experience.
-
-* Minor performance improvements.
+* The DISM component of the Harden System Security app is now saved in a more secure location during runtime. This location is ACL'd by default to only grant Write access to System and TrustedInstaller. Other users (even Administrators) have Read and eXecute rights but not Write. This location is cleared by the system when the app is uninstalled.

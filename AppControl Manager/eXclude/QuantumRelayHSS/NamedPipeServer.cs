@@ -308,6 +308,40 @@ internal sealed class NamedPipeServer : IDisposable
 
 									break;
 								}
+							case RequestCommand.CopyFile:
+								{
+									string source = Helpers.ReadString(reader);
+									string destination = Helpers.ReadString(reader);
+									bool overwrite = reader.ReadBoolean();
+
+									try
+									{
+										sessionContext.SendLog($"Copying file from '{source}' to '{destination}' (Overwrite: {overwrite})");
+										File.Copy(source, destination, overwrite);
+										await sessionContext.WriteFinalResponseAsync("File copied successfully.", cancellationToken).ConfigureAwait(false);
+									}
+									catch (Exception ex)
+									{
+										await sessionContext.WriteErrorResponseAsync(ex.HResult, $"Failed to copy file: {ex.Message}", cancellationToken).ConfigureAwait(false);
+									}
+									break;
+								}
+							case RequestCommand.DeleteFile:
+								{
+									string path = Helpers.ReadString(reader);
+
+									try
+									{
+										sessionContext.SendLog($"Deleting file '{path}'");
+										File.Delete(path);
+										await sessionContext.WriteFinalResponseAsync("File deleted successfully.", cancellationToken).ConfigureAwait(false);
+									}
+									catch (Exception ex)
+									{
+										await sessionContext.WriteErrorResponseAsync(ex.HResult, $"Failed to delete file: {ex.Message}", cancellationToken).ConfigureAwait(false);
+									}
+									break;
+								}
 							default: break;
 						}
 					}
@@ -333,7 +367,7 @@ internal sealed class NamedPipeServer : IDisposable
 						{
 							if (pipeServer.IsConnected)
 							{
-								await sessionContext!.WriteErrorResponseAsync(-1, $"Error processing request: {ex.Message}{Environment.NewLine}{ex.StackTrace}", cancellationToken).ConfigureAwait(false);
+								await sessionContext.WriteErrorResponseAsync(-1, $"Error processing request: {ex.Message}{Environment.NewLine}{ex.StackTrace}", cancellationToken).ConfigureAwait(false);
 							}
 						}
 						catch

@@ -70,7 +70,7 @@
 
                 <Button HorizontalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.DeployManagedInstallerPolicy_Click}" 
+                        Click="{x:Bind ViewModel.DeployManagedInstallerPolicy_Click}"
                         VerticalAlignment="Center"
                         x:Uid="CreateManagedInstallerButton"/>
 

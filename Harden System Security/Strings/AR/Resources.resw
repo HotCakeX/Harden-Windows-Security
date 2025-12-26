@@ -1441,15 +1441,6 @@
   <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
     <value>خطأ أثناء فحص عمليات DISMService الموجودة: {0}</value>
   </data>
-  <data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-    <value>فشل فحص تكامل ملف خدمة DISM</value>
-  </data>
-  <data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-    <value>فشل في التحقق من تكامل خدمة DISM: {0}</value>
-  </data>
-  <data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-    <value>فشل التحقق من تكامل ملف خدمة DISM. لا يمكن بدء الخدمة.</value>
-  </data>
   <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
     <value>فشل في إنشاء العملية. خطأ Win32: {0}</value>
   </data>
@@ -1461,9 +1452,6 @@
   </data>
   <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
     <value>فشل في بدء خدمة DISM. تأكد من وجود DismService.exe في دليل التطبيق وأنك تعمل كمسؤول.</value>
-  </data>
-  <data name="FailedToInitializeDISMService" xml:space="preserve">
-    <value>فشل في تهيئة خدمة DISM: {0}</value>
   </data>
   <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
     <value>تم تحميل {0} ميزة وقدرة Windows بنجاح.</value>
@@ -1531,9 +1519,6 @@
   <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
     <value>خطأ أثناء عملية التعطيل الجماعي</value>
   </data>
-  <data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-    <value>فشل في تهيئة خدمة DISM لتقوية الأمان.</value>
-  </data>
   <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
     <value>البدء مع {0} ميزة وقدرة اختيارية لـ Windows...</value>
   </data>
@@ -1546,9 +1531,6 @@
   <data name="SecurityHardeningCompleted" xml:space="preserve">
     <value>اكتملت تقوية الأمان: {0} نجح، {1} فشل.</value>
   </data>
-  <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-    <value>فشل في تهيئة خدمة DISM للتحقق.</value>
-  </data>
   <data name="VerifyingSecurityHardeningState" xml:space="preserve">
     <value>التحقق من حالة تقوية الأمان لـ {0} ميزة وقدرة اختيارية لـ Windows...</value>
   </data>
@@ -1560,9 +1542,6 @@
   </data>
   <data name="IncorrectItems" xml:space="preserve">
     <value>العناصر غير الصحيحة: {0}</value>
-  </data>
-  <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-    <value>فشل في تهيئة خدمة DISM لإزالة تقوية الأمان.</value>
   </data>
   <data name="RemovingSecurityHardening" xml:space="preserve">
     <value>إزالة تقوية الأمان لـ {0} ميزة وقدرة اختيارية لـ Windows...</value>

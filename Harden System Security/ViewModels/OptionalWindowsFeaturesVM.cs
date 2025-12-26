@@ -22,15 +22,16 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommonCore.DISM;
 using CommunityToolkit.WinUI;
+using HardenSystemSecurity.QuantumRelayHSS;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -40,103 +41,27 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class DismServiceClient : IDisposable
 {
-	private readonly string DISMServiceLocationInPackage = Path.Combine(AppContext.BaseDirectory, "DISMService.exe");
-
-	private string DISMFileHash = string.Empty;
+	/// <summary>
+	/// Location of the DISMService.exe in the App package.
+	/// </summary>
+	internal static readonly string DISMServiceLocationInPackage = Path.Combine(AppContext.BaseDirectory, "DISMService.exe");
 
 	/// <summary>
-	/// The file or directory will not be visible in the file explorer because of file virtualization and we can keep it this way.
-	/// https://learn.microsoft.com/windows/msix/desktop/flexible-virtualization
+	/// Location where the DISMService.exe will be copied to and executed from.
 	/// </summary>
-	private static readonly string SecureDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-		"HardenSystemSecurity", "DISMService");
-
-	internal static readonly string SecureDISMServicePath = Path.Combine(SecureDirectory, "DISMService.exe");
-
-	/// <summary>
-	/// Hash the file and then copy it to the destination.
-	/// </summary>
-	internal void SecureCopyFile()
-	{
-		const int bufferSize = 4096 * 1024;
-
-		using (FileStream sourceStreamPrior = new(DISMServiceLocationInPackage, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize))
-		{
-			using SHA256 sha256 = SHA256.Create();
-			byte[] hashBytes = sha256.ComputeHash(sourceStreamPrior);
-			DISMFileHash = Convert.ToHexString(hashBytes);
-		}
-
-		if (Directory.Exists(SecureDirectory))
-			Directory.Delete(SecureDirectory, true);
-
-		_ = Directory.CreateDirectory(SecureDirectory);
-
-		using FileStream sourceStream = new(DISMServiceLocationInPackage, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize);
-		using FileStream destinationStream = new(SecureDISMServicePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize);
-
-		sourceStream.CopyTo(destinationStream);
-		destinationStream.Flush();
-	}
-
-	/// <summary>
-	/// Verify the integrity of the DISM service executable by comparing its current hash with the stored hash.
-	/// </summary>
-	/// <returns>True if the file integrity is verified, false if tampered or missing.</returns>
-	private async Task<bool> VerifyDISMServiceIntegrity()
-	{
-		try
-		{
-			bool isValid = await Task.Run(() =>
-			{
-				if (!File.Exists(SecureDISMServicePath))
-					return false;
-
-				if (string.IsNullOrEmpty(DISMFileHash))
-					return false;
-
-				const int bufferSize = 4096 * 1024;
-
-				using FileStream fileStream = new(SecureDISMServicePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize);
-				using SHA256 sha256 = SHA256.Create();
-				byte[] currentHashBytes = sha256.ComputeHash(fileStream);
-				string currentHash = Convert.ToHexString(currentHashBytes);
-
-				return string.Equals(currentHash, DISMFileHash, StringComparison.OrdinalIgnoreCase);
-			});
-
-			if (!isValid)
-			{
-				LogReceived?.Invoke(GlobalVars.GetStr("DISMServiceFileIntegrityCheckFailed"), LogTypeIntel.Error);
-			}
-
-			return isValid;
-		}
-		catch (Exception ex)
-		{
-			LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToVerifyDISMServiceIntegrity"), ex.Message), LogTypeIntel.Error);
-			return false;
-		}
-	}
+	internal static readonly string SecureDISMServicePath = Path.Combine(
+		Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath,
+		"DISMService.exe");
 
 	private IntPtr _processHandle = IntPtr.Zero;
 	private NamedPipeClientStream? _pipeClient;
 	private BinaryWriter? _writer;
 	private BinaryReader? _reader;
-	private readonly string _pipeName;
+	private readonly string _pipeName = $"DismService_{Guid.NewGuid():N}";
 	private bool _disposed;
 
 	internal event Action<string, LogTypeIntel>? LogReceived;
 	internal event Action<string, uint, uint>? ItemProgressUpdated;
-
-	// To track the active service for termination
-	private static DismServiceClient? ActiveInstance;
-
-	internal DismServiceClient(string? customPipeName = null)
-	{
-		_pipeName = customPipeName ?? $"DismService_{Guid.NewGuid():N}";
-		ActiveInstance = this;
-	}
 
 	private const uint DETACHED_PROCESS = 0x00000008;
 	private const uint CREATE_NO_WINDOW = 0x08000000;
@@ -145,12 +70,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity())
-			{
-				LogReceived?.Invoke(GlobalVars.GetStr("DISMServiceFileIntegrityVerificationFailed"), LogTypeIntel.Error);
-				return false;
-			}
-
 			IntPtr desktopPtr = Marshal.StringToHGlobalUni("");
 			IntPtr titlePtr = Marshal.StringToHGlobalUni("");
 
@@ -234,8 +153,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return [];
-
 			return await Task.Run(async () =>
 			{
 				_writer!.Write((byte)Command.GetAllResults);
@@ -258,8 +175,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return [];
-
 			return await Task.Run(async () =>
 			{
 				_writer!.Write((byte)Command.GetSpecificCapabilities);
@@ -287,8 +202,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return [];
-
 			return await Task.Run(async () =>
 			{
 				_writer!.Write((byte)Command.GetSpecificFeatures);
@@ -316,8 +229,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return false;
-
 			_writer!.Write((byte)Command.AddCapability);
 			WriteString(capabilityName);
 			_writer.Write(limitAccess);
@@ -347,8 +258,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return false;
-
 			_writer!.Write((byte)Command.RemoveCapability);
 			WriteString(capabilityName);
 
@@ -364,8 +273,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return false;
-
 			_writer!.Write((byte)Command.EnableFeature);
 			WriteString(featureName);
 
@@ -394,8 +301,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return false;
-
 			_writer!.Write((byte)Command.DisableFeature);
 			WriteString(featureName);
 
@@ -411,8 +316,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		try
 		{
-			if (!await VerifyDISMServiceIntegrity()) return;
-
 			_writer!.Write((byte)Command.Shutdown);
 			_ = await WaitForResponse();
 		}
@@ -537,12 +440,6 @@ internal sealed partial class DismServiceClient : IDisposable
 			}
 		}
 		catch { }
-
-		if (ActiveInstance == this)
-			ActiveInstance = null;
-
-		if (Directory.Exists(SecureDirectory))
-			WebView2Config.TryDeleteDirectoryWithRetries(SecureDirectory, 10, 500);
 	}
 
 	private enum Command : byte
@@ -589,16 +486,16 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 
 	private static SolidColorBrush GetStateBadgeBrush(DismPackageFeatureState state) => state switch
 	{
-		DismPackageFeatureState.DismStateInstalled => new SolidColorBrush(Color.FromArgb(255, 16, 137, 62)),         // Green
-		DismPackageFeatureState.DismStateInstallPending => new SolidColorBrush(Color.FromArgb(255, 247, 99, 12)),   // Orange
-		DismPackageFeatureState.DismStatePartiallyInstalled => new SolidColorBrush(Color.FromArgb(255, 247, 99, 12)),// Orange
-		DismPackageFeatureState.DismStateStaged => new SolidColorBrush(Color.FromArgb(255, 0, 120, 215)),           // Blue
-		DismPackageFeatureState.DismStateUninstallPending => new SolidColorBrush(Color.FromArgb(255, 247, 99, 12)), // Orange
-		DismPackageFeatureState.DismStateSuperseded => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92)),        // Gray
-		DismPackageFeatureState.DismStateRemoved => new SolidColorBrush(Color.FromArgb(255, 232, 17, 35)),          // Red
-		DismPackageFeatureState.DismStateNotPresent => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92)),        // Gray
-		DismPackageFeatureState.NotAvailableOnSystem => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92)),       // Gray
-		_ => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92))                                                   // Default Gray
+		DismPackageFeatureState.DismStateInstalled => new(Color.FromArgb(255, 16, 137, 62)),         // Green
+		DismPackageFeatureState.DismStateInstallPending => new(Color.FromArgb(255, 247, 99, 12)),   // Orange
+		DismPackageFeatureState.DismStatePartiallyInstalled => new(Color.FromArgb(255, 247, 99, 12)),// Orange
+		DismPackageFeatureState.DismStateStaged => new(Color.FromArgb(255, 0, 120, 215)),           // Blue
+		DismPackageFeatureState.DismStateUninstallPending => new(Color.FromArgb(255, 247, 99, 12)), // Orange
+		DismPackageFeatureState.DismStateSuperseded => new(Color.FromArgb(255, 96, 94, 92)),        // Gray
+		DismPackageFeatureState.DismStateRemoved => new(Color.FromArgb(255, 232, 17, 35)),          // Red
+		DismPackageFeatureState.DismStateNotPresent => new(Color.FromArgb(255, 96, 94, 92)),        // Gray
+		DismPackageFeatureState.NotAvailableOnSystem => new(Color.FromArgb(255, 96, 94, 92)),       // Gray
+		_ => new(Color.FromArgb(255, 96, 94, 92))                                                   // Default Gray
 	};
 
 	[JsonIgnore]
@@ -633,8 +530,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 	[JsonIgnore]
 	internal bool IsProcessing
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -690,8 +586,8 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 
 	[JsonIgnore]
 	internal SolidColorBrush BorderBrush => IsProcessing
-		? new SolidColorBrush(Color.FromArgb(255, 255, 20, 147)) // Hot pink
-		: new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)); // Transparent
+		? new(Color.FromArgb(255, 255, 20, 147)) // Hot pink
+		: new(Color.FromArgb(0, 0, 0, 0)); // Transparent
 
 	private static string GetStateDisplayName(DismPackageFeatureState state) => state switch
 	{
@@ -765,6 +661,8 @@ internal sealed partial class GroupInfoListForDISMItems(IEnumerable<DISMOutputEn
 internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDisposable
 {
 	private DismServiceClient? _dismServiceClient;
+
+	private bool DismStartedSuccessfully;
 
 	/// <summary>
 	/// Track current operation type for progress logging
@@ -983,17 +881,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// For the button event handler.
 	/// </summary>
-	internal async void EnsureRecommendedItemsRetrievedAndGroupAsync_Click()
-	{
-		try
-		{
-			await EnsureRecommendedItemsRetrievedAndGroupAsync();
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex);
-		}
-	}
+	internal async void EnsureRecommendedItemsRetrievedAndGroupAsync_Click() => await EnsureRecommendedItemsRetrievedAndGroupAsync();
 
 	/// <summary>
 	/// Retrieve only the recommended items (features and capabilities) and ensure grouping is up-to-date.
@@ -1004,11 +892,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			ElementsAreEnabled = false;
 
-			// Initialize DISM service
-			if (!await InitializeDismServiceAsync())
-			{
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			// Build unique, case-insensitive name lists for recommended capabilities and features
 			string[] capabilityNames = SecurityHardeningConfigs
@@ -1050,6 +934,10 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				AllItems.Add(new DISMOutputEntry(item, this));
 			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -1102,72 +990,62 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Initialize the DISM service client
 	/// </summary>
-	private async Task<bool> InitializeDismServiceAsync()
+	private async Task InitializeDismServiceAsync()
 	{
-		try
+		if (!DismStartedSuccessfully)
 		{
-			if (_dismServiceClient == null)
+			// Since we copy the DISMService.exe outside of the package, it will be considered unsigned by ASR rules so we have to add it to exception.
+			await Task.Run(() =>
 			{
-				// Since we copy the DISMService.exe outside of the package, it will be considered unsigned by ASR rules so we have to add it to exception.
-				await Task.Run(() =>
+				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{DismServiceClient.SecureDISMServicePath}\" "));
+
+				Thread.Sleep(2000); // Necessary, otherwise it would be blocked by ASR
+			});
+
+			_dismServiceClient = new();
+
+			// Subscribe to item-specific progress updates
+			_dismServiceClient.ItemProgressUpdated += async (itemName, current, total) =>
+			{
+				await Dispatcher.EnqueueAsync(() =>
 				{
-					Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{DismServiceClient.SecureDISMServicePath}\" "));
+					// Update the item's progress
+					DISMOutputEntry? entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, itemName, StringComparison.OrdinalIgnoreCase));
+					entry?.UpdateProgress(current, total);
 				});
+			};
 
-				_dismServiceClient = new();
-
-				// Subscribe to item-specific progress updates
-				_dismServiceClient.ItemProgressUpdated += async (itemName, current, total) =>
+			// Subscribe to log messages
+			_dismServiceClient.LogReceived += (message, logType) =>
+			{
+				switch (logType)
 				{
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						// Update the item's progress
-						DISMOutputEntry? entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, itemName, StringComparison.OrdinalIgnoreCase));
-						entry?.UpdateProgress(current, total);
-					});
-				};
-
-				// Subscribe to log messages
-				_dismServiceClient.LogReceived += (message, logType) =>
-				{
-					switch (logType)
-					{
-						case LogTypeIntel.Information:
-						case LogTypeIntel.InformationInteractionRequired:
-							Logger.Write(message, LogTypeIntel.Information);
-							break;
-						case LogTypeIntel.Warning:
-						case LogTypeIntel.WarningInteractionRequired:
-							MainInfoBar.WriteWarning(message);
-							Logger.Write(message, LogTypeIntel.Warning);
-							break;
-						case LogTypeIntel.Error:
-						case LogTypeIntel.ErrorInteractionRequired:
-							MainInfoBar.WriteWarning(message);
-							Logger.Write(message, LogTypeIntel.Error);
-							break;
-						default:
-							break;
-					}
-				};
-
-				_dismServiceClient.SecureCopyFile();
-
-				// Start the service
-				if (!await _dismServiceClient.StartServiceAsync(DismServiceClient.SecureDISMServicePath))
-				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("FailedToStartDISMServiceAdministrator"));
-					return false;
+					case LogTypeIntel.Information:
+					case LogTypeIntel.InformationInteractionRequired:
+						Logger.Write(message, LogTypeIntel.Information);
+						break;
+					case LogTypeIntel.Warning:
+					case LogTypeIntel.WarningInteractionRequired:
+						MainInfoBar.WriteWarning(message);
+						Logger.Write(message, LogTypeIntel.Warning);
+						break;
+					case LogTypeIntel.Error:
+					case LogTypeIntel.ErrorInteractionRequired:
+						MainInfoBar.WriteWarning(message);
+						Logger.Write(message, LogTypeIntel.Error);
+						break;
+					default:
+						break;
 				}
-			}
+			};
 
-			return true;
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("FailedToInitializeDISMService"));
-			Logger.Write(string.Format(GlobalVars.GetStr("FailedToInitializeDISMService"), ex.Message), LogTypeIntel.Error);
-			return false;
+			// Copy the file from the app package to the Machine folder via the service
+			Client.CopyFile(DismServiceClient.DISMServiceLocationInPackage, DismServiceClient.SecureDISMServicePath, true);
+
+			if (!await _dismServiceClient.StartServiceAsync(DismServiceClient.SecureDISMServicePath))
+				throw new InvalidOperationException(GlobalVars.GetStr("FailedToStartDISMServiceAdministrator"));
+
+			DismStartedSuccessfully = true;
 		}
 	}
 
@@ -1188,11 +1066,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			AllItems.Clear();
 			ItemsSourceSelectedItems.Clear();
 
-			// Initialize DISM service
-			if (!await InitializeDismServiceAsync())
-			{
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			// Retrieve all features and capabilities from the service
 			List<DISMOutput> results = await _dismServiceClient!.GetAllResultsAsync();
@@ -1241,11 +1115,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			MainInfoBar.WriteInfo($"{_currentOperationType} {entry.TypeDisplayName.ToLowerInvariant()}: {entry.Name}");
 
-			// Initialize DISM service if not already done
-			if (!await InitializeDismServiceAsync())
-			{
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			bool result = false;
 
@@ -1327,11 +1197,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			MainInfoBar.WriteInfo($"{_currentOperationType} {entry.TypeDisplayName.ToLowerInvariant()}: {entry.Name}");
 
-			// Initialize DISM service if not already done
-			if (!await InitializeDismServiceAsync())
-			{
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			bool result = false;
 
@@ -1409,11 +1275,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			ElementsAreEnabled = false;
 
-			// Initialize DISM service if not already done
-			if (!await InitializeDismServiceAsync())
-			{
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			int successCount = 0;
 			int failureCount = 0;
@@ -1546,11 +1408,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			ElementsAreEnabled = false;
 
-			// Initialize DISM service if not already done
-			if (!await InitializeDismServiceAsync())
-			{
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			int successCount = 0;
 			int failureCount = 0;
@@ -1944,12 +1802,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			ElementsAreEnabled = false;
 
-			// Initialize DISM service if not already done
-			if (!await InitializeDismServiceAsync())
-			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("FailedToInitializeDISMServiceForSecurityHardening"));
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			ApplyCancellableButton.Begin();
 
@@ -2109,12 +1962,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			ElementsAreEnabled = false;
 
-			// Initialize DISM service if not already done
-			if (!await InitializeDismServiceAsync())
-			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("FailedToInitializeDISMServiceForVerification"));
-				return false;
-			}
+			await InitializeDismServiceAsync();
 
 			// Set operation type for progress logging
 			_currentOperationType = "Verifying Recommended Configurations";
@@ -2298,12 +2146,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			ElementsAreEnabled = false;
 
-			// Initialize DISM service if not already done
-			if (!await InitializeDismServiceAsync())
-			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("FailedToInitializeDISMServiceForRemovingSecurityHardening"));
-				return;
-			}
+			await InitializeDismServiceAsync();
 
 			// Set operation type for progress logging
 			_currentOperationType = "Removing Recommended Configurations";

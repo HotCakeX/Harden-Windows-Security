@@ -86,32 +86,27 @@ internal sealed partial class GroupPolicyObject : IDisposable
 						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToInitializeCOMInSTAError"), initHr));
 					}
 
-					try
-					{
-						int hr = NativeMethods.CoCreateInstance(
-							in clsid,
-							IntPtr.Zero,
-							CSEMgr.CLSCTX_INPROC_SERVER,
-							in iid,
-							out resultPointer);
+					int hr = NativeMethods.CoCreateInstance(
+						in clsid,
+						IntPtr.Zero,
+						CSEMgr.CLSCTX_INPROC_SERVER,
+						in iid,
+						out resultPointer);
 
-						if (hr != CSEMgr.S_OK)
-						{
-							string errorMessage = hr switch
-							{
-								unchecked((int)0x80004002) => "E_NOINTERFACE",
-								unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE:.",
-								unchecked((int)0x80040154) => "REGDB_E_CLASSNOTREG: Group Policy class not registered.",
-								_ => string.Format(GlobalVars.GetStr("FailedToCreateGroupPolicyObjectError"), hr)
-							};
-							throw new InvalidOperationException(errorMessage);
-						}
-					}
-					finally
+					if (hr != CSEMgr.S_OK)
 					{
-						// Don't uninitialize COM here as the object needs to stay alive
-						// The object will manage its own COM lifetime
+						string errorMessage = hr switch
+						{
+							unchecked((int)0x80004002) => "E_NOINTERFACE",
+							unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE:.",
+							unchecked((int)0x80040154) => "REGDB_E_CLASSNOTREG: Group Policy class not registered.",
+							_ => string.Format(GlobalVars.GetStr("FailedToCreateGroupPolicyObjectError"), hr)
+						};
+						throw new InvalidOperationException(errorMessage);
 					}
+
+					// Don't uninitialize COM here as the object needs to stay alive
+					// The object will manage its own COM lifetime
 				}
 				catch (Exception ex)
 				{
@@ -235,10 +230,8 @@ internal sealed partial class GroupPolicyObject : IDisposable
 		}
 	}
 
-	private void ThrowIfDisposed()
-	{
-		ObjectDisposedException.ThrowIf(_disposed, nameof(GroupPolicyObject));
-	}
+	private void ThrowIfDisposed() => ObjectDisposedException.ThrowIf(_disposed, nameof(GroupPolicyObject));
+
 
 	public void Dispose()
 	{
@@ -282,7 +275,8 @@ internal static class CSEMgr
 		new("827D319E-6EAC-11D2-A4EA-00C04F79F83A"), // Security
 		new("D76B9641-3288-4F75-942D-087DE603E3EA"), // LAPS
 		new("F312195E-3D9D-447A-A3F5-08DFFA24735E"), // Device Guard Virtualization Based Security
-		new("F3CCC681-B74C-4060-9F26-CD84525DCA2A")  // Audit Policy Configuration
+		new("F3CCC681-B74C-4060-9F26-CD84525DCA2A"), // Audit Policy Configuration
+		new("9F02E2F5-5A41-4D1A-B473-4617E84BC957")  // Windows Protected Print
 	];
 
 	// CSE GUIDs for user extensions in order

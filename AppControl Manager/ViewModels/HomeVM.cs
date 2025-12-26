@@ -214,6 +214,29 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 				Logger.Write(ex);
 			}
 
+			try
+			{
+				List<WindowsActivationStatus> actStats = GetOSActivationStates.Get();
+				if (actStats.Count > 0)
+				{
+					// First one is the active OS license
+					WindowsActivationStatus mainStat = actStats[0];
+					string genuine = mainStat.ClcGenuineStatus ?? "Unknown";
+					string channel = mainStat.ProductKeyChannel ?? "";
+
+					ActivationStatusSummaryText = !string.IsNullOrWhiteSpace(channel) ? $"{genuine} - {channel}" : genuine;
+				}
+				else
+				{
+					ActivationStatusSummaryText = "Activation info unavailable";
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				ActivationStatusSummaryText = "Activation info unavailable";
+			}
+
 		});
 	}
 
@@ -272,6 +295,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string? GpuNamesText { get; private set => SP(ref field, value); }
 	internal string? ComputerNameText { get; private set => SP(ref field, value); }
 	internal string? SystemInfoText { get; private set => SP(ref field, value); }
+	internal string? ActivationStatusSummaryText { get; private set => SP(ref field, value); } = "Checking...";
 
 	/// <summary>
 	/// Timer first used as one-shot to align to next minute, then switched to repeating every minute.
@@ -1465,7 +1489,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			StackPanel contentPanel = new()
 			{
 				Spacing = 16,
-				Width = 450,
 				Padding = new Thickness(10, 0, 16, 0)
 			};
 
@@ -1555,6 +1578,132 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
+	/// Handler for the Activation button click event.
+	/// Opens a dialog to allow the user to see detailed Windows Activation information.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal async void OnActivationInfoClick(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			List<WindowsActivationStatus> statuses = GetOSActivationStates.Get();
+
+			StackPanel contentPanel = new()
+			{
+				Spacing = 16,
+				Padding = new Thickness(10, 0, 16, 0)
+			};
+
+			if (statuses.Count == 0)
+			{
+				contentPanel.Children.Add(new TextBlock { Text = "No activation information available." });
+			}
+			else
+			{
+				foreach (WindowsActivationStatus status in statuses)
+				{
+					// Group for one Status entry
+					StackPanel statusGroup = new() { Spacing = 6 };
+
+					// Title
+					statusGroup.Children.Add(new TextBlock
+					{
+						Text = status.Name ?? "Unknown Product",
+						FontSize = 18,
+						FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+						TextWrapping = TextWrapping.Wrap
+					});
+
+					// Details
+					statusGroup.Children.Add(CreateActivationDetailRow("Description", status.Description));
+					statusGroup.Children.Add(CreateActivationDetailRow("Activation ID", status.ActivationId.ToString()));
+					statusGroup.Children.Add(CreateActivationDetailRow("Extended PID", status.ExtendedPid));
+					statusGroup.Children.Add(CreateActivationDetailRow("Product Key Channel", status.ProductKeyChannel));
+					statusGroup.Children.Add(CreateActivationDetailRow("Partial Product Key", status.PartialProductKey));
+					statusGroup.Children.Add(CreateActivationDetailRow("License Status", status.LicenseStatusString));
+					statusGroup.Children.Add(CreateActivationDetailRow("Status Code", status.Status.ToString(CultureInfo.InvariantCulture)));
+					statusGroup.Children.Add(CreateActivationDetailRow("Grace Time", $"{status.GraceTime} minutes"));
+					statusGroup.Children.Add(CreateActivationDetailRow("Reason Code", $"0x{status.Reason:X}"));
+					statusGroup.Children.Add(CreateActivationDetailRow("Validity Expiration", status.Validity.ToString(CultureInfo.InvariantCulture)));
+					statusGroup.Children.Add(CreateActivationDetailRow("Genuine Status", status.ClcGenuineStatus));
+					statusGroup.Children.Add(CreateActivationDetailRow("Digital License", status.ClcIsDigitalLicense ? "Yes" : "No"));
+					statusGroup.Children.Add(CreateActivationDetailRow("Last Activation Time", status.ClcLastActivationTime));
+					statusGroup.Children.Add(CreateActivationDetailRow("Last Activation HResult", status.ClcHResult));
+
+					if (!string.IsNullOrWhiteSpace(status.ExpirationMsg))
+					{
+						statusGroup.Children.Add(CreateActivationDetailRow("Expiration Info", status.ExpirationMsg));
+					}
+
+					statusGroup.Children.Add(CreateActivationDetailRow("Is Subscription Supported", status.EdittionSupportsSubscription.ToString()));
+
+					if (status.EdittionSupportsSubscription)
+					{
+						statusGroup.Children.Add(CreateActivationDetailRow("Subscription Enabled", status.IsSubscriptionEnabled ? "Yes" : "No"));
+						if (status.IsSubscriptionEnabled)
+						{
+							statusGroup.Children.Add(CreateActivationDetailRow("Subscription SKU", status.SubscriptionSku));
+							statusGroup.Children.Add(CreateActivationDetailRow("Subscription State", status.SubscriptionState));
+						}
+					}
+
+					if (!string.IsNullOrWhiteSpace(status.ClcStateData))
+					{
+						statusGroup.Children.Add(CreateActivationDetailRow("State Data", status.ClcStateData));
+					}
+
+					contentPanel.Children.Add(statusGroup);
+
+					// Separator between entries
+					if (statuses.IndexOf(status) < statuses.Count - 1)
+					{
+						contentPanel.Children.Add(new MenuFlyoutSeparator());
+					}
+				}
+			}
+
+			// ScrollViewer for the content
+			ScrollViewer scrollViewer = new()
+			{
+				Content = contentPanel,
+				VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+				HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+			};
+
+			using ContentDialogV2 actDialog = new()
+			{
+				Title = "Activation Details",
+				Content = scrollViewer,
+				CloseButtonText = GlobalVars.GetStr("OK"),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			_ = await actDialog.ShowAsync();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Helper to create a TextBlock for activation details.
+	/// </summary>
+	private static TextBlock CreateActivationDetailRow(string label, string? value)
+	{
+		TextBlock tb = new()
+		{
+			TextWrapping = TextWrapping.Wrap,
+			IsTextSelectionEnabled = true
+		};
+		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = label + ": ", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = string.IsNullOrEmpty(value) ? "N/A" : value });
+		return tb;
+	}
+
+
+	/// <summary>
 	/// Formats the WMI date string (yyyyMMdd...) into a user-friendly date format.
 	/// </summary>
 	/// <param name="wmiDate">The raw WMI date string.</param>
@@ -1575,6 +1724,463 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 		return wmiDate;
 	}
+
+	#region Windows Activation and Licensing Info
+
+	/// <summary>
+	/// Class that holds activation data such as SKU-specific Status and Global Client Licensing Data
+	/// </summary>
+	internal sealed class WindowsActivationStatus(
+		string? name,
+		string? description,
+		Guid activationId,
+		string? extendedPid,
+		string? productKeyChannel,
+		string? partialProductKey,
+		int status,
+		int graceTime,
+		int reason,
+		long validity,
+		string? clcStateData,
+		string? clcHResult,
+		string? clcLastActivationTime,
+		string? clcGenuineStatus,
+		bool clcIsDigitalLicense,
+		bool edittionSupportsSubscription,
+		bool isSubscriptionEnabled,
+		string? subscriptionSku,
+		string? subscriptionState,
+		string? expirationMsg
+		)
+	{
+		internal string? Name => name;
+		internal string? Description => description;
+		internal Guid ActivationId => activationId;
+		internal string? ExtendedPid => extendedPid;
+		internal string? ProductKeyChannel => productKeyChannel;
+		internal string? PartialProductKey => partialProductKey;
+		internal int Status => status;
+		internal int GraceTime => graceTime;
+		internal int Reason => reason;
+		internal long Validity => validity;
+		internal string? ClcStateData => clcStateData;
+		internal string? ClcHResult => clcHResult;
+		internal string? ClcLastActivationTime => clcLastActivationTime;
+		internal string? ClcGenuineStatus => clcGenuineStatus;
+		internal bool ClcIsDigitalLicense => clcIsDigitalLicense;
+		internal bool EdittionSupportsSubscription => edittionSupportsSubscription;
+		internal bool IsSubscriptionEnabled => isSubscriptionEnabled;
+		internal string? SubscriptionSku => subscriptionSku;
+		internal string? SubscriptionState => subscriptionState;
+		internal string? ExpirationMsg => expirationMsg;
+
+		/// <summary>
+		/// https://learn.microsoft.com/previous-versions/windows/desktop/sppwmi/softwarelicensingproduct
+		/// </summary>
+		internal string LicenseStatusString => Status switch
+		{
+			0 => "Unlicensed",
+			1 => "Licensed",
+			2 => "OOBGrace (Out-of-Box grace period)",
+			3 => "OOTGrace (Out-of-Tolerance grace period)",
+			4 => "NonGenuineGrace (Non-genuine grace period)",
+			5 => "Notification",
+			6 => "ExtendedGrace (Extended grace period)",
+			_ => "Unknown"
+		};
+	}
+
+	internal static class GetOSActivationStates
+	{
+		/// <summary>
+		/// https://github.com/MicrosoftDocs/SupportArticles-docs/blob/main/support/windows-client/licensing-and-activation/activation-failures-not-genuine-notifications-volume-licensed-kms-client.md
+		/// </summary>
+		private static readonly Guid WindowsAppId = new("55c92734-d682-4d71-983e-d6ec3f16059f");
+
+		// https://learn.microsoft.com/windows/win32/api/slpublic/ne-slpublic-sl_genuine_state
+		private const int SL_GEN_STATE_IS_GENUINE = 0;
+		private const int SL_GEN_STATE_INVALID_LICENSE = 1;
+		private const int SL_GEN_STATE_TAMPERED = 2;
+		private const int SL_GEN_STATE_OFFLINE = 3;
+		private const int SL_GEN_STATE_LAST = 4;
+
+		internal static List<WindowsActivationStatus> Get()
+		{
+			IntPtr hSLC = IntPtr.Zero;
+			int result = NativeMethods.SLOpen(ref hSLC);
+
+			if (result != 0)
+			{
+				throw new InvalidOperationException("Failed to open Software Licensing Client.");
+			}
+
+			try
+			{
+				// Gather all data: Windows Status + Client Licensing
+				return GetWindowsActivationStatus(hSLC);
+			}
+			finally
+			{
+				if (hSLC != IntPtr.Zero)
+				{
+					int closeResult = NativeMethods.SLClose(hSLC);
+					if (closeResult != 0)
+					{
+						Logger.Write($"Failed to close Software Licensing Client. Error Code: 0x{closeResult:X8}", LogTypeIntel.Error);
+					}
+				}
+			}
+		}
+
+		private static unsafe List<WindowsActivationStatus> GetWindowsActivationStatus(IntPtr hSLC)
+		{
+			List<WindowsActivationStatus> results = new();
+			uint count = 0;
+			IntPtr pIds = IntPtr.Zero;
+
+			(bool, bool, string?, string?) subscriptionStatus = GetSubscriptionStatus();
+
+			// Collect SKU List
+			int hr = NativeMethods.SLGetSLIDList(hSLC, 0, WindowsAppId, 1, ref count, ref pIds);
+
+			if (hr != 0 || count == 0)
+			{
+				return results;
+			}
+
+			try
+			{
+				int guidSize = sizeof(Guid);
+
+				for (int i = 0; i < count; i++)
+				{
+					IntPtr currentPtr = IntPtr.Add(pIds, i * guidSize);
+					Guid skuId = *(Guid*)currentPtr;
+
+					string? pkeyIdStr = GetSkuInfoString(hSLC, skuId, "pkeyId");
+
+					if (string.IsNullOrEmpty(pkeyIdStr)) continue;
+					if (!Guid.TryParse(pkeyIdStr, out Guid pkeyId)) continue;
+
+					string? description = GetSkuInfoString(hSLC, skuId, "Description");
+					string? extendedPid = GetPKeyInfoString(hSLC, pkeyId, "DigitalPID");
+					string? channel = GetPKeyInfoString(hSLC, pkeyId, "Channel");
+					string? partialKey = GetPKeyInfoString(hSLC, pkeyId, "PartialProductKey");
+
+					GetLicensingStatus(hSLC, WindowsAppId, skuId, out int status, out int grace, out int reason, out long validity);
+
+					results.Add(new WindowsActivationStatus(
+						name: GetSkuInfoString(hSLC, skuId, "Name"),
+						description: description ?? string.Empty,
+						activationId: skuId,
+						extendedPid: extendedPid,
+						productKeyChannel: channel,
+						partialProductKey: partialKey,
+						status: status,
+						graceTime: grace,
+						reason: reason,
+						validity: validity,
+						clcStateData: GetStateData(),
+						clcHResult: GetLastActivationHResult(),
+						clcLastActivationTime: GetLastActivationTime(),
+						clcGenuineStatus: GetIsWindowsGenuine(),
+						clcIsDigitalLicense: GetDigitalLicenseStatus(),
+						edittionSupportsSubscription: subscriptionStatus.Item1,
+						isSubscriptionEnabled: subscriptionStatus.Item2,
+						subscriptionSku: subscriptionStatus.Item3,
+						subscriptionState: subscriptionStatus.Item4,
+						expirationMsg: GetExpirationMessage(status, description: description, grace, reason)
+					));
+				}
+			}
+			finally
+			{
+				if (pIds != IntPtr.Zero)
+				{
+					Marshal.FreeHGlobal(pIds);
+				}
+			}
+			return results;
+		}
+
+		private static string? GetSkuInfoString(IntPtr hSLC, Guid skuId, string valueName)
+		{
+			uint dataType = 0;
+			uint dataSize = 0;
+			IntPtr dataPtr = IntPtr.Zero;
+
+			int hr = NativeMethods.SLGetProductSkuInformation(hSLC, skuId, valueName, ref dataType, ref dataSize, ref dataPtr);
+
+			if (hr == 0 && dataType == 1 && dataPtr != IntPtr.Zero)
+			{
+				string? result = Marshal.PtrToStringUni(dataPtr);
+				Marshal.FreeHGlobal(dataPtr);
+				return result;
+			}
+
+			if (dataPtr != IntPtr.Zero) Marshal.FreeHGlobal(dataPtr);
+			return null;
+		}
+
+		private static string? GetPKeyInfoString(IntPtr hSLC, Guid pKeyId, string valueName)
+		{
+			uint dataType = 0;
+			uint dataSize = 0;
+			IntPtr dataPtr = IntPtr.Zero;
+
+			int hr = NativeMethods.SLGetPKeyInformation(hSLC, pKeyId, valueName, ref dataType, ref dataSize, ref dataPtr);
+
+			if (hr == 0 && dataType == 1 && dataPtr != IntPtr.Zero)
+			{
+				string? result = Marshal.PtrToStringUni(dataPtr);
+				Marshal.FreeHGlobal(dataPtr);
+				return result;
+			}
+
+			if (dataPtr != IntPtr.Zero) Marshal.FreeHGlobal(dataPtr);
+			return null;
+		}
+
+		private static unsafe void GetLicensingStatus(IntPtr hSLC, Guid appId, Guid skuId, out int status, out int grace, out int reason, out long validity)
+		{
+			status = 0;
+			grace = 0;
+			reason = 0;
+			validity = 0;
+
+			uint count = 0;
+			IntPtr ptr = IntPtr.Zero;
+
+			int hr = NativeMethods.SLGetLicensingStatusInformation(hSLC, appId, skuId, null, ref count, ref ptr);
+
+			if (hr == 0 && count > 0 && ptr != IntPtr.Zero)
+			{
+				SL_LICENSING_STATUS info = *(SL_LICENSING_STATUS*)ptr;
+
+				status = (int)info.eStatus;
+				grace = (int)info.dwGraceTime;
+				reason = info.hrReason;
+				validity = info.qwValidityExpiration;
+
+				if (status == 3) status = 5;
+				if (status == 2)
+				{
+					if (reason == unchecked(0x4004F00D)) status = 3;
+					else if (reason == unchecked(0x4004F065)) status = 4;
+					else if (reason == unchecked(0x4004FC06)) status = 6;
+				}
+			}
+
+			if (ptr != IntPtr.Zero) Marshal.FreeHGlobal(ptr);
+		}
+
+		private static string GetExpirationMessage(int status, string? description, int grace, int reason)
+		{
+			double days = Math.Round(grace / 1440.0);
+			bool inGrace = grace > 0;
+			string safeDesc = description ?? string.Empty;
+
+			string expiryDateStr = "";
+			if (inGrace)
+			{
+				expiryDateStr = DateTime.Now.AddMinutes(grace).ToString("yyyy-MM-dd hh:mm:ss tt");
+			}
+
+			if (status == 1) // Licensed
+			{
+				if (grace == 0)
+				{
+					return "Permanently activated.";
+				}
+				else
+				{
+					string actTag = "Time-based";
+					if (safeDesc.Contains("VOLUME_KMSCLIENT", StringComparison.OrdinalIgnoreCase))
+					{
+						actTag = "Volume KMS";
+					}
+					else if (safeDesc.Contains("VIRTUAL_MACHINE_ACTIVATION", StringComparison.OrdinalIgnoreCase))
+					{
+						actTag = "VM Activation";
+					}
+
+					if (inGrace)
+					{
+						return $"{actTag} activation will expire: {expiryDateStr}";
+					}
+					else
+					{
+						return $"{actTag} activation expiration: {grace} minutes - {days} days";
+					}
+				}
+			}
+			else if (status == 2 && inGrace)
+			{
+				return $"Initial grace period ends {expiryDateStr}";
+			}
+			else if ((status == 3 || status == 4 || status == 6) && inGrace)
+			{
+				return $"Grace period ends {expiryDateStr}";
+			}
+			else if (status == 5)
+			{
+				return $"Notification Reason: 0x{reason:X}";
+			}
+			return string.Empty;
+		}
+
+		private static string GetStateData()
+		{
+			uint type = 0;
+			uint size = 0;
+			IntPtr ptr = IntPtr.Zero;
+
+			int hr = NativeMethods.SLGetWindowsInformation("Security-SPP-Action-StateData", ref type, ref size, ref ptr);
+
+			if (hr == 0 && ptr != IntPtr.Zero)
+			{
+				string raw = Marshal.PtrToStringUni(ptr) ?? "";
+				Marshal.FreeHGlobal(ptr);
+				return "    " + raw.Replace(";", "\n    ");
+			}
+			return string.Empty;
+		}
+
+		private static string GetLastActivationHResult()
+		{
+			uint type = 0;
+			uint size = 0;
+			IntPtr ptr = IntPtr.Zero;
+
+			int hr = NativeMethods.SLGetWindowsInformation("Security-SPP-LastWindowsActivationHResult", ref type, ref size, ref ptr);
+
+			if (hr == 0 && ptr != IntPtr.Zero)
+			{
+				int val = Marshal.ReadInt32(ptr);
+				Marshal.FreeHGlobal(ptr);
+				return $"0x{val:x8}";
+			}
+			return string.Empty;
+		}
+
+		private static string GetLastActivationTime()
+		{
+			uint type = 0;
+			uint size = 0;
+			IntPtr ptr = IntPtr.Zero;
+
+			int hr = NativeMethods.SLGetWindowsInformation("Security-SPP-LastWindowsActivationTime", ref type, ref size, ref ptr);
+
+			if (hr == 0 && ptr != IntPtr.Zero)
+			{
+				long val = Marshal.ReadInt64(ptr);
+				Marshal.FreeHGlobal(ptr);
+
+				if (val != 0)
+				{
+					try
+					{
+						return DateTime.FromFileTimeUtc(val).ToString("yyyy/MM/dd:HH:mm:ss");
+					}
+					catch { }
+				}
+			}
+			return string.Empty;
+		}
+
+		/// <summary>
+		/// Get the License status of the Windows, whetther it is genuine or not.
+		/// </summary>
+		/// <returns></returns>
+		private static string GetIsWindowsGenuine()
+		{
+			int genuineState = 0;
+			int hr = NativeMethods.SLIsWindowsGenuineLocal(ref genuineState);
+
+			if (hr == 0)
+			{
+				// https://learn.microsoft.com/windows/win32/api/slpublic/ne-slpublic-sl_genuine_state
+				return genuineState switch
+				{
+					SL_GEN_STATE_IS_GENUINE => "Genuine",
+					SL_GEN_STATE_INVALID_LICENSE => "Invalid License",
+					SL_GEN_STATE_TAMPERED => "Tampered",
+					SL_GEN_STATE_OFFLINE => "Offline",
+					SL_GEN_STATE_LAST => "Last State",
+					_ => genuineState.ToString()
+				};
+			}
+			return string.Empty;
+		}
+
+		/// <summary>
+		/// Get the Digital License information.
+		/// </summary>
+		/// <returns></returns>
+		private static bool GetDigitalLicenseStatus()
+		{
+			try
+			{
+				int hr = NativeMethods.CLSIDFromProgID("EditionUpgradeManagerObj.EditionUpgradeManager", out Guid clsid);
+				if (hr != 0) return false;
+
+				Guid iid = typeof(IEditionUpgradeManager).GUID;
+				hr = NativeMethods.CoCreateInstanceForLicensing(in clsid, IntPtr.Zero, 1, in iid, out IEditionUpgradeManager eum);
+
+				if (hr == 0 && eum != null)
+				{
+					// Calls the 5th method in the VTable
+					hr = eum.GetWindowsLicense(1, out int result);
+					if (hr == 0)
+					{
+						return result >= 0 && result != 1;
+					}
+				}
+			}
+			catch { }
+			return false;
+		}
+
+		/// <summary>
+		/// Get the subscription details.
+		/// </summary>
+		/// <returns></returns>
+		private static unsafe (bool, bool, string?, string?) GetSubscriptionStatus()
+		{
+			bool EdittionSupportsSubscription = false;
+			bool IsSubscriptionEnabled = false;
+			string? SubscriptionSku = null;
+			string? SubscriptionState = null;
+
+			int dwSupported = 0;
+
+			int hr = NativeMethods.SLGetWindowsInformationDWORD("ConsumeAddonPolicySet", ref dwSupported);
+
+			if (hr != 0) return (EdittionSupportsSubscription, IsSubscriptionEnabled, SubscriptionSku, SubscriptionState);
+
+			EdittionSupportsSubscription = dwSupported != 0;
+
+			IntPtr pStatus = IntPtr.Zero;
+			hr = NativeMethods.ClipGetSubscriptionStatus(ref pStatus);
+
+			if (hr == 0 && pStatus != IntPtr.Zero)
+			{
+				SubscriptionStatus status = *(SubscriptionStatus*)pStatus;
+				Marshal.FreeHGlobal(pStatus);
+
+				IsSubscriptionEnabled = status.dwEnabled != 0;
+
+				if (status.dwEnabled != 0)
+				{
+					SubscriptionSku = status.dwSku.ToString();
+					SubscriptionState = status.dwState.ToString();
+				}
+			}
+			return (EdittionSupportsSubscription, IsSubscriptionEnabled, SubscriptionSku, SubscriptionState);
+		}
+	}
+
+	#endregion
 
 	public void Dispose()
 	{

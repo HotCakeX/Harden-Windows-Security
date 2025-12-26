@@ -248,6 +248,25 @@
                             </Grid>
                         </Border>
 
+                        <!-- ACTIVATION -->
+                        <Button Style="{StaticResource CardButtonStyle}" Click="{x:Bind ViewModel.OnActivationInfoClick}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE8D0;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               Text="Windows Activation"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.ActivationStatusSummaryText, Mode=OneWay}"/>
+                            </Grid>
+                        </Button>
+
                         <!-- UPTIME -->
                         <Border Style="{StaticResource OverviewCardBorderStyle}">
                             <Grid Style="{StaticResource CardContentGridStyle}">

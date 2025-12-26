@@ -1441,15 +1441,6 @@
 <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
   <value>Error while checking for existing DISMService processes: {0}</value>
 </data>
-<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-  <value>DISM service file integrity check failed</value>
-</data>
-<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-  <value>Failed to verify DISM service integrity: {0}</value>
-</data>
-<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-  <value>DISM service file integrity verification failed. Cannot start service.</value>
-</data>
 <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
   <value>Failed to create process. Win32 Error: {0}</value>
 </data>
@@ -1461,9 +1452,6 @@
 </data>
 <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
   <value>Failed to start DISM service. Make sure DismService.exe is in the application directory and you're running as Administrator.</value>
-</data>
-<data name="FailedToInitializeDISMService" xml:space="preserve">
-  <value>Failed to initialize DISM service: {0}</value>
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Successfully loaded {0} Windows features and capabilities.</value>
@@ -1531,9 +1519,6 @@
 <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
   <value>Error during bulk disable operation</value>
 </data>
-<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-  <value>Failed to initialize DISM service for security hardening.</value>
-</data>
 <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
   <value>Starting with {0} optional Windows features and capabilities...</value>
 </data>
@@ -1546,9 +1531,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Security hardening completed: {0} succeeded, {1} failed.</value>
 </data>
-<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-  <value>Failed to initialize DISM service for verification.</value>
-</data>
 <data name="VerifyingSecurityHardeningState" xml:space="preserve">
   <value>Verifying security hardening state for {0} optional Windows features and capabilities...</value>
 </data>
@@ -1560,9 +1542,6 @@
 </data>
 <data name="IncorrectItems" xml:space="preserve">
   <value>Incorrect items: {0}</value>
-</data>
-<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-  <value>Failed to initialize DISM service for removing security hardening.</value>
 </data>
 <data name="RemovingSecurityHardening" xml:space="preserve">
   <value>Removing security hardening for {0} optional Windows features and capabilities...</value>

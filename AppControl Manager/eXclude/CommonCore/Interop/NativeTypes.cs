@@ -16,6 +16,7 @@
 //
 
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace CommonCore.Interop;
 
@@ -1074,4 +1075,40 @@ internal unsafe struct WINTRUST_DATA
 		UIContext = 0;
 		pSignatureSettings = signatureSettingsPtr;
 	}
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/slpublic/ns-slpublic-sl_licensing_status
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SL_LICENSING_STATUS
+{
+	internal Guid SkuId;
+	internal uint eStatus;
+	internal uint dwGraceTime;
+	internal uint dwTotalGraceTime;
+	internal int hrReason;
+	internal long qwValidityExpiration;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct SubscriptionStatus
+{
+	internal uint dwEnabled;
+	internal uint dwSku;
+	internal uint dwState;
+}
+
+[GeneratedComInterface]
+[Guid("F2DCB80D-0670-44BC-9002-CD18688730AF")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IEditionUpgradeManager
+{
+	void PlaceholderMethod1();
+	void PlaceholderMethod2();
+	void PlaceholderMethod3();
+	void PlaceholderMethod4();
+
+	[PreserveSig]
+	int GetWindowsLicense(int uUnk, out int pdwResult);
 }

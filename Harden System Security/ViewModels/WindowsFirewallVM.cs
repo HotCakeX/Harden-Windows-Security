@@ -25,6 +25,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
+using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -254,7 +255,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (selectedFiles.Count > 0)
 			{
-				foreach (string item in selectedFiles)
+				foreach (string item in CollectionsMarshal.AsSpan(selectedFiles))
 				{
 					SelectedFiles.Add(item);
 				}
@@ -355,6 +356,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" "{file}" outbound {action} "{ruleNameOutbound}" """));
 					}
 				}
+
+				// Update policies to take effect immediately
+				CSEMgr.RegisterCSEGuids();
 			});
 
 			await RetrieveFirewallRules_internal();
@@ -429,7 +433,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			await Task.Run(() =>
 			{
-				foreach (string file in DualUsePrograms)
+				foreach (string file in CollectionsMarshal.AsSpan(DualUsePrograms))
 				{
 					string ruleNameInbound = $"BlockingDualUseProgram-{file}-Inbound";
 					string ruleNameOutbound = $"BlockingDualUseProgram-{file}-Outbound";
@@ -439,6 +443,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" "{file}" inbound block "{ruleNameInbound}" """));
 					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" "{file}" outbound block "{ruleNameOutbound}" """));
 				}
+
+				// Update policies to take effect immediately
+				CSEMgr.RegisterCSEGuids();
 			});
 
 			await RetrieveFirewallRules_internal();
@@ -668,10 +675,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			await Task.Run(() =>
 			{
-				foreach (FirewallRule rule in rulesToDelete)
+				foreach (FirewallRule rule in CollectionsMarshal.AsSpan(rulesToDelete))
 				{
 					DeleteFirewallRule(rule.Name);
 				}
+
+				// Update policies to take effect immediately
+				CSEMgr.RegisterCSEGuids();
 			});
 
 			await RetrieveFirewallRules_internal();

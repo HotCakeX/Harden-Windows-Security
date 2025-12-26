@@ -1441,15 +1441,6 @@
 <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
   <value>നിലവിലുള്ള DISMService പ്രോസസുകൾ പരിശോധിക്കുന്നതിൽ പിശക്: {0}</value>
 </data>
-<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
-  <value>DISM സേവന ഫയൽ സമഗ്രത പരിശോധന പരാജയപ്പെട്ടു</value>
-</data>
-<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
-  <value>DISM സേവന സമഗ്രത പരിശോധിക്കുന്നതിൽ പരാജയപ്പെട്ടു: {0}</value>
-</data>
-<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
-  <value>DISM സേവന ഫയൽ സമഗ്രത പരിശോധന പരാജയപ്പെട്ടു. സേവനം ആരംഭിക്കാൻ കഴിയില്ല.</value>
-</data>
 <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
   <value>പ്രോസസ് സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു. Win32 പിശക്: {0}</value>
 </data>
@@ -1461,9 +1452,6 @@
 </data>
 <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
   <value>DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു. DismService.exe ആപ്ലിക്കേഷൻ ഫോൾഡറിൽ ഉണ്ടെന്നും നിങ്ങൾ അഡ്മിനിസ്ട്രേറ്ററായി പ്രവർത്തിപ്പിക്കുന്നുവെന്നും ഉറപ്പാക്കുക.</value>
-</data>
-<data name="FailedToInitializeDISMService" xml:space="preserve">
-  <value>DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു: {0}</value>
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>{0} Windows ഫീച്ചറുകളും കഴിവുകളും വിജയകരമായി ലോഡ് ചെയ്തു.</value>
@@ -1531,9 +1519,6 @@
 <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
   <value>ബൾക്ക് പ്രാപ്തമല്ലാതാക്കൽ പ്രവർത്തനത്തിനിടയിൽ പിശക്</value>
 </data>
-<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
-  <value>സുരക്ഷാ കാഠിന്യത്തിനായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
-</data>
 <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
   <value>{0} ഓപ്ഷണൽ Windows ഫീച്ചറുകളും കഴിവുകളുമായി ആരംഭിക്കുന്നു...</value>
 </data>
@@ -1546,9 +1531,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>സുരക്ഷാ കാഠിന്യം പൂർത്തിയായി: {0} വിജയിച്ചു, {1} പരാജയപ്പെട്ടു.</value>
 </data>
-<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
-  <value>പരിശോധനയ്ക്കായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
-</data>
 <data name="VerifyingSecurityHardeningState" xml:space="preserve">
   <value>{0} ഓപ്ഷണൽ Windows ഫീച്ചറുകൾക്കും കഴിവുകൾക്കുമായി സുരക്ഷാ കാഠിന്യ നില പരിശോധിക്കുന്നു...</value>
 </data>
@@ -1560,9 +1542,6 @@
 </data>
 <data name="IncorrectItems" xml:space="preserve">
   <value>തെറ്റായ ഇനങ്ങൾ: {0}</value>
-</data>
-<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
-  <value>സുരക്ഷാ കാഠിന്യം നീക്കം ചെയ്യുന്നതിനായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
 </data>
 <data name="RemovingSecurityHardening" xml:space="preserve">
   <value>{0} ഓപ്ഷണൽ Windows ഫീച്ചറുകൾക്കും കഴിവുകൾക്കുമായി സുരക്ഷാ കാഠിന്യം നീക്കം ചെയ്യുന്നു...</value>

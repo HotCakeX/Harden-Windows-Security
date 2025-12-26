@@ -40,11 +40,9 @@ internal static class WindowsServiceHost
 	// Debug logging toggle via System environment variable "QUANTUMRELAYHSS_DEBUG"
 	private static readonly bool s_debugLoggingEnabled = IsDebugEnabled();
 
-	static WindowsServiceHost()
-	{
+	static WindowsServiceHost() =>
 		// Create the custom event source if it doesn't exist
 		NativeEventLogger.EnsureSourceRegistered(Atlas.QuantumRelayHSSServiceName);
-	}
 
 	// Entry from Program.Main. Starts the service control dispatcher.
 	internal static int Run()
@@ -149,7 +147,7 @@ internal static class WindowsServiceHost
 			{
 				try
 				{
-					await s_pipeServer!.StartAsync(s_stoppingCts.Token).ConfigureAwait(false);
+					await s_pipeServer.StartAsync(s_stoppingCts.Token).ConfigureAwait(false);
 				}
 				catch (OperationCanceledException) { } // Expected during stopping
 				catch (Exception ex)

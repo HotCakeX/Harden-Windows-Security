@@ -282,7 +282,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 <br>
 
 > [!IMPORTANT]\
-> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/blue.gif" alt="Attention gif"> It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Sony, and Samsung, with OEMs that use unmodified Insyde H20, or Phoenix firmwares utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system.
+> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/blue.gif" alt="Attention gif"> It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Sony, and Samsung, as well as OEMs that use unmodified Insyde H20, or Phoenix firmwares, utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system.
 
 <br>
 

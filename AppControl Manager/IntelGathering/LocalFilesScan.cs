@@ -56,7 +56,7 @@ internal static class LocalFilesScan
 
 		try
 		{
-			Taskbar.Badge.SetBadgeAsActive();
+			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
 
 			// Get the security catalog data to include in the scan
 			ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, scalability);
@@ -86,7 +86,7 @@ internal static class LocalFilesScan
 				progressReporter.Report(percentageToUse);
 
 				// Update the taskbar progress
-				Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
+				CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
 
 			}, null, 0, 2000);
 
@@ -394,13 +394,11 @@ internal static class LocalFilesScan
 			progressReporter.Report(100);
 
 			return MainOutput.Keys;
-
 		}
 		finally
 		{
 			// Clear the taskbar progress
-			Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
-			Taskbar.Badge.ClearBadge();
+			CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
 		}
 	}
 

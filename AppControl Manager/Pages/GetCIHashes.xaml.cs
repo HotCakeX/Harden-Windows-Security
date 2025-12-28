@@ -273,17 +273,11 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 		_ = await hashGridView.TryStartConnectedAnimationAsync(animation, ViewModel.SelectedHashItem, "connectedElement");
 	}
 
-	private void SmokeGrid_Tapped(object sender, TappedRoutedEventArgs e)
-	{
-		// Close modal when clicking on the background
-		BackButton_Click(sender, e);
-	}
+	// Close modal when clicking on the background
+	private void SmokeGrid_Tapped(object sender, TappedRoutedEventArgs e) => BackButton_Click(sender, e);
 
-	private void DestinationElement_Tapped(object sender, TappedRoutedEventArgs e)
-	{
-		// Prevent the tap from bubbling up to the smoke grid
-		e.Handled = true;
-	}
+	// Prevent the tap from bubbling up to the smoke grid
+	private void DestinationElement_Tapped(object sender, TappedRoutedEventArgs e) => e.Handled = true;
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GetCIHashesPageTitle/Text");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes");

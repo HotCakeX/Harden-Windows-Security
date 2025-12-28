@@ -82,18 +82,13 @@ internal static class CustomSerialization
 		}
 
 		// EKUs
-		// Adding this first so if there are no EKUs, an empty EKUs node will exist to satisfy the schema validation
-		XmlElement ekusElement = xmlDoc.CreateElement("EKUs", GlobalVars.SiPolicyNamespace);
-		_ = root.AppendChild(ekusElement);
-
-		if (policy.EKUs is { Count: > 0 })
+		if (policy.EKUs?.Count > 0)
 		{
+			XmlElement ekusElement = xmlDoc.CreateElement("EKUs", GlobalVars.SiPolicyNamespace);
+			_ = root.AppendChild(ekusElement);
+
 			foreach (EKU eku in policy.EKUs)
 			{
-
-				if (eku is null)
-					continue;
-
 				XmlElement ekuElement = xmlDoc.CreateElement("EKU", GlobalVars.SiPolicyNamespace);
 				ekuElement.SetAttribute("ID", eku.ID);
 
@@ -106,12 +101,11 @@ internal static class CustomSerialization
 		}
 
 		// FileRules
-		// Adding this first so if there are no FileRules, an empty FileRules node will exist to satisfy the schema validation.
-		XmlElement fileRulesElement = xmlDoc.CreateElement("FileRules", GlobalVars.SiPolicyNamespace);
-		_ = root.AppendChild(fileRulesElement);
-
-		if (policy.FileRules is { Count: > 0 })
+		if (policy.FileRules?.Count > 0)
 		{
+			XmlElement fileRulesElement = xmlDoc.CreateElement("FileRules", GlobalVars.SiPolicyNamespace);
+			_ = root.AppendChild(fileRulesElement);
+
 			// Detect the types of each FileRule
 			foreach (object fr in CollectionsMarshal.AsSpan(policy.FileRules))
 			{
@@ -135,11 +129,13 @@ internal static class CustomSerialization
 		}
 
 		// Signers
-		if (policy.Signers is { Count: > 0 })
+		if (policy.Signers?.Count > 0)
 		{
 			// Only create the <Signers> block if there are any signers since it is nullable (can be absent in the XML) according to the Schema.
+			// Don't append to the root yet
 			XmlElement signersElement = xmlDoc.CreateElement("Signers", GlobalVars.SiPolicyNamespace);
-			_ = root.AppendChild(signersElement);
+
+			int totalValidSignerElements = 0;
 
 			foreach (Signer signer in policy.Signers)
 			{
@@ -150,13 +146,11 @@ internal static class CustomSerialization
 					signerElement.SetAttribute("SignTimeAfter", signer.SignTimeAfter.Value.ToString("o"));
 
 				// CertRoot
-				if (signer.CertRoot is not null && !signer.CertRoot.Value.IsEmpty)
-				{
-					XmlElement certRootElement = xmlDoc.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
-					certRootElement.SetAttribute("Type", signer.CertRoot.Type.ToString());
-					certRootElement.SetAttribute("Value", ConvertByteArrayToHex(signer.CertRoot.Value));
-					_ = signerElement.AppendChild(certRootElement);
-				}
+				if (signer.CertRoot.Value.IsEmpty) continue;
+				XmlElement certRootElement = xmlDoc.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
+				certRootElement.SetAttribute("Type", signer.CertRoot.Type.ToString());
+				certRootElement.SetAttribute("Value", ConvertByteArrayToHex(signer.CertRoot.Value));
+				_ = signerElement.AppendChild(certRootElement);
 
 				// CertEKU(s)
 				if (signer.CertEKU is { Count: > 0 })
@@ -170,21 +164,21 @@ internal static class CustomSerialization
 				}
 
 				// CertIssuer, CertPublisher, CertOemID
-				if (signer.CertIssuer is not null && signer.CertIssuer.Value is not null)
+				if (signer.CertIssuer is not null)
 				{
 					if (!AppendAttributeElement(xmlDoc, signerElement, "CertIssuer", "Value", signer.CertIssuer.Value))
 					{
 						throw new InvalidOperationException("Could not get the CertIssuer value");
 					}
 				}
-				if (signer.CertPublisher is not null && signer.CertPublisher.Value is not null)
+				if (signer.CertPublisher is not null)
 				{
 					if (!AppendAttributeElement(xmlDoc, signerElement, "CertPublisher", "Value", signer.CertPublisher.Value))
 					{
 						throw new InvalidOperationException("Could not get the CertPublisher value");
 					}
 				}
-				if (signer.CertOemID is not null && signer.CertOemID.Value is not null)
+				if (signer.CertOemID is not null)
 				{
 					if (!AppendAttributeElement(xmlDoc, signerElement, "CertOemID", "Value", signer.CertOemID.Value))
 					{
@@ -195,15 +189,20 @@ internal static class CustomSerialization
 				// FileAttribRef(s)
 				if (signer.FileAttribRef is { Count: > 0 })
 				{
-					foreach (FileAttribRef far in signer.FileAttribRef)
+					foreach (FileAttribRef far in CollectionsMarshal.AsSpan(signer.FileAttribRef))
 					{
 						XmlElement farElement = xmlDoc.CreateElement("FileAttribRef", GlobalVars.SiPolicyNamespace);
 						farElement.SetAttribute("RuleID", far.RuleID);
 						_ = signerElement.AppendChild(farElement);
 					}
 				}
+
+				totalValidSignerElements++;
 				_ = signersElement.AppendChild(signerElement);
 			}
+			// Only append the Signers element to the root if it has valid elements and won't be empty
+			if (totalValidSignerElements > 0)
+				_ = root.AppendChild(signersElement);
 		}
 
 		// SigningScenarios
@@ -229,12 +228,9 @@ internal static class CustomSerialization
 					scenarioElement.SetAttribute("MinimumHashAlgorithm", possibleMinimumHashAlgorithm);
 
 				// ProductSigners
-				if (scenario.ProductSigners is not null)
-				{
-					XmlElement prodSigners = xmlDoc.CreateElement("ProductSigners", GlobalVars.SiPolicyNamespace);
-					AppendProductSigners(xmlDoc, prodSigners, scenario.ProductSigners);
-					_ = scenarioElement.AppendChild(prodSigners);
-				}
+				XmlElement prodSigners = xmlDoc.CreateElement("ProductSigners", GlobalVars.SiPolicyNamespace);
+				AppendProductSigners(xmlDoc, prodSigners, scenario.ProductSigners);
+				_ = scenarioElement.AppendChild(prodSigners);
 				// TestSigners
 				if (scenario.TestSigners is not null)
 				{
@@ -273,11 +269,11 @@ internal static class CustomSerialization
 		}
 
 		// UpdatePolicySigners
-		XmlElement upsElement = xmlDoc.CreateElement("UpdatePolicySigners", GlobalVars.SiPolicyNamespace);
-		_ = root.AppendChild(upsElement);
-
-		if (policy.UpdatePolicySigners is { Count: > 0 })
+		if (policy.UpdatePolicySigners?.Count > 0)
 		{
+			XmlElement upsElement = xmlDoc.CreateElement("UpdatePolicySigners", GlobalVars.SiPolicyNamespace);
+			_ = root.AppendChild(upsElement);
+
 			foreach (UpdatePolicySigner ups in policy.UpdatePolicySigners)
 			{
 				XmlElement upsChild = xmlDoc.CreateElement("UpdatePolicySigner", GlobalVars.SiPolicyNamespace);
@@ -287,11 +283,11 @@ internal static class CustomSerialization
 		}
 
 		// CiSigners
-		XmlElement ciElement = xmlDoc.CreateElement("CiSigners", GlobalVars.SiPolicyNamespace);
-		_ = root.AppendChild(ciElement);
-
-		if (policy.CiSigners is { Count: > 0 })
+		if (policy.CiSigners?.Count > 0)
 		{
+			XmlElement ciElement = xmlDoc.CreateElement("CiSigners", GlobalVars.SiPolicyNamespace);
+			_ = root.AppendChild(ciElement);
+
 			foreach (CiSigner ci in CollectionsMarshal.AsSpan(policy.CiSigners))
 			{
 				XmlElement ciSignerElement = xmlDoc.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
@@ -310,8 +306,10 @@ internal static class CustomSerialization
 		// Settings
 		if (policy.Settings is { Count: > 0 })
 		{
+			// Create element but don't append it to the root yet
 			XmlElement settingsElement = xmlDoc.CreateElement("Settings", GlobalVars.SiPolicyNamespace);
-			_ = root.AppendChild(settingsElement);
+
+			int totalValidSettingsCount = 0;
 
 			foreach (Setting setting in CollectionsMarshal.AsSpan(policy.Settings))
 			{
@@ -363,7 +361,13 @@ internal static class CustomSerialization
 				_ = settingElement.AppendChild(valueElement);
 
 				_ = settingsElement.AppendChild(settingElement);
+
+				totalValidSettingsCount++;
 			}
+
+			// Only append to the root if it is guaranteed that it won't be empty
+			if (totalValidSettingsCount > 0)
+				_ = root.AppendChild(settingsElement);
 		}
 
 		// Macros
@@ -433,48 +437,43 @@ internal static class CustomSerialization
 	}
 
 	// Helper for OptionType conversion
-	private static string ConvertOptionType(OptionType option)
+	private static string ConvertOptionType(OptionType option) => option switch
 	{
-		return option switch
-		{
-			OptionType.EnabledUMCI => "Enabled:UMCI",
-			OptionType.EnabledBootMenuProtection => "Enabled:Boot Menu Protection",
-			OptionType.EnabledIntelligentSecurityGraphAuthorization => "Enabled:Intelligent Security Graph Authorization",
-			OptionType.EnabledInvalidateEAsonReboot => "Enabled:Invalidate EAs on Reboot",
-			OptionType.RequiredWHQL => "Required:WHQL",
-			OptionType.EnabledDeveloperModeDynamicCodeTrust => "Enabled:Developer Mode Dynamic Code Trust",
-			OptionType.EnabledAllowSupplementalPolicies => "Enabled:Allow Supplemental Policies",
-			OptionType.DisabledRuntimeFilePathRuleProtection => "Disabled:Runtime FilePath Rule Protection",
-			OptionType.EnabledRevokedExpiredAsUnsigned => "Enabled:Revoked Expired As Unsigned",
-			OptionType.EnabledAuditMode => "Enabled:Audit Mode",
-			OptionType.DisabledFlightSigning => "Disabled:Flight Signing",
-			OptionType.EnabledInheritDefaultPolicy => "Enabled:Inherit Default Policy",
-			OptionType.EnabledUnsignedSystemIntegrityPolicy => "Enabled:Unsigned System Integrity Policy",
-			OptionType.EnabledDynamicCodeSecurity => "Enabled:Dynamic Code Security",
-			OptionType.RequiredEVSigners => "Required:EV Signers",
-			OptionType.EnabledBootAuditOnFailure => "Enabled:Boot Audit On Failure",
-			OptionType.EnabledAdvancedBootOptionsMenu => "Enabled:Advanced Boot Options Menu",
-			OptionType.DisabledScriptEnforcement => "Disabled:Script Enforcement",
-			OptionType.RequiredEnforceStoreApplications => "Required:Enforce Store Applications",
-			OptionType.EnabledSecureSettingPolicy => "Enabled:Secure Setting Policy",
-			OptionType.EnabledManagedInstaller => "Enabled:Managed Installer",
-			OptionType.EnabledUpdatePolicyNoReboot => "Enabled:Update Policy No Reboot",
-			OptionType.EnabledConditionalWindowsLockdownPolicy => "Enabled:Conditional Windows Lockdown Policy",
-			_ => throw new InvalidOperationException("Policy Rule Option is not valid"),
-		};
-	}
+		OptionType.EnabledUMCI => "Enabled:UMCI",
+		OptionType.EnabledBootMenuProtection => "Enabled:Boot Menu Protection",
+		OptionType.EnabledIntelligentSecurityGraphAuthorization => "Enabled:Intelligent Security Graph Authorization",
+		OptionType.EnabledInvalidateEAsonReboot => "Enabled:Invalidate EAs on Reboot",
+		OptionType.RequiredWHQL => "Required:WHQL",
+		OptionType.EnabledDeveloperModeDynamicCodeTrust => "Enabled:Developer Mode Dynamic Code Trust",
+		OptionType.EnabledAllowSupplementalPolicies => "Enabled:Allow Supplemental Policies",
+		OptionType.DisabledRuntimeFilePathRuleProtection => "Disabled:Runtime FilePath Rule Protection",
+		OptionType.EnabledRevokedExpiredAsUnsigned => "Enabled:Revoked Expired As Unsigned",
+		OptionType.EnabledAuditMode => "Enabled:Audit Mode",
+		OptionType.DisabledFlightSigning => "Disabled:Flight Signing",
+		OptionType.EnabledInheritDefaultPolicy => "Enabled:Inherit Default Policy",
+		OptionType.EnabledUnsignedSystemIntegrityPolicy => "Enabled:Unsigned System Integrity Policy",
+		OptionType.EnabledDynamicCodeSecurity => "Enabled:Dynamic Code Security",
+		OptionType.RequiredEVSigners => "Required:EV Signers",
+		OptionType.EnabledBootAuditOnFailure => "Enabled:Boot Audit On Failure",
+		OptionType.EnabledAdvancedBootOptionsMenu => "Enabled:Advanced Boot Options Menu",
+		OptionType.DisabledScriptEnforcement => "Disabled:Script Enforcement",
+		OptionType.RequiredEnforceStoreApplications => "Required:Enforce Store Applications",
+		OptionType.EnabledSecureSettingPolicy => "Enabled:Secure Setting Policy",
+		OptionType.EnabledManagedInstaller => "Enabled:Managed Installer",
+		OptionType.EnabledUpdatePolicyNoReboot => "Enabled:Update Policy No Reboot",
+		OptionType.EnabledConditionalWindowsLockdownPolicy => "Enabled:Conditional Windows Lockdown Policy",
+		OptionType.DisabledDefaultWindowsCertificateRemapping => "Disabled:Default Windows Certificate Remapping",
+		_ => throw new InvalidOperationException("Policy Rule Option is not valid")
+	};
 
 	// Helper for PolicyType conversion
-	private static string ConvertPolicyType(PolicyType pt)
+	private static string ConvertPolicyType(PolicyType pt) => pt switch
 	{
-		return pt switch
-		{
-			PolicyType.BasePolicy => "Base Policy",
-			PolicyType.SupplementalPolicy => "Supplemental Policy",
-			PolicyType.AppIDTaggingPolicy => "AppID Tagging Policy",
-			_ => throw new InvalidOperationException("Unknown PolicyType")
-		};
-	}
+		PolicyType.BasePolicy => "Base Policy",
+		PolicyType.SupplementalPolicy => "Supplemental Policy",
+		PolicyType.AppIDTaggingPolicy => "AppID Tagging Policy",
+		_ => throw new InvalidOperationException("Unknown PolicyType")
+	};
 
 	// FileRules Helpers
 	private static void AppendAllow(XmlDocument doc, XmlElement parent, Allow allow)
@@ -562,7 +561,7 @@ internal static class CustomSerialization
 			XmlElement allowedElement = doc.CreateElement("AllowedSigners", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(ps.AllowedSigners.Workaround))
 				allowedElement.SetAttribute("Workaround", ps.AllowedSigners.Workaround);
-			if (ps.AllowedSigners.AllowedSigner is not null)
+			if (ps.AllowedSigners.AllowedSigner.Count > 0)
 			{
 				foreach (AllowedSigner aSigner in CollectionsMarshal.AsSpan(ps.AllowedSigners.AllowedSigner))
 				{
@@ -581,15 +580,16 @@ internal static class CustomSerialization
 					}
 					_ = allowedElement.AppendChild(aSignerElement);
 				}
+				_ = parent.AppendChild(allowedElement);
 			}
-			_ = parent.AppendChild(allowedElement);
 		}
 		if (ps.DeniedSigners is not null)
 		{
 			XmlElement deniedElement = doc.CreateElement("DeniedSigners", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(ps.DeniedSigners.Workaround))
 				deniedElement.SetAttribute("Workaround", ps.DeniedSigners.Workaround);
-			if (ps.DeniedSigners.DeniedSigner is not null)
+
+			if (ps.DeniedSigners.DeniedSigner.Count > 0)
 			{
 				foreach (DeniedSigner dSigner in CollectionsMarshal.AsSpan(ps.DeniedSigners.DeniedSigner))
 				{
@@ -608,15 +608,15 @@ internal static class CustomSerialization
 					}
 					_ = deniedElement.AppendChild(dSignerElement);
 				}
+				_ = parent.AppendChild(deniedElement);
 			}
-			_ = parent.AppendChild(deniedElement);
 		}
 		if (ps.FileRulesRef is not null)
 		{
 			XmlElement fileRulesRefElement = doc.CreateElement("FileRulesRef", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(ps.FileRulesRef.Workaround))
 				fileRulesRefElement.SetAttribute("Workaround", ps.FileRulesRef.Workaround);
-			if (ps.FileRulesRef.FileRuleRef is not null)
+			if (ps.FileRulesRef.FileRuleRef.Count > 0)
 			{
 				foreach (FileRuleRef fr in CollectionsMarshal.AsSpan(ps.FileRulesRef.FileRuleRef))
 				{
@@ -625,8 +625,9 @@ internal static class CustomSerialization
 						frElement.SetAttribute("RuleID", fr.RuleID);
 					_ = fileRulesRefElement.AppendChild(frElement);
 				}
+				// Only append if it will have members because it cannot exist empty as `<FileRulesRef />` in the XML according to the schema.
+				_ = parent.AppendChild(fileRulesRefElement);
 			}
-			_ = parent.AppendChild(fileRulesRefElement);
 		}
 	}
 
@@ -637,7 +638,7 @@ internal static class CustomSerialization
 			XmlElement allowedElement = doc.CreateElement("AllowedSigners", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(ts.AllowedSigners.Workaround))
 				allowedElement.SetAttribute("Workaround", ts.AllowedSigners.Workaround);
-			if (ts.AllowedSigners.AllowedSigner is not null)
+			if (ts.AllowedSigners.AllowedSigner.Count > 0)
 			{
 				foreach (AllowedSigner aSigner in CollectionsMarshal.AsSpan(ts.AllowedSigners.AllowedSigner))
 				{
@@ -656,15 +657,15 @@ internal static class CustomSerialization
 					}
 					_ = allowedElement.AppendChild(aSignerElement);
 				}
+				_ = parent.AppendChild(allowedElement);
 			}
-			_ = parent.AppendChild(allowedElement);
 		}
 		if (ts.DeniedSigners is not null)
 		{
 			XmlElement deniedElement = doc.CreateElement("DeniedSigners", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(ts.DeniedSigners.Workaround))
 				deniedElement.SetAttribute("Workaround", ts.DeniedSigners.Workaround);
-			if (ts.DeniedSigners.DeniedSigner is not null)
+			if (ts.DeniedSigners.DeniedSigner.Count > 0)
 			{
 				foreach (DeniedSigner dSigner in CollectionsMarshal.AsSpan(ts.DeniedSigners.DeniedSigner))
 				{
@@ -683,15 +684,15 @@ internal static class CustomSerialization
 					}
 					_ = deniedElement.AppendChild(dSignerElement);
 				}
+				_ = parent.AppendChild(deniedElement);
 			}
-			_ = parent.AppendChild(deniedElement);
 		}
 		if (ts.FileRulesRef is not null)
 		{
 			XmlElement fileRulesRefElement = doc.CreateElement("FileRulesRef", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(ts.FileRulesRef.Workaround))
 				fileRulesRefElement.SetAttribute("Workaround", ts.FileRulesRef.Workaround);
-			if (ts.FileRulesRef.FileRuleRef is not null)
+			if (ts.FileRulesRef.FileRuleRef.Count > 0)
 			{
 				foreach (FileRuleRef fr in CollectionsMarshal.AsSpan(ts.FileRulesRef.FileRuleRef))
 				{
@@ -700,8 +701,9 @@ internal static class CustomSerialization
 						frElement.SetAttribute("RuleID", fr.RuleID);
 					_ = fileRulesRefElement.AppendChild(frElement);
 				}
+				// Only append if it will have members because it cannot exist empty as `<FileRulesRef />` in the XML according to the schema.
+				_ = parent.AppendChild(fileRulesRefElement);
 			}
-			_ = parent.AppendChild(fileRulesRefElement);
 		}
 	}
 
@@ -712,7 +714,7 @@ internal static class CustomSerialization
 			XmlElement allowedElement = doc.CreateElement("AllowedSigners", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(tss.AllowedSigners.Workaround))
 				allowedElement.SetAttribute("Workaround", tss.AllowedSigners.Workaround);
-			if (tss.AllowedSigners.AllowedSigner is not null)
+			if (tss.AllowedSigners.AllowedSigner.Count > 0)
 			{
 				foreach (AllowedSigner aSigner in CollectionsMarshal.AsSpan(tss.AllowedSigners.AllowedSigner))
 				{
@@ -731,15 +733,15 @@ internal static class CustomSerialization
 					}
 					_ = allowedElement.AppendChild(aSignerElement);
 				}
+				_ = parent.AppendChild(allowedElement);
 			}
-			_ = parent.AppendChild(allowedElement);
 		}
 		if (tss.DeniedSigners is not null)
 		{
 			XmlElement deniedElement = doc.CreateElement("DeniedSigners", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(tss.DeniedSigners.Workaround))
 				deniedElement.SetAttribute("Workaround", tss.DeniedSigners.Workaround);
-			if (tss.DeniedSigners.DeniedSigner is not null)
+			if (tss.DeniedSigners.DeniedSigner.Count > 0)
 			{
 				foreach (DeniedSigner dSigner in CollectionsMarshal.AsSpan(tss.DeniedSigners.DeniedSigner))
 				{
@@ -758,15 +760,15 @@ internal static class CustomSerialization
 					}
 					_ = deniedElement.AppendChild(dSignerElement);
 				}
+				_ = parent.AppendChild(deniedElement);
 			}
-			_ = parent.AppendChild(deniedElement);
 		}
 		if (tss.FileRulesRef is not null)
 		{
 			XmlElement fileRulesRefElement = doc.CreateElement("FileRulesRef", GlobalVars.SiPolicyNamespace);
 			if (!string.IsNullOrEmpty(tss.FileRulesRef.Workaround))
 				fileRulesRefElement.SetAttribute("Workaround", tss.FileRulesRef.Workaround);
-			if (tss.FileRulesRef.FileRuleRef is not null)
+			if (tss.FileRulesRef.FileRuleRef.Count > 0)
 			{
 				foreach (FileRuleRef fr in CollectionsMarshal.AsSpan(tss.FileRulesRef.FileRuleRef))
 				{
@@ -775,8 +777,9 @@ internal static class CustomSerialization
 						frElement.SetAttribute("RuleID", fr.RuleID);
 					_ = fileRulesRefElement.AppendChild(frElement);
 				}
+				// Only append if it will have members because it cannot exist empty as `<FileRulesRef />` in the XML according to the schema.
+				_ = parent.AppendChild(fileRulesRefElement);
 			}
-			_ = parent.AppendChild(fileRulesRefElement);
 		}
 	}
 

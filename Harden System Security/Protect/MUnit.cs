@@ -678,8 +678,7 @@ internal sealed partial class MUnit(
 	[JsonPropertyName("IsApplied")]
 	internal bool? IsApplied
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{

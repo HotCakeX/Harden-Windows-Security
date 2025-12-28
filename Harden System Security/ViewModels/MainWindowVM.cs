@@ -68,8 +68,14 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePage)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("UpdateNavItem/Content")],
-			pages: [typeof(Pages.UpdatePage)]
+			titles: [GlobalVars.GetStr("UpdateNavItem/Content"), GlobalVars.GetStr("UpdatePageCustomMSIXPath")],
+			pages: [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("UpdateNavItem/Content"), GlobalVars.GetStr("UpdatePageCustomMSIXPath")],
+			pages: [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
@@ -339,6 +345,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.CryptographicBillOfMaterials)] = GlobalVars.GetStr("CBOMNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Intune)] = GlobalVars.GetStr("IntuneNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.CSP)] = GlobalVars.GetStr("CSPNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePageCustomMSIXPath)] = GlobalVars.GetStr("UpdatePageCustomMSIXPath");
 	}
 
 	/// <summary>

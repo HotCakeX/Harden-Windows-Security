@@ -26,6 +26,7 @@ using Windows.Graphics;
 using AnimatedVisuals;
 using Microsoft.UI.Xaml.Automation;
 using CommonCore.AppSettings;
+using CommunityToolkit.WinUI;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -102,6 +103,9 @@ internal sealed partial class MainWindow : Window
 
 		// Subscribe to the size changed of the AppWindow
 		AppWindow.Changed += ViewModel.MainWindow_SizeChanged;
+
+		// Subscribe to the AppWindow Closing event
+		AppWindow.Closing += AppWindow_Closing;
 
 		// Set the initial background setting based on the user's settings
 		OnNavigationBackgroundChanged(null, new(App.Settings.NavViewBackground));
@@ -392,7 +396,64 @@ internal sealed partial class MainWindow : Window
 					break;
 				}
 		}
+	}
 
+	/// <summary>
+	/// Event handler for the AppWindow Closing event.
+	/// Shows a confirmation dialog before closing the application.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+	{
+		// If we should always ask for confirmation
+		if (AppSettings.AppCloseConfirmationBehavior == 0)
+		{
+			// Do nothing and let the flow continue
+		}
+		// If we should automatically/conditionally ask for confirmation
+		else if (AppSettings.AppCloseConfirmationBehavior == 1)
+		{
+			if (!CommonCore.TaskTracking.AppNeedsCloseConfirmation)
+			{
+				return;
+			}
+		}
+		// If we should never ask for confirmation
+		else if (AppSettings.AppCloseConfirmationBehavior == 2)
+		{
+			return;
+		}
+
+		// Cancel the closing operation immediately to allow for async confirmation
+		args.Cancel = true;
+
+		await DispatcherQueue.EnqueueAsync(async () =>
+		{
+			// If there is an existing content dialog open, close it
+			if (App.CurrentlyOpenContentDialog is ContentDialog existingDialog)
+			{
+				existingDialog.Hide();
+				App.CurrentlyOpenContentDialog = null;
+			}
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 confirmCloseDialog = new()
+			{
+				Title = GlobalVars.GetStr("ConfirmExitTitle"),
+				Content = GlobalVars.GetStr("ConfirmExitMsg"),
+				PrimaryButtonText = GlobalVars.GetStr("Yes"),
+				CloseButtonText = GlobalVars.GetStr("No"),
+				DefaultButton = ContentDialogButton.Primary
+			};
+
+			ContentDialogResult result = await confirmCloseDialog.ShowAsync();
+
+			if (result == ContentDialogResult.Primary)
+			{
+				// Close without re-triggering the cancelable AppWindow.Closing event loop
+				Application.Current.Exit();
+			}
+		});
 	}
 
 	/// <summary>

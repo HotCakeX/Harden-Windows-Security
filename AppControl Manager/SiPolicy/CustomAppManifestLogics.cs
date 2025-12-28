@@ -77,11 +77,10 @@ internal static class CustomAppManifestLogics
 			settings.Add(setting);
 		}
 
-		return new AppManifest
-		{
-			Id = id,
-			SettingDefinition = settings.ToArray()
-		};
+		return new AppManifest(
+			id: id,
+			settingDefinition: settings
+		);
 	}
 
 	private static SettingDefinition DeserializeSettingDefinition(XmlElement elem)
@@ -116,12 +115,11 @@ internal static class CustomAppManifestLogics
 			throw new InvalidOperationException($"Invalid 'IgnoreAuditPolicies' value '{ignoreAuditPoliciesStr}' in SettingDefinition. Must be 'true' or 'false'.");
 		}
 
-		return new SettingDefinition
-		{
-			Name = name,
-			Type = type,
-			IgnoreAuditPolicies = ignoreAuditPolicies
-		};
+		return new SettingDefinition(
+			name: name,
+			type: type,
+			ignoreAuditPolicies: ignoreAuditPolicies
+		);
 	}
 
 	/// <summary>

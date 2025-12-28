@@ -112,8 +112,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// </summary>
 	internal CtlHeader? CurrentCtlHeader
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{

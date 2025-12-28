@@ -277,6 +277,14 @@
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
+                        <customUI:SettingsCardV2 x:Uid="AppCloseConfirmationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7E8;}">
+                            <ComboBox SelectedIndex="{x:Bind ViewModel.AppSettings.AppCloseConfirmationBehavior, Mode=TwoWay}">
+                                <ComboBoxItem x:Uid="AppCloseConfirmationOptionAlwaysSettingsCard" />
+                                <ComboBoxItem x:Uid="AppCloseConfirmationOptionAutomaticSettingsCard" />
+                                <ComboBoxItem x:Uid="AppCloseConfirmationOptionNeverSettingsCard" />
+                            </ComboBox>
+                        </customUI:SettingsCardV2>
+
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

@@ -445,7 +445,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 					Management.ConvertXMLToBinary(file, null, CIPFilePath);
 
 					// Sign the CIP
-					Signing.Main.SignCIP(CIPFilePath, CertCN);
+					CommonCore.Signing.Main.SignCIP(CIPFilePath, CertCN);
 
 					// If the SignOnlyNoDeployToggleSwitch is on, don't deploy the policy, only create signed CIP
 					if (SignOnlyNoDeployToggleSwitch)

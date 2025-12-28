@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.Pkcs;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
 /// The following functions and methods use the Windows APIs to grab all of the certificates from a signed file

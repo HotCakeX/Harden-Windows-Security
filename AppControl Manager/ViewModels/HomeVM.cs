@@ -276,7 +276,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		_temperatureSampler = null;
 	}
 
-	// Textblock sources bound to the UI for system info HUDs.
+	// Textblock sources bound to the UI for the info tiles.
 	internal string? SystemTimeText { get; private set => SP(ref field, value); }
 	internal string? UserKindText { get; private set => SP(ref field, value); }
 	internal string? UptimeText { get; private set => SP(ref field, value); }

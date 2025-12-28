@@ -94,13 +94,10 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal FileInfo? SelectedLogFile
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value) && value is not null)
-			{
 				_ = DisplayLogContentAsync(value);
-			}
 		}
 	}
 
@@ -109,13 +106,10 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal string? SearchText
 	{
-		get;
-		set
+		get; set
 		{
 			if (SPT(ref field, value))
-			{
 				_ = UpdateLogDisplayAsync();
-			}
 		}
 	}
 

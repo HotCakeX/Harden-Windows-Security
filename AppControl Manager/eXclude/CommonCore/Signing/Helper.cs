@@ -18,7 +18,7 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace AppControlManager.Signing;
+namespace CommonCore.Signing;
 
 internal static class Helper
 {

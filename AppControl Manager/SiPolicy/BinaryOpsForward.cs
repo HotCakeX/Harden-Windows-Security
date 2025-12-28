@@ -833,7 +833,7 @@ internal static partial class BinaryOpsForward
 
 			WriteOptionalStringValue(applicationManifest.Id);
 
-			BodyWriter.Write((uint)applicationManifest.SettingDefinition.Length);
+			BodyWriter.Write((uint)applicationManifest.SettingDefinition.Count);
 
 			foreach (SettingDefinition currentDefinitionInLoop in applicationManifest.SettingDefinition)
 			{

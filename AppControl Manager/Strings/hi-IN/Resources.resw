@@ -964,24 +964,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="ASRError" xml:space="preserve">
     <value>ASR नियम बहिष्करण हटाने का प्रयास करते समय एक त्रुटि हुई जिसे आप सुरक्षित रूप से अनदेखा कर सकते हैं: </value>
   </data>
-  <data name="InstallingPackage" xml:space="preserve">
-    <value>AppControl Manager MSIXBundle पैकेज स्थापित किया जा रहा है</value>
-  </data>
-  <data name="InstallationError" xml:space="preserve">
-    <value>AppControl Manager स्थापित करते समय त्रुटि। त्रुटि कोड: </value>
-  </data>
-  <data name="InstallationErrorText" xml:space="preserve">
-    <value> - त्रुटि पाठ: </value>
-  </data>
-  <data name="InstallationCanceled" xml:space="preserve">
-    <value>AppControl Manager इंस्टॉलेशन रद्द कर दिया गया</value>
-  </data>
-  <data name="InstallationSucceeded" xml:space="preserve">
-    <value>AppControl Manager इंस्टॉलेशन सफल रहा</value>
-  </data>
-  <data name="UnknownInstallationIssue" xml:space="preserve">
-    <value>AppControl Manager स्थापित करते समय एक अज्ञात समस्या हुई</value>
-  </data>
   <data name="ASRAddError" xml:space="preserve">
     <value>ASR नियम बहिष्करण जोड़ने का प्रयास करते समय एक त्रुटि हुई जिसे आप सुरक्षित रूप से अनदेखा कर सकते हैं: </value>
   </data>
@@ -2395,27 +2377,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>प्रमाणपत्र विवरण डेटा में खोजें</value>
-  </data>
-  <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>अपने डिवाइस पर AppControl Manager MSIXBundle फ़ाइल पाथ के लिए ब्राउज़ करें और फिर इसे इंस्टॉल करने के लिए अपडेट पेज पर वापस जाएँ।</value>
-  </data>
-  <data name="BrowseForCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>कस्टम MSIX पाथ ब्राउज़ करें</value>
-  </data>
-  <data name="BrowseForCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>अपने डिवाइस पर AppControl Manager MSIXBundle फ़ाइल पाथ के लिए ब्राउज़ करें और फिर इसे इंस्टॉल करने के लिए अपडेट पेज पर वापस जाएँ।</value>
-  </data>
-  <data name="BrowseForCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>अपने डिवाइस पर AppControl Manager MSIXBundle फ़ाइल पाथ के लिए ब्राउज़ करें और फिर इसे इंस्टॉल करने के लिए अपडेट पेज पर वापस जाएँ।</value>
-  </data>
-  <data name="BrowseForCustomMSIXPathButton.Content" xml:space="preserve">
-    <value>MSIXBundle पथ के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="BrowseForCustomMSIXPathButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>फाइल पिकर खोलता है, जिससे आप अपने डिवाइस पर AppControl Manager MSIXBundle फ़ाइल चुन सकते हैं।</value>
-  </data>
-  <data name="BrowseForCustomMSIXPathButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>फाइल पिकर खोलता है, जिससे आप अपने डिवाइस पर AppControl Manager MSIXBundle फ़ाइल चुन सकते हैं।</value>
   </data>
   <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>चयनित कस्टम MSIXBundle फ़ाइल का उपयोग स्वचालित रूप से GitHub से डाउनलोड करने के बजाय करने की पुष्टि करें। इससे ऑनलाइन अपडेट जांच अधिलेखित हो जाएगी और GitHub से MSIXBundle फ़ाइल डाउनलोड बायपास हो जाएगी।</value>
@@ -5363,9 +5324,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CreateTextBlock.Text" xml:space="preserve">
     <value>बनाएं</value>
   </data>
-  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
-    <value>कस्टम MSIXBundle पथ</value>
-  </data>
   <data name="OpenInFileExplorer.Text" xml:space="preserve">
     <value>फ़ाइल एक्सप्लोरर में खोलें</value>
   </data>
@@ -6335,5 +6293,86 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CreateManagedInstallerButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>अपने टेरेंट में एक प्रबंधित इंस्टॉलर नीति बनाएँ और अपलोड करें जो Intune के माध्यम से तैनात ऐप्स को ऐप नियंत्रण नीतियों का उपयोग करने वाले उपकरणों पर स्वचालित रूप से अनुमति देने की सुविधा देगी।</value>
+  </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>ऐप पैकेज इंस्टॉल करें</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>सिस्टम पर इंस्टॉल करने के लिए MSIX या MSIXBundle फ़ाइल जैसे किसी भी ऐप पैकेज के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर इंस्टॉल करने के लिए MSIX या MSIXBundle फ़ाइल जैसे किसी भी ऐप पैकेज के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर इंस्टॉल करने के लिए MSIX या MSIXBundle फ़ाइल जैसे किसी भी ऐप पैकेज के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>डिवाइस पर इंस्टॉल की जाने वाली एप्लिकेशन पैकेज फ़ाइल, जो आमतौर पर MSIX या MSIXBundle फ़ाइलें होती हैं, के लिए ब्राउज़ करें। यदि चुना गया ऐप पैकेज हस्ताक्षरित है, तो यह सीधे इंस्टॉल हो जाएगा। यदि यह अहस्ताक्षरित है, तो उस पैकेज पर हस्ताक्षर करने और फिर उसे इंस्टॉल करने के लिए आपके डिवाइस पर एक अद्वितीय प्रमाणपत्र (certificate) जनरेट किया जाएगा।</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>ऐप पैकेज फ़ाइल के लिए ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डिवाइस पर इंस्टॉल की जाने वाली एप्लिकेशन पैकेज फ़ाइल, जो आमतौर पर MSIX या MSIXBundle फ़ाइलें होती हैं, के लिए ब्राउज़ करें। यदि चुना गया ऐप पैकेज हस्ताक्षरित है, तो यह सीधे इंस्टॉल हो जाएगा। यदि यह अहस्ताक्षरित है, तो उस पैकेज पर हस्ताक्षर करने और फिर उसे इंस्टॉल करने के लिए आपके डिवाइस पर एक अद्वितीय प्रमाणपत्र (certificate) जनरेट किया जाएगा।</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डिवाइस पर इंस्टॉल की जाने वाली एप्लिकेशन पैकेज फ़ाइल, जो आमतौर पर MSIX या MSIXBundle फ़ाइलें होती हैं, के लिए ब्राउज़ करें। यदि चुना गया ऐप पैकेज हस्ताक्षरित है, तो यह सीधे इंस्टॉल हो जाएगा। यदि यह अहस्ताक्षरित है, तो उस पैकेज पर हस्ताक्षर करने और फिर उसे इंस्टॉल करने के लिए आपके डिवाइस पर एक अद्वितीय प्रमाणपत्र (certificate) जनरेट किया जाएगा।</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>कस्टम ऐप पैकेज इंस्टॉलेशन</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>इंस्टॉल करें</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित ऐप पैकेज को सिस्टम पर इंस्टॉल करें।</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित ऐप पैकेज को सिस्टम पर इंस्टॉल करें।</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>एप्लिकेशन से बाहर निकलें?</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>वर्तमान में एक ऑपरेशन प्रगति पर है। अभी बाहर निकलने के परिणामस्वरूप कार्य अधूरे रह सकते हैं। क्या आप वाकई बाहर निकलना चाहते हैं?</value>
+</data>
+  <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>चुनें कि ऐप को बंद करते समय पुष्टि मांगनी चाहिए या नहीं।</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>ऐप बंद करने की पुष्टि</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चुनें कि ऐप को बंद करते समय पुष्टि मांगनी चाहिए या नहीं।</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चुनें कि ऐप को बंद करते समय पुष्टि मांगनी चाहिए या नहीं।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>कभी नहीं</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप बंद करते समय कभी भी पुष्टि न मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप बंद करते समय कभी भी पुष्टि न मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>हमेशा</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप बंद करते समय हमेशा पुष्टि मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप बंद करते समय हमेशा पुष्टि मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>स्वचालित</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>केवल कुछ परिस्थितियों में ऐप बंद करने से पहले पुष्टि मांगें जब कोई ऑपरेशन चल रहा हो।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>केवल कुछ परिस्थितियों में ऐप बंद करने से पहले पुष्टि मांगें जब कोई ऑपरेशन चल रहा हो।</value>
   </data>
 </root>

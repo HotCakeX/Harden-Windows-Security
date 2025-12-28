@@ -131,8 +131,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 	internal AuthenticatedAccounts? CurrentActiveAccount
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{

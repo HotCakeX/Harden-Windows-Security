@@ -64,8 +64,7 @@ internal sealed partial class AuditPolicyInfo(
 	[JsonPropertyOrder(2)]
 	internal uint AuditingInformation
 	{
-		get;
-		set
+		get; set
 		{
 			if (field != value)
 			{

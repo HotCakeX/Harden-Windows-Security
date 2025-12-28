@@ -1276,8 +1276,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal int OperationModeComboBoxSelectedIndex
 	{
-		get;
-		set
+		get; set
 		{
 			// Update the operation mode property
 			_ = SP(ref field, value);

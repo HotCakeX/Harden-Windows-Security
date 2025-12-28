@@ -31,6 +31,17 @@ namespace CommonCore.Interop;
 /// </summary>
 internal static unsafe partial class NativeMethods
 {
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/procthread/process-creation-flags
+	/// </summary>
+	internal const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute
+	/// </summary>
+	internal const uint PROC_THREAD_ATTRIBUTE_DESKTOP_APP_POLICY = 0x00020012;
+	internal const uint PROCESS_CREATION_DESKTOP_APP_BREAKAWAY_DISABLE_PROCESS_TREE = 0x02;
+	internal const uint PROCESS_CREATION_DESKTOP_APP_BREAKAWAY_OVERRIDE = 0x04;
 
 	internal static readonly IntPtr INVALID_HANDLE_VALUE = new(-1);
 
@@ -1099,6 +1110,25 @@ internal static unsafe partial class NativeMethods
 		IntPtr lpEnvironment,
 		string? lpCurrentDirectory,
 		ref STARTUPINFO lpStartupInfo,
+		out PROCESS_INFORMATION lpProcessInformation);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
+	/// </summary>
+	[LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool CreateProcessW(
+		string? lpApplicationName,
+		string lpCommandLine,
+		IntPtr lpProcessAttributes,
+		IntPtr lpThreadAttributes,
+		[MarshalAs(UnmanagedType.Bool)] bool bInheritHandles,
+		uint dwCreationFlags,
+		IntPtr lpEnvironment,
+		string? lpCurrentDirectory,
+		ref STARTUPINFOEX lpStartupInfo,
 		out PROCESS_INFORMATION lpProcessInformation);
 
 
@@ -2277,5 +2307,72 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("ole32.dll", EntryPoint = "CoCreateInstance")]
 	internal static partial int CoCreateInstanceForLicensing(in Guid rclsid, IntPtr pUnkOuter, uint dwClsContext, in Guid riid, out IEditionUpgradeManager ppv);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/shlwapi/nf-shlwapi-shcreatestreamonfileex
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("shlwapi.dll")]
+	internal static partial int SHCreateStreamOnFileEx(
+		ushort* pszFile,
+		uint grfMode,
+		uint dwAttributes,
+		int fCreate,
+		IntPtr pstmTemplate,
+		void* ppstm);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("ole32.dll")]
+	internal static partial void CoTaskMemFree(IntPtr pv);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-sysfreestring
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("oleaut32.dll")]
+	internal static partial void SysFreeString(IntPtr bstrStr);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-initializeprocthreadattributelist
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool InitializeProcThreadAttributeList(
+		IntPtr lpAttributeList,
+		uint dwAttributeCount,
+		uint dwFlags,
+		ref IntPtr lpSize);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool UpdateProcThreadAttribute(
+		IntPtr lpAttributeList,
+		uint dwFlags,
+		IntPtr Attribute,
+		IntPtr lpValue,
+		IntPtr cbSize,
+		IntPtr lpPreviousValue,
+		IntPtr lpReturnSize);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-deleteprocthreadattributelist
+	/// </summary>
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void DeleteProcThreadAttributeList(IntPtr lpAttributeList);
 
 }

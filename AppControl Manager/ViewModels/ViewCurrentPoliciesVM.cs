@@ -101,8 +101,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	internal int SwapPolicyComboBoxSelectedIndex
 	{
-		get;
-		set
+		get; set
 		{   // Instead of attaching the method to the SelectionChanged event of the ComboBox, we check changes in the SelectedItemIndex in here.
 			// Value is set to -1 by the method that retrieves the policies.
 			if (SP(ref field, value) && value != -1)
@@ -622,7 +621,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
 
 								// Sign the CIP
-								Signing.Main.SignCIP(CIPFilePath, CertCN);
+								CommonCore.Signing.Main.SignCIP(CIPFilePath, CertCN);
 
 								// Deploy the signed CIP file
 								CiToolHelper.UpdatePolicy(CIPFilePath);

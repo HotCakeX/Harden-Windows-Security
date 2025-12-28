@@ -5066,4 +5066,103 @@ Thumbprint: {3}</value>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Storage Size and Temperature</value>
   </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>Install App Packages</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>Browse for any app package such as MSIX or MSIXBundle file to install on the system.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for any app package such as MSIX or MSIXBundle file to install on the system.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for any app package such as MSIX or MSIXBundle file to install on the system.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>Browse for an application package file, which are typically MSIX or MSIXBundle files, to be installed on the device. If the selected app package is signed, it will be directly installed. if it is unsigned, a unique certificate will be generated on your device in order to sign that package and then install it.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>Browse for an app package file</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for an application package file, which are typically MSIX or MSIXBundle files, to be installed on the device. If the selected app package is signed, it will be directly installed. if it is unsigned, a unique certificate will be generated on your device in order to sign that package and then install it.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for an application package file, which are typically MSIX or MSIXBundle files, to be installed on the device. If the selected app package is signed, it will be directly installed. if it is unsigned, a unique certificate will be generated on your device in order to sign that package and then install it.</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>Custom App Package Installation</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Install the selected app package on the system.</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Install the selected app package on the system.</value>
+  </data>
+  <data name="ASRError" xml:space="preserve">
+    <value>An error occurred while trying to remove the ASR rule exclusions which you can safely ignore: </value>
+  </data>
+  <data name="ASRAddError" xml:space="preserve">
+    <value>An error occurred while trying to add the ASR rule exclusions which you can safely ignore: </value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>Couldn't deserialize ASR rules exceptions list JSON which was this: {0} - Error: {1}</value>
+</data>
+  <data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>Deleted certificate with the Common Name: {0} from store: {1}</value>
+  </data>
+    <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>Checking if a certificate with the common name '{0}' already exists in the personal user store.</value>
+  </data>
+    <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} certificates with the common name '{1}' already exist on the system. Removing them</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>Exit Application?</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>An operation is currently in progress. Exiting now may result in incomplete tasks. Are you sure you want to exit?</value>
+</data>
+ <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>Choose whether the app should ask you for confirmation when closing it.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>App Close Confirmation</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choose whether the app should ask you for confirmation when closing it.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choose whether the app should ask you for confirmation when closing it.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Never ask for confirmation when closing the app.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Never ask for confirmation when closing the app.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>Always</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Always ask for confirmation when closing the app.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Always ask for confirmation when closing the app.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Only ask for confirmation before closing the app under certain circumstances when there is an ongoing operation.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Only ask for confirmation before closing the app under certain circumstances when there is an ongoing operation.</value>
+  </data>
 </root>

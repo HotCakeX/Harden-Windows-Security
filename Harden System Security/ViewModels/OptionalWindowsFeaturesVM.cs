@@ -46,13 +46,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	/// </summary>
 	internal static readonly string DISMServiceLocationInPackage = Path.Combine(AppContext.BaseDirectory, "DISMService.exe");
 
-	/// <summary>
-	/// Location where the DISMService.exe will be copied to and executed from.
-	/// </summary>
-	internal static readonly string SecureDISMServicePath = Path.Combine(
-		Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath,
-		"DISMService.exe");
-
 	private IntPtr _processHandle = IntPtr.Zero;
 	private NamedPipeClientStream? _pipeClient;
 	private BinaryWriter? _writer;
@@ -73,71 +66,123 @@ internal sealed partial class DismServiceClient : IDisposable
 			IntPtr desktopPtr = Marshal.StringToHGlobalUni("");
 			IntPtr titlePtr = Marshal.StringToHGlobalUni("");
 
+			int STARTUPINFOEXSize = default;
+
+			unsafe
+			{
+				STARTUPINFOEXSize = sizeof(STARTUPINFOEX);
+			}
+
 			try
 			{
 				return await Task.Run(async () =>
 				{
+					STARTUPINFOEX startupInfoEx = default;
+					startupInfoEx.StartupInfo.cb = (uint)STARTUPINFOEXSize;
+					startupInfoEx.StartupInfo.lpReserved = IntPtr.Zero;
+					startupInfoEx.StartupInfo.lpDesktop = desktopPtr;
+					startupInfoEx.StartupInfo.lpTitle = titlePtr;
+					startupInfoEx.StartupInfo.dwFlags = 0;
+					startupInfoEx.StartupInfo.wShowWindow = 0;
+					startupInfoEx.StartupInfo.cbReserved2 = 0;
+					startupInfoEx.StartupInfo.lpReserved2 = IntPtr.Zero;
+					startupInfoEx.StartupInfo.hStdInput = IntPtr.Zero;
+					startupInfoEx.StartupInfo.hStdOutput = IntPtr.Zero;
+					startupInfoEx.StartupInfo.hStdError = IntPtr.Zero;
 
-					STARTUPINFO startupInfo = default;
+					IntPtr attributeListSize = IntPtr.Zero;
 
-					unsafe
+					// Determine the size of the attribute list
+					_ = NativeMethods.InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref attributeListSize);
+
+					IntPtr attributeListPtr = Marshal.AllocHGlobal(attributeListSize);
+					startupInfoEx.lpAttributeList = attributeListPtr;
+
+					try
 					{
-						startupInfo.cb = (uint)sizeof(STARTUPINFO);
+						if (!NativeMethods.InitializeProcThreadAttributeList(attributeListPtr, 1, 0, ref attributeListSize))
+						{
+							int error = Marshal.GetLastPInvokeError();
+							LogReceived?.Invoke(string.Format("Failed to initialize process attribute list. Error: {0}", error), LogTypeIntel.Error);
+							return false;
+						}
+
+						uint policy = NativeMethods.PROCESS_CREATION_DESKTOP_APP_BREAKAWAY_DISABLE_PROCESS_TREE | NativeMethods.PROCESS_CREATION_DESKTOP_APP_BREAKAWAY_OVERRIDE;
+
+						IntPtr policyPtr = Marshal.AllocHGlobal(sizeof(uint));
+						try
+						{
+							Marshal.WriteInt32(policyPtr, (int)policy);
+
+							if (!NativeMethods.UpdateProcThreadAttribute(
+								attributeListPtr,
+								0,
+								(IntPtr)NativeMethods.PROC_THREAD_ATTRIBUTE_DESKTOP_APP_POLICY,
+								policyPtr,
+								sizeof(uint),
+								IntPtr.Zero,
+								IntPtr.Zero))
+							{
+								int error = Marshal.GetLastPInvokeError();
+								LogReceived?.Invoke(string.Format("Failed to update process thread attribute. Error: {0}", error), LogTypeIntel.Error);
+								return false;
+							}
+
+							string commandLine = $"\"{serviceExecutablePath}\" {_pipeName}";
+
+							bool success = NativeMethods.CreateProcessW(
+								null,
+								commandLine,
+								IntPtr.Zero,
+								IntPtr.Zero,
+								false,
+								CREATE_NO_WINDOW | DETACHED_PROCESS | NativeMethods.EXTENDED_STARTUPINFO_PRESENT,
+								IntPtr.Zero,
+								null,
+								ref startupInfoEx,
+								out PROCESS_INFORMATION processInfo);
+
+							if (!success)
+							{
+								int error = Marshal.GetLastPInvokeError();
+								LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToCreateProcessWin32Error"), error), LogTypeIntel.Error);
+								return false;
+							}
+
+							_processHandle = processInfo.hProcess;
+
+							_ = NativeMethods.CloseHandle(processInfo.hThread);
+
+							_pipeClient = new NamedPipeClientStream(".", _pipeName, PipeDirection.InOut,
+								PipeOptions.Asynchronous, System.Security.Principal.TokenImpersonationLevel.None);
+
+							await _pipeClient.ConnectAsync(10000); // 10 second timeout
+
+							// Set buffer sizes after connection
+							_pipeClient.ReadMode = PipeTransmissionMode.Byte;
+
+							_writer = new BinaryWriter(_pipeClient);
+							_reader = new BinaryReader(_pipeClient);
+
+							return true;
+						}
+						finally
+						{
+							Marshal.FreeHGlobal(policyPtr);
+						}
 					}
-
-					startupInfo.lpReserved = IntPtr.Zero;
-					startupInfo.lpDesktop = desktopPtr;
-					startupInfo.lpTitle = titlePtr;
-					startupInfo.dwFlags = 0;
-					startupInfo.wShowWindow = 0;
-					startupInfo.cbReserved2 = 0;
-					startupInfo.lpReserved2 = IntPtr.Zero;
-					startupInfo.hStdInput = IntPtr.Zero;
-					startupInfo.hStdOutput = IntPtr.Zero;
-					startupInfo.hStdError = IntPtr.Zero;
-
-					string commandLine = $"\"{serviceExecutablePath}\" {_pipeName}";
-
-					bool success = NativeMethods.CreateProcessW(
-						null,
-						commandLine,
-						IntPtr.Zero,
-						IntPtr.Zero,
-						false,
-						CREATE_NO_WINDOW | DETACHED_PROCESS,
-						IntPtr.Zero,
-						null,
-						ref startupInfo,
-						out PROCESS_INFORMATION processInfo);
-
-					if (!success)
+					finally
 					{
-						int error = Marshal.GetLastPInvokeError();
-						LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToCreateProcessWin32Error"), error), LogTypeIntel.Error);
-						return false;
+						NativeMethods.DeleteProcThreadAttributeList(attributeListPtr);
+						Marshal.FreeHGlobal(attributeListPtr);
 					}
-
-					_processHandle = processInfo.hProcess;
-
-					_ = NativeMethods.CloseHandle(processInfo.hThread);
-
-					_pipeClient = new NamedPipeClientStream(".", _pipeName, PipeDirection.InOut,
-						PipeOptions.Asynchronous, System.Security.Principal.TokenImpersonationLevel.None);
-					await _pipeClient.ConnectAsync(10000); // 10 second timeout
-
-					// Set buffer sizes after connection
-					_pipeClient.ReadMode = PipeTransmissionMode.Byte;
-
-					_writer = new BinaryWriter(_pipeClient);
-					_reader = new BinaryReader(_pipeClient);
-
-					return true;
 				});
 			}
 			finally
 			{
 				if (desktopPtr != IntPtr.Zero)
 					Marshal.FreeHGlobal(desktopPtr);
+
 				if (titlePtr != IntPtr.Zero)
 					Marshal.FreeHGlobal(titlePtr);
 			}
@@ -145,6 +190,7 @@ internal sealed partial class DismServiceClient : IDisposable
 		catch (Exception ex)
 		{
 			LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToStartService"), ex.Message), LogTypeIntel.Error);
+			Dispose();
 			return false;
 		}
 	}
@@ -510,8 +556,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 	[JsonIgnore]
 	internal DismPackageFeatureState State
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -994,14 +1039,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		if (!DismStartedSuccessfully)
 		{
-			// Since we copy the DISMService.exe outside of the package, it will be considered unsigned by ASR rules so we have to add it to exception.
-			await Task.Run(() =>
-			{
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{DismServiceClient.SecureDISMServicePath}\" "));
-
-				Thread.Sleep(2000); // Necessary, otherwise it would be blocked by ASR
-			});
-
 			_dismServiceClient = new();
 
 			// Subscribe to item-specific progress updates
@@ -1039,10 +1076,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				}
 			};
 
-			// Copy the file from the app package to the Machine folder via the service
-			Client.CopyFile(DismServiceClient.DISMServiceLocationInPackage, DismServiceClient.SecureDISMServicePath, true);
-
-			if (!await _dismServiceClient.StartServiceAsync(DismServiceClient.SecureDISMServicePath))
+			if (!await _dismServiceClient.StartServiceAsync(DismServiceClient.DISMServiceLocationInPackage))
 				throw new InvalidOperationException(GlobalVars.GetStr("FailedToStartDISMServiceAdministrator"));
 
 			DismStartedSuccessfully = true;
@@ -1061,6 +1095,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		try
 		{
 			ElementsAreEnabled = false;
+
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			// Clear existing items and reset their processing state
 			AllItems.Clear();
@@ -1270,6 +1306,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 		try
 		{
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			// Set operation type for progress logging
 			_currentOperationType = "Enabling Selected Item";
 
@@ -1405,6 +1443,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			// Set operation type for progress logging
 			_currentOperationType = "Disabling Selected Item";
+
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			ElementsAreEnabled = false;
 
@@ -1714,13 +1754,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				removeStrategy:         ApplyOperation.Enable,
 				validVerificationStates:ValidStatesForRemoval
 			),
-			new OptionalFeatureConfig(
-				name:                   "Microsoft.Windows.Notepad.System~~~~0.0.1.0",
-				type:                   DISMResultType.Capability,
-				applyStrategy:          ApplyOperation.Disable,
-				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:ValidStatesForRemoval
-			),
+			// new OptionalFeatureConfig(
+			// 	name:                   "Microsoft.Windows.Notepad.System~~~~0.0.1.0",
+			// 	type:                   DISMResultType.Capability,
+			// 	applyStrategy:          ApplyOperation.Disable,
+			// 	removeStrategy:         ApplyOperation.Enable,
+			// 	validVerificationStates:ValidStatesForRemoval
+			// ),
 			new OptionalFeatureConfig(
 				name:                   "Microsoft.Windows.WordPad~~~~0.0.1.0",
 				type:                   DISMResultType.Capability,
@@ -2323,9 +2363,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		try
 		{
-			// Remove the ASR exclusion for DISMService.exe during disposal. This dispose method automatically runs during app exit.
-			Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions \"{DismServiceClient.SecureDISMServicePath}\" "));
-
 			_dismServiceClient?.Dispose();
 		}
 		catch (Exception ex)

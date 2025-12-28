@@ -5066,4 +5066,103 @@
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>भंडारण आकार और तापमान</value>
   </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>ऐप पैकेज इंस्टॉल करें</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>सिस्टम पर इंस्टॉल करने के लिए किसी भी ऐप पैकेज जैसे MSIX या MSIXBundle फ़ाइल के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर इंस्टॉल करने के लिए किसी भी ऐप पैकेज जैसे MSIX या MSIXBundle फ़ाइल के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर इंस्टॉल करने के लिए किसी भी ऐप पैकेज जैसे MSIX या MSIXBundle फ़ाइल के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>डिवाइस पर इंस्टॉल किए जाने वाले एप्लिकेशन पैकेज फ़ाइल के लिए ब्राउज़ करें, जो आमतौर पर MSIX या MSIXBundle फ़ाइलें होती हैं। यदि चयनित ऐप पैकेज हस्ताक्षरित (signed) है, तो यह सीधे इंस्टॉल हो जाएगा। यदि यह अहस्ताक्षरित (unsigned) है, तो उस पैकेज को साइन करने और फिर इंस्टॉल करने के लिए आपके डिवाइस पर एक अद्वितीय प्रमाणपत्र (certificate) जनरेट किया जाएगा।</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>ऐप पैकेज फ़ाइल के लिए ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डिवाइस पर इंस्टॉल किए जाने वाले एप्लिकेशन पैकेज फ़ाइल के लिए ब्राउज़ करें, जो आमतौर पर MSIX या MSIXBundle फ़ाइलें होती हैं। यदि चयनित ऐप पैकेज हस्ताक्षरित (signed) है, तो यह सीधे इंस्टॉल हो जाएगा। यदि यह अहस्ताक्षरित (unsigned) है, तो उस पैकेज को साइन करने और फिर इंस्टॉल करने के लिए आपके डिवाइस पर एक अद्वितीय प्रमाणपत्र (certificate) जनरेट किया जाएगा।</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डिवाइस पर इंस्टॉल किए जाने वाले एप्लिकेशन पैकेज फ़ाइल के लिए ब्राउज़ करें, जो आमतौर पर MSIX या MSIXBundle फ़ाइलें होती हैं। यदि चयनित ऐप पैकेज हस्ताक्षरित (signed) है, तो यह सीधे इंस्टॉल हो जाएगा। यदि यह अहस्ताक्षरित (unsigned) है, तो उस पैकेज को साइन करने और फिर इंस्टॉल करने के लिए आपके डिवाइस पर एक अद्वितीय प्रमाणपत्र (certificate) जनरेट किया जाएगा।</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>कस्टम ऐप पैकेज इंस्टॉलेशन</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>इंस्टॉल करें</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित ऐप पैकेज को सिस्टम पर इंस्टॉल करें।</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित ऐप पैकेज को सिस्टम पर इंस्टॉल करें।</value>
+  </data>
+  <data name="ASRError" xml:space="preserve">
+    <value>ASR नियम बहिष्करण (exclusions) को हटाने का प्रयास करते समय एक त्रुटि हुई जिसे आप सुरक्षित रूप से अनदेखा कर सकते हैं: </value>
+  </data>
+  <data name="ASRAddError" xml:space="preserve">
+    <value>ASR नियम बहिष्करण (exclusions) को जोड़ने का प्रयास करते समय एक त्रुटि हुई जिसे आप सुरक्षित रूप से अनदेखा कर सकते हैं: </value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>ASR नियम अपवाद सूची JSON को डीसिरियलाइज़ नहीं किया जा सका जो यह था: {0} - त्रुटि: {1}</value>
+</data>
+  <data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>स्टोर: {1} से सामान्य नाम (Common Name): {0} वाला प्रमाणपत्र हटा दिया गया</value>
+  </data>
+    <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>जाँच की जा रही है कि क्या सामान्य नाम '{0}' वाला प्रमाणपत्र व्यक्तिगत उपयोगकर्ता स्टोर में पहले से मौजूद है।</value>
+  </data>
+    <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>सामान्य नाम '{1}' वाले {0} प्रमाणपत्र सिस्टम पर पहले से मौजूद हैं। उन्हें हटाया जा रहा है</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>एप्लिकेशन से बाहर निकलें?</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>वर्तमान में एक ऑपरेशन प्रगति पर है। अभी बाहर निकलने के परिणामस्वरूप कार्य अधूरे रह सकते हैं। क्या आप वाकई बाहर निकलना चाहते हैं?</value>
+</data>
+  <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>चुनें कि ऐप को बंद करते समय पुष्टि मांगनी चाहिए या नहीं।</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>ऐप बंद करने की पुष्टि</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चुनें कि ऐप को बंद करते समय पुष्टि मांगनी चाहिए या नहीं।</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चुनें कि ऐप को बंद करते समय पुष्टि मांगनी चाहिए या नहीं।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>कभी नहीं</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप बंद करते समय कभी भी पुष्टि न मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप बंद करते समय कभी भी पुष्टि न मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>हमेशा</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप बंद करते समय हमेशा पुष्टि मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप बंद करते समय हमेशा पुष्टि मांगें।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>स्वचालित</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>केवल कुछ परिस्थितियों में ऐप बंद करने से पहले पुष्टि मांगें जब कोई ऑपरेशन चल रहा हो।</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>केवल कुछ परिस्थितियों में ऐप बंद करने से पहले पुष्टि मांगें जब कोई ऑपरेशन चल रहा हो।</value>
+  </data>
 </root>

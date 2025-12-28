@@ -455,9 +455,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				}
 				else
 				{
-					// Close the empty rules in the main policy
-					CloseEmptyXmlNodesSemantic.Close(SelectedPolicyFile);
-
 					// Instantiate the policy
 					PolicyObj = Management.Initialize(SelectedPolicyFile, null);
 				}

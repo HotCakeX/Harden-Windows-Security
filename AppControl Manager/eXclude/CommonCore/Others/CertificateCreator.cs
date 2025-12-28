@@ -19,13 +19,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+#if APP_CONTROL_MANAGER
 using AppControlManager.Main;
-
-namespace AppControlManager.Others;
+#endif
+namespace CommonCore.Others;
 
 internal static class CertificateGenerator
 {
-
 	/// <summary>
 	/// Generates a self-signed X.509 certificate with specified parameters and saves it to the user's personal store.
 	/// </summary>
@@ -79,12 +79,13 @@ internal static class CertificateGenerator
 			UserProtectedPrivateKey: true,
 			ExportablePrivateKey: true);
 
+#if APP_CONTROL_MANAGER
 		// Save the newly created certificate's details in the user config JSON file
 		_ = UserConfiguration.Set(
 			CertificatePath: cerFilePath,
 			CertificateCommonName: CommonName
 		);
-
+#endif
 		return generatedCertificate;
 	}
 
@@ -109,7 +110,11 @@ internal static class CertificateGenerator
 		string? pfxExportFilePath = null,
 		string? pfxPassword = null)
 	{
-		X500DistinguishedName distinguishedName = new($"CN={subjectName}");
+		// Check if the subject name already starts with "CN="
+		// If it does, use it as-is; otherwise, prepend "CN="
+		X500DistinguishedName distinguishedName = subjectName.StartsWith("CN=", StringComparison.OrdinalIgnoreCase)
+			? new(subjectName)
+			: new($"CN={subjectName}");
 
 		using RSA rsa = RSA.Create(keySize);
 

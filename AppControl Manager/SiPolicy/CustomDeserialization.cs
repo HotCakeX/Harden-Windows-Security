@@ -89,8 +89,8 @@ internal static class CustomDeserialization
 		}
 
 		if (
-			(policyType is PolicyType.BasePolicy && !string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase)) ||
-			(policyType is not PolicyType.BasePolicy && string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase))
+			(policyType is PolicyType.BasePolicy or PolicyType.AppIDTaggingPolicy && !string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase)) ||
+			(policyType is PolicyType.SupplementalPolicy && string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase))
 			)
 		{
 			throw new InvalidOperationException(GlobalVars.GetStr("IDsMismatchValidationError"));
@@ -420,18 +420,14 @@ internal static class CustomDeserialization
 		return elem is not null ? elem.InnerText : string.Empty;
 	}
 
-	// Convert a hex string (without delimiters) to a byte array.
-	private static byte[] ConvertHexStringToByteArray(string hex)
+	// Convert a hex string (without delimiters) to a ReadOnlyMemory<byte>.
+	private static ReadOnlyMemory<byte> ConvertHexStringToByteArray(string? hex)
 	{
 		if (string.IsNullOrEmpty(hex))
-			return [];
-		int length = hex.Length;
-		byte[] bytes = new byte[length / 2];
-		for (int i = 0; i < length; i += 2)
-			bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-		return bytes;
-	}
+			return ReadOnlyMemory<byte>.Empty;
 
+		return Convert.FromHexString(hex);
+	}
 
 	private static readonly FrozenDictionary<string, OptionType> PolicyRuleOptionsActual = new Dictionary<string, OptionType>
 	{
@@ -457,46 +453,33 @@ internal static class CustomDeserialization
 		{ "Enabled:Revoked Expired As Unsigned", OptionType.EnabledRevokedExpiredAsUnsigned },
 		{ "Enabled:Developer Mode Dynamic Code Trust", OptionType.EnabledDeveloperModeDynamicCodeTrust },
 		{ "Enabled:Secure Setting Policy", OptionType.EnabledSecureSettingPolicy },
-		{ "Enabled:Conditional Windows Lockdown Policy", OptionType.EnabledConditionalWindowsLockdownPolicy }
+		{ "Enabled:Conditional Windows Lockdown Policy", OptionType.EnabledConditionalWindowsLockdownPolicy },
+		{ "Disabled:Default Windows Certificate Remapping", OptionType.DisabledDefaultWindowsCertificateRemapping }
 	}.ToFrozenDictionary(StringComparer.Ordinal);
 
 	// Conversion methods for enums.
-	internal static OptionType ConvertStringToOptionType(string s)
-	{
-		return PolicyRuleOptionsActual[s];
-	}
+	internal static OptionType ConvertStringToOptionType(string s) => PolicyRuleOptionsActual[s];
 
-	private static PolicyType ConvertStringToPolicyType(string s)
+	private static PolicyType ConvertStringToPolicyType(string s) => s switch
 	{
-		return s switch
-		{
-			"Base Policy" => PolicyType.BasePolicy,
-			"Supplemental Policy" => PolicyType.SupplementalPolicy,
-			"AppID Tagging Policy" => PolicyType.AppIDTaggingPolicy,
-			_ => throw new InvalidOperationException("Unknown PolicyType: " + s)
-		};
-	}
-
-	private static CertEnumType ConvertStringToCertEnumType(string s)
+		"Base Policy" => PolicyType.BasePolicy,
+		"Supplemental Policy" => PolicyType.SupplementalPolicy,
+		"AppID Tagging Policy" => PolicyType.AppIDTaggingPolicy,
+		_ => throw new InvalidOperationException("Unknown PolicyType: " + s)
+	};
+	private static CertEnumType ConvertStringToCertEnumType(string s) => s switch
 	{
-		return s switch
-		{
-			"TBS" => CertEnumType.TBS,
-			"Wellknown" => CertEnumType.Wellknown,
-			_ => throw new InvalidOperationException("Unknown CertEnumType: " + s)
-		};
-	}
-
-	private static RuleTypeType ConvertStringToRuleTypeType(string s)
+		"TBS" => CertEnumType.TBS,
+		"Wellknown" => CertEnumType.Wellknown,
+		_ => throw new InvalidOperationException("Unknown CertEnumType: " + s)
+	};
+	private static RuleTypeType ConvertStringToRuleTypeType(string s) => s switch
 	{
-		return s switch
-		{
-			"Match" => RuleTypeType.Match,
-			"Exclude" => RuleTypeType.Exclude,
-			"Attribute" => RuleTypeType.Attribute,
-			_ => throw new InvalidOperationException("Unknown RuleTypeType: " + s)
-		};
-	}
+		"Match" => RuleTypeType.Match,
+		"Exclude" => RuleTypeType.Exclude,
+		"Attribute" => RuleTypeType.Attribute,
+		_ => throw new InvalidOperationException("Unknown RuleTypeType: " + s)
+	};
 
 	// Deserialization methods for nested types
 
@@ -1115,7 +1098,6 @@ internal static class CustomDeserialization
 
 	private static AppRoot DeserializeAppRoot(XmlElement elem)
 	{
-
 		string manifest = elem.GetAttribute("Manifest");
 		List<AppSetting> settings = [];
 		foreach (XmlNode node in elem.ChildNodes)

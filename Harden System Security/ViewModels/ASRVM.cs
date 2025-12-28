@@ -64,8 +64,7 @@ internal sealed partial class ASRRuleEntry(RegistryPolicyEntry policyEntry, ASRV
 	[JsonInclude]
 	internal ASRRuleState State
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{

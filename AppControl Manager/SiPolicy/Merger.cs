@@ -55,16 +55,11 @@ internal static class Merger
 	/// <param name="otherXmlFilePaths"></param>
 	internal static void Merge(string mainXmlFilePath, List<string> otherXmlFilePaths)
 	{
-		// Close the empty nodes in the main policy
-		CloseEmptyXmlNodesSemantic.Close(mainXmlFilePath);
-
 		// Create a list of all SiPolicy objects representing the instantiation of otherXmlFilePaths
 		List<SiPolicy> allPolicies = [];
 
 		foreach (string item in otherXmlFilePaths)
 		{
-			CloseEmptyXmlNodesSemantic.Close(item);
-
 			allPolicies.Add(Management.Initialize(item, null));
 		}
 
@@ -602,9 +597,6 @@ internal static class Merger
 
 		// Save the changes to the main XML File
 		Management.SavePolicyToFile(output, mainXmlFilePath);
-
-		// Close any empty nodes
-		CloseEmptyXmlNodesSemantic.Close(mainXmlFilePath);
 
 		// The reason this method is being used to go over the XML one more time and its logic wasn't implemented during policy creation
 		// is because this operation needs the complete view of the policy, whereas the policy creation operation micro-manages things

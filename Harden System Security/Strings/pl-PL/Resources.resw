@@ -5066,4 +5066,103 @@ Odcisk Palca: {3}</value>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Rozmiar pamięci i temperatura</value>
   </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>Zainstaluj pakiety aplikacji</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz dowolny pakiet aplikacji, taki jak plik MSIX lub MSIXBundle, aby zainstalować go w systemie.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz dowolny pakiet aplikacji, taki jak plik MSIX lub MSIXBundle, aby zainstalować go w systemie.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz dowolny pakiet aplikacji, taki jak plik MSIX lub MSIXBundle, aby zainstalować go w systemie.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz plik pakietu aplikacji, zazwyczaj MSIX lub MSIXBundle, który ma zostać zainstalowany na urządzeniu. Jeśli wybrany pakiet aplikacji jest podpisany, zostanie zainstalowany bezpośrednio. Jeśli nie jest podpisany, na Twoim urządzeniu zostanie wygenerowany unikalny certyfikat w celu podpisania tego pakietu, a następnie jego instalacji.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>Wybierz plik pakietu aplikacji</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz plik pakietu aplikacji, zazwyczaj MSIX lub MSIXBundle, który ma zostać zainstalowany na urządzeniu. Jeśli wybrany pakiet aplikacji jest podpisany, zostanie zainstalowany bezpośrednio. Jeśli nie jest podpisany, na Twoim urządzeniu zostanie wygenerowany unikalny certyfikat w celu podpisania tego pakietu, a następnie jego instalacji.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz plik pakietu aplikacji, zazwyczaj MSIX lub MSIXBundle, który ma zostać zainstalowany na urządzeniu. Jeśli wybrany pakiet aplikacji jest podpisany, zostanie zainstalowany bezpośrednio. Jeśli nie jest podpisany, na Twoim urządzeniu zostanie wygenerowany unikalny certyfikat w celu podpisania tego pakietu, a następnie jego instalacji.</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>Niestandardowa instalacja pakietu aplikacji</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>Zainstaluj</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zainstaluj wybrany pakiet aplikacji w systemie.</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zainstaluj wybrany pakiet aplikacji w systemie.</value>
+  </data>
+  <data name="ASRError" xml:space="preserve">
+    <value>Wystąpił błąd podczas próby usunięcia wykluczeń reguł ASR, który można bezpiecznie zignorować: </value>
+  </data>
+  <data name="ASRAddError" xml:space="preserve">
+    <value>Wystąpił błąd podczas próby dodania wykluczeń reguł ASR, który można bezpiecznie zignorować: </value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>Nie udało się zdeserializować listy wyjątków reguł ASR w formacie JSON, która wyglądała następująco: {0} - Błąd: {1}</value>
+</data>
+  <data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>Usunięto certyfikat o nazwie pospolitej (CN): {0} z magazynu: {1}</value>
+  </data>
+    <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>Sprawdzanie, czy certyfikat o nazwie pospolitej '{0}' już istnieje w osobistym magazynie użytkownika.</value>
+  </data>
+    <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} certyfikaty o nazwie pospolitej '{1}' już istnieją w systemie. Usuwanie ich</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>Zamknąć aplikację?</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>Operacja jest w toku. Wyjście teraz może spowodować, że zadania pozostaną nieukończone. Czy na pewno chcesz wyjść?</value>
+</data>
+  <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz, czy aplikacja ma prosić o potwierdzenie podczas zamykania.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>Potwierdzenie zamknięcia aplikacji</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz, czy aplikacja ma prosić o potwierdzenie podczas zamykania.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz, czy aplikacja ma prosić o potwierdzenie podczas zamykania.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>Nigdy</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nigdy nie pytaj o potwierdzenie podczas zamykania aplikacji.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Nigdy nie pytaj o potwierdzenie podczas zamykania aplikacji.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>Zawsze</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zawsze pytaj o potwierdzenie podczas zamykania aplikacji.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zawsze pytaj o potwierdzenie podczas zamykania aplikacji.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>Automatycznie</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pytaj o potwierdzenie przed zamknięciem aplikacji tylko w określonych okolicznościach, gdy trwa operacja.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pytaj o potwierdzenie przed zamknięciem aplikacji tylko w określonych okolicznościach, gdy trwa operacja.</value>
+  </data>
 </root>

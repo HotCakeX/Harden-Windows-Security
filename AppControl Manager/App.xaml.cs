@@ -141,9 +141,6 @@ public partial class App : Application
 #if APP_CONTROL_MANAGER
 		FileDialogHelper.DirectoryToOpen = IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory) ?? "C:";
 #endif
-#if HARDEN_SYSTEM_SECURITY
-		FileDialogHelper.DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory) ?? "C:";
-#endif
 
 		// Capture the dispatcher queue as early as possible.
 		AppDispatcher = DispatcherQueue.GetForCurrentThread();

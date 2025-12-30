@@ -550,8 +550,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// </summary>
 	internal RunningOperation CurrentRunningOperation
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -1291,6 +1290,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			// Set flags to disable other operations and UI elements
 			ElementsAreEnabled = false;
 
+			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
+
 			// Set the current running operation to enable/disable appropriate buttons
 			CurrentRunningOperation = operation switch
 			{
@@ -1464,6 +1465,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			ElementsAreEnabled = false;
 			EnableDisableAnimatedButtons(false);
 
+			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
+
 			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Traverse.Generator.GetFileName());
 
 			if (savePath is null)
@@ -1495,6 +1498,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 			EnableDisableAnimatedButtons(false);
+
+			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
 
 			string? loadPath = FileDialogHelper.ShowFilePickerDialog(GlobalVars.JSONPickerFilter);
 

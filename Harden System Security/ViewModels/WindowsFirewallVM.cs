@@ -387,11 +387,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		@"C:\Windows\System32\cmd.exe",
 		@"C:\Windows\System32\cscript.exe",
 		@"C:\Windows\System32\forfiles.exe",
-		@"C:\Windows\System32\hh.exe",
+		@"C:\Windows\hh.exe",
 		@"C:\Windows\System32\mshta.exe",
 		@"C:\Windows\System32\msiexec.exe",
 		@"C:\Windows\System32\netsh.exe",
-		@"C:\Windows\System32\powershell.exe",
 		@"C:\Windows\System32\presentationhost.exe",
 		@"C:\Windows\System32\reg.exe",
 		@"C:\Windows\System32\regsvr32.exe",
@@ -411,7 +410,6 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		@"C:\Windows\SysWOW64\mshta.exe",
 		@"C:\Windows\SysWOW64\msiexec.exe",
 		@"C:\Windows\SysWOW64\netsh.exe",
-		@"C:\Windows\SysWOW64\powershell.exe",
 		@"C:\Windows\SysWOW64\presentationhost.exe",
 		@"C:\Windows\SysWOW64\reg.exe",
 		@"C:\Windows\SysWOW64\regsvr32.exe",
@@ -420,6 +418,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		@"C:\Windows\SysWOW64\wscript.exe",
 		@"C:\Windows\SysWOW64\wmic.exe",
 		@"C:\Windows\SysWOW64\xwizard.exe",
+		@"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
 	];
 
 	/// <summary>

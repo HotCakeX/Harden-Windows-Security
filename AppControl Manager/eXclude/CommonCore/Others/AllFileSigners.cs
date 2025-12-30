@@ -15,29 +15,26 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
+using System.Security.Cryptography.Pkcs;
+using System.Security.Cryptography.X509Certificates;
 
-namespace AppControlManager.SiPolicy;
+namespace CommonCore.Others;
 
-internal sealed class AppManifest(List<SettingDefinition> settingDefinition, string id)
+/// <summary>
+/// Represents a signed CMS and its certificate chain.
+/// Since .NET isn't showing any warnings for not disposing of this type, we have to make sure we do it ourselves.
+/// </summary>
+/// <param name="signerCertificate"></param>
+/// <param name="chainContext"></param>
+internal sealed partial class AllFileSigners(SignedCms signerCertificate, IntPtr chainContext) : IDisposable
 {
-	internal List<SettingDefinition> SettingDefinition => settingDefinition;
+	internal SignedCms Signer => signerCertificate;
+	internal X509Chain Chain { get; } = chainContext == IntPtr.Zero
+		? new X509Chain()
+		: new X509Chain(chainContext);
 
-	internal string Id => id;
-}
-
-internal sealed class SettingDefinition(string name, SettingType type, bool ignoreAuditPolicies)
-{
-	internal string Name => name;
-
-	internal SettingType Type => type;
-
-	internal bool IgnoreAuditPolicies => ignoreAuditPolicies;
-}
-
-internal enum SettingType
-{
-	Bool,
-	StringList,
-	StringSet,
+	public void Dispose()
+	{
+		Chain.Dispose();
+	}
 }

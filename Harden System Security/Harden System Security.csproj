@@ -64,7 +64,7 @@
 		<AssemblyName>HardenSystemSecurity</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>1.0.35.0</FileVersion>
+		<FileVersion>1.0.36.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -186,7 +186,6 @@
 		<Compile Include="..\AppControl Manager\IncrementalCollection\IncrementalCollection.cs" Link="IncrementalCollection\IncrementalCollection.cs" />
 		<Compile Include="..\AppControl Manager\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Others\AppUpdate.cs" Link="Others\AppUpdate.cs" />
-		<Compile Include="..\AppControl Manager\Others\ClipboardManagement.cs" Link="Others\ClipboardManagement.cs" />
 		<Compile Include="..\AppControl Manager\Others\EventLogUtility.cs" Link="Others\EventLogUtility.cs" />
 		<Compile Include="..\AppControl Manager\Others\ListViewHelper-Shared.cs" Link="Others\ListViewHelper-Shared.cs" />
 		<Compile Include="..\AppControl Manager\Others\UniqueStringObservableCollection.cs" Link="Others\UniqueStringObservableCollection.cs" />
@@ -198,9 +197,6 @@
 		<Compile Include="..\AppControl Manager\Pages\Logs.xaml.cs" Link="Pages\Logs.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Pages\Settings.xaml.cs" Link="Pages\Settings.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Pages\UpdatePage.xaml.cs" Link="Pages\UpdatePage.xaml.cs" />
-		<Compile Include="..\AppControl Manager\Taskbar\Badge.cs" Link="Taskbar\Badge.cs" />
-		<Compile Include="..\AppControl Manager\Taskbar\JumpListMgr.cs" Link="Taskbar\JumpListMgr.cs" />
-		<Compile Include="..\AppControl Manager\Taskbar\TaskBarProgress.cs" Link="Taskbar\TaskBarProgress.cs" />
 		<Compile Include="..\AppControl Manager\ViewModels\HomeVM.cs" Link="ViewModels\HomeVM.cs" />
 		<Compile Include="..\AppControl Manager\ViewModels\LogsVM.cs" Link="ViewModels\LogsVM.cs" />
 		<Compile Include="..\AppControl Manager\ViewModels\MainWindowVM-Shared.cs" Link="ViewModels\MainWindowVM-Shared.cs" />

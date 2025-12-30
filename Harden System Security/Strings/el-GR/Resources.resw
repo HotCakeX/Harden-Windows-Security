@@ -5066,4 +5066,103 @@
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Μέγεθος αποθήκευσης και θερμοκρασία</value>
   </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>Εγκατάσταση πακέτων εφαρμογών</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>Αναζητήστε οποιοδήποτε πακέτο εφαρμογής, όπως αρχείο MSIX ή MSIXBundle, για εγκατάσταση στο σύστημα.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε οποιοδήποτε πακέτο εφαρμογής, όπως αρχείο MSIX ή MSIXBundle, για εγκατάσταση στο σύστημα.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε οποιοδήποτε πακέτο εφαρμογής, όπως αρχείο MSIX ή MSIXBundle, για εγκατάσταση στο σύστημα.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>Αναζητήστε ένα αρχείο πακέτου εφαρμογής, το οποίο είναι συνήθως αρχεία MSIX ή MSIXBundle, για εγκατάσταση στη συσκευή. Εάν το επιλεγμένο πακέτο εφαρμογής είναι υπογεγραμμένο, θα εγκατασταθεί απευθείας. Εάν δεν είναι υπογεγραμμένο, θα δημιουργηθεί ένα μοναδικό πιστοποιητικό στη συσκευή σας για να υπογραφεί αυτό το πακέτο και στη συνέχεια να εγκατασταθεί.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>Αναζήτηση αρχείου πακέτου εφαρμογής</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε ένα αρχείο πακέτου εφαρμογής, το οποίο είναι συνήθως αρχεία MSIX ή MSIXBundle, για εγκατάσταση στη συσκευή. Εάν το επιλεγμένο πακέτο εφαρμογής είναι υπογεγραμμένο, θα εγκατασταθεί απευθείας. Εάν δεν είναι υπογεγραμμένο, θα δημιουργηθεί ένα μοναδικό πιστοποιητικό στη συσκευή σας για να υπογραφεί αυτό το πακέτο και στη συνέχεια να εγκατασταθεί.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε ένα αρχείο πακέτου εφαρμογής, το οποίο είναι συνήθως αρχεία MSIX ή MSIXBundle, για εγκατάσταση στη συσκευή. Εάν το επιλεγμένο πακέτο εφαρμογής είναι υπογεγραμμένο, θα εγκατασταθεί απευθείας. Εάν δεν είναι υπογεγραμμένο, θα δημιουργηθεί ένα μοναδικό πιστοποιητικό στη συσκευή σας για να υπογραφεί αυτό το πακέτο και στη συνέχεια να εγκατασταθεί.</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>Προσαρμοσμένη εγκατάσταση πακέτου εφαρμογής</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>Εγκατάσταση</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εγκαταστήστε το επιλεγμένο πακέτο εφαρμογής στο σύστημα.</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εγκαταστήστε το επιλεγμένο πακέτο εφαρμογής στο σύστημα.</value>
+  </data>
+  <data name="ASRError" xml:space="preserve">
+    <value>Παρουσιάστηκε σφάλμα κατά την προσπάθεια κατάργησης των εξαιρέσεων κανόνων ASR, το οποίο μπορείτε να αγνοήσετε με ασφάλεια: </value>
+  </data>
+  <data name="ASRAddError" xml:space="preserve">
+    <value>Παρουσιάστηκε σφάλμα κατά την προσπάθεια προσθήκης των εξαιρέσεων κανόνων ASR, το οποίο μπορείτε να αγνοήσετε με ασφάλεια: </value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>Αδυναμία αποσειριοποίησης της λίστας εξαιρέσεων κανόνων ASR JSON η οποία ήταν: {0} - Σφάλμα: {1}</value>
+</data>
+  <data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>Διαγράφηκε το πιστοποιητικό με το Κοινό Όνομα: {0} από το χώρο αποθήκευσης: {1}</value>
+  </data>
+    <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>Γίνεται έλεγχος εάν υπάρχει ήδη πιστοποιητικό με το κοινό όνομα '{0}' στον προσωπικό χώρο αποθήκευσης χρήστη.</value>
+  </data>
+    <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} πιστοποιητικά με το κοινό όνομα '{1}' υπάρχουν ήδη στο σύστημα. Κατάργηση αυτών</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>Έξοδος από την εφαρμογή;</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>Μια λειτουργία βρίσκεται σε εξέλιξη. Η έξοδος τώρα ενδέχεται να οδηγήσει σε ημιτελείς εργασίες. Είστε βέβαιοι ότι θέλετε να βγείτε;</value>
+</data>
+  <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε αν η εφαρμογή θα ζητά επιβεβαίωση κατά το κλείσιμό της.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>Επιβεβαίωση κλεισίματος εφαρμογής</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε αν η εφαρμογή θα ζητά επιβεβαίωση κατά το κλείσιμό της.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε αν η εφαρμογή θα ζητά επιβεβαίωση κατά το κλείσιμό της.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>Ποτέ</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Να μη ζητείται ποτέ επιβεβαίωση κατά το κλείσιμο της εφαρμογής.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Να μη ζητείται ποτέ επιβεβαίωση κατά το κλείσιμο της εφαρμογής.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>Πάντα</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Να ζητείται πάντα επιβεβαίωση κατά το κλείσιμο της εφαρμογής.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Να ζητείται πάντα επιβεβαίωση κατά το κλείσιμο της εφαρμογής.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>Αυτόματα</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Να ζητείται επιβεβαίωση πριν από το κλείσιμο της εφαρμογής μόνο υπό ορισμένες συνθήκες, όταν υπάρχει λειτουργία σε εξέλιξη.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Να ζητείται επιβεβαίωση πριν από το κλείσιμο της εφαρμογής μόνο υπό ορισμένες συνθήκες, όταν υπάρχει λειτουργία σε εξέλιξη.</value>
+  </data>
 </root>

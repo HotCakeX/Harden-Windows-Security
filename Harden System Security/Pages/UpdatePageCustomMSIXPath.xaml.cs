@@ -15,24 +15,31 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Runtime.InteropServices;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 
-namespace AppControlManager.Taskbar;
+namespace HardenSystemSecurity.Pages;
 
-internal static class TaskBarProgress
+internal sealed partial class UpdatePageCustomMSIXPath : Page
 {
-	/// <summary>
-	/// Updates the taskbar progress for the specified window
-	/// </summary>
-	/// <param name="hwnd">Window handle</param>
-	/// <param name="completed">Amount of work completed</param>
-	/// <param name="total">Total amount of work</param>
-	/// <exception cref="COMException">Thrown when the operation fails</exception>
-	internal static void UpdateTaskbarProgress(IntPtr hwnd, ulong completed, ulong total)
-	{
-		int result = NativeMethods.update_taskbar_progress(hwnd, completed, total, out int lastError);
+	private ViewModels.UpdateVM ViewModel { get; } = ViewModels.ViewModelProvider.UpdateVM;
 
-		if (lastError != 0 && result != 0)
-			Logger.Write($"Taskbar progress update failed with HRESULT: 0x{lastError:X8}");
+	internal UpdatePageCustomMSIXPath()
+	{
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 }

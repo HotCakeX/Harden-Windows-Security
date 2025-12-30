@@ -20,7 +20,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using AppControlManager.Taskbar;
+using CommonCore.Taskbar;
 using HardenSystemSecurity.DeviceIntents;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Others;

@@ -63,8 +63,6 @@ internal static class Management
 
 		xmlObj.Save(filePath);
 
-		CloseEmptyXmlNodesSemantic.Close(filePath);
-
 		CiPolicyTest.TestCiPolicy(filePath);
 	}
 

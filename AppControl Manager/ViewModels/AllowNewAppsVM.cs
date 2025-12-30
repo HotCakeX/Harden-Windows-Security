@@ -806,7 +806,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				if (_IsSignedPolicy)
 				{
 					// Sign the CIP
-					Signing.Main.SignCIP(CIPPath, _CertCN);
+					CommonCore.Signing.Main.SignCIP(CIPPath, _CertCN);
 				}
 				else
 				{
@@ -1230,7 +1230,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					Management.ConvertXMLToBinary(tempBasePolicyPath, null, AuditModeCIP);
 
 					// Sign the CIP
-					Signing.Main.SignCIP(AuditModeCIP, _CertCN);
+					CommonCore.Signing.Main.SignCIP(AuditModeCIP, _CertCN);
 
 					// Create Enforced mode CIP
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
@@ -1239,7 +1239,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					Management.ConvertXMLToBinary(tempBasePolicyPath, null, EnforcedModeCIP);
 
 					// Sign the CIP
-					Signing.Main.SignCIP(EnforcedModeCIP, _CertCN);
+					CommonCore.Signing.Main.SignCIP(EnforcedModeCIP, _CertCN);
 				}
 
 				Logger.Write(GlobalVars.GetStr("CreatingSnapBackGuarantee"));

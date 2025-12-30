@@ -5066,4 +5066,103 @@
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>حجم التخزين ودرجة الحرارة</value>
   </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>تثبيت حزم التطبيقات</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>استعرض للبحث عن أي حزمة تطبيق مثل ملف MSIX أو MSIXBundle لتثبيتها على النظام.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للبحث عن أي حزمة تطبيق مثل ملف MSIX أو MSIXBundle لتثبيتها على النظام.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للبحث عن أي حزمة تطبيق مثل ملف MSIX أو MSIXBundle لتثبيتها على النظام.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>استعرض للبحث عن ملف حزمة تطبيق، والذي يكون عادةً ملفات MSIX أو MSIXBundle، ليتم تثبيته على الجهاز. إذا كانت حزمة التطبيق المحددة موقعة، فسيتم تثبيتها مباشرة. أما إذا كانت غير موقعة، فسيتم إنشاء شهادة فريدة على جهازك من أجل توقيع تلك الحزمة ثم تثبيتها.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>استعراض للبحث عن ملف حزمة تطبيق</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للبحث عن ملف حزمة تطبيق، والذي يكون عادةً ملفات MSIX أو MSIXBundle، ليتم تثبيته على الجهاز. إذا كانت حزمة التطبيق المحددة موقعة، فسيتم تثبيتها مباشرة. أما إذا كانت غير موقعة، فسيتم إنشاء شهادة فريدة على جهازك من أجل توقيع تلك الحزمة ثم تثبيتها.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للبحث عن ملف حزمة تطبيق، والذي يكون عادةً ملفات MSIX أو MSIXBundle، ليتم تثبيته على الجهاز. إذا كانت حزمة التطبيق المحددة موقعة، فسيتم تثبيتها مباشرة. أما إذا كانت غير موقعة، فسيتم إنشاء شهادة فريدة على جهازك من أجل توقيع تلك الحزمة ثم تثبيتها.</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>تثبيت مخصص لحزمة التطبيق</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>تثبيت</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتثبيت حزمة التطبيق المحددة على النظام.</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتثبيت حزمة التطبيق المحددة على النظام.</value>
+  </data>
+  <data name="ASRError" xml:space="preserve">
+    <value>حدث خطأ أثناء محاولة إزالة استثناءات قواعد ASR والذي يمكنك تجاهله بأمان: </value>
+  </data>
+  <data name="ASRAddError" xml:space="preserve">
+    <value>حدث خطأ أثناء محاولة إضافة استثناءات قواعد ASR والذي يمكنك تجاهله بأمان: </value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>تعذر إلغاء تسلسل قائمة استثناءات قواعد ASR بتنسيق JSON والتي كانت: {0} - الخطأ: {1}</value>
+</data>
+  <data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>تم حذف الشهادة ذات الاسم الشائع: {0} من المخزن: {1}</value>
+  </data>
+    <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>جارٍ التحقق مما إذا كانت هناك شهادة بالاسم الشائع '{0}' موجودة بالفعل في مخزن المستخدم الشخصي.</value>
+  </data>
+    <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} شهادات بالاسم الشائع '{1}' موجودة بالفعل على النظام. جارٍ إزالتها</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>الخروج من التطبيق؟</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>هناك عملية قيد التنفيذ حالياً. قد يؤدي الخروج الآن إلى مهام غير مكتملة. هل أنت متأكد أنك تريد الخروج؟</value>
+</data>
+  <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>اختر ما إذا كان يجب على التطبيق طلب التأكيد عند إغلاقه.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>تأكيد إغلاق التطبيق</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر ما إذا كان يجب على التطبيق طلب التأكيد عند إغلاقه.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر ما إذا كان يجب على التطبيق طلب التأكيد عند إغلاقه.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>مطلقاً</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>لا تطلب التأكيد مطلقاً عند إغلاق التطبيق.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>لا تطلب التأكيد مطلقاً عند إغلاق التطبيق.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>دائماً</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اطلب التأكيد دائماً عند إغلاق التطبيق.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اطلب التأكيد دائماً عند إغلاق التطبيق.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>تلقائي</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اطلب التأكيد قبل إغلاق التطبيق فقط في ظروف معينة عند وجود عملية جارية.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اطلب التأكيد قبل إغلاق التطبيق فقط في ظروف معينة عند وجود عملية جارية.</value>
+  </data>
 </root>

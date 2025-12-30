@@ -2521,8 +2521,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal int OperationModeComboBoxSelectedIndex
 	{
-		get;
-		set
+		get; set
 		{
 			// Update the operation mode property
 			_ = SP(ref field, value);

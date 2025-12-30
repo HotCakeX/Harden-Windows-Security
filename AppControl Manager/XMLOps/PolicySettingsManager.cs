@@ -212,42 +212,36 @@ internal static class PolicySettingsManager
 		return output;
 	}
 
-	private static int GetValueType(SettingValueType? type)
+	private static int GetValueType(SettingValueType? type) => type?.Item switch
 	{
-		return type?.Item switch
-		{
-			byte[] => 0, // (Binary)
-			bool => 1, // (Boolean)
-			uint => 2, // (DWord)
-			string => 3, // (String)
-			_ => -1
-		};
-	}
+		byte[] => 0, // (Binary)
+		bool => 1, // (Boolean)
+		uint => 2, // (DWord)
+		string => 3, // (String)
+		_ => -1
+	};
 
-	private static SettingValueType SetValueType(int type, object value)
+	// Map the integer index to the actual CLR type
+	private static SettingValueType SetValueType(int type, object value) => type switch
 	{
-		// Map the integer index to the actual CLR type
-		return type switch
-		{
-			// 0 = byte[]  (Binary)
-			0 => new SettingValueType(item: (byte[])value),
+		// 0 = byte[]  (Binary)
+		0 => new SettingValueType(item: (byte[])value),
 
-			// 1 = bool    (Boolean)
-			1 => new SettingValueType(item: Convert.ToBoolean(value)),
+		// 1 = bool    (Boolean)
+		1 => new SettingValueType(item: Convert.ToBoolean(value)),
 
-			// 2 = uint    (DWord)
-			2 => new SettingValueType(item: Convert.ToUInt32(value)),
+		// 2 = uint    (DWord)
+		2 => new SettingValueType(item: Convert.ToUInt32(value)),
 
-			// 3 = string  (String)
-			3 => new SettingValueType(item: Convert.ToString(value)!),
+		// 3 = string  (String)
+		3 => new SettingValueType(item: Convert.ToString(value)!),
 
-			_ => throw new ArgumentOutOfRangeException(
-					 nameof(type),
-					 type,
-					 $"Unsupported SettingValueType index: {type}"
-				 )
-		};
-	}
+		_ => throw new ArgumentOutOfRangeException(
+				 nameof(type),
+				 type,
+				 $"Unsupported SettingValueType index: {type}"
+			 )
+	};
 
 	/// <summary>
 	/// Returns unique Setting[] array.

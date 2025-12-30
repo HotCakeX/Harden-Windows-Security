@@ -102,8 +102,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool AllowMicrosoftSectionIsEnabled
 	{
-		get;
-		set
+		get; set
 		{
 			_ = SP(ref field, value);
 			AllowMicrosoftLogSizeInputIsEnabled = field && AllowMicrosoftAudit;
@@ -125,8 +124,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool AllowMicrosoftAudit
 	{
-		get;
-		set
+		get; set
 		{
 			_ = SP(ref field, value);
 			AllowMicrosoftLogSizeInputIsEnabled = field;
@@ -224,8 +222,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool DefaultWindowsSectionIsEnabled
 	{
-		get;
-		set
+		get; set
 		{
 			_ = SP(ref field, value);
 			DefaultWindowsLogSizeInputIsEnabled = field && DefaultWindowsAudit;
@@ -248,8 +245,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool DefaultWindowsAudit
 	{
-		get;
-		set
+		get; set
 		{
 			_ = SP(ref field, value);
 			DefaultWindowsLogSizeInputIsEnabled = field;
@@ -346,8 +342,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool SignedAndReputableSectionIsEnabled
 	{
-		get;
-		set
+		get; set
 		{
 			_ = SP(ref field, value);
 			SignedAndReputableLogSizeInputIsEnabled = field && SignedAndReputableAudit;
@@ -370,8 +365,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool SignedAndReputableAudit
 	{
-		get;
-		set
+		get; set
 		{
 			_ = SP(ref field, value);
 			SignedAndReputableLogSizeInputIsEnabled = field;

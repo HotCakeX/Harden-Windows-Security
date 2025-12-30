@@ -25,7 +25,6 @@ internal static class PolicyEditor
 	/// <param name="policyIdInput"></param>
 	/// <param name="policyFilePathInput"></param>
 	internal static void EditGuids(string policyIdInput, string policyFilePathInput)
-
 	{
 		// Instantiate the policy
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(policyFilePathInput, null);

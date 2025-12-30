@@ -47,18 +47,16 @@
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}"
-                        Grid.Row="2"
-                        Margin="0,10,0,0">
+                        Grid.Row="2">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Uid="CheckForUpdateSettingsCard"
-                                       IsClickEnabled="{x:Bind ViewModel.CheckForUpdateSettingsCardIsClickable, Mode=OneWay}"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}"
-                                       Click="{x:Bind ViewModel.CheckForUpdate_Click}">
+                <customUI:SettingsCardV2 x:Uid="CheckForUpdateSettingsCard"
+                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                         HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}">
 
                     <controls:WrapPanel Orientation="Horizontal">
 
@@ -67,11 +65,9 @@
                                       IsIndeterminate="{x:Bind ViewModel.ProgressBarIsIndeterminate, Mode=OneWay}"
                                       Minimum="0"
                                       Maximum="100"
-                                      Width="60"
-                                      Height="60"
                                       Margin="5,5,15,5"/>
 
-                        <Button IsEnabled="{x:Bind ViewModel.CheckForUpdateButtonIsEnabled, Mode=OneWay}"
+                        <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                 Content="{x:Bind ViewModel.UpdateButtonContent, Mode=OneWay}"
                                 x:Uid="UpdatePageCheckForUpdateButton"
                                 Style="{StaticResource AccentButtonStyle}"
@@ -89,18 +85,11 @@
 
                     </controls:WrapPanel>
 
-                </controls:SettingsCard>
+                </customUI:SettingsCardV2>
 
                 <customUI:SettingsCardV2 x:Uid="AutoUpdateCheckSettingsCard"
                                          HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.AutoCheckForUpdateAtStartup, Mode=TwoWay}"
-                                  x:Uid="ToggleSwitchGeneral"/>
-                </customUI:SettingsCardV2>
-
-                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard"
-                                         HeaderIcon="{ui:FontIcon Glyph=&#xF552;}"
-                                         Visibility="{x:Bind ViewModel.HardenedProcedureSectionVisibility, Mode=OneWay}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}"
                                   x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 
@@ -111,6 +100,12 @@
                                        IsClickEnabled="True"
                                        ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
                                        IsActionIconVisible="True" />
+
+                <controls:SettingsCard x:Uid="InstallAppPackagesSettingsCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
+                                       IsClickEnabled="True"
+                                       IsActionIconVisible="True"
+                                       Click="{x:Bind ViewModel.NavigateToAppPackageInstallerPage_Click}"/>
 
             </StackPanel>
 

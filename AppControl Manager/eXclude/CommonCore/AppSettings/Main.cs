@@ -67,6 +67,7 @@ internal sealed partial class Main : ViewModelBase
 		IsAnimatedRainbowEnabled = ReadValue(nameof(IsAnimatedRainbowEnabled), IsAnimatedRainbowEnabled);
 		CustomAppWindowsBorder = ReadValue(nameof(CustomAppWindowsBorder), CustomAppWindowsBorder);
 		UseV2CIManagement = ReadValue(nameof(UseV2CIManagement), UseV2CIManagement);
+		AppCloseConfirmationBehavior = ReadValue(nameof(AppCloseConfirmationBehavior), AppCloseConfirmationBehavior);
 	}
 
 	/// <summary>
@@ -111,8 +112,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool SoundSetting
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -130,8 +130,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool NavViewBackground
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -148,8 +147,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string NavViewPaneDisplayMode
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -163,8 +161,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string AppTheme
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -178,8 +175,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string BackDropBackground
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -193,8 +189,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string IconsStyle
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -208,8 +203,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal int MainWindowWidth
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -223,8 +217,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal int MainWindowHeight
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -238,8 +231,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool MainWindowIsMaximized
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -253,8 +245,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool ListViewsVerticalCentering
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -269,8 +260,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool StickyHeadersForListViews
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -284,8 +274,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool CacheSecurityCatalogsScanResults
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -299,8 +288,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool PromptForElevationOnStartup
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -314,8 +302,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool AutomaticAssignmentSidebar
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -329,8 +316,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool AutoCheckForUpdateAtStartup
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -344,8 +330,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string ApplicationGlobalLanguage
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -359,8 +344,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string ApplicationGlobalFlowDirection
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -375,8 +359,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string CiPolicySchemaPath
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -390,8 +373,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool ScreenShield
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -407,8 +389,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool PublishUserActivityInTheOS
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -422,8 +403,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool LinkPreviewsForSecurityMeasure
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -437,8 +417,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool AutoResizeListViewColumns
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -452,8 +431,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string ListViewFontFamily
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -468,8 +446,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal int SelectedSignInMethodForMSGraph
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -483,8 +460,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool IsAnimatedRainbowEnabled
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -498,8 +474,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal string CustomAppWindowsBorder
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -513,8 +488,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal bool UseV2CIManagement
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -522,4 +496,18 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// The behavior of the app when the user attempts to close it.
+	/// </summary>
+	internal int AppCloseConfirmationBehavior
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AppCloseConfirmationBehavior), field);
+			}
+		}
+	} = 1; // 0 = Always confirm, 1 = Automatic, 2 = Never confirm
 }

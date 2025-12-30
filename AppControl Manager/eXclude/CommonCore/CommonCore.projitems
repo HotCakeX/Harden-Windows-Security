@@ -54,6 +54,18 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)Taskbar\Badge.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Taskbar\JumpListMgr.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Taskbar\TaskBarProgress.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TaskTracking.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\AllCertificatesGrabber.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\AllFileSigners.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\ClipboardManagement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LLPackageReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\CertificateCreator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Signing\Helper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Signing\Main.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Signing\Structure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppSettings\AppThemeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppSettings\Main.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppSettings\NavigationBackgroundManager.cs" />

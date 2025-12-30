@@ -82,8 +82,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal int BackDropComboBoxSelectedIndex
 	{
-		get;
-		set
+		get; set
 		{
 			// Update the value and the system backdrop
 			if (SP(ref field, value))

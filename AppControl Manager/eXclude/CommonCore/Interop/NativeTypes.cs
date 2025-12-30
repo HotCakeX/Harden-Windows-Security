@@ -50,6 +50,15 @@ internal struct LUID_AND_ATTRIBUTES
 	internal uint Attributes;
 }
 
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winbase/ns-winbase-startupinfoexw
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct STARTUPINFOEX
+{
+	internal STARTUPINFO StartupInfo;
+	internal IntPtr lpAttributeList;
+}
 
 [StructLayout(LayoutKind.Sequential)]
 internal struct STARTUPINFO
@@ -699,7 +708,7 @@ internal readonly struct CRYPT_PROVIDERS
 
 /// <summary>
 /// SAMPR_USER_INFO_BUFFER union; we only model the member we use (UserControlInformation) at offset 0.
-/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/9496c26e-490b-4e76-827f-2695fc216f35
+/// https://learn.microsoft.com/openspecs/windows_protocols/ms-samr/9496c26e-490b-4e76-827f-2695fc216f35
 /// </summary>
 [StructLayout(LayoutKind.Explicit)]
 internal struct SAMPR_USER_INFO_BUFFER
@@ -713,7 +722,7 @@ internal struct SAMPR_USER_INFO_BUFFER
 
 /// <summary>
 /// [MS-SAMR] 2.2.6.28/2.2.6.29
-/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/eb5f1508-ede1-4ff1-be82-55f3e2ef1633
+/// https://learn.microsoft.com/openspecs/windows_protocols/ms-samr/eb5f1508-ede1-4ff1-be82-55f3e2ef1633
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct SAMPR_USER_CONTROL_INFORMATION
@@ -723,7 +732,7 @@ internal struct SAMPR_USER_CONTROL_INFORMATION
 
 /// <summary>
 /// SAMPR_USER_NAME_INFORMATION structure used with SamSetInformationUser(UserNameInformation).
-/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/400d937e-66e5-44af-929d-13dfab550d46
+/// https://learn.microsoft.com/openspecs/windows_protocols/ms-samr/400d937e-66e5-44af-929d-13dfab550d46
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct SAMPR_USER_NAME_INFORMATION
@@ -1111,4 +1120,226 @@ internal partial interface IEditionUpgradeManager
 
 	[PreserveSig]
 	int GetWindowsLicense(int uUnk, out int pdwResult);
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIUnknown
+{
+	internal IUnknownVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/unknwn/nn-unknwn-iunknown
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IUnknownVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+}
+
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxFactory
+{
+	internal IAppxFactoryVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxfactory
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxFactoryVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, IntPtr, IntPtr*, int> CreatePackageWriter;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, IntPtr*, int> CreatePackageReader; // Index 4
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, IntPtr*, int> CreateManifestReader;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, IntPtr*, int> CreateBlockMapReader;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, ushort*, IntPtr*, int> CreateValidatedBlockMapReader;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxPackageReader
+{
+	internal IAppxPackageReaderVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxpackagereader
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxPackageReaderVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetBlockMap; // Index 3
+	internal delegate* unmanaged[Stdcall]<void*, int, IntPtr*, int> GetFootprintFile;
+	internal delegate* unmanaged[Stdcall]<void*, ushort*, IntPtr*, int> GetPayloadFile;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetPayloadFiles;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetManifest; // Index 7
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxManifestReader
+{
+	internal IAppxManifestReaderVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxmanifestreader
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxManifestReaderVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetPackageId; // Index 3
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetProperties;
+	// Methods after GetProperties are omitted as they are not used.
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxManifestPackageId
+{
+	internal IAppxManifestPackageIdVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxmanifestpackageid
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxManifestPackageIdVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, ushort**, int> GetName;
+	internal delegate* unmanaged[Stdcall]<void*, int*, int> GetArchitecture;
+	internal delegate* unmanaged[Stdcall]<void*, ushort**, int> GetPublisher; // Index 5
+	internal delegate* unmanaged[Stdcall]<void*, ulong*, int> GetVersion; // Index 6
+	internal delegate* unmanaged[Stdcall]<void*, ushort**, int> GetResourceId;
+	internal delegate* unmanaged[Stdcall]<void*, ushort*, int*, int> ComparePublisher;
+	internal delegate* unmanaged[Stdcall]<void*, ushort**, int> GetPackageFullName;
+	internal delegate* unmanaged[Stdcall]<void*, ushort**, int> GetPackageFamilyName; // Index 10
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxBlockMapReader
+{
+	internal IAppxBlockMapReaderVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxblockmapreader
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxBlockMapReaderVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, ushort*, IntPtr*, int> GetFile; // Index 3
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetFiles;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetHashMethod; // Index 5
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetStream;
+}
+
+// IUri (Windows/Urlmon)
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIUri
+{
+	internal IUriVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms775038(v=vs.85)
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IUriVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, int, ushort**, uint, int> GetPropertyBSTR;
+	internal delegate* unmanaged[Stdcall]<void*, int, uint*, uint, int> GetPropertyLength;
+	internal delegate* unmanaged[Stdcall]<void*, int, uint*, uint, int> GetPropertyDWORD;
+	internal delegate* unmanaged[Stdcall]<void*, int, int*, uint, int> HasProperty;
+	internal delegate* unmanaged[Stdcall]<void*, ushort**, int> GetAbsoluteUri; // Index 7
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxBundleFactory
+{
+	internal IAppxBundleFactoryVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxbundlefactory
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxBundleFactoryVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, ulong, IntPtr*, int> CreateBundleWriter;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, IntPtr*, int> CreateBundleReader; // Index 4
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr, IntPtr*, int> CreateBundleManifestReader;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxBundleReader
+{
+	internal IAppxBundleReaderVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxbundlereader
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxBundleReaderVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, int, IntPtr*, int> GetFootprintFile;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetBlockMap; // Index 4
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetManifest; // Index 5
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetPayloadPackages;
+	internal delegate* unmanaged[Stdcall]<void*, ushort*, IntPtr*, int> GetPayloadPackage;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct RawIAppxBundleManifestReader
+{
+	internal IAppxBundleManifestReaderVtbl* Vtbl;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxbundlemanifestreader
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct IAppxBundleManifestReaderVtbl
+{
+	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
+	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
+	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
+
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetPackageId; // Index 3
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetPackageInfoItems;
+	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetStream;
 }

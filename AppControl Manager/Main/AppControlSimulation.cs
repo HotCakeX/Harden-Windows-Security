@@ -204,11 +204,11 @@ internal static class AppControlSimulation
 					progressReporter.Report(percentageToUse);
 
 					// Update the taskbar progress
-					Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
+					CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
 
 				}, null, 0, 2000) : null;
 
-			Taskbar.Badge.SetBadgeAsActive();
+			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
 
 			// split the file paths by ThreadsCount which by default is 2 and minimum 1
 			IEnumerable<string[]> SplitArrays = CollectedFiles.Item1.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
@@ -526,8 +526,7 @@ internal static class AppControlSimulation
 		finally
 		{
 			// Clear the taskbar progress
-			Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
-			Taskbar.Badge.ClearBadge();
+			CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
 		}
 
 		return FinalSimulationResults;

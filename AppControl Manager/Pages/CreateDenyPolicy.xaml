@@ -686,9 +686,7 @@
                         <controls:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
                                            IsClickEnabled="True" IsActionIconVisible="True"
-                                           Click="{x:Bind ViewModel.FilesAndFoldersViewFileDetailsSettingsCard_Click}">
-
-                        </controls:SettingsCard>
+                                           Click="{x:Bind ViewModel.FilesAndFoldersViewFileDetailsSettingsCard_Click}"/>
 
                     </controls:SettingsExpander.Items>
 

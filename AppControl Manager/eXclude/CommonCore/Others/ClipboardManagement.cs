@@ -17,7 +17,7 @@
 
 using Windows.ApplicationModel.DataTransfer;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 internal static class ClipboardManagement
 {

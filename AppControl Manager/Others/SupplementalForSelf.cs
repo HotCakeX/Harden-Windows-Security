@@ -126,7 +126,7 @@ internal static class SupplementalForSelf
 		Management.ConvertXMLToBinary(savePath, null, CIPFilePath);
 
 		// Sign the CIP
-		Signing.Main.SignCIP(CIPFilePath, CertCN);
+		CommonCore.Signing.Main.SignCIP(CIPFilePath, CertCN);
 
 		// Deploy the signed CIP file
 		CiToolHelper.UpdatePolicy(CIPFilePath);

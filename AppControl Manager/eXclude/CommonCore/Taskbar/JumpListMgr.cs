@@ -18,7 +18,7 @@
 using System.Threading.Tasks;
 using Windows.UI.StartScreen;
 
-namespace AppControlManager.Taskbar;
+namespace CommonCore.Taskbar;
 
 /// <summary>
 /// https://learn.microsoft.com/uwp/api/windows.ui.startscreen.jumplistitem

@@ -38,8 +38,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal string? SidebarBasePolicyPathTextBoxText
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{

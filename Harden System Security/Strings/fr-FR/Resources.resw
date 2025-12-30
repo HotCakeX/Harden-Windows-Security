@@ -5066,4 +5066,103 @@ Empreinte : {3}</value>
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>Taille du stockage et température</value>
   </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>Installer des packages d'application</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>Parcourez pour trouver un package d'application tel qu'un fichier MSIX ou MSIXBundle à installer sur le système.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Parcourez pour trouver un package d'application tel qu'un fichier MSIX ou MSIXBundle à installer sur le système.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Parcourez pour trouver un package d'application tel qu'un fichier MSIX ou MSIXBundle à installer sur le système.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>Parcourez pour trouver un fichier de package d'application, généralement des fichiers MSIX ou MSIXBundle, à installer sur l'appareil. Si le package d'application sélectionné est signé, il sera installé directement. S'il n'est pas signé, un certificat unique sera généré sur votre appareil afin de signer ce package, puis de l'installer.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>Parcourir pour trouver un fichier de package d'application</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Parcourez pour trouver un fichier de package d'application, généralement des fichiers MSIX ou MSIXBundle, à installer sur l'appareil. Si le package d'application sélectionné est signé, il sera installé directement. S'il n'est pas signé, un certificat unique sera généré sur votre appareil afin de signer ce package, puis de l'installer.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Parcourez pour trouver un fichier de package d'application, généralement des fichiers MSIX ou MSIXBundle, à installer sur l'appareil. Si le package d'application sélectionné est signé, il sera installé directement. S'il n'est pas signé, un certificat unique sera généré sur votre appareil afin de signer ce package, puis de l'installer.</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>Installation personnalisée de package d'application</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>Installer</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Installez le package d'application sélectionné sur le système.</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Installez le package d'application sélectionné sur le système.</value>
+  </data>
+  <data name="ASRError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la tentative de suppression des exclusions de règles ASR que vous pouvez ignorer en toute sécurité : </value>
+  </data>
+  <data name="ASRAddError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la tentative d'ajout des exclusions de règles ASR que vous pouvez ignorer en toute sécurité : </value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>Impossible de désérialiser le JSON de la liste d'exceptions des règles ASR qui était : {0} - Erreur : {1}</value>
+</data>
+  <data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>Le certificat avec le nom commun : {0} a été supprimé du magasin : {1}</value>
+  </data>
+    <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>Vérification de l'existence d'un certificat avec le nom commun '{0}' dans le magasin personnel de l'utilisateur.</value>
+  </data>
+    <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} certificats avec le nom commun '{1}' existent déjà sur le système. Suppression en cours</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>Quitter l'application ?</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>Une opération est en cours. Quitter maintenant peut entraîner des tâches incomplètes. Êtes-vous sûr de vouloir quitter ?</value>
+</data>
+  <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>Choisissez si l'application doit vous demander confirmation lors de sa fermeture.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>Confirmation de fermeture de l'application</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez si l'application doit vous demander confirmation lors de sa fermeture.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez si l'application doit vous demander confirmation lors de sa fermeture.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>Jamais</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ne jamais demander confirmation lors de la fermeture de l'application.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ne jamais demander confirmation lors de la fermeture de l'application.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>Toujours</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Toujours demander confirmation lors de la fermeture de l'application.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Toujours demander confirmation lors de la fermeture de l'application.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>Automatique</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ne demander confirmation avant la fermeture de l'application que dans certaines circonstances, lorsqu'une opération est en cours.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ne demander confirmation avant la fermeture de l'application que dans certaines circonstances, lorsqu'une opération est en cours.</value>
+  </data>
 </root>

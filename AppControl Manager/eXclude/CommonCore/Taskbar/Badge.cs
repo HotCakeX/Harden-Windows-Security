@@ -19,7 +19,7 @@ using System.Threading;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
-namespace AppControlManager.Taskbar;
+namespace CommonCore.Taskbar;
 
 /// <summary>
 /// Manages the badging system.

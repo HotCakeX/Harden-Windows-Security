@@ -15,12 +15,22 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.ApplicationModel;
+using Windows.Foundation;
+using Windows.Management.Deployment;
 using Windows.System;
-using System.Text.Json.Serialization;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.Others;
@@ -29,18 +39,6 @@ namespace HardenSystemSecurity.ViewModels;
 #endif
 
 #if APP_CONTROL_MANAGER
-using Windows.ApplicationModel;
-using Windows.Foundation;
-using Windows.Management.Deployment;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 namespace AppControlManager.ViewModels;
 #endif
 
@@ -49,112 +47,47 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class UpdateVM : ViewModelBase
 {
-
-	[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
-	[JsonSerializable(typeof(string[]))] // Used to deserialize MS Defender results
-	private sealed partial class MSDefenderJsonContext : JsonSerializerContext
+	internal UpdateVM()
 	{
-	}
-
-	internal UpdateVM() => MainInfoBar = new InfoBarSettings(
+		MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
 
+		AppPackageInstallerInfoBar = new InfoBarSettings(
+			() => AppPackageInstallerInfoBarIsOpen, value => AppPackageInstallerInfoBarIsOpen = value,
+			() => AppPackageInstallerInfoBarMessage, value => AppPackageInstallerInfoBarMessage = value,
+			() => AppPackageInstallerInfoBarSeverity, value => AppPackageInstallerInfoBarSeverity = value,
+			() => AppPackageInstallerInfoBarIsClosable, value => AppPackageInstallerInfoBarIsClosable = value,
+			Dispatcher, null, null);
+	}
+
 	internal readonly InfoBarSettings MainInfoBar;
-
-#if APP_CONTROL_MANAGER
-	/// <summary>
-	/// Pattern for finding ASR rules that belong to the AppControl Manager
-	/// </summary>
-	/// <returns></returns>
-	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase)]
-	internal partial Regex AppPFNRegex();
-
-	/// <summary>
-	/// Navigate to the extra sub-page
-	/// </summary>
-	internal void CheckForUpdate_Click() =>
-		ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePageCustomMSIXPath), null);
-
-#endif
-
-	/// <summary>
-	/// Common name of the on-device generated certificate used to sign the AppControl Manager MSIXBundle package
-	/// </summary>
-	internal const string CertCommonName = "SelfSignedCertForAppControlManager";
 
 	#region UI-Bound Properties
 
 	/// <summary>
-	/// To determine whether to use the user-supplied package or continue with downloading the package from GitHub.
+	/// Whether the UI elements are enabled or disabled.
 	/// </summary>
-	internal bool CheckForUpdateButtonIsEnabled
+	internal bool ElementsAreEnabled
 	{
-		get; set => SP(ref field, value);
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				MainInfoBarIsClosable = field;
+				AppPackageInstallerInfoBarIsClosable = field;
+				ProgressBarVisibility = field ? Visibility.Collapsed : Visibility.Visible;
+			}
+		}
 	} = true;
-
-	internal bool CheckForUpdateSettingsCardIsClickable
-	{
-		get; set => SP(ref field, value);
-	} = App.PackageSource is 0;
 
 	/// <summary>
 	/// Content of the main update button
 	/// </summary>
 	internal string UpdateButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
-
-	/// <summary>
-	/// To determine whether to use the user-supplied package or continue with downloading the package from GitHub.
-	/// </summary>
-	internal bool InstallLocalPackageConfirmation
-	{
-		get;
-		set
-		{
-			if (SP(ref field, value))
-			{
-				// Change the update button's text based on the file path
-				UpdateButtonContent = field ? $"Install {Path.GetFileName(LocalPackageFilePath)}" : GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
-			}
-		}
-	}
-
-	/// <summary>
-	/// The custom package path that the user supplied.
-	/// </summary>
-	internal string? LocalPackageFilePath
-	{
-		get;
-		set
-		{
-			if (SP(ref field, value))
-			{
-				bool ok = !string.IsNullOrEmpty(field);
-
-				// Set the enabled/disabled state of the confirmation section based on file path availability.
-				InstallLocalPackageConfirmationIsEnabled = ok;
-
-				// If the file path is emptied, the confirmation toggle must be off.
-				if (!ok)
-				{
-					InstallLocalPackageConfirmation = false;
-				}
-			}
-		}
-	}
-
-	/// <summary>
-	/// Whether the section that provides confirmation ability is enabled or disabled
-	/// </summary>
-	internal bool InstallLocalPackageConfirmationIsEnabled { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Whether the installation process must use hardened procedures.
-	/// </summary>
-	internal bool UseHardenedInstallationProcess { get; set => SP(ref field, value); }
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
@@ -169,8 +102,6 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 	internal bool WhatsNewInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal Visibility HardenedProcedureSectionVisibility { get; set => SP(ref field, value); } = App.PackageSource is 0 ? Visibility.Visible : Visibility.Collapsed;
-
 	internal Visibility RatingsSectionVisibility { get; set => SP(ref field, value); } = App.PackageSource is 1 ? Visibility.Visible : Visibility.Collapsed;
 
 	#endregion
@@ -180,13 +111,12 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// </summary>
 	internal async void CheckForUpdateButton_Click()
 	{
-		if (App.PackageSource is 1)
+		try
 		{
-			try
-			{
-				CheckForUpdateButtonIsEnabled = false;
-				MainInfoBarIsClosable = false;
+			ElementsAreEnabled = false;
 
+			if (App.PackageSource is 1)
+			{
 				MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdateStore"));
 
 				UpdateCheckResponse UpCheckResult = await AppUpdate.CheckStore();
@@ -210,71 +140,34 @@ internal sealed partial class UpdateVM : ViewModelBase
 					MainInfoBar.WriteSuccess(GlobalVars.GetStr("TheAppIsUpToDate"));
 				}
 			}
-			catch (Exception ex)
+			else
 			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("UpdateCheckError"));
-			}
-			finally
-			{
-				CheckForUpdateButtonIsEnabled = true;
-				MainInfoBarIsClosable = true;
-			}
-		}
-		else
-		{
 #if APP_CONTROL_MANAGER
-			try
-			{
-				CheckForUpdateButtonIsEnabled = false;
-				CheckForUpdateSettingsCardIsClickable = false;
-				MainInfoBarIsClosable = false;
-
-				// variable to store the update results
-				UpdateCheckResponse? updateCheckResult = null;
-
-				// If user did not provide custom MSIXBundle path, start checking for update
-				if (!InstallLocalPackageConfirmation)
+				try
 				{
 					MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdate"));
 
 					// Check for update asynchronously
-					updateCheckResult = await Task.Run(AppUpdate.CheckGitHub);
-				}
+					UpdateCheckResponse updateCheckResult = await Task.Run(AppUpdate.CheckGitHub);
 
-				// If a new version is available or user supplied a custom MSIXBundle path to be installed
-				if ((updateCheckResult is { IsNewVersionAvailable: true }) || InstallLocalPackageConfirmation)
-				{
-					if (InstallLocalPackageConfirmation)
+					// If a new version is available
+					if (updateCheckResult.IsNewVersionAvailable)
 					{
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("InstallingCustomPath") + LocalPackageFilePath);
-					}
-					else
-					{
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("VersionComparison") + App.currentAppVersion + GlobalVars.GetStr("WhileOnlineVersion") + updateCheckResult?.OnlineVersion + GlobalVars.GetStr("UpdatingApplication"));
-					}
+						MainInfoBar.WriteInfo(GlobalVars.GetStr("VersionComparison") + App.currentAppVersion + GlobalVars.GetStr("WhileOnlineVersion") + updateCheckResult.OnlineVersion + GlobalVars.GetStr("UpdatingApplication"));
 
-					WhatsNewInfoBarIsOpen = true;
+						WhatsNewInfoBarIsOpen = true;
 
-					string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
+						string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
 
-					// To store the latest MSIXBundle version download link after retrieving it from GitHub text file
-					Uri onlineDownloadURL;
+						// store the latest MSIXBundle version download link after retrieving it from GitHub text file
+						Uri onlineDownloadURL = new(await SecHttpClient.Instance.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
 
-					// Location of the MSIXBundle package where it will be saved after downloading it from GitHub
-					// Or in case user supplied a custom path, it will be assigned to this
-					string AppControlManagerSavePath;
-
-					ProgressBarVisibility = Visibility.Visible;
-
-					// If user did not supply a custom MSIXBundle file path
-					if (!InstallLocalPackageConfirmation)
-					{
-						// Store the download link to the latest available version
-						onlineDownloadURL = new Uri(await SecHttpClient.Instance.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
-
-						AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
+						// Location of the MSIXBundle package where it will be saved after downloading it from GitHub
+						string AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
 						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadingPackage"));
+
+						ProgressBarIsIndeterminate = false;
 
 						// Send an Async get request to the url and specify to stop reading after headers are received for better efficiently
 						using (HttpResponseMessage response = await SecHttpClient.Instance.GetAsync(onlineDownloadURL, HttpCompletionOption.ResponseHeadersRead))
@@ -334,214 +227,41 @@ internal sealed partial class UpdateVM : ViewModelBase
 							}
 						}
 
-						Logger.Write(GlobalVars.GetStr("DownloadSuccess") + AppControlManagerSavePath);
+						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadSuccess") + AppControlManagerSavePath);
+
+						ProgressBarIsIndeterminate = true;
+
+						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadsFinished"));
+
+						await InstallAppPackage(AppControlManagerSavePath, UseHardenedInstallationProcess, MainInfoBar);
+
+						MainInfoBar.WriteSuccess(GlobalVars.GetStr("UpdateSuccess"));
+
+						UpdateButtonContent = GlobalVars.GetStr("UpdatesInstalled");
 					}
 					else
 					{
-						// Use the user-supplied MSIXBundle file path for installation source
-						AppControlManagerSavePath = LocalPackageFilePath ?? throw new InvalidOperationException(GlobalVars.GetStr("NoMSIXBundlePath"));
+						MainInfoBar.WriteSuccess(GlobalVars.GetStr("AlreadyUpdated"));
 					}
-
-					ProgressBarIsIndeterminate = true;
-
-					MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadsFinished"));
-
-					await Task.Run(() =>
-					{
-						// Random password to temporarily encrypt the private key of the newly generated certificate
-						string PassWord = Guid.CreateVersion7().ToString("N");
-
-						// Path where the .cer file will be saved
-						string CertificateOutputPath = Path.Combine(stagingArea, $"{CertCommonName}.cer");
-
-						// Remove any certificates with the specified common name that may already exist on the system form previous attempts
-						CertificateGenerator.DeleteCertificateByCN(CertCommonName);
-
-						// Generate a new certificate
-						using X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
-						subjectName: CertCommonName,
-						validityInYears: 100,
-						keySize: 4096,
-						hashAlgorithm: HashAlgorithmName.SHA512,
-						storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
-						cerExportFilePath: CertificateOutputPath,
-						friendlyName: CertCommonName,
-						UserProtectedPrivateKey: UseHardenedInstallationProcess,
-						ExportablePrivateKey: false);
-
-						// Sign the package
-						Signing.Main.SignAppPackage(AppControlManagerSavePath, generatedCert);
-
-						// Remove any certificates with the specified common name again
-						// Because the existing one contains private keys and we don't want that
-						CertificateGenerator.DeleteCertificateByCN(CertCommonName);
-
-						// Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only.
-						// This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else.
-						CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
-
-
-						string? ASROutput = null;
-
-						const string comCommand = "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionOnlyExclusions";
-
-						try
-						{
-							ASROutput = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, comCommand);
-
-							// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
-							// Before adding new ones for the new version
-							if (!string.IsNullOrWhiteSpace(ASROutput))
-							{
-
-								// Deserialize the JSON string
-								string[]? ASROutputArrayCleaned = JsonSerializer.Deserialize(ASROutput, MSDefenderJsonContext.Default.StringArray) as string[];
-
-								// If there were ASR rules exceptions
-								if (ASROutputArrayCleaned is not null && ASROutputArrayCleaned.Length > 0)
-								{
-
-									List<string> asrRulesToRemove = [];
-
-									// Find all the rules that belong to the AppControl Manager
-									foreach (string item in ASROutputArrayCleaned)
-									{
-										if (AppPFNRegex().IsMatch(item))
-										{
-											asrRulesToRemove.Add(item);
-										}
-									}
-
-									// If any of the rules belong to the AppControl Manager
-									if (asrRulesToRemove.Count > 0)
-									{
-										// Remove ASR rule exclusions that belong to all previous app versions
-										// Wrap them with double quotes and separate them with a space
-										string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(item => $"\"{item}\""));
-
-										_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $@"wmi stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
-									}
-								}
-							}
-						}
-						catch (JsonException Jex)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ASRRulesDeserializationFailedMessage"), ASROutput, Jex.Message));
-						}
-						catch (Exception ex)
-						{
-							Logger.Write(GlobalVars.GetStr("ASRError") + ex.Message);
-						}
-
-
-						PackageManager packageManager = new();
-
-						Logger.Write(GlobalVars.GetStr("InstallingPackage"));
-
-						// https://learn.microsoft.com/uwp/api/windows.management.deployment.addpackageoptions
-						AddPackageOptions options = new()
-						{
-							DeferRegistrationWhenPackagesAreInUse = true,
-							ForceUpdateFromAnyVersion = true
-						};
-
-						IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
-
-						// This event is signaled when the operation completes
-						using ManualResetEvent opCompletedEvent = new(false);
-
-						// Define the delegate using a statement lambda
-						deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };
-
-						// Wait until the operation completes
-						_ = opCompletedEvent.WaitOne();
-
-						// Check the status of the operation
-						if (deploymentOperation.Status == AsyncStatus.Error)
-						{
-							DeploymentResult deploymentResult = deploymentOperation.GetResults();
-							throw new InvalidOperationException(GlobalVars.GetStr("InstallationError") + deploymentOperation.ErrorCode + GlobalVars.GetStr("InstallationErrorText") + deploymentResult.ErrorText);
-						}
-						else if (deploymentOperation.Status == AsyncStatus.Canceled)
-						{
-							Logger.Write(GlobalVars.GetStr("InstallationCanceled"));
-						}
-						else if (deploymentOperation.Status == AsyncStatus.Completed)
-						{
-							Logger.Write(GlobalVars.GetStr("InstallationSucceeded"));
-						}
-						else
-						{
-							throw new InvalidOperationException(GlobalVars.GetStr("UnknownInstallationIssue"));
-						}
-
-						try
-						{
-							// Problem: This won't get the latest version of the app as long as the current app version is still open, preventing the new app version from being fully installed.
-							// Solution: Going through the installation process for the 2nd time, after the first one has completed and app is restarted, resolves it.
-							// Note: This obviously only applies to the Non-Store versions of the app.
-							// Possible remedy: replace the version manually via string manipulation.
-							Package AppControlManagerPackage = packageManager.FindPackages("AppControlManager_sadt7br7jpt02").First();
-
-							string AppControlInstallFolder = AppControlManagerPackage.EffectivePath;
-
-							// Construct the paths to the .exe and .dll files of the AppControl Manager
-							string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
-							string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
-
-							// Adding the extra executables included in the package so they will be allowed to run as well
-							_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{GlobalVars.ComManagerProcessPath}\" ");
-						}
-						catch (Exception ex)
-						{
-							Logger.Write(GlobalVars.GetStr("ASRAddError") + ex.Message);
-						}
-					});
-
-					MainInfoBar.WriteSuccess(GlobalVars.GetStr("UpdateSuccess"));
-
-					UpdateButtonContent = GlobalVars.GetStr("UpdatesInstalled");
-
-					// Keep the CheckForUpdate button disabled since the update has been installed at this point
-					// And all that's required is for the app to be restarted by the user
 				}
-
-				else
+				catch
 				{
-					MainInfoBar.WriteSuccess(GlobalVars.GetStr("AlreadyUpdated"));
-
-					CheckForUpdateButtonIsEnabled = true;
+					WhatsNewInfoBarIsOpen = false;
+					throw;
 				}
-			}
-			catch (Exception ex)
-			{
-				ProgressBarValue = 0;
-
-				CheckForUpdateButtonIsEnabled = true;
-
-				WhatsNewInfoBarIsOpen = false;
-
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("UpdateCheckError"));
-			}
-			finally
-			{
-				MainInfoBarIsClosable = true;
-
-				CheckForUpdateSettingsCardIsClickable = true;
-
-				ProgressBarVisibility = Visibility.Collapsed;
-			}
 #endif
+			}
 		}
-	}
-
-
-	/// <summary>
-	/// Opens a file picker to select a MSIX/MSIXBundle package file.
-	/// </summary>
-	internal void BrowseForCustomMSIXPathButton_Click()
-	{
-		LocalPackageFilePath = FileDialogHelper.ShowFilePickerDialog("MSIX/MSIXBundle files|*.msixbundle;*.msix");
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("UpdateCheckError"));
+		}
+		finally
+		{
+			ProgressBarValue = 0;
+			ElementsAreEnabled = true;
+			ProgressBarIsIndeterminate = true;
+		}
 	}
 
 	/// <summary>
@@ -566,5 +286,269 @@ internal sealed partial class UpdateVM : ViewModelBase
 			MainInfoBar.WriteError(ex);
 		}
 	}
+
+	#region App Package Installer's Page
+
+	[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+	[JsonSerializable(typeof(string[]))] // Used to deserialize MS Defender results
+	private sealed partial class MSDefenderJsonContext : JsonSerializerContext
+	{
+	}
+
+	/// <summary>
+	/// Removes any existing ASR rule exclusions that belong to the AppControl Manager, non-store version.
+	/// </summary>
+	private static void RemoveExistingAppControlManagerASRExclusions()
+	{
+		string? ASROutput = null;
+
+		const string comCommand = "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionOnlyExclusions";
+
+		try
+		{
+			ASROutput = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, comCommand);
+
+			// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
+			if (!string.IsNullOrWhiteSpace(ASROutput))
+			{
+				// Deserialize the JSON string
+				string[]? ASROutputArrayCleaned = JsonSerializer.Deserialize(ASROutput, MSDefenderJsonContext.Default.StringArray) as string[];
+
+				// If there were ASR rules exceptions
+				if (ASROutputArrayCleaned is not null && ASROutputArrayCleaned.Length > 0)
+				{
+					List<string> asrRulesToRemove = [];
+
+					// Find all the rules that belong to the AppControl Manager
+					foreach (string item in ASROutputArrayCleaned)
+					{
+						if (item.Contains("__sadt7br7jpt02", StringComparison.OrdinalIgnoreCase))
+						{
+							asrRulesToRemove.Add(item);
+						}
+					}
+
+					// If any of the rules belong to the AppControl Manager
+					if (asrRulesToRemove.Count > 0)
+					{
+						// Wrap them with double quotes and separate them with a space
+						string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(item => $"\"{item}\""));
+
+						_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $@"wmi stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
+					}
+				}
+			}
+		}
+		catch (JsonException Jex)
+		{
+			Logger.Write(string.Format(GlobalVars.GetStr("ASRRulesDeserializationFailedMessage"), ASROutput, Jex.Message));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(GlobalVars.GetStr("ASRError") + ex.Message);
+		}
+	}
+
+	private static void AddASRExclusionsForAppControlManager(PackageManager packageManager)
+	{
+		try
+		{
+			// This correctly lists all packages for all users and gets the latest version package which we just installed which will be in staged state.
+			Package? AppControlManagerPackage = packageManager.FindPackages("AppControlManager_sadt7br7jpt02")
+				.OrderByDescending(p => new Version(p.Id.Version.Major, p.Id.Version.Minor, p.Id.Version.Build, p.Id.Version.Revision))
+				.FirstOrDefault();
+
+			if (AppControlManagerPackage is null)
+				return;
+
+			string AppControlInstallFolder = AppControlManagerPackage.EffectivePath;
+
+			// Construct the paths to the .exe and .dll files of the AppControl Manager
+			string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
+			string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
+			string path3 = Path.Combine(AppControlInstallFolder, "CppInterop", "ComManager.exe");
+
+			// Adding the extra executables included in the package so they will be allowed to run as well
+			_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{path3}\" ");
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(GlobalVars.GetStr("ASRAddError") + ex.Message);
+		}
+	}
+
+	/// <summary>
+	/// Navigate to the Package Installer sub-page.
+	/// </summary>
+	internal void NavigateToAppPackageInstallerPage_Click() =>
+		ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePageCustomMSIXPath), null);
+
+	/// <summary>
+	/// Whether the installation process must use hardened procedures.
+	/// </summary>
+	internal bool UseHardenedInstallationProcess { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Common name of the on-device generated certificate used to sign the AppControl Manager MSIXBundle package.
+	/// </summary>
+	private const string CertCommonName = "SelfSignedCertForAppControlManager";
+
+	internal readonly InfoBarSettings AppPackageInstallerInfoBar;
+	internal bool AppPackageInstallerInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? AppPackageInstallerInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity AppPackageInstallerInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool AppPackageInstallerInfoBarIsClosable { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// The package path that the user supplied.
+	/// </summary>
+	internal string? LocalPackageFilePath { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Opens a file picker to select a MSIX/MSIXBundle package file.
+	/// </summary>
+	internal void BrowseForCustomMSIXPathButton_Click() =>
+		LocalPackageFilePath = FileDialogHelper.ShowFilePickerDialog("MSIX/MSIXBundle files|*.msixbundle;*.msix");
+
+	/// <summary>
+	/// Event handler to clear the selected file path.
+	/// </summary>
+	internal void ClearSelectedFilePath() => LocalPackageFilePath = null;
+
+	/// <summary>
+	/// Event handler for the UI button.
+	/// </summary>
+	internal async void InstallButton_Click()
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+			await InstallAppPackage(LocalPackageFilePath, UseHardenedInstallationProcess, AppPackageInstallerInfoBar);
+		}
+		catch (Exception ex)
+		{
+			AppPackageInstallerInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Installs an app package from a user-supplied path.
+	/// It can automatically detect if the package is signed or unsigned and perform signing if needed.
+	/// </summary>
+	/// <param name="packagePath"></param>
+	/// <exception cref="InvalidOperationException"></exception>
+	private static async Task InstallAppPackage(
+		string? packagePath,
+		bool UseHardenedInstallationProcess,
+		InfoBarSettings infoBar)
+	{
+		if (packagePath is null)
+		{
+			throw new InvalidOperationException("You must provide a valid package path.");
+		}
+
+		await Task.Run(() =>
+		{
+			bool isNonStoreACM = false;
+
+			infoBar.WriteInfo($"Getting the package details for: '{packagePath}'");
+
+			List<AllFileSigners> possibleExistingSigners = AllCertificatesGrabber.GetAllFileSigners(packagePath);
+
+			// Only attempt signing if the package doesn't already have signatures
+			if (possibleExistingSigners.Count == 0)
+			{
+				LLPackageReader.PackageDetails packageDits = LLPackageReader.GetPackageDetails(packagePath);
+
+				// Determine whether this is the AppControl Manager app package provided in GitHub releases that the user is trying to install
+				isNonStoreACM = string.Equals(packageDits.CertCN, CertCommonName, StringComparison.Ordinal);
+
+				infoBar.WriteInfo($"Package details retrieved. Package Publisher: '{packageDits.CertCN}', Package Hashing Algorithm: '{packageDits.HashAlgorithm}'.");
+
+				// Remove any certificates with the specified common name that may already exist on the system form previous attempts
+				CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
+
+				// Generate a new certificate
+				using X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
+				subjectName: packageDits.CertCN,
+				validityInYears: 100,
+				keySize: 4096,
+				hashAlgorithm: packageDits.HashAlgorithm,
+				storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
+				cerExportFilePath: null,
+				friendlyName: packageDits.CertCN,
+				UserProtectedPrivateKey: UseHardenedInstallationProcess,
+				ExportablePrivateKey: false);
+
+				// Sign the package
+				CommonCore.Signing.Main.SignAppPackage(packagePath, generatedCert);
+
+				// Remove any certificates with the specified common name again
+				// Because the existing one contains private keys and we don't want that
+				CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
+
+				// Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only.
+				// This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else.
+				CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
+			}
+			else
+			{
+				infoBar.WriteInfo("The package is already signed. Proceeding with installation.");
+			}
+
+			PackageManager packageManager = new();
+
+			infoBar.WriteInfo($"Installing '{packagePath}'");
+
+			// https://learn.microsoft.com/uwp/api/windows.management.deployment.addpackageoptions
+			AddPackageOptions options = new()
+			{
+				DeferRegistrationWhenPackagesAreInUse = true,
+				ForceUpdateFromAnyVersion = true
+			};
+
+			IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(new Uri(packagePath), options);
+
+			// This event is signaled when the operation completes
+			using ManualResetEvent opCompletedEvent = new(false);
+
+			// The delegate
+			deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };
+
+			// Wait until the operation completes
+			_ = opCompletedEvent.WaitOne();
+
+			// Check the status of the operation
+			if (deploymentOperation.Status == AsyncStatus.Error)
+			{
+				DeploymentResult deploymentResult = deploymentOperation.GetResults();
+				throw new InvalidOperationException($"There was a problem installing '{packagePath}': {deploymentOperation.ErrorCode} - {deploymentResult.ErrorText}");
+			}
+			else if (deploymentOperation.Status == AsyncStatus.Canceled)
+			{
+				infoBar.WriteWarning("App installation was cancelled.");
+			}
+			else if (deploymentOperation.Status == AsyncStatus.Completed)
+			{
+				infoBar.WriteSuccess($"Successfully installed '{packagePath}'");
+			}
+			else
+			{
+				throw new InvalidOperationException($"There was an unknown problem installing '{packagePath}'");
+			}
+
+			if (isNonStoreACM)
+			{
+				RemoveExistingAppControlManagerASRExclusions();
+				AddASRExclusionsForAppControlManager(packageManager);
+			}
+		});
+	}
+
+	#endregion
 
 }

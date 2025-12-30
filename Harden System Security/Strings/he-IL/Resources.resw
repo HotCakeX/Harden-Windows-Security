@@ -5066,4 +5066,103 @@
   <data name="StorageSizeAndTemp.Text" xml:space="preserve">
     <value>נפח אחסון וטמפרטורה</value>
   </data>
+    <data name="InstallAppPackagesSettingsCard.Header" xml:space="preserve">
+    <value>התקנת חבילות יישום</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.Description" xml:space="preserve">
+    <value>דפדף כדי לבחור חבילת יישום כלשהי, כגון קובץ MSIX או MSIXBundle, להתקנה במערכת.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>דפדף כדי לבחור חבילת יישום כלשהי, כגון קובץ MSIX או MSIXBundle, להתקנה במערכת.</value>
+  </data>
+  <data name="InstallAppPackagesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>דפדף כדי לבחור חבילת יישום כלשהי, כגון קובץ MSIX או MSIXBundle, להתקנה במערכת.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Description" xml:space="preserve">
+    <value>דפדף כדי לאתר קובץ חבילת יישום, שהינו בדרך כלל מסוג MSIX או MSIXBundle, להתקנה במכשיר. אם חבילת היישום שנבחרה חתומה, היא תותקן ישירות. אם היא אינה חתומה, תופק במכשירך תעודה ייחודית כדי לחתום על החבילה ולאחר מכן להתקין אותה.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.Header" xml:space="preserve">
+    <value>דפדף לאיתור קובץ חבילת יישום</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>דפדף כדי לאתר קובץ חבילת יישום, שהינו בדרך כלל מסוג MSIX או MSIXBundle, להתקנה במכשיר. אם חבילת היישום שנבחרה חתומה, היא תותקן ישירות. אם היא אינה חתומה, תופק במכשירך תעודה ייחודית כדי לחתום על החבילה ולאחר מכן להתקין אותה.</value>
+  </data>
+  <data name="BrowseForAppPackagePathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>דפדף כדי לאתר קובץ חבילת יישום, שהינו בדרך כלל מסוג MSIX או MSIXBundle, להתקנה במכשיר. אם חבילת היישום שנבחרה חתומה, היא תותקן ישירות. אם היא אינה חתומה, תופק במכשירך תעודה ייחודית כדי לחתום על החבילה ולאחר מכן להתקין אותה.</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>התקנת חבילת יישום מותאמת אישית</value>
+  </data>
+  <data name="InstallAppPackagesButton.Content" xml:space="preserve">
+    <value>התקן</value>
+  </data>
+  <data name="InstallAppPackagesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התקן את חבילת היישום שנבחרה במערכת.</value>
+  </data>
+  <data name="InstallAppPackagesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התקן את חבילת היישום שנבחרה במערכת.</value>
+  </data>
+  <data name="ASRError" xml:space="preserve">
+    <value>אירעה שגיאה בעת הניסיון להסיר את החרגות כלל ה-ASR שניתן להתעלם ממנה בבטחה: </value>
+  </data>
+  <data name="ASRAddError" xml:space="preserve">
+    <value>אירעה שגיאה בעת הניסיון להוסיף את החרגות כלל ה-ASR שניתן להתעלם ממנה בבטחה: </value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>לא היה ניתן לבצע דה-סריאליזציה לרשימת החריגים של כללי ASR ב-JSON שהייתה: {0} - שגיאה: {1}</value>
+</data>
+  <data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>התעודה עם השם הנפוץ (CN) נמחקה: {0} מהמאגר: {1}</value>
+  </data>
+    <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>בודק אם תעודה עם השם הנפוץ '{0}' כבר קיימת במאגר המשתמש האישי.</value>
+  </data>
+    <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} תעודות עם השם הנפוץ '{1}' כבר קיימות במערכת. מסיר אותן</value>
+  </data>
+  <data name="ConfirmExitTitle" xml:space="preserve">
+  <value>יציאה מהיישום?</value>
+</data>
+<data name="ConfirmExitMsg" xml:space="preserve">
+  <value>מתבצעת כעת פעולה. יציאה כעת עלולה להוביל למשימות שלא הושלמו. האם אתה בטוח שברצונך לצאת?</value>
+</data>
+  <data name="AppCloseConfirmationSettingsCard.Description" xml:space="preserve">
+    <value>בחר האם האפליקציה תבקש אישור בעת סגירתה.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.Header" xml:space="preserve">
+    <value>אישור סגירת אפליקציה</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר האם האפליקציה תבקש אישור בעת סגירתה.</value>
+  </data>
+  <data name="AppCloseConfirmationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר האם האפליקציה תבקש אישור בעת סגירתה.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.Content" xml:space="preserve">
+    <value>אף פעם</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לעולם אל תבקש אישור בעת סגירת האפליקציה.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionNeverSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לעולם אל תבקש אישור בעת סגירת האפליקציה.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.Content" xml:space="preserve">
+    <value>תמיד</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>תמיד בקש אישור בעת סגירת האפליקציה.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAlwaysSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>תמיד בקש אישור בעת סגירת האפליקציה.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.Content" xml:space="preserve">
+    <value>אוטומטי</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בקש אישור לפני סגירת האפליקציה רק בנסיבות מסוימות, כאשר מתבצעת פעולה.</value>
+  </data>
+  <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בקש אישור לפני סגירת האפליקציה רק בנסיבות מסוימות, כאשר מתבצעת פעולה.</value>
+  </data>
 </root>

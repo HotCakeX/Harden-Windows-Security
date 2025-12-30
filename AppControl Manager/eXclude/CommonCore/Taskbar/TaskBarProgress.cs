@@ -15,26 +15,24 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Security.Cryptography.Pkcs;
-using System.Security.Cryptography.X509Certificates;
+using System.Runtime.InteropServices;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Taskbar;
 
-/// <summary>
-/// Represents a signed CMS and its certificate chain.
-/// Since .NET isn't showing any warnings for not disposing of this type, we have to make sure we do it ourselves.
-/// </summary>
-/// <param name="signerCertificate"></param>
-/// <param name="chainContext"></param>
-internal sealed partial class AllFileSigners(SignedCms signerCertificate, IntPtr chainContext) : IDisposable
+internal static class TaskBarProgress
 {
-	internal SignedCms Signer => signerCertificate;
-	internal X509Chain Chain { get; } = chainContext == IntPtr.Zero
-		? new X509Chain()
-		: new X509Chain(chainContext);
-
-	public void Dispose()
+	/// <summary>
+	/// Updates the taskbar progress for the specified window
+	/// </summary>
+	/// <param name="hwnd">Window handle</param>
+	/// <param name="completed">Amount of work completed</param>
+	/// <param name="total">Total amount of work</param>
+	/// <exception cref="COMException">Thrown when the operation fails</exception>
+	internal static void UpdateTaskbarProgress(IntPtr hwnd, ulong completed, ulong total)
 	{
-		Chain.Dispose();
+		int result = NativeMethods.update_taskbar_progress(hwnd, completed, total, out int lastError);
+
+		if (lastError != 0 && result != 0)
+			Logger.Write($"Taskbar progress update failed with HRESULT: 0x{lastError:X8}");
 	}
 }

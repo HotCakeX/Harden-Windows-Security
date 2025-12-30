@@ -26,7 +26,7 @@ internal static class FileDialogHelper
 	// Location where File/Folder picker dialog will be opened
 	// It is only the directory where the first dialog will be opened in, it will then be replaced by the directory
 	// That user browses to to pick a single file/directory
-	internal static string DirectoryToOpen = null!;
+	internal static string DirectoryToOpen = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
 	/// <summary>
 	/// Shows a single file picker dialog with filter.

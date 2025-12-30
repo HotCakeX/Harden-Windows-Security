@@ -17,7 +17,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace AppControlManager.Signing;
+namespace CommonCore.Signing;
 
 /// <summary>
 /// Defines the main structure of the signing operations. Defines C constants.
@@ -102,6 +102,9 @@ internal static class Structure
 		internal IntPtr pwszDisplayName;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-subject-info
+	/// </summary>
 	[StructLayout(LayoutKind.Explicit)]
 	internal struct SIGNER_SUBJECT_INFO_UNION
 	{
@@ -112,6 +115,9 @@ internal static class Structure
 		internal IntPtr pSignerBlobInfo;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-subject-info
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_SUBJECT_INFO
 	{
@@ -121,6 +127,9 @@ internal static class Structure
 		internal SIGNER_SUBJECT_INFO_UNION Info;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-attr-authcode
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_ATTR_AUTHCODE
 	{
@@ -133,6 +142,9 @@ internal static class Structure
 		internal IntPtr pwszInfo;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-signature-info
+	/// </summary>
 	[StructLayout(LayoutKind.Explicit)]
 	internal struct SIGNER_SIGNATURE_INFO_UNION
 	{
@@ -140,6 +152,9 @@ internal static class Structure
 		internal IntPtr pAttrAuthcode;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-signature-info
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_SIGNATURE_INFO
 	{
@@ -151,6 +166,9 @@ internal static class Structure
 		internal IntPtr psUnauthenticated;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-provider-info
+	/// </summary>
 	[StructLayout(LayoutKind.Explicit)]
 	internal struct SIGNER_PROVIDER_INFO_UNION
 	{
@@ -161,6 +179,9 @@ internal static class Structure
 		internal IntPtr pwszKeyContainer;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-provider-info
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_PROVIDER_INFO
 	{
@@ -172,6 +193,9 @@ internal static class Structure
 		internal SIGNER_PROVIDER_INFO_UNION PvkChoice;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-spc-chain-info
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_SPC_CHAIN_INFO
 	{
@@ -181,6 +205,9 @@ internal static class Structure
 		internal IntPtr hCertStore;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-cert-store-info
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_CERT_STORE_INFO
 	{
@@ -190,6 +217,9 @@ internal static class Structure
 		internal IntPtr hCertStore;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-cert
+	/// </summary>
 	[StructLayout(LayoutKind.Explicit)]
 	internal struct SIGNER_CERT_UNION
 	{
@@ -203,6 +233,9 @@ internal static class Structure
 		internal IntPtr pSpcChainInfo;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-cert
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_CERT
 	{
@@ -212,6 +245,9 @@ internal static class Structure
 		internal IntPtr hwnd;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-context
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_CONTEXT
 	{
@@ -220,6 +256,9 @@ internal static class Structure
 		internal IntPtr pbBlob;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccrypto/signersignex3
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_SIGN_EX3_PARAMS
 	{
@@ -229,15 +268,19 @@ internal static class Structure
 		internal IntPtr pSignatureInfo;
 		internal IntPtr pProviderInfo;
 		internal uint dwTimestampFlags;
-		internal IntPtr pszAlgorithmOid;
-		internal IntPtr pwszTimestampURL;
-		internal IntPtr pCryptAttrs;
+		internal IntPtr pszTimestampAlgorithmOid;
+		internal IntPtr pwszHttpTimeStamp;
+		internal IntPtr psRequest;
 		internal IntPtr pSipData;
-		internal IntPtr pSignerContext;
+		internal IntPtr ppSignerContext;
 		internal IntPtr pCryptoPolicy;
+		internal IntPtr pDigestSignInfo;
 		internal IntPtr pReserved;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/appxpkg/how-to-programmatically-sign-a-package
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct APPX_SIP_CLIENT_DATA
 	{
@@ -245,13 +288,9 @@ internal static class Structure
 		internal IntPtr pAppxSipState;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct CRYPT_ATTR_BLOB
-	{
-		internal uint cbData;
-		internal IntPtr pbData;
-	}
-
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wincrypt/ns-wincrypt-crypt_attribute
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_ATTRIBUTE
 	{
@@ -260,6 +299,9 @@ internal static class Structure
 		internal IntPtr rgValue; // PCRYPT_ATTR_BLOB
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wincrypt/ns-wincrypt-crypt_attributes
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_ATTRIBUTES
 	{
@@ -267,13 +309,16 @@ internal static class Structure
 		internal IntPtr rgAttr; // PCRYPT_ATTRIBUTE
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wincrypt/ns-wincrypt-crypt_sign_message_para
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_SIGN_MESSAGE_PARA
 	{
 		internal uint cbSize;
 		internal uint dwMsgEncodingType;
 		internal IntPtr pSigningCert;
-		internal CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; // pszObjId will be a hash OID
+		internal CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
 		internal IntPtr pvHashAuxInfo;
 		internal uint cMsgCert;
 		internal IntPtr rgpMsgCert;
@@ -285,8 +330,13 @@ internal static class Structure
 		internal IntPtr rgUnauthAttr;
 		internal uint dwFlags;
 		internal uint dwInnerContentType;
+		internal CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm;
+		internal IntPtr pvHashEncryptionAuxInfo;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wincrypt/ns-wincrypt-crypt_algorithm_identifier
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_ALGORITHM_IDENTIFIER
 	{
@@ -294,6 +344,9 @@ internal static class Structure
 		internal CRYPT_OBJID_BLOB Parameters;
 	}
 
+	/// <summary>
+	/// https://learn.microsoft.com/previous-versions/windows/desktop/legacy/aa381414(v=vs.85)
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_OBJID_BLOB
 	{

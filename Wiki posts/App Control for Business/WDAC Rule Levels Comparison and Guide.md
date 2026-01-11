@@ -2,158 +2,86 @@
 
 This document lists all of the levels of App Control rules. **From Top to bottom, from the most secure to the least secure**, the levels are:
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number0.gif" width="40" alt="Neon number"> Hash
+## 0. Hash
 
-* File's SHA2-256 Authenticode hash
+- File's SHA2-256 Authenticode hash
 
-* File's SHA2-256 Page hash
+- File's SHA2-256 Page hash
 
-<br>
+## 1. WHQLFilePublisher
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+- One of the Intermediate certificates of the file
 
-<br>
+- Leaf certificate of the file
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number1.gif" width="40" alt="Neon number"> WHQLFilePublisher
+- File's version
 
-* One of the Intermediate certificates of the file
+- Another attribute of the file (FileDescription, InternalName, OriginalFileName, PackageFamilyName, ProductName, Filepath)
 
-* Leaf certificate of the file
+- File's WHQL EKU OID
 
-* File's version
+## 2. FilePublisher
 
-* Another attribute of the file (FileDescription, InternalName, OriginalFileName, PackageFamilyName, ProductName, Filepath)
+- One of the Intermediate certificates of the file
 
-* File's WHQL EKU OID
+- Leaf certificate of the file
 
-<br>
+- File's version
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+- Another attribute of the file (FileDescription, InternalName, OriginalFileName, PackageFamilyName, ProductName, Filepath)
 
-<br>
+## 3. WHQLPublisher
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number2.gif" width="40" alt="Neon number"> FilePublisher
+- One of the Intermediate certificates of the file
 
-* One of the Intermediate certificates of the file
+- Leaf certificate of the file
 
-* Leaf certificate of the file
+- File's WHQL EKU OID
 
-* File's version
+## 4. SignedVersion
 
-* Another attribute of the file (FileDescription, InternalName, OriginalFileName, PackageFamilyName, ProductName, Filepath)
+- One of the Intermediate certificates of the file
 
-<br>
+- Leaf certificate of the file
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+- File's version
 
-<br>
+## 5. Publisher
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number3.gif" width="40" alt="Neon number"> WHQLPublisher
+- One of the Intermediate certificates of the file
 
-* One of the Intermediate certificates of the file
+- Leaf certificate of the file
 
-* Leaf certificate of the file
+## 6. WHQL
 
-* File's WHQL EKU OID
+- Intermediate certificate of the file that belongs to Microsoft as part of the WHQL program
 
-<br>
+- File's WHQL EKU OID
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+## 7. LeafCertificate
 
-<br>
+- Leaf certificate of the file
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number4.gif" width="40" alt="Neon number"> SignedVersion
+## 8. PcaCertificate
 
-* One of the Intermediate certificates of the file
+- One of the Intermediate certificates of the file
 
-* Leaf certificate of the file
+## 9. RootCertificate
 
-* File's version
+- One of the Intermediate certificates of the file
 
-<br>
+## 10. FileName
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+- One of the attributes of the file (FileDescription, InternalName, OriginalFileName, PackageFamilyName, ProductName, Filepath)
 
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number5.gif" width="40" alt="Neon number"> Publisher
-
-* One of the Intermediate certificates of the file
-
-* Leaf certificate of the file
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number6.gif" width="40" alt="Neon number"> WHQL
-
-* Intermediate certificate of the file that belongs to Microsoft as part of the WHQL program
-
-* File's WHQL EKU OID
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number7.gif" width="40" alt="Neon number"> LeafCertificate
-
-* Leaf certificate of the file
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number8.gif" width="40" alt="Neon number"> PcaCertificate
-
-* One of the Intermediate certificates of the file
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number9.gif" width="40" alt="Neon number"> RootCertificate
-
-* One of the Intermediate certificates of the file
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number1.gif" width="20" alt="Neon number"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number0.gif" width="25" alt="Neon number"> FileName
-
-* One of the attributes of the file (FileDescription, InternalName, OriginalFileName, PackageFamilyName, ProductName, Filepath)
-
-> [!IMPORTANT]\
+> [!IMPORTANT]
 > These properties are mutable.
 
-<br>
+## 11. FilePath
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+- Path of the file on disk
 
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number1.gif" width="20" alt="Neon number"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number1.gif" width="20" alt="Neon number"> FilePath
-
-* Path of the file on disk
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/symbolexclamation.gif" width="40" alt="Neon number"> About SpecificFileNameLevel Options
+## About SpecificFileNameLevel Options
 
 App Control creates file rules based on file attributes when you scan a folder using a level such as `FilePublisher`. Each file rule has a `MinimumVersion` and **only** one of the six `SpecificFileNameLevels`.
 
@@ -162,5 +90,3 @@ For instance, suppose a folder has 10 signed files with identical signatures and
 The `MinimumVersion` is the smallest version among the files with the same signature and SpecificFileNameLevel in the folder.
 
 Find more information in [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create)
-
-<br>

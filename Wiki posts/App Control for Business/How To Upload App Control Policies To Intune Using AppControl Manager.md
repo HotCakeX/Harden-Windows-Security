@@ -4,45 +4,23 @@ The [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
 To do that, navigate to the [Deploy App Control Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy) page, Click the `Sign In` button. A new browser tab will open, prompting you to sign into your Entra ID account.
 
-<div align="center">
+![Sign In button](https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Sign%20In%20button.png)
 
-<br>
+![Azure Sign in pages](https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Azure%20SignIn%20page.png)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Sign%20In%20button.png" alt="Sign In button">
-
-<br>
-
-<br>
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Azure%20SignIn%20page.png" Height="600" alt="Azure Sign in pages">
-
-<br>
-
-<br>
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Permissions%20acceptance%20page.png" alt="Azure Permissions page">
-
-<br>
-
-<br>
-
-</div>
+![Azure Permissions page](https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Permissions%20acceptance%20page.png)
 
 Once signed in, you'll be redirected back to the AppControl Manager.
 
-<br>
-
 ## Permissions Required
 
-To successfully complete the sign-in process and deploy policies, your account must have the following permissions, ***adhering to the Principle of Least Privilege***:
+To successfully complete the sign-in process and deploy policies, your account must have the following permissions, **_adhering to the Principle of Least Privilege_**:
 
-* [`Group.Read.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#groupreadall): Allows the AppControl Manager to read security groups and display them in the dropdown list.
+- [`Group.Read.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#groupreadall): Allows the AppControl Manager to read security groups and display them in the dropdown list.
 
-* [`DeviceManagementConfiguration.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#devicemanagementconfigurationreadwriteall): Grants the ability to create, upload, and assign App Control policies.
+- [`DeviceManagementConfiguration.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#devicemanagementconfigurationreadwriteall): Grants the ability to create, upload, and assign App Control policies.
 
 By ensuring these permissions are in place, you can seamlessly deploy App Control policies through Intune while maintaining secure and minimal access.
-
-<br>
 
 ## Select Policies To Deploy
 
@@ -52,17 +30,11 @@ The name specified in the XML file will appear as the name of the corresponding 
 
 You can optionally use the `Refresh` button and select a group to assign to the policies you upload to Intune.
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Group%20Names.png" alt="Intune Groups DropDown">
-
-<br>
-
-<br>
+![Intune Groups DropDown](https://raw.githubusercontent.com/HotCakeX/.github/7ccc3793b4d21d2fe7d5a79b56d1cc78fa1d0aac/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Group%20Names.png)
 
 ## How To Change Tenant?
 
 If you want to change your tenant and sign into another account, press the `Sign Out` button and then use the `Sign In` button again to sign into a different tenant.
-
-<br>
 
 ## How To View The Uploaded Policies?
 
@@ -74,18 +46,8 @@ Intune Portal | Devices | Configuration
 
 You can remove any of the deployed policies in here. After removal from the Intune portal, the target device must be restarted once for the removal process to complete.
 
-<br>
-
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/bd62727406d683bbee30fdebecde9580d13e3a00/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Microsoft%20Intune%20deployed%20and%20uploaded%20policies.png" Alt="View deployed policies in the Microsoft Intune portal">
-
-</div>
-
-<br>
+![View deployed policies in the Microsoft Intune portal](https://raw.githubusercontent.com/HotCakeX/.github/bd62727406d683bbee30fdebecde9580d13e3a00/Pictures/PNG%20and%20JPG/How%20To%20Upload%20App%20Control%20Policies%20To%20Intune%20Using%20AppControl%20Manager/Microsoft%20Intune%20deployed%20and%20uploaded%20policies.png)
 
 ## Have Questions or Feature Requests?
 
 Feel free to [create a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) to ask questions or request for extra features that don't currently exist in the AppControl Manager application.
-
-<br>

@@ -4,8 +4,6 @@
 
 A Code Integrity policy, also known as [Application Control for Business policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction), is a binary file containing the rules that define which applications, files or drivers are allowed to run on the operating system. They can be cryptographically signed which adds extra benefits and protections against tampering. [You can find more information about that here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/The-Strength-of-Signed-App-Control-Policies)
 
-<br>
-
 ## Signing a Code Integrity Policy
 
 To sign a Code Integrity policy, you need a code signing certificate whose specifications is detailed [in this article](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering). You could use SignTool.exe from the Windows SDK to sign the policy but this article explores how to do it without the `SignTool.exe` program.
@@ -62,19 +60,15 @@ With the important bits being:
 
 Which makes it clear that if we use custom content type OID, the document should be marked as `v3`.
 
-<br>
-
 ## The Workaround
 
-Since the version value of the CMS is outside the signed portion of the data block, we can find the `02 01 03` and replace it with `02 01 01` in order to make the CIP file usable by the operating system. The CMS version number is really just telling a reader "this uses a feature from the future". For example, if the reader only knows about CMS v3 but it sees `SignedData.version == 5`, it can just say: "nope, I won't know how to read that, let's stop now."
+Since the version value of the CMS is outside the signed portion of the data block, we can find the `02 01 03` and replace it with `02 01 01` in order to make the CIP file usable by the operating system. The CMS version number is really just telling a reader "this uses a feature from the future". For example, if the reader only knows about CMS v3 but it sees `SignedData.version == 5`, it can just say: "nope, I won't know how to read that, let's stop now."
 
 The strange thing about this requirement is that custom encapsulated data types seem to have come in version 3, so the OS is basically saying "I only understand v1, but I also understand that you are using a custom encapsulated data type, which is a V3 feature."
 
 [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) implements this workaround in [its signing process](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/AppControl%20Manager/Signing/Main.cs) so it can produce CIP files that are both signed and usable by the operating system.
 
 Keep in mind that if you deploy a signed CIP file with `CMS V3` certificate, the system will reject it and boot failure might occur.
-
-<br>
 
 ## Signing via SignTool.exe
 
@@ -86,9 +80,9 @@ The following [command](https://learn.microsoft.com/en-us/dotnet/framework/tools
 $"sign /v /n \"{certCN}\" /p7 . /p7co 1.3.6.1.4.1.311.79.1 /fd certHash \"{ciPath.Name}\"";
 ```
 
-* `/n` specifies the certificate's common name (CN) in the certificate store, we supply it via `certCN` variable.
-* `/p7` specifies that the file should be signed using PKCS #7.
-* `/p7co` specifies the content type OID for the signed content.
-* `/fd` specifies the file digest algorithm to use, which should match the certificate's hashing algorithm.
-* `/v` enables verbose output.
-* `ciPath.Name` variable is the path to the CIP file to be signed.
+- `/n` specifies the certificate's common name (CN) in the certificate store, we supply it via `certCN` variable.
+- `/p7` specifies the file should be signed using PKCS #7.
+- `/p7co` specifies the content type OID for the signed content.
+- `/fd` specifies the file digest algorithm to use, which should match the certificate's hashing algorithm.
+- `/v` enables verbose output.
+- `ciPath.Name` variable is the path to the CIP file to be signed.

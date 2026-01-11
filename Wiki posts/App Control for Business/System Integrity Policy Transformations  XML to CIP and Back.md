@@ -9,12 +9,6 @@ The transformations involve intricate manipulations at the byte level, precise s
 >
 > [**Download it from the Microsoft Store**](https://apps.microsoft.com/detail/9PNG1JDDTGP8)
 
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width="300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
 ## Overview of XML ⇄ Binary Workflow
 
 1. **XML → Object Model**
@@ -28,12 +22,6 @@ The transformations involve intricate manipulations at the byte level, precise s
 3. **Binary → XML**
 
    Read the 32-bit version identifier to determine which body blocks are present, parse header metadata, then sequentially parse each versioned block to reconstruct the `SiPolicy` object, and finally serialize that back to XML.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width="300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
 
 ## 1. XML to Binary Transformation
 
@@ -49,6 +37,7 @@ The `.cip` binary is composed of two concatenated parts:
 
 1. **Header Stream**
    A fixed-width preamble containing:
+
    - A 32-bit _Version Identifier_ (indicates the highest versioned block written).
    - Two 16-byte GUIDs: PolicyTypeID and PlatformID.
    - 32-bit option flags.
@@ -61,25 +50,19 @@ The `.cip` binary is composed of two concatenated parts:
 
 ### 1.3 Header Layout and Version Identifier
 
-<div align="center">
-
-| Offset | Size | Field                                                      |
-|-------:|:----:|:-----------------------------------------------------------|
-| 0x00   | 4    | Version identifier (`uint32`) → denotes highest V-block    |
-| 0x04   | 16   | PolicyTypeID GUID (from `BasePolicyID`)                    |
-| 0x14   | 16   | PlatformID GUID (zeroed if unspecified)                    |
-| 0x24   | 4    | Option flags (`uint32`)                                    |
-| 0x28   | 4    | Count of EKUs (`uint32`)                                   |
-| 0x2C   | 4    | Count of FileRules                                         |
-| 0x30   | 4    | Count of Signers                                           |
-| 0x34   | 4    | Count of SigningScenarios                                  |
-| 0x38   | 8    | Policy version (two `uint32` from `VersionEx`)             |
-| 0x40   | 4    | Body-offset placeholder (`uint32`)                         |
-| …      | …    | (continues into Body Stream)                               |
-
-</div>
-
-<br>
+| Offset | Size | Field                                                   |
+| -----: | :--: | :------------------------------------------------------ |
+|   0x00 |  4   | Version identifier (`uint32`) → denotes highest V-block |
+|   0x04 |  16  | PolicyTypeID GUID (from `BasePolicyID`)                 |
+|   0x14 |  16  | PlatformID GUID (zeroed if unspecified)                 |
+|   0x24 |  4   | Option flags (`uint32`)                                 |
+|   0x28 |  4   | Count of EKUs (`uint32`)                                |
+|   0x2C |  4   | Count of FileRules                                      |
+|   0x30 |  4   | Count of Signers                                        |
+|   0x34 |  4   | Count of SigningScenarios                               |
+|   0x38 |  8   | Policy version (two `uint32` from `VersionEx`)          |
+|   0x40 |  4   | Body-offset placeholder (`uint32`)                      |
+|      … |  …   | (continues into Body Stream)                            |
 
 The **Version Identifier** serves to signal exactly which subsequent versioned blocks (V3, V4, …, V8) are encoded in the body. This is a brilliant implementation done by Microsoft which enables backward compatibility: older policies omit higher-numbered blocks, preventing attempts to read beyond EOF.
 
@@ -95,10 +78,12 @@ The **Version Identifier** serves to signal exactly which subsequent versioned b
 #### Sections and Versioned Blocks
 
 1. **EKU Section**
+
    - For each EKU, write its DER bytes via `WritePaddedCountedBytes`.
    - ID in XML is generated as `ID_EKU_<MD5("EKU:" + Base64(value))>`.
 
 2. **FileRules Section**
+
    - Sorted by rule type and key properties.
    - For each rule:
      - `uint32 Type` (0 = Deny, 1 = Allow, 2 = FileAttrib, 3 = FileRule).
@@ -108,6 +93,7 @@ The **Version Identifier** serves to signal exactly which subsequent versioned b
    - Later V-blocks append metadata (max version, AppIDs, internal names, etc.).
 
 3. **Signers Section**
+
    - Certificate root indicator + data.
    - EKU index references.
    - Issuer, Publisher, OEM ID strings.
@@ -115,13 +101,16 @@ The **Version Identifier** serves to signal exactly which subsequent versioned b
    - Later V3 block adds `SignTimeAfter`.
 
 4. **SigningScenarios Section**
+
    - For each scenario:
      - `uint32 Value`, inherited-scenarios index array, minimum-hash-algorithm, allowed/denied/test signer groups.
 
 5. **HVCI Options**
+
    - Single `uint32` bitmask.
 
 6. **Secure Settings**
+
    - Sorted by provider, key, value-name.
    - Each record: provider, key, value-name strings; type tag; typed value.
 
@@ -147,12 +136,6 @@ Elements not serialized into the CIP binary:
 - Generated IDs (SignerID, FileRuleID) are only created during parsing.
 - `FriendlyName` attributes.
 - `Signer.Name` (human-friendly certificate name).
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width="300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
 
 ## 2. Binary to XML Transformation
 
@@ -198,31 +181,19 @@ Parse only blocks `N` where `N <= version`:
 - The resulting XML mirrors the original structure, enriched with generated IDs and version-specific extensions.
 - The following data will not be included in the XML since they weren't included in the XML in the first place:
 
-   - Signer Name
-   - FriendlyName
-   - ID
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width="300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
+  - Signer Name
+  - FriendlyName
+  - ID
 
 ## 3. Appendix: Version Tags Reference
 
-<div align="center">
-
-Version  | Block Tag | Contents
--------- | --------- | ------------------------------------------------------------------
-1–2      | —         | Core header + EKUs + FileRules + Signers + Scenarios + Settings
-3        | 3         | MaxFileVersion & AppIDs (FileRules); SignTimeAfter (Signers)
-4        | 4         | FileRule metadata (InternalName, FileDescription, ProductName)
-5        | 5         | PackageFamilyName & PackageVersion
-6        | 6         | PolicyID/BasePolicyID GUIDs; SupplementalPolicySigners
-7        | 7         | FilePath for each FileRule
-8        | 8         | AppSettings region (AppRoot + AppSetting entries)
-End      | version+1 | Terminator tag
-
-</div>
-
-<br>
+| Version | Block Tag | Contents                                                        |
+| ------- | --------- | --------------------------------------------------------------- |
+| 1–2     | —         | Core header + EKUs + FileRules + Signers + Scenarios + Settings |
+| 3       | 3         | MaxFileVersion & AppIDs (FileRules); SignTimeAfter (Signers)    |
+| 4       | 4         | FileRule metadata (InternalName, FileDescription, ProductName)  |
+| 5       | 5         | PackageFamilyName & PackageVersion                              |
+| 6       | 6         | PolicyID/BasePolicyID GUIDs; SupplementalPolicySigners          |
+| 7       | 7         | FilePath for each FileRule                                      |
+| 8       | 8         | AppSettings region (AppRoot + AppSetting entries)               |
+| End     | version+1 | Terminator tag                                                  |

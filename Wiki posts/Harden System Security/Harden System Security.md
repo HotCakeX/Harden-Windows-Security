@@ -4,7 +4,7 @@ Harden System Security is a modern secure lightweight application that can help 
 
 It always stays up to date with the latest security patches and provides constant and consistent maintenance and support.
 
-## How To Install or Update The App<img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/heart-purple.gif" width="35">
+## How To Install or Update The App
 
 ### Use The [Microsoft Store](https://apps.microsoft.com/detail/9p7ggfl7dx57)
 
@@ -24,80 +24,65 @@ winget install --id 9p7ggfl7dx57 --exact --accept-package-agreements --accept-so
 
 Please [**follow this guide**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Install-Microsoft-Store-Apps-Completely-Offline) for instructions.
 
-<br>
-
 Please feel free to open a discussion if you have any questions about the build process, security, how to use or have feedbacks. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security)
-
-<br>
 
 ### Supported Operating Systems
 
-* Windows 11 25H2
-* Windows 11 24H2
-* Windows 11 23H2
-* Windows 11 22H2
-* Windows Server 2025
-
-<br>
+- Windows 11 25H2
+- Windows 11 24H2
+- Windows 11 23H2
+- Windows 11 22H2
+- Windows Server 2025
 
 ## Preview of the App
 
-<div align="center">
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/e98e3a322d2bd04b6a77e2cd4d2d8909d0eb6af0/Pictures/Gifs/HardenWindowsSecurityApp.gif" alt="Harden System Security preview"/>
+</p>
 
-</div>
+## Technical Details of The App
 
-<br>
+- Secure and transparent development and build process.
+- Built using [WinUI3](https://learn.microsoft.com/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/dotnet/csharp/).
+- Built using the latest [.NET](https://dotnet.microsoft.com) SDK.
+- Powered by the [WinAppSDK](https://github.com/microsoft/WindowsAppSDK) (formerly Project Reunion).
+- Packaged with the modern [MSIX](https://learn.microsoft.com/windows/msix/overview) format.
+- Incorporates the [Mica](https://learn.microsoft.com/windows/apps/design/style/mica) material design for backgrounds.
+- Adopts the Windows 11 [Fluent design system](https://fluent2.microsoft.design/components/windows).
+- Fast execution and startup time.
+- 0 required dependency.
+- 0 Third-party library or file used.
+- 0 Telemetry or data collection.
+- 100% clean uninstallation.
+- 100% open-source and free to use.
+- Natively supports X64 and ARM64 architectures.
+- Full [Trimming](https://learn.microsoft.com/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot) support.
+- Never uses runtime marshaling.
+- 0 dependency on any executable in the OS.
 
-## Technical Details of The App <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbow.gif" width="32">
+## Features
 
-* Secure and transparent development and build process.
-* Built using [WinUI3](https://learn.microsoft.com/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/dotnet/csharp/).
-* Built using the latest [.NET](https://dotnet.microsoft.com) SDK.
-* Powered by the [WinAppSDK](https://github.com/microsoft/WindowsAppSDK) (formerly Project Reunion).
-* Packaged with the modern [MSIX](https://learn.microsoft.com/windows/msix/overview) format.
-* Incorporates the [Mica](https://learn.microsoft.com/windows/apps/design/style/mica) material design for backgrounds.
-* Adopts the Windows 11 [Fluent design system](https://fluent2.microsoft.design/components/windows).
-* Fast execution and startup time.
-* 0 required dependency.
-* 0 Third-party library or file used.
-* 0 Telemetry or data collection.
-* 100% clean uninstallation.
-* 100% open-source and free to use.
-* Natively supports X64 and ARM64 architectures.
-* Full [Trimming](https://learn.microsoft.com/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot) support.
-* Never uses runtime marshaling.
-* 0 dependency on any executable in the OS.
-
-<br>
-
-## Features <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png">
-
-<div align="center">
+<p align="center">
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/harden%20windows%20security%20Module.apng" alt="Harden Windows Security by Violet Hansen aka HotCakeX">
-</div>
+</p>
 
-<br>
+- Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
+- No Windows functionality is removed/disabled against Microsoft's recommendations.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> No Windows functionality is removed/disabled against Microsoft's recommendations.
+- All of the links in the documentations and sources are from official Microsoft websites, straight from the source. No bias, No FUD, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles, and such.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links in the documentations and sources are from official Microsoft websites, straight from the source. No bias, No FUD, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles, and such.
+- When a security measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from the app in order to prevent any problems and because it won't be necessary anymore. **Community feedback will always be taken into account when doing so.**
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> When a security measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from the app in order to prevent any problems and because it won't be necessary anymore. **Community feedback will always be taken into account when doing so.**
+- Applying the security measures can make your system compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11#what-makes-a-secured-core-pc) - <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard">Check Device Guard category for more info</a>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying the security measures can make your system compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11#what-makes-a-secured-core-pc) - <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard">Check Device Guard category for more info</a>
-> [Secured-core](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
+  > [Secured-core](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
+- Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> If you have multiple accounts on your device, you only need to apply the security measures 1 time with Admin privileges, that will make system-wide changes. Then you can ***optionally*** run the app, without Admin privileges, for each standard user to apply the [Non-Admin category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures).
+- If you have multiple accounts on your device, you only need to apply the security measures 1 time with Admin privileges, that will make system-wide changes. Then you can **_optionally_** run the app, without Admin privileges, for each standard user to apply the [Non-Admin category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures).
 
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/Logging.svg" width="35" alt="Comprehensive Logging Capabilities Harden System Security App"> Comprehensive Logging Capabilities
+## Comprehensive Logging Capabilities
 
 The Harden System Security app includes detailed logging feature that tracks every part of its operations. These logs are helpful for reviewing what actions were taken, making it easier to audit and troubleshoot if necessary. The logs are saved in the following location:
 
@@ -107,14 +92,10 @@ C:\Users\USERNAME\AppData\Local\Temp\HardenSystemSecurityLogs
 
 The logs ensure that all actions taken by the Harden System Security app are recorded, giving you clear visibility into your security processes. Whether you're conducting security checks, responding to issues, or just keeping an eye on things, these logs can provide valuable information.
 
-<br>
+## Security
 
-## Security <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbutterflyholopastel.gif" width="35">
-
-> [!IMPORTANT]\
+> [!IMPORTANT]
 > The Harden System Security application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/runs/17206622843/workflow) and uploaded to the Microsoft Partner Center for validation and signing. The action uses [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository. All of the dependencies of any project in this repository are uploaded to GitHub and are available in the [Dependency Graph](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies).
-
-<br>
 
 Harden System Security is architected with a security-first philosophy from its inception. Every feature is designed and implemented with an offensive security mindset, ensuring that security is never an afterthought—and never will be. When selecting a solution tasked with defending critical systems, the last thing you want is a so‑called security tool that silently broadens your attack surface or neglects foundational safeguards. This application is built to be inherently trustworthy, defensible, and resilient.
 
@@ -134,75 +115,55 @@ This disciplined approach bolsters resistance against memory corruption, injecti
 
 The codebase is extensively and thoughtfully documented, enabling reviewers to trace logic, validate control flows, and assess security-relevant decisions with minimal friction. I remain fully available to clarify design rationale, threat assumptions, or implementation details whenever deeper scrutiny is desired.
 
-<br>
+## Documentation
 
-## Documentation <img src="https://raw.githubusercontent.com/HotCakeX/.github/c26ab12b9bc18eb51041857c6244d6abe11a707a/Pictures/Gifs/peaheartbento.gif" width="40">
-
-> [!NOTE]\
+> [!NOTE]
 > Mixing 3rd party security solutions with advanced Microsoft Defender features or other features offered by the Harden System Security app is not recommended as it can create conflicts.
 
-### Symbols Reference
+### Quick Links
 
-The following chart explains various symbols you will see throughout the documentations for the Harden System Security app, helping you understand how they are each applied.
-
-<div align="center">
-
-| Indicator| Description                   |
-|:--------:|:-----------------------------:|
-| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> | Security measure is applied via Registry/API/COM etc. |
-| <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> | Security measure is applied via Group Policies |
-| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="25" alt="Rotating green checkmark denoting CSP"> | [CSP](https://learn.microsoft.com/windows/configuration/provisioning-packages/how-it-pros-can-use-configuration-service-providers) for the security measure |
-| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> | Sub-category |
-
-</div>
-
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/Protect.gif" alt="Harden System Security Menu Item" width="30"> [Protect](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect)
-
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines)
-    - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/d32e4aced203262acc7eff373e888f22247a4212/images/MicrosoftBaseLinesOverrides.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines Overrides](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png" alt="Harden System Security Menu Item" width="30"> [Microsoft 365 Apps Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-365-Apps-Security-Baseline)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Defender](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png" alt="Harden System Security Menu Item" width="30"> [Attack Surface Reduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png" alt="Harden System Security Menu Item" width="30"> [Bitlocker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png" alt="Harden System Security Menu Item" width="30"> [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png" alt="Harden System Security Menu Item" width="30"> [TLS Security](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TLS-Security)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png" alt="Harden System Security Menu Item" width="30"> [Lock Screen](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Lock-Screen)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png" alt="Harden System Security Menu Item" width="30"> [User Account Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/User-Account-Control)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png" alt="Harden System Security Menu Item" width="30"> [Windows Firewall](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png" alt="Harden System Security Menu Item" width="30"> [Optional Windows Features](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png" alt="Harden System Security Menu Item" width="30"> [Windows Networking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Networking)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png" alt="Harden System Security Menu Item" width="30"> [Miscellaneous Configurations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Miscellaneous-Configurations)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png" alt="Harden System Security Menu Item" width="30"> [Windows Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Update)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png" alt="Harden System Security Menu Item" width="30"> [Edge Browser](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edge-Browser)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png" alt="Harden System Security Menu Item" width="30"> [Certificate Checking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png" alt="Harden System Security Menu Item" width="30"> [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking)
-    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png" alt="Harden System Security Menu Item" width="30"> [Non Admin Measures](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Star.gif" alt="Harden System Security Menu Item" width="30"> [Group Policy Editor](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Toolbox.gif" alt="Harden System Security Menu Item" width="30"> [Manage Installed Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/kawaii.gif" alt="Harden System Security Menu Item" width="30"> [File Reputation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/ChocolateBar.gif" alt="Harden System Security Menu Item" width="30"> [Audit Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/d186f4e5b83d5097099d6ce05573bf1844d7a7b3/Pictures/Gifs/Harden%20System%20Security%20Menu/CBOM.gif" alt="Harden System Security Menu Item" width="30"> [Cryptographic Bill of Materials](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cryptographic-Bill-of-Materials)
-- <img src="https://github.com/HotCakeX/.github/blob/a38f44e66f5eac033c255cbafa5d629ece92bd4d/Pictures/Gifs/Harden%20System%20Security%20Menu/Intune%20Cloud.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [Intune](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security)
-- <img src="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/Assets/ProtectionCategoriesIcons/CSP.png?raw=true" alt="Harden System Security Menu Item" width="30"> [Configuration Service Provider (CSP)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configuration-Service-Provider-%7C-Harden-System-Security)
-
-<br>
+- [Protect](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect)
+- [Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines)
+- [Microsoft Security Baselines Overrides](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
+- [Microsoft 365 Apps Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-365-Apps-Security-Baseline)
+- [Microsoft Defender](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender)
+- [Attack Surface Reduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction)
+- [Bitlocker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker)
+- [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard)
+- [TLS Security](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TLS-Security)
+- [Lock Screen](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Lock-Screen)
+- [User Account Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/User-Account-Control)
+- [Windows Firewall](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall)
+- [Optional Windows Features](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features)
+- [Windows Networking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Networking)
+- [Miscellaneous Configurations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Miscellaneous-Configurations)
+- [Windows Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Update)
+- [Edge Browser](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edge-Browser)
+- [Certificate Checking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking)
+- [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking)
+- [Non Admin Measures](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures)
+- [Group Policy Editor](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor)
+- [Manage Installed Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps)
+- [File Reputation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation)
+- [Audit Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies)
+- [Cryptographic Bill of Materials](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cryptographic-Bill-of-Materials)
+- [Intune](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security)
+- [Configuration Service Provider (CSP)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configuration-Service-Provider-%7C-Harden-System-Security)
 
 ## Supported Languages
 
-The Harden System Security fully supports the following languages.
+The Harden System Security fully supports the following languages:
 
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/usa.svg" width="25" alt="Country flag"> English
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/israel.svg" width="25" alt="Country flag"> Hebrew
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/greece.svg" width="25" alt="Country flag"> Greek
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/india.svg" width="25" alt="Country flag"> Hindi
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/india.svg" width="25" alt="Country flag"> Malayalam
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/saudi-arabia.svg" width="25" alt="Country flag"> Arabic
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/mexico.svg" width="25" alt="Country flag"> Spanish
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/poland.svg" width="25" alt="Country flag"> Polish
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/2f006adff77201f244cacdbe7c3ad8ac34f50199/Pictures/Country%20Flags/icons8-germany.svg" width="25" alt="Country flag"> German
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/2fd2894faa6e16175cb5088323a452bb90b08ea8/Pictures/Country%20Flags/france.svg" width="25" alt="Country flag"> French
-
-<br>
+- English
+- Hebrew
+- Greek
+- Hindi
+- Malayalam
+- Arabic
+- Spanish
+- Polish
+- German
+- French
 
 ## Windows Service
 
@@ -213,8 +174,6 @@ It can only be used by elevated Administrators and SYSTEM account. It is automat
 The service source code [can be found here](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager/eXclude/QuantumRelayHSS). The service name is `QuantumRelayHSS` and it is designed to write verbose logs in the Windows Event log if you add a System environment variable to your OS named `QUANTUMRELAYHSS_DEBUG` with a value of `1` or `true`.
 
 The service supports Arbitrary Code Guard exploit protection as well as many others, all of which can be applied to it in the [Microsoft Defender category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender).
-
-<br>
 
 ## CommandLine Interface (CLI) Support
 
@@ -269,11 +228,13 @@ HSS.exe --cli --preset=0|1|2 --op=Apply|Remove|Verify
 ```
 
 Presets:
+
 - 0 = Basic
 - 1 = Recommended
 - 2 = Complete
 
 Examples:
+
 ```powershell
 # Apply the Recommended preset
 HSS.exe --cli --preset=1 --op=Apply
@@ -289,7 +250,7 @@ HSS.exe --cli --preset=0 --op=Remove
 
 Apply protections tailored to a specific [device usage intent](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect#device-usage-intents).
 
-> [!NOTE]\
+> [!NOTE]
 > Only `Apply` is supported for intents at this time.
 
 ```powershell
@@ -297,6 +258,7 @@ HSS.exe --cli --intent=<IntentName> --op=Apply
 ```
 
 Supported intents:
+
 - Development
 - Gaming
 - School
@@ -305,6 +267,7 @@ Supported intents:
 - PrivilegedAccessWorkstation
 
 Example (Business intent):
+
 ```powershell
 HSS.exe --cli --intent=Business --op=Apply
 ```
@@ -316,14 +279,17 @@ HSS.exe --cli --intent=Business --op=Apply
 Create a full system state JSON report. Elevation is required.
 
 Syntax:
+
 ```powershell
 HSS.exe --cli ExportReport --out="C:\Path\HardenSystemSecurity-Report.json"
 ```
 
 Requirements:
+
 - `--out` is mandatory.
 
 Example:
+
 ```powershell
 HSS.exe --cli ExportReport --out="C:\Reports\HSS-SystemState.json"
 ```
@@ -335,19 +301,23 @@ HSS.exe --cli ExportReport --out="C:\Reports\HSS-SystemState.json"
 Import and apply a previously exported system state report. Elevation is required.
 
 Syntax:
+
 ```powershell
 HSS.exe --cli ImportReport --in="C:\Path\Report.json" [--mode=full|partial]
 ```
 
 Requirements:
+
 - `--in` is mandatory and must point to an existing `.json` file.
 - `--mode` defaults to `full` if omitted.
 
 Modes:
-- `full`    → Apply all measures marked applied AND remove all measures marked not applied.
+
+- `full` → Apply all measures marked applied AND remove all measures marked not applied.
 - `partial` → Apply only measures marked applied; skip removals.
 
 Examples:
+
 ```powershell
 # Full synchronization (default)
 HSS.exe --cli ImportReport --in="C:\Reports\HSS-SystemState.json"
@@ -370,40 +340,33 @@ HSS.exe --cli CheckMSStoreAppUpdate
 
 ### Exit Codes
 
-| Code | Meaning                                                                                       |
-|------|------------------------------------------------------------------------------------------------|
-| 0    | Success or no-op (including elevation denied before performing any change)                    |
-| 1    | Unexpected runtime failure (exception during execution)                                       |
-| 2    | Invalid arguments (missing required flag, unsupported value, invalid path/extension)          |
-
-
-<br>
+| Code | Meaning                                                                              |
+| ---- | ------------------------------------------------------------------------------------ |
+| 0    | Success or no-op (including elevation denied before performing any change)           |
+| 1    | Unexpected runtime failure (exception during execution)                              |
+| 2    | Invalid arguments (missing required flag, unsupported value, invalid path/extension) |
 
 ## Under the Hood: Files and Directories Structures Explained
 
 Here is the breakdown of some of the directories and files used by the Harden System Security app.
 
-* [Animated Icon Sources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icon%20Sources) is the location hosting JSON content of the Lottie animations used for the animated buttons.
+- [Animated Icon Sources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icon%20Sources) is the location hosting JSON content of the Lottie animations used for the animated buttons.
 
-* [Animated Icons](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icons) contain source generated files used for animated icons in various parts of the app.
+- [Animated Icons](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icons) contain source generated files used for animated icons in various parts of the app.
 
-* [Resources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources) directory contains JSON data used by the app to apply Security Measures for the following sources: `Group Policies`, `Registry Keys`, `Security Policies Registry Keys`.
+- [Resources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources) directory contains JSON data used by the app to apply Security Measures for the following sources: `Group Policies`, `Registry Keys`, `Security Policies Registry Keys`.
 
-* [CountryIPsData](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/CountryIPsData) contains the JSON files used by the app in the [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking) page.
+- [CountryIPsData](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/CountryIPsData) contains the JSON files used by the app in the [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking) page.
 
-* [Mitigations](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Mitigations) contains files used by the app to apply, verify or remove Exploit Protection for different processes defined in it.
+- [Mitigations](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Mitigations) contains files used by the app to apply, verify or remove Exploit Protection for different processes defined in it.
 
-* [DISMService.exe](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/DISMService.exe) is one of the components of the Harden System Security app that provides DISM functionalities via named pipe.
+- [DISMService.exe](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/DISMService.exe) is one of the components of the Harden System Security app that provides DISM functionalities via named pipe.
 
-* [CppInterop](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/CppInterop) directory contains parts of the Harden System Security app written in C++.
+- [CppInterop](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/CppInterop) directory contains parts of the Harden System Security app written in C++.
 
-* [Intune Files](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Intune%20Files) directory contains files to be used for Intune, such as policies the app offers for Intune deployment.
-
-<br>
+- [Intune Files](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Intune%20Files) directory contains files to be used for Intune, such as policies the app offers for Intune deployment.
 
 If you'd like to know more about a specific file or directory please feel free to reach out.
-
-<br>
 
 ## How To Build The Harden System Security Locally?
 

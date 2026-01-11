@@ -4,44 +4,32 @@
 
 This article explores some of the technical details of how to deploy an App Control policy that uses Script Enforcement and forces PowerShell to run in Constrained Language Mode. It expands aspects of this topic that are not covered enough in the official docs.
 
-> [!Tip]\
+> [!Tip]
 > Check out these 2 documents from Microsoft for more info and basics:
 >
-> * [PowerShell Constrained Language Mode](https://devblogs.microsoft.com/powershell/powershell-constrained-language-mode/)
+> - [PowerShell Constrained Language Mode](https://devblogs.microsoft.com/powershell/powershell-constrained-language-mode/)
 >
-> * [Script enforcement with App Control for Business](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/script-enforcement)
-
-<br>
+> - [Script enforcement with App Control for Business](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/script-enforcement)
 
 Below are the required steps to enable Script Enforcement and allow a PowerShell module to run in Constrained Language Mode, if its code meets the requirements of it.
-
-<br>
 
 ## Signing the PowerShell Module files
 
 The PowerShell module that you intend to use in Constrained Language Mode must be completely signed, that means all of its `.psm1` and `.psd1` files must be signed by a code signing certificate.
 
-<br>
-
 ## Type of Certificate to Use to Sign the PowerShell Module Files
 
 The Code Signing certificate you're going to use to sign the PowerShell module files with can be a self-signed certificate or a certificate from a trusted certification authority (CA).
 
-<br>
-
 ## Making the System Trust the Certificate
 
-If the certificate you used to sign the PowerShell module files with is from a trusted certification authority (CA) and the root certificate of that CA exists in the "Trusted Root Certification Authorities" store of ***either the Local Machine or Current User certificate store***, then you're good to go, but if the certificate is self-signed, you need to add the certificate's root certificate to either of those locations.
+If the certificate you used to sign the PowerShell module files with is from a trusted certification authority (CA) and the root certificate of that CA exists in the "Trusted Root Certification Authorities" store of **_either the Local Machine or Current User certificate store_**, then you're good to go, but if the certificate is self-signed, you need to add the certificate's root certificate to either of those locations.
 
 For instance, if you generated a Code Signing certificate from Windows Server Active Directory Certificate Services, and you used that certificate to sign the PowerShell module files, you need to export the root certificate containing the public key, to a `.cer` file and then add it to one of the locations mentioned earlier. Adding the leaf certificate, which is the one you used to sign the module files with, to those locations, will not count and won't allow the signed PowerShell module to run in Constrained Language Mode.
-
-<br>
 
 ## Base Policy Requirements
 
 The App Control base policy you're going to deploy must have `0 Enabled:UMCI` and it must not have the `11 Disabled:Script Enforcement` [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options).
-
-<br>
 
 ## How to Create a Supplemental Policy to Allow the Certificate(s)
 
@@ -101,35 +89,25 @@ Here is an example of a valid Supplemental policy that allows a root certificate
 
 As you can see, we need the TBS Hash value of the root certificate.
 
-<br>
-
 ### Use the AppControl Manager to Automatically Allow Certificates
 
 You can use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create a supplemental policy that allows the certificates you select to be allowed by App Control.
 
-***[Refer to this page for more information](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy#create-a-supplemental-policy-from-certificate-files)***
+**_[Refer to this page for more information](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy#create-a-supplemental-policy-from-certificate-files)_**
 
-<br>
-
-
-> [!TIP]\
+> [!TIP]
 > A manual way to get the TBS Hash value of a certificate is using the following command, which also works for signed files and will show the details of the certificates in the chain as well.
 >
 > ```powershell
 > certutil.exe -v <Path To .cer file>
 > ```
->
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Screenshot%20TBS%20Hash%20CertUtil.png" alt="TBS Hash value using certutil.exe -v">
-
-<br>
+![TBS Hash value using certutil.exe -v](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Screenshot%20TBS%20Hash%20CertUtil.png)
 
 ## PowerShell Engine Behavior
 
 When an App Control policy with script enforcement is deployed and you try to import an unauthorized module, you might see different errors. For instance, you might see an error about classes not being allowed or other reasons for a module not being able to load, but in essence, the PowerShell engine is trying to load the module in Constrained Language Mode and the module is failing to meet the requirements, most likely because:
 
-* The module you're trying to load is not signed
-* The module you're trying to load is signed but the certificate's root is not trusted by the system
-* The module you're trying to load is signed but at least one of its files is tampered with and has a hash mismatch. Even adding a single space on an empty line causes hash mismatch, **which is expected**.
-
-<br>
+- The module you're trying to load is not signed
+- The module you're trying to load is signed but the certificate's root is not trusted by the system
+- The module you're trying to load is signed but at least one of its files is tampered with and has a hash mismatch. Even adding a single space on an empty line causes hash mismatch, **which is expected**.

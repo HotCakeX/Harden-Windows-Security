@@ -1,6 +1,8 @@
 # Microsoft Security Baselines | Harden System Security
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Microsoft%20Security%20Baselines/Microsoft%20Security%20Baselines.svg" alt="Microsoft Security Baselines - Harden Windows Security" width="500"></p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Microsoft%20Security%20Baselines/Microsoft%20Security%20Baselines.svg" alt="Microsoft Security Baselines - Harden Windows Security" width="600">
+</p>
 
 A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
@@ -16,17 +18,13 @@ Each security measure has the following details:
 4. `Current Value`: The current value of the security measure on the system.
 5. `Expected Value`: The correct and secure value the security measure should be in order to be compliant.
 
-<br>
+- You can use the Baseline selector Dropdown button to select an older or newer baseline to be applied, removed or verified on your system.
 
-* You can use the Baseline selector Dropdown button to select an older or newer baseline to be applied, removed or verified on your system.
+- Use the `Browse` button to browse for a Microsoft Security baseline ZIP file that you've already downloaded on your device, this way you can use it on systems that have no Internet connectivity.
 
-* Use the `Browse` button to browse for a Microsoft Security baseline ZIP file that you've already downloaded on your device, this way you can use it on systems that have no Internet connectivity.
+- Use the **Apply Optional Overrides** toggle button, which is toggled by default, to apply the [Overrides for Microsoft Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline). They are recommended for enhanced user experience when using the Microsoft Security Baselines.
 
-* Use the **Apply Optional Overrides** toggle button, which is toggled by default, to apply the [Overrides for Microsoft Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline). They are recommended for enhanced user experience when using the Microsoft Security Baselines.
-
-   * Users usually apply the Microsoft Security Baseline on their system, which is mostly geared towards enterprise use, but then they find that some settings are not user-friendly for personal use. These optional overrides help to mitigate that situation. You can of course disable this toggle if you want to stick strictly to the Microsoft Security Baseline without any modifications.
-
-<br>
+  - Users usually apply the Microsoft Security Baseline on their system, which is mostly geared towards enterprise use, but then they find that some settings are not user-friendly for personal use. These optional overrides help to mitigate that situation. You can of course disable this toggle if you want to stick strictly to the Microsoft Security Baseline without any modifications.
 
 > [!NOTE]
 > Either when downloading the Security Baseline from Microsoft Servers or when browsing for the zip file manually, the Harden System Security app will process it entirely **in memory**, and apply it without writing any temporary files to disk. The same is true for verification or removal processes.
@@ -35,22 +33,10 @@ Each security measure has the following details:
 >
 > The app caches the baseline in memory to avoid unnecessary re-downloads and/or re-reads. The cache expires every **2 hours**, after which it is refreshed with the latest data from the Microsoft Server/File path you provided, and this only happens if the app is open. The cache is compressed to minimize memory usage.
 
-<br>
+![Microsoft Security Baselines | Harden System Security](https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Microsoft%20Security%20Baseline.png)
 
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Microsoft%20Security%20Baseline.png" alt="Microsoft Security Baselines | Harden System Security">
-
-</div>
-
-<br>
-
-> [!TIP]\
-> [Official Documentation for the Microsoft Security Baseline](https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines#what-are-security-baselines)
+> [!TIP] > [Official Documentation for the Microsoft Security Baseline](https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines#what-are-security-baselines)
 >
 > [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 >
 > **Highly recommended** to apply these overrides. Use Optional Overrides when applying the hardening measures on Azure VMs.
->
-
-<br>

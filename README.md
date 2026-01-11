@@ -5,8 +5,8 @@
 This repository hosts the source code and documentation for tools designed to secure Windows personal and enterprise devices against advanced threats without relying on third-party security software.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml)
-[![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
+[![Build Status](https://github.com/offsechq/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml/badge.svg)](https://github.com/offsechq/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml)
+[![PSScriptAnalyzer](https://github.com/offsechq/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/offsechq/Harden-Windows-Security/actions/workflows/powershell.yml)
 
 ---
 
@@ -28,7 +28,7 @@ A modern interface for managing Windows Application Control (formerly WDAC).
 - **Target Audience**: Users requiring strict application execution policies (Zero Trust).
 - **Features**: Configure and deploy Application Control policies to prevent unauthorized code execution.
 - **Install**: [![Microsoft Store](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9PNG1JDDTGP8)
-- **Documentation**: [AppControl Manager Wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+- **Documentation**: [AppControl Manager Wiki](https://github.com/offsechq/Harden-Windows-Security/wiki/AppControl-Manager)
 
 ---
 
@@ -57,9 +57,8 @@ For a truly secure environment, we recommend adhering to the following best prac
 
 ## Support
 
-- **Wiki**: [Comprehensive Documentation](https://github.com/HotCakeX/Harden-Windows-Security/wiki)
-- **Discussions**: [Ask questions or suggest features](https://github.com/HotCakeX/Harden-Windows-Security/discussions)
-- **Issues**: [Report bugs](https://github.com/HotCakeX/Harden-Windows-Security/issues)
+- **Wiki**: [Comprehensive Documentation](https://github.com/offsechq/Harden-Windows-Security/wiki)
+- **Issues**: [Report bugs](https://github.com/offsechq/Harden-Windows-Security/issues)
 
 ## License
 

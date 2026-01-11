@@ -1,12 +1,6 @@
 # Cryptographic Bill of Materials
 
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/35b963aab5530fd6b084f2e37cc25860bc999747/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Cryptographic%20Bill%20of%20Materials.png" alt="CBOM in Harden System Security">
-
-</div>
-
-<br>
+![CBOM in Harden System Security](https://raw.githubusercontent.com/HotCakeX/.github/35b963aab5530fd6b084f2e37cc25860bc999747/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Cryptographic%20Bill%20of%20Materials.png)
 
 The Cryptographic Bill of Materials (CBOM) offers a system-level inventory and introspection of the operating system cryptography, surfacing the algorithms, curves, cipher suites, and providers that define the platform's cryptographic posture. By normalizing what the OS exposes, it delivers SBOM-like transparency for crypto: enabling evidence-based audits, baseline conformance checks, drift detection across updates, identification of legacy/weak primitives, and planning for [post-quantum](https://techcommunity.microsoft.com/blog/microsoft-security-blog/post-quantum-cryptography-comes-to-windows-insiders-and-linux/4413803) transitions. Enumerations are sourced directly from the underlying providers to emphasize fidelity and provenance, making the output suitable for compliance artifacts, interoperability analysis, and informed hardening and policy decisions as standards evolve.
 
@@ -15,20 +9,24 @@ The Cryptographic Bill of Materials (CBOM) offers a system-level inventory and i
 The CBOM page gathers and presents cryptographic capabilities directly from the operating system, organized into five views:
 
 - Crypto Algorithms
+
   - All OS-registered cryptographic algorithms across operation classes (cipher, hash, signature, RNG, key derivation, asymmetric, secret agreement).
   - Availability checks indicating whether an algorithm can be opened by the platform at runtime.
   - Post‑quantum awareness: heuristic detection of PQ families (ML‑KEM/Kyber, ML‑DSA/Dilithium, SLH‑DSA/SPHINCS+, and well-known candidates).
   - Capability probing for PQ algorithms: key generation support and parameter sets that successfully apply and finalize.
 
 - CNG Curves
+
   - ECDH curves exposed via CNG.
   - For each curve: canonical name, OID (when resolvable), and public key length (bits).
 
 - SSL Provider Curves
+
   - ECC curves visible through the SSL/TLS provider layer.
   - For each curve: provider-reported name, OID, public key length (bits), curve type, and flags.
 
 - TLS Cipher Suites
+
   - TLS/DTLS cipher suites resolved from the platform's SSL context.
   - For each suite: supported protocol versions, cipher and hash selections, certificate type, key exchange metadata, numeric suite identifiers (including hex forms), and key-related lengths.
   - A `Configured only` toggle to focus the list on suites currently configured/enabled by the system vs. the broader set known to the provider(s).
@@ -41,15 +39,19 @@ All data is gathered from the system's low level cryptographic subsystems to ref
 ## How to Use the Page
 
 - Retrieval
+
   - Each tab includes a Retrieve button to query the OS and refresh the view.
 
 - Search and filter
+
   - Each tab provides a search box that filters the current view in real time (case‑insensitive).
 
 - Sort
+
   - Click any column header to sort ascending/descending by that field; sorting persists within the session.
 
 - Copy to clipboard
+
   - Right‑click or tap and hold on any row to copy the entire row or an individual field for easy sharing or documentation.
 
 - Export CBOM
@@ -144,12 +146,8 @@ A minimal, illustrative shape (truncated for clarity):
   "TlsCipherSuites": [
     {
       "Name": "TLS_CHACHA20_POLY1305_SHA256",
-      "Protocols": [
-        772
-      ],
-      "ProtocolNames": [
-        "TLS 1.3"
-      ],
+      "Protocols": [772],
+      "ProtocolNames": ["TLS 1.3"],
       "Cipher": "CHACHA20_POLY1305",
       "CipherSuite": 4867,
       "CipherSuiteHex": "0x1303",
@@ -164,12 +162,12 @@ A minimal, illustrative shape (truncated for clarity):
       "MaximumExchangeLength": 0,
       "Certificate": "",
       "KeyType": 0
-    },
+    }
     // ...
   ],
   "RegisteredProviders": [
     "Microsoft Key Protection Provider",
-    "Microsoft Passport Key Storage Provider",
+    "Microsoft Passport Key Storage Provider"
     // ...
   ]
 }
@@ -180,4 +178,3 @@ A minimal, illustrative shape (truncated for clarity):
 - The exported filename includes the machine name by default. You may rename the file before sharing.
 - Host metadata (machine name, OS description, architecture, FIPS state) is included to make audits reproducible and results comparable across systems.
 - No secrets or private keys are accessed. Capability checks use ephemeral, in‑memory handles and are destroyed immediately after probing.
-

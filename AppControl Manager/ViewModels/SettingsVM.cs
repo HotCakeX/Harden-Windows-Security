@@ -118,7 +118,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				App.Settings.NavViewPaneDisplayMode = x;
 			}
 		}
-	} = string.Equals(App.Settings.NavViewPaneDisplayMode, "Top", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
+	}
 
 	private static readonly Dictionary<string, int> SupportedLanguages = new(StringComparer.OrdinalIgnoreCase)
 	{

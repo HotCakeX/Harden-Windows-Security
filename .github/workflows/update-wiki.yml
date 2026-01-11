@@ -1,0 +1,39 @@
+name: Update Wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Wiki posts/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Upload to Wiki
+        run: |
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Clone Wiki
+          # Using GITHUB_TOKEN for authentication
+          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git" wiki-local
+
+          # Copy content
+          # Using -R and quotes to handle spaces in directory name
+          cp -R "Wiki posts"/* wiki-local/
+
+          # Push changes
+          cd wiki-local
+          git add .
+          git commit -m "Update Wiki content from main repo" || echo "No changes to commit"
+          git push

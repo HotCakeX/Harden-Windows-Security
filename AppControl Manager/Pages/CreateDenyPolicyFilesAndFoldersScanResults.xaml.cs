@@ -32,6 +32,6 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page,
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyFilesAndFoldersScanResultsPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyFilesAndFoldersScanResultsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

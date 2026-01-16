@@ -276,7 +276,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		_temperatureSampler = null;
 	}
 
-	// Textblock sources bound to the UI for the info tiles.
+	// TextBlock sources bound to the UI for the info tiles.
 	internal string? SystemTimeText { get; private set => SP(ref field, value); }
 	internal string? UserKindText { get; private set => SP(ref field, value); }
 	internal string? UptimeText { get; private set => SP(ref field, value); }
@@ -1230,7 +1230,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 				// Return the maximum speed found among all populated slots.
 				uint maxSpeed = 0;
-				foreach (uint val in chosenSpeeds)
+				foreach (uint val in CollectionsMarshal.AsSpan(chosenSpeeds))
 				{
 					if (val > maxSpeed)
 					{
@@ -1498,7 +1498,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			}
 			else
 			{
-				foreach (GpuInfo gpu in gpus)
+				foreach (GpuInfo gpu in CollectionsMarshal.AsSpan(gpus))
 				{
 					// Group for one GPU
 					StackPanel gpuGroup = new() { Spacing = 6 };
@@ -1601,7 +1601,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			}
 			else
 			{
-				foreach (WindowsActivationStatus status in statuses)
+				foreach (WindowsActivationStatus status in CollectionsMarshal.AsSpan(statuses))
 				{
 					// Group for one Status entry
 					StackPanel statusGroup = new() { Spacing = 6 };
@@ -1636,9 +1636,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 						statusGroup.Children.Add(CreateActivationDetailRow("Expiration Info", status.ExpirationMsg));
 					}
 
-					statusGroup.Children.Add(CreateActivationDetailRow("Is Subscription Supported", status.EdittionSupportsSubscription.ToString()));
+					statusGroup.Children.Add(CreateActivationDetailRow("Is Subscription Supported", status.EditionSupportsSubscription.ToString()));
 
-					if (status.EdittionSupportsSubscription)
+					if (status.EditionSupportsSubscription)
 					{
 						statusGroup.Children.Add(CreateActivationDetailRow("Subscription Enabled", status.IsSubscriptionEnabled ? "Yes" : "No"));
 						if (status.IsSubscriptionEnabled)
@@ -1746,7 +1746,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		string? clcLastActivationTime,
 		string? clcGenuineStatus,
 		bool clcIsDigitalLicense,
-		bool edittionSupportsSubscription,
+		bool editionSupportsSubscription,
 		bool isSubscriptionEnabled,
 		string? subscriptionSku,
 		string? subscriptionState,
@@ -1768,7 +1768,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		internal string? ClcLastActivationTime => clcLastActivationTime;
 		internal string? ClcGenuineStatus => clcGenuineStatus;
 		internal bool ClcIsDigitalLicense => clcIsDigitalLicense;
-		internal bool EdittionSupportsSubscription => edittionSupportsSubscription;
+		internal bool EditionSupportsSubscription => editionSupportsSubscription;
 		internal bool IsSubscriptionEnabled => isSubscriptionEnabled;
 		internal string? SubscriptionSku => subscriptionSku;
 		internal string? SubscriptionState => subscriptionState;
@@ -1885,7 +1885,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 						clcLastActivationTime: GetLastActivationTime(),
 						clcGenuineStatus: GetIsWindowsGenuine(),
 						clcIsDigitalLicense: GetDigitalLicenseStatus(),
-						edittionSupportsSubscription: subscriptionStatus.Item1,
+						editionSupportsSubscription: subscriptionStatus.Item1,
 						isSubscriptionEnabled: subscriptionStatus.Item2,
 						subscriptionSku: subscriptionStatus.Item3,
 						subscriptionState: subscriptionStatus.Item4,
@@ -2089,7 +2089,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		}
 
 		/// <summary>
-		/// Get the License status of the Windows, whetther it is genuine or not.
+		/// Get the License status of the Windows, whether it is genuine or not.
 		/// </summary>
 		/// <returns></returns>
 		private static string GetIsWindowsGenuine()
@@ -2147,7 +2147,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		/// <returns></returns>
 		private static unsafe (bool, bool, string?, string?) GetSubscriptionStatus()
 		{
-			bool EdittionSupportsSubscription = false;
+			bool EditionSupportsSubscription = false;
 			bool IsSubscriptionEnabled = false;
 			string? SubscriptionSku = null;
 			string? SubscriptionState = null;
@@ -2156,9 +2156,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			int hr = NativeMethods.SLGetWindowsInformationDWORD("ConsumeAddonPolicySet", ref dwSupported);
 
-			if (hr != 0) return (EdittionSupportsSubscription, IsSubscriptionEnabled, SubscriptionSku, SubscriptionState);
+			if (hr != 0) return (EditionSupportsSubscription, IsSubscriptionEnabled, SubscriptionSku, SubscriptionState);
 
-			EdittionSupportsSubscription = dwSupported != 0;
+			EditionSupportsSubscription = dwSupported != 0;
 
 			IntPtr pStatus = IntPtr.Zero;
 			hr = NativeMethods.ClipGetSubscriptionStatus(ref pStatus);
@@ -2176,7 +2176,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 					SubscriptionState = status.dwState.ToString();
 				}
 			}
-			return (EdittionSupportsSubscription, IsSubscriptionEnabled, SubscriptionSku, SubscriptionState);
+			return (EditionSupportsSubscription, IsSubscriptionEnabled, SubscriptionSku, SubscriptionState);
 		}
 	}
 

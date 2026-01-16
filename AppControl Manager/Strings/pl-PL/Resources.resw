@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>Dzienniki</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>Ustawienia</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>Wdrażanie głównych zasad po scaleniu.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>Wystąpił błąd podczas procesu scalania</value>
   </data>
@@ -936,9 +930,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>Sprawdzanie aktualizacji</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>Instalowanie wybranej ścieżki MSIXBundle: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>Bieżąca wersja to </value>
@@ -954,9 +945,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>Pakiet MSIXBundle Menedżera AppControl został pomyślnie pobrany do </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>Nie wybrano ścieżki MSIXBundle</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Wszystkie pobierania zakończone, instalowanie nowej wersji Menedżera AppControl</value>
@@ -1967,73 +1955,73 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz szablon do zastosowania do wybranego pliku zasad. Szablony to predefiniowane listy opcji reguł zasad.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>Twórz zasady App Control for Business na podstawie różnych szablonów i opcji reguł zasad. Szablon Podpisane i renomowane jest doskonały dla nowych użytkowników. Zezwalaj tylko Microsoft zezwala na pliki podpisane certyfikatami Microsoft. Domyślny Windows zezwala tylko na pliki dostarczane domyślnie z systemem operacyjnym Windows.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>Utwórz zasady uzupełniające, które rozszerzą zakres zasad podstawowych. Zasady uzupełniające mogą tylko zezwalać na pliki, nie mogą zawierać reguł odmowy.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Wyświetl wykryte pliki, które zostały użyte do utworzenia zasad uzupełniających.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>Wdrażaj dowolny typ zasad kontroli aplikacji lokalnie lub zdalnie na komputerach zarządzanych w chmurze.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>Wykorzystaj lokalne dzienniki systemowe lub pliki dziennika EVTX do tworzenia zasad kontroli aplikacji. Wymagane są tylko dzienniki operacyjne integralności kodu i dzienniki AppLocker. Użyj przycisku Skanuj, aby wypełnić siatkę danych. Po wypełnieniu użyj przycisku Utwórz zasady, aby zdefiniować konfigurację wyjściową i wygenerować plik zasad XML.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>Oblicz integralność kodu i inne typy skrótów plików.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>Pobieraj i wysyłaj zapytania dotyczące bezpiecznych ustawień w systemie.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>Poniżej znajdują się dzienniki, które Menedżer AppControl automatycznie generuje i przechowuje w folderze „AppControl Manager” w Program Files (jeśli działa z podniesionymi uprawnieniami, w przeciwnym razie zostaną zapisane w katalogu TEMP). Całkowity rozmiar folderu dzienników nigdy nie przekroczy 1 GB.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>Wykorzystaj dzienniki zaawansowanego wyszukiwania Microsoft Defender for Endpoint do tworzenia zasad kontroli aplikacji. Możesz przeglądać wyeksportowane pliki dziennika lub pobierać je z chmury, logując się na swoje konto Microsoft.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>Scalaj zasady App Control for Business i usuwaj z nich duplikaty. Możesz wybrać te same zasady dwukrotnie, aby usunąć z nich zduplikowane reguły.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>Edytuj zasady App Control for Business. Łatwo przeglądaj w poszukiwaniu pliku XML zasad i ładuj jego szczegóły za pomocą przycisku Załaduj. Po załadowaniu możesz przejrzeć liczbę każdej reguły w zasadach, usunąć określone reguły i zmodyfikować różne inne ustawienia zasad.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Dostosuj tutaj ustawienia aplikacji. Twoje preferencje zostaną zapisane, aby były gotowe za każdym razem, gdy uruchomisz Menedżera AppControl.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>Przeprowadź symulację App Control for Business, wybierając pliki lub foldery oraz plik zasad XML, a następnie użyj przycisku Rozpocznij symulację, aby wypełnić siatkę danych. Wyniki pokażą, czy wybrane pliki zostałyby dozwolone, czy zablokowane przez Twoje zasady kontroli aplikacji, gdyby zostały faktycznie wdrożone w systemie, a te pliki były uruchomione.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>Wyświetl wykryte pliki trybu jądra, które zostaną użyte do utworzenia zasad trybu wymuszonego. Usuń z listy elementy, których nie chcesz uwzględniać w ostatecznych zasadach trybu ścisłego jądra.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>Sprawdź aktualizacje na tej stronie. Możesz również włączyć automatyczne sprawdzanie aktualizacji, które będzie miało miejsce raz podczas uruchamiania, a zostaniesz powiadomiony, gdy dostępna będzie nowa wersja.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>Sprawdź poprawność zasad kontroli aplikacji, aby upewnić się, że są zgodne z oficjalnym schematem. Jeśli ręcznie zmodyfikowałeś pliki zasad XML i chcesz upewnić się, że Twoje modyfikacje są poprawne, użyj tej funkcji, aby je zweryfikować.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>Wyświetl kompleksowe informacje o certyfikatach użytych do podpisania dowolnego pliku. Szczegóły, które są zwykle niedostępne we właściwościach Eksploratora plików lub poleceniach cmdlet PowerShell, są tutaj przedstawione w całości.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Wyświetl wykryte pliki, które zostały użyte do utworzenia zasad odmowy.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>Utwórz podstawowe zasady odmowy, które jawnie zablokują pliki lub aplikacje. Pamiętaj, że kontrola aplikacji opiera się zasadniczo na białej liście, co oznacza, że wszystko, co nie jest dozwolone przez zasady, jest już automatycznie blokowane.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>Skonfiguruj opcje reguł zasad App Control for Business. Szczegółowe informacje znajdują się obok każdej reguły, a jeśli potrzebujesz więcej informacji, możesz użyć przycisku Przewodnik lub otworzyć dyskusję na GitHub.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>Bezpiecznie twórz certyfikaty podpisywania kodu, które są odpowiednie do podpisywania zasad kontroli aplikacji.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>Wyświetl szczegółowe informacje o wdrożonych zasadach i integralności kodu w systemach lokalnych lub zdalnych.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>Użyj tej strony, aby zezwolić na uruchamianie nowych lub już zainstalowanych aplikacji lub plików w systemie.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przeszukaj dane szczegółów certyfikatu</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>Potwierdź, że chcesz użyć wybranego niestandardowego pliku MSIXBundle zamiast automatycznego pobierania go z GitHub. Spowoduje to zastąpienie sprawdzania aktualizacji online i pominięcie pobierania pliku MSIXBundle z GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>Potwierdź</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Potwierdź, że chcesz użyć wybranego niestandardowego pliku MSIXBundle zamiast automatycznego pobierania go z GitHub. Spowoduje to zastąpienie sprawdzania aktualizacji online i pominięcie pobierania pliku MSIXBundle z GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Potwierdź, że chcesz użyć wybranego niestandardowego pliku MSIXBundle zamiast automatycznego pobierania go z GitHub. Spowoduje to zastąpienie sprawdzania aktualizacji online i pominięcie pobierania pliku MSIXBundle z GitHub.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>Więcej informacji</value>
   </data>
@@ -2506,12 +2482,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pobierze najnowsze konfiguracje użytkownika i wyświetli je.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Ścieżka podpisanych zasad:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Ścieżka niepodpisanych zasad:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Nazwa pospolita certyfikatu:</value>
@@ -2902,18 +2872,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Dokumentacja</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>Automatyczne przypisywanie</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>Automatycznie zapisuj ścieżkę do tworzonych zasad podstawowych na pasku bocznym.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Automatycznie zapisuj ścieżkę do tworzonych zasad podstawowych na pasku bocznym.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Automatycznie zapisuj ścieżkę do tworzonych zasad podstawowych na pasku bocznym.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>Przewodnik po pasku bocznym</value>
   </data>
@@ -2923,50 +2881,11 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Aby uzyskać przewodnik użytkowania paska bocznego, odwiedź stronę wiki GitHub, klikając/dotykając tutaj.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>Wybierz</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przypisz wybrany plik zasad XML na pasku bocznym do ścieżki zasad podstawowych odpowiedniej sekcji na aktualnie widocznej stronie.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przypisz wybrany plik zasad XML na pasku bocznym do ścieżki zasad podstawowych odpowiedniej sekcji na aktualnie widocznej stronie.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>Wyczyść</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Wyczyść wybrane pole tekstowe ścieżki pliku XML.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Wyczyść wybrane pole tekstowe ścieżki pliku XML.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku zasad XML</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku zasad XML</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>Użyj paska bocznego, aby przypinać ścieżki plików XML i używać ich ponownie w różnych częściach Menedżera AppControl.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>Pasek boczny</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>Przypięta ścieżka zasad</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Ścieżka zasad</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>Musisz wybrać nazwę dla zasad uzupełniających</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>Musisz wybrać ścieżkę pliku zasad XML</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>Wybrana ścieżka pliku XML nie istnieje</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>Uruchamianie...</value>
@@ -3003,9 +2922,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>Nie można znaleźć pliku CIP trybu wymuszonego</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku zasad XML kontroli aplikacji</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>Wykonywanie walidacji</value>
@@ -3216,10 +3132,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Właściwość „Id” AppManifest jest wymagana i nie może być pusta ani mieć wartości null.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>Tablica SettingDefinition zawiera element o wartości null.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>Właściwość „Name” SettingDefinition jest wymagana i nie może być pusta ani mieć wartości null.</value>
     <comment>App Manifest Validation</comment>
@@ -3397,9 +3309,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>Musisz wybrać opcję z listy tworzenia zasad</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>Zasady uzupełniające z dzienników zdarzeń - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>Nie wybrano pliku zasad, do którego mają zostać dodane dzienniki.</value>
@@ -3620,9 +3529,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>Wybrany plik certyfikatu i nazwa pospolita nie pasują do siebie.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>Proszę wybrać plik zasad XML usuwanych zasad.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>Wybrana ścieżka pliku zasad XML nie istnieje</value>
   </data>
@@ -3734,9 +3640,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>Wystąpił błąd podczas pobierania dodatkowych informacji związanych z zalecanymi przez Microsoft regułami blokowania sterowników.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>Plik zasad został utworzony i zapisany w {0}</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>Resetowanie identyfikatora zasad i przypisywanie nazwy zasad</value>
   </data>
@@ -3764,9 +3667,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>Nie znaleziono zawartości XML w źródle Microsoft GitHub dla zalecanych przez Microsoft reguł blokowania trybu użytkownika.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>Konfigurowanie opcji reguł zasad dla: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>Dodawanie opcji reguły: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
     <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} nie należy do nazwy pospolitej podmiotu żadnego z wdrożonych certyfikatów</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>Określony plik zasad „{0}” nie jest podpisany. Proszę podać podpisany plik zasad.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>Określony plik zasad „{0}” jest podpisany. Proszę podać niepodpisany plik zasad.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>Próba przeanalizowania i odczytania bieżącego pliku konfiguracji użytkownika</value>
@@ -3938,36 +3832,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>Wykonanie polecenia nie powiodło się z kodem błędu {0}. Dane wyjściowe: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>Ścieżka CipPath nie może być pusta ani mieć wartości null.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>Plik „{0}” nie istnieje.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>Wdrażanie następującego pliku CIP: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>Nieprawidłowa struktura XML, nie znaleziono węzła SiPolicy</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>Nie znaleziono węzła Signers</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Nie udało się utworzyć lub pobrać węzła UMCI_ProductSignersNode</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Nie udało się utworzyć lub pobrać węzła KMCI_ProductSignersNode</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>Nie znaleziono węzła {0} Product Signers AllowedSigners pomimo jego utworzenia.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>Nie znaleziono węzła {0} Product Signers FileRulesRef pomimo jego utworzenia.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>Nie znaleziono węzła {0} Product Signers DeniedSigners pomimo jego utworzenia.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>Wystąpił problem podczas uruchamiania CiTool.exe.</value>
   </data>
@@ -4031,7 +3895,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>Musisz wybrać opcję z listy tworzenia zasad.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>Zasady uzupełniające z dzienników zaawansowanego wyszukiwania MDE - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>Brak dzienników lub plików w siatkach danych, aby utworzyć politykę uzupełniającą.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>Nie znaleziono obszaru tymczasowego</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>Pomyślnie utworzono i wdrożono politykę.</value>
 </data>
@@ -4402,9 +4263,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>Oczekiwano znacznika bloku V8 '8', otrzymano '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>Oczekiwano końcowego znacznika polityki '{0}', otrzymano '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>Typ polityki to {0} i zawiera opcję reguły {1}, która jest nieprawidłowa. Tylko {2} może ją posiadać.</value>
@@ -4658,9 +4516,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CertificateMustHavePrivateKey" xml:space="preserve">
     <value>Certyfikat musi posiadać klucz prywatny.</value>
   </data>
-  <data name="PKCS7SignatureWritten" xml:space="preserve">
-    <value>Podpis PKCS #7 (zawartość osadzona, certyfikat dołączony) zapisany do {0}</value>
-  </data>
   <data name="SignerSignEx3Failed" xml:space="preserve">
     <value>Funkcja SignerSignEx3 zakończyła się niepowodzeniem z HRESULT: 0x{0:X}</value>
   </data>
@@ -4687,9 +4542,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
     <value>Aplikacja została uruchomiona poprzez aktywację plikiem, ale bez żadnych argumentów aktywacji plikiem</value>
-  </data>
-  <data name="UserCanceledUACMessage" xml:space="preserve">
-    <value>Użytkownik anulował monit UAC.</value>
   </data>
   <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
     <value>Żądanie podniesienia uprawnień było wymagane do przetworzenia wybranego pliku, ale zostało odrzucone przez użytkownika. Zamykanie aplikacji.</value>
@@ -4729,12 +4581,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
     <value>Wybrany plik zasad XML jest zasadą podstawową, ale jego BasePolicyID i PolicyID nie są takie same, co wskazuje, że jest to zasada uzupełniająca; zmieniam typ.</value>
-  </data>
-  <data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-    <value>Pomyślnie skonfigurowano zasadę w '{0}'. Teraz ma typ '{1}', BasePolicyID '{2}' i PolicyID '{3}'.</value>
-  </data>
-  <data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-    <value>Pomyślnie ustawiono wersję pliku zasad w '{0}' z '{1}' na '{2}'.</value>
   </data>
   <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: Rozpoczynanie procesu separacji danych.</value>
@@ -4831,9 +4677,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="DuplicateSignerIdMessage" xml:space="preserve">
     <value>Jeden z plików XML zawiera więcej niż jednego Sygnatariusza (Signer) o tym samym ID `{0}`</value>
-  </data>
-  <data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-    <value>Pomyślnie ustawiono HVCI w pliku zasad '{0}' na Ścisły (Strict).</value>
   </data>
   <data name="JumpListNotSupportedMessage" xml:space="preserve">
     <value>Lista szybkiego dostępu (JumpList) nie jest obsługiwana.</value>
@@ -5300,10 +5143,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>nie wykryto podpisujących WHQLFilePublisher do tworzenia reguł zezwoleń.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>Węzeł EKUs nie został znaleziony</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>nie wykryto podpisujących WHQLFilePublisher do tworzenia reguł odmowy.</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Czas utworzenia</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Szczegóły wdrożenia zasady Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Określ szczegóły wdrożenia zasady Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Określ szczegóły wdrożenia zasady Intune</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>Utwórz nową grupę</value>
@@ -5634,7 +5468,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
 <data name="GroupType" xml:space="preserve">
   <value>Typ grupy:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Zarządzaj grupami Entra w swoim dzierżawcy i wybierz grupy, do których chcesz wdrożyć zasadę.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,8 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pytaj o potwierdzenie przed zamknięciem aplikacji tylko w określonych okolicznościach, gdy trwa operacja.</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>W bibliotece paska bocznego wciąż znajdują się niezapisane zasady. Zostaną one utracone po zamknięciu aplikacji. Czy na pewno chcesz wyjść?</value>
   </data>
 </root>

@@ -80,9 +80,4 @@ internal static partial class GlobalVars
 
 	// Storing the path to User Config JSON file in the app's folder in the Program Files
 	internal static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
-
-	// Storing the path to the StagingArea folder in the AppControl Manager folder in the Program Files
-	// Each instance of the App (in case there are more than one at a time) has a unique staging area
-	internal static readonly string StagingArea = Path.Combine(UserConfigDir, $"StagingArea-{DateTime.UtcNow:yyyyMMddHHmmssfffffff}");
-
 }

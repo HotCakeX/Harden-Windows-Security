@@ -27,16 +27,10 @@ internal static class PolicySettingsManager
 	/// Gets the policy name.
 	/// </summary>
 	/// <param name="PolicyObj"></param>
-	/// <param name="PolicyFilePath"></param>
 	/// <returns></returns>
-	internal static string? GetPolicyName(SiPolicy.SiPolicy? PolicyObj, string? PolicyFilePath)
+	internal static string? GetPolicyName(SiPolicy.SiPolicy PolicyObj)
 	{
-
-		SiPolicy.SiPolicy PolicyObjToUse = PolicyObj ?? Management.Initialize(PolicyFilePath, null);
-
-		string? PolicyName = null;
-
-		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObjToUse.Settings))
+		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObj.Settings))
 		{
 			if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
 				string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
@@ -44,13 +38,12 @@ internal static class PolicySettingsManager
 			{
 				if (item.Value.Item is not null)
 				{
-					PolicyName = (string)item.Value.Item;
-					break;
+					return (string)item.Value.Item;
 				}
 			}
 		}
 
-		return PolicyName;
+		return null;
 	}
 
 	/// <summary>
@@ -100,16 +93,10 @@ internal static class PolicySettingsManager
 	/// Gets the PolicyInfo.
 	/// </summary>
 	/// <param name="PolicyObj"></param>
-	/// <param name="PolicyFilePath"></param>
 	/// <returns></returns>
-	internal static string? GetPolicyIDInfo(SiPolicy.SiPolicy? PolicyObj, string? PolicyFilePath)
+	internal static string? GetPolicyIDInfo(SiPolicy.SiPolicy PolicyObj)
 	{
-
-		SiPolicy.SiPolicy PolicyObjToUse = PolicyObj ?? Management.Initialize(PolicyFilePath, null);
-
-		string? PolicyIDInfo = null;
-
-		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObjToUse.Settings))
+		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObj.Settings))
 		{
 			if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) &&
 				string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
@@ -117,14 +104,12 @@ internal static class PolicySettingsManager
 			{
 				if (item.Value.Item is not null)
 				{
-					PolicyIDInfo = (string)item.Value.Item;
-
-					break;
+					return (string)item.Value.Item;
 				}
 			}
 		}
 
-		return PolicyIDInfo;
+		return null;
 	}
 
 	/// <summary>
@@ -215,8 +200,8 @@ internal static class PolicySettingsManager
 	private static int GetValueType(SettingValueType? type) => type?.Item switch
 	{
 		byte[] => 0, // (Binary)
-		bool => 1, // (Boolean)
-		uint => 2, // (DWord)
+		bool => 1,   // (Boolean)
+		uint => 2,   // (DWord)
 		string => 3, // (String)
 		_ => -1
 	};
@@ -244,7 +229,7 @@ internal static class PolicySettingsManager
 	};
 
 	/// <summary>
-	/// Returns unique Setting[] array.
+	/// Returns unique List<Setting>.
 	/// </summary>
 	/// <param name="Objects"></param>
 	/// <returns></returns>
@@ -331,6 +316,17 @@ internal static class PolicySettingsManager
 			string text => text,
 			_ => settingValue.Item.ToString() ?? "null"
 		};
+	}
+
+	/// <summary>
+	/// Sets the HVCI option to Strict or (2) in an App Control policy.
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static SiPolicy.SiPolicy UpdateHVCIOptions(SiPolicy.SiPolicy policyObj)
+	{
+		policyObj.HvciOptions = 2;
+		return policyObj;
 	}
 
 }

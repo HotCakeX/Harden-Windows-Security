@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -27,7 +27,6 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class CreatePolicyVM : ViewModelBase
 {
-
 	internal CreatePolicyVM()
 	{
 		AllowMSFTInfoBar = new InfoBarSettings(
@@ -119,7 +118,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	private readonly InfoBarSettings AllowMSFTInfoBar;
 
-	internal string? _policyPathAllowMicrosoft { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathAllowMicrosoft { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftLogSizeInputIsEnabled { get; set => SP(ref field, value); }
 
 	internal bool AllowMicrosoftAudit
@@ -131,6 +130,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 	}
 
+	internal bool AllowMicrosoftAppIDTaggingToggle { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftRequireEVSigners { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool AllowMicrosoftTestMode { get; set => SP(ref field, value); }
@@ -140,10 +140,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying AllowMicrosoft policy
 	/// </summary>
-	internal async void AllowMicrosoftCreate_Click()
+	internal async void AllowMicrosoftCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-		bool Error = false;
-
 		try
 		{
 			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -155,8 +153,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			// Disable the buttons to prevent multiple clicks
 			AllowMicrosoftSectionIsEnabled = false;
-
-			string stagingArea = StagingArea.NewStagingArea("BuildAllowMicrosoft").ToString();
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -173,7 +169,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			_policyPathAllowMicrosoft = await Task.Run(() =>
 			{
 				return BasePolicyCreator.BuildAllowMSFT(
-				StagingArea: stagingArea,
 				IsAudit: AllowMicrosoftAudit,
 				LogSize: logSize,
 				deploy: AllowMicrosoftCreateAndDeploy,
@@ -185,25 +180,34 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				DeployMicrosoftRecommendedBlockRules: !AllowMicrosoftNoBlockRules
 				);
 			});
+
+			// Convert it to AppIDTagging policy if the toggle was enabled
+			if (AllowMicrosoftAppIDTaggingToggle)
+			{
+				Dictionary<string, string> tags = [];
+				tags["AllowMSFTTagKey"] = "True";
+
+				_policyPathAllowMicrosoft.PolicyObj = AppIDTagging.Convert(_policyPathAllowMicrosoft.PolicyObj);
+				_policyPathAllowMicrosoft.PolicyObj = AppIDTagging.AddTags(_policyPathAllowMicrosoft.PolicyObj, tags);
+			}
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathAllowMicrosoft);
+
+			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Visible;
+			AllowMSFTInfoBar.WriteSuccess(AllowMicrosoftCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedAllowMicrosoftBasePolicy"));
 		}
 		catch (Exception ex)
 		{
-			Error = true;
 			AllowMSFTInfoBar.WriteError(ex);
 		}
 		finally
 		{
 			// Re-enable the buttons once the work is done
 			AllowMicrosoftSectionIsEnabled = true;
-
 			AllowMicrosoftSettingsInfoBarIsClosable = true;
-
-			if (!Error)
-			{
-				AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Visible;
-
-				AllowMSFTInfoBar.WriteSuccess(AllowMicrosoftCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedAllowMicrosoftBasePolicy"));
-			}
 		}
 	}
 
@@ -231,7 +235,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility DefaultWindowsInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string? _policyPathDefaultWindows { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathDefaultWindows { get; set => SP(ref field, value); }
 
 	internal bool DefaultWindowsSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
@@ -252,6 +256,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 	}
 
+	internal bool DefaultWindowsAppIDTaggingToggle { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsRequireEVSigners { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool DefaultWindowsTestMode { get; set => SP(ref field, value); }
@@ -261,10 +266,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying DefaultWindows policy
 	/// </summary>
-	internal async void DefaultWindowsCreate_Click()
+	internal async void DefaultWindowsCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-		bool Error = false;
-
 		DefaultWindowsInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		try
@@ -276,8 +279,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			// Disable the buttons to prevent multiple clicks
 			DefaultWindowsSectionIsEnabled = false;
-
-			string stagingArea = StagingArea.NewStagingArea("BuildDefaultWindows").ToString();
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -293,7 +294,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			_policyPathDefaultWindows = await Task.Run(() =>
 			{
 				return BasePolicyCreator.BuildDefaultWindows(
-				StagingArea: stagingArea,
 				IsAudit: DefaultWindowsAudit,
 				LogSize: logSize,
 				deploy: DefaultWindowsCreateAndDeploy,
@@ -306,24 +306,33 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				);
 			});
 
+			// Convert it to AppIDTagging policy if the toggle was enabled
+			if (DefaultWindowsAppIDTaggingToggle)
+			{
+				Dictionary<string, string> tags = [];
+				tags["DefaultWindowsTagKey"] = "True";
+
+				_policyPathDefaultWindows.PolicyObj = AppIDTagging.Convert(_policyPathDefaultWindows.PolicyObj);
+				_policyPathDefaultWindows.PolicyObj = AppIDTagging.AddTags(_policyPathDefaultWindows.PolicyObj, tags);
+			}
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathDefaultWindows);
+
+			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			DefaultWindowsInfoBarActionButtonVisibility = Visibility.Visible;
+			DefaultWinInfoBar.WriteSuccess(DefaultWindowsCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedDefaultWindowsBasePolicy"));
 		}
 		catch (Exception ex)
 		{
-			Error = true;
 			DefaultWinInfoBar.WriteError(ex);
 		}
 		finally
 		{
 			// Re-enable the buttons once the work is done
 			DefaultWindowsSectionIsEnabled = true;
-
 			DefaultWindowsSettingsInfoBarIsClosable = true;
-
-			if (!Error)
-			{
-				DefaultWindowsInfoBarActionButtonVisibility = Visibility.Visible;
-				DefaultWinInfoBar.WriteSuccess(DefaultWindowsCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedDefaultWindowsBasePolicy"));
-			}
 		}
 	}
 
@@ -351,7 +360,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility SignedAndReputableInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string? _policyPathSignedAndReputable { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathSignedAndReputable { get; set => SP(ref field, value); }
 
 	internal bool SignedAndReputableSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal bool SignedAndReputableSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
@@ -381,10 +390,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying SignedAndReputable policy
 	/// </summary>
-	internal async void SignedAndReputableCreate_Click()
+	internal async void SignedAndReputableCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-		bool Error = false;
-
 		SignedAndReputableInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		try
@@ -397,8 +404,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Disable the buttons
 			SignedAndReputableSectionIsEnabled = false;
 
-			string stagingArea = StagingArea.NewStagingArea("BuildSignedAndReputable").ToString();
-
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
 
@@ -409,10 +414,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			}
 			#endregion
 
-			_policyPathSignedAndReputable = await Task.Run(() =>
+			_policyPathSignedAndReputable = await Task.Run(async () =>
 			{
-				return BasePolicyCreator.BuildSignedAndReputable(
-				StagingArea: stagingArea,
+				return await BasePolicyCreator.BuildSignedAndReputable(
 				IsAudit: SignedAndReputableAudit,
 				LogSize: logSize,
 				deploy: SignedAndReputableCreateAndDeploy,
@@ -424,23 +428,23 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				DeployMicrosoftRecommendedBlockRules: !SignedAndReputableNoBlockRules
 				);
 			});
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathSignedAndReputable);
+
+			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			SignedAndReputableInfoBarActionButtonVisibility = Visibility.Visible;
+			SignedAndRepInfoBar.WriteSuccess(SignedAndReputableCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedSignedAndReputableBasePolicy"));
 		}
 		catch (Exception ex)
 		{
-			Error = true;
 			SignedAndRepInfoBar.WriteError(ex);
 		}
 		finally
 		{
 			SignedAndReputableSectionIsEnabled = true;
-
 			SignedAndReputableSettingsInfoBarIsClosable = true;
-
-			if (!Error)
-			{
-				SignedAndReputableInfoBarActionButtonVisibility = Visibility.Visible;
-				SignedAndRepInfoBar.WriteSuccess(SignedAndReputableCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedSignedAndReputableBasePolicy"));
-			}
 		}
 	}
 
@@ -457,7 +461,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	#region Microsoft Recommended Drivers Block Rule
 
-	internal string? _policyPathMSFTRecommendedDriverBlockRules { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathMSFTRecommendedDriverBlockRules { get; set => SP(ref field, value); }
 
 	internal bool RecommendedDriverBlockRulesSectionIsEnabled { get; set => SP(ref field, value); } = true;
 
@@ -480,10 +484,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended driver block rules policy
 	/// </summary>
-	internal async void RecommendedDriverBlockRulesCreate_Click()
+	internal async void RecommendedDriverBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-		bool error = false;
-
 		RecommendedDriverBlockRulesSettingsIsExpanded = true;
 
 		RecommendedDriverBlockRulesVersionTextBlock = "N/A";
@@ -497,46 +499,37 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = false;
 			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("CreatingRecommendedDriverBlockRulesPolicy"));
 
-			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
-
-			(string?, string?) results = (null, null);
-
-			await Task.Run(() =>
+			SiPolicy.PolicyFileRepresent result = await Task.Run(() =>
 			{
 				if (RecommendedDriverBlockRulesCreateAndDeploy)
 				{
-					results = BasePolicyCreator.DeployDriversBlockRules(stagingArea);
+					return BasePolicyCreator.DeployDriversBlockRules();
 				}
 				else
 				{
-					results = BasePolicyCreator.GetDriversBlockRules(stagingArea);
-
-					_policyPathMSFTRecommendedDriverBlockRules = results.Item1;
+					return BasePolicyCreator.GetDriversBlockRules();
 				}
 			});
 
-			RecommendedDriverBlockRulesVersionTextBlock = results.Item2;
+			_policyPathMSFTRecommendedDriverBlockRules = result;
+
+			RecommendedDriverBlockRulesVersionTextBlock = result.PolicyObj.VersionEx;
+
+			KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedRecommendedDriverBlockRulesPolicy"));
+
+			if (!RecommendedDriverBlockRulesCreateAndDeploy)
+			{
+				RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
+			}
 		}
 		catch (Exception ex)
 		{
-			error = true;
 			KernelModeBlockListInfoBar.WriteError(ex);
 		}
 		finally
 		{
 			RecommendedDriverBlockRulesSectionIsEnabled = true;
-
 			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
-
-			if (!error)
-			{
-				KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedRecommendedDriverBlockRulesPolicy"));
-
-				if (!RecommendedDriverBlockRulesCreateAndDeploy)
-				{
-					RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
-				}
-			}
 		}
 	}
 
@@ -545,8 +538,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void RecommendedDriverBlockRulesScheduledAutoUpdate_Click()
 	{
-		bool errorsOccurred = false;
-
 		try
 		{
 			RecommendedDriverBlockRulesSectionIsEnabled = false;
@@ -560,21 +551,17 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("ConfiguringAutoUpdate"));
 
 			await Task.Run(BasePolicyCreator.SetAutoUpdateDriverBlockRules);
+
+			KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("AutoUpdateConfigured"));
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			KernelModeBlockListInfoBar.WriteError(ex, GlobalVars.GetStr("AutoUpdateError"));
 		}
 		finally
 		{
 			RecommendedDriverBlockRulesSectionIsEnabled = true;
 			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
-
-			if (!errorsOccurred)
-			{
-				KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("AutoUpdateConfigured"));
-			}
 		}
 	}
 
@@ -591,7 +578,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	#region Microsoft Recommended Block Rule
 
-	internal string? _policyPathRecommendedUserModeBlockRules { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathRecommendedUserModeBlockRules { get; set => SP(ref field, value); }
 
 	internal bool RecommendedUserModeBlockRulesSectionIsEnabled { get; set => SP(ref field, value); } = true;
 
@@ -610,10 +597,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended user-mode block rules policy
 	/// </summary>
-	internal async void RecommendedUserModeBlockRulesCreate_Click()
+	internal async void RecommendedUserModeBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-		bool error = false;
-
 		try
 		{
 			RecommendedUserModeBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -629,16 +614,21 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			UserModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("CreatingUserModeBlockRules"));
 
-			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedUserModeBlockRules").ToString();
-
-			await Task.Run(() =>
+			_policyPathRecommendedUserModeBlockRules = await Task.Run(() =>
 			{
-				_policyPathRecommendedUserModeBlockRules = BasePolicyCreator.GetBlockRules(stagingArea, RecommendedUserModeBlockRulesCreateAndDeploy);
+				return BasePolicyCreator.GetBlockRules(RecommendedUserModeBlockRulesCreateAndDeploy);
 			});
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathRecommendedUserModeBlockRules);
+
+			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			RecommendedUserModeBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
+			UserModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedUserModeBlockRules"));
 		}
 		catch (Exception ex)
 		{
-			error = true;
 			UserModeBlockListInfoBar.WriteError(ex);
 		}
 		finally
@@ -647,12 +637,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			// Re-enable buttons
 			RecommendedUserModeBlockRulesSectionIsEnabled = true;
-
-			if (!error)
-			{
-				RecommendedUserModeBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
-				UserModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedUserModeBlockRules"));
-			}
 		}
 	}
 
@@ -671,7 +655,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility StrictKernelModeInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string? _policyPathStrictKernelMode { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathStrictKernelMode { get; set => SP(ref field, value); }
 
 	internal bool StrictKernelModeSectionIsEnabled { get; set => SP(ref field, value); } = true;
 
@@ -691,10 +675,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to prepare the system for Strict Kernel-mode policy
 	/// </summary>
-	internal async void StrictKernelModePolicyCreateButton_Click()
+	internal async void StrictKernelModePolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-		bool errorsOccurred = false;
-
 		try
 		{
 			StrictKernelModesSettingsIsExpanded = true;
@@ -708,25 +690,24 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			_policyPathStrictKernelMode = await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("Strict Kernel-Mode policy Prepare");
-
-				return BasePolicyCreator.BuildStrictKernelMode(stagingArea.FullName, StrictKernelModesAudit, StrictKernelModeNoFlightRoots, StrictKernelModesCreateAndDeploy);
+				return BasePolicyCreator.BuildStrictKernelMode(StrictKernelModesAudit, StrictKernelModeNoFlightRoots, StrictKernelModesCreateAndDeploy);
 			});
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathStrictKernelMode);
+
+			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
+
+			StrictKernelInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			StrictKernelInfoBar.WriteError(ex, GlobalVars.GetStr("PolicyCreationError"));
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
-
-				StrictKernelInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyCreatedSuccessfully"));
-			}
-
 			StrictKernelModesSettingsInfoBarIsClosable = true;
 			StrictKernelModeSectionIsEnabled = true;
 		}
@@ -747,7 +728,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility RMMBlockingInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string? _policyPathRMMBlocking { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathRMMBlocking { get; set => SP(ref field, value); }
 
 	internal bool RMMBlockingSectionIsEnabled { get; set => SP(ref field, value); } = true;
 
@@ -766,13 +747,11 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to prepare the RMM Blocking policy
 	/// </summary>
-	internal async void RMMBlockingPolicyCreateButton_Click() => await RMMBlockingPolicyCreateButton_Private();
+	internal async void RMMBlockingPolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => await RMMBlockingPolicyCreateButton_Private(sender);
 
 
-	private async Task RMMBlockingPolicyCreateButton_Private()
+	private async Task RMMBlockingPolicyCreateButton_Private(object? sender)
 	{
-		bool errorsOccurred = false;
-
 		try
 		{
 			RMMBlockingSettingsIsExpanded = true;
@@ -786,25 +765,25 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			_policyPathRMMBlocking = await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("RMM Blocking Policy Prepare");
-
-				return BasePolicyCreator.BuildRMMBlocking(stagingArea.FullName, RMMBlockingAudit, RMMBlockingCreateAndDeploy);
+				return BasePolicyCreator.BuildRMMBlocking(RMMBlockingAudit, RMMBlockingCreateAndDeploy);
 			});
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathRMMBlocking);
+
+			if (sender is not null)
+				AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			RMMBlockingInfoBarActionButtonVisibility = Visibility.Visible;
+
+			RMMBlockingInfoBar.WriteSuccess(GlobalVars.GetStr("RMMBlockingPolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			RMMBlockingInfoBar.WriteError(ex);
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				RMMBlockingInfoBarActionButtonVisibility = Visibility.Visible;
-
-				RMMBlockingInfoBar.WriteSuccess(GlobalVars.GetStr("RMMBlockingPolicyCreatedSuccessfully"));
-			}
-
 			RMMBlockingSettingsInfoBarIsClosable = true;
 			RMMBlockingSectionIsEnabled = true;
 		}
@@ -836,14 +815,14 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 					{
 						RMMBlockingCreateAndDeploy = true;
 						RMMBlockingAudit = true;
-						await RMMBlockingPolicyCreateButton_Private();
+						await RMMBlockingPolicyCreateButton_Private(null);
 						break;
 					}
 				case LaunchProtocolActions.DeployRMMBlockPolicy:
 					{
 						RMMBlockingCreateAndDeploy = true;
 						RMMBlockingAudit = false;
-						await RMMBlockingPolicyCreateButton_Private();
+						await RMMBlockingPolicyCreateButton_Private(null);
 						break;
 					}
 				case LaunchProtocolActions.PolicyEditor:
@@ -865,7 +844,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility DownloadsDefenseMeasureInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string? _policyPathDownloadsDefenseMeasure { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathDownloadsDefenseMeasure { get; set => SP(ref field, value); }
 
 	internal bool DownloadsDefenseMeasureSectionIsEnabled { get; set => SP(ref field, value); } = true;
 
@@ -884,15 +863,11 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to prepare the Downloads Defense Measures policy
 	/// </summary>
-	internal async void DownloadsDefenseMeasurePolicyCreateButton_Click()
-	{
-		await DownloadsDefenseMeasurePolicyCreateButton_Private();
-	}
+	internal async void DownloadsDefenseMeasurePolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) =>
+		await DownloadsDefenseMeasurePolicyCreateButton_Private(sender);
 
-	private async Task DownloadsDefenseMeasurePolicyCreateButton_Private()
+	private async Task DownloadsDefenseMeasurePolicyCreateButton_Private(object? sender)
 	{
-		bool errorsOccurred = false;
-
 		try
 		{
 			DownloadsDefenseMeasureSettingsIsExpanded = true;
@@ -906,25 +881,25 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			_policyPathDownloadsDefenseMeasure = await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("Downloads Defense Measures Policy Prepare");
-
-				return BasePolicyCreator.BuildDownloadsDefenseMeasures(stagingArea.FullName, DownloadsDefenseMeasureAudit, DownloadsDefenseMeasureCreateAndDeploy);
+				return BasePolicyCreator.BuildDownloadsDefenseMeasures(DownloadsDefenseMeasureAudit, DownloadsDefenseMeasureCreateAndDeploy);
 			});
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathDownloadsDefenseMeasure);
+
+			if (sender is not null)
+				AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			DownloadsDefenseMeasureInfoBarActionButtonVisibility = Visibility.Visible;
+
+			DownloadsDefenseMeasureInfoBar.WriteSuccess(GlobalVars.GetStr("DownloadsDefenseMeasurePolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			DownloadsDefenseMeasureInfoBar.WriteError(ex);
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				DownloadsDefenseMeasureInfoBarActionButtonVisibility = Visibility.Visible;
-
-				DownloadsDefenseMeasureInfoBar.WriteSuccess(GlobalVars.GetStr("DownloadsDefenseMeasurePolicyCreatedSuccessfully"));
-			}
-
 			DownloadsDefenseMeasureSettingsInfoBarIsClosable = true;
 			DownloadsDefenseMeasureSectionIsEnabled = true;
 		}
@@ -945,7 +920,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility DangerousScriptHostsBlockingInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string? _policyPathDangerousScriptHostsBlocking { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? _policyPathDangerousScriptHostsBlocking { get; set => SP(ref field, value); }
 
 	internal bool DangerousScriptHostsBlockingSectionIsEnabled { get; set => SP(ref field, value); } = true;
 
@@ -964,15 +939,11 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to prepare the Dangerous Script Hosts Blocking policy
 	/// </summary>
-	internal async void DangerousScriptHostsBlockingPolicyCreateButton_Click()
-	{
-		await DangerousScriptHostsBlockingPolicyCreateButton_Private();
-	}
+	internal async void DangerousScriptHostsBlockingPolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) =>
+		await DangerousScriptHostsBlockingPolicyCreateButton_Private(sender);
 
-	private async Task DangerousScriptHostsBlockingPolicyCreateButton_Private()
+	private async Task DangerousScriptHostsBlockingPolicyCreateButton_Private(object? sender)
 	{
-		bool errorsOccurred = false;
-
 		try
 		{
 			DangerousScriptHostsBlockingSettingsIsExpanded = true;
@@ -986,25 +957,25 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			_policyPathDangerousScriptHostsBlocking = await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("Dangerous Script Hosts Blocking Policy Prepare");
-
-				return BasePolicyCreator.BuildDangerousScriptBlockingPolicy(stagingArea.FullName, DangerousScriptHostsBlockingAudit, DangerousScriptHostsBlockingCreateAndDeploy);
+				return BasePolicyCreator.BuildDangerousScriptBlockingPolicy(DangerousScriptHostsBlockingAudit, DangerousScriptHostsBlockingCreateAndDeploy);
 			});
+
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathDangerousScriptHostsBlocking);
+
+			if (sender is not null)
+				AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			DangerousScriptHostsBlockingInfoBarActionButtonVisibility = Visibility.Visible;
+
+			DangerousScriptHostsBlockingInfoBar.WriteSuccess(GlobalVars.GetStr("DangerousScriptHostsBlockingPolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			DangerousScriptHostsBlockingInfoBar.WriteError(ex);
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				DangerousScriptHostsBlockingInfoBarActionButtonVisibility = Visibility.Visible;
-
-				DangerousScriptHostsBlockingInfoBar.WriteSuccess(GlobalVars.GetStr("DangerousScriptHostsBlockingPolicyCreatedSuccessfully"));
-			}
-
 			DangerousScriptHostsBlockingSettingsInfoBarIsClosable = true;
 			DangerousScriptHostsBlockingSectionIsEnabled = true;
 		}

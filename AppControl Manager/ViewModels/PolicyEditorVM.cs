@@ -65,6 +65,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	internal GridLength SignatureBasedColumnWidth6 { get; set => SP(ref field, value); }
 	internal GridLength SignatureBasedColumnWidth7 { get; set => SP(ref field, value); }
 
+
+	// ------------ AppIDTags ------------
+
+	internal GridLength AppIDTagsColumnWidth1 { get; set => SP(ref field, value); }
+	internal GridLength AppIDTagsColumnWidth2 { get; set => SP(ref field, value); }
+	internal GridLength AppIDTagsColumnWidth3 { get; set => SP(ref field, value); }
+
+
 	#endregion
 
 	// Observable Collections bound to the ListViews in the UI via compiled bindings
@@ -73,6 +81,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	internal readonly ObservableCollection<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesCollection = [];
 	internal readonly List<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesCollectionList = [];
+
+	internal readonly ObservableCollection<PolicyEditor.AppIDTagsWithContext> AppIDTagsCollection = [];
 
 	/// <summary>
 	/// To store Policy Settings, bound to the UI List View.
@@ -141,24 +151,16 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	internal bool UIElementsEnabledState { get; set => SP(ref field, value); } = true;
 
-	internal string? SelectedPolicyFile { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? SelectedPolicy { get; set => SP(ref field, value); }
 
+	/// <summary>
+	/// The UI toggle that controls whether text selection in the rows of ListViews are enabled or disabled.
+	/// </summary>
 	internal bool TextsAreSelectableToggleState { get; set => SP(ref field, value); }
 
-	internal string FileBasedCollectionTabItemHeader
-	{
-		get; set => SP(ref field, value);
-	} = "File-based Rules - count: 0";
+	internal string PolicyNameTextBox { get; set => SP(ref field, value); } = string.Empty;
 
-	internal string SignatureBasedCollectionTabItemHeader
-	{
-		get; set => SP(ref field, value);
-	} = "Signature-based Rules - count: 0";
-
-	internal string PolicyNameTextBox
-	{
-		get; set => SP(ref field, value);
-	} = string.Empty;
+	internal string? PolicyFriendlyNameTextBox { get; set => SP(ref field, value); }
 
 	internal string? PolicyIDTextBox { get; set => SPT(ref field, value); }
 
@@ -262,9 +264,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	// To store the EKUs, will use them during policy creation
 	private static List<EKU> ekusToUse = [];
-
-	// To store the user-selected XML policy objectified
-	private static SiPolicy.SiPolicy? PolicyObj;
 
 	// To store the signerCollection
 	private static SignerCollection? SignerCollectionCol;
@@ -372,36 +371,37 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// The file type based on extension.
-	/// 0 -> CIP
-	/// 1 -> XML
-	/// </summary>
-	private uint? fileType;
+	/// For AppIDTags collection and list view.
+	/// Calculates the maximum required width for each column (including header text).
+	private void CalculateAppIDTagsListViewColumnWidths()
+	{
+		// Measure header text widths first.
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("KeyHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("ValueHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("ContextHeader/Text"));
+
+		// Iterate over all items to determine the widest string for each column.
+		foreach (PolicyEditor.AppIDTagsWithContext item in AppIDTagsCollection)
+		{
+			maxWidth1 = ListViewHelper.MeasureText(item.AppIDTag.Key, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.AppIDTag.Value, maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.Context.ToString(), maxWidth3);
+		}
+
+		// Set the column width properties.
+		AppIDTagsColumnWidth1 = new(maxWidth1);
+		AppIDTagsColumnWidth2 = new(maxWidth2);
+		AppIDTagsColumnWidth3 = new(maxWidth3);
+	}
 
 	/// <summary>
 	/// Extracts the data from the user selected policy XML file and puts them in the UI elements such as the ListViews
 	/// </summary>
 	internal async void ProcessData()
 	{
-		if (SelectedPolicyFile is null)
+		if (SelectedPolicy is null)
 		{
 			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAppControlPolicyFirstMessage"));
-			return;
-		}
-
-		string fileExt = Path.GetExtension(SelectedPolicyFile);
-
-		if (string.Equals(fileExt, ".cip", StringComparison.OrdinalIgnoreCase))
-		{
-			fileType = 0;
-		}
-		else if (string.Equals(fileExt, ".xml", StringComparison.OrdinalIgnoreCase))
-		{
-			fileType = 1;
-		}
-		else
-		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("OnlyXmlCipSupportedMessage"));
 			return;
 		}
 
@@ -419,7 +419,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				MainInfoBar.WriteInfo(GlobalVars.GetStr("LoadingPolicyMessage"));
 
 				// Clear the class variables
-				PolicyObj = null;
 				ekusToUse = [];
 				SignerCollectionCol = null;
 
@@ -429,6 +428,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				SignatureRulesCollection.Clear();
 				SignatureRulesCollectionList.Clear();
 				PolicySettingsCollection.Clear();
+				AppIDTagsCollection.Clear();
 			});
 
 			// Collections to deserialize the policy object into
@@ -446,50 +446,32 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			HashSet<AllowRule> allowRules = [];
 			List<FileRuleRef> kernelModeFileRulesRefs = [];
 			List<FileRuleRef> userModeFileRulesRefs = [];
+			AppIDTags? userModeAppIDTags = null;
+			AppIDTags? kernelModeAppIDTags = null;
 
 			await Task.Run(() =>
 			{
-				if (fileType == 0)
-				{
-					PolicyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(SelectedPolicyFile);
-				}
-				else
-				{
-					// Instantiate the policy
-					PolicyObj = Management.Initialize(SelectedPolicyFile, null);
-				}
-
 				#region Extract policy details
 
-				string? policyName = PolicySettingsManager.GetPolicyName(PolicyObj, null);
-				string? policyIDInfo = PolicySettingsManager.GetPolicyIDInfo(PolicyObj, null);
+				string? policyName = PolicySettingsManager.GetPolicyName(SelectedPolicy.PolicyObj);
+				string? policyIDInfo = PolicySettingsManager.GetPolicyIDInfo(SelectedPolicy.PolicyObj);
 
-				_ = Dispatcher.TryEnqueue(() =>
-				{
-					PolicyNameTextBox = policyName ?? string.Empty;
-					PolicyIDTextBox = PolicyObj.PolicyID;
-					PolicyBaseIDTextBox = PolicyObj.BasePolicyID;
-					PolicyVersionTextBox = PolicyObj.VersionEx;
-					PolicyTypeComboBox = PolicyObj.PolicyType;
-					PolicyInfoIDTextBox = policyIDInfo;
-				});
+				PolicyNameTextBox = policyName ?? string.Empty;
+				PolicyIDTextBox = SelectedPolicy.PolicyObj.PolicyID;
+				PolicyBaseIDTextBox = SelectedPolicy.PolicyObj.BasePolicyID;
+				PolicyVersionTextBox = SelectedPolicy.PolicyObj.VersionEx;
+				PolicyTypeComboBox = SelectedPolicy.PolicyObj.PolicyType;
+				PolicyInfoIDTextBox = policyIDInfo;
+				PolicyFriendlyNameTextBox = SelectedPolicy.PolicyObj.FriendlyName;
 
-				_ = PolicyObj.HvciOptions is not null
-					? Dispatcher.TryEnqueue(() =>
-					{
-						HVCIOptionComboBox = GetHVCIOptionKey(PolicyObj.HvciOptions);
-					})
-					// If policy doesn't have HVCI field then set it to None on the UI ComboBox
-					: Dispatcher.TryEnqueue(() =>
-					{
-						HVCIOptionComboBox = GetHVCIOptionKey(0);
-					});
+				// If policy doesn't have HVCI field then set it to None on the UI ComboBox
+				HVCIOptionComboBox = SelectedPolicy.PolicyObj.HvciOptions is not null ? GetHVCIOptionKey(SelectedPolicy.PolicyObj.HvciOptions) : GetHVCIOptionKey(0);
 
 				#endregion
 
 				// Deserialize the policy and populate the collections
 				Merger.PolicyDeserializer(
-					[PolicyObj],
+					[SelectedPolicy.PolicyObj],
 					ref ekusToUse,
 					ref fileRulesNode,
 					ref signers,
@@ -505,7 +487,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					ref allowRules,
 					ref SignerCollectionCol,
 					ref kernelModeFileRulesRefs,
-					ref userModeFileRulesRefs);
+					ref userModeFileRulesRefs,
+					ref userModeAppIDTags,
+					ref kernelModeAppIDTags);
 			});
 
 			await Dispatcher.EnqueueAsync(() =>
@@ -675,7 +659,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 						PolicyEditor.SignatureBasedRulesForListView temp6 = new
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -699,7 +683,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						_WHQLPublisherRulesCount++;
 						PolicyEditor.SignatureBasedRulesForListView temp7 = new
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -723,7 +707,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						_UpdatePolicySignersCount++;
 						PolicyEditor.SignatureBasedRulesForListView temp8 = new
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -747,7 +731,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						_SupplementalPolicySignersCount++;
 						SignatureRulesCollection.Add(new PolicyEditor.SignatureBasedRulesForListView
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -765,13 +749,30 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					CalculateSignatureBasedListViewColumnWidths();
 				}
 
-				if (PolicyObj is not null)
+				if (SelectedPolicy.PolicyObj is not null)
 				{
-					foreach (PolicyEditor.PolicySettings item in CollectionsMarshal.AsSpan(PolicySettingsManager.GetPolicySettings(PolicyObj.Settings, this)))
+					foreach (PolicyEditor.PolicySettings item in CollectionsMarshal.AsSpan(PolicySettingsManager.GetPolicySettings(SelectedPolicy.PolicyObj.Settings, this)))
 					{
 						PolicySettingsCollection.Add(item);
 					}
 				}
+
+
+				// Populate the AppIDTags collection UI-bound collection
+
+
+				foreach (AppIDTag item in CollectionsMarshal.AsSpan(userModeAppIDTags?.AppIDTag))
+				{
+					AppIDTagsCollection.Add(new(context: SSType.UserMode, appIDTag: item));
+				}
+
+				foreach (AppIDTag item in CollectionsMarshal.AsSpan(kernelModeAppIDTags?.AppIDTag))
+				{
+					AppIDTagsCollection.Add(new(context: SSType.KernelMode, appIDTag: item));
+				}
+
+				CalculateAppIDTagsListViewColumnWidths();
+
 			});
 
 			await Dispatcher.EnqueueAsync(() =>
@@ -784,9 +785,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				catch { }
 			});
 
-			await PublishUserActivityAsync(LaunchProtocolActions.PolicyEditor,
-				SelectedPolicyFile,
-				GlobalVars.GetStr("UserActivityNameForPolicyEditor"));
+			if (SelectedPolicy.FilePath is not null)
+				await PublishUserActivityAsync(LaunchProtocolActions.PolicyEditor,
+					SelectedPolicy.FilePath,
+					GlobalVars.GetStr("UserActivityNameForPolicyEditor"));
 		}
 		catch (Exception ex)
 		{
@@ -798,8 +800,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				UIElementsEnabledState = true;
-				UpdateFileBasedCollectionsCount();
-				UpdateSignatureBasedCollectionsCount();
 				ProgressBarVisibility = Visibility.Collapsed;
 
 				if (!error)
@@ -811,7 +811,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			});
 		}
 	}
-
 
 	/// <summary>
 	/// To remove an item from the File rules based ListView
@@ -827,8 +826,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 
 		_ = FileRulesCollectionList.Remove(item);
-
-		UpdateFileBasedCollectionsCount();
 	}
 
 	/// <summary>
@@ -845,8 +842,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 
 		_ = SignatureRulesCollectionList.Remove(item);
-
-		UpdateSignatureBasedCollectionsCount();
 	}
 
 
@@ -855,42 +850,69 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForPolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLAndCIPFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			SelectedPolicyFile = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLAndCIPAndP7BFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				SelectedPolicy = ParseFilePathAsPolicyRepresent(selectedFile);
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Accepts a path to an XML or CIP file and then returns a <see cref="PolicyFileRepresent"/> made from it.
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static SiPolicy.PolicyFileRepresent ParseFilePathAsPolicyRepresent(string filePath)
+	{
+		string fileExt = Path.GetExtension(filePath);
+
+		if (string.Equals(fileExt, ".cip", StringComparison.OrdinalIgnoreCase))
+		{
+			return new SiPolicy.PolicyFileRepresent(
+				policyObj: BinaryOpsReverse.ConvertBinaryToXmlFile(filePath),
+				kind: PolicyFileRepresentKind.CIP)
+			{
+				FileName = Path.GetFileNameWithoutExtension(filePath)
+			};
+		}
+		else if (string.Equals(fileExt, ".xml", StringComparison.OrdinalIgnoreCase))
+		{
+			return new SiPolicy.PolicyFileRepresent(
+				policyObj: Management.Initialize(filePath, null),
+				kind: PolicyFileRepresentKind.XML)
+			{
+				FilePath = filePath, // Only assign the file path if it's XML since we use it to save the policy back to the file in other places in the app.
+				FileName = Path.GetFileNameWithoutExtension(filePath)
+			};
+		}
+		else if (string.Equals(fileExt, ".p7b", StringComparison.OrdinalIgnoreCase))
+		{
+			return new SiPolicy.PolicyFileRepresent(
+				policyObj: BinaryOpsReverse.ConvertBinaryToXmlFile(filePath),
+				kind: PolicyFileRepresentKind.P7B)
+			{
+				FileName = Path.GetFileNameWithoutExtension(filePath)
+			};
+		}
+		else
+		{
+			throw new InvalidOperationException(GlobalVars.GetStr("OnlyXmlCipSupportedMessage"));
 		}
 	}
 
 	/// <summary>
 	/// Event handler for the Clear selected policy button
 	/// </summary>
-	internal void ClearButton_Click() => SelectedPolicyFile = null;
-
-	/// <summary>
-	/// To set the count of File-based rules ListView collection in the TabView's header in real time
-	/// </summary>
-	internal void UpdateFileBasedCollectionsCount()
-	{
-		FileBasedCollectionTabItemHeader = $"File-based Rules - count: {FileRulesCollection.Count}";
-	}
-
-	/// <summary>
-	/// To set the count of Signature-based rules ListView collection in the TabView's header in real time
-	/// </summary>
-	internal void UpdateSignatureBasedCollectionsCount()
-	{
-		SignatureBasedCollectionTabItemHeader = $"Signature-based Rules - count: {SignatureRulesCollection.Count}";
-	}
-
-
-	/// <summary>
-	/// Event handler for the UI toggle button to enable/disable text selection in the ListViews
-	/// </summary>
-	internal void ChangeTextSelectionsState() =>
-		TextsAreSelectableToggleState = !TextsAreSelectableToggleState;
-
+	internal void ClearButton_Click() => SelectedPolicy = null;
 
 	#region Custom HashSet comparers so that when processing FilePublisher and WHQLFilePublisher rules, we don't add duplicate signers to the policy.
 	/*
@@ -915,10 +937,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	private sealed class SignerComparer : IEqualityComparer<Signer>
 	{
-		public bool Equals(Signer? x, Signer? y) => x?.ID == y?.ID;
+		public bool Equals(Signer? x, Signer? y) => string.Equals(x?.ID, y?.ID, StringComparison.Ordinal);
 		public int GetHashCode(Signer obj)
 		{
-			unchecked // Standard for hash code, protects against overflow
+			unchecked
 			{
 				return obj.ID.GetHashCode();
 			}
@@ -927,7 +949,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	private sealed class AllowedSignerComparer : IEqualityComparer<AllowedSigner>
 	{
-		public bool Equals(AllowedSigner? x, AllowedSigner? y) => x?.SignerId == y?.SignerId;
+		public bool Equals(AllowedSigner? x, AllowedSigner? y) => string.Equals(x?.SignerId, y?.SignerId, StringComparison.Ordinal);
 		public int GetHashCode(AllowedSigner obj)
 		{
 			unchecked // Standard for hash code, protects against overflow
@@ -939,7 +961,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	private sealed class DeniedSignerComparer : IEqualityComparer<DeniedSigner>
 	{
-		public bool Equals(DeniedSigner? x, DeniedSigner? y) => x?.SignerId == y?.SignerId;
+		public bool Equals(DeniedSigner? x, DeniedSigner? y) => string.Equals(x?.SignerId, y?.SignerId, StringComparison.Ordinal);
 		public int GetHashCode(DeniedSigner obj)
 		{
 			unchecked // Standard for hash code, protects against overflow
@@ -951,7 +973,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	private sealed class CiSignerComparer : IEqualityComparer<CiSigner>
 	{
-		public bool Equals(CiSigner? x, CiSigner? y) => x?.SignerId == y?.SignerId;
+		public bool Equals(CiSigner? x, CiSigner? y) => string.Equals(x?.SignerId, y?.SignerId, StringComparison.Ordinal);
 		public int GetHashCode(CiSigner obj)
 		{
 			unchecked // Standard for hash code, protects against overflow
@@ -966,7 +988,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Saves the changes made to the policy file.
 	/// </summary>
-	internal async void SaveChanges()
+	internal async void SaveChanges(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
 		{
@@ -974,7 +996,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			MainInfoBarIsClosable = false;
 
-			if (SelectedPolicyFile is null || PolicyObj is null)
+			if (SelectedPolicy is null)
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyBeforeLoad"));
 				return;
@@ -982,7 +1004,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			await Task.Run(async () =>
 			{
-
 				// Collections we will populate to be passed to the policy generator method
 				List<object> fileRulesNode = [];
 				List<FileRuleRef> userModeFileRulesRefs = [];
@@ -995,6 +1016,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				HashSet<DeniedSigner> kernelModeDeniedSigners = new(new DeniedSignerComparer());
 				List<SupplementalPolicySigner> supplementalPolicySignersCol = [];
 				List<UpdatePolicySigner> updatePolicySignersCol = [];
+				AppIDTags? userModeAppIDTags = null;
+				AppIDTags? kernelModeAppIDTags = null;
 
 				// Collecting the data from the FileRulesCollectionList that is the backing list of the ObservableCollection
 				// So that the search feature won't affect what will be added to the policy
@@ -1294,44 +1317,45 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				}
 
 				// Other policy details retrieved from the UI elements
-				PolicyObj.PolicyID = policyIDCheckResult.Item2;
-				PolicyObj.BasePolicyID = basePolicyIDCheckResult.Item2;
+				SelectedPolicy.PolicyObj.PolicyID = policyIDCheckResult.Item2;
+				SelectedPolicy.PolicyObj.BasePolicyID = basePolicyIDCheckResult.Item2;
 
 				// Increment the version by 1
 				string incrementedVersionString = VersionIncrementer.AddVersion(new(PolicyVersionTextBox)).ToString();
 
 				// Assign the new incremented version both to the new policy and the textbox on the UI.
-				PolicyObj.VersionEx = incrementedVersionString;
+				SelectedPolicy.PolicyObj.VersionEx = incrementedVersionString;
 				PolicyVersionTextBox = incrementedVersionString;
 
 				if (PolicyTypeComboBox is not null)
-					PolicyObj.PolicyType = (PolicyType)PolicyTypeComboBox;
+					SelectedPolicy.PolicyObj.PolicyType = (PolicyType)PolicyTypeComboBox;
 
 				// If the user selected an HVCI option, set it in the policy
 				if (!string.IsNullOrEmpty(HVCIOptionComboBox))
 				{
-					PolicyObj.HvciOptions = GetHVCIOptionValue(HVCIOptionComboBox);
+					SelectedPolicy.PolicyObj.HvciOptions = GetHVCIOptionValue(HVCIOptionComboBox);
 				}
+
+				// Set Friendly Name
+
+				SelectedPolicy.PolicyObj.FriendlyName = PolicyFriendlyNameTextBox;
 
 				#endregion
 
 				string? fileToSaveTheChangesTo = null;
 
-				// Save the CIP file in a XML file with the same name, different extension
-				if (fileType == 0)
+				// Save the CIP file in a XML file
+				if (SelectedPolicy.Kind is PolicyFileRepresentKind.CIP or PolicyFileRepresentKind.P7B)
 				{
-
-					string cipFileName = Path.GetFileNameWithoutExtension(SelectedPolicyFile);
-
 					// Save it to User Config dir when elevated
 					fileToSaveTheChangesTo = App.IsElevated
-						? Path.Combine(GlobalVars.UserConfigDir, $"{cipFileName}.xml")
+						? Path.Combine(GlobalVars.UserConfigDir, $"{SelectedPolicy.FileName}.xml")
 						// Save it to the same location file is being read from if non-elevated since we already check if we have write permission in that location
-						: Path.Combine(Path.GetDirectoryName(SelectedPolicyFile)!, $"{cipFileName}.xml");
+						: Path.Combine(Path.GetDirectoryName(SelectedPolicy.FilePath)!, $"{SelectedPolicy.FileName}.xml");
 				}
 				else
 				{
-					fileToSaveTheChangesTo = SelectedPolicyFile;
+					fileToSaveTheChangesTo = SelectedPolicy.FilePath;
 				}
 
 				// Anything that has to do with Settings must be applied by this method because it always overwrites any other changes as it writes the final settings block to the policy.
@@ -1351,7 +1375,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				// 2. Iterate through all signers and filter their FileAttribRef lists
 				foreach (Signer signer in signers)
 				{
-					if (signer.FileAttribRef is not null && signer.FileAttribRef.Count > 0)
+					if (signer.FileAttribRef?.Count > 0)
 					{
 						// Keep only the refs whose RuleID exists in our valid set
 						signer.FileAttribRef = signer.FileAttribRef
@@ -1361,10 +1385,69 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				}
 
 
+				#region AppID Tags gathering from UI collection
+
+				List<AppIDTag> userModeAppIDTagsCollection = [];
+				List<AppIDTag> kernelModeAppIDTagsCollection = [];
+
+				HashSet<string> currentTagKeysUserMode = new(StringComparer.Ordinal);
+
+				HashSet<string> currentTagKeysKernelMode = new(StringComparer.Ordinal);
+
+				SigningScenario? umciScenario = SelectedPolicy.PolicyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
+				SigningScenario? kmciScenario = SelectedPolicy.PolicyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
+
+				// Collect AppIDTags from the UI collection for each signing scenario
+				foreach (PolicyEditor.AppIDTagsWithContext tagPackage in AppIDTagsCollection)
+				{
+					// User-Mode Signing Scenario
+					if (tagPackage.Context is SSType.UserMode)
+					{
+						// Ensure only Unique keys for User-mode will be in the policy.
+						if (currentTagKeysUserMode.Add(tagPackage.AppIDTag.Key))
+						{
+							userModeAppIDTagsCollection.Add(tagPackage.AppIDTag);
+						}
+					}
+
+					// kernel-Mode Signing Scenario
+					else if (tagPackage.Context is SSType.KernelMode)
+					{
+						// Ensure only Unique keys for Kernel-mode will be in the policy.
+						if (currentTagKeysKernelMode.Add(tagPackage.AppIDTag.Key))
+						{
+							kernelModeAppIDTagsCollection.Add(tagPackage.AppIDTag);
+						}
+					}
+				}
+
+
+				if (userModeAppIDTagsCollection.Count > 0)
+				{
+					// Assign the results to the Ref vars
+					userModeAppIDTags = new()
+					{
+						EnforceDLL = umciScenario?.AppIDTags?.EnforceDLL, // Assign from the loaded policy.
+						AppIDTag = userModeAppIDTagsCollection
+					};
+				}
+
+				if (kernelModeAppIDTagsCollection.Count > 0)
+				{
+					// Assign the results to the Ref vars
+					kernelModeAppIDTags = new()
+					{
+						EnforceDLL = kmciScenario?.AppIDTags?.EnforceDLL, // Assign from the loaded policy.
+						AppIDTag = kernelModeAppIDTagsCollection
+					};
+				}
+
+				#endregion
+
+
 				// Generate the policy
-				Merger.PolicyGenerator(
-				   fileToSaveTheChangesTo, // The user selected XML file path
-				   PolicyObj, // The deserialized policy object
+				SelectedPolicy.PolicyObj = Merger.PolicyGenerator(
+				   SelectedPolicy.PolicyObj, // The deserialized policy object
 				   ekusToUse, // The deserialized EKUs
 				   fileRulesNode,
 				   [.. signers],
@@ -1377,27 +1460,35 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				   updatePolicySignersCol,
 				   kernelModeFileRulesRefs,
 				   userModeFileRulesRefs,
-				   _policySettings
+				   _policySettings,
+				   userModeAppIDTags,
+				   kernelModeAppIDTags
 				   );
 
+				// Save the policy to the the user selected XML file path
+				if (fileToSaveTheChangesTo is not null)
+				{
+					Management.SavePolicyToFile(SelectedPolicy.PolicyObj, fileToSaveTheChangesTo);
+				}
+
+				// Assign the modified policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(SelectedPolicy);
+
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				await Dispatcher.EnqueueAsync(async () =>
 				{
-
 					// Update the Policy Settings again to reflect the newest changes when something is removed from their UI-bound collection.
-					if (PolicyObj is not null)
-					{
-						PolicySettingsCollection.Clear();
+					PolicySettingsCollection.Clear();
 
-						foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(_policySettings, this))
-						{
-							PolicySettingsCollection.Add(item);
-						}
+					foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(_policySettings, this))
+					{
+						PolicySettingsCollection.Add(item);
 					}
 
 					MainInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyEditorSuccessfulSaveMessage"));
 
-					if (fileType == 0)
+					if (SelectedPolicy.Kind is PolicyFileRepresentKind.CIP or PolicyFileRepresentKind.P7B)
 					{
 						using ContentDialogV2 dialog = new()
 						{
@@ -1412,7 +1503,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 								{
 									new TextBlock
 									{
-										Text = GlobalVars.GetStr("DialogContentCIPConvertedToXML"),
+										Text = SelectedPolicy.Kind is PolicyFileRepresentKind.CIP ? GlobalVars.GetStr("DialogContentCIPConvertedToXML") : GlobalVars.GetStr("DialogContentP7BConvertedToXML"),
 										HorizontalAlignment = HorizontalAlignment.Center,
 										TextWrapping = TextWrapping.WrapWholeWords
 									},
@@ -1456,15 +1547,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		SignatureRulesCollection.Clear();
 		SignatureRulesCollectionList.Clear();
 		PolicySettingsCollection.Clear();
+		AppIDTagsCollection.Clear();
 
 		ekusToUse = [];
-		PolicyObj = null;
+		SelectedPolicy = null;
 		SignerCollectionCol = null;
 
-		SelectedPolicyFile = null;
-
-		FileBasedCollectionTabItemHeader = "File-based Rules - count: 0";
-		SignatureBasedCollectionTabItemHeader = "Signature-based Rules - count: 0";
+		SelectedPolicy = null;
 
 		PolicyNameTextBox = string.Empty;
 		PolicyIDTextBox = null;
@@ -1473,6 +1562,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		PolicyInfoIDTextBox = null;
 		PolicyTypeComboBox = null;
 		HVCIOptionComboBox = null;
+		PolicyFriendlyNameTextBox = null;
 
 		AllowRulesCount = "• Allow Rules count: 0";
 		DenyRulesCount = "• Deny Rules count: 0";
@@ -1490,6 +1580,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 		CalculateSignatureBasedListViewColumnWidths();
 		CalculateFileBasedListViewColumnWidths();
+		CalculateAppIDTagsListViewColumnWidths();
 	}
 
 
@@ -1501,7 +1592,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		try
 		{
-
 			if (SearchTextBox is null)
 				return;
 
@@ -1532,10 +1622,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.FileName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.FilePath?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.InternalName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.FilePath?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.InternalName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.PackageFamilyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.ProductName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 				).ToList();
 			});
@@ -1546,8 +1636,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			{
 				FileRulesCollection.Add(item);
 			}
-
-			UpdateFileBasedCollectionsCount();
 
 			if (Sv1 != null && savedHorizontal1.HasValue)
 			{
@@ -1565,10 +1653,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.CertIssuer?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.CertificateEKU?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.CertOemID?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.CertPublisher?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.CertRoot?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.Name?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+				(p.CertOemID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.CertPublisher?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.CertRoot?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.Name?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 				)];
 			});
 
@@ -1579,14 +1667,15 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				SignatureRulesCollection.Add(item);
 			}
 
-			UpdateSignatureBasedCollectionsCount();
-
 			if (Sv2 != null && savedHorizontal2.HasValue)
 			{
 				// restore horizontal scroll position
 				_ = Sv2.ChangeView(savedHorizontal2, null, null, disableAnimation: false);
 			}
 
+			// Adjust the column widths after performing search
+			CalculateSignatureBasedListViewColumnWidths();
+			CalculateFileBasedListViewColumnWidths();
 		}
 		catch (Exception ex)
 		{
@@ -1599,7 +1688,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// Used by various methods internally to open a created/modified policy in the Policy Editor
 	/// </summary>
 	/// <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
-	internal async Task OpenInPolicyEditor(string? policyFile)
+	internal async Task OpenInPolicyEditor(SiPolicy.PolicyFileRepresent? policy)
 	{
 		try
 		{
@@ -1607,7 +1696,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			ViewModelProvider.NavigationService.Navigate(typeof(Pages.PolicyEditor), null);
 
 			// Assign the policy file path to the local variable
-			SelectedPolicyFile = policyFile;
+			SelectedPolicy = policy;
 
 			await Task.Run(ProcessData);
 		}
@@ -1654,6 +1743,17 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		foreach (PolicyEditor.SignatureBasedRulesForListView item in CollectionsMarshal.AsSpan(itemsToDelete))
 		{
 			RemoveSignatureRuleFromCollection(item);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for deleting selected items from the AppIDTagsCollection's Items Source
+	/// </summary>
+	internal void AppIDTagsListView_DeleteItems(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyEditor.AppIDTagsWithContext tag })
+		{
+			_ = AppIDTagsCollection.Remove(tag);
 		}
 	}
 
@@ -1729,6 +1829,28 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			if (SP(ref field, value))
 				PresetAddButtonVisibility = field is null ? Visibility.Collapsed : Visibility.Visible;
 		}
+	}
+
+	// Texts bound to the UI TextBoxes for adding a new App ID Tag
+	internal string? NewAppIDTagKey { get; set => SPT(ref field, value); }
+	internal string? NewAppIDTagValue { get; set => SPT(ref field, value); }
+
+	/// <summary>
+	/// Adds a new App ID Tag to the collection with the key and value that user entered in the text boxes.
+	/// </summary>
+	internal void AddNewAppIDTag()
+	{
+		if (string.IsNullOrWhiteSpace(NewAppIDTagKey) || string.IsNullOrWhiteSpace(NewAppIDTagValue)) return;
+
+		PolicyEditor.AppIDTagsWithContext newTag = new(
+			context: SSType.UserMode,
+			appIDTag: new(key: NewAppIDTagKey, value: NewAppIDTagValue)
+		);
+
+		AppIDTagsCollection.Add(newTag);
+
+		// Update the column widths after adding a new item to the ListView's collection.
+		CalculateAppIDTagsListViewColumnWidths();
 	}
 
 }

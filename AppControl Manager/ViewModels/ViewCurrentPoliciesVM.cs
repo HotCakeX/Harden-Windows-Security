@@ -23,6 +23,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
+using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -264,7 +265,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			RemovePolicyButtonState = false;
 			UIElementsEnabledState = false;
 
-			string policyID = ListViewSelectedPolicy.PolicyID!.ToString();
+			string policyID = ListViewSelectedPolicy.PolicyID;
 
 			TextBlock formattedTextBlock = new()
 			{
@@ -323,17 +324,13 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				return;
 			}
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
-
-				string stagingArea = StagingArea.NewStagingArea("PolicySwapping").FullName;
-
 				switch (SwapPolicyComboBoxSelectedIndex)
 				{
 					case 0: // Default Windows
 						{
 							_ = BasePolicyCreator.BuildDefaultWindows(
-							StagingArea: stagingArea,
 							IsAudit: false,
 							LogSize: null,
 							deploy: true,
@@ -350,7 +347,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 					case 1: // Allow Microsoft
 						{
 							_ = BasePolicyCreator.BuildAllowMSFT(
-							StagingArea: stagingArea,
 							IsAudit: false,
 							LogSize: null,
 							deploy: true,
@@ -366,8 +362,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 						}
 					case 2: // Signed and Reputable
 						{
-							_ = BasePolicyCreator.BuildSignedAndReputable(
-							StagingArea: stagingArea,
+							_ = await BasePolicyCreator.BuildSignedAndReputable(
 							IsAudit: false,
 							LogSize: null,
 							deploy: true,
@@ -384,7 +379,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 					case 3: // Strict Kernel-Mode
 						{
 							_ = BasePolicyCreator.BuildStrictKernelMode(
-								StagingArea: stagingArea,
 								IsAudit: false,
 								NoFlightRoots: false,
 								deploy: true,
@@ -395,7 +389,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 					case 4: // Strict Kernel-Mode(No Flight Roots)
 						{
 							_ = BasePolicyCreator.BuildStrictKernelMode(
-								StagingArea: stagingArea,
 								IsAudit: false,
 								NoFlightRoots: true,
 								deploy: true,
@@ -449,9 +442,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// Make sure we have a valid selected non-system policy that is on disk
 			if (ListViewSelectedPolicy is not null && !ListViewSelectedPolicy.IsSystemPolicy && ListViewSelectedPolicy.IsOnDisk)
 			{
-				// List of all the deployed non-system policies
-				List<CiPolicyInfo> currentlyDeployedPolicies = [];
-
 				// List of all the deployed base policy IDs
 				List<string?> currentlyDeployedBasePolicyIDs = [];
 
@@ -461,7 +451,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				// Populate the lists defined above
 				await Task.Run(() =>
 				{
-					currentlyDeployedPolicies = CiToolHelper.GetPolicies(false, true, true);
+					// List of all the deployed non-system policies
+					List<CiPolicyInfo> currentlyDeployedPolicies = CiToolHelper.GetPolicies(false, true, true);
 
 					currentlyDeployedBasePolicyIDs = [.. currentlyDeployedPolicies.Where(x => string.Equals(x.PolicyID, x.BasePolicyID, StringComparison.OrdinalIgnoreCase)).Select(p => p.BasePolicyID)];
 
@@ -503,7 +494,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 				#region
 
-
 				// If the policy that's going to be removed is a base policy
 				if (string.Equals(ListViewSelectedPolicy.PolicyID, ListViewSelectedPolicy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 				{
@@ -526,8 +516,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				// If there are policies to be removed
 				if (policiesToRemove.Count > 0)
 				{
-					DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyRemoval");
-
 					foreach (CiPolicyInfo policy in policiesToRemove)
 					{
 						// Remove the policy directly from the system if it's unsigned or supplemental
@@ -535,7 +523,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 						{
 							await Task.Run(() =>
 							{
-								CiToolHelper.RemovePolicy(policy.PolicyID!);
+								CiToolHelper.RemovePolicy(policy.PolicyID);
 							});
 						}
 
@@ -547,12 +535,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							if (policy.PolicyOptions is not null && policy.PolicyOptionsDisplay.Contains("Enabled:Unsigned System Integrity Policy", StringComparison.OrdinalIgnoreCase))
 							{
 								// And if system was rebooted once after performing the 1st removal stage
-								if (VerifyRemovalEligibility(policy.PolicyID!))
+								if (VerifyRemovalEligibility(policy.PolicyID))
 								{
-									CiToolHelper.RemovePolicy(policy.PolicyID!);
+									CiToolHelper.RemovePolicy(policy.PolicyID);
 
 									// Remove the PolicyID from the SignedPolicyStage1RemovalTimes dictionary
-									UserConfiguration.RemoveSignedPolicyStage1RemovalTime(policy.PolicyID!);
+									UserConfiguration.RemoveSignedPolicyStage1RemovalTime(policy.PolicyID);
 								}
 								else
 								{
@@ -575,17 +563,15 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							// Treat it as a new signed policy removal
 							else
 							{
-
 								#region Signing Details acquisition
 
 								string CertCN;
 								string CertPath;
-								string XMLPolicyPath;
+								string? XMLPolicyPath;
 
 								// Instantiate the Content Dialog
-								using (SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!))
+								using (SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID))
 								{
-
 									// Show the dialog and await its result
 									ContentDialogResult result = await customDialog.ShowAsync();
 
@@ -594,7 +580,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 									{
 										CertPath = customDialog.CertificatePath!;
 										CertCN = customDialog.CertificateCommonName!;
-										XMLPolicyPath = customDialog.XMLPolicyPath!;
+										XMLPolicyPath = customDialog.XMLPolicyPath;
 
 										// Sometimes the content dialog lingers on or re-appears so making sure it hides
 										customDialog.Hide();
@@ -606,27 +592,48 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								}
 								#endregion
 
+								// The policy object we're removing
+								SiPolicy.SiPolicy? policyObj = null;
+
+								// If policy file was provided by the dialog/user then use it
+								if (!string.IsNullOrEmpty(XMLPolicyPath))
+								{
+									// Initialize the user-selected policy file		
+									policyObj = Management.Initialize(XMLPolicyPath, null);
+								}
+								// If not then find the corresponding CIP file and use that instead
+								else
+								{
+									string? cipFilePathToDecode = GetLocalCIPFile(policy) ?? throw new InvalidOperationException("Could not find the CIP path of the Signed policy you're trying to remove on the system.");
+
+									policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(cipFilePathToDecode);
+
+									if (!CertificatePresence.InferCertificatePresence(policyObj, CertPath, CertCN, PolicyFileRepresentKind.CIP))
+									{
+										throw new InvalidOperationException("The selected certificate is not for the signed policy you're trying to remove. Please select the correct certificate file and common name.");
+									}
+								}
+
 								// Add the unsigned policy rule option to the policy
-								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 								// Making sure SupplementalPolicySigners do not exist in the XML policy
-								CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
+								policyObj = CiPolicyHandler.RemoveSupplementalSigners(policyObj);
 
-								// Define the path for the CIP file
-								string randomString = Guid.CreateVersion7().ToString("N");
-								string xmlFileName = Path.GetFileName(XMLPolicyPath);
-								string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
+								// Save the modified policy back to the user-selected policy file path - If provided
+								if (!string.IsNullOrEmpty(XMLPolicyPath))
+								{
+									Management.SavePolicyToFile(policyObj, XMLPolicyPath);
+								}
 
-								// Convert the XML file to CIP, overwriting the unsigned one
-								Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
+								// Convert policy object to CIP
+								byte[] cipContent = Management.ConvertXMLToBinary(policyObj);
 
 								// Sign the CIP
-								CommonCore.Signing.Main.SignCIP(CIPFilePath, CertCN);
+								cipContent = CommonCore.Signing.Main.SignCIP(cipContent, CertCN);
 
 								// Deploy the signed CIP file
-								CiToolHelper.UpdatePolicy(CIPFilePath);
-
-								SiPolicy.SiPolicy policyObj = Management.Initialize(XMLPolicyPath, null);
+								CiToolHelper.UpdatePolicy(cipContent);
 
 								// The time of first stage of the signed policy removal
 								// Since policy object has the full ID, in upper case with curly brackets,
@@ -734,7 +741,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	{
 		try
 		{
-
 			string? searchTerm = SearchBoxTextBox?.Trim();
 
 			if (searchTerm is null)
@@ -755,7 +761,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			{
 				// Perform a case-insensitive search in all relevant fields
 				filteredResults = AllPoliciesOutput.Where(p =>
-				(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				p.PolicyID.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				p.IsSystemPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -879,9 +885,29 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	private static readonly string UnsignedPoliciesPath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity", "CIPolicies", "Active");
 
 	/// <summary>
+	/// Path to the directory where the App Control policies in .p7b format are located.
+	/// </summary>
+	private static readonly string P7bPoliciesPath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity");
+
+	/// <summary>
 	/// To avoid querying the EFI partition path multiple times, we store it here after the first successful retrieval.
 	/// </summary>
 	private static string? EFIRootPath;
+
+	/// <summary>
+	/// A dictionary where keys are PolicyIDs and values are policy objects of P7B policies.
+	/// </summary>
+	private readonly static Dictionary<string, SiPolicy.SiPolicy> P7BPoliciesDictionary = new(StringComparer.OrdinalIgnoreCase);
+
+	/// <summary>
+	/// A dictionary where keys are PolicyIDs and values are paths of P7B policies.
+	/// </summary>
+	private readonly static Dictionary<string, string> P7BPoliciesIDToPath = new(StringComparer.OrdinalIgnoreCase);
+
+	/// <summary>
+	/// A dictionary where keys are Paths and values are PolicyIDs of P7B policies.
+	/// </summary>
+	private readonly static Dictionary<string, string> P7BPoliciesPathToID = new(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Finds the local CIP file path of a given policy, if it exists on the system.
@@ -892,13 +918,56 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	{
 		string? output = null;
 
-		if (policyInfoObj is null || policyInfoObj.PolicyID is null)
+		if (policyInfoObj is null)
 			return output;
+
+		#region p7b files
+
+		// If the dictionary is empty
+		if (P7BPoliciesDictionary.Count == 0)
+		{
+
+			string[] p7bFiles = Directory.GetFiles(P7bPoliciesPath, "*.p7b", SearchOption.TopDirectoryOnly);
+
+			// If there are any .p7b policies on disk
+			if (p7bFiles.Length > 0)
+			{
+				foreach (string item in p7bFiles)
+				{
+					try
+					{
+						// We only ever decode the same P7B file once and reuse it from the dictionary on retrievals
+						SiPolicy.SiPolicy decodedPolicy = BinaryOpsReverse.ConvertBinaryToXmlFile(item);
+
+						// Store PolicyID -> Policy Object
+						if (P7BPoliciesDictionary.TryAdd(decodedPolicy.PolicyID.Trim('{', '}'), decodedPolicy))
+						{
+							// Store PolicyID -> File Path
+							_ = P7BPoliciesIDToPath.TryAdd(decodedPolicy.PolicyID, item);
+
+							// Store File Path -> PolicyID
+							_ = P7BPoliciesPathToID.TryAdd(item, decodedPolicy.PolicyID.Trim('{', '}'));
+						}
+						else
+						{
+							Logger.Write($"The P7B policy '{item}' could not be added to the dictionary because there was already a policy with the same PolicyID: {decodedPolicy.PolicyID}");
+						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Write($"The following P7B policy could not be parsed: {item}");
+						Logger.Write(ex);
+					}
+				}
+			}
+		}
+
+		#endregion
 
 		// Normalized file name because that's how Code Integrity policies are saved on the disk.
 		string policyIDAsGUID = $"{{{policyInfoObj.PolicyID}}}.cip";
 
-		// Try to find it first among unsigned policeis.
+		// Try to find it first among unsigned policies.
 		string[] files = Directory.GetFiles(UnsignedPoliciesPath, policyIDAsGUID, SearchOption.AllDirectories);
 
 		// Check if any files were found
@@ -910,7 +979,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		else
 		{
 			// Get the EFI partition path if we haven't already gotten it
-			EFIRootPath ??= IntelGathering.DriveLetterMapper.GetEfiPartitionRootPath();
+			EFIRootPath ??= DriveLetterMapper.GetEfiPartitionRootPath();
 
 			// If we couldn't get the EFI partition path
 			if (EFIRootPath is not null)
@@ -922,6 +991,15 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				{
 					output = files2[0];
 				}
+			}
+		}
+
+		// If the policy isn't CIP, look for it among P7B policies
+		if (output is null)
+		{
+			if (P7BPoliciesDictionary.TryGetValue(policyInfoObj.PolicyID, out SiPolicy.SiPolicy? p7BPolicy))
+			{
+				_ = P7BPoliciesIDToPath.TryGetValue(p7BPolicy.PolicyID, out output);
 			}
 		}
 
@@ -940,7 +1018,21 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		{
 			UIElementsEnabledState = false;
 
-			await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(SelectedPolicyLocalFilePath);
+			SiPolicy.PolicyFileRepresent? policy = null;
+
+			// First see if the policy is P7B type so we can get its object from the dictionary instead of decoding it again.
+			if (P7BPoliciesPathToID.TryGetValue(SelectedPolicyLocalFilePath, out string? possibleP7BPolicyID))
+			{
+				if (P7BPoliciesDictionary.TryGetValue(possibleP7BPolicyID, out SiPolicy.SiPolicy? policyObj))
+				{
+					policy = new(policyObj);
+				}
+			}
+
+			// If the policy couldn't be found among P7B files that have been already decoded then decode it via the provided file path which is for CIP files.
+			policy ??= PolicyEditorVM.ParseFilePathAsPolicyRepresent(SelectedPolicyLocalFilePath);
+
+			await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(policy);
 		}
 		catch (Exception ex)
 		{

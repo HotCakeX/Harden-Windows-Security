@@ -15,29 +15,29 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
 internal static partial class CheckForAllowAll
 {
 	/// <summary>
-	/// Takes a XML file path and checks whether it has an allow all rule
+	/// Takes an <see cref="SiPolicy.SiPolicy"/> and checks whether it has an allow all rule.
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
 	/// <returns></returns>
-	internal static bool Check(string xmlFilePath)
+	internal static bool Check(SiPolicy.SiPolicy policyObj)
 	{
-		// Read the content of the XML file into a string
-		string xmlContent = File.ReadAllText(xmlFilePath);
+		// Check if the policy contains any FileRules
+		if (policyObj.FileRules is { Count: > 0 })
+		{
+			// Check for any Allow rule that has FileName="*"
+			return policyObj.FileRules
+				.OfType<Allow>()
+				.Any(rule => string.Equals(rule.FileName, "*", StringComparison.OrdinalIgnoreCase));
+		}
 
-		Regex allowAllRegex = MyRegex();
-
-		// Check if the pattern matches the XML content
-		return allowAllRegex.IsMatch(xmlContent);
+		return false;
 	}
-
-	[GeneratedRegex(@"<Allow ID=""ID_ALLOW_.*"" FriendlyName="".*"" FileName=""\*"".*/>")]
-	private static partial Regex MyRegex();
 }

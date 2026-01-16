@@ -31,13 +31,11 @@
       <Option>Enabled:Revoked Expired As Unsigned</Option>
     </Rule>
   </Rules>
-  <EKUs />
   <FileRules>
     <Allow ID="ID_ALLOW_A_1_0" FriendlyName="" FileName="*" />
     <Allow ID="ID_ALLOW_A_2_0" FriendlyName="" FileName="*" />
     <Deny ID="ID_DENY_D_1_1" FriendlyName="System Downloads Folder" FilePath="To-Be-Detected" />
   </FileRules>
-  <Signers />
   <SigningScenarios>
     <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel-Mode Signing Scenario">
       <ProductSigners>
@@ -55,8 +53,6 @@
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners />
-  <CiSigners />
   <HvciOptions>2</HvciOptions>
   <BasePolicyID>{98FC8E9B-A6B1-431C-B2BE-EB23A86B5DE5}</BasePolicyID>
   <PolicyID>{98FC8E9B-A6B1-431C-B2BE-EB23A86B5DE5}</PolicyID>

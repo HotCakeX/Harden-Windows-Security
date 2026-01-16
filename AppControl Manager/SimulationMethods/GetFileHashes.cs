@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Xml;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SimulationMethods;
@@ -25,17 +24,15 @@ namespace AppControlManager.SimulationMethods;
 internal static partial class GetFileHashes
 {
 	/// <summary>
-	/// Takes an App Control XML policy and returns all of the Hashes in the Hash rules.
-	/// The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main method.
+	/// Takes an App Control policy and returns all of the Hashes in the Hash rules.
+	/// The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main method in Simulation.
 	/// </summary>
-	/// <param name="xml"></param>
+	/// <param name="policyObj"></param>
 	/// <returns></returns>
-	internal static HashSet<string> Get(XmlDocument xml)
+	internal static HashSet<string> Get(SiPolicy.SiPolicy policyObj)
 	{
 		// Create an empty HashSet to store the output
 		HashSet<string> outputHashInfoProcessingString = [];
-
-		SiPolicy.SiPolicy policyObj = Management.Initialize(null, xml);
 
 		if (policyObj.FileRules is not null)
 		{
@@ -51,6 +48,7 @@ internal static partial class GetFileHashes
 		}
 
 		Logger.Write(string.Format(GlobalVars.GetStr("ReturningNFileRulesBasedOnHashes"), outputHashInfoProcessingString.Count));
+
 		// Return the output HashSet
 		return outputHashInfoProcessingString;
 	}

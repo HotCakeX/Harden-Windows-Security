@@ -16,6 +16,7 @@
 //
 
 using System.Threading;
+using AppControlManager.ViewModels;
 
 namespace CommonCore;
 
@@ -29,7 +30,17 @@ internal static class TaskTracking
 	/// <summary>
 	/// Returns true if there is at least one active operation.
 	/// </summary>
-	internal static bool AppNeedsCloseConfirmation => Volatile.Read(ref _activeOperationsCount) > 0;
+	internal static bool AppNeedsCloseConfirmation => AppNeedsCloseConfirmationVerdict();
+
+	private static bool AppNeedsCloseConfirmationVerdict()
+	{
+#if APP_CONTROL_MANAGER
+		// If there are any active operations or there are policies in the Sidebar library and Persistent library option is not enabled meaning app restart will cause all in-memory policies in the library to be lost.
+		return Volatile.Read(ref _activeOperationsCount) > 0 || (ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Count > 0 && !AppControlManager.App.Settings.PersistentPoliciesLibrary);
+#else
+		return Volatile.Read(ref _activeOperationsCount) > 0;
+#endif
+	}
 
 	/// <summary>
 	/// Registers a new operation and returns a disposable object.
@@ -48,7 +59,7 @@ internal static class TaskTracking
 			_ = Interlocked.Increment(ref _activeOperationsCount);
 
 			// Set the active badge
-			CommonCore.Taskbar.Badge.SetBadgeAsActive();
+			Taskbar.Badge.SetBadgeAsActive();
 		}
 
 		public void Dispose()
@@ -57,7 +68,7 @@ internal static class TaskTracking
 			if (Interlocked.Decrement(ref _activeOperationsCount) == 0)
 			{
 				// Clear the active badge if no more active operations
-				CommonCore.Taskbar.Badge.ClearBadge();
+				Taskbar.Badge.ClearBadge();
 			}
 		}
 	}

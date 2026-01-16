@@ -49,23 +49,34 @@ internal static class FileAttribDeDuplication
 		IEnumerable<DeniedSigner> kernelModeDeniedSigners
 		)
 	{
-
 		// Step 1: a list of file attributes in the <FileRules> node
 		List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList() ?? [];
-
 
 		// Step 2: Group duplicate FileAttribs using custom equality logic.
 
 		// Each group contains FileAttribs that are considered duplicates based on our custom rules.
 		List<List<FileAttrib>> duplicateGroups = [];
 
-		foreach (FileAttrib fileAttrib in fileAttribs)
+		foreach (FileAttrib fileAttrib in CollectionsMarshal.AsSpan(fileAttribs))
 		{
 			bool addedToGroup = false;
-			foreach (List<FileAttrib> group in duplicateGroups)
+			foreach (List<FileAttrib> group in CollectionsMarshal.AsSpan(duplicateGroups))
 			{
 				// Use the first element of the group as the representative.
-				if (AreFileAttribsEqual(group[0], fileAttrib))
+				FileAttrib group0 = group[0];
+
+				if (Merger.CompareCommonRuleProperties(
+					null, null,
+					null, null,
+					group0.PackageFamilyName, fileAttrib.PackageFamilyName,
+					group0.Hash, fileAttrib.Hash,
+					group0.FilePath, fileAttrib.FilePath,
+					group0.FileName, fileAttrib.FileName,
+					group0.MinimumFileVersion, fileAttrib.MinimumFileVersion,
+					group0.MaximumFileVersion, fileAttrib.MaximumFileVersion,
+					group0.InternalName, fileAttrib.InternalName,
+					group0.FileDescription, fileAttrib.FileDescription,
+					group0.ProductName, fileAttrib.ProductName))
 				{
 					group.Add(fileAttrib);
 					addedToGroup = true;
@@ -84,7 +95,7 @@ internal static class FileAttribDeDuplication
 
 		// This dictionary indexes Signer objects by their ID for later lookup.
 		Dictionary<string, Signer> signerDictionary = [];
-		foreach (Signer signer in signers)
+		foreach (Signer signer in CollectionsMarshal.AsSpan(signers))
 		{
 			if (!signerDictionary.TryAdd(signer.ID, signer))
 			{
@@ -144,7 +155,7 @@ internal static class FileAttribDeDuplication
 
 		// We keep track of FileAttrib IDs that must be removed from FileRules.
 		HashSet<string> fileAttribIdsToRemove = [];
-		foreach (List<FileAttrib> group in duplicateGroups)
+		foreach (List<FileAttrib> group in CollectionsMarshal.AsSpan(duplicateGroups))
 		{
 			// Only groups with more than one FileAttrib need deduplication.
 			if (group.Count > 1)
@@ -193,7 +204,7 @@ internal static class FileAttribDeDuplication
 		// this ensures only one reference is retained.
 		foreach (Signer signer in CollectionsMarshal.AsSpan(signers))
 		{
-			if (signer.FileAttribRef is not null && signer.FileAttribRef.Count > 1)
+			if (signer.FileAttribRef?.Count > 1)
 			{
 				signer.FileAttribRef = [.. signer.FileAttribRef
 					.GroupBy(r => r.RuleID)
@@ -201,34 +212,6 @@ internal static class FileAttribDeDuplication
 			}
 		}
 	}
-
-	/// <summary>
-	/// Compares two FileAttrib objects based on custom duplicate detection logic.
-	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="y"></param>
-	/// <returns></returns>
-	private static bool AreFileAttribsEqual(FileAttrib x, FileAttrib y)
-	{
-		if (x is null || y is null)
-		{
-			return false;
-		}
-
-		return Merger.CompareCommonRuleProperties(
-					null, null,
-					null, null,
-					x.PackageFamilyName, y.PackageFamilyName,
-					x.Hash, y.Hash,
-					x.FilePath, y.FilePath,
-					x.FileName, y.FileName,
-					x.MinimumFileVersion, y.MinimumFileVersion,
-					x.MaximumFileVersion, y.MaximumFileVersion,
-					x.InternalName, y.InternalName,
-					x.FileDescription, y.FileDescription,
-					x.ProductName, y.ProductName);
-	}
-
 
 	/// <summary>
 	/// For a group of duplicate FileAttribs, this method deduplicates them within the same signer dictionary.
@@ -252,7 +235,7 @@ internal static class FileAttribDeDuplication
 		// Create a mapping of each FileAttrib to the set of signer dictionary keys in which it is referenced.
 		// The keys can be: "allowedUMCI", "deniedUMCI", "allowedKMCI", "deniedKMCI".
 		Dictionary<FileAttrib, HashSet<string>> usage = [];
-		foreach (FileAttrib fa in group)
+		foreach (FileAttrib fa in CollectionsMarshal.AsSpan(group))
 		{
 			HashSet<string> dicts = [];
 
@@ -319,7 +302,7 @@ internal static class FileAttribDeDuplication
 				// If the FileAttribs use MinimumFileVersion, choose the one with the lowest version.
 				if (!string.IsNullOrWhiteSpace(kept.MinimumFileVersion))
 				{
-					foreach (FileAttrib fa in fileAttribList)
+					foreach (FileAttrib fa in CollectionsMarshal.AsSpan(fileAttribList))
 					{
 						if (!string.IsNullOrWhiteSpace(fa.MinimumFileVersion) &&
 							CompareVersions(fa.MinimumFileVersion, kept.MinimumFileVersion) < 0)
@@ -331,7 +314,7 @@ internal static class FileAttribDeDuplication
 				// Else if they use MaximumFileVersion, choose the one with the highest version.
 				else if (!string.IsNullOrWhiteSpace(kept.MaximumFileVersion))
 				{
-					foreach (FileAttrib fa in fileAttribList)
+					foreach (FileAttrib fa in CollectionsMarshal.AsSpan(fileAttribList))
 					{
 						if (!string.IsNullOrWhiteSpace(fa.MaximumFileVersion) &&
 							CompareVersions(fa.MaximumFileVersion, kept.MaximumFileVersion) > 0)

@@ -52,10 +52,10 @@ internal static class Factory
 
 			// Find all FileRuleRefs in SigningScenarios and map them to Allow rules
 			if (siPolicy.SigningScenarios is not null)
-				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
+				foreach (SigningScenario signingScenario in CollectionsMarshal.AsSpan(siPolicy.SigningScenarios))
 				{
 					// Get all possible FileRuleRef items from the current signing scenario
-					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
+					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners.FileRulesRef?.FileRuleRef;
 
 					if (possibleFileRuleRef is { Count: > 0 })
 					{
@@ -133,10 +133,10 @@ internal static class Factory
 
 			// Find all FileRuleRefs in SigningScenarios and map them to DenyRules
 			if (siPolicy.SigningScenarios is not null)
-				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
+				foreach (SigningScenario signingScenario in CollectionsMarshal.AsSpan(siPolicy.SigningScenarios))
 				{
 					// Get all possible FileRuleRef items from the current signing scenario
-					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
+					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners.FileRulesRef?.FileRuleRef;
 
 					if (possibleFileRuleRef is { Count: > 0 })
 					{
@@ -211,10 +211,10 @@ internal static class Factory
 
 			// Find all FileRuleRefs in SigningScenarios and map them to FileRules
 			if (siPolicy.SigningScenarios is not null)
-				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
+				foreach (SigningScenario signingScenario in CollectionsMarshal.AsSpan(siPolicy.SigningScenarios))
 				{
 					// Get all possible FileRuleRef items from the current signing scenario
-					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
+					List<FileRuleRef>? possibleFileRuleRef = signingScenario.ProductSigners.FileRulesRef?.FileRuleRef;
 
 					if (possibleFileRuleRef is { Count: > 0 })
 					{
@@ -322,62 +322,56 @@ internal static class Factory
 
 			// Step 2: Process SigningScenarios
 			if (siPolicy.SigningScenarios is not null)
-				foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
+				foreach (SigningScenario signingScenario in CollectionsMarshal.AsSpan(siPolicy.SigningScenarios))
 				{
-					// If the signing scenario has product signers
-					ProductSigners? possibleProdSigners = signingScenario.ProductSigners;
+					List<AllowedSigner>? allowedSigners = signingScenario.ProductSigners.AllowedSigners?.AllowedSigner;
+					List<DeniedSigner>? deniedSigners = signingScenario.ProductSigners.DeniedSigners?.DeniedSigner;
 
-					if (possibleProdSigners is not null)
+					if (allowedSigners is { Count: > 0 })
 					{
-						List<AllowedSigner>? allowedSigners = possibleProdSigners.AllowedSigners?.AllowedSigner;
-						List<DeniedSigner>? deniedSigners = possibleProdSigners.DeniedSigners?.DeniedSigner;
-
-						if (allowedSigners is { Count: > 0 })
+						// Process Allowed Signers
+						foreach (AllowedSigner item in CollectionsMarshal.AsSpan(allowedSigners))
 						{
-							// Process Allowed Signers
-							foreach (AllowedSigner item in CollectionsMarshal.AsSpan(allowedSigners))
+							// Get the Signer element associated with the current AllowedSigner
+							if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
 							{
-								// Get the Signer element associated with the current AllowedSigner
-								if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
-								{
-									AddSignerRule(
-										signer,
-										signingScenario,
-										Authorization.Allow,
-										item,
-										null,
-										ciSignerSet,
-										fileAttribDictionary,
-										filePublisherSigners,
-										signerRules,
-										wHQLPublishers,
-										whqlFilePublishers,
-										ekuDictionary);
-								}
+								AddSignerRule(
+									signer,
+									signingScenario,
+									Authorization.Allow,
+									item,
+									null,
+									ciSignerSet,
+									fileAttribDictionary,
+									filePublisherSigners,
+									signerRules,
+									wHQLPublishers,
+									whqlFilePublishers,
+									ekuDictionary);
 							}
 						}
+					}
 
-						if (deniedSigners is { Count: > 0 })
+					if (deniedSigners is { Count: > 0 })
+					{
+						// Process Denied Signers
+						foreach (DeniedSigner item in CollectionsMarshal.AsSpan(deniedSigners))
 						{
-							// Process Denied Signers
-							foreach (DeniedSigner item in CollectionsMarshal.AsSpan(deniedSigners))
+							if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
 							{
-								if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
-								{
-									AddSignerRule(
-										signer,
-										signingScenario,
-										Authorization.Deny,
-										null,
-										item,
-										ciSignerSet,
-										fileAttribDictionary,
-										filePublisherSigners,
-										signerRules,
-										wHQLPublishers,
-										whqlFilePublishers,
-										ekuDictionary);
-								}
+								AddSignerRule(
+									signer,
+									signingScenario,
+									Authorization.Deny,
+									null,
+									item,
+									ciSignerSet,
+									fileAttribDictionary,
+									filePublisherSigners,
+									signerRules,
+									wHQLPublishers,
+									whqlFilePublishers,
+									ekuDictionary);
 							}
 						}
 					}
@@ -501,7 +495,7 @@ internal static class Factory
 
 				List<FileAttribRef> signerFileAttribRefs = new(associatedFileAttribs.Count);
 
-				foreach (FileAttrib item in associatedFileAttribs)
+				foreach (FileAttrib item in CollectionsMarshal.AsSpan(associatedFileAttribs))
 				{
 					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_FILEATTRIB_A_{tempGuid}";
@@ -535,7 +529,7 @@ internal static class Factory
 				List<EKU> newEKUs = new(associatedEKUs.Count);
 				List<CertEKU> signerCertEKUs = new(associatedEKUs.Count);
 
-				foreach (EKU item in associatedEKUs)
+				foreach (EKU item in CollectionsMarshal.AsSpan(associatedEKUs))
 				{
 					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_EKU_E_{tempGuid}";
@@ -611,7 +605,7 @@ internal static class Factory
 
 				List<FileAttribRef> signerFileAttribRefs = new(associatedFileAttribs.Count);
 
-				foreach (FileAttrib item in associatedFileAttribs)
+				foreach (FileAttrib item in CollectionsMarshal.AsSpan(associatedFileAttribs))
 				{
 					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_FILEATTRIB_A_{tempGuid}";
@@ -695,7 +689,7 @@ internal static class Factory
 			List<EKU> newEKUs = new(associatedEKUs.Count);
 			List<CertEKU> signerCertEKUs = new(associatedEKUs.Count);
 
-			foreach (EKU item in associatedEKUs)
+			foreach (EKU item in CollectionsMarshal.AsSpan(associatedEKUs))
 			{
 				string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string tempID = $"ID_EKU_E_{tempGuid}";

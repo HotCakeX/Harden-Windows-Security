@@ -302,7 +302,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 
 				await Task.Run(() =>
 				{
-					isValid = CertificatePresence.InferCertificatePresence(policyObjectToVerify, certPath, certCN);
+					isValid = CertificatePresence.InferCertificatePresence(policyObjectToVerify, certPath, certCN, SiPolicy.PolicyFileRepresentKind.XML);
 				});
 
 				if (!isValid)

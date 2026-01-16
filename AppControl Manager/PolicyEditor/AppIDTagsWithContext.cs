@@ -15,25 +15,20 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.XMLOps;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using AppControlManager.SiPolicy;
 
-internal static class UpdateHvciOptions
+namespace AppControlManager.PolicyEditor;
+
+/// <summary>
+/// To display AppIDTags in the Policy Editor.
+/// </summary>
+/// <param name="context"></param>
+/// <param name="appIDTag"></param>
+internal sealed class AppIDTagsWithContext(SiPolicyIntel.SSType context, AppIDTag appIDTag)
 {
-	/// <summary>
-	/// Sets the HVCI option to Strict or (2) in a policy XML file
-	/// </summary>
-	/// <param name="filePath"></param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void Update(string filePath)
-	{
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
-
-		policyObj.HvciOptions = 2;
-
-		// Save the modified XML document
-		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
-
-		Logger.Write(string.Format(GlobalVars.GetStr("HVCISetToStrictSuccessMessage"), filePath));
-	}
+	internal SiPolicyIntel.SSType Context => context;
+	internal AppIDTag AppIDTag => appIDTag;
 }

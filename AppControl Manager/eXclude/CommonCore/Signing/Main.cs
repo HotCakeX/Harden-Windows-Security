@@ -16,7 +16,6 @@
 //
 
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
@@ -82,12 +81,12 @@ internal static class Main
 	/// <summary>
 	/// Method for signing Code Integrity Policies (CIP).
 	/// </summary>
-	/// <param name="filePath">The CIP file to be signed.</param>
+	/// <param name="fileContent">The CIP content to be signed.</param>
 	/// <param name="CertCN"></param>
 	/// <param name="Cert"></param>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static void SignCIP(string filePath, string? CertCN = null, X509Certificate2? Cert = null)
+	internal static byte[] SignCIP(byte[] fileContent, string? CertCN = null, X509Certificate2? Cert = null)
 	{
 		X509Certificate2? signingCertificate = (Cert ??
 			Helper.FindCertificateBySubjectName(CertCN ??
@@ -96,9 +95,6 @@ internal static class Main
 
 		if (!signingCertificate.HasPrivateKey)
 			throw new InvalidOperationException(GlobalVars.GetStr("CertificateMustHavePrivateKey"));
-
-		// Read the file content to be signed
-		byte[] fileContent = File.ReadAllBytes(filePath);
 
 		// The required OID for Code Integrity policy signing.
 		const string contentTypeOid = "1.3.6.1.4.1.311.79.1";
@@ -130,10 +126,7 @@ internal static class Main
 
 		ForceCmsVersionToV1(signedBytes);
 
-		File.Delete(filePath);
-		File.WriteAllBytes(filePath, signedBytes);
-
-		Logger.Write(string.Format(GlobalVars.GetStr("PKCS7SignatureWritten"), filePath));
+		return signedBytes;
 	}
 
 	/// <summary>

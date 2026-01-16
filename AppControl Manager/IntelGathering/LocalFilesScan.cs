@@ -19,6 +19,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
@@ -56,7 +57,7 @@ internal static class LocalFilesScan
 
 		try
 		{
-			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			// Get the security catalog data to include in the scan
 			ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, scalability);
@@ -104,7 +105,6 @@ internal static class LocalFilesScan
 				{
 					foreach (string file in chunk)
 					{
-
 						cToken?.ThrowIfCancellationRequested();
 
 						// Increment the processed file count safely
@@ -217,9 +217,8 @@ internal static class LocalFilesScan
 								List<ChainPackage> FileSignerInfo = GetCertificateDetails.Get(FileSignatureResults);
 
 								// Iterate through the certificates of the file
-								foreach (ChainPackage package in FileSignerInfo)
+								foreach (ChainPackage package in CollectionsMarshal.AsSpan(FileSignerInfo))
 								{
-
 									string? CurrentOpusData = null;
 
 									try
@@ -240,11 +239,11 @@ internal static class LocalFilesScan
 
 									// If the Leaf Certificate exists in the current package
 									// Indicating that the current signer of the file is a normal certificate with Leaf/Intermediate(s)/Root
-									if (package.LeafCertificate is not null)
+									if (package.LeafCertificate is not null && package.LeafCertificate.Certificate is not null)
 									{
 
 										// See if the leaf certificate in the current signer has WHQL OID for its EKU
-										bool WHQLConfirmed = DetermineWHQL(package.LeafCertificate.Certificate!.Extensions);
+										bool WHQLConfirmed = DetermineWHQL(package.LeafCertificate.Certificate.Extensions);
 
 										// Get the TBSHash of the Issuer certificate of the Leaf Certificate of the current file's signer
 										string IssuerTBSHash = CertificateHelper.GetTBSCertificate(package.LeafCertificate.Issuer);
@@ -290,10 +289,10 @@ internal static class LocalFilesScan
 									}
 									// If Leaf certificate is null, according to the GetCertificateDetails class's logic,
 									// use Root certificate. That means the current signer of the file is a root certificate.
-									else if (package.RootCertificate is not null)
+									else if (package.RootCertificate is not null && package.RootCertificate.Certificate is not null)
 									{
 										// See if the root certificate in the current signer has WHQL OID for its EKU
-										bool WHQLConfirmed = DetermineWHQL(package.RootCertificate.Certificate!.Extensions);
+										bool WHQLConfirmed = DetermineWHQL(package.RootCertificate.Certificate.Extensions);
 
 										FileSignerInfo signerInfo = new(
 											totalSignatureCount: FileSignerInfo.Count,
@@ -340,7 +339,7 @@ internal static class LocalFilesScan
 							// Disposing all AllFileSigners instances now that we have extracted
 							// every piece of information. This prevents X509Chain native resource accumulation.
 							// As of this moment, .NET doesn't warn us about doing this even with all analyzers enabled.
-							foreach (AllFileSigners signer in FileSignatureResults)
+							foreach (AllFileSigners signer in CollectionsMarshal.AsSpan(FileSignatureResults))
 							{
 								signer.Dispose();
 							}
@@ -413,7 +412,7 @@ internal static class LocalFilesScan
 	{
 		List<string> output = [];
 
-		foreach (AllFileSigners fileSignature in fileSigners)
+		foreach (AllFileSigners fileSignature in CollectionsMarshal.AsSpan(fileSigners))
 		{
 			// Only process entries where Signer and its SignerInfos exist.
 			if (fileSignature.Signer?.SignerInfos is not null)

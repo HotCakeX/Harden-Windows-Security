@@ -18,7 +18,7 @@
 namespace AppControlManager.PolicyEditor;
 
 /// <summary>
-/// Levels used by the Policy Editor
+/// Levels used by the Policy Editor.
 /// </summary>
 internal enum FileBasedRuleType
 {

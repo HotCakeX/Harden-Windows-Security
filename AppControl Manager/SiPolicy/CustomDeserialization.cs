@@ -108,7 +108,7 @@ internal static class CustomDeserialization
 				if (node is XmlElement ruleElem)
 				{
 					string optionText = GetElementText(ruleElem, "Option");
-					OptionType opt = ConvertStringToOptionType(optionText);
+					OptionType opt = PolicyRuleOptionsActual[optionText];
 
 					if (!policyRules.Add(opt))
 					{
@@ -423,13 +423,13 @@ internal static class CustomDeserialization
 	// Convert a hex string (without delimiters) to a ReadOnlyMemory<byte>.
 	private static ReadOnlyMemory<byte> ConvertHexStringToByteArray(string? hex)
 	{
-		if (string.IsNullOrEmpty(hex))
+		if (string.IsNullOrWhiteSpace(hex))
 			return ReadOnlyMemory<byte>.Empty;
 
 		return Convert.FromHexString(hex);
 	}
 
-	private static readonly FrozenDictionary<string, OptionType> PolicyRuleOptionsActual = new Dictionary<string, OptionType>
+	internal static readonly FrozenDictionary<string, OptionType> PolicyRuleOptionsActual = new Dictionary<string, OptionType>
 	{
 		{ "Enabled:UMCI", OptionType.EnabledUMCI },
 		{ "Enabled:Boot Menu Protection", OptionType.EnabledBootMenuProtection },
@@ -458,7 +458,6 @@ internal static class CustomDeserialization
 	}.ToFrozenDictionary(StringComparer.Ordinal);
 
 	// Conversion methods for enums.
-	internal static OptionType ConvertStringToOptionType(string s) => PolicyRuleOptionsActual[s];
 
 	private static PolicyType ConvertStringToPolicyType(string s) => s switch
 	{
@@ -505,7 +504,7 @@ internal static class CustomDeserialization
 		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
 		allow.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
 		string hashValue = elem.GetAttribute("Hash");
-		allow.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		allow.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		allow.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
 		string filePathValue = elem.GetAttribute("FilePath");
@@ -572,7 +571,7 @@ internal static class CustomDeserialization
 		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
 		deny.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
 		string hashValue = elem.GetAttribute("Hash");
-		deny.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		deny.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		deny.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
 		string filePathValue = elem.GetAttribute("FilePath");
@@ -645,7 +644,7 @@ internal static class CustomDeserialization
 		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
 		fa.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
 		string hashValue = elem.GetAttribute("Hash");
-		fa.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		fa.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		fa.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
 		string filePathValue = elem.GetAttribute("FilePath");
@@ -718,7 +717,7 @@ internal static class CustomDeserialization
 		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
 		fr.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
 		string hashValue = elem.GetAttribute("Hash");
-		fr.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		fr.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		fr.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
 		string filePathValue = elem.GetAttribute("FilePath");

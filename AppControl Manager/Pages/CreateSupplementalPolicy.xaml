@@ -420,7 +420,7 @@
 
                                 <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
                                                    Margin="15,0,0,0"
-                                                   ObservedData="{x:Bind ViewModel.PolicyFileToMergeWith, Mode=OneWay}"
+                                                   ObservedData="{x:Bind ViewModel.PolicyFileToMergeWith.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                    Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
                                                    IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
 
@@ -438,7 +438,16 @@
 
                                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}" />
+                                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
 
                                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -533,7 +542,7 @@
                                 ExternalOperationStarted="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.FilesAndFoldersDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 
@@ -563,7 +572,16 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -599,7 +617,16 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -631,7 +658,7 @@
                                     x:Name="FilesAndFoldersBrowseForBasePolicyButton"
                                     Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                     x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.FilesAndFoldersBasePolicyPath, Mode=OneWay}"
+                                    ObservedData="{x:Bind ViewModel.FilesAndFoldersBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                     Click="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyButton_Click}">
 
                                 <customUI:ButtonV2.Flyout>
@@ -639,11 +666,20 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.FilesAndFoldersBasePolicyPath, Mode=OneWay}"
+                                            <TextBox Text="{x:Bind ViewModel.FilesAndFoldersBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                      TextWrapping="Wrap"
                                                      AcceptsReturn="True"
                                                      IsSpellCheckEnabled="False"
@@ -798,7 +834,7 @@
                                 Margin="0,0,15,0" />
 
                         <ToggleButton x:Uid="DeployAfterCreationButton"
-                                      IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       IsChecked="{x:Bind ViewModel.CertificatesBasedDeployButton, Mode=TwoWay}"
                                       Margin="0,0,15,0" />
 
@@ -810,20 +846,48 @@
                                                  IsClickEnabled="True"
                                                  IsActionIconVisible="False">
 
-                            <Button x:Uid="FileBrowseButton"
-                                    IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
-                                    Click="{x:Bind ViewModel.CertificatesBrowseForCertsButton_Click}">
+                            <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                                    IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                                    Click="{x:Bind ViewModel.CertificatesBrowseForCertsButton_Click}"
+                                                    ObservedData="{x:Bind ViewModel.CertificatesBasedCertFilePaths.Count, Mode=OneWay}">
 
-                                <Button.ContentTemplate>
+                                <customUI:ButtonV2.ContentTemplate>
                                     <DataTemplate x:DataType="x:String">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <FontIcon Glyph="&#xEC50;" FontSize="16"/>
                                             <TextBlock Text="{x:Bind}"/>
                                         </StackPanel>
                                     </DataTemplate>
-                                </Button.ContentTemplate>
+                                </customUI:ButtonV2.ContentTemplate>
 
-                            </Button>
+                                <customUI:ButtonV2.Flyout>
+                                    <Flyout>
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CertificatesBasedCertFilePaths_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <customUI:ListBoxV2 MinWidth="400"
+                                                                SelectionMode="Single"
+                                                                ItemsSource="{x:Bind ViewModel.CertificatesBasedCertFilePaths, Mode=OneWay}" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </customUI:ButtonV2.Flyout>
+
+                            </customUI:ButtonV2>
 
                         </customUI:SettingsCardV3>
 
@@ -841,7 +905,7 @@
                                     Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                     IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
                                     x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.CertificatesBasedBasePolicyPath, Mode=OneWay}"
+                                    ObservedData="{x:Bind ViewModel.CertificatesBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                     Click="{x:Bind ViewModel.CertificatesBrowseForBasePolicyButton_Click}">
 
                                 <customUI:ButtonV2.Flyout>
@@ -849,11 +913,20 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.CertificatesBasedBasePolicyPath, Mode=OneWay}"
+                                            <TextBox Text="{x:Bind ViewModel.CertificatesBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                      TextWrapping="Wrap"
                                                      AcceptsReturn="True"
                                                      IsSpellCheckEnabled="False"
@@ -950,7 +1023,7 @@
                                 Margin="0,0,15,0" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.ISGBasedDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 
@@ -972,7 +1045,7 @@
                             <customUI:ButtonV2 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                     IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
                                     x:Name="ISGBrowseForBasePolicyButton"
-                                    ObservedData="{x:Bind ViewModel.ISGBasedBasePolicyPath, Mode=OneWay}"
+                                    ObservedData="{x:Bind ViewModel.ISGBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                     Click="{x:Bind ViewModel.ISGBrowseForBasePolicyButton_Click}"
                                     x:Uid="PickPolicyFileButton">
 
@@ -981,11 +1054,20 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ISGBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ISGBrowseForBasePolicyButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.ISGBasedBasePolicyPath, Mode=OneWay}"
+                                            <TextBox Text="{x:Bind ViewModel.ISGBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
@@ -1066,7 +1148,7 @@
 
                         <ToggleButton x:Uid="DeployAfterCreationButton"
                                       IsChecked="{x:Bind ViewModel.StrictKernelModeShouldDeploy, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
@@ -1124,7 +1206,7 @@
                                     Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                     IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
                                     x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.StrictKernelModeBasePolicyPath, Mode=OneWay}"
+                                    ObservedData="{x:Bind ViewModel.StrictKernelModeBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                     Click="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyButton_Click}">
 
                                 <customUI:ButtonV2.Flyout>
@@ -1132,11 +1214,20 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.StrictKernelModeBasePolicyPath, Mode=OneWay}"
+                                            <TextBox Text="{x:Bind ViewModel.StrictKernelModeBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
@@ -1186,9 +1277,10 @@
 
                 <!-- Package Family Name (PFN) -->
                 <controls:SettingsExpander x:Uid="PFNSupplementalPolicySettingsExpander"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}"
-                    IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
-                    Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}">
+                                           IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                           HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}"
+                                           IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
+                                           Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}">
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
@@ -1246,7 +1338,7 @@
                                 ExternalShadowAnimationRunning="{x:Bind ViewModel.PFNBasedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                                 ExternalOperationStarted="{x:Bind ViewModel.PFNBasedCancellableButton.OperationStarted, Mode=OneWay}" />
 
-                        <ToggleButton IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       IsChecked="{x:Bind ViewModel.PFNBasedShouldDeploy, Mode=TwoWay}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
@@ -1271,7 +1363,7 @@
                             <customUI:ButtonV2 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                     IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
                                     x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.PFNBasePolicyPath, Mode=OneWay}"
+                                    ObservedData="{x:Bind ViewModel.PFNBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                     x:Name="PFNBrowseForBasePolicyButton"
                                     Click="{x:Bind ViewModel.PFNBrowseForBasePolicyButton_Click}">
 
@@ -1280,11 +1372,20 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PFNBasePolicyClearButton_Click}"/>
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PFNBasePolicyClearButton_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.PFNBasePolicyPath, Mode=OneWay}"
+                                            <TextBox Text="{x:Bind ViewModel.PFNBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
@@ -1475,7 +1576,7 @@
                                     ExternalOperationStarted="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 
@@ -1496,7 +1597,7 @@
                             <customUI:ButtonV2 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                     IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
                                     x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton"
-                                    ObservedData="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedBasePolicyPath, Mode=OneWay}"
+                                    ObservedData="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                     Click="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click}"
                                     x:Uid="PickPolicyFileButton">
 
@@ -1505,11 +1606,20 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedBasePolicyPath, Mode=OneWay}"
+                                            <TextBox Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                  MinWidth="400" IsReadOnly="True" />
 

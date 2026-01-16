@@ -15,9 +15,12 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AnimatedVisuals;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -25,10 +28,11 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class MDEAHPolicyCreation : Page, CommonCore.UI.IPageHeaderProvider
+internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 
 	private MDEAHPolicyCreationVM ViewModel { get; } = ViewModelProvider.MDEAHPolicyCreationVM;
+	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal MDEAHPolicyCreation()
 	{
@@ -42,6 +46,56 @@ internal sealed partial class MDEAHPolicyCreation : Page, CommonCore.UI.IPageHea
 		// Setting it in XAML would fire it unnecessarily initially
 		MenuSelectorBar.SelectionChanged += ViewModel.MenuSelectorBar_SelectionChanged;
 	}
+
+	#region Augmentation Interface
+
+	public void SetVisibility(Visibility visibility)
+	{
+		// Light up the local page's button icon
+		ViewModel.LightAnimatedIconVisibility = visibility;
+
+		sideBarVM.AssignActionPacks(
+			actionPack1: (LightUp1, GlobalVars.GetStr("AddToPolicySegmentedItem/Content")),
+			actionPack2: (LightUp2, GlobalVars.GetStr("BasePolicyFileSegmentedItem/Content"))
+		);
+	}
+
+	/// <summary>
+	/// Local event handlers that are assigned to the sidebar button
+	/// </summary>
+	private void LightUp1(object? param)
+	{
+		MenuSelectorBar.SelectedItem = CreateSelectorBarItem;
+
+		// Show the first flyout for the Split button
+		MainSplitButton.Flyout.ShowAt(MainSplitButton);
+
+		// Switch to the correct index in the Segmented control
+		ViewModel.SelectedCreationMethod = 0;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.PolicyToAddLogsTo = policy;
+		}
+	}
+
+	private void LightUp2(object? param)
+	{
+		MenuSelectorBar.SelectedItem = CreateSelectorBarItem;
+
+		// Show the first flyout for the Split button
+		MainSplitButton.Flyout.ShowAt(MainSplitButton);
+
+		// Switch to the correct index in the Segmented control
+		ViewModel.SelectedCreationMethod = 1;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.BasePolicyXMLFile = policy;
+		}
+	}
+
+	#endregion
 
 	#region For the toolbar menu's Selector Bar - The rest in the ViewModel class.
 
@@ -130,7 +184,7 @@ internal sealed partial class MDEAHPolicyCreation : Page, CommonCore.UI.IPageHea
 		}
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MDEAHPolicyCreationPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MDEAHPolicyCreationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting");
 }
 

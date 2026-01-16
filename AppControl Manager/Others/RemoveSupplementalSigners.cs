@@ -25,14 +25,12 @@ internal static class CiPolicyHandler
 	/// <summary>
 	/// Removes the entire SupplementalPolicySigners block
 	/// and any Signer in Signers node that have the same ID as the SignerIds of the SupplementalPolicySigner(s) in <SupplementalPolicySigners>...</SupplementalPolicySigners> node
-	/// from a CI policy XML file
+	/// from a SiPolicy object.
 	/// </summary>
-	/// <param name="path">The path to the CI policy XML file</param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void RemoveSupplementalSigners(string path)
+	/// <param name="policyObj">The policy object to act on</param>
+	/// <returns>The modified policy object.</returns>
+	internal static SiPolicy.SiPolicy RemoveSupplementalSigners(SiPolicy.SiPolicy policyObj)
 	{
-
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(path, null);
 
 		// Check if SupplementalPolicySigners exists and has child nodes
 		if (policyObj.SupplementalPolicySigners?.Count > 0)
@@ -57,7 +55,6 @@ internal static class CiPolicyHandler
 			policyObj.SupplementalPolicySigners = [];
 		}
 
-		// Save the updated policy
-		SiPolicy.Management.SavePolicyToFile(policyObj, path);
+		return policyObj;
 	}
 }

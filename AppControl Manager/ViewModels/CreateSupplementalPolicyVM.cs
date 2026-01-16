@@ -209,9 +209,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	#endregion
 
 	/// <summary>
-	/// Selected Base policy path
+	/// Selected Base policy.
 	/// </summary>
-	internal string? FilesAndFoldersBasePolicyPath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? FilesAndFoldersBasePolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Selected Supplemental policy name
@@ -274,9 +274,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal readonly AnimatedCancellableButtonInitializer FilesAndFoldersCancellableButton;
 
 	/// <summary>
-	/// Path to the Files and Folders Supplemental policy XML file.
+	/// The final Files and Folders Supplemental policy that is created.
 	/// </summary>
-	internal string? _FilesAndFoldersSupplementalPolicyPath;
+	internal SiPolicy.PolicyFileRepresent? _FilesAndFoldersSupplementalPolicyPath;
 
 
 	/// <summary>
@@ -296,12 +296,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	{
 		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles.Count > 0)
+		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
-			foreach (string file in selectedFiles)
-			{
-				filesAndFoldersFilePaths.Add(file);
-			}
+			filesAndFoldersFilePaths.Add(file);
 		}
 	}
 
@@ -312,26 +309,40 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	{
 		List<string> selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedDirectories.Count > 0)
+		foreach (string dir in CollectionsMarshal.AsSpan(selectedDirectories))
 		{
-			foreach (string dir in selectedDirectories)
-			{
-				filesAndFoldersFolderPaths.Add(dir);
-			}
+			filesAndFoldersFolderPaths.Add(dir);
 		}
 	}
 
 	/// <summary>
 	/// Browse for Base Policy - Button Click
 	/// </summary>
-	internal void FilesAndFoldersBrowseForBasePolicyButton_Click()
+	internal async void FilesAndFoldersBrowseForBasePolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			FilesAndFoldersBasePolicyPath = selectedFile;
+			FilesAndFoldersElementsAreEnabled = false;
+
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					FilesAndFoldersBasePolicy = new(policyObj);
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			FilesAndFoldersInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			FilesAndFoldersElementsAreEnabled = true;
 		}
 	}
 
@@ -344,7 +355,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
-	internal void FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click() => FilesAndFoldersBasePolicyPath = null;
+	internal void FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click() => FilesAndFoldersBasePolicy = null;
 
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified supplemental policy path.
@@ -356,7 +367,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Main button's event handler for files and folders Supplemental policy creation
 	/// </summary>
-	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click()
+	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		_FilesAndFoldersSupplementalPolicyPath = null;
 
@@ -382,7 +393,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				return;
 			}
 		}
-		else if (FilesAndFoldersBasePolicyPath is null)
+		else if (FilesAndFoldersBasePolicy is null)
 		{
 			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"), GlobalVars.GetStr("SelectBasePolicyTitle"));
 			return;
@@ -420,7 +431,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
 				if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is not ScanLevels.WildCardFolderPath)
 				{
-
 					// Collect all of the AppControl compatible files from user selected directories and files
 					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(filesAndFoldersFolderPaths, filesAndFoldersFilePaths, null, FilesAndFoldersCancellableButton.Cts?.Token);
 
@@ -482,46 +492,41 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 						LVController.NotifyFullSourceChanged();
 					});
 
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompletedCreatingSupplementalPolicyMessage"));
-					});
-
+					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompletedCreatingSupplementalPolicyMessage"));
 				}
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersSupplementalPolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths.UniqueItems);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{FilesAndFoldersSupplementalPolicyName}.xml");
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
+					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+
+					// Save the results back to the user-selected policy file
+					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
 				}
 				else
 				{
-					// Instantiate the user selected Base policy
-					SiPolicy.SiPolicy policyObj = Management.Initialize(FilesAndFoldersBasePolicyPath, null);
+					if (FilesAndFoldersBasePolicy is null)
+						throw new InvalidOperationException("Base policy Object is null");
 
 					// Set the BasePolicyID of our new policy to the one from user selected policy
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, FilesAndFoldersSupplementalPolicyName, policyObj.BasePolicyID, null);
+					// And set its name to the user-provided name.
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, FilesAndFoldersSupplementalPolicyName, FilesAndFoldersBasePolicy.PolicyObj.BasePolicyID);
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -533,52 +538,35 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 							FilesAndFoldersScanLevelComboBoxSelectedItem.FriendlyName
 						));
 
-						CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
+						policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
 					}
 					else
 					{
-						CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+						policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 					}
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
-
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 				}
 
-				// Assign the supplemental policy file path to the local variable
-				_FilesAndFoldersSupplementalPolicyPath = OutputPath;
+				// Assign the supplemental policy to the local variable
+				_FilesAndFoldersSupplementalPolicyPath = new(policyObj);
 
-				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FilesAndFoldersSupplementalPolicyPath);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : $"{FilesAndFoldersSupplementalPolicyName}.cip";
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
-
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (FilesAndFoldersDeployButton)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(CIPPath);
-				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 				}
 			});
 
@@ -675,19 +663,19 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal bool CertificatesBasedSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Path to the Certificates Supplemental policy XML file
+	/// The final Certificates Supplemental policy that is created.
 	/// </summary>
-	internal string? _CertificatesSupplementalPolicyPath;
+	internal SiPolicy.PolicyFileRepresent? _CertificatesSupplementalPolicyPath;
 
 	/// <summary>
 	/// Selected Certificate File Paths
 	/// </summary>
-	internal readonly HashSet<string> CertificatesBasedCertFilePaths = [];
+	internal readonly UniqueStringObservableCollection CertificatesBasedCertFilePaths = [];
 
 	/// <summary>
 	/// Selected Base policy path
 	/// </summary>
-	internal string? CertificatesBasedBasePolicyPath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? CertificatesBasedBasePolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Selected Supplemental policy name,
@@ -735,30 +723,52 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	{
 		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
-		if (selectedFiles.Count > 0)
+		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
-			foreach (string file in selectedFiles)
-			{
-				_ = CertificatesBasedCertFilePaths.Add(file);
-			}
-		}
-	}
-
-	internal void CertificatesBrowseForBasePolicyButton_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			CertificatesBasedBasePolicyPath = selectedFile;
+			CertificatesBasedCertFilePaths.Add(file);
 		}
 	}
 
 	/// <summary>
+	/// Event handler for browse button to select base policy.
+	/// </summary>
+	internal async void CertificatesBrowseForBasePolicyButton_Click()
+	{
+		try
+		{
+			CertificatesBasedElementsAreEnabled = false;
+
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					CertificatesBasedBasePolicy = new(policyObj);
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			CertificatesBasedInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			CertificatesBasedElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the UI to clear the selected certificates file paths.
+	/// </summary>
+	internal void CertificatesBasedCertFilePaths_Flyout_Clear_Click() => CertificatesBasedCertFilePaths.Clear();
+
+	/// <summary>
 	/// Main Button - Creates the Certificates-based Supplemental policy
 	/// </summary>
-	internal async void CreateCertificatesSupplementalPolicyButton_Click()
+	internal async void CreateCertificatesSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		bool errorsOccurred = false;
 
@@ -783,7 +793,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				return;
 			}
 		}
-		else if (CertificatesBasedBasePolicyPath is null)
+		else if (CertificatesBasedBasePolicy is null)
 		{
 			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
 				GlobalVars.GetStr("SelectBasePolicyTitle"));
@@ -811,14 +821,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("CertificatesSupplementalPolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				List<CertificateSignerCreator> certificateResults = [];
 
-				foreach (string certificate in CertificatesBasedCertFilePaths)
+				foreach (string certificate in CertificatesBasedCertFilePaths.UniqueItems)
 				{
 					// Create a certificate object from the .cer file
 					using X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificate);
@@ -831,75 +836,56 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					));
 				}
 
-				if (certificateResults.Count > 0)
-				{
-					// Generating signer rules
-					SiPolicy.SiPolicy policyObj = Management.Initialize(EmptyPolicyPath, null);
-					policyObj = NewCertificateSignerRules.CreateAllow(policyObj, certificateResults);
-					Management.SavePolicyToFile(policyObj, EmptyPolicyPath);
-				}
-				else
+				if (certificateResults.Count == 0)
 				{
 					CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
 					errorsOccurred = true;
 					return;
 				}
 
-				Merger.Merge(EmptyPolicyPath, [EmptyPolicyPath]);
-
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1
-					? PolicyFileToMergeWith!
-					: Path.Combine(GlobalVars.UserConfigDir, $"{CertificatesBasedSupplementalPolicyName}.xml");
+				// Generating signer rules
+				SiPolicy.SiPolicy? policyObj = CustomPolicyCreator.CreateEmpty();
+				policyObj = NewCertificateSignerRules.CreateAllow(policyObj, certificateResults);
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
+					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+
+					// Save the policy to the path user selected
+					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
 				}
 				else
 				{
-					// Instantiate the user selected Base policy
-					SiPolicy.SiPolicy policyObj = Management.Initialize(CertificatesBasedBasePolicyPath, null);
+					if (CertificatesBasedBasePolicy is null)
+						throw new InvalidOperationException("Base policy Object is null");
 
 					// Set the BasePolicyID of our new policy to the one from user selected policy
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CertificatesBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
+					// And set its name to the user-provided name.
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, CertificatesBasedSupplementalPolicyName, CertificatesBasedBasePolicy.PolicyObj.BasePolicyID);
 
 					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 				}
 
-				_CertificatesSupplementalPolicyPath = OutputPath;
+				_CertificatesSupplementalPolicyPath = new(policyObj);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1
-					? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip"
-					: $"{CertificatesBasedSupplementalPolicyName}.cip";
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_CertificatesSupplementalPolicyPath);
 
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				// If user selected to deploy the policy
 				if (CertificatesBasedDeployButton)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						CertificatesBasedInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					CertificatesBasedInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(CIPPath);
-				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 				}
 			});
 		}
@@ -929,10 +915,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
-	internal void CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click()
-	{
-		CertificatesBasedBasePolicyPath = null;
-	}
+	internal void CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click() =>
+		CertificatesBasedBasePolicy = null;
 
 	/// <summary>
 	/// Opens a policy editor for Certificates using a specified supplemental policy path.
@@ -966,9 +950,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	private readonly InfoBarSettings ISGInfoBar;
 
 	/// <summary>
-	/// Path to the base policy for the ISG based supplemental policy
+	/// Base policy for the ISG based supplemental policy
 	/// </summary>
-	internal string? ISGBasedBasePolicyPath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? ISGBasedBasePolicy { get; set => SP(ref field, value); }
 
 	internal bool ISGBasedDeployButton { get; set => SP(ref field, value); }
 
@@ -978,14 +962,14 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal string? ISGBasedSupplementalPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
-	/// Path to the ISG Supplemental policy XML file
+	/// The final ISG Supplemental policy that is created.
 	/// </summary>
-	private string? _ISGSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _ISGSupplementalPolicyPath;
 
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental ISG based policy
 	/// </summary>
-	internal async void CreateISGSupplementalPolicyButton_Click()
+	internal async void CreateISGSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 
 		ISGInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -1004,7 +988,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				return;
 			}
 		}
-		else if (ISGBasedBasePolicyPath is null)
+		else if (ISGBasedBasePolicy is null)
 		{
 			ISGInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
 				GlobalVars.GetStr("SelectBasePolicyTitle"));
@@ -1019,49 +1003,40 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			ISGInfoBar.WriteInfo(GlobalVars.GetStr("CreatingISGBasedSupplementalPolicyMessage"));
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
-
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("ISGBasedSupplementalPolicy");
-
-				// Defining the paths
-				string savePathTemp = Path.Combine(stagingArea.FullName, "ISGBasedSupplementalPolicy.xml");
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, "ISGBasedSupplementalPolicy.xml");
+				SiPolicy.SiPolicy? finalPolicyObj = null;
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
+					// Instantiate the user-selected policy file.
+					finalPolicyObj = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+
 					// Configure policy rule options only
-					CiRuleOptions.Set(filePath: OutputPath, rulesToAdd: [OptionType.EnabledIntelligentSecurityGraphAuthorization, OptionType.EnabledInvalidateEAsonReboot]);
+					finalPolicyObj = CiRuleOptions.Set(policyObj: finalPolicyObj, rulesToAdd: [OptionType.EnabledIntelligentSecurityGraphAuthorization, OptionType.EnabledInvalidateEAsonReboot]);
+
+					Management.SavePolicyToFile(finalPolicyObj, PolicyFileToMergeWith!.FilePath!);
 				}
 				else
 				{
-					// Instantiate the user-selected base policy
-					SiPolicy.SiPolicy basePolicyObj = Management.Initialize(ISGBasedBasePolicyPath, null);
-
 					// Instantiate the supplemental policy
-					SiPolicy.SiPolicy supplementalPolicyObj = Management.Initialize(GlobalVars.ISGOnlySupplementalPolicyPath, null);
+					finalPolicyObj = Management.Initialize(GlobalVars.ISGOnlySupplementalPolicyPath, null);
 
-					PolicySettingsManager.SetPolicyName(supplementalPolicyObj, ISGBasedSupplementalPolicyName);
+					PolicySettingsManager.SetPolicyName(finalPolicyObj, ISGBasedSupplementalPolicyName);
+
+					if (ISGBasedBasePolicy is null)
+						throw new InvalidOperationException("Base policy Object is null");
 
 					// Replace the BasePolicyID in the Supplemental policy
-					supplementalPolicyObj.BasePolicyID = basePolicyObj.BasePolicyID;
-
-					// Save the policy object to XML file in the staging Area
-					Management.SavePolicyToFile(supplementalPolicyObj, savePathTemp);
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(savePathTemp, OutputPath, true);
-
+					finalPolicyObj.BasePolicyID = ISGBasedBasePolicy.PolicyObj.BasePolicyID;
 				}
 
-				_ISGSupplementalPolicyPath = OutputPath;
+				_ISGSupplementalPolicyPath = new(finalPolicyObj);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : "ISGBasedSupplementalPolicy.cip";
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_ISGSupplementalPolicyPath);
 
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				// If the policy is to be deployed
 				if (ISGBasedDeployButton)
@@ -1069,20 +1044,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					ISGInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
 					// Prepare the ISG services
-					ConfigureISGServices.Configure();
+					await ConfigureISGServices.Configure();
 
 					// Deploy the signed CIP file
-					CiToolHelper.UpdatePolicy(CIPPath);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(finalPolicyObj));
 				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
-				}
-
 			});
-
 		}
 		catch (Exception ex)
 		{
@@ -1104,21 +1071,38 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 	}
 
-	internal void ISGBrowseForBasePolicyButton_Click()
+	/// <summary>
+	/// Event handler for UI button to select a base policy for the ISG supplemental policy.
+	/// </summary>
+	internal async void ISGBrowseForBasePolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			ISGBasedBasePolicyPath = selectedFile;
+			ISGElementsAreEnabled = false;
+
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					ISGBasedBasePolicy = new(policyObj);
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			ISGInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ISGElementsAreEnabled = true;
 		}
 	}
 
-	internal void ISGBrowseForBasePolicyButton_Flyout_Clear_Click()
-	{
-		ISGBasedBasePolicyPath = null;
-	}
+	internal void ISGBrowseForBasePolicyButton_Flyout_Clear_Click() => ISGBasedBasePolicy = null;
 
 	/// <summary>
 	/// Opens a policy editor for ISG using a specified supplemental policy path.
@@ -1170,7 +1154,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal void CalculateColumnWidthsStrictKernelMode()
 	{
-
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignatureStatusHeader/Text"));
@@ -1254,9 +1237,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	private readonly InfoBarSettings StrictKernelModeInfoBar;
 
 	/// <summary>
-	/// Path to the base policy for the Strict kernel-mode supplemental policy
+	/// The base policy for the Strict kernel-mode supplemental policy.
 	/// </summary>
-	internal string? StrictKernelModeBasePolicyPath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? StrictKernelModeBasePolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Whether the supplemental policy should be deployed at the end.
@@ -1271,9 +1254,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal bool StrictKernelModeSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Path to the StrictKernelMode Supplemental policy XML file
+	/// The final StrictKernelMode Supplemental policy that is created.
 	/// </summary>
-	private string? _StrictKernelModeSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _StrictKernelModeSupplementalPolicyPath;
 
 	internal void StrictKernelModeScanButton_Click() => StrictKernelModePerformScans(false);
 
@@ -1283,21 +1266,38 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Browse for Base Policy - Button Click
 	/// </summary>
-	internal void StrictKernelModeBrowseForBasePolicyButton_Click()
+	internal async void StrictKernelModeBrowseForBasePolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			StrictKernelModeBasePolicyPath = selectedFile;
+			StrictKernelModeElementsAreEnabled = false;
+
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					StrictKernelModeBasePolicy = new(policyObj);
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			StrictKernelModeInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			StrictKernelModeElementsAreEnabled = true;
 		}
 	}
 
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
-	internal void StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click() => StrictKernelModeBasePolicyPath = null;
+	internal void StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click() => StrictKernelModeBasePolicy = null;
 
 	internal void StrictKernelModeScanSinceLastRebootButton_Click() => StrictKernelModePerformScans(true);
 
@@ -1383,7 +1383,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Event handler for the create button
 	/// </summary>
-	internal async void StrictKernelModeCreateButton_Click()
+	internal async void StrictKernelModeCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
 
@@ -1414,7 +1414,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				return;
 			}
 		}
-		else if (string.IsNullOrWhiteSpace(StrictKernelModeBasePolicyPath))
+		else if (StrictKernelModeBasePolicy is null)
 		{
 			StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
 				GlobalVars.GetStr("SelectBasePolicyTitle"));
@@ -1440,67 +1440,55 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("StrictKernelModeSupplementalPolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. StrictKernelModeScanResults], level: ScanLevels.WHQLFilePublisher);
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
-
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{policyNameChosenByUser}.xml");
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
+					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+
+					// Save the policy to the user selected policy path
+					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
 				}
 				else
 				{
-					// Instantiate the user selected Base policy - To get its BasePolicyID
-					SiPolicy.SiPolicy policyObj = Management.Initialize(StrictKernelModeBasePolicyPath, null);
+					if (StrictKernelModeBasePolicy is null)
+						throw new InvalidOperationException("Base policy Object is null");
 
 					// Set the BasePolicyID of our new policy to the one from user selected policy
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyNameChosenByUser, policyObj.BasePolicyID, null);
+					// And set its name to the user-provided name.
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, policyNameChosenByUser, StrictKernelModeBasePolicy.PolicyObj.BasePolicyID);
 
 					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
-					RemoveUserModeSS.Remove(EmptyPolicyPath);
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
+					// Remove all User-Mode signing scenarios from the policy
+					policyObj = RemoveSigningScenarios.RemoveUserMode(policyObj);
 				}
 
-				_StrictKernelModeSupplementalPolicyPath = OutputPath;
+				_StrictKernelModeSupplementalPolicyPath = new(policyObj);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : Path.Combine(stagingArea.FullName, $"{policyNameChosenByUser}.cip");
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_StrictKernelModeSupplementalPolicyPath);
 
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				// If user selected to deploy the policy
 				if (StrictKernelModeShouldDeploy)
 				{
 					StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(CIPPath);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
-				}
-
 			});
 		}
 		catch (Exception ex)
@@ -1547,7 +1535,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			await Task.Run(() =>
 			{
-
 				// Since there can be more than one folder due to localizations such as en-US then from each of the folders, the bootres.dll.mui file is added
 
 				// Define the directory path
@@ -1601,7 +1588,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			CalculateColumnWidthsStrictKernelMode();
 		}
-
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
@@ -1765,9 +1751,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal bool packagesLoadedOnExpand;
 
 	/// <summary>
-	/// Path to the base policy for the PFN based supplemental policy
+	/// The Base policy for the PFN based supplemental policy
 	/// </summary>
-	internal string? PFNBasePolicyPath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? PFNBasePolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// The name of the supplemental policy that will be created.
@@ -1780,9 +1766,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal bool PFNBasedShouldDeploy { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Path to the PFN Supplemental policy XML file
+	/// The final PFN Supplemental policy that is created.
 	/// </summary>
-	private string? _PFNSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _PFNSupplementalPolicyPath;
 
 	/// <summary>
 	/// Items Source of the ListView that displays the list of the installed packaged apps.
@@ -1936,23 +1922,40 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 	}
 
-	internal void PFNBrowseForBasePolicyButton_Click()
+	internal async void PFNBrowseForBasePolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			PFNBasePolicyPath = selectedFile;
+			PFNElementsAreEnabled = false;
+
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					PFNBasePolicy = new(policyObj);
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			PFNInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PFNElementsAreEnabled = true;
 		}
 	}
 
-	internal void PFNBasePolicyClearButton_Click() => PFNBasePolicyPath = null;
+	internal void PFNBasePolicyClearButton_Click() => PFNBasePolicy = null;
 
 	/// <summary>
 	/// Main button's event handler - Create Supplemental policy based on PFNs
 	/// </summary>
-	internal async void CreatePFNSupplementalPolicyButton_Click()
+	internal async void CreatePFNSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
 
@@ -1983,7 +1986,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				return;
 			}
 		}
-		else if (string.IsNullOrWhiteSpace(PFNBasePolicyPath))
+		else if (PFNBasePolicy is null)
 		{
 			PFNInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
 				GlobalVars.GetStr("SelectBasePolicyTitle"));
@@ -2024,76 +2027,61 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PFNSupplementalPolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(level: ScanLevels.PFN, packageFamilyNames: selectedAppsPFNs);
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
 
 				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedSupplementalPolicyName}.xml");
-
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
+					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+
+					// Save the policy to the user selected file path
+					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
 				}
 				else
 				{
-					// Instantiate the user selected Base policy
-					SiPolicy.SiPolicy policyObj = Management.Initialize(PFNBasePolicyPath, null);
+					if (PFNBasePolicy is null)
+						throw new InvalidOperationException("Base policy Object is null");
 
 					// Set the BasePolicyID of our new policy to the one from user selected policy
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
+					// And set its name to the user-provided name.
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, PFNBasedSupplementalPolicyName, PFNBasePolicy.PolicyObj.BasePolicyID);
 
 					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 				}
 
-				_PFNSupplementalPolicyPath = OutputPath;
+				_PFNSupplementalPolicyPath = new(policyObj);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : Path.Combine(stagingArea.FullName, $"{PFNBasedSupplementalPolicyName}.cip");
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_PFNSupplementalPolicyPath);
+
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (PFNBasedShouldDeploy)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					CiToolHelper.UpdatePolicy(CIPPath);
-				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 				}
 			});
 		}
@@ -2227,7 +2215,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			}
 
 			// Open the folder in File Explorer
-			await OpenInDefaultFileHandler(targetApp.InstallLocation);
+			await OpenFileInDefaultFileHandler(targetApp.InstallLocation);
 
 			PFNInfoBar.WriteInfo($"Opened installation location for {targetApp.DisplayName}");
 		}
@@ -2266,9 +2254,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	private readonly InfoBarSettings CustomFilePathRulesInfoBar;
 
 	/// <summary>
-	/// Path to the base policy for the Custom Pattern-based File Rule supplemental policy
+	/// The base policy for the Custom Pattern-based File Rule supplemental policy.
 	/// </summary>
-	internal string? CustomPatternBasedFileRuleBasedBasePolicyPath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? CustomPatternBasedFileRuleBasedBasePolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Whether the supplemental policy should be deployed at the end.
@@ -2276,9 +2264,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal bool CustomPatternBasedFileRuleBasedDeployButton { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Path to the CustomPatternBasedFileRule Supplemental policy XML file
+	/// The final CustomPatternBasedFileRule Supplemental policy that is created.
 	/// </summary>
-	private string? _CustomPatternBasedFileRuleSupplementalPolicyPath { get; set => SP(ref field, value); }
+	private SiPolicy.PolicyFileRepresent? _CustomPatternBasedFileRuleSupplementalPolicyPath { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// The custom pattern used for file rule.
@@ -2295,26 +2283,41 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal string? CustomPatternBasedFileRuleBasedSupplementalPolicyName { get; set => SPT(ref field, value); }
 
-	internal void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click()
+	internal async void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			CustomPatternBasedFileRuleBasedBasePolicyPath = selectedFile;
+			CustomFilePathRulesElementsAreEnabled = false;
+
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					CustomPatternBasedFileRuleBasedBasePolicy = new(policyObj);
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			CustomFilePathRulesInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			CustomFilePathRulesElementsAreEnabled = true;
 		}
 	}
 
-	internal void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click()
-	{
-		CustomPatternBasedFileRuleBasedBasePolicyPath = null;
-	}
+	internal void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click() =>
+		CustomPatternBasedFileRuleBasedBasePolicy = null;
 
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental pattern based File path policy
 	/// </summary>
-	internal async void CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click()
+	internal async void CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 
 		CustomFilePathRulesSettingsExpanderIsExpanded = true;
@@ -2331,7 +2334,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				return;
 			}
 		}
-		else if (CustomPatternBasedFileRuleBasedBasePolicyPath is null)
+		else if (CustomPatternBasedFileRuleBasedBasePolicy is null)
 		{
 			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
 				GlobalVars.GetStr("SelectBasePolicyTitle"));
@@ -2372,78 +2375,60 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PatternBasedFilePathRulePolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [SupplementalPolicyCustomPatternBasedCustomPatternTextBox]);
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
 
 				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{CustomPatternBasedFileRuleBasedSupplementalPolicyName}.xml");
-
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
+					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+
+					// Save the policy to the user selected policy path
+					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
 				}
 				else
 				{
-					// Instantiate the user selected Base policy
-					SiPolicy.SiPolicy policyObj = Management.Initialize(CustomPatternBasedFileRuleBasedBasePolicyPath, null);
+					if (CustomPatternBasedFileRuleBasedBasePolicy is null)
+						throw new InvalidOperationException("Base policy Object is null");
 
 					// Set the BasePolicyID of our new policy to the one from user selected policy
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
+					// And set its name to the user-provided name.
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, CustomPatternBasedFileRuleBasedSupplementalPolicyName, CustomPatternBasedFileRuleBasedBasePolicy.PolicyObj.BasePolicyID);
 
 					PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
+					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 				}
 
-				_CustomPatternBasedFileRuleSupplementalPolicyPath = OutputPath;
+				_CustomPatternBasedFileRuleSupplementalPolicyPath = new(policyObj);
 
-				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_CustomPatternBasedFileRuleSupplementalPolicyPath);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedSupplementalPolicyName}.cip");
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
-
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(CIPPath);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
-				}
-
 			});
 		}
 		catch (Exception ex)
@@ -2497,9 +2482,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	#region Policy Creation Mode
 
 	/// <summary>
-	/// The path to the policy file that user selected to add the new rules to.
+	/// The policy that user selected to add the new rules to.
 	/// </summary>
-	internal string? PolicyFileToMergeWith { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? PolicyFileToMergeWith { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Whether the button that allows for picking a policy file to add the rules to is enabled or disabled.
@@ -2539,14 +2524,25 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal void ClearPolicyFileToMergeWith() => PolicyFileToMergeWith = null;
 
-	internal void PolicyFileToMergeWithButton_Click()
+	internal async void PolicyFileToMergeWithButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			PolicyFileToMergeWith = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					PolicyFileToMergeWith = new(policyObj) { FilePath = selectedFile };
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			FilesAndFoldersInfoBar.WriteError(ex);
 		}
 	}
 

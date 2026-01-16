@@ -17,6 +17,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -103,18 +105,14 @@ internal sealed class NavigationService
 	/// </summary>
 	internal void AffectPagesAnimatedIconsVisibilities(Frame contentFrame)
 	{
-
-		// Check the unsigned base policy path on the Sidebar's textbox
-		bool isUnsignedBasePolicyPathAvailable = !string.IsNullOrWhiteSpace(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic);
-
 		sidebarVM.Nullify();
 
 		// Check if the currently displayed content (page) in the ContentFrame implements the IAnimatedIconsManager interface.
 		// If it does, cast ContentFrame.Content to IAnimatedIconsManager
-		// And if the text box for unsigned policy path is also full then set the visibility of animated icons
-		if (contentFrame.Content is IAnimatedIconsManager currentPage && isUnsignedBasePolicyPathAvailable)
+		// And if the sidebar policies library has any policies then set the visibility of animated icons
+		if (contentFrame.Content is IAnimatedIconsManager currentPage)
 		{
-			if (isUnsignedBasePolicyPathAvailable)
+			if (mainWindowVM.SidebarPoliciesLibrary.Count > 0)
 			{
 				currentPage.SetVisibility(Visibility.Visible);
 				sidebarVM.SidebarBasePolicySelectButtonLightAnimatedIconVisibility = Visibility.Visible;
@@ -316,33 +314,32 @@ internal sealed class NavigationService
 	/// <summary>
 	/// Event handler for the sidebar base policy browse button
 	/// </summary>
-	internal void SidebarBasePolicyBrowseButton_Click()
+	internal async void SidebarBasePolicyBrowseButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			mainWindowVM.SidebarBasePolicyPathTextBoxText = selectedFile;
+			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLAndCIPAndP7BFilePickerFilter);
 
-			// Show the animated icons on the currently visible page
-			AffectPagesAnimatedIconsVisibilitiesEx(true);
+			if (selectedFilePaths.Count > 0)
+			{
+				foreach (string selectedFile in selectedFilePaths)
+				{
+					await Task.Run(() =>
+					{
+						mainWindowVM.AssignToSidebar(ViewModels.PolicyEditorVM.ParseFilePathAsPolicyRepresent(selectedFile));
+					});
+				}
+
+				// Show the animated icons on the currently visible page
+				AffectPagesAnimatedIconsVisibilitiesEx(true);
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
 		}
 	}
 
-	/// <summary>
-	/// Event handler for the clear button in the sidebar for unsigned policy path
-	/// </summary>
-	internal void SidebarBasePolicyClearButton_Click()
-	{
-		// Clear the Sidebar text box
-		mainWindowVM.SidebarBasePolicyPathTextBoxText = null;
-
-		// Hide the animated icons on the currently visible page
-		AffectPagesAnimatedIconsVisibilitiesEx(false);
-
-		sidebarVM.Nullify();
-	}
 #endif
 
 	/// <summary>

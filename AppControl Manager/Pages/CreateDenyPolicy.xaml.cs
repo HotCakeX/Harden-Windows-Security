@@ -43,6 +43,6 @@ internal sealed partial class CreateDenyPolicy : Page, CommonCore.UI.IPageHeader
 		await ShadowExitAnimation.StartAsync((UIElement)sender);
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Deny-App-Control-Policy");
 }

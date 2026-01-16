@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.Main;
@@ -241,7 +242,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 		SimulationOutputs.Clear();
 
-		foreach (SimulationOutput item in filteredResults)
+		foreach (SimulationOutput item in CollectionsMarshal.AsSpan(filteredResults))
 		{
 			SimulationOutputs.Add(item);
 		}
@@ -434,12 +435,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	{
 		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles.Count > 0)
+		foreach (string item in CollectionsMarshal.AsSpan(selectedFiles))
 		{
-			foreach (string item in selectedFiles)
-			{
-				FilePaths.Add(item);
-			}
+			FilePaths.Add(item);
 		}
 	}
 
@@ -450,12 +448,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	{
 		List<string> selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedFolders.Count > 0)
+		foreach (string folder in CollectionsMarshal.AsSpan(selectedFolders))
 		{
-			foreach (string folder in selectedFolders)
-			{
-				FolderPaths.Add(folder);
-			}
+			FolderPaths.Add(folder);
 		}
 	}
 
@@ -512,6 +507,12 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 			if (savePath is null)
 				return;
+
+			// Ensure the file path ends with .json
+			if (!savePath.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+			{
+				savePath += ".json";
+			}
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
 

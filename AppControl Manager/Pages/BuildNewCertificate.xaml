@@ -51,7 +51,16 @@
                 <customUI:InfoBarV2.ActionButton>
                     <Button Visibility="{x:Bind ViewModel.CopyInfoBarToClipboardButtonVisibility, Mode=OneWay}"
                             x:Uid="CopyThumbPrintToClipboardButton"
-                            Click="{x:Bind ViewModel.CopyInfoBarToClipboardButton_Click}" />
+                            Click="{x:Bind ViewModel.CopyInfoBarToClipboardButton_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE8C8;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
                 </customUI:InfoBarV2.ActionButton>
             </customUI:InfoBarV2>
 

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Text;
@@ -79,8 +80,6 @@ internal static class BinaryOpsReverse
 	/// </summary>
 	private static SiPolicy ParseSiPolicy(BinaryReader reader)
 	{
-		const ulong DefaultMaxVersionNumber = ulong.MaxValue;
-
 		// HEADER PARSING
 		_ = reader.BaseStream.Seek(0, SeekOrigin.Begin);
 
@@ -92,9 +91,9 @@ internal static class BinaryOpsReverse
 		uint flags = reader.ReadUInt32();
 
 		// Parse Rules from flag bits
-		List<RuleType> rules = Helper.Options
-			.Where(kvp => (flags & kvp.Value) != 0)
-			.Select(kvp => new RuleType(item: kvp.Key))
+		List<RuleType> rules = Enum.GetValues<OptionType>()
+			.Where(option => (flags & (uint)option) != 0)
+			.Select(rule => new RuleType(item: rule))
 			.ToList();
 
 		// Header counts for later parsing
@@ -151,7 +150,7 @@ internal static class BinaryOpsReverse
 			uint minL = reader.ReadUInt32();
 			uint minH = reader.ReadUInt32();
 			ulong minNum = ((ulong)minH << 32) | minL;
-			string minVer = (minNum is not DefaultMaxVersionNumber and not 0)
+			string minVer = (minNum is not ulong.MaxValue and not 0)
 				? NumberToStringVersionFixed(minNum)
 				: string.Empty;
 			byte[] hash = ReadCountedAlignedBytes(reader);
@@ -278,7 +277,7 @@ internal static class BinaryOpsReverse
 					else if (fileRules[i] is FileRule fr2) fr2.AppIDs = combined;
 				}
 			}
-			foreach (Signer s in policy.Signers)
+			foreach (Signer s in CollectionsMarshal.AsSpan(policy.Signers))
 				ParseSignerV3(reader, s);
 		}
 
@@ -382,12 +381,13 @@ internal static class BinaryOpsReverse
 			policy.AppSettings = ParseAppSettings(reader);
 		}
 
-		// End tag: should be version+1
+		// Determine if we've encountered a new policy version.
+		// We have to implement the additional parsing logic for it.
 		uint expectedEndTag = version + 1;
 		uint endTag = reader.ReadUInt32();
-		if (endTag != expectedEndTag)
+		if (endTag < expectedEndTag)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorExpectedPolicyEndTagGot"), expectedEndTag, endTag));
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("WarningReverseConvertingNewerPolicyVersion"), expectedEndTag, endTag));
 		}
 
 		return policy;
@@ -631,7 +631,7 @@ internal static class BinaryOpsReverse
 				};
 				_ = reader.ReadUInt32(); // audit flag, currently ignored
 
-				// If the list/array only has null values then the entire list must be repalced with null.
+				// If the list/array only has null values then the entire list must be replaced with null.
 				List<string>? filtered = values.Where(s => s is not null).Cast<string>().ToList();
 				if (filtered.Count == 0) filtered = null;
 				settings.Add(new AppSetting(name: name, value: filtered));

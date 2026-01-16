@@ -107,13 +107,12 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	#endregion
 
-
 	#region UI-Bound Properties
 
 	/// <summary>
-	/// The user selected XML base policy path.
+	/// The user selected base policy.
 	/// </summary>
-	internal string? selectedXMLFilePath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? selectedBasePolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// The user selected Supplemental policy name.
@@ -133,7 +132,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal readonly FileIdentityECCBasedHashSet fileIdentities = new();
 
 	/// <summary>
-	/// Will determine whether the user selected XML policy file is signed or unsigned
+	/// Will determine whether the user selected policy is signed or unsigned.
 	/// </summary>
 	private bool _IsSignedPolicy;
 
@@ -143,15 +142,10 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal bool SupplementalPolicyNameTextBoxIsEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
-	/// Only the logs generated after this time will be shown
-	/// It will be set when user moves from Step1 to Step2
+	/// Only the logs generated after this time will be shown.
+	/// It will be set when user moves from Step1 to Step2.
 	/// </summary>
 	internal DateTime? LogsScanStartTime;
-
-	/// <summary>
-	/// The base policy XML objectified
-	/// </summary>
-	internal SiPolicy.SiPolicy? _BasePolicyObject;
 
 	// To hold the necessary details for policy signing if the selected base policy is signed
 	// They will be retrieved from the content dialog
@@ -159,10 +153,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	private string? _CertPath;
 
 	// Paths for the entire operation of this page
-	private DirectoryInfo? stagingArea;
-	private string? tempBasePolicyPath;
-	private string? AuditModeCIP;
-	private string? EnforcedModeCIP;
+	private string? EnforcedModeCIPPath;
 
 	internal bool BrowseForXMLPolicyButtonIsEnabled { get; set => SP(ref field, value); } = true;
 	internal bool GoToStep2ButtonIsEnabled { get; set => SP(ref field, value); } = true;
@@ -194,9 +185,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal bool BrowseForFoldersButtonIsEnabled { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Path of the Supplemental policy that is created
+	/// The Supplemental policy that is created.
 	/// </summary>
-	internal string? finalSupplementalPolicyPath { get; set => SP(ref field, value); }
+	internal SiPolicy.PolicyFileRepresent? finalSupplementalPolicy { get; set => SP(ref field, value); }
 
 	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -212,26 +203,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// enabled or disabled.
 	/// </summary>
 	internal bool LocalFilesMenuItemState { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Stores the count of local files for display in an info badge. Used to track and indicate the number of local files.
-	/// </summary>
-	internal int LocalFilesCountInfoBadgeValue { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Stores the opacity level for the local files count info badge. It is a double value representing transparency.
-	/// </summary>
-	internal double LocalFilesCountInfoBadgeOpacity { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Stores the count of event logs for the info badge. Used to track the number of events for display purposes.
-	/// </summary>
-	internal int EventLogsCountInfoBadgeValue { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Stores the opacity level for the event logs count info badge. It is a double value representing transparency.
-	/// </summary>
-	internal double EventLogsCountInfoBadgeOpacity { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Toggle button to determine whether the new Supplemental policy should be deployed on the system after creation or not.
@@ -632,91 +603,43 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 
 	/// <summary>
-	/// Event handler for the Clear Data button
+	/// Event handler for the Clear Data button - Local Files section
 	/// </summary>
 	internal void ClearLocalFilesDataButton_Click()
 	{
 		LocalFilesFileIdentities.Clear();
 		LocalFilesAllFileIdentities.Clear();
-
-		UpdateTotalFiles(true);
-
 		CalculateColumnWidthLocalFiles();
 	}
 
 	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	internal void UpdateTotalFiles(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			// Update the InfoBadge for the top menu
-			LocalFilesCountInfoBadgeOpacity = 1;
-			LocalFilesCountInfoBadgeValue = 0;
-		}
-		else
-		{
-			// Update the InfoBadge for the top menu
-			LocalFilesCountInfoBadgeOpacity = 1;
-			LocalFilesCountInfoBadgeValue = LocalFilesFileIdentities.Count;
-		}
-	}
-
-	/// <summary>
-	/// Event handler for the Clear Data button
+	/// Event handler for the Clear Data button - Event Logs section
 	/// </summary>
 	internal void ClearEventLogsDataButton_Click()
 	{
 		EventLogsFileIdentities.Clear();
 		EventLogsAllFileIdentities.Clear();
-
-		UpdateTotalLogs(true);
-
 		CalculateColumnWidthEventLogs();
 	}
 
 	/// <summary>
-	/// Updates the total logs count displayed on the UI
+	/// Event handler to open the supplemental policy in the Policy Editor.
 	/// </summary>
-	internal void UpdateTotalLogs(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			// Update the InfoBadge for the top menu
-			EventLogsCountInfoBadgeOpacity = 1;
-			EventLogsCountInfoBadgeValue = 0;
-		}
-		else
-		{
-			// Update the InfoBadge for the top menu
-			EventLogsCountInfoBadgeOpacity = 1;
-			EventLogsCountInfoBadgeValue = EventLogsFileIdentities.Count;
-		}
-	}
+	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicy);
+
+	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicy);
 
 	/// <summary>
-	/// Event handler to open the supplemental policy in the Policy Editor
-	/// </summary>
-	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
-
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
-
-	/// <summary>
-	/// Event handler for the clear button in the base policy path selection button
+	/// Event handler for the clear button in the base policy selection button.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal void BrowseForXMLPolicyButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
-	{
-		selectedXMLFilePath = null;
-		tempBasePolicyPath = null;
-	}
+	internal void BrowseForXMLPolicyButton_Flyout_Clear_Click(object sender, RoutedEventArgs e) => selectedBasePolicy = null;
 
 	/// <summary>
 	/// Event handler for the Create Policy button - Step 3
 	/// </summary>
-	internal async void CreatePolicyButton_Click()
+	internal async void CreatePolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
 		{
@@ -731,24 +654,16 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			Step3InfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyFromLogsOrScans"));
 
-			// Check if there are items for the local file scans ListView
-			if (LocalFilesAllFileIdentities.Count > 0)
+			// Store every item for the Local File Scans ListView in the list
+			foreach (FileIdentity item in CollectionsMarshal.AsSpan(LocalFilesAllFileIdentities))
 			{
-				// convert every selected item to FileIdentity and store it in the list
-				foreach (FileIdentity item in LocalFilesAllFileIdentities)
-				{
-					_ = fileIdentities.Add(item);
-				}
+				_ = fileIdentities.Add(item);
 			}
 
-			// Check if there are selected items for the Event Logs scan ListView
-			if (EventLogsAllFileIdentities.Count > 0)
+			// Store every item for the Event Logs Scans ListView in the list
+			foreach (FileIdentity item in CollectionsMarshal.AsSpan(EventLogsAllFileIdentities))
 			{
-				// convert every selected item to FileIdentity and store it in the list
-				foreach (FileIdentity item in EventLogsAllFileIdentities)
-				{
-					_ = fileIdentities.Add(item);
-				}
+				_ = fileIdentities.Add(item);
 			}
 
 			// If there are no logs to create a Supplemental policy with
@@ -760,72 +675,54 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-
-				if (stagingArea is null)
-				{
-					throw new InvalidOperationException(GlobalVars.GetStr("StagingAreaNotFound"));
-				}
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: ScanLevelComboBoxSelectedItem.Level, folderPaths: selectedDirectoriesToScan);
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, Authorization.Allow);
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, Authorization.Allow);
 
-				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{selectedSupplementalPolicyName}.xml");
+				if (selectedBasePolicy is null)
+					throw new InvalidOperationException("Base policy Object is null");
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, selectedSupplementalPolicyName, _BasePolicyObject!.BasePolicyID, null);
+				// And set its name to the user-provided name.
+				policyObj = SetCiPolicyInfo.Set(policyObj, true, selectedSupplementalPolicyName, selectedBasePolicy.PolicyObj.BasePolicyID);
 
 				// Configure policy rule options
-				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 				// Set policy version
-				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+				policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 				if (_IsSignedPolicy)
 				{
 					// Add certificate's details to the supplemental policy
-					_ = AddSigningDetails.Add(EmptyPolicyPath, _CertPath!);
+					policyObj = AddSigningDetails.Add(policyObj, _CertPath!);
 				}
 
-				// Copying the policy file to the User Config directory - outside of the temporary staging area
-				File.Copy(EmptyPolicyPath, OutputPath, true);
-
-				string CIPPath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip");
-
-				// Convert the XML file to CIP
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				// Convert the policy to CIP
+				byte[] cipContent = Management.ConvertXMLToBinary(policyObj);
 
 				// Add the supplemental policy path to the class variable
-				finalSupplementalPolicyPath = OutputPath;
+				finalSupplementalPolicy = new(policyObj);
+
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicy);
+
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				if (_IsSignedPolicy)
 				{
 					// Sign the CIP
-					CommonCore.Signing.Main.SignCIP(CIPPath, _CertCN);
-				}
-				else
-				{
-					Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+					cipContent = CommonCore.Signing.Main.SignCIP(cipContent, _CertCN);
 				}
 
 				// If user selected to deploy the policy
 				if (DeployPolicy)
 				{
 #if !DEBUG
-					CiToolHelper.UpdatePolicy(CIPPath);
+					CiToolHelper.UpdatePolicy(cipContent);
 #endif
-				}
-
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
 				}
 			});
 
@@ -852,22 +749,32 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// Handles the click event for a button to browse and select an XML policy file.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when the selected file path is not a valid XML file.</exception>
-	internal void BrowseForXMLPolicyButton_Click()
+	internal async void BrowseForXMLPolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrWhiteSpace(selectedFile))
+		try
 		{
-			// The extra validations are required since user can provide path in the text box directly
-			if (File.Exists(selectedFile) && Path.GetExtension(selectedFile).Equals(".xml", StringComparison.OrdinalIgnoreCase))
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrWhiteSpace(selectedFile))
 			{
-				// Store the selected XML file path
-				selectedXMLFilePath = selectedFile;
+				// The extra validations are required since user can provide path in the text box directly
+				if (File.Exists(selectedFile) && Path.GetExtension(selectedFile).Equals(".xml", StringComparison.OrdinalIgnoreCase))
+				{
+					await Task.Run(() =>
+					{
+						SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+						selectedBasePolicy = new(policyObj);
+					});
+				}
+				else
+				{
+					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SelectedItemNotValidXmlFilePath"), selectedFile));
+				}
 			}
-			else
-			{
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SelectedItemNotValidXmlFilePath"), selectedFile));
-			}
+		}
+		catch (Exception ex)
+		{
+			Step1InfoBar.WriteError(ex);
 		}
 	}
 
@@ -882,7 +789,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		if (selectedFolders.Count > 0)
 		{
 			// Add each folder to the HashSet of the selected directories
-			foreach (string folder in selectedFolders)
+			foreach (string folder in CollectionsMarshal.AsSpan(selectedFolders))
 			{
 				selectedDirectoriesToScan.Add(folder);
 			}
@@ -896,9 +803,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		get; set
 		{
 			if (SP(ref field, value))
-			{
 				ApplyFiltersLocalFiles();
-			}
 		}
 	}
 
@@ -920,18 +825,13 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Applies the date and search filters to the data grid
 	/// </summary>
-	private void ApplyFiltersLocalFiles()
-	{
-		ListViewHelper.ApplyFilters(
+	private void ApplyFiltersLocalFiles() => ListViewHelper.ApplyFilters(
 			allFileIdentities: LocalFilesAllFileIdentities.AsEnumerable(),
 			filteredCollection: LocalFilesFileIdentities,
 			searchText: LocalFilesAllFileIdentitiesSearchText,
 			selectedDate: null,
 			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults
 		);
-
-		UpdateTotalFiles();
-	}
 
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
@@ -978,8 +878,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			_ = LocalFilesFileIdentities.Remove(item);
 			_ = LocalFilesAllFileIdentities.Remove(item);
 		}
-
-		UpdateTotalFiles();
 	}
 
 	#endregion
@@ -991,27 +889,20 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		get; set
 		{
 			if (SP(ref field, value))
-			{
 				ApplyFiltersEventLogs();
-			}
 		}
 	}
 
 	/// <summary>
 	/// Applies the date and search filters to the data grid
 	/// </summary>
-	private void ApplyFiltersEventLogs()
-	{
-		ListViewHelper.ApplyFilters(
+	private void ApplyFiltersEventLogs() => ListViewHelper.ApplyFilters(
 			allFileIdentities: EventLogsAllFileIdentities.AsEnumerable(),
 			filteredCollection: EventLogsFileIdentities,
 			searchText: EventLogsAllFileIdentitiesSearchText,
 			selectedDate: null,
 			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults
 		);
-
-		UpdateTotalLogs();
-	}
 
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -1073,8 +964,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			_ = EventLogsFileIdentities.Remove(item);
 			_ = EventLogsAllFileIdentities.Remove(item);
 		}
-
-		UpdateTotalLogs();
 	}
 
 	#endregion
@@ -1082,13 +971,16 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Local event handler that are assigned to the sidebar button.
 	/// </summary>
-	internal void LightUp1()
+	internal void LightUp1(object? param)
 	{
 		if (AllowNewAppsStart.BrowseForXMLPolicyButtonPub is not null && AllowNewAppsStart.BrowseForXMLPolicyButton_FlyOutPub is not null)
 			AllowNewAppsStart.BrowseForXMLPolicyButton_FlyOutPub.ShowAt(AllowNewAppsStart.BrowseForXMLPolicyButtonPub);
-		selectedXMLFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
-	}
 
+		if (param is PolicyFileRepresent policy)
+		{
+			selectedBasePolicy = policy;
+		}
+	}
 
 	internal double Step2ProgressRingValue { get; set => SP(ref field, value); }
 
@@ -1122,26 +1014,17 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				throw new InvalidOperationException(GlobalVars.GetStr("ErrorSelectSupplementalPolicyName"));
 			}
 
-			// Ensure user selected a XML policy file path
-			if (string.IsNullOrWhiteSpace(selectedXMLFilePath))
+			// Ensure user selected a policy file
+			if (selectedBasePolicy is null)
 			{
 				throw new InvalidOperationException(GlobalVars.GetStr("ErrorSelectXMLPolicyFile"));
 			}
 
-			// Ensure the selected XML file path exists on the disk
-			if (!File.Exists(selectedXMLFilePath))
-			{
-				throw new InvalidOperationException(GlobalVars.GetStr("ErrorXMLFileDoesNotExist") + ": " + selectedXMLFilePath);
-			}
-
 			await Task.Run(() =>
 			{
-				// Instantiate the selected policy file
-				_BasePolicyObject = Management.Initialize(selectedXMLFilePath, null);
-
-				if (_BasePolicyObject.PolicyType is not PolicyType.BasePolicy)
+				if (selectedBasePolicy.PolicyObj.PolicyType is not PolicyType.BasePolicy)
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("ErrorPolicyMustBeBase") + _BasePolicyObject.PolicyType);
+					throw new InvalidOperationException(GlobalVars.GetStr("ErrorPolicyMustBeBase") + selectedBasePolicy.PolicyObj.PolicyType);
 				}
 
 				// Get all deployed base policies
@@ -1151,7 +1034,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				List<string?> CurrentlyDeployedBasePolicyIDs = [.. allDeployedBasePolicies.Select(p => p.BasePolicyID)];
 
 				// Trim the curly braces from the policyID
-				string trimmedPolicyID = _BasePolicyObject.PolicyID.TrimStart('{').TrimEnd('}');
+				string trimmedPolicyID = selectedBasePolicy.PolicyObj.PolicyID.TrimStart('{').TrimEnd('}');
 
 				// Make sure the selected policy is deployed on the system
 				if (!CurrentlyDeployedBasePolicyIDs.Any(id => string.Equals(id, trimmedPolicyID, StringComparison.OrdinalIgnoreCase)))
@@ -1160,18 +1043,17 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 
 				// If the policy doesn't have any rule options or it doesn't have the EnabledUnsignedSystemIntegrityPolicy rule option then it is signed
-				_IsSignedPolicy = !_BasePolicyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy);
+				_IsSignedPolicy = !selectedBasePolicy.PolicyObj.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy);
 			});
 
 			if (_IsSignedPolicy)
 			{
-
 				Logger.Write(GlobalVars.GetStr("SignedPolicyDetected"));
 
 				#region Signing Details acquisition
 
 				// Instantiate the Content Dialog
-				using SigningDetailsDialog customDialog = new(_BasePolicyObject);
+				using SigningDetailsDialog customDialog = new(selectedBasePolicy.PolicyObj);
 
 				// Show the dialog and await its result
 				ContentDialogResult result = await customDialog.ShowAsync();
@@ -1185,7 +1067,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				else
 				{
 					GoToStep2ButtonIsEnabled = true;
-
 					return;
 				}
 
@@ -1195,55 +1076,44 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// Execute the main tasks of step 1
 			await Task.Run(() =>
 			{
+				byte[] AuditModeCIP = [];
 
-				// Create the required directory and file paths in step 1
-				stagingArea = StagingArea.NewStagingArea("AllowNewApps");
-				tempBasePolicyPath = Path.Combine(stagingArea.FullName, "BasePolicy.XML");
-				AuditModeCIP = Path.Combine(stagingArea.FullName, "BaseAudit.cip");
-
-				// Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
-				EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7().ToString("N")}.cip");
+				// Make sure it stays unique because we don't want any other command to remove or overwrite it
+				EnforcedModeCIPPath = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7():N}.cip");
 
 				Step1InfoBar.WriteInfo(GlobalVars.GetStr("DeployingInAuditWait"));
-
-				// Creating a copy of the original policy in the Staging Area so that the original one will be unaffected
-				File.Copy(selectedXMLFilePath, tempBasePolicyPath, true);
 
 				// If the policy is Unsigned
 				if (!_IsSignedPolicy)
 				{
-					// Create audit mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode]);
-					Management.ConvertXMLToBinary(tempBasePolicyPath, null, AuditModeCIP);
+					// Create audit mode CIP from the user-selected base policy
+					SiPolicy.SiPolicy tempBasePolicyAudit = CiRuleOptions.Set(policyObj: selectedBasePolicy.PolicyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
+					AuditModeCIP = Management.ConvertXMLToBinary(tempBasePolicyAudit);
 
-					// Create Enforced mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode]);
-					Management.ConvertXMLToBinary(tempBasePolicyPath, null, EnforcedModeCIP);
+					// Create Enforced mode CIP from the user-selected base policy
+					SiPolicy.SiPolicy tempBasePolicyEnforced = CiRuleOptions.Set(policyObj: selectedBasePolicy.PolicyObj, rulesToRemove: [OptionType.EnabledAuditMode]);
+					Management.ConvertXMLToBinary(tempBasePolicyEnforced, EnforcedModeCIPPath);
 				}
 				// If the policy is Signed
 				else
 				{
-					// Create audit mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode], rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+					// Create audit mode CIP from the user-selected base policy
+					SiPolicy.SiPolicy tempBasePolicyAudit = CiRuleOptions.Set(policyObj: selectedBasePolicy.PolicyObj, rulesToAdd: [OptionType.EnabledAuditMode], rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
-					// Convert the XML file to CIP
-					Management.ConvertXMLToBinary(tempBasePolicyPath, null, AuditModeCIP);
+					// Convert the policy object to CIP and Sign it
+					AuditModeCIP = CommonCore.Signing.Main.SignCIP(Management.ConvertXMLToBinary(tempBasePolicyAudit), _CertCN);
 
-					// Sign the CIP
-					CommonCore.Signing.Main.SignCIP(AuditModeCIP, _CertCN);
+					// Create Enforced mode CIP from the user-selected base policy
+					SiPolicy.SiPolicy? tempBasePolicyEnforced = CiRuleOptions.Set(policyObj: selectedBasePolicy.PolicyObj, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
-					// Create Enforced mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+					// Convert the policy object to CIP and Sign it
+					byte[] cipBytesEnforced = CommonCore.Signing.Main.SignCIP(Management.ConvertXMLToBinary(tempBasePolicyEnforced), _CertCN);
 
-					// Convert the XML file to CIP
-					Management.ConvertXMLToBinary(tempBasePolicyPath, null, EnforcedModeCIP);
-
-					// Sign the CIP
-					CommonCore.Signing.Main.SignCIP(EnforcedModeCIP, _CertCN);
+					File.WriteAllBytes(EnforcedModeCIPPath, cipBytesEnforced);
 				}
 
 				Logger.Write(GlobalVars.GetStr("CreatingSnapBackGuarantee"));
-				SnapBackGuarantee.Create(EnforcedModeCIP);
+				SnapBackGuarantee.Create(EnforcedModeCIPPath);
 
 #if !DEBUG
 				Logger.Write(GlobalVars.GetStr("DeployingAuditModePolicy"));
@@ -1279,7 +1149,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				GoToStep2ButtonIsEnabled = true;
 
 				// Clear the variables if errors occurred in step 1
-				_BasePolicyObject = null;
+				selectedBasePolicy = null;
 				_CertCN = null;
 				_CertPath = null;
 			}
@@ -1291,7 +1161,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// </summary>
 	internal async void GoToStep3Button_Click()
 	{
-
 		bool errorsOccurred = false;
 
 		try
@@ -1299,6 +1168,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			Step2ProgressRingIsActive = true;
 			GoToStep3ButtonIsEnabled = false;
 			ResetStepsButtonIsEnabled = false;
+			BrowseForFoldersButtonIsEnabled = false;
 
 			Step2InfoBar_IsClosable = false;
 
@@ -1311,9 +1181,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			await Task.Run(async () =>
 			{
-
 				// Deploy the base policy in enforced mode before proceeding with scans
-				if (EnforcedModeCIP is null)
+				if (EnforcedModeCIPPath is null)
 				{
 					throw new InvalidOperationException(GlobalVars.GetStr("ErrorEnforcedModeCIPNotFound"));
 				}
@@ -1322,11 +1191,11 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 #if !DEBUG
 				Logger.Write(GlobalVars.GetStr("DeployingEnforceMode"));
-				CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+				CiToolHelper.UpdatePolicy(await File.ReadAllBytesAsync(EnforcedModeCIPPath));
 #endif
 
 				// Delete the enforced mode CIP file after deployment
-				File.Delete(EnforcedModeCIP);
+				File.Delete(EnforcedModeCIPPath);
 
 				// Remove the snap back guarantee task and related .bat file after successfully re-deploying the Enforced mode policy
 				SnapBackGuarantee.Remove();
@@ -1372,10 +1241,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 			});
 
-			// Update the InfoBadge for the top menu
-			LocalFilesCountInfoBadgeValue = LocalFilesFileIdentities.Count;
-			LocalFilesCountInfoBadgeOpacity = 1;
-
 			Step2InfoBar.WriteInfo(GlobalVars.GetStr("ScanningEventLogs"));
 
 			// Log scanning doesn't produce determinate real time progress so setting it as indeterminate
@@ -1419,10 +1284,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				});
 			}
 
-			// Update the InfoBadge for the top menu
-			EventLogsCountInfoBadgeValue = EventLogsFileIdentities.Count;
-			EventLogsCountInfoBadgeOpacity = 1;
-
 			DisableStep1();
 			DisableStep2();
 			EnableStep3();
@@ -1437,6 +1298,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			Step2ProgressRingIsActive = false;
 			ResetStepsButtonIsEnabled = true;
 			Step2InfoBar_IsClosable = true;
+			BrowseForFoldersButtonIsEnabled = true;
 
 			if (errorsOccurred)
 			{
@@ -1445,7 +1307,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// Steps Reset
@@ -1471,7 +1332,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			// Clear the path to the supplemental policy
-			finalSupplementalPolicyPath = null;
+			finalSupplementalPolicy = null;
 
 			// Clear the ListViews and their respective search/filter-related lists
 			LocalFilesFileIdentities.Clear();
@@ -1485,8 +1346,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			DeployPolicy = true;
 			selectedSupplementalPolicyName = null;
 			LogsScanStartTime = null;
-			tempBasePolicyPath = null;
-			_BasePolicyObject = null;
+			selectedBasePolicy = null;
 			_CertCN = null;
 			_CertPath = null;
 			_IsSignedPolicy = false;
@@ -1495,31 +1355,21 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			EventLogsMenuItemState = false;
 			LocalFilesMenuItemState = false;
 
-
-			// Update the InfoBadges for the top menu
-			LocalFilesCountInfoBadgeValue = 0;
-			LocalFilesCountInfoBadgeOpacity = 0;
-			EventLogsCountInfoBadgeOpacity = 0;
-			EventLogsCountInfoBadgeValue = 0;
-
 			// Reset the UI inputs back to their default states
 			DeployPolicy = true;
 
 			// Run the main reset tasks on a different thread
 			await Task.Run(() =>
 			{
-
 				// Deploy the base policy in enforced mode if user advanced to that step
-				if (Path.Exists(EnforcedModeCIP))
+				if (Path.Exists(EnforcedModeCIPPath))
 				{
-
 #if !DEBUG
 					Logger.Write(GlobalVars.GetStr("DeployingEnforceModeCuzReset"));
-					CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+					CiToolHelper.UpdatePolicy(File.ReadAllBytes(EnforcedModeCIPPath));
 #endif
-
 					// Delete the enforced mode CIP file from the user config directory after deploying it
-					File.Delete(EnforcedModeCIP);
+					File.Delete(EnforcedModeCIPPath);
 				}
 
 				// Remove the snap back guarantee task and .bat file if it exists

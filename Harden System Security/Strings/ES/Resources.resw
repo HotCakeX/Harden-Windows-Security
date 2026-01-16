@@ -205,7 +205,7 @@
   <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Soporte - Hacer preguntas</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Personalice la configuración de su aplicación aquí. Sus preferencias se guardarán para que estén listas para usted cada vez que inicie Harden System Security.</value>
   </data>
   <data name="Appearance.Text" xml:space="preserve">
@@ -580,10 +580,7 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Documentación</value>
   </data>
-  <data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>El usuario canceló el aviso de UAC.</value>
-  </data>
-    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Seleccione una de las configuraciones predefinidas de protección para aplicar, son conjuntos de configuración predefinidos hechos para diferentes niveles de seguridad.</value>
   </data>
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -4457,7 +4454,7 @@ Huella Digital: {3}</value>
 <data name="GroupType" xml:space="preserve">
   <value>Tipo de grupo:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Administre los grupos de Entra en su inquilino y seleccione los grupos a los que desea implementar la directiva.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">

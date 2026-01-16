@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using AppControlManager.XMLOps;
 
 namespace AppControlManager.Others;
 
@@ -34,7 +35,8 @@ internal sealed class FileBasedInfoPackage(
 	List<PublisherSignerCreator> publishersigners,
 	List<HashCreator> completehashes,
 	List<FilePathCreator> filePaths,
-	List<PFNRuleCreator> pfnRules)
+	List<PFNRuleCreator> pfnRules,
+	List<FileNameRuleCreator> fileNameRules)
 {
 	internal List<WHQLFilePublisherSignerCreator> WHQLFilePublisherSigners => whqlFilepublishersigners;
 	internal List<FilePublisherSignerCreator> FilePublisherSigners => filepublishersigners;
@@ -42,4 +44,5 @@ internal sealed class FileBasedInfoPackage(
 	internal List<HashCreator> CompleteHashes => completehashes;
 	internal List<FilePathCreator> FilePaths => filePaths;
 	internal List<PFNRuleCreator> PFNRules => pfnRules;
+	internal List<FileNameRuleCreator> FileNameRules => fileNameRules;
 }

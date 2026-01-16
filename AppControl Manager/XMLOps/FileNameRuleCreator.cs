@@ -15,30 +15,28 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using AppControlManager.SiPolicyIntel;
+
 namespace AppControlManager.XMLOps;
 
-internal static class PolicyEditor
+/// <summary>
+/// Used to create FileName rule for a file.
+/// </summary>
+internal sealed class FileNameRuleCreator(
+	Version? fileVersion,
+	string? fileDescription,
+	string? internalName,
+	string? originalFileName,
+	string? productName,
+	SSType siSigningScenario)
 {
-	/// <summary>
-	/// Swaps the PolicyID and BasePolicyID GUIDs in an App Control for Business policy XML file for Base policies.
-	/// </summary>
-	/// <param name="policyIdInput"></param>
-	/// <param name="policyFilePathInput"></param>
-	internal static void EditGuids(string policyIdInput, string policyFilePathInput)
-	{
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(policyFilePathInput, null);
-
-		if (policyObj.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
-		{
-			throw new InvalidOperationException("Don't use this method for Supplemental policies");
-		}
-
-		string policyId = "{" + policyIdInput + "}";
-
-		policyObj.BasePolicyID = policyId;
-		policyObj.PolicyID = policyId;
-
-		SiPolicy.Management.SavePolicyToFile(policyObj, policyFilePathInput);
-	}
+	internal Version? FileVersion => fileVersion;
+	internal string? FileDescription => fileDescription;
+	internal string? InternalName => internalName;
+	internal string? OriginalFileName => originalFileName;
+	internal string? ProductName => productName;
+	internal SSType SiSigningScenario => siSigningScenario;
 }

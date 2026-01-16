@@ -331,6 +331,12 @@ internal sealed class FileIdentity
 		if (savePath is null)
 			return;
 
+		// Ensure the file path ends with .json
+		if (!savePath.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+		{
+			savePath += ".json";
+		}
+
 		infoBarSettings.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
 
 		List<FileIdentity> dataToExport = [];

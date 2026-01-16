@@ -78,7 +78,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => ViewModel.LightUp1(), GlobalVars.GetStr("AllowNewApps_SidebarButtonContent")));
+			actionPack1: (ViewModel.LightUp1, GlobalVars.GetStr("AllowNewApps_SidebarButtonContent")));
 	}
 
 	#endregion
@@ -117,6 +117,6 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 		}
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("AllowNewAppsPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("AllowNewAppsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps");
 }

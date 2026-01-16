@@ -35,6 +35,7 @@ using AppControlManager.Main;
 using AppControlManager.WindowComponents;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Runtime.InteropServices;
 namespace AppControlManager.ViewModels;
 #endif
 
@@ -282,8 +283,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 			App.Settings.CiPolicySchemaPath = path;
 	}
 
-	internal string? SignedPolicyPathTextBox { get; set => SP(ref field, value); }
-	internal string? UnsignedPolicyPathTextBox { get; set => SP(ref field, value); }
 	internal string? CertificatePathTextBox { get; set => SP(ref field, value); }
 
 	internal bool MainUserConfigurationsSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
@@ -293,54 +292,12 @@ internal sealed partial class SettingsVM : ViewModelBase
 	{
 		UserConfiguration userConfig = UserConfiguration.Get();
 
-		SignedPolicyPathTextBox = userConfig.SignedPolicyPath ?? string.Empty;
-		UnsignedPolicyPathTextBox = userConfig.UnsignedPolicyPath ?? string.Empty;
 		CertCNsAutoSuggestBoxText = userConfig.CertificateCommonName ?? string.Empty;
 		CertificatePathTextBox = userConfig.CertificatePath ?? string.Empty;
 
 		// Expand the settings expander to make the configurations visible
 		MainUserConfigurationsSettingsExpanderIsExpanded = true;
 	}
-
-	#region Signed Policy Path
-
-	internal void EditButton_SignedPolicyPath_Click()
-	{
-		_ = UserConfiguration.Set(SignedPolicyPath: SignedPolicyPathTextBox);
-	}
-
-	internal void ClearButton_SignedPolicyPath_Click()
-	{
-		UserConfiguration.Remove(SignedPolicyPath: true);
-		SignedPolicyPathTextBox = null;
-	}
-
-	internal void BrowseButton_SignedPolicyPath_Click()
-	{
-		SignedPolicyPathTextBox = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-	}
-
-	#endregion
-
-	#region Unsigned Policy Path
-
-	internal void EditButton_UnsignedPolicyPath_Click()
-	{
-		_ = UserConfiguration.Set(UnsignedPolicyPath: UnsignedPolicyPathTextBox);
-	}
-
-	internal void ClearButton_UnsignedPolicyPath_Click()
-	{
-		UserConfiguration.Remove(UnsignedPolicyPath: true);
-		UnsignedPolicyPathTextBox = null;
-	}
-
-	internal void BrowseButton_UnsignedPolicyPath_Click()
-	{
-		UnsignedPolicyPathTextBox = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-	}
-
-	#endregion
 
 	#region Certificate Common Name
 
@@ -436,7 +393,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 		CertCommonNames.Clear();
 
-		foreach (string item in suggestions)
+		foreach (string item in CollectionsMarshal.AsSpan(suggestions))
 		{
 			CertCommonNames.Add(item);
 		}

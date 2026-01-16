@@ -205,7 +205,7 @@
   <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Pomoc - zadaj pytania</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Dostosuj ustawienia aplikacji tutaj. Twoje preferencje zostaną zapisane, więc będą gotowe za każdym razem, gdy uruchomisz Harden System Security.</value>
   </data>
   <data name="Appearance.Text" xml:space="preserve">
@@ -580,10 +580,7 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Dokumentacja</value>
   </data>
-  <data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>Użytkownik anulował monit UAC.</value>
-  </data>
-    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz jeden z szablonów ochrony do zastosowania, są to predefiniowane zestawy konfiguracji zaprojektowane dla różnych poziomów bezpieczeństwa.</value>
   </data>
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -4457,7 +4454,7 @@ Odcisk Palca: {3}</value>
 <data name="GroupType" xml:space="preserve">
   <value>Typ grupy:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Zarządzaj grupami Entra w swojej dzierżawie i wybierz grupy, do których chcesz wdrożyć zasady.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">

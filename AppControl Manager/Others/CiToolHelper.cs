@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 
@@ -92,10 +93,10 @@ internal static class CiToolHelper
 		ProcessStartInfo processStartInfo = new()
 		{
 			FileName = CiToolPath,
-			Arguments = "-lp -json",   // Arguments to list policies and output as JSON
+			Arguments = "-lp -json",       // Arguments to list policies and output as JSON
 			RedirectStandardOutput = true, // Capture the standard output
-			UseShellExecute = false,   // Do not use the OS shell to start the process
-			CreateNoWindow = true      // Run the process without creating a window
+			UseShellExecute = false,       // Do not use the OS shell to start the process
+			CreateNoWindow = true          // Run the process without creating a window
 		};
 
 		// Start the process and capture the output
@@ -127,7 +128,7 @@ internal static class CiToolHelper
 			{
 				// Create a new Policy object and populate its properties from the JSON data
 				CiPolicyInfo? policy = new(
-					policyID: policyElement.GetPropertyOrDefault("PolicyID", string.Empty),
+					policyID: policyElement.GetPropertyOrDefault("PolicyID", string.Empty) ?? throw new InvalidOperationException("CiTool reported a policy without an ID!"),
 					basePolicyID: policyElement.GetPropertyOrDefault("BasePolicyID", string.Empty),
 					friendlyName: policyElement.GetPropertyOrDefault("FriendlyName", string.Empty),
 					version: Measure(policyElement.GetProperty("Version").GetUInt64().ToString(CultureInfo.InvariantCulture)),
@@ -146,10 +147,10 @@ internal static class CiToolHelper
 				if (SystemPolicies && policy.IsSystemPolicy) { policies.Add(policy); }
 
 				// If the policy is Not System, and the policy is Base and BasePolicies parameter was used then add it to the list
-				else if (BasePolicies && !policy.IsSystemPolicy && policy.BasePolicyID == policy.PolicyID) { policies.Add(policy); }
+				else if (BasePolicies && !policy.IsSystemPolicy && string.Equals(policy.BasePolicyID, policy.PolicyID, StringComparison.OrdinalIgnoreCase)) { policies.Add(policy); }
 
 				// If the policy is Not System, and the policy is supplemental and the SupplementalPolicies parameter was used then add it to the list
-				else if (SupplementalPolicies && !policy.IsSystemPolicy && policy.BasePolicyID != policy.PolicyID) { policies.Add(policy); }
+				else if (SupplementalPolicies && !policy.IsSystemPolicy && !string.Equals(policy.BasePolicyID, policy.PolicyID, StringComparison.OrdinalIgnoreCase)) { policies.Add(policy); }
 			}
 
 			// Return the list of policies
@@ -225,7 +226,7 @@ internal static class CiToolHelper
 	/// <exception cref="ArgumentException"></exception>
 	internal static void RemovePolicy(List<string> policyIds)
 	{
-		foreach (string policyId in policyIds)
+		foreach (string policyId in CollectionsMarshal.AsSpan(policyIds))
 		{
 			if (string.IsNullOrWhiteSpace(policyId))
 			{
@@ -277,71 +278,67 @@ internal static class CiToolHelper
 	}
 
 	/// <summary>
-	/// Deploys a Code Integrity policy on the system by accepting the .CIP file path
+	/// The location where the CIP files will be copied to be deployed.
 	/// </summary>
-	/// <param name="CipPath"></param>
+	private static readonly string SecureCIPsPath = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath, "CIPs")).FullName;
+
+	/// <summary>
+	/// Deploys a Code Integrity policy on the system by accepting the CIP content.
+	/// </summary>
+	/// <param name="policyBytes"></param>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static void UpdatePolicy(string CipPath)
+	internal static void UpdatePolicy(ReadOnlySpan<byte> policyBytes)
 	{
-		if (string.IsNullOrWhiteSpace(CipPath))
-		{
-			throw new ArgumentException(
-				GlobalVars.GetStr("CipPathCannotBeNullOrEmptyMessage"),
-				nameof(CipPath));
-		}
-
-		if (!File.Exists(CipPath))
-		{
-			throw new FileNotFoundException(
-				string.Format(
-					GlobalVars.GetStr("CipFileNotFoundMessage"),
-					CipPath),
-				CipPath);
-		}
-
-		Logger.Write(
-			string.Format(
-				GlobalVars.GetStr("DeployingCipFileMessage"),
-				CipPath));
-
 		if (App.Settings.UseV2CIManagement)
 		{
 			Logger.Write("Using alternative method for deploying policy");
-			CIManager.Add(File.ReadAllBytes(CipPath));
+			CIManager.Add(policyBytes);
 			return;
 		}
 
-		// Set up the process start info to run CiTool.exe with necessary arguments
-		ProcessStartInfo processStartInfo = new()
+		string tempFilePath = Path.Combine(SecureCIPsPath, $"{Guid.CreateVersion7():N}.cip");
+
+		try
 		{
-			FileName = CiToolPath,
-			Arguments = $"--update-policy \"{CipPath}\" -json",   // Arguments to update the App Control policy
-			RedirectStandardOutput = true, // Capture the standard output
-			UseShellExecute = false,   // Do not use the OS shell to start the process
-			CreateNoWindow = true      // Run the process without creating a window
-		};
+			File.WriteAllBytes(tempFilePath, policyBytes);
 
-		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
+			// Set up the process start info to run CiTool.exe with necessary arguments
+			ProcessStartInfo processStartInfo = new()
+			{
+				FileName = CiToolPath,
+				Arguments = $"--update-policy \"{tempFilePath}\" -json",   // Arguments to update the App Control policy
+				RedirectStandardOutput = true, // Capture the standard output
+				UseShellExecute = false,   // Do not use the OS shell to start the process
+				CreateNoWindow = true      // Run the process without creating a window
+			};
 
-		// Read all output as a string
-		string jsonOutput = process.StandardOutput.ReadToEnd();
+			// Start the process and capture the output
+			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+				GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
-		// Wait for the process to complete
-		process.WaitForExit();
+			// Read all output as a string
+			string jsonOutput = process.StandardOutput.ReadToEnd();
 
-		if (process.ExitCode != 0)
+			// Wait for the process to complete
+			process.WaitForExit();
+
+			if (process.ExitCode != 0)
+			{
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
+						process.ExitCode,
+						jsonOutput
+						)
+					);
+			}
+		}
+		finally
 		{
-			throw new InvalidOperationException(
-				string.Format(
-					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
-					process.ExitCode,
-					jsonOutput
-					)
-				);
+			if (File.Exists(tempFilePath))
+				File.Delete(tempFilePath);
 		}
 	}
 

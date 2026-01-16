@@ -1132,7 +1132,7 @@ dotnet_diagnostic.IDE0084.severity = error
 dotnet_diagnostic.IDE0079.severity = error
 
 # CA1505: Avoid unmaintainable code
-dotnet_diagnostic.CA1505.severity = error
+dotnet_diagnostic.CA1505.severity = suggestion
 
 # CA1047: Do not declare protected members in sealed types
 dotnet_diagnostic.CA1047.severity = error

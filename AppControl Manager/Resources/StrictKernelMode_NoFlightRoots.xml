@@ -26,7 +26,6 @@
     <EKU ID="ID_EKU_ELAM" Value="010A2B0601040182373D0401"/>
     <EKU ID="ID_EKU_HAL_EXT" Value="010A2B0601040182373D0501"/>
   </EKUs>
-  <FileRules/>
   <Signers>
     <Signer ID="ID_SIGNER_WINDOWS_PRODUCTION" Name="Microsoft Product Root 2010 Windows EKU">
       <CertRoot Type="Wellknown" Value="06"/>
@@ -52,8 +51,6 @@
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners/>
-  <CiSigners/>
   <HvciOptions>2</HvciOptions>
   <Settings>
     <Setting Provider="AllHostIds" Key="AllKeys" ValueName="EnterpriseDefinedClsId">

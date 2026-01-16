@@ -1,11 +1,3 @@
-* The Update page now has a new section that allows you to install any MSIX/MSIXBundle package on your system. If the package you're trying to install is signed then it will be directly installed. If it is not signed, its designated certificate common name and hashing algorithm will be detected from its manifest, a unique matching certificate will be generated on your system in order to sign the package and then install it. This significantly simplifies any app package installation by abstracting and automating the entire process.
+* Updated dependencies to the latest version.
 
-* The app now asks for confirmation before closing when there are ongoing operations such as applying/verifying/removing security measures, retrieving MDM information and so on, to prevent accidental termination of important long running tasks. It has 3 modes: Always ask for confirmation, Automatic (which will only ask if there are ongoing operations and is the default value), and Never ask for confirmation. **You can change this setting in the app's settings page.**
-
-* Updated paths to the Dual-use programs in the Windows Firewall category so they point to the locations available in the latest OS versions. `PowerShell.exe` and `hh.exe` are the updated program paths.
-
-* The file/folder picker now opens by default in the user directory instead of OS drive.
-
-* The legacy Notepad program is no longer removed as part of the recommended actions in the Optional Windows Features category.
-
-* See the complete list on the GitHub.
+* In the app close confirmation dialog, the default selected button is now set to "No" instead of "Yes" to follow best practices.

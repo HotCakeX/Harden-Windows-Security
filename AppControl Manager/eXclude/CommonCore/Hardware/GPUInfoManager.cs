@@ -84,7 +84,7 @@ internal static class GPUInfoManager
 		}
 		finally
 		{
-			// Gotta always release the memory allocated by Rust
+			// Always release the memory allocated by Rust
 			if (collectionPtr != IntPtr.Zero)
 				NativeMethods.release_gpu_information(collectionPtr);
 		}

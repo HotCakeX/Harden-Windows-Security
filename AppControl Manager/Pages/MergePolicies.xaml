@@ -7,6 +7,8 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:ViewModel="using:AppControlManager.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
@@ -40,10 +42,10 @@
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                     <Button x:Uid="MergeButton"
-                                IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Margin="0,0,15,0"
-                                Click="{x:Bind ViewModel.MergeButton_Click}" />
+                            IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Margin="0,0,15,0"
+                            Click="{x:Bind ViewModel.MergeButton_Click}" />
 
                     <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
 
@@ -56,12 +58,18 @@
                     <customUI:SettingsCardV3 x:Uid="BrowseForMainPolicyToMergeSettingsCard">
 
                         <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                                           x:Name="MainPolicyForMergeBrowseButton"
                                            Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}"
-                                           ObservedData="{x:Bind ViewModel.MainPolicy, Mode=OneWay}">
+                                           ObservedData="{x:Bind ViewModel.MainPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}">
 
                             <customUI:ButtonV2.ContentTemplate>
                                 <DataTemplate x:DataType="x:String">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.MainMergePolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Light/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
                                         <FontIcon Glyph="&#xEC50;" FontSize="16"/>
                                         <TextBlock Text="{x:Bind}"/>
                                     </StackPanel>
@@ -69,17 +77,26 @@
                             </customUI:ButtonV2.ContentTemplate>
 
                             <customUI:ButtonV2.Flyout>
-                                <Flyout>
+                                <Flyout x:Name="MainPolicyForMergeBrowseButton_FlyOut">
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.MainPolicy_Flyout_ClearButton}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.MainPolicy_Flyout_ClearButton}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewTheSelectedMainPolicy" TextWrapping="WrapWholeWords" />
 
-                                        <TextBox Text="{x:Bind ViewModel.MainPolicy, Mode=OneWay}"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                MinWidth="400" IsReadOnly="True" />
+                                        <TextBox Text="{x:Bind ViewModel.MainPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                 MinWidth="400" IsReadOnly="True" />
 
                                     </controls:WrapPanel>
 
@@ -93,12 +110,18 @@
                     <customUI:SettingsCardV3 x:Uid="BrowseForOtherPoliciesToMergeSettingsCard">
 
                         <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                                           x:Name="OtherPoliciesForMergeBrowseButton"
                                            Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}"
                                            ObservedData="{x:Bind ViewModel.OtherPolicies.Count, Mode=OneWay}">
 
                             <customUI:ButtonV2.ContentTemplate>
                                 <DataTemplate x:DataType="x:String">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.OtherMergePoliciesLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Light/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
                                         <FontIcon Glyph="&#xEC50;" FontSize="16"/>
                                         <TextBlock Text="{x:Bind}"/>
                                     </StackPanel>
@@ -106,11 +129,20 @@
                             </customUI:ButtonV2.ContentTemplate>
 
                             <customUI:ButtonV2.Flyout>
-                                <Flyout>
+                                <Flyout x:Name="OtherPoliciesForMergeBrowseButton_FlyOut">
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.OtherPolicies_Flyout_ClearButton}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.OtherPolicies_Flyout_ClearButton}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewTheSelectedOtherPolicies" TextWrapping="WrapWholeWords" />
 
@@ -124,6 +156,186 @@
                         </customUI:ButtonV2>
 
                     </customUI:SettingsCardV3>
+
+                </controls:SettingsExpander.Items>
+
+            </controls:SettingsExpander>
+
+            <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
+                       x:Uid="Advanced" />
+
+            <controls:SettingsExpander x:Uid="AdvancedFeaturesSettingsExpander"
+                                       IsExpanded="True"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xE712;}">
+
+                <controls:SettingsExpander.ItemsHeader>
+                    <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"
+                                        BorderThickness="0"
+                                        CornerRadius="0"
+                                        IsIconVisible="True"
+                                        Title="{x:Bind ViewModel.AdvancedFeaturesInfoBarTitle, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.AdvancedFeaturesInfoBarIsOpen, Mode=TwoWay}"
+                                        Message="{x:Bind ViewModel.AdvancedFeaturesInfoBarMessage, Mode=OneWay}"
+                                        IsClosable="{x:Bind ViewModel.AdvancedFeaturesInfoBarIsClosable, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.AdvancedFeaturesInfoBarSeverity, Mode=OneWay}">
+                    </customUI:InfoBarV2>
+                </controls:SettingsExpander.ItemsHeader>
+
+                <controls:SettingsExpander.Items>
+
+                    <controls:SettingsCard x:Uid="ConvertPoliciesToAppIDTaggingSettingsCard">
+
+                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                            <Button x:Uid="ConvertToAppIDTaggingButton"
+                                    IsEnabled="{x:Bind ViewModel.ConvertToAppIDTaggingElementsAreEnabled, Mode=OneWay}"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Margin="0,0,15,0"
+                                    Click="{x:Bind ViewModel.ConvertToAppIDTagging}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE8AB;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+
+                            <ProgressRing IsIndeterminate="True"
+                                          Visibility="{x:Bind ViewModel.PoliciesToConvertToAppIDTaggingProgressRingVisibility, Mode=OneWay}" />
+
+                            <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                                               x:Name="AppIDTaggingConversionBrowseButton"
+                                               Click="{x:Bind ViewModel.PoliciesToConvertToAppIDTaggingBrowseButton_Click}"
+                                               IsEnabled="{x:Bind ViewModel.ConvertToAppIDTaggingElementsAreEnabled, Mode=OneWay}"
+                                               ObservedData="{x:Bind ViewModel.PoliciesToConvertToAppIDTagging.Count, Mode=OneWay}">
+
+                                <customUI:ButtonV2.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.AppIDTagConversionPolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
+                                                <AnimatedIcon.Source>
+                                                    <animatedvisuals:Light/>
+                                                </AnimatedIcon.Source>
+                                            </AnimatedIcon>
+                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </customUI:ButtonV2.ContentTemplate>
+
+                                <customUI:ButtonV2.Flyout>
+                                    <Flyout x:Name="AppIDTaggingConversionBrowseButton_FlyOut">
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PoliciesToConvertToAppIDTagging_Clear}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <customUI:ListBoxV2 MinWidth="400"
+                                                                SelectionMode="Single"
+                                                                ItemsSource="{x:Bind ViewModel.PoliciesToConvertToAppIDTagging, Mode=OneWay}" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </customUI:ButtonV2.Flyout>
+
+                            </customUI:ButtonV2>
+
+                        </controls:WrapPanel>
+
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard x:Uid="RemoveSigningScenarioFeatureSettingsCard">
+
+                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                            <Button x:Uid="RemoveSigningScenarioButton"
+                                    IsEnabled="{x:Bind ViewModel.SigningScenarioRemovalElementsAreEnabled, Mode=OneWay}"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Margin="0,0,15,0"
+                                    Click="{x:Bind ViewModel.RemoveSigningScenario}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xED61;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+
+                            <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                                               x:Name="SigningScenarioRemovalBrowseButton"
+                                               Click="{x:Bind ViewModel.PoliciesForSigningScenarioRemovalBrowseButton_Click}"
+                                               IsEnabled="{x:Bind ViewModel.SigningScenarioRemovalElementsAreEnabled, Mode=OneWay}"
+                                               ObservedData="{x:Bind ViewModel.PoliciesForSigningScenarioRemoval.Count, Mode=OneWay}">
+
+                                <customUI:ButtonV2.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.SigningScenarioRemovalPolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
+                                                <AnimatedIcon.Source>
+                                                    <animatedvisuals:Light/>
+                                                </AnimatedIcon.Source>
+                                            </AnimatedIcon>
+                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </customUI:ButtonV2.ContentTemplate>
+
+                                <customUI:ButtonV2.Flyout>
+                                    <Flyout x:Name="SigningScenarioRemovalBrowseButton_FlyOut">
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PoliciesForSigningScenarioRemoval_Clear}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <customUI:ListBoxV2 MinWidth="400"
+                                                                SelectionMode="Single"
+                                                                ItemsSource="{x:Bind ViewModel.PoliciesForSigningScenarioRemoval, Mode=OneWay}" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </customUI:ButtonV2.Flyout>
+
+                            </customUI:ButtonV2>
+
+                            <RadioButtons x:Uid="SigningScenariosRadioButtons"
+                                          IsEnabled="{x:Bind ViewModel.SigningScenarioRemovalElementsAreEnabled, Mode=OneWay}"
+                                          Margin="10,0,0,0">
+                                <RadioButton GroupName="SigningScenarioSelection" x:Uid="UserModeRadioButton" IsChecked="{x:Bind ViewModel.UserModeSigningScenarioSelected, Mode=TwoWay}"/>
+                                <RadioButton GroupName="SigningScenarioSelection" x:Uid="KernelModeRadioButton" IsChecked="{x:Bind ViewModel.KernelModeSigningScenarioSelected, Mode=TwoWay}"/>
+                            </RadioButtons>
+
+                        </controls:WrapPanel>
+
+                    </controls:SettingsCard>
 
                 </controls:SettingsExpander.Items>
 

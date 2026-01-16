@@ -17,14 +17,15 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
+using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
@@ -123,14 +124,14 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	/// <summary>
 	/// To store the MDE Advanced Hunting CSV log file path.
 	/// </summary>
-	internal string? MDEAdvancedHuntingLogs { get; set => SP(ref field, value); }
+	internal readonly UniqueStringObservableCollection MDEAdvancedHuntingLogs = [];
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
 	// Variables to hold the data supplied by the UI elements
 	internal string? BasePolicyGUID { get; set => SPT(ref field, value); }
-	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
-	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? PolicyToAddLogsTo { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -138,6 +139,11 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// For Animated Sidebar related actions for policy assignments.
+	/// </summary>
+	internal Visibility LightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// Determines whether the UI elements are enabled or disabled.
@@ -185,7 +191,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	/// <summary>
 	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
 	/// </summary>
-	private string? finalSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? finalSupplementalPolicyPath;
 
 	internal string? PolicyNameTextBox { get; set => SPT(ref field, value); }
 
@@ -210,7 +216,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 				};
 			}
 		}
-	} = 1;
+	}
 
 	internal string? DeviceNameTextBox { get; set => SPT(ref field, value); }
 
@@ -380,7 +386,7 @@ DeviceEvents
 		}
 	}
 
-	internal void BrowseForLogs_Flyout_Clear_Click() => MDEAdvancedHuntingLogs = null;
+	internal void BrowseForLogs_Flyout_Clear_Click() => MDEAdvancedHuntingLogs.Clear();
 
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
@@ -389,46 +395,62 @@ DeviceEvents
 	{
 		const string filter = "CSV file|*.csv";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (!string.IsNullOrEmpty(selectedFile))
+		foreach (string item in CollectionsMarshal.AsSpan(selectedFiles))
 		{
 			// Store the selected csv file path
-			MDEAdvancedHuntingLogs = selectedFile;
-
-			Logger.Write($"Selected {selectedFile} for MDE Advanced Hunting scan");
+			MDEAdvancedHuntingLogs.Add(item);
 		}
 	}
 
 	/// <summary>
 	/// The button that browses for XML file the logs will be added to
 	/// </summary>
-	internal void AddToPolicyButton_Click()
+	internal async void AddToPolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			PolicyToAddLogsTo = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-			Logger.Write($"Selected {PolicyToAddLogsTo} to add the logs to.");
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(selectedFile, null));
+				PolicyToAddLogsTo = new(policyObj) { FilePath = selectedFile };
+
+				Logger.Write(string.Format(
+				GlobalVars.GetStr("SelectedFileToAddLogsToMessage"),
+				selectedFile));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
 	/// <summary>
 	/// The button to browse for the XML file the supplemental policy that will be created will belong to
 	/// </summary>
-	internal void BasePolicyFileButton_Click()
+	internal async void BasePolicyFileButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			BasePolicyXMLFile = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-			Logger.Write($"Selected {BasePolicyXMLFile} to associate the Supplemental policy with.");
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(selectedFile, null));
+				BasePolicyXMLFile = new(policyObj) { FilePath = selectedFile };
+
+				Logger.Write(string.Format(
+				GlobalVars.GetStr("SelectedBasePolicyFileMessage"),
+				selectedFile));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -440,9 +462,14 @@ DeviceEvents
 	{
 		if (!Guid.TryParse(BasePolicyGUID, out _))
 		{
-			throw new ArgumentException("Invalid GUID");
+			throw new ArgumentException(GlobalVars.GetStr("InvalidGuidMessage"));
 		}
 	}
+
+	/// <summary>
+	/// Generates a random GUID to be used for <see cref="BasePolicyGUID"/>.
+	/// </summary>
+	internal void GenerateRandomGUIDButton_Click() => BasePolicyGUID = Guid.CreateVersion7().ToString().ToUpperInvariant();
 
 	/// <summary>
 	/// Event handler for the Clear Data button
@@ -530,30 +557,46 @@ DeviceEvents
 			FileIdentities.Clear();
 			AllFileIdentities.Clear();
 
-			// To store the output of the MDE Advanced Hunting logs scan
-			HashSet<FileIdentity> Output = [];
+			// To store the output of the MDE Advanced Hunting logs scan.
+			// Ensures the data are unique and are time-prioritized.
+			// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
+			FileIdentityTimeBasedHashSet Output = new();
 
 			// Grab the App Control Logs
 			await Task.Run(() =>
 			{
-				if (MDEAdvancedHuntingLogs is null)
+				if (MDEAdvancedHuntingLogs.Count == 0)
 				{
 					throw new InvalidOperationException(
 						GlobalVars.GetStr("NoMDEAdvancedHuntingLogProvided")
 					);
 				}
 
-				List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(MDEAdvancedHuntingLogs);
+				using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
-				Output = MDEAHCSVData.Count > 0
-					? GetMDEAdvancedHuntingLogsData.Retrieve(MDEAHCSVData)
-					: throw new InvalidOperationException(
-						GlobalVars.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs")
-					);
+				foreach (string file in MDEAdvancedHuntingLogs.UniqueItems)
+				{
+					List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(file);
+
+					HashSet<FileIdentity> data = GetMDEAdvancedHuntingLogsData.Retrieve(MDEAHCSVData);
+
+					foreach (FileIdentity item in data)
+					{
+						_ = Output.Add(item);
+					}
+				}
+
+				if (Output.Count == 0)
+				{
+					throw new InvalidOperationException(GlobalVars.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs"));
+				}
 			});
 
 			// Store all of the data in the List
-			AllFileIdentities.AddRange(Output);
+			foreach (FileIdentity item in Output.FileIdentitiesInternal)
+			{
+				AllFileIdentities.Add(item);
+			}
 
 			// Instead of manually adding items to the ObservableCollection, we call ApplyFilters.
 			// This ensures that if there's an existing search text or date filter,
@@ -584,11 +627,20 @@ DeviceEvents
 		}
 	}
 
+	/// <summary>
+	/// Event handler for the UI to clear the selected policy to add logs to.
+	/// </summary>
+	internal void Clear_PolicyToAddLogsTo() => PolicyToAddLogsTo = null;
+
+	/// <summary>
+	/// Event handler for the UI to clear the selected base policy.
+	/// </summary>
+	internal void Clear_BasePolicyXMLFile() => BasePolicyXMLFile = null;
 
 	/// <summary>
 	/// When the main button responsible for creating policy is pressed
 	/// </summary>
-	internal async void CreatePolicyButton_Click()
+	internal async void CreatePolicyButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
 	{
 		bool Error = false;
 
@@ -620,19 +672,6 @@ DeviceEvents
 			}
 
 			MainInfoBarIsClosable = false;
-
-			// Create a policy name if it wasn't provided
-			DateTime now = DateTime.Now;
-			string formattedDate = now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
-
-			// If the UI text box was empty or whitespace then set policy name manually
-			if (string.IsNullOrWhiteSpace(PolicyNameTextBox))
-			{
-				PolicyNameTextBox = string.Format(
-					GlobalVars.GetStr("DefaultSupplementalPolicyNameFormat"),
-					formattedDate
-				);
-			}
 
 			// All of the File Identities that will be used to put in the policy XML file
 			List<FileIdentity> SelectedLogs = [];
@@ -669,17 +708,11 @@ DeviceEvents
 
 			await Task.Run(() =>
 			{
-				// Create a new Staging Area
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyCreatorMDEAH");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevelComboBoxSelectedItem.Level);
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
 
 				switch (SelectedCreationMethod)
 				{
@@ -687,25 +720,36 @@ DeviceEvents
 						{
 							if (PolicyToAddLogsTo is not null)
 							{
-								// Set policy name and reset the policy ID of our new policy
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PolicyNameTextBox, null, null);
-
 								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
-								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
+								PolicyToAddLogsTo.PolicyObj = Merger.Merge(PolicyToAddLogsTo.PolicyObj, [policyObj]);
 
-								UpdateHvciOptions.Update(PolicyToAddLogsTo);
+								// Set a new name if it was provided
+								if (!string.IsNullOrWhiteSpace(PolicyNameTextBox))
+								{
+									PolicyToAddLogsTo.PolicyObj = SetCiPolicyInfo.Set(PolicyToAddLogsTo.PolicyObj, false, PolicyNameTextBox, null);
+								}
+
+								// Set the HVCI to Strict
+								PolicyToAddLogsTo.PolicyObj = PolicySettingsManager.UpdateHVCIOptions(PolicyToAddLogsTo.PolicyObj);
+
+								// Save the merged policy to the user selected file path if it was provided
+								if (PolicyToAddLogsTo.FilePath is not null)
+								{
+									Management.SavePolicyToFile(PolicyToAddLogsTo.PolicyObj, PolicyToAddLogsTo.FilePath);
+								}
 
 								// Add the supplemental policy path to the class variable
 								finalSupplementalPolicyPath = PolicyToAddLogsTo;
 
+								// Assign the created policy to the Sidebar
+								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+
+								MainWindow.TriggerTransferIconAnimationStatic(sender);
+
 								// If user selected to deploy the policy
 								if (DeployPolicyToggle)
 								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-									SiPolicy.Management.ConvertXMLToBinary(PolicyToAddLogsTo, null, CIPPath);
-
-									CiToolHelper.UpdatePolicy(CIPPath);
+									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(PolicyToAddLogsTo.PolicyObj));
 								}
 							}
 							else
@@ -722,34 +766,39 @@ DeviceEvents
 						{
 							if (BasePolicyXMLFile is not null)
 							{
-								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PolicyNameTextBox}.xml");
+								// Create a policy name if it wasn't provided since we are creating a new policy and it needs one
+								if (string.IsNullOrWhiteSpace(PolicyNameTextBox))
+								{
+									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
 
-								// Instantiate the user selected Base policy
-								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(BasePolicyXMLFile, null);
+									PolicyNameTextBox = string.Format(
+										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatMDEAH"),
+										formattedDate
+									);
+								}
 
 								// Set the BasePolicyID of our new policy to the one from user selected policy
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PolicyNameTextBox, policyObj.BasePolicyID, null);
+								// And set its name to the user-provided name.
+								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyXMLFile.PolicyObj.BasePolicyID);
 
 								// Configure policy rule options
-								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-								// Copying the policy file to the User Config directory - outside of the temporary staging area
-								File.Copy(EmptyPolicyPath, OutputPath, true);
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = OutputPath;
+								finalSupplementalPolicyPath = new(policyObj);
+
+								// Assign the created policy to the Sidebar
+								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+
+								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
 								// If user selected to deploy the policy
 								if (DeployPolicyToggle)
 								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-
-									CiToolHelper.UpdatePolicy(CIPPath);
+									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 								}
 							}
 							else
@@ -766,34 +815,42 @@ DeviceEvents
 						{
 							if (BasePolicyGUID is not null)
 							{
+								// Create a policy name if it wasn't provided since we are creating a new policy and it needs one
+								if (string.IsNullOrWhiteSpace(PolicyNameTextBox))
+								{
+									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
+
+									PolicyNameTextBox = string.Format(
+										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatMDEAH"),
+										formattedDate
+									);
+								}
+
 								// Make sure the GUID that user entered is valid in case they didn't submit to validate it.
 								BaseGUIDSubmitButton_Click();
 
-								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PolicyNameTextBox}.xml");
-
 								// Set the BasePolicyID of our new policy to the one supplied by user
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PolicyNameTextBox, BasePolicyGUID, null);
+								// And set its name to the user-provided name.
+								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyGUID);
 
 								// Configure policy rule options
-								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-								// Copying the policy file to the User Config directory - outside of the temporary staging area
-								File.Copy(EmptyPolicyPath, OutputPath, true);
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = OutputPath;
+								finalSupplementalPolicyPath = new(policyObj);
+
+								// Assign the created policy to the Sidebar
+								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+
+								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
 								// If user selected to deploy the policy
 								if (DeployPolicyToggle)
 								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-
-									CiToolHelper.UpdatePolicy(CIPPath);
+									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 								}
 							}
 							else
@@ -900,8 +957,21 @@ DeviceEvents
 					)
 				);
 
+				// To store the output of the MDE Advanced Hunting logs scan.
+				// Ensures the data are unique and are time-prioritized.
+				// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
+				FileIdentityTimeBasedHashSet Output = new();
+
 				// Grab the App Control Logs
-				HashSet<FileIdentity> Output = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
+				HashSet<FileIdentity> data = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
+
+				await Task.Run(() =>
+				{
+					foreach (FileIdentity log in data)
+					{
+						_ = Output.Add(log);
+					}
+				});
 
 				if (Output.Count is 0)
 				{
@@ -911,8 +981,14 @@ DeviceEvents
 				AllFileIdentities.Clear();
 				FileIdentities.Clear();
 
-				// Store all of the data in the List
-				AllFileIdentities.AddRange(Output);
+				await Task.Run(() =>
+				{
+					// Store all of the data in the List
+					foreach (FileIdentity log in Output.FileIdentitiesInternal)
+					{
+						AllFileIdentities.Add(log);
+					}
+				});
 
 				// Adds data from the List to Observable collection and makes sure filters are respected
 				ApplyFilters();

@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>السجلات</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>الإعدادات</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>يتم نشر السياسة الرئيسية بعد الدمج.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>حدث خطأ أثناء عملية الدمج</value>
   </data>
@@ -936,9 +930,6 @@
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>جارٍ التحقق من التحديث</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>جارٍ تثبيت مسار MSIXBundle الذي اخترته: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>الإصدار الحالي هو </value>
@@ -954,9 +945,6 @@
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>تم تنزيل حزمة AppControl Manager MSIXBundle بنجاح إلى </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>لم يتم اختيار أي مسار MSIXBundle</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>اكتملت جميع التنزيلات، جارٍ تثبيت الإصدار الجديد من AppControl Manager</value>
@@ -1967,73 +1955,73 @@
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>حدد قالبًا لتطبيقه على ملف النهج المحدد. القوالب هي قوائم محددة مسبقًا لخيارات قاعدة النهج.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>أنشئ نُهج App Control for Business بناءً على قوالب مختلفة وخيارات قواعد النهج. "موقّع وذو سمعة جيدة" رائع للمستخدمين الجدد. "السماح لـ Microsoft فقط" يسمح فقط بالملفات الموقعة بشهادات Microsoft. "Windows الافتراضي" يسمح فقط بالملفات التي تأتي افتراضيًا مع نظام التشغيل Windows.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>أنشئ نهجًا تكميليًا يوسع نطاق النهج الأساسي. يمكن للنُهج التكميلية السماح بالملفات فقط، ولا يمكن أن تحتوي على قواعد رفض.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>اعرض الملفات المكتشفة التي تم استخدامها لإنشاء النهج التكميلي.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>وزّع أي نوع من نُهج التحكم في التطبيقات محليًا أو عن بُعد على أجهزة الكمبيوتر المدارة بواسطة السحابة.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>استفد من سجلات النظام المحلية أو ملفات سجل EVTX لإنشاء نُهج التحكم في التطبيقات. مطلوب فقط سجلات Code Integrity التشغيلية وسجلات AppLocker. استخدم زر الفحص لملء شبكة البيانات. بمجرد ملئها، استخدم زر إنشاء النهج لتحديد تكوين الإخراج وإنشاء ملف نهج XML.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>احسب تكامل التعليمات البرمجية وأنواع أخرى من تجزئات الملفات.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>استرجع واستعلم عن الإعدادات الآمنة على النظام.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>فيما يلي السجلات التي يقوم مدير AppControl بإنشائها وتخزينها تلقائيًا في مجلد "AppControl Manager" في Program Files (إذا كان يعمل بامتيازات مرتفعة، وإلا فسيتم حفظها في دليل TEMP). لن يتجاوز الحجم الإجمالي لمجلد السجلات 1 جيجابايت.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>استفد من سجلات Microsoft Defender for Endpoint Advanced Hunting لإنشاء نُهج التحكم في التطبيقات. يمكنك إما تصفح ملفات السجل المصدرة أو استردادها من السحابة عن طريق تسجيل الدخول إلى حساب Microsoft الخاص بك.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>ادمج نُهج App Control for Business وأزل تكرارها. يمكنك تحديد نفس النهج مرتين لإزالة تكرار قواعده.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>حرر نُهج App Control for Business. تصفح بسهولة ملف نهج XML وحمّل تفاصيله باستخدام زر التحميل. بمجرد التحميل، يمكنك مراجعة عدد كل قاعدة داخل النهج، وإزالة قواعد معينة، وتعديل إعدادات النهج الأخرى المختلفة.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>خصص إعدادات تطبيقك هنا. سيتم حفظ تفضيلاتك حتى تكون جاهزة لك في كل مرة تبدأ فيها تشغيل مدير AppControl.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>قم بإجراء محاكاة App Control for Business عن طريق تحديد الملفات أو المجلدات، وملف نهج XML، ثم استخدم زر بدء المحاكاة لملء شبكة البيانات. ستظهر لك النتائج ما إذا كانت الملفات المحددة سيتم السماح بها أو حظرها بواسطة نهج التحكم في التطبيقات الخاص بك إذا تم توزيعه بالفعل على نظام وتم تشغيل تلك الملفات.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>اعرض ملفات وضع النواة المكتشفة التي سيتم استخدامها لإنشاء نهج الوضع المفروض. أزل العناصر التي لا تريد تضمينها في نهج وضع النواة الصارم النهائي من القائمة.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>تحقق من وجود تحديثات في هذه الصفحة. يمكنك أيضًا تمكين التحقق التلقائي من التحديثات والذي سيحدث مرة واحدة عند بدء التشغيل وسيتم إعلامك عند توفر إصدار جديد.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>تحقق من صحة نُهج التحكم في التطبيقات للتأكد من توافقها مع المخطط الرسمي. إذا قمت بتعديل ملفات نهج XML يدويًا وتريد التأكد من صحة تعديلاتك، فاستخدم هذه الميزة للتحقق من صحتها.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>اعرض معلومات شاملة حول الشهادات المستخدمة لتوقيع أي ملف. يتم عرض التفاصيل التي لا تتوفر عادةً في خصائص مستكشف الملفات أو أوامر PowerShell cmdlets هنا بالكامل.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>اعرض الملفات المكتشفة التي تم استخدامها لإنشاء نهج الرفض.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>أنشئ نهج رفض أساسي يرفض صراحةً الملفات أو التطبيقات. ضع في اعتبارك أن التحكم في التطبيقات يعتمد بشكل أساسي على القائمة البيضاء، مما يعني أن أي شيء غير مسموح به بواسطة النهج يتم رفضه تلقائيًا بالفعل.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>قم بتكوين خيارات قاعدة نهج App Control for Business. يتم توفير معلومات مفصلة بجانب كل قاعدة ويمكنك استخدام زر الدليل أو فتح مناقشة على GitHub إذا كنت بحاجة إلى مزيد من المعلومات.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>أنشئ شهادات توقيع التعليمات البرمجية بشكل آمن تكون مناسبة لتوقيع نُهج التحكم في التطبيقات.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>اعرض معلومات مفصلة حول النُهج الموزعة وتكامل التعليمات البرمجية على الأنظمة المحلية أو البعيدة.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>استخدم هذه الصفحة للسماح للتطبيقات أو الملفات الجديدة أو المثبتة بالفعل بالعمل على النظام.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>ابحث بين بيانات تفاصيل الشهادة</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>تأكد من أنك تريد استخدام ملف MSIXBundle المخصص المحدد بدلاً من تنزيله تلقائيًا من GitHub. سيؤدي هذا إلى تجاوز التحقق من التحديث عبر الإنترنت وتجاوز تنزيل ملف MSIXBundle من GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>تأكيد</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>تأكد من أنك تريد استخدام ملف MSIXBundle المخصص المحدد بدلاً من تنزيله تلقائيًا من GitHub. سيؤدي هذا إلى تجاوز التحقق من التحديث عبر الإنترنت وتجاوز تنزيل ملف MSIXBundle من GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>تأكد من أنك تريد استخدام ملف MSIXBundle المخصص المحدد بدلاً من تنزيله تلقائيًا من GitHub. سيؤدي هذا إلى تجاوز التحقق من التحديث عبر الإنترنت وتجاوز تنزيل ملف MSIXBundle من GitHub.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>مزيد من المعلومات</value>
   </data>
@@ -2506,12 +2482,6 @@
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>سيقوم باسترداد أحدث تكوينات المستخدم وعرضها.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>مسار النهج الموقع:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>مسار النهج غير الموقع:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>الاسم الشائع للشهادة:</value>
@@ -2902,18 +2872,6 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>التوثيق</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>التعيين التلقائي</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>احفظ تلقائيًا مسار السياسات الأساسية التي تنشئها في الشريط الجانبي.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>احفظ تلقائيًا مسار السياسات الأساسية التي تنشئها في الشريط الجانبي.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>احفظ تلقائيًا مسار السياسات الأساسية التي تنشئها في الشريط الجانبي.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>دليل الشريط الجانبي</value>
   </data>
@@ -2923,50 +2881,11 @@
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>للحصول على دليل استخدام الشريط الجانبي، يرجى زيارة صفحة ويكي GitHub بالنقر/الضغط هنا.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>تحديد</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>قم بتعيين ملف سياسة XML المحدد في الشريط الجانبي إلى مسار السياسة الأساسية للقسم القابل للتطبيق في الصفحة المرئية حاليًا.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>قم بتعيين ملف سياسة XML المحدد في الشريط الجانبي إلى مسار السياسة الأساسية للقسم القابل للتطبيق في الصفحة المرئية حاليًا.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>مسح</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>امسح مربع نص مسار ملف XML المحدد.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>امسح مربع نص مسار ملف XML المحدد.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>تصفح بحثًا عن ملف سياسة XML</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>تصفح بحثًا عن ملف سياسة XML</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>استخدم الشريط الجانبي لتثبيت مسارات ملفات XML وإعادة استخدامها في أجزاء مختلفة من مدير AppControl.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>الشريط الجانبي</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>مسار السياسة المثبت</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>مسار السياسة</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>تحتاج إلى تحديد اسم للسياسة التكميلية</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>تحتاج إلى تحديد مسار ملف سياسة XML</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>مسار ملف XML المحدد غير موجود</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>جارٍ البدء...</value>
@@ -3003,9 +2922,6 @@
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>تعذر العثور على ملف CIP لوضع الإنفاذ</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>تصفح بحثًا عن ملف سياسة XML للتحكم في التطبيقات</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>جارٍ التحقق من الصحة</value>
@@ -3216,10 +3132,6 @@
     <comment>App Manifest Validation</comment>
     <value>خاصية "Id" لـ AppManifest مطلوبة ولا يمكن أن تكون فارغة أو خالية.</value>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <comment>App Manifest Validation</comment>
-    <value>تحتوي مصفوفة SettingDefinition على عنصر فارغ.</value>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <comment>App Manifest Validation</comment>
     <value>خاصية "Name" لـ SettingDefinition مطلوبة ولا يمكن أن تكون فارغة أو خالية.</value>
@@ -3397,9 +3309,6 @@
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>يجب عليك تحديد خيار من قائمة إنشاء السياسة</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>سياسة تكميلية من سجلات الأحداث - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>لم يتم تحديد ملف سياسة لإضافة السجلات إليه.</value>
@@ -3620,9 +3529,6 @@
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>ملف الشهادة المحدد والاسم الشائع لا يتطابقان.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>الرجاء تحديد ملف سياسة XML للسياسة التي يتم إزالتها.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>مسار ملف سياسة XML المحدد غير موجود</value>
   </data>
@@ -3734,9 +3640,6 @@
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>حدث خطأ أثناء استرداد معلومات إضافية متعلقة بقواعد حظر برامج التشغيل الموصى بها من Microsoft.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>تم إنشاء ملف السياسة وحفظه في {0}</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>إعادة تعيين معرف السياسة وتعيين اسم السياسة</value>
   </data>
@@ -3764,9 +3667,6 @@
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>لم يتم العثور على محتوى XML على مصدر Microsoft GitHub لقواعد حظر وضع المستخدم الموصى بها من Microsoft.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>تكوين خيارات قاعدة السياسة لـ: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>إضافة خيار القاعدة: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@
   </data>
     <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} لا ينتمي إلى اسم شائع لموضوع أي من الشهادات المنشورة</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>ملف السياسة المحدد "{0}" غير موقع. يرجى تقديم ملف سياسة موقع.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>ملف السياسة المحدد "{0}" موقع. يرجى تقديم ملف سياسة غير موقع.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>محاولة تحليل وقراءة ملف تكوينات المستخدم الحالي</value>
@@ -3938,36 +3832,6 @@
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>فشل تنفيذ الأمر برمز الخطأ {0}. الإخراج: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>لا يمكن أن يكون CipPath فارغًا أو خاليًا.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>الملف "{0}" غير موجود.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>جارٍ نشر ملف CIP التالي: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>بنية XML غير صالحة، لم يتم العثور على عقدة SiPolicy</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>لم يتم العثور على عقدة الموقعين</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>فشل في إنشاء أو استرداد عقدة UMCI_ProductSignersNode</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>فشل في إنشاء أو استرداد عقدة KMCI_ProductSignersNode</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>لم يتم العثور على عقدة AllowedSigners لموقعي المنتج {0} على الرغم من إنشائها.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>لم يتم العثور على عقدة FileRulesRef لموقعي المنتج {0} على الرغم من إنشائها.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>لم يتم العثور على عقدة DeniedSigners لموقعي المنتج {0} على الرغم من إنشائها.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>حدثت مشكلة أثناء تشغيل CiTool.exe.</value>
   </data>
@@ -4031,7 +3895,7 @@
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>يجب عليك تحديد خيار من قائمة إنشاء السياسة.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>سياسة تكميلية من سجلات MDE Advanced Hunting - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>لا توجد سجلات أو ملفات في أي شبكات بيانات لإنشاء نهج تكميلي لها.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>لم يتم العثور على منطقة التجهيز</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>تم بنجاح إنشاء ونشر النهج.</value>
 </data>
@@ -4402,9 +4263,6 @@
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>كان متوقعًا علامة كتلة V8 '8'، ولكن تم الحصول على '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>كان متوقعًا علامة نهاية النهج '{0}'، ولكن تم الحصول على '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>نوع النهج هو {0} ويحتوي على خيار القاعدة {1} وهو غير صالح. فقط {2} يمكن أن يحتوي على ذلك.</value>
@@ -4658,9 +4516,6 @@
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>يجب أن تحتوي الشهادة على مفتاح خاص.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>تمت كتابة توقيع PKCS #7 (المحتوى مضمن، الشهادة متضمنة) إلى {0}</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>فشل SignerSignEx3 مع HRESULT: 0x{0:X}</value>
 </data>
@@ -4687,9 +4542,6 @@
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>تم تشغيل التطبيق عبر تنشيط الملف ولكن بدون أي وسائط لتنشيط الملف</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>ألغى المستخدم موجه التحكم في حساب المستخدم (UAC).</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>كان طلب الرفع مطلوبًا لمعالجة الملف المحدد ولكنه رُفض من قبل المستخدم. يتم الخروج من التطبيق.</value>
@@ -4729,12 +4581,6 @@
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>ملف نهج XML المحدد هو نهج أساسي ولكن معرف النهج الأساسي (BasePolicyID) ومعرف النهج (PolicyID) غير متطابقين، مما يشير إلى أنه نهج تكميلي، يتم تغيير النوع.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>تم تكوين النهج بنجاح في '{0}'. الآن لديه النوع '{1}'، ومعرف النهج الأساسي (BasePolicyID) '{2}' ومعرف النهج (PolicyID) '{3}'.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>تم تعيين إصدار ملف النهج بنجاح في '{0}' من '{1}' إلى '{2}'.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: بدء عملية فصل البيانات.</value>
@@ -4831,9 +4677,6 @@
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>أحد ملفات XML يحتوي على أكثر من موقع واحد بنفس المعرف `{0}`</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>تم تعيين HVCI بنجاح في ملف النهج '{0}' إلى صارم.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>قائمة الانتقال السريع غير مدعومة.</value>
@@ -5300,10 +5143,7 @@
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>لم يتم اكتشاف موقعين WHQLFilePublisher لإنشاء قواعد السماح لهم.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>عقدة EKUs غير موجودة</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>لم يتم اكتشاف موقعين WHQLFilePublisher لإنشاء قواعد المنع لهم.</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@
     <value>وقت الإنشاء</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>تفاصيل نشر سياسة Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>حدد تفاصيل نشر سياسة Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>حدد تفاصيل نشر سياسة Intune</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>إنشاء مجموعة جديدة</value>
@@ -5634,7 +5468,7 @@
 <data name="GroupType" xml:space="preserve">
   <value>نوع المجموعة:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>أدِر مجموعات Entra في المستأجر لديك وحدد المجموعات التي تريد نشر السياسة عليها.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,8 @@
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>اطلب التأكيد قبل إغلاق التطبيق فقط في ظروف معينة عند وجود عملية جارية.</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>لا تزال هناك سياسات غير محفوظة في مكتبة الشريط الجانبي، وسيتم فقدها في حال إغلاق التطبيق. هل أنت متأكد من رغبتك في الخروج؟</value>
   </data>
 </root>

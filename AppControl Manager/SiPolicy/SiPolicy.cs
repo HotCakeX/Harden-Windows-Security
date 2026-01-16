@@ -47,36 +47,36 @@ internal sealed class AppSettingRegion(List<AppRoot>? app)
 	internal List<AppRoot>? App => app;
 }
 
-internal sealed class RuleType(OptionType item)
+internal readonly struct RuleType(OptionType item)
 {
 	internal OptionType Item => item;
 }
 
-internal enum OptionType
+internal enum OptionType : uint
 {
-	EnabledUMCI,
-	EnabledBootMenuProtection,
-	EnabledIntelligentSecurityGraphAuthorization,
-	EnabledInvalidateEAsonReboot,
-	RequiredWHQL,
-	EnabledDeveloperModeDynamicCodeTrust,
-	EnabledAllowSupplementalPolicies,
-	DisabledRuntimeFilePathRuleProtection,
-	EnabledRevokedExpiredAsUnsigned,
-	EnabledAuditMode,
-	DisabledFlightSigning,
-	EnabledInheritDefaultPolicy,
-	EnabledUnsignedSystemIntegrityPolicy,
-	EnabledDynamicCodeSecurity,
-	RequiredEVSigners,
-	EnabledBootAuditOnFailure,
-	EnabledAdvancedBootOptionsMenu,
-	DisabledScriptEnforcement,
-	RequiredEnforceStoreApplications,
-	EnabledSecureSettingPolicy,
-	EnabledManagedInstaller,
-	EnabledUpdatePolicyNoReboot,
-	EnabledConditionalWindowsLockdownPolicy,
+	EnabledUMCI = 4U,
+	EnabledBootMenuProtection = 8U,
+	EnabledIntelligentSecurityGraphAuthorization = 16U,
+	EnabledInvalidateEAsonReboot = 32U,
+	RequiredWHQL = 128U,
+	EnabledDeveloperModeDynamicCodeTrust = 256U,
+	EnabledAllowSupplementalPolicies = 1024U,
+	DisabledRuntimeFilePathRuleProtection = 2048U,
+	EnabledRevokedExpiredAsUnsigned = 8192U,
+	EnabledAuditMode = 65536U,
+	DisabledFlightSigning = 131072U,
+	EnabledInheritDefaultPolicy = 262144U,
+	EnabledUnsignedSystemIntegrityPolicy = 524288U,
+	EnabledDynamicCodeSecurity = 1048576U,
+	RequiredEVSigners = 2097152U,
+	EnabledBootAuditOnFailure = 4194304U,
+	EnabledAdvancedBootOptionsMenu = 8388608U,
+	DisabledScriptEnforcement = 16777216U,
+	RequiredEnforceStoreApplications = 33554432U,
+	EnabledSecureSettingPolicy = 67108864U,
+	EnabledManagedInstaller = 134217728U,
+	EnabledUpdatePolicyNoReboot = 268435456U,
+	EnabledConditionalWindowsLockdownPolicy = 536870912U,
 	DisabledDefaultWindowsCertificateRemapping
 }
 
@@ -94,7 +94,7 @@ internal sealed class Setting(SettingValueType value, string provider, string ke
 
 	internal string Key => key;
 
-	internal string ValueName { get; set; } = valueName;
+	internal string ValueName => valueName;
 }
 
 internal sealed class CertEKU(string id)
@@ -104,7 +104,7 @@ internal sealed class CertEKU(string id)
 
 internal sealed class CertOemID(string value)
 {
-	internal string Value = value;
+	internal string Value => value;
 }
 
 internal sealed class CertPublisher(string value)
@@ -144,7 +144,7 @@ internal sealed class ProductSigners
 
 internal sealed class AllowedSigners(List<AllowedSigner> allowedSigner)
 {
-	internal List<AllowedSigner> AllowedSigner { get; set; } = allowedSigner;
+	internal List<AllowedSigner> AllowedSigner => allowedSigner;
 
 	internal string? Workaround { get; set; }
 }
@@ -163,14 +163,14 @@ internal sealed class ExceptDenyRule(string denyRuleID)
 
 internal sealed class DeniedSigners(List<DeniedSigner> deniedSigner)
 {
-	internal List<DeniedSigner> DeniedSigner { get; set; } = deniedSigner;
+	internal List<DeniedSigner> DeniedSigner => deniedSigner;
 
 	internal string? Workaround { get; set; }
 }
 
 internal sealed class DeniedSigner(string signerId, List<ExceptAllowRule>? exceptAllowRule)
 {
-	internal List<ExceptAllowRule>? ExceptAllowRule { get; set; } = exceptAllowRule;
+	internal List<ExceptAllowRule>? ExceptAllowRule => exceptAllowRule;
 
 	internal string SignerId => signerId;
 }
@@ -182,7 +182,7 @@ internal sealed class ExceptAllowRule(string allowRuleID)
 
 internal sealed class FileRulesRef(List<FileRuleRef> fileRuleRef)
 {
-	internal List<FileRuleRef> FileRuleRef { get; set; } = fileRuleRef;
+	internal List<FileRuleRef> FileRuleRef => fileRuleRef;
 
 	internal string? Workaround { get; set; }
 }
@@ -231,7 +231,7 @@ internal sealed class FileAttribRef(string ruleID)
 
 internal sealed class EKU(string id, ReadOnlyMemory<byte> value, string? friendlyName)
 {
-	internal string ID { get; set; } = id;
+	internal string ID => id;
 
 	/// <summary>
 	/// Holds hexBinary
@@ -243,7 +243,7 @@ internal sealed class EKU(string id, ReadOnlyMemory<byte> value, string? friendl
 
 internal sealed class Allow(string id)
 {
-	internal string ID { get; set; } = id;
+	internal string ID => id;
 
 	internal string? FriendlyName { get; set; }
 
@@ -275,7 +275,7 @@ internal sealed class Allow(string id)
 
 internal sealed class Deny(string id)
 {
-	internal string ID { get; set; } = id;
+	internal string ID => id;
 
 	internal string? FriendlyName { get; set; }
 
@@ -307,7 +307,7 @@ internal sealed class Deny(string id)
 
 internal sealed class FileAttrib(string id)
 {
-	internal string ID { get; set; } = id;
+	internal string ID => id;
 
 	internal string? FriendlyName { get; set; }
 
@@ -339,7 +339,7 @@ internal sealed class FileAttrib(string id)
 
 internal sealed class FileRule(string id, RuleTypeType type)
 {
-	internal string ID { get; set; } = id;
+	internal string ID => id;
 
 	internal RuleTypeType Type => type;
 
@@ -380,22 +380,22 @@ internal enum RuleTypeType
 
 internal sealed class UpdatePolicySigner(string signerID)
 {
-	internal string SignerId { get; set; } = signerID;
+	internal string SignerId => signerID;
 }
 
 internal sealed class SupplementalPolicySigner(string signerID)
 {
-	internal string SignerId { get; set; } = signerID;
+	internal string SignerId => signerID;
 }
 
 internal sealed class CiSigner(string signerID)
 {
-	internal string SignerId { get; set; } = signerID;
+	internal string SignerId => signerID;
 }
 
 internal sealed class Signer(string id, string name, CertRoot certRoot)
 {
-	internal CertRoot CertRoot { get; set; } = certRoot;
+	internal CertRoot CertRoot => certRoot;
 
 	internal List<CertEKU>? CertEKU { get; set; }
 
@@ -416,7 +416,7 @@ internal sealed class Signer(string id, string name, CertRoot certRoot)
 
 internal sealed class SigningScenario(string id, byte value, ProductSigners productSigners)
 {
-	internal ProductSigners ProductSigners { get; set; } = productSigners;
+	internal ProductSigners ProductSigners => productSigners;
 
 	internal TestSigners? TestSigners { get; set; }
 
@@ -424,11 +424,11 @@ internal sealed class SigningScenario(string id, byte value, ProductSigners prod
 
 	internal AppIDTags? AppIDTags { get; set; }
 
-	internal string ID { get; set; } = id;
+	internal string ID => id;
 
 	internal string? FriendlyName { get; set; }
 
-	internal byte Value { get; set; } = value;
+	internal byte Value => value;
 
 	internal string? InheritedScenarios { get; set; }
 
@@ -447,13 +447,13 @@ internal sealed class SiPolicy(
 
 	internal string? PolicyTypeID { get; set; }
 
-	internal string PlatformID { get; set; } = platformID;
+	internal string PlatformID => platformID;
 
 	internal string PolicyID { get; set; } = policyID;
 
 	internal string BasePolicyID { get; set; } = basePolicyID;
 
-	internal List<RuleType> Rules { get; set; } = rules;
+	internal List<RuleType> Rules => rules;
 
 	internal List<EKU>? EKUs { get; set; }
 

@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace AppControlManager.Others;
 
@@ -27,21 +26,7 @@ namespace AppControlManager.Others;
 /// </summary>
 internal sealed partial class UniqueStringObservableCollection : ObservableCollection<string>
 {
-	private readonly HashSet<string> _hashSet;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="UniqueStringObservableCollection"/> class.
-	/// Uses StringComparer.OrdinalIgnoreCase for uniqueness.
-	/// </summary>
-	internal UniqueStringObservableCollection() => _hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="UniqueStringObservableCollection"/> class that contains elements copied from the specified collection.
-	/// Only unique items (case-insensitive) will be retained.
-	/// </summary>
-	/// <param name="collection">The collection whose elements are copied to the new list.</param>
-	internal UniqueStringObservableCollection(IEnumerable<string> collection)
-		: base(collection.Distinct(StringComparer.OrdinalIgnoreCase)) => _hashSet = new HashSet<string>(this, StringComparer.OrdinalIgnoreCase);
+	private readonly HashSet<string> _hashSet = new(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// A read-only view of the internal set of unique items.
@@ -53,8 +38,6 @@ internal sealed partial class UniqueStringObservableCollection : ObservableColle
 	/// </summary>
 	protected override void InsertItem(int index, string item)
 	{
-		ArgumentNullException.ThrowIfNull(item);
-
 		if (_hashSet.Add(item))
 		{
 			base.InsertItem(index, item);
@@ -77,8 +60,6 @@ internal sealed partial class UniqueStringObservableCollection : ObservableColle
 	/// </summary>
 	protected override void SetItem(int index, string item)
 	{
-		ArgumentNullException.ThrowIfNull(item);
-
 		string old = this[index];
 		if (_hashSet.Contains(item))
 		{

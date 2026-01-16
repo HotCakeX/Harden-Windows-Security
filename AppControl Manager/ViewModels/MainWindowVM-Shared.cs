@@ -371,9 +371,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	// Page header's URL
 	internal Uri? PageHeaderGuideUri { get; set => SP(ref field, value); }
 
-	// Wether the inline page header is visible.
+	// Whether the inline page header is visible.
 	internal Visibility HeaderInlineVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-	// Wether the flyout page header is visible.
+	// Whether the flyout page header is visible.
 	internal Visibility HeaderFlyoutVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	// Style used by Breadcrumb items

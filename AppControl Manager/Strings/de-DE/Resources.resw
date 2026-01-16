@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>Protokolle</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>Bereitstellen der Hauptrichtlinie nach dem Zusammenführen.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>Während des Zusammenführungsprozesses ist ein Fehler aufgetreten</value>
   </data>
@@ -936,9 +930,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>Suche nach Update</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>Installieren des von Ihnen ausgewählten MSIXBundle-Pfads: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>Die aktuelle Version ist </value>
@@ -954,9 +945,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>Das AppControl Manager MSIXBundle-Paket wurde erfolgreich heruntergeladen nach </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>Es wurde kein MSIXBundle-Pfad ausgewählt</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Alle Downloads abgeschlossen, die neue AppControl Manager-Version wird installiert</value>
@@ -1967,73 +1955,73 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wählen Sie eine Vorlage aus, die auf die ausgewählte Richtliniendatei angewendet werden soll. Vorlagen sind vordefinierte Listen von Optionen für Richtlinienregeln.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>Erstellen Sie App Control für Unternehmen-Richtlinien basierend auf verschiedenen Vorlagen und Richtlinienregeloptionen. Signiert und vertrauenswürdig ist ideal für neue Benutzer. Microsoft zulassen erlaubt nur Dateien, die mit Microsofts Zertifikaten signiert sind. Standard-Windows erlaubt nur Dateien, die standardmäßig mit dem Windows-Betriebssystem geliefert werden.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>Erstellen Sie eine ergänzende Richtlinie, die den Geltungsbereich einer Basisrichtlinie erweitert. Ergänzende Richtlinien können nur Dateien zulassen; sie dürfen keine Sperrregeln enthalten.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Zeigen Sie die erkannten Dateien an, die zum Erstellen der ergänzenden Richtlinie verwendet wurden.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>Stellen Sie beliebige App-Control-Richtlinien lokal oder remote auf Cloud-verwalteten PCs bereit.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>Nutzen Sie lokale Systemprotokolle oder EVTX-Protokolldateien, um Richtlinien für die Anwendungssteuerung zu erstellen. Nur Code Integrity Operational- und AppLocker-Protokolle werden benötigt. Verwenden Sie die Schaltfläche &quot;Scannen&quot;, um die Datentabelle zu füllen. Sobald sie gefüllt ist, verwenden Sie die Schaltfläche &quot;Richtlinie erstellen&quot;, um die Ausgabekonfiguration festzulegen und die XML-Richtliniendatei zu generieren.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>Berechnen Sie die Codeintegritäts- und andere Hashes von Dateien.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>Rufen Sie die sicheren Einstellungen auf dem System ab und fragen Sie sie ab.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>Die folgenden Protokolle werden vom AppControl Manager automatisch generiert und im Ordner &quot;AppControl Manager&quot; in Program Files gespeichert (bei Ausführung mit erhöhten Rechten, andernfalls werden sie im TEMP-Verzeichnis gespeichert). Die Gesamtgröße des Protokollordners überschreitet niemals 1 GB.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>Nutzen Sie die Protokolle der &quot;Erweiterten Suche&quot; von Microsoft Defender for Endpoint, um Richtlinien für die Anwendungssteuerung zu erstellen. Sie können entweder nach exportierten Protokolldateien suchen oder sie aus der Cloud abrufen, indem Sie sich bei Ihrem Microsoft-Konto anmelden.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>App Control für Unternehmen-Richtlinien zusammenführen und deduplizieren. Sie können dieselbe Richtlinie zweimal auswählen, um deren Regeln zu deduplizieren.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>App Control für Unternehmen-Richtlinien bearbeiten. Suchen Sie bequem eine XML-Richtliniendatei und laden Sie deren Details mit der Schaltfläche &quot;Laden&quot;. Nach dem Laden können Sie die Anzahl jeder Regel innerhalb der Richtlinie prüfen, bestimmte Regeln entfernen und verschiedene andere Richtlinieneinstellungen ändern.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Passen Sie hier Ihre App-Einstellungen an. Ihre Präferenzen werden gespeichert, sodass sie bei jedem Start des AppControl Managers bereitstehen.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>Führen Sie eine App Control für Unternehmen-Simulation durch, indem Sie Dateien oder Ordner und eine XML-Richtliniendatei auswählen, und verwenden Sie dann die Schaltfläche &quot;Simulation starten&quot;, um die Datentabelle zu füllen. Die Ergebnisse zeigen Ihnen, ob die ausgewählten Dateien durch Ihre App-Control-Richtlinie zugelassen oder blockiert würden, wenn sie tatsächlich auf einem System bereitgestellt wäre und diese Dateien ausgeführt würden.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>Zeigen Sie die erkannten Kernelmodus-Dateien an, die zum Erstellen der Erzwingungsmodus-Richtlinie verwendet werden. Entfernen Sie Elemente, die nicht in der endgültigen strikten Kernelmodus-Richtlinie enthalten sein sollen, aus der Liste.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>Suchen Sie auf dieser Seite nach Updates. Sie können auch die automatische Update-Prüfung aktivieren, die einmal beim Start erfolgt, und Sie werden benachrichtigt, sobald eine neue Version verfügbar ist.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>Validieren Sie App-Control-Richtlinien, um sicherzustellen, dass sie dem offiziellen Schema entsprechen. Wenn Sie XML-Richtliniendateien manuell geändert haben und sicherstellen möchten, dass Ihre Änderungen korrekt sind, verwenden Sie diese Funktion, um sie zu validieren.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>Umfassende Informationen über die Zertifikate anzeigen, mit denen beliebige Dateien signiert wurden. Details, die in den Eigenschaften des Datei-Explorers oder in PowerShell-Cmdlets typischerweise nicht verfügbar sind, werden hier vollständig dargestellt.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Zeigen Sie die erkannten Dateien an, die zum Erstellen der Sperrrichtlinie verwendet wurden.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>Erstellen Sie eine Sperr-Basisrichtlinie, die Dateien oder Anwendungen ausdrücklich verweigert. Beachten Sie, dass die Anwendungssteuerung grundsätzlich auf Allowlisting basiert, was bedeutet, dass alles, was nicht durch eine Richtlinie erlaubt ist, bereits automatisch verweigert wird.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>Optionen für App Control für Unternehmen-Richtlinienregeln konfigurieren. Ausführliche Informationen werden neben jeder Regel bereitgestellt, und Sie können die Schaltfläche &quot;Guide&quot; verwenden oder auf GitHub eine Diskussion eröffnen, wenn Sie weitere Informationen benötigen.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>Erstellen Sie sicher Codesignaturzertifikate, die zum Signieren von App-Control-Richtlinien geeignet sind.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>Zeigen Sie ausführliche Informationen über die bereitgestellten Richtlinien und die Codeintegrität auf lokalen oder Remote-Systemen an.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>Verwenden Sie diese Seite, um neue oder bereits installierte Apps oder Dateien für die Ausführung auf dem System zuzulassen.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>In den Zertifikatsdetails suchen</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>Bestätigen Sie, dass Sie die ausgewählte benutzerdefinierte MSIXBundle-Datei verwenden möchten, statt sie automatisch von GitHub herunterzuladen. Dadurch wird die Online-Updateprüfung außer Kraft gesetzt und der Download der MSIXBundle-Datei von GitHub übersprungen.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>Bestätigen</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Bestätigen Sie, dass Sie die ausgewählte benutzerdefinierte MSIXBundle-Datei verwenden möchten, statt sie automatisch von GitHub herunterzuladen. Dadurch wird die Online-Updateprüfung außer Kraft gesetzt und der Download der MSIXBundle-Datei von GitHub übersprungen.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Bestätigen Sie, dass Sie die ausgewählte benutzerdefinierte MSIXBundle-Datei verwenden möchten, statt sie automatisch von GitHub herunterzuladen. Dadurch wird die Online-Updateprüfung außer Kraft gesetzt und der Download der MSIXBundle-Datei von GitHub übersprungen.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>Weitere Informationen</value>
   </data>
@@ -2506,12 +2482,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ruft die neuesten Benutzerkonfigurationen ab und zeigt sie an.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Pfad zur signierten Richtlinie:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Pfad zur unsignierten Richtlinie:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Allgemeiner Zertifikatname:</value>
@@ -2902,18 +2872,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Dokumentation</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>Automatische Zuordnung</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>Speichert den Pfad zu den von Ihnen erstellten Basisrichtlinien automatisch in der Seitenleiste.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Speichert den Pfad zu den von Ihnen erstellten Basisrichtlinien automatisch in der Seitenleiste.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Speichert den Pfad zu den von Ihnen erstellten Basisrichtlinien automatisch in der Seitenleiste.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>Leitfaden zur Seitenleiste</value>
   </data>
@@ -2923,50 +2881,11 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Eine Anleitung zur Seitenleiste finden Sie auf der GitHub-Wiki-Seite, indem Sie hier klicken/tippen.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>Auswählen</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ordnet die in der Seitenleiste ausgewählte XML-Richtliniendatei dem Basisrichtlinienpfad des zutreffenden Abschnitts auf der aktuell sichtbaren Seite zu.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ordnet die in der Seitenleiste ausgewählte XML-Richtliniendatei dem Basisrichtlinienpfad des zutreffenden Abschnitts auf der aktuell sichtbaren Seite zu.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>Leeren</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Löscht das Textfeld für den ausgewählten XML-Dateipfad.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Löscht das Textfeld für den ausgewählten XML-Dateipfad.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach einer XML-Richtliniendatei suchen</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach einer XML-Richtliniendatei suchen</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>Verwenden Sie die Seitenleiste, um XML-Dateipfade anzupinnen und in verschiedenen Bereichen des AppControl Manager wiederzuverwenden.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>Seitenleiste</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>Angehefteter Richtlinienpfad</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Richtlinienpfad</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>Sie müssen einen Namen für die Ergänzungsrichtlinie auswählen</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>Sie müssen einen XML-Richtliniendateipfad auswählen</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>Der ausgewählte XML-Dateipfad ist nicht vorhanden</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>Starten...</value>
@@ -3003,9 +2922,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>CIP-Datei für den Erzwingungsmodus konnte nicht gefunden werden</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>Nach einer App-Control-XML-Richtliniendatei suchen</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>Validierung wird ausgeführt</value>
@@ -3216,10 +3132,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Die Eigenschaft 'Id' von AppManifest ist erforderlich und darf nicht null oder leer sein.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>Das Array SettingDefinition enthält ein null-Element.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>Die Eigenschaft 'Name' von SettingDefinition ist erforderlich und darf nicht null oder leer sein.</value>
     <comment>App Manifest Validation</comment>
@@ -3397,9 +3309,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>Sie müssen eine Option aus der Liste zur Richtlinienerstellung auswählen</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>Ergänzungsrichtlinie aus Ereignisprotokollen - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>Es wurde keine Richtliniendatei ausgewählt, der die Protokolle hinzugefügt werden.</value>
@@ -3620,9 +3529,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>Die ausgewählte Zertifikatsdatei und der allgemeine Name stimmen nicht überein.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>Bitte wählen Sie die XML-Richtliniendatei der zu entfernenden Richtlinie aus.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>Der ausgewählte XML-Richtliniendateipfad ist nicht vorhanden</value>
   </data>
@@ -3734,9 +3640,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>Beim Abrufen zusätzlicher Informationen zu den von Microsoft empfohlenen Treibersperrregeln ist ein Fehler aufgetreten.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>Die Richtliniendatei wurde erstellt und unter {0} gespeichert</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>Die Richtlinien-ID wird zurückgesetzt und ein Richtlinienname zugewiesen</value>
   </data>
@@ -3764,9 +3667,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>Kein XML-Inhalt auf der Microsoft-GitHub-Quelle für von Microsoft empfohlene Benutzermodus-Sperrregeln gefunden.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>Konfigurieren der Richtlinienregeloptionen für: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>Regeloption wird hinzugefügt: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
     <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} gehört zu keinem Betreff-CN eines der bereitgestellten Zertifikate</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>Die angegebene Richtliniendatei '{0}' ist nicht signiert. Bitte geben Sie eine signierte Richtliniendatei an.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>Die angegebene Richtliniendatei '{0}' ist signiert. Bitte geben Sie eine unsignierte Richtliniendatei an.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>Es wird versucht, die aktuelle Benutzerkonfigurationsdatei zu analysieren und zu lesen</value>
@@ -3938,36 +3832,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>Befehlsausführung mit Fehlercode {0} fehlgeschlagen. Ausgabe: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>CipPath darf nicht null oder leer sein.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>Die Datei '{0}' existiert nicht.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>Bereitstellen der folgenden CIP-Datei: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>Ungültige XML-Struktur, SiPolicy-Knoten nicht gefunden</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>Signers-Knoten nicht gefunden</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>UMCI_ProductSignersNode konnte nicht erstellt oder abgerufen werden</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>KMCI_ProductSignersNode konnte nicht erstellt oder abgerufen werden</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>AllowedSigners-Knoten für {0} Product Signers trotz Erstellung nicht gefunden.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>FileRulesRef-Knoten für {0} Product Signers trotz Erstellung nicht gefunden.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>DeniedSigners-Knoten für {0} Product Signers trotz Erstellung nicht gefunden.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>Beim Ausführen von CiTool.exe ist ein Problem aufgetreten.</value>
   </data>
@@ -4031,7 +3895,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>Sie müssen eine Option aus der Liste zur Richtlinenerstellung auswählen.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>Zusätzliche Richtlinie aus MDE Advanced Hunting-Protokollen - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>Es befinden sich keine Protokolle oder Dateien in irgendwelchen Datengittern, um eine zusätzliche Richtlinie zu erstellen.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>Stagingbereich wurde nicht gefunden</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>Richtlinie erfolgreich erstellt und bereitgestellt.</value>
 </data>
@@ -4402,9 +4263,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>Erwartetes V8-Block-Tag '8', erhalten: '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>Erwartetes Richtlinien-Endtag '{0}', erhalten: '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>Der Richtlinientyp ist {0} und besitzt die Regeloption {1}, die ungültig ist. Nur {2} dürfen diese haben.</value>
@@ -4658,9 +4516,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>Zertifikat muss über einen privaten Schlüssel verfügen.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>PKCS #7-Signatur (Inhalt eingebettet, Zertifikat enthalten) nach {0} geschrieben</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>SignerSignEx3 mit HRESULT fehlgeschlagen: 0x{0:X}</value>
 </data>
@@ -4687,9 +4542,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>App wurde über die Dateiaktivierung gestartet, jedoch ohne Dateiaktivierungsargumente</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>Benutzer hat die UAC-Eingabeaufforderung abgebrochen.</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>Für die Verarbeitung der ausgewählten Datei war eine Anforderung zur Ausführung mit erhöhten Rechten erforderlich, diese wurde jedoch vom Benutzer abgelehnt. App wird beendet.</value>
@@ -4729,12 +4581,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>Die ausgewählte XML-Richtliniendatei ist eine Basisrichtlinie, aber ihre BasePolicyID und PolicyID sind nicht identisch, was auf eine Ergänzungsrichtlinie hindeutet; Typ wird geändert.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>Die Richtlinie unter '{0}' wurde erfolgreich konfiguriert. Sie hat jetzt den Typ '{1}', die BasePolicyID '{2}' und die PolicyID '{3}'.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>Die Version der Richtliniendatei unter '{0}' wurde erfolgreich von '{1}' auf '{2}' festgelegt.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: Der Datentrennungsprozess wird gestartet.</value>
@@ -4831,9 +4677,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>Eine der XML-Dateien enthält mehr als 1 Unterzeichner mit derselben ID `{0}`</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>HVCI in der Richtliniendatei '{0}' erfolgreich auf Strict gesetzt.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>JumpList wird nicht unterstützt.</value>
@@ -5300,10 +5143,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>keine WHQLFilePublisher-Unterzeichner erkannt, um Zulassungsregeln zu erstellen.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>EKUs-Knoten nicht gefunden</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>keine WHQLFilePublisher-Unterzeichner erkannt, um Verweigerungsregeln zu erstellen.</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Erstellungszeitpunkt</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Details zur Intune-Richtlinienbereitstellung</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Geben Sie die Details einer Intune-Richtlinienbereitstellung an</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Geben Sie die Details einer Intune-Richtlinienbereitstellung an</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>Neue Gruppe erstellen</value>
@@ -5634,7 +5468,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 <data name="GroupType" xml:space="preserve">
   <value>Gruppentyp:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Verwalten Sie die Entra-Gruppen in Ihrem Mandanten und wählen Sie die Gruppen aus, auf die die Richtlinie bereitgestellt werden soll.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,8 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Nur unter bestimmten Umständen vor dem Schließen der App nach einer Bestätigung fragen, wenn ein Vorgang läuft.</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>Es befinden sich noch ungespeicherte Richtlinien in der Bibliothek der Seitenleiste. Diese gehen verloren, wenn Sie die Anwendung schließen. Sind Sie sicher, dass Sie beenden möchten?</value>
   </data>
 </root>

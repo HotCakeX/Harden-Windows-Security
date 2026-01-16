@@ -20,36 +20,26 @@ namespace AppControlManager.XMLOps;
 internal static class SetCiPolicyInfo
 {
 	/// <summary>
-	/// Configures an XML Code Integrity policy by modifying its details.
-	/// When it comes to PolicyID, the only time it is modified is through random GUID generation.
-	/// The BasePolicyID, however, can be modified by supplying an XML file, providing the GUID directory, or through GUID random generation.
+	/// Configures a Code Integrity policy by modifying its details.
+	/// When it comes to PolicyID, the only time it is modified is through random GUID generation which also sets the same newly generated GUID for the BasePolicyID.
+	/// If the intention is to solely change the BasePolicyID, then supply value to the basePolicyID parameter.
 	/// If the policy doesn't have a "Settings" node with a "Setting" node inside it for PolicyName, it will be created. This is regardless of whether the policyName parameter was provided or not.
 	/// </summary>
-	/// <param name="filePath">Path to the XML policy file to modify.</param>
 	/// <param name="resetPolicyID">
-	/// Will assign a random GUID for the PolicyID and BasePolicyID of the selected XML file.
+	/// Will assign a random GUID for the PolicyID and BasePolicyID of the supplied App Control policy.
 	/// If this parameter is specified along with basePolicyID, first both PolicyID and BasePolicyID will reset and then basePolicyID will be applied to the policy.
 	/// </param>
-	/// <param name="policyName">The policy name to set for the selected XML policy file.</param>
+	/// <param name="policyName">The policy name to set for the supplied App Control policy.</param>
 	/// <param name="basePolicyID">
-	/// The BasePolicyID to set for the selected XML policy file.
+	/// The BasePolicyID to set for the supplied App Control policy.
 	/// It doesn't need to have curly brackets; they will be added automatically by the method.
-	/// This is the same as the -SupplementsBasePolicyID parameter of the Set-CIPolicyIdInfo cmdlet.
 	/// It will change the type of the policy to a Supplemental Policy type.
 	/// </param>
-	/// <param name="basePolicyToSupplementPath">
-	/// The path to an XML file. The PolicyID of the file will be extracted and applied to the BasePolicyID of the XML file selected in the filePath parameter.
-	/// </param>
 	/// <returns>
-	/// Returns the final policy ID of the XML policy. It will have curly brackets.
+	/// Returns the final App Control policy object after modifications have been made.
 	/// </returns>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static string Set(string filePath, bool? resetPolicyID, string? policyName, string? basePolicyID, string? basePolicyToSupplementPath)
+	internal static SiPolicy.SiPolicy Set(SiPolicy.SiPolicy policyObj, bool? resetPolicyID, string? policyName, string? basePolicyID)
 	{
-
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
-
 		#region PolicyName Processing
 
 		PolicySettingsManager.SetPolicyName(policyObj, policyName);
@@ -90,16 +80,6 @@ internal static class SetCiPolicyInfo
 
 		#endregion
 
-		#region basePolicyToSupplementPath processing
-
-		if (!string.IsNullOrWhiteSpace(basePolicyToSupplementPath))
-		{
-			SiPolicy.SiPolicy policyObj2 = SiPolicy.Management.Initialize(basePolicyToSupplementPath, null);
-			policyObj.BasePolicyID = policyObj2.PolicyID;
-		}
-
-		#endregion
-
 		#region Checking Policy Type
 
 		if (policyObj.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
@@ -118,19 +98,13 @@ internal static class SetCiPolicyInfo
 			{
 				Logger.Write(GlobalVars.GetStr("BasePolicyTypeChangeMessage"));
 
-
 				policyObj.PolicyType = SiPolicy.PolicyType.SupplementalPolicy;
 			}
 		}
 
 		#endregion
 
-		// Save the changes to the XML file
-		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
-
-		Logger.Write(string.Format(GlobalVars.GetStr("PolicyConfigurationSuccessMessage"), filePath, policyObj.PolicyType, policyObj.BasePolicyID, policyObj.PolicyID));
-
-		return policyObj.PolicyID;
+		return policyObj;
 	}
 
 
@@ -140,16 +114,8 @@ internal static class SetCiPolicyInfo
 	/// <param name="filePath"></param>
 	/// <param name="version"></param>
 	/// <param name="ID">This will be used as the BasePolicyID and PolicyID of the policy</param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void Set(string filePath, Version version, string? ID = null)
+	internal static SiPolicy.SiPolicy Set(SiPolicy.SiPolicy policyObj, Version version, string? ID = null)
 	{
-
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
-
-		// save the current XML policy version to a variable prior to modifying it
-		string OriginalXMLPolicyVersion = policyObj.VersionEx;
-
 		// Set the user provided version to the policy
 		policyObj.VersionEx = version.ToString();
 
@@ -163,17 +129,14 @@ internal static class SetCiPolicyInfo
 				throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidGuidFormatError"), ID));
 			}
 
-			// Set the BasePolicyID of the policy file to the user provided one
+			// Set the BasePolicyID of the policy object to the user provided one
 			policyObj.BasePolicyID = response.Item2;
 
-			// Set the PolicyID of the policy file to the user provided one
+			// Set the PolicyID of the policy object to the user provided one
 			policyObj.PolicyID = response.Item2;
 		}
 
-		// Save the changes to the XML file
-		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
-
-		Logger.Write(string.Format(GlobalVars.GetStr("PolicyVersionSetSuccessMessage"), filePath, OriginalXMLPolicyVersion, version));
+		return policyObj;
 	}
 
 
@@ -186,7 +149,6 @@ internal static class SetCiPolicyInfo
 	/// The 2nd item includes the string that can be used in the policy.</returns>
 	internal static (bool, string) ValidatePolicyID(string? id)
 	{
-
 		if (string.IsNullOrWhiteSpace(id))
 		{
 			return (false, string.Empty);
@@ -204,4 +166,23 @@ internal static class SetCiPolicyInfo
 		return (IsValid, tempVar);
 	}
 
+	/// <summary>
+	/// Swaps the PolicyID and BasePolicyID GUIDs in an App Control for Business policy with the provided value, for non-Supplemental policy types only.
+	/// </summary>
+	/// <param name="policyIdInput"></param>
+	/// <param name="policyObj"></param>
+	internal static SiPolicy.SiPolicy SetPolicyIDs(string policyIdInput, SiPolicy.SiPolicy policyObj)
+	{
+		if (policyObj.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
+		{
+			throw new InvalidOperationException("Don't use this method for Supplemental policies");
+		}
+
+		string policyId = "{" + policyIdInput + "}";
+
+		policyObj.BasePolicyID = policyId;
+		policyObj.PolicyID = policyId;
+
+		return policyObj;
+	}
 }

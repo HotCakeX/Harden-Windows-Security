@@ -432,7 +432,16 @@
 
                                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}" />
+                                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
 
                                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -527,7 +536,7 @@
                                     ExternalOperationStarted="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.filesAndFoldersDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 
@@ -557,7 +566,16 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -593,7 +611,16 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -695,6 +722,7 @@
 
                 <!-- Package Family Name (PFN) -->
                 <controls:SettingsExpander x:Uid="CreateDenyPolicyPFNSettingsExpander"
+                                           IsEnabled="{x:Bind ViewModel.IsElevated}"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}"
                                            Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}"
                                            IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}">
@@ -756,7 +784,7 @@
 
                         <ToggleButton x:Uid="DeployAfterCreationButton"
                                       IsChecked="{x:Bind ViewModel.PFNBasedShouldDeploy, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
@@ -943,7 +971,7 @@
                                 ExternalOperationStarted="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton x:Uid="DeployAfterCreationButton"
-                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
                                       IsChecked="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDeployButton, Mode=TwoWay}"
                                       Margin="0,0,15,0" />
 

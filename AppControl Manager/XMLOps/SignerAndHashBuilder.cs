@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 
@@ -70,7 +71,7 @@ internal static class SignerAndHashBuilder
 	List<FileIdentity>? data = null,
 	IReadOnlyCollection<string>? folderPaths = null,
 	HashSet<string>? customFileRulePatterns = null,
-	ScanLevels level = ScanLevels.FilePublisher,
+	ScanLevels level = ScanLevels.WHQLFilePublisher,
 	bool publisherToHash = false,
 	List<string>? packageFamilyNames = null
 )
@@ -93,6 +94,9 @@ internal static class SignerAndHashBuilder
 		// To store the PackageFamilyName rules using the PFN Level
 		List<PFNRuleCreator> pfnRules = [];
 
+		// To store the FileName rules for the FileName Level
+		List<FileNameRuleCreator> fileNameRules = [];
+
 		// Lists to separate data initially
 		List<FileIdentity> signedWHQLFilePublisherData = [];
 		List<FileIdentity> signedFilePublisherData = [];
@@ -102,6 +106,7 @@ internal static class SignerAndHashBuilder
 		IReadOnlyCollection<string> wildCardFilePathData = [];
 		List<string> PFNs = [];
 		HashSet<string> customPatternBasedFileRules = [];
+		List<FileIdentity> fileNameData = [];
 
 		Logger.Write(GlobalVars.GetStr("BuildSignerDataSeparationStartMessage"));
 
@@ -131,7 +136,7 @@ internal static class SignerAndHashBuilder
 
 						Logger.Write(GlobalVars.GetStr("BuildSignerPublisherHashLevelsMessage"));
 
-						foreach (FileIdentity item in data)
+						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
 						{
 							// If the current data is signed and publisherToHash is not used, which would indicate Hash level rules must be created for Publisher level data
 							// And make sure the file is not ECC Signed
@@ -159,7 +164,7 @@ internal static class SignerAndHashBuilder
 						Logger.Write(GlobalVars.GetStr("BuildSignerFilePublisherLevelsMessage"));
 
 						// Loop over each data
-						foreach (FileIdentity item in data)
+						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
 						{
 							// If the file's version is empty or it has no file attribute, then add it to the Publishers array
 							// because FilePublisher rule cannot be created for it
@@ -213,7 +218,7 @@ internal static class SignerAndHashBuilder
 						Logger.Write(GlobalVars.GetStr("BuildSignerWHQLFilePublisherLevelsMessage"));
 
 						// Loop over each data
-						foreach (FileIdentity item in data)
+						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
 						{
 
 							// It can be WHQLFilePublisher, FilePublisher, Publisher at this point
@@ -303,6 +308,39 @@ internal static class SignerAndHashBuilder
 					break;
 				}
 
+			case ScanLevels.FileName:
+				{
+					if (data is not null)
+					{
+						// Loop over each data
+						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
+						{
+							// If the file's version is empty or it has no file attribute, then add it to the Hashes array
+
+							// Get values from the item and check for null, empty or whitespace
+							bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
+														string.IsNullOrWhiteSpace(item.InternalName) &&
+														string.IsNullOrWhiteSpace(item.FileDescription) &&
+														string.IsNullOrWhiteSpace(item.ProductName);
+
+							bool hasNoFileVersion = item.FileVersion is null;
+
+							if (hasNoFileAttributes || hasNoFileVersion)
+							{
+								// Create hash rules for the file because it doesn't have the necessary file details for a FileName rule.
+								unsignedData.Add(item);
+							}
+							else
+							{
+								// If the file has the required info for a FileName rule level creation, add the data to the fileNameData list
+								fileNameData.Add(item);
+							}
+
+						}
+					}
+					break;
+				}
+
 			default:
 
 				break;
@@ -315,11 +353,12 @@ internal static class SignerAndHashBuilder
 		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerFilePathRulesCountMessage"), filePathData.Count));
 		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerWildCardFilePathRulesCountMessage"), wildCardFilePathData.Count));
 		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerPFNRulesCountMessage"), PFNs.Count));
+		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerFileNameRulesCountMessage"), fileNameData.Count));
 
 
 		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingWHQLFilePublisherMessage"));
 
-		foreach (FileIdentity signedData in signedWHQLFilePublisherData)
+		foreach (FileIdentity signedData in CollectionsMarshal.AsSpan(signedWHQLFilePublisherData))
 		{
 			// Create a new WHQLFilePublisherSignerCreator object
 			WHQLFilePublisherSignerCreator currentWHQLFilePublisherSigner = new(
@@ -388,7 +427,7 @@ internal static class SignerAndHashBuilder
 
 		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingFilePublisherMessage"));
 
-		foreach (FileIdentity signedData in signedFilePublisherData)
+		foreach (FileIdentity signedData in CollectionsMarshal.AsSpan(signedFilePublisherData))
 		{
 			// Create a new FilePublisherSignerCreator object
 			FilePublisherSignerCreator currentFilePublisherSigner = new(
@@ -397,7 +436,6 @@ internal static class SignerAndHashBuilder
 				internalName: signedData.InternalName,
 				originalFileName: signedData.OriginalFileName,
 				productName: signedData.ProductName,
-				fileName: signedData.FilePath,
 				authenticodeSHA256: signedData.SHA256Hash,
 				authenticodeSHA1: signedData.SHA1Hash,
 				siSigningScenario: signedData.SISigningScenario,
@@ -454,7 +492,7 @@ internal static class SignerAndHashBuilder
 
 		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingPublisherMessage"));
 
-		foreach (FileIdentity signedData in signedPublisherData)
+		foreach (FileIdentity signedData in CollectionsMarshal.AsSpan(signedPublisherData))
 		{
 
 			// Create a new PublisherSignerCreator object
@@ -511,9 +549,8 @@ internal static class SignerAndHashBuilder
 
 		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingUnsignedHashMessage"));
 
-		foreach (FileIdentity hashData in unsignedData)
+		foreach (FileIdentity hashData in CollectionsMarshal.AsSpan(unsignedData))
 		{
-
 			string? sha256 = hashData.SHA256Hash;
 			string? sha1 = hashData.SHA1Hash;
 			string? filePath = hashData.FilePath;
@@ -536,7 +573,7 @@ internal static class SignerAndHashBuilder
 
 		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingFilePathMessage"));
 
-		foreach (FileIdentity item in filePathData)
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(filePathData))
 		{
 			if (!string.IsNullOrWhiteSpace(item.FilePath))
 			{
@@ -552,7 +589,6 @@ internal static class SignerAndHashBuilder
 
 		foreach (string item in wildCardFilePathData)
 		{
-
 			// Create wildcard path - If user selected a root of a drive then do not add the extra backslash otherwise we'd create an invalid path such as "D:\\*" in the policy
 			string wildcardPath = DriveLetters.Any(x => string.Equals(x, item[..^1], StringComparison.OrdinalIgnoreCase)) ? item + "*" : item + @"\" + "*";
 
@@ -569,7 +605,6 @@ internal static class SignerAndHashBuilder
 
 		foreach (string item in customPatternBasedFileRules)
 		{
-
 			// FilePath rules can only be used for User-Mode files only
 			// Using whatever user entered as is.
 			filePaths.Add(new FilePathCreator(
@@ -581,7 +616,7 @@ internal static class SignerAndHashBuilder
 
 		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingPFNMessage"));
 
-		foreach (string item in PFNs)
+		foreach (string item in CollectionsMarshal.AsSpan(PFNs))
 		{
 			pfnRules.Add(new PFNRuleCreator(
 				item,
@@ -590,8 +625,22 @@ internal static class SignerAndHashBuilder
 				));
 		}
 
+		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingFileNameMessage"));
+
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(fileNameData))
+		{
+			fileNameRules.Add(new FileNameRuleCreator(
+				fileVersion: item.FileVersion,
+				fileDescription: item.FileDescription,
+				internalName: item.InternalName,
+				originalFileName: item.OriginalFileName,
+				productName: item.ProductName,
+				siSigningScenario: item.SISigningScenario
+				));
+		}
+
 		Logger.Write(GlobalVars.GetStr("BuildSignerCompletedMessage"));
 
-		return new FileBasedInfoPackage(whqlFilePublisherSigners, filePublisherSigners, publisherSigners, completeHashes, filePaths, pfnRules);
+		return new FileBasedInfoPackage(whqlFilePublisherSigners, filePublisherSigners, publisherSigners, completeHashes, filePaths, pfnRules, fileNameRules);
 	}
 }

@@ -32,7 +32,7 @@
                                 Grid.Row="1">
 
                 <customUI:ButtonV2 x:Name="PickPolicyFileButton"
-                                   ObservedData="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
+                                   ObservedData="{x:Bind ViewModel.SelectedPolicy.PolicyIdentifier, Mode=OneWay,FallbackValue=''}"
                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"
                                    x:Uid="SelectAppControlPolicyFileButton">
@@ -58,11 +58,20 @@
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PickPolicyFileButton_FlyOut_Clear_Click}" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PickPolicyFileButton_FlyOut_Clear_Click}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
 
                                 <TextBlock x:Uid="ViewSelectedPolicyPathsTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
+                                <TextBox Text="{x:Bind ViewModel.SelectedPolicy, Mode=OneWay}"
                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                          MinWidth="400" IsReadOnly="True" />
 

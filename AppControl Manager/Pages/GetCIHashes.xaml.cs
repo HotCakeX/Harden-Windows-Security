@@ -279,7 +279,7 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 	// Prevent the tap from bubbling up to the smoke grid
 	private void DestinationElement_Tapped(object sender, TappedRoutedEventArgs e) => e.Handled = true;
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GetCIHashesPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GetCIHashesPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes");
 
 }

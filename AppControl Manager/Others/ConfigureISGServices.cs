@@ -17,6 +17,11 @@
 
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
+using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Win32;
 
 namespace AppControlManager.Others;
 
@@ -110,12 +115,46 @@ internal static class ConfigureISGServices
 	/// <summary>
 	/// Starts the AppIdTel and sets the AppIDSvc service to auto start
 	/// </summary>
-	internal static void Configure()
+	internal static async Task Configure()
 	{
 		Logger.Write(GlobalVars.GetStr("ConfiguringAndStartingRequiredIsgServicesMessage"));
 
 		_ = ProcessStarter.RunCommand("appidtel.exe", "start");
 
 		SetServiceStartType("appidsvc", ServiceStartType.Automatic);
+
+		// If Smart App Control is not turned off, warn the user
+
+		using RegistryKey? key = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\CI\\Policy", false);
+
+		if (key is not null)
+		{
+			object? value = key.GetValue("VerifiedAndReputablePolicyState");
+
+			RegistryValueKind valueKind = key.GetValueKind("VerifiedAndReputablePolicyState");
+
+			if (value is not null)
+			{
+
+				if (
+					(valueKind is RegistryValueKind.String && !string.Equals(value.ToString(), "0", StringComparison.OrdinalIgnoreCase)) ||
+					(valueKind is RegistryValueKind.DWord && value is uint num && num != 0) ||
+					(valueKind is RegistryValueKind.DWord && value is int num2 && num2 != 0)
+					)
+				{
+					await App.AppDispatcher.EnqueueAsync(async () =>
+					{
+						using ContentDialogV2 sacDialog = new()
+						{
+							Title = GlobalVars.GetStr("WarningTitle"),
+							Content = GlobalVars.GetStr("SACIsNotOffForISGPolicyWarning"),
+							CloseButtonText = GlobalVars.GetStr("OK"),
+							DefaultButton = ContentDialogButton.Close
+						};
+						_ = await sacDialog.ShowAsync();
+					});
+				}
+			}
+		}
 	}
 }

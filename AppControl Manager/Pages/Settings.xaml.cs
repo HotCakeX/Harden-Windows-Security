@@ -29,7 +29,6 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class Settings : Page, CommonCore.UI.IPageHeaderProvider
 {
-
 	private SettingsVM ViewModel => ViewModelProvider.SettingsVM;
 	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
 
@@ -40,6 +39,6 @@ internal sealed partial class Settings : Page, CommonCore.UI.IPageHeaderProvider
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SettingsPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SettingsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

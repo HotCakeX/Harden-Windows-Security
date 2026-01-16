@@ -348,7 +348,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			_InfoBar.WriteWarning(GlobalVars.GetStr("SignInProcessCancelledByUserMessage"));
 		}
 		// Specifically for WAM
-		catch (MsalClientException ex) when (ex.ErrorCode == "authentication_canceled")
+		catch (MsalClientException ex) when (string.Equals(ex.ErrorCode, "authentication_canceled", StringComparison.OrdinalIgnoreCase))
 		{
 			_InfoBar.WriteWarning(GlobalVars.GetStr("SignInProcessCancelledByUserMessage"));
 		}

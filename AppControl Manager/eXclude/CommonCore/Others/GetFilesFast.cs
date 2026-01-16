@@ -208,8 +208,7 @@ internal static class FileUtility
 						}
 					};
 
-					IEnumerator<FileSystemInfo> enumerator = enumeration.GetEnumerator();
-
+					using IEnumerator<FileSystemInfo> enumerator = enumeration.GetEnumerator();
 					while (true)
 					{
 						cToken?.ThrowIfCancellationRequested();
@@ -265,7 +264,7 @@ internal static class FileUtility
 								}
 							};
 
-							IEnumerator<FileSystemInfo> subEnumerator = enumeration.GetEnumerator();
+							using IEnumerator<FileSystemInfo> subEnumerator = enumeration.GetEnumerator();
 							while (true)
 							{
 								cToken?.ThrowIfCancellationRequested();

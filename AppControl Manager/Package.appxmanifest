@@ -30,12 +30,13 @@
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:virtualization="http://schemas.microsoft.com/appx/manifest/virtualization/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="mp uap uap2 uap3 uap4 uap5 uap6 uap7 uap8 uap10 uap11 uap12 uap16 uap17 uap18 desktop desktop4 desktop5 desktop6 desktop7 desktop8 desktop9 desktop10 com virtualization rescap">
+  xmlns:appdata="http://schemas.microsoft.com/appx/manifest/appdata/windows10"
+  IgnorableNamespaces="mp uap uap2 uap3 uap4 uap5 uap6 uap7 uap8 uap10 uap11 uap12 uap16 uap17 uap18 desktop desktop4 desktop5 desktop6 desktop7 desktop8 desktop9 desktop10 com virtualization rescap appdata">
 
   <Identity
     Name="VioletHansen.AppControlManager"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="2.0.59.0" />
+    Version="2.0.60.0" />
 
   <mp:PhoneIdentity PhoneProductId="4157a676-f4c2-4a8c-a511-b7fb2255c6f5" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
@@ -48,6 +49,13 @@
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
     <uap17:UpdateWhileInUse>defer</uap17:UpdateWhileInUse>
+
+    <!-- https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md#34-per-machine-data-store -->
+    <appdata:ApplicationData>
+      <!-- grants Full Control to Administrators -->
+      <appdata:MachineFolder Sddl="(A;OICI;GA;;;BA)"/>
+    </appdata:ApplicationData>
+
   </Properties>
 
   <Dependencies>

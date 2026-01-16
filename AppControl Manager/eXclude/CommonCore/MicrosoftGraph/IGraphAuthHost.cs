@@ -17,7 +17,7 @@
 
 namespace CommonCore.MicrosoftGraph;
 
-// Host interface for viewmodels that want to use the GraphAuthPanel user control.
+// Host interface for ViewModels that want to use the GraphAuthPanel user control.
 internal interface IGraphAuthHost
 {
 	AuthenticationCompanion AuthCompanionCLS { get; }

@@ -33,7 +33,7 @@ internal enum Intent : int
 }
 
 /// <summary>
-/// Defiens an intent item with associated metadata to display it in the UI.
+/// Defines an intent item with associated metadata to display it in the UI.
 /// </summary>
 /// <param name="intent"></param>
 /// <param name="title"></param>

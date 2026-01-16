@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>लॉग्स</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>सेटिंग्स</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>मर्ज के बाद मुख्य नीति तैनात की जा रही है।</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>मर्ज प्रक्रिया के दौरान एक त्रुटि हुई</value>
   </data>
@@ -936,9 +930,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>अपडेट की जांच हो रही है</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>आपके द्वारा चयनित MSIXBundle पथ स्थापित किया जा रहा है: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>वर्तमान संस्करण है </value>
@@ -954,9 +945,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>AppControl Manager MSIXBundle पैकेज सफलतापूर्वक डाउनलोड किया गया: </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>कोई MSIXBundle पथ चयनित नहीं था</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>सभी डाउनलोड पूर्ण, नया AppControl Manager संस्करण स्थापित किया जा रहा है</value>
@@ -1967,73 +1955,73 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>चयनित नीति फ़ाइल पर लागू करने के लिए एक टेम्पलेट चुनें। टेम्पलेट पूर्व-निर्धारित नीति नियम विकल्पों की सूचियाँ हैं।</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>विभिन्न टेम्पलेट और नीति नियम विकल्पों के आधार पर बिजनेस के लिए App Control नीतियाँ बनाएँ। Signed And Reputable नए उपयोगकर्ताओं के लिए श्रेष्ठ है। Allow Microsoft केवल माइक्रोसॉफ्ट के प्रमाणपत्रों से साइन की गई फ़ाइलों की अनुमति देता है। Default Windows केवल उन फ़ाइलों की अनुमति देता है जो Windows OS के साथ डिफ़ॉल्ट रूप से आती हैं।</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>एक पूरक नीति बनाएँ जो मूल नीति के दायरे का विस्तार करेगी। पूरक नीतियाँ केवल फ़ाइलों की अनुमति दे सकती हैं, उनमें निषेध नियम नहीं हो सकते।</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>पता लगी हुई फ़ाइलें देखें जिनका उपयोग पूरक नीति बनाने में किया गया था।</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>App Control नीति को स्थानीय रूप से या क्लाउड प्रबंधित PCs पर दूरस्थ रूप से तैनात करें।</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>स्थानीय सिस्टम लॉग या EVTX लॉग फ़ाइलों का उपयोग करके एप्लिकेशन कंट्रोल नीतियाँ बनाएँ। केवल कोड इंटीग्रिटी ऑपरेशनल और AppLocker लॉग की आवश्यकता है। डेटा ग्रिड भरने के लिए Scan बटन का उपयोग करें। एक बार भरने के बाद, Create Policy बटन का उपयोग करके आउटपुट कॉन्फ़िगरेशन निर्दिष्ट करें और XML नीति फ़ाइल जेनरेट करें।</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>फ़ाइलों के कोड इंटीग्रिटी और अन्य प्रकार के हैश गणना करें।</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>सिस्टम पर सुरक्षित सेटिंग्स पुनर्प्राप्त और क्वेरी करें।</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>निम्नलिखित लॉग्स AppControl Manager द्वारा स्वतः जेनरेट किए जाते हैं और Program Files में "AppControl Manager" फ़ोल्डर (यदि उच्च विशेषाधिकार पर चल रहा हो) या TEMP निर्देशिका में संग्रहीत होते हैं। लॉग्स फ़ोल्डर का कुल आकार कभी 1GB से अधिक नहीं होगा।</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>Microsoft Defender for Endpoint Advanced Hunting लॉग्स का उपयोग करके एप्लिकेशन कंट्रोल नीतियाँ बनाएँ। आप निर्यातित लॉग फ़ाइलों के लिए ब्राउज़ कर सकते हैं या क्लाउड से उन्हें Microsoft खाते में साइन इन करके प्राप्त कर सकते हैं।</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>App Control for Business नीतियों को मर्ज और डुप्लिकेट हटाएँ। नियमों को डुप्लिकेट हटाने के लिए आप एक ही नीति को दो बार चुन सकते हैं।</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>App Control for Business नीतियाँ संपादित करें। Load बटन का उपयोग करके नीति XML फ़ाइल ब्राउज़ और लोड करें। एक बार लोड होने पर, नीति में प्रत्येक नियम की संख्या समीक्षा करें, विशिष्ट नियम हटाएँ, और अन्य नीति सेटिंग्स संशोधित करें।</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>यहाँ अपने ऐप सेटिंग्स अनुकूलित करें। आपकी प्राथमिकताएँ सहेजी जाएँगी ताकि आप हर बार AppControl Manager शुरू करने पर तैयार हों।</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>फ़ाइलों या फ़ोल्डरों, और एक XML नीति फ़ाइल का चयन करके App Control for Business सिमुलेशन करें, फिर Begin Simulation बटन का उपयोग करके डेटा ग्रिड भरें। परिणाम आपको दिखाएँगे कि चयनित फ़ाइलें आपकी नीति द्वारा अनुमति पाएँगी या ब्लॉक होंगी यदि यह वास्तविक रूप से सिस्टम पर लागू होती।</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>पता लगी हुई Kernel-mode फ़ाइलें देखें जिनका उपयोग प्रवर्तित मोड नीति बनाने में किया जाएगा। अंतिम सख्त Kernel-mode नीति से हटाने के लिए अनचाही आइटम हटाएँ।</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>इस पृष्ठ पर अपडेट्स के लिए जांचें। आप स्वचालित अपडेट जांच सक्षम कर सकते हैं जो स्टार्टअप पर एक बार होगी और जब नया संस्करण उपलब्ध होगा तो आपको सूचित किया जाएगा।</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>App Control नीतियों को आधिकारिक schema के साथ पालनशील सुनिश्चित करने के लिए सत्यापित करें। यदि आपने XML नीति फ़ाइलों में मैन्युअल संशोधन किया है और सुनिश्चित करना चाहते हैं कि आपके संशोधन सही हैं, तो इस सुविधा का उपयोग करें।</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>किसी भी फ़ाइल को साइन करने के लिए उपयोग किए गए प्रमाणपत्रों के बारे में व्यापक जानकारी देखें। फ़ाइल एक्सप्लोरर गुण या PowerShell cmdlets में आमतौर पर अनुपलब्ध विवरण यहाँ पूर्ण रूप में प्रस्तुत होते हैं।</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>पता लगी हुई फ़ाइलें देखें जिनका उपयोग Deny नीति बनाने में किया गया था।</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>एक Deny मूल नीति बनाएँ जो फ़ाइलों या अनुप्रयोगों को स्पष्ट रूप से अस्वीकृत करेगी। ध्यान दें कि एप्लिकेशन कंट्रोल मूल रूप से allow-listing पर आधारित है, जिसका अर्थ है कि एक नीति द्वारा अनुमति नहीं दी गई कोई भी चीज़ पहले से ही स्वचालित रूप से अस्वीकृत है।</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>App Control for Business नीति नियम विकल्प कॉन्फ़िगर करें। प्रत्येक नियम के बगल में विस्तृत जानकारी प्रदान की जाती है और अधिक जानकारी के लिए आप Guide बटन का उपयोग कर सकते हैं या GitHub पर चर्चा खोल सकते हैं।</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>ऐप कंट्रोल नीतियों पर साइनिंग के लिए उपयुक्त कोड साइनिंग प्रमाणपत्र सुरक्षित रूप से बनाएं।</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>स्थानीय या दूरस्थ सिस्टम पर तैनात नीतियों और कोड इंटीग्रिटी के बारे में विस्तृत जानकारी देखें।</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>इस पृष्ठ का उपयोग करके नए या पहले से इंस्टॉल किए गए ऐप्स या फ़ाइलों को सिस्टम पर चलने की अनुमति दें।</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>प्रमाणपत्र विवरण डेटा में खोजें</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>चयनित कस्टम MSIXBundle फ़ाइल का उपयोग स्वचालित रूप से GitHub से डाउनलोड करने के बजाय करने की पुष्टि करें। इससे ऑनलाइन अपडेट जांच अधिलेखित हो जाएगी और GitHub से MSIXBundle फ़ाइल डाउनलोड बायपास हो जाएगी।</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>पुष्टि करें</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>चयनित कस्टम MSIXBundle फ़ाइल का उपयोग स्वचालित रूप से GitHub से डाउनलोड करने के बजाय करने की पुष्टि करें। इससे ऑनलाइन अपडेट जांच अधिलेखित हो जाएगी और GitHub से MSIXBundle फ़ाइल डाउनलोड बायपास हो जाएगी।</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>चयनित कस्टम MSIXBundle फ़ाइल का उपयोग स्वचालित रूप से GitHub से डाउनलोड करने के बजाय करने की पुष्टि करें। इससे ऑनलाइन अपडेट जांच अधिलेखित हो जाएगी और GitHub से MSIXBundle फ़ाइल डाउनलोड बायपास हो जाएगी।</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>अधिक जानकारी</value>
   </data>
@@ -2506,12 +2482,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>यह नवीनतम उपयोगकर्ता कॉन्फ़िगरेशन पुनः प्राप्त कर उन्हें प्रदर्शित करेगा।</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>साइन की गई नीति पथ:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>अनसाइन की गई नीति पथ:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>प्रमाणपत्र सामान्य नाम:</value>
@@ -2902,18 +2872,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>दस्तावेज़ीकरण</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>स्वचालित असाइनमेंट</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>आप द्वारा बनाए गए बेस नीतियों का पथ स्वचालित रूप से साइडबार में सहेजे।</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>आप द्वारा बनाए गए बेस नीतियों का पथ स्वचालित रूप से साइडबार में सहेजे।</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>आप द्वारा बनाए गए बेस नीतियों का पथ स्वचालित रूप से साइडबार में सहेजे।</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>साइडबार मार्गदर्शिका</value>
   </data>
@@ -2923,50 +2881,11 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>साइडबार उपयोग गाइड के लिए कृपया यहाँ क्लिक/टैप करके GitHub विकी पेज देखें।</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>चुनें</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>साइडबार में चयनित XML नीति फ़ाइल को वर्तमान पेज के प्रासंगिक अनुभाग में बेस नीति पथ के रूप में असाइन करें।</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>साइडबार में चयनित XML नीति फ़ाइल को वर्तमान पेज के प्रासंगिक अनुभाग में बेस नीति पथ के रूप में असाइन करें।</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>साफ़ करें</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>चयनित XML फ़ाइल पथ टेक्स्ट बॉक्स साफ़ करें।</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>चयनित XML फ़ाइल पथ टेक्स्ट बॉक्स साफ़ करें।</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>XML नीति फ़ाइल के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>XML नीति फ़ाइल के लिए ब्राउज़ करें</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>साइडबार का उपयोग XML फ़ाइल पथ पिन करने और AppControl Manager के विभिन्न हिस्सों में पुनः उपयोग करने के लिए करें।</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>साइडबार</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>पिन किया गया नीति पथ</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>नीति पथ</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>आपको पूरक नीति के लिए एक नाम चुनना आवश्यक है</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>आपको एक XML नीति फ़ाइल पथ चुनना आवश्यक है</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>चयनित XML फ़ाइल पथ मौजूद नहीं है</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>प्रारंभ हो रहा है…</value>
@@ -3003,9 +2922,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>प्रवर्तन मोड CIP फ़ाइल नहीं मिल सकी</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>App Control XML नीति फ़ाइल के लिए ब्राउज़ करें</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>मान्यता कर रहे हैं</value>
@@ -3216,10 +3132,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>AppManifest की 'Id' प्रॉपर्टी आवश्यक है और null या खाली नहीं हो सकती।</value>
     <comment>ऐप मैनिफेस्ट मान्यता</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>SettingDefinition array में null तत्व है।</value>
-    <comment>ऐप मैनिफेस्ट मान्यता</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>SettingDefinition की 'Name' प्रॉपर्टी आवश्यक है और null या खाली नहीं हो सकती।</value>
     <comment>ऐप मैनिफेस्ट मान्यता</comment>
@@ -3397,9 +3309,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>नीति निर्माण सूची से एक विकल्प चुनना आवश्यक है</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>ईवेंट लॉग्स से पूरक नीति - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>लॉग्स जोड़ने के लिए कोई नीति फ़ाइल चयनित नहीं की गई।</value>
@@ -3620,9 +3529,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>चयनित प्रमाणपत्र फ़ाइल और सामान्य नाम मेल नहीं खाते।</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>कृपया हटाई जा रही नीति की XML फ़ाइल चुनें।</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>चयनित XML नीति फ़ाइल पथ मौजूद नहीं है</value>
   </data>
@@ -3734,9 +3640,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>Microsoft अनुशंसित ड्राइवर ब्लॉक नियमों से संबंधित अतिरिक्त जानकारी प्राप्त करते समय त्रुटि हुई।</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>नीति फ़ाइल बनाई गई और {0} पर सहेजी गई</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>नीति ID रीसेट कर रहे हैं और नीति नाम असाइन कर रहे हैं</value>
   </data>
@@ -3764,9 +3667,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>Microsoft GitHub स्रोत पर Microsoft अनुशंसित User Mode Block Rules के लिए कोई XML सामग्री नहीं मिली।</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>के लिए नीति नियम विकल्प कॉन्फ़िगर कर रहे हैं: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>नियम विकल्प जोड़ रहे हैं: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} किसी भी तैनात प्रमाणपत्र के विषय CN में नहीं आता</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>निर्दिष्ट नीति फ़ाइल '{0}' साइन की गई नहीं है। कृपया एक साइन की गई नीति फ़ाइल प्रदान करें।</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>निर्दिष्ट नीति फ़ाइल '{0}' साइन की गई है। कृपया एक अनसाइन की गई नीति फ़ाइल प्रदान करें।</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>वर्तमान उपयोगकर्ता विन्यास फ़ाइल पार्स और पढ़ने का प्रयास कर रहे हैं</value>
@@ -3938,36 +3832,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>कमांड निष्पादन त्रुटि कोड {0} के साथ विफल हुआ। आउटपुट: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>CipPath null या खाली नहीं हो सकता।</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>फ़ाइल '{0}' मौजूद नहीं है।</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>निम्नलिखित CIP फ़ाइल तैनात कर रहे हैं: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>अमान्य XML संरचना, SiPolicy नोड नहीं मिला</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>Signers नोड नहीं मिला</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>UMCI_ProductSignersNode बनाने या प्राप्त करने में विफल</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>KMCI_ProductSignersNode बनाने या प्राप्त करने में विफल</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Product Signers AllowedSigners नोड बनाने के बावजूद नहीं मिला।</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Product Signers FileRulesRef नोड बनाने के बावजूद नहीं मिला।</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Product Signers DeniedSigners नोड बनाने के बावजूद नहीं मिला।</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>CiTool.exe चलाने में समस्या हुई।</value>
   </data>
@@ -4031,7 +3895,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>नीति निर्माण सूची से एक विकल्प चुनना आवश्यक है।</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>MDE उन्नत शिकार लॉग्स से पूरक नीति - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>सप्लीमेंटल पॉलिसी बनाने के लिए किसी भी डेटा ग्रिड में कोई लॉग या फ़ाइलें नहीं हैं।</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>स्टेजिंग एरिया नहीं मिला</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>पॉलिसी सफलतापूर्वक बनाई और डिप्लॉय की गई।</value>
 </data>
@@ -4402,9 +4263,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>अपेक्षित V8 ब्लॉक टैग '8', मिला '{0}'।</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>अपेक्षित पॉलिसी एंड टैग '{0}', मिला '{1}'।</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>पॉलिसी का प्रकार {0} है और इसमें {1} नियम विकल्प है जो अमान्य है। केवल {2} में वह हो सकता है।</value>
@@ -4658,9 +4516,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>प्रमाणपत्र में एक निजी कुंजी होनी चाहिए।</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>PKCS #7 हस्ताक्षर (सामग्री एम्बेडेड, प्रमाणपत्र शामिल) {0} पर लिखा गया</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>SignerSignEx3 HRESULT: 0x{0:X} के साथ विफल रहा</value>
 </data>
@@ -4687,9 +4542,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>ऐप को फ़ाइल सक्रियण के माध्यम से लॉन्च किया गया था लेकिन बिना किसी फ़ाइल सक्रियण तर्क के</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>उपयोगकर्ता ने UAC प्रॉम्प्ट रद्द कर दिया।</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>चयनित फ़ाइल को संसाधित करने के लिए एलिवेशन अनुरोध आवश्यक था लेकिन उपयोगकर्ता द्वारा इसे अस्वीकार कर दिया गया। ऐप से बाहर निकल रहा है।</value>
@@ -4729,12 +4581,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>चयनित XML नीति फ़ाइल एक आधार नीति है, लेकिन इसकी BasePolicyID और PolicyID समान नहीं हैं, जो यह दर्शाता है कि यह एक पूरक नीति है, प्रकार बदला जा रहा है।</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>'{0}' पर नीति को सफलतापूर्वक कॉन्फ़िगर किया गया। अब इसका प्रकार '{1}', BasePolicyID '{2}' और PolicyID '{3}' है।</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>'{0}' पर नीति फ़ाइल का संस्करण सफलतापूर्वक '{1}' से '{2}' में सेट किया गया।</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: डेटा पृथक्करण प्रक्रिया प्रारंभ की जा रही है।</value>
@@ -4831,9 +4677,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>XML फ़ाइलों में से एक में समान ID `{0}` वाले 1 से अधिक हस्ताक्षरकर्ता हैं</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>नीति फ़ाइल '{0}' में HVCI को सफलतापूर्वक 'सख्त' पर सेट किया गया।</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>जंपलिस्ट समर्थित नहीं है।</value>
@@ -5300,10 +5143,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>अनुमति नियम बनाने के लिए कोई WHQLFilePublisher हस्ताक्षरकर्ता नहीं मिले।</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>EKUs नोड नहीं मिला</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>अस्वीकार नियम बनाने के लिए कोई WHQLFilePublisher हस्ताक्षरकर्ता नहीं मिले।</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>निर्माण समय</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Intune नीति परिनियोजन विवरण</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Intune नीति परिनियोजन का विवरण निर्दिष्ट करें</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Intune नीति परिनियोजन का विवरण निर्दिष्ट करें</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>नई समूह बनाएँ</value>
@@ -5634,7 +5468,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="GroupType" xml:space="preserve">
   <value>समूह प्रकार:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>अपने टेनेंट में Entra समूहों का प्रबंधन करें और वे समूह चुनें जिन पर आप नीति परिनियोजित करना चाहते हैं.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,8 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>केवल कुछ परिस्थितियों में ऐप बंद करने से पहले पुष्टि मांगें जब कोई ऑपरेशन चल रहा हो।</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>साइडबार की लाइब्रेरी में अभी भी बिना सहेजी गई नीतियां हैं, यदि आप एप्लिकेशन बंद करते हैं तो ��े नष्ट हो जाएंगी। क्या आप वाकई बाहर निकलना चाहते हैं?</value>
   </data>
 </root>

@@ -206,7 +206,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// </summary>
 	internal void SelectGroups_Click()
 	{
-		// Assign the current signed in account to the viewmodel to make it available for usage.
+		// Assign the current signed in account to the ViewModel to make it available for usage.
 		AppControlManager.ViewModels.IntuneDeploymentDetailsVM.TargetAccount = AuthCompanionCLS.CurrentActiveAccount;
 
 		ViewModelProvider.NavigationService.Navigate(typeof(IntuneDeploymentDetails), null);

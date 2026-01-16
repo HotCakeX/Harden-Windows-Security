@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Xml;
 
 namespace AppControlManager.SiPolicy;
@@ -150,25 +151,18 @@ internal static class CustomAppManifestLogics
 
 		root.SetAttribute("Id", manifest.Id);
 
-		if (manifest.SettingDefinition != null)
+		foreach (SettingDefinition setting in CollectionsMarshal.AsSpan(manifest.SettingDefinition))
 		{
-			foreach (SettingDefinition setting in manifest.SettingDefinition)
+			if (string.IsNullOrEmpty(setting.Name))
 			{
-				if (setting is null)
-				{
-					throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionArrayNullElementValidationError"));
-				}
-				if (string.IsNullOrEmpty(setting.Name))
-				{
-					throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionPropertyNameNullOrEmptyValidationError"));
-				}
-
-				XmlElement settingElem = xmlDoc.CreateElement("SettingDefinition", NamespaceUri);
-				settingElem.SetAttribute("Name", setting.Name);
-				settingElem.SetAttribute("Type", setting.Type.ToString());
-				settingElem.SetAttribute("IgnoreAuditPolicies", setting.IgnoreAuditPolicies.ToString().ToLowerInvariant());
-				_ = root.AppendChild(settingElem);
+				throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionPropertyNameNullOrEmptyValidationError"));
 			}
+
+			XmlElement settingElem = xmlDoc.CreateElement("SettingDefinition", NamespaceUri);
+			settingElem.SetAttribute("Name", setting.Name);
+			settingElem.SetAttribute("Type", setting.Type.ToString());
+			settingElem.SetAttribute("IgnoreAuditPolicies", setting.IgnoreAuditPolicies.ToString().ToLowerInvariant());
+			_ = root.AppendChild(settingElem);
 		}
 
 		return xmlDoc;

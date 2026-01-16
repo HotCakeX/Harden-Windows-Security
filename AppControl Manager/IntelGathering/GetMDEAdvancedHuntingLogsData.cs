@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace AppControlManager.IntelGathering;
 
@@ -105,7 +106,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 				// If there are correlated events - for signer information of the file
 				// Iterate over each correlated event - files can have multiple signers
-				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
+				foreach (MDEAdvancedHuntingData correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 				{
 
 					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
@@ -187,7 +188,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 				// If there are correlated events - for signer information of the file
 				// Iterate over each correlated event - files can have multiple signers
-				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
+				foreach (MDEAdvancedHuntingData correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 				{
 					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
 					// They have "Unknown" as their IssuerName and PublisherName too
@@ -268,7 +269,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 				// If there are correlated events - for signer information of the file
 				// Iterate over each correlated event - files can have multiple signers
-				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
+				foreach (MDEAdvancedHuntingData correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 				{
 
 					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
@@ -350,7 +351,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				// If there are correlated events - for signer information of the file
 
 				// Iterate over each correlated event - files can have multiple signers
-				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
+				foreach (MDEAdvancedHuntingData correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 				{
 
 					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName

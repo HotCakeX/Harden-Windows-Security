@@ -22,13 +22,13 @@ namespace HardenSystemSecurity.Arcane;
 
 internal static class AlgorithmManager
 {
-	internal const uint BCRYPT_CIPHER_OPERATION = 0x00000001;
-	internal const uint BCRYPT_HASH_OPERATION = 0x00000002;
-	internal const uint BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION = 0x00000004;
-	internal const uint BCRYPT_SECRET_AGREEMENT_OPERATION = 0x00000008;
-	internal const uint BCRYPT_SIGNATURE_OPERATION = 0x00000010;
-	internal const uint BCRYPT_RNG_OPERATION = 0x00000020;
-	internal const uint BCRYPT_KEY_DERIVATION_OPERATION = 0x00000040;
+	private const uint BCRYPT_CIPHER_OPERATION = 0x00000001;
+	private const uint BCRYPT_HASH_OPERATION = 0x00000002;
+	private const uint BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION = 0x00000004;
+	private const uint BCRYPT_SECRET_AGREEMENT_OPERATION = 0x00000008;
+	private const uint BCRYPT_SIGNATURE_OPERATION = 0x00000010;
+	private const uint BCRYPT_RNG_OPERATION = 0x00000020;
+	private const uint BCRYPT_KEY_DERIVATION_OPERATION = 0x00000040;
 
 	private const string BCRYPT_PARAMETER_SET_NAME = "ParameterSetName";
 

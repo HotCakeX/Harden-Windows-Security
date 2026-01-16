@@ -18,14 +18,15 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>
-/// A UserControl wrapping a ListBox that adds a delete button to the right of each string item.
-/// Works with UniqueStringObservableCollection, ObservableCollection<string>, or any IList containing strings.
+/// A UserControl wrapping a ListBox that adds a delete button to the right side of each item.
+/// Uses a DataTemplateSelector to handle both Strings and <see cref="PolicyFileRepresent"/> object types.
 /// </summary>
 internal sealed partial class ListBoxV2 : UserControl
 {
@@ -56,35 +57,44 @@ internal sealed partial class ListBoxV2 : UserControl
 	internal ListBoxV2() => InitializeComponent();
 
 	/// <summary>
-	/// Click handler for the delete button. Removes the item from the bound collection.
+	/// Click handler for the delete button.
 	/// </summary>
 	internal void DeleteItem_Click(object sender, RoutedEventArgs e)
 	{
-		string? path = ((Button)sender).Tag as string;
-		if (string.IsNullOrEmpty(path))
-			return;
+		// Get the tag content from the button
+		object? tagContent = ((Button)sender).Tag;
 
-		// Fast path for UniqueStringObservableCollection
-		UniqueStringObservableCollection? uniqueCollection = ItemsSource as UniqueStringObservableCollection;
-		if (uniqueCollection is not null)
+		// Handle PolicyFileRepresent removal
+		if (tagContent is PolicyFileRepresent itemToRemove)
 		{
-			_ = uniqueCollection.Remove(path);
-			return;
+			if (ItemsSource is UniquePolicyFileRepresentObservableCollection collectionToRemoveFrom)
+			{
+				_ = collectionToRemoveFrom.Remove(itemToRemove);
+				return;
+			}
 		}
 
-		// ObservableCollection<string>
-		ObservableCollection<string>? observableStrings = ItemsSource as ObservableCollection<string>;
-		if (observableStrings is not null)
+		// Handle string removal
+		if (tagContent is string stringToRemove)
 		{
-			RemoveFromObservable(observableStrings, path);
-			return;
+			if (ItemsSource is UniqueStringObservableCollection uniqueStringCollection)
+			{
+				_ = uniqueStringCollection.Remove(stringToRemove);
+				return;
+			}
+
+			if (ItemsSource is ObservableCollection<string> observableStrings)
+			{
+				RemoveFromObservable(observableStrings, stringToRemove);
+				return;
+			}
+
+			// Handle generic IList, assuming contents are strings
+			if (ItemsSource is IList list)
+			{
+				RemoveFromIList(list, stringToRemove);
+			}
 		}
-
-		// IList (generic fallback)
-		if (ItemsSource is not IList list)
-			return;
-
-		RemoveFromIList(list, path);
 	}
 
 	/// <summary>
@@ -118,5 +128,29 @@ internal sealed partial class ListBoxV2 : UserControl
 				break;
 			}
 		}
+	}
+}
+
+/// <summary>
+/// Selects the appropriate DataTemplate based on the item type.
+/// </summary>
+internal sealed partial class ListBoxItemTemplateSelector : DataTemplateSelector
+{
+	public DataTemplate? StringTemplate { get; set; }
+	public DataTemplate? PolicyTemplate { get; set; }
+
+	protected override DataTemplate? SelectTemplateCore(object item, DependencyObject container)
+	{
+		if (item is string)
+		{
+			return StringTemplate;
+		}
+
+		if (item is PolicyFileRepresent)
+		{
+			return PolicyTemplate;
+		}
+
+		return base.SelectTemplateCore(item, container);
 	}
 }

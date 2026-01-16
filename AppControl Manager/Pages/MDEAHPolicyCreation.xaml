@@ -60,7 +60,7 @@
                          VerticalAlignment="Center">
                 <SelectorBarItem Tag="Local" x:Uid="LocalTextBlock"/>
                 <SelectorBarItem Tag="Cloud" x:Uid="CloudTextBlock"/>
-                <SelectorBarItem Tag="Create" x:Uid="CreateTextBlock"/>
+                <SelectorBarItem x:Name="CreateSelectorBarItem" Tag="Create" x:Uid="CreateTextBlock"/>
             </SelectorBar>
 
             <!-- Total chip -->
@@ -115,22 +115,29 @@
                             </Button>
 
                             <customUI:ButtonV2 x:Uid="BrowseForMDELogsButton"
-                                               ObservedData="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}"
-                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                   Click="{x:Bind ViewModel.BrowseForLogs_Click}">
+                                               ObservedData="{x:Bind ViewModel.MDEAdvancedHuntingLogs.Count, Mode=OneWay}"
+                                               IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                               Click="{x:Bind ViewModel.BrowseForLogs_Click}">
 
                                 <customUI:ButtonV2.Flyout>
                                     <Flyout>
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.BrowseForLogs_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.BrowseForLogs_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}"
-                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                         MinWidth="400" IsReadOnly="True" />
+                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}" />
 
                                         </controls:WrapPanel>
 
@@ -260,12 +267,21 @@
 
 
                             <SplitButton IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                         x:Name="MainSplitButton"
                                          ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs"
-                             Click="{x:Bind ViewModel.CreatePolicyButton_Click}">
+                                         Click="{x:Bind ViewModel.CreatePolicyButton_Click}">
 
                                 <SplitButton.Content>
                                     <StackPanel Orientation="Horizontal">
+
+                                        <AnimatedIcon Visibility="{x:Bind ViewModel.LightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Light/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
+
                                         <FontIcon Glyph="&#xECCD;" />
+
                                         <TextBlock Text="{x:Bind ViewModel.CreatePolicyButtonContent, Mode=OneWay}" Margin="5,0,0,0" />
                                     </StackPanel>
                                 </SplitButton.Content>
@@ -321,10 +337,49 @@
                                                                    Width="310"
                                                                    TextWrapping="WrapWholeWords"/>
 
-                                                        <Button Margin="5"
-                                                                x:Uid="FileBrowseButton"
-                                                                Style="{StaticResource AccentButtonStyle}"
-                                                                Click="{x:Bind ViewModel.AddToPolicyButton_Click}" />
+                                                        <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                                                           Margin="5"
+                                                                           Style="{StaticResource AccentButtonStyle}"
+                                                                           ObservedData="{x:Bind ViewModel.PolicyToAddLogsTo.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                                           Click="{x:Bind ViewModel.AddToPolicyButton_Click}">
+
+                                                            <customUI:ButtonV2.ContentTemplate>
+                                                                <DataTemplate x:DataType="x:String">
+                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                        <FontIcon Glyph="&#xE8DA;" FontSize="16"/>
+                                                                        <TextBlock Text="{x:Bind}"/>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </customUI:ButtonV2.ContentTemplate>
+
+                                                            <customUI:ButtonV2.Flyout>
+                                                                <Flyout>
+
+                                                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.Clear_PolicyToAddLogsTo}">
+                                                                            <Button.ContentTemplate>
+                                                                                <DataTemplate x:DataType="x:String">
+                                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                                        <TextBlock Text="{x:Bind}"/>
+                                                                                    </StackPanel>
+                                                                                </DataTemplate>
+                                                                            </Button.ContentTemplate>
+                                                                        </Button>
+
+                                                                        <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                                                        <TextBox Text="{x:Bind ViewModel.PolicyToAddLogsTo.PolicyIdentifier, Mode=OneWay,FallbackValue=''}"
+                                                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                                                 MinWidth="400" IsReadOnly="True" />
+
+                                                                    </controls:WrapPanel>
+
+                                                                </Flyout>
+                                                            </customUI:ButtonV2.Flyout>
+
+                                                        </customUI:ButtonV2>
 
                                                     </StackPanel>
                                                 </controls:Case>
@@ -339,11 +394,49 @@
                                                        x:Uid="BasePolicyFileDescription"
                                                        Width="310" />
 
-                                                        <Button Margin="5"
-                                                    x:Uid="FileBrowseButton"
-                                                    Style="{StaticResource AccentButtonStyle}"
-                                                    Click="{x:Bind ViewModel.BasePolicyFileButton_Click}" />
+                                                        <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                                                           Margin="5"
+                                                                           Style="{StaticResource AccentButtonStyle}"
+                                                                           ObservedData="{x:Bind ViewModel.BasePolicyXMLFile.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                                           Click="{x:Bind ViewModel.BasePolicyFileButton_Click}">
 
+                                                            <customUI:ButtonV2.ContentTemplate>
+                                                                <DataTemplate x:DataType="x:String">
+                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                        <FontIcon Glyph="&#xE8DA;" FontSize="16"/>
+                                                                        <TextBlock Text="{x:Bind}"/>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </customUI:ButtonV2.ContentTemplate>
+
+                                                            <customUI:ButtonV2.Flyout>
+                                                                <Flyout>
+
+                                                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.Clear_BasePolicyXMLFile}">
+                                                                            <Button.ContentTemplate>
+                                                                                <DataTemplate x:DataType="x:String">
+                                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                                        <TextBlock Text="{x:Bind}"/>
+                                                                                    </StackPanel>
+                                                                                </DataTemplate>
+                                                                            </Button.ContentTemplate>
+                                                                        </Button>
+
+                                                                        <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                                                        <TextBox Text="{x:Bind ViewModel.BasePolicyXMLFile.PolicyIdentifier, Mode=OneWay,FallbackValue=''}"
+                                                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                                                 MinWidth="400" IsReadOnly="True" />
+
+                                                                    </controls:WrapPanel>
+
+                                                                </Flyout>
+                                                            </customUI:ButtonV2.Flyout>
+
+                                                        </customUI:ButtonV2>
 
                                                     </StackPanel>
                                                 </controls:Case>
@@ -351,19 +444,47 @@
                                                 <controls:Case Value="BaseGUID">
                                                     <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
                                                                 animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                                Orientation="Vertical"
                                                                 Style="{StaticResource PanelStyle}">
 
-                                                        <TextBox x:Uid="BasePolicyGUIDDescription"
-                                                                 Width="300"
-                                                                 Margin="10"
-                                                                 VerticalAlignment="Center"
-                                                                 VerticalContentAlignment="Center"
-                                                                 Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Spacing="8"
+                                                                    VerticalAlignment="Center"
+                                                                    HorizontalAlignment="Center">
 
-                                                        <Button Margin="5"
-                                                                x:Uid="SubmitButton"
-                                                                Style="{StaticResource AccentButtonStyle}"
-                                                                Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}" />
+                                                            <Button x:Uid="SubmitButton"
+                                                                    Style="{StaticResource AccentButtonStyle}"
+                                                                    Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}">
+                                                                <Button.ContentTemplate>
+                                                                    <DataTemplate x:DataType="x:String">
+                                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                            <FontIcon Glyph="&#xE751;" FontSize="16"/>
+                                                                            <TextBlock Text="{x:Bind}"/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </Button.ContentTemplate>
+                                                            </Button>
+
+                                                            <Button x:Uid="GenerateRandomGUIDButton"
+                                                                    Style="{StaticResource AccentButtonStyle}"
+                                                                    Click="{x:Bind ViewModel.GenerateRandomGUIDButton_Click}">
+                                                                <Button.ContentTemplate>
+                                                                    <DataTemplate x:DataType="x:String">
+                                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                            <FontIcon Glyph="&#xEA38;" FontSize="16"/>
+                                                                            <TextBlock Text="{x:Bind}"/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </Button.ContentTemplate>
+                                                            </Button>
+
+                                                        </StackPanel>
+
+                                                        <TextBox x:Uid="BasePolicyGUIDDescription"
+                                                                 Width="300" Margin="10"
+                                                                 Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 VerticalAlignment="Center"
+                                                                 VerticalContentAlignment="Center" />
 
                                                     </StackPanel>
                                                 </controls:Case>
@@ -410,7 +531,8 @@
                                         <MenuFlyoutSeparator/>
 
                                         <ToggleMenuFlyoutItem x:Uid="DeployAfterCreationMenuFlyoutItem"
-                                                  IsChecked="{x:Bind ViewModel.DeployPolicyToggle, Mode=TwoWay}">
+                                                              IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                                              IsChecked="{x:Bind ViewModel.DeployPolicyToggle, Mode=TwoWay}">
                                             <ToggleMenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE896;"/>
                                             </ToggleMenuFlyoutItem.Icon>
@@ -498,9 +620,9 @@
                               ToolTipService.ToolTip="Select a property to filter by"/>
 
                     <TextBox Text="{x:Bind ViewModel.PropertyFilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         MinWidth="200"
-                         PlaceholderText="Enter filter value..."
-                         ToolTipService.ToolTip="Enter the value to filter the selected property by"/>
+                             MinWidth="200"
+                             PlaceholderText="Enter filter value..."
+                             ToolTipService.ToolTip="Enter the value to filter the selected property by"/>
 
                     <Button Click="{x:Bind ViewModel.ClearPropertyFilter}"
                             x:Uid="ResetFiltersButton">
@@ -533,10 +655,10 @@
         </Expander>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-          RegistryKey="MDE_AdvancedHunting"
-          ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"
-          Grid.Row="3"
-          SelectionMode="Extended">
+                             RegistryKey="MDE_AdvancedHunting"
+                             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"
+                             Grid.Row="3"
+                             SelectionMode="Extended">
 
             <customUI:ListViewV2.Header>
                 <Border CornerRadius="5"

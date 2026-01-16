@@ -39,8 +39,8 @@ internal static class NewPFNLevelRules
 			return siPolicy;
 		}
 
-		// Ensure the FileRules list is initialized
-		List<object> fileRulesList = siPolicy.FileRules ?? [];
+		// Ensure the lists are initialized
+		siPolicy.FileRules ??= [];
 
 		// Find the User Mode Signing Scenario (Value 12)
 		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
@@ -66,13 +66,10 @@ internal static class NewPFNLevelRules
 		else
 		{
 			// Ensure nested objects exist
-			umci.ProductSigners ??= new ProductSigners();
 			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 		}
 
 		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-
-		List<FileRuleRef> umciFileRuleRefs = umci.ProductSigners.FileRulesRef.FileRuleRef ?? [];
 
 		foreach (PFNRuleCreator PFN in CollectionsMarshal.AsSpan(PFNData))
 		{
@@ -87,17 +84,13 @@ internal static class NewPFNLevelRules
 				PackageFamilyName = PFN.PackageFamilyName
 			};
 
-			fileRulesList.Add(newPFNRule);
+			siPolicy.FileRules.Add(newPFNRule);
 
 			// Create FileRuleRef for the PFN
 			FileRuleRef newRef = new(ruleID: ID);
 
-			umciFileRuleRefs.Add(newRef);
+			umci.ProductSigners.FileRulesRef.FileRuleRef.Add(newRef);
 		}
-
-		// Update the policy object
-		siPolicy.FileRules = fileRulesList;
-		umci.ProductSigners.FileRulesRef.FileRuleRef = umciFileRuleRefs;
 
 		return siPolicy;
 	}
@@ -116,8 +109,8 @@ internal static class NewPFNLevelRules
 			return siPolicy;
 		}
 
-		// Ensure the FileRules list is initialized
-		List<object> fileRulesList = siPolicy.FileRules ?? [];
+		// Ensure the lists are initialized
+		siPolicy.FileRules ??= [];
 
 		// Find the User Mode Signing Scenario (Value 12)
 		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
@@ -142,13 +135,10 @@ internal static class NewPFNLevelRules
 		}
 		else
 		{
-			umci.ProductSigners ??= new ProductSigners();
 			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 		}
 
 		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-
-		List<FileRuleRef> umciFileRuleRefs = umci.ProductSigners.FileRulesRef.FileRuleRef ?? [];
 
 		foreach (PFNRuleCreator PFN in CollectionsMarshal.AsSpan(PFNData))
 		{
@@ -163,19 +153,14 @@ internal static class NewPFNLevelRules
 				PackageFamilyName = PFN.PackageFamilyName
 			};
 
-			fileRulesList.Add(newPFNRule);
+			siPolicy.FileRules.Add(newPFNRule);
 
 			// Create FileRuleRef for the PFN
 			FileRuleRef newRef = new(ruleID: ID);
 
-			umciFileRuleRefs.Add(newRef);
+			umci.ProductSigners.FileRulesRef.FileRuleRef.Add(newRef);
 		}
-
-		// Update the policy object
-		siPolicy.FileRules = fileRulesList;
-		umci.ProductSigners.FileRulesRef.FileRuleRef = umciFileRuleRefs;
 
 		return siPolicy;
 	}
-
 }

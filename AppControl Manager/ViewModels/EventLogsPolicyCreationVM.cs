@@ -18,13 +18,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Eventing.Reader;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -72,8 +72,13 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 	// Variables to hold the data supplied by the UI elements
 	internal string? BasePolicyGUID { get; set => SPT(ref field, value); }
-	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
-	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? PolicyToAddLogsTo { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? BasePolicyXMLFile { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// For Animated Sidebar related actions for policy assignments.
+	/// </summary>
+	internal Visibility LightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// Determines whether the UI elements are enabled or disabled.
@@ -123,7 +128,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
 	/// </summary>
-	internal string? finalSupplementalPolicyPath;
+	internal SiPolicy.PolicyFileRepresent? finalSupplementalPolicyPath;
 
 	#region LISTVIEW IMPLEMENTATIONS
 
@@ -158,7 +163,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal void CalculateColumnWidths()
 	{
-
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("TimeCreatedHeader/Text"));
@@ -252,7 +256,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				};
 			}
 		}
-	} = 1;
+	}
 
 
 	internal bool ScanLogsProgressRingIsActive { get; set => SP(ref field, value); }
@@ -398,38 +402,52 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// The button that browses for XML file the logs will be added to
+	/// The button that browses for the policy that the logs will be added to.
 	/// </summary>
-	internal void AddToPolicyButton_Click()
+	internal async void AddToPolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			PolicyToAddLogsTo = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-			Logger.Write(string.Format(
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(selectedFile, null));
+				PolicyToAddLogsTo = new(policyObj) { FilePath = selectedFile };
+
+				Logger.Write(string.Format(
 				GlobalVars.GetStr("SelectedFileToAddLogsToMessage"),
-				PolicyToAddLogsTo));
+				selectedFile));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
 	/// <summary>
 	/// The button to browse for the XML file the supplemental policy that will be created will belong to
 	/// </summary>
-	internal void BasePolicyFileButton_Click()
+	internal async void BasePolicyFileButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			BasePolicyXMLFile = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-			Logger.Write(string.Format(
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(selectedFile, null));
+				BasePolicyXMLFile = new(policyObj) { FilePath = selectedFile };
+
+				Logger.Write(string.Format(
 				GlobalVars.GetStr("SelectedBasePolicyFileMessage"),
-				BasePolicyXMLFile));
+				selectedFile));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -442,11 +460,14 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		if (!Guid.TryParse(BasePolicyGUID, out _))
 		{
-			throw new ArgumentException(
-				GlobalVars.GetStr("InvalidGuidMessage"));
+			throw new ArgumentException(GlobalVars.GetStr("InvalidGuidMessage"));
 		}
 	}
 
+	/// <summary>
+	/// Generates a random GUID to be used for <see cref="BasePolicyGUID"/>.
+	/// </summary>
+	internal void GenerateRandomGUIDButton_Click() => BasePolicyGUID = Guid.CreateVersion7().ToString().ToUpperInvariant();
 
 	/// <summary>
 	/// Event handler for the ScanLogs click
@@ -513,9 +534,19 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Event handler for the UI to clear the selected policy to add logs to.
+	/// </summary>
+	internal void Clear_PolicyToAddLogsTo() => PolicyToAddLogsTo = null;
+
+	/// <summary>
+	/// Event handler for the UI to clear the selected base policy.
+	/// </summary>
+	internal void Clear_BasePolicyXMLFile() => BasePolicyXMLFile = null;
+
+	/// <summary>
 	/// When the main button responsible for creating policy is pressed
 	/// </summary>
-	internal async void CreatePolicyButton_Click()
+	internal async void CreatePolicyButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
 	{
 		bool error = false;
 
@@ -545,24 +576,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 					GlobalVars.GetStr("MustSelectOptionMessage"));
 			}
 
-			// Create a policy name if it wasn't provided
-			DateTime now = DateTime.Now;
-			string formattedDate = now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
-
-			// Get the policy name from the UI text box
-			string? policyName = PolicyNameTextBox;
-
-			// If the UI text box was empty or whitespace then set policy name manually
-			if (string.IsNullOrWhiteSpace(policyName))
-			{
-				policyName = string.Format(
-					GlobalVars.GetStr("DefaultPolicyNameFormat"),
-					formattedDate);
-			}
-
-			// If user selected to deploy the policy
-			bool DeployAtTheEnd = DeployPolicyToggle;
-
 			// All of the File Identities that will be used to put in the policy XML file
 			List<FileIdentity> SelectedLogs = [];
 
@@ -588,17 +601,11 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				// Create a new Staging Area
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyCreator");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevelComboBoxSelectedItem.Level);
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
 
 				switch (SelectedCreationMethod)
 				{
@@ -606,22 +613,35 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 						{
 							if (PolicyToAddLogsTo is not null)
 							{
-								// Set policy name and reset the policy ID of our new policy
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
-
 								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
-								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
+								PolicyToAddLogsTo.PolicyObj = Merger.Merge(PolicyToAddLogsTo.PolicyObj, [policyObj]);
 
-								UpdateHvciOptions.Update(PolicyToAddLogsTo);
+								// Set a new name if it was provided
+								if (!string.IsNullOrWhiteSpace(PolicyNameTextBox))
+								{
+									PolicyToAddLogsTo.PolicyObj = SetCiPolicyInfo.Set(PolicyToAddLogsTo.PolicyObj, null, PolicyNameTextBox, null);
+								}
+
+								// Set the HVCI to Strict
+								PolicyToAddLogsTo.PolicyObj = PolicySettingsManager.UpdateHVCIOptions(PolicyToAddLogsTo.PolicyObj);
+
+								// Save the merged policy to the user selected file path if it was provided
+								if (PolicyToAddLogsTo.FilePath is not null)
+								{
+									Management.SavePolicyToFile(PolicyToAddLogsTo.PolicyObj, PolicyToAddLogsTo.FilePath);
+								}
 
 								finalSupplementalPolicyPath = PolicyToAddLogsTo;
 
+								// Assign the created policy to the Sidebar
+								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+
+								MainWindow.TriggerTransferIconAnimationStatic(sender);
+
 								// If user selected to deploy the policy
-								if (DeployAtTheEnd)
+								if (DeployPolicyToggle)
 								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-									SiPolicy.Management.ConvertXMLToBinary(PolicyToAddLogsTo, null, CIPPath);
-									CiToolHelper.UpdatePolicy(CIPPath);
+									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(PolicyToAddLogsTo.PolicyObj));
 								}
 							}
 							else
@@ -636,31 +656,38 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 						{
 							if (BasePolicyXMLFile is not null)
 							{
-								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+								// Create a policy name if it wasn't provided since we are creating a new policy and it needs one
+								if (string.IsNullOrWhiteSpace(PolicyNameTextBox))
+								{
+									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
 
-								// Instantiate the user selected Base policy
-								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(BasePolicyXMLFile, null);
+									PolicyNameTextBox = string.Format(
+										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatEventLogs"),
+										formattedDate
+									);
+								}
 
 								// Set the BasePolicyID of our new policy to the one from user selected policy
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, policyObj.BasePolicyID, null);
+								// And set its name to the user-provided name.
+								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyXMLFile.PolicyObj.BasePolicyID);
 
 								// Configure policy rule options
-								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
-								// Copying the policy file to the User Config directory - outside of the temporary staging area
-								File.Copy(EmptyPolicyPath, OutputPath, true);
+								finalSupplementalPolicyPath = new(policyObj);
 
-								finalSupplementalPolicyPath = OutputPath;
+								// Assign the created policy to the Sidebar
+								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+
+								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
 								// If user selected to deploy the policy
-								if (DeployAtTheEnd)
+								if (DeployPolicyToggle)
 								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-									CiToolHelper.UpdatePolicy(CIPPath);
+									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 								}
 							}
 							else
@@ -675,31 +702,41 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 						{
 							if (BasePolicyGUID is not null)
 							{
+								// Create a policy name if it wasn't provided since we are creating a new policy and it needs one
+								if (string.IsNullOrWhiteSpace(PolicyNameTextBox))
+								{
+									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
+
+									PolicyNameTextBox = string.Format(
+										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatEventLogs"),
+										formattedDate
+									);
+								}
+
 								// Make sure the GUID that user entered is valid in case they didn't submit to validate it.
 								BaseGUIDSubmitButton_Click();
 
-								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
 								// Set the BasePolicyID of our new policy to the one supplied by user
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
+								// And set its name to the user-provided name.
+								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyGUID);
 
 								// Configure policy rule options
-								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
-								// Copying the policy file to the User Config directory - outside of the temporary staging area
-								File.Copy(EmptyPolicyPath, OutputPath, true);
+								finalSupplementalPolicyPath = new(policyObj);
 
-								finalSupplementalPolicyPath = OutputPath;
+								// Assign the created policy to the Sidebar
+								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+
+								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
 								// If user selected to deploy the policy
-								if (DeployAtTheEnd)
+								if (DeployPolicyToggle)
 								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-									CiToolHelper.UpdatePolicy(CIPPath);
+									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 								}
 							}
 							else

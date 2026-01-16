@@ -484,8 +484,8 @@ internal sealed partial class ListViewIncrementalController(
 	private void ScheduleWidthRecalc()
 	{
 		EnsureRecalcTimer();
-		_recalcTimer!.Stop();
-		_recalcTimer.Start();
+		_recalcTimer?.Stop();
+		_recalcTimer?.Start();
 	}
 
 	/// <summary>

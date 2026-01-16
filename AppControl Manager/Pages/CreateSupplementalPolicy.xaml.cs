@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
@@ -49,82 +50,107 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		ViewModel.CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => LightUp1(), GlobalVars.GetStr("FilesAndFoldersSupplementalPolicyLabel")),
-			actionPack2: (param => LightUp2(), GlobalVars.GetStr("CertificatesSupplementalPolicyLabel")),
-			actionPack3: (param => LightUp3(), GlobalVars.GetStr("ISGSupplementalPolicyLabel")),
-			actionPack4: (param => LightUp4(), GlobalVars.GetStr("StrictKernelModeSupplementalPolicyLabel")),
-			actionPack5: (param => LightUp5(), GlobalVars.GetStr("PFNSupplementalPolicyLabel")),
-			actionPack6: (param => LightUp6(), GlobalVars.GetStr("CustomPatternBasedSupplementalPolicyLabel"))
+			actionPack1: (LightUp1, GlobalVars.GetStr("FilesAndFoldersSupplementalPolicyLabel")),
+			actionPack2: (LightUp2, GlobalVars.GetStr("CertificatesSupplementalPolicyLabel")),
+			actionPack3: (LightUp3, GlobalVars.GetStr("ISGSupplementalPolicyLabel")),
+			actionPack4: (LightUp4, GlobalVars.GetStr("StrictKernelModeSupplementalPolicyLabel")),
+			actionPack5: (LightUp5, GlobalVars.GetStr("PFNSupplementalPolicyLabel")),
+			actionPack6: (LightUp6, GlobalVars.GetStr("CustomPatternBasedSupplementalPolicyLabel"))
 		);
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	private void LightUp1()
+	private void LightUp1(object? param)
 	{
 		// Make sure the element has XamlRoot. When it's in a settings card that is not expanded yet, it won't have it
 		if (FilesAndFoldersBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicyButton);
 		}
-		ViewModel.FilesAndFoldersBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.FilesAndFoldersBasePolicy = policy;
+		}
 	}
-	private void LightUp2()
+
+	private void LightUp2(object? param)
 	{
 		// Make sure the element has XamlRoot. When it's in a settings card that is not expanded yet, it won't have it
 		if (CertificatesBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicyButton);
 		}
-		ViewModel.CertificatesBasedBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.CertificatesBasedBasePolicy = policy;
+		}
 	}
-	private void LightUp3()
+
+	private void LightUp3(object? param)
 	{
 		if (ISGBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicyButton);
 		}
-		ViewModel.ISGBasedBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.ISGBasedBasePolicy = policy;
+		}
 	}
-	private void LightUp4()
+
+	private void LightUp4(object? param)
 	{
 		if (StrictKernelModeBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicyButton);
 		}
-		ViewModel.StrictKernelModeBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.StrictKernelModeBasePolicy = policy;
+		}
 	}
-	private void LightUp5()
+
+	private void LightUp5(object? param)
 	{
 		if (PFNBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
 		}
-		ViewModel.PFNBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.PFNBasePolicy = policy;
+		}
 	}
-	private void LightUp6()
+
+	private void LightUp6(object? param)
 	{
 		if (CustomPatternBasedFileRuleBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicyButton);
 		}
-		ViewModel.CustomPatternBasedFileRuleBasedBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.CustomPatternBasedFileRuleBasedBasePolicy = policy;
+		}
 	}
 
 	#endregion
 
-	// Since using behaviors in XAML is not Native AOT compatible, we use event handlers.
-	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
-	{
+	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e) =>
 		await ShadowEnterAnimation.StartAsync((UIElement)sender);
-	}
-	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
-	{
-		await ShadowExitAnimation.StartAsync((UIElement)sender);
-	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateSupplementalPolicyPageTitle/Text");
+	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) =>
+		await ShadowExitAnimation.StartAsync((UIElement)sender);
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateSupplementalPolicyPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy");
 
 }

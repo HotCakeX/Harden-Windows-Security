@@ -61,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.59.0</FileVersion>
+		<FileVersion>2.0.60.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>
@@ -214,8 +214,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.251219" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.79.2" />
-		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.79.2" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.80.0" />
+		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.80.0" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.1" />
@@ -281,9 +281,6 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Resources\Downloads-Defense-Measures.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\EmptyPolicy.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Resources\ISGBasedSupplementalPolicy.xml">

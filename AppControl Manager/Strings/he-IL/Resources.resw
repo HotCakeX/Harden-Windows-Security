@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>יומנים</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>הגדרות</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>מפעיל את המדיניות הראשית לאחר המיזוג.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>אירעה שגיאה במהלך תהליך המיזוג</value>
   </data>
@@ -936,9 +930,6 @@
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>בודק עדכון</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>מתקין את נתיב ה-MSIXBundle שבחרת: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>הגרסה הנוכחית היא </value>
@@ -954,9 +945,6 @@
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>חבילת ה-MSIXBundle של מנהל AppControl הורדה בהצלחה אל </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>לא נבחר נתיב MSIXBundle</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>כל ההורדות הסתיימו, מתקין את הגרסה החדשה של מנהל AppControl</value>
@@ -1967,73 +1955,73 @@
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>בחר תבנית ליישום על קובץ המדיניות שנבחר. תבניות הן רשימות מוגדרות מראש של אפשרויות כלל מדיניות.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>צור מדיניות בקרת אפליקציות לעסקים על בסיס תבניות שונות ואפשרויות כלל מדיניות. חתום ומוכר הוא נהדר למשתמשים חדשים. אפשר למיקרוסופט מאפשר רק לקבצים חתומים על ידי תעודות של מיקרוסופט. חלונות ברירת מחדל מאפשר רק לקבצים שמגיעים כברירת מחדל עם מערכת ההפעלה Windows.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>צור מדיניות משלימה שתרחיב את היקף המדיניות הבסיסית. מדיניות משלימות יכולות רק לאפשר קבצים, הן לא יכולות להכיל כללי דחייה.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>צפה בקבצים שזוהו וששימשו ליצירת המדיניות המשלימה.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>הפעל כל סוג של מדיניות בקרת אפליקציות מקומית או מרחוק על מחשבים מנוהלים בענן.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>השתמש ביומני המערכת המקומיים או בקבצי יומן EVTX ליצירת מדיניות בקרת אפליקציות. נדרשים רק יומני Code Integrity Operational ו-AppLocker. השתמש בלחצן הסריקה כדי למלא את רשת הנתונים. לאחר המילוי, השתמש בלחצן יצירת מדיניות כדי להגדיר את תצורת הפלט וליצור את קובץ מדיניות ה-XML.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>חשב את האשי שלמות הקוד וסוגים אחרים של האשים של קבצים.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>אחזר ושאל את ההגדרות המאובטחות במערכת.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>להלן היומנים שמנהל AppControl מייצר אוטומטית ומאחסן בתיקיית &quot;AppControl Manager&quot; ב-Program Files (אם פועל עם הרשאות מוגברות, אחרת הם יישמרו בספריית TEMP). הגודל הכולל של תיקיית היומנים לעולם לא יעלה על 1GB.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>השתמש ביומני ה-Advanced Hunting של Microsoft Defender for Endpoint לבניית מדיניות בקרת אפליקציות. תוכל לדפדף בקבצי יומן מיוצאים או לאחזר אותם מהענן על ידי התחברות לחשבון מיקרוסופט שלך.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>מזג מדיניות בקרת אפליקציות לעסקים ודדופליקט אותן. תוכל לבחור את אותה מדיניות פעמיים כדי לדדופליקט את הכללים שלה.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>ערוך מדיניות בקרת אפליקציות לעסקים. דפדף בקלות לקובץ מדיניות XML וטען את פרטיו באמצעות לחצן הטעינה. לאחר הטעינה, תוכל לסקור את מספר כל כלל בתוך המדיניות, להסיר כללים ספציפיים ולשנות הגדרות מדיניות אחרות.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>התאם אישית את הגדרות האפליקציה שלך כאן. ההעדפות שלך יישמרו כך שיהיו מוכנות עבורך בכל פעם שתפעיל את מנהל AppControl.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>בצע סימולציה של בקרת אפליקציות לעסקים על ידי בחירת קבצים או תיקיות, וקובץ מדיניות XML, ולאחר מכן השתמש בלחצן התחל סימולציה כדי למלא את רשת הנתונים. התוצאות יראו לך אם הקבצים שנבחרו יורשו או ייחסמו על ידי מדיניות בקרת האפליקציות שלך אם היא הייתה מופעלת בפועל על מערכת והקבצים האלה היו פועלים.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>צפה בקבצי מצב הליבה שזוהו שישמשו ליצירת מדיניות מצב אכיפה. הסר פריטים שאינך רוצה שייכללו במדיניות מצב הליבה המחמירה הסופית מהרשימה.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>בדוק עדכונים בדף זה. תוכל גם להפעיל בדיקת עדכונים אוטומטית שתתבצע פעם אחת בעת ההפעלה ותקבל הודעה בכל פעם שגרסה חדשה זמינה.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>אמת מדיניות בקרת אפליקציות כדי לוודא שהן תואמות לסכמה הרשמית. אם שינית ידנית קבצי מדיניות XML וברצונך לוודא שהשינויים שלך נכונים, השתמש בתכונה זו לאימותם.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>צפה במידע מקיף על התעודות המשמשות לחתימת כל קובץ. פרטים שאינם זמינים בדרך כלל במאפייני סייר הקבצים או ב-cmdlets של PowerShell מוצגים כאן במלואם.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>צפה בקבצים שזוהו ששימשו ליצירת מדיניות הדחייה.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>צור מדיניות בסיסית של דחייה שתדחה במפורש קבצים או אפליקציות. זכור שבקרת אפליקציות מבוססת ביסודה על רשימת אישורים, מה שאומר שכל דבר שלא מותר על ידי מדיניות כבר נדחה אוטומטית.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>הגדר אפשרויות כלל מדיניות בקרת אפליקציות לעסקים. מידע מפורט מסופק ליד כל כלל ותוכל להשתמש בלחצן המדריך או לפתוח דיון ב-GitHub אם אתה זקוק למידע נוסף.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>בנה בצורה מאובטחת תעודות חתימת קוד המתאימות לחתימת מדיניות בקרת אפליקציות.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>צפה במידע מפורט על המדיניות המופעלות ושלמות הקוד במערכות מקומיות או מרוחקות.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>השתמש בדף זה כדי לאפשר לאפליקציות או קבצים חדשים או כבר מותקנים לפעול על המערכת.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>חפש בין פרטי התעודה</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>אשר שברצונך להשתמש בקובץ MSIXBundle המותאם שבחרת במקום להורידו אוטומטית מ-GitHub. פעולה זו תעקוף בדיקת עדכונים מקוונת ותדלג על הורדת הקובץ מ-GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>אשר</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אשר שברצונך להשתמש בקובץ MSIXBundle המותאם שבחרת במקום להורידו אוטומטית מ-GitHub. פעולה זו תעקוף בדיקת עדכונים מקוונת ותדלג על הורדת הקובץ מ-GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אשר שברצונך להשתמש בקובץ MSIXBundle המותאם שבחרת במקום להורידו אוטומטית מ-GitHub. פעולה זו תעקוף בדיקת עדכונים מקוונת ותדלג על הורדת הקובץ מ-GitHub.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>מידע נוסף</value>
   </data>
@@ -2506,12 +2482,6 @@
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>יאחזר את הגדרות המשתמש העדכניות ויציג אותן.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>נתיב מדיניות חתומה:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>נתיב מדיניות לא חתומה:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>שם נפוץ של התעודה:</value>
@@ -2902,18 +2872,6 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>תיעוד</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>הקצאה אוטומטית</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>שמירה אוטומטית של הנתיב למדיניות הבסיס שאתה יוצר בסרגל הצד.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שמירה אוטומטית של הנתיב למדיניות הבסיס שאתה יוצר בסרגל הצד.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שמירה אוטומטית של הנתיב למדיניות הבסיס שאתה יוצר בסרגל הצד.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>מדריך סרגל הצד</value>
   </data>
@@ -2923,50 +2881,11 @@
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>לקבלת מדריך שימוש בסרגל הצד, אנא בקר בדף הוויקי של GitHub על ידי לחיצה/הקשה כאן.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>בחר</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הקצה את קובץ המדיניות XML הנבחר בסרגל הצד לנתיב המדיניות הבסיסית של הסקשן המתאים בעמוד המוצג כעת.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הקצה את קובץ המדיניות XML הנבחר בסרגל הצד לנתיב המדיניות הבסיסית של הסקשן המתאים בעמוד המוצג כעת.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>נקה</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>נקה את תיבת הטקסט של נתיב קובץ ה-XML הנבחר.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>נקה את תיבת הטקסט של נתיב קובץ ה-XML הנבחר.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בקובץ מדיניות XML</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בקובץ מדיניות XML</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>השתמש בסרגל הצד כדי לנעוץ נתיבי קובצי XML ולהשתמש בהם שוב בחלקים שונים של AppControl Manager.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>סרגל צד</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>נתיב מדיניות מקובע</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>נתיב מדיניות</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
   <value>יש לבחור שם למדיניות המשלים</value>
 </data>
 <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
   <value>יש לבחור נתיב לקובץ מדיניות XML</value>
-</data>
-<data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-  <value>נתיב הקובץ XML הנבחר אינו קיים</value>
 </data>
 <data name="Starting" xml:space="preserve">
   <value>מתחיל...</value>
@@ -3003,9 +2922,6 @@
 </data>
 <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
   <value>קובץ CIP למצב אכיפה לא נמצא</value>
-</data>
-<data name="BrowseForAppControlPolicy" xml:space="preserve">
-  <value>עיין ובחר קובץ מדיניות XML של App Control</value>
 </data>
 <data name="Validating" xml:space="preserve">
   <value>מבצע אימות</value>
@@ -3216,10 +3132,6 @@
     <value>המאפיין 'Id' של AppManifest נדרש ולא יכול להיות null או ריק.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>המערך SettingDefinition מכיל אלמנט null.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>המאפיין 'Name' של SettingDefinition נדרש ולא יכול להיות null או ריק.</value>
     <comment>App Manifest Validation</comment>
@@ -3397,9 +3309,6 @@
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>עליך לבחור אפשרות מתוך רשימת יצירת המדיניות</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>מדיניות משנית מיומני אירועים - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>לא נבחר קובץ מדיניות להוספת היומנים אליו.</value>
@@ -3620,9 +3529,6 @@
 <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>קובץ התעודה ושם הרגיל שנבחר אינם תואמים.</value>
 </data>
-<data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>אנא בחר את קובץ מדיניות ה-XML של המדיניות שמוסרת.</value>
-</data>
 <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>הנתיב לקובץ מדיניות ה-XML שנבחר אינו קיים</value>
 </data>
@@ -3734,9 +3640,6 @@
 <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>אירעה שגיאה בשליפת מידע נוסף הקשור לכללי חסימת דרייברים מומלצים על-ידי Microsoft.</value>
 </data>
-<data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>קובץ המדיניות נוצר ונשמר ב-{0}</value>
-</data>
 <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>מאפס את מזהה המדיניות ומשייך שם למדיניות</value>
 </data>
@@ -3764,9 +3667,6 @@
 <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>לא נמצא תוכן XML במקור GitHub של Microsoft עבור כללי חסימת מצב משתמש מומלצים.</value>
 </data>
-<data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>מגדיר את אפשרויות כלל המדיניות עבור: {0}</value>
-</data>
 <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>מוסיף אפשרות כלל: {0}</value>
 </data>
@@ -3778,12 +3678,6 @@
 </data>
 <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} אינו חלק מ-Subject CN של אף אחת מהתעודות המופעלות</value>
-</data>
-<data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>קובץ המדיניות שצוין '{0}' אינו חתום. אנא ספק קובץ מדיניות חתום.</value>
-</data>
-<data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>קובץ המדיניות שצוין '{0}' חתום. אנא ספק קובץ מדיניות לא חתום.</value>
 </data>
 <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>מנסה לנתח ולקרוא את קובץ הגדרות המשתמש הנוכחי</value>
@@ -3938,36 +3832,6 @@
 <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>ביצוע הפקודה נכשל עם קוד שגיאה {0}. פלט: {1}</value>
 </data>
-<data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>CipPath לא יכול להיות null או ריק.</value>
-</data>
-<data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>הקובץ '{0}' אינו קיים.</value>
-</data>
-<data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>מפעיל את קובץ CIP הבא: {0}</value>
-</data>
-<data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>מבנה XML לא חוקי, לא נמצא צומת SiPolicy</value>
-</data>
-<data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>לא נמצא צומת Signers</value>
-</data>
-<data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>לא הצליח ליצור או לשלוף את UMCI_ProductSignersNode</value>
-</data>
-<data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>לא הצליח ליצור או לשלוף את KMCI_ProductSignersNode</value>
-</data>
-<data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>צומת AllowedSigners של Product Signers עבור {0} לא נמצא למרות שנוצר.</value>
-</data>
-<data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>צומת FileRulesRef של Product Signers עבור {0} לא נמצא למרות שנוצר.</value>
-</data>
-<data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>צומת DeniedSigners של Product Signers עבור {0} לא נמצא למרות שנוצר.</value>
-</data>
 <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>הייתה בעיה בהרצת CiTool.exe.</value>
 </data>
@@ -4031,7 +3895,7 @@
 <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>עליך לבחור אפשרות מרשימת יצירת המדיניות.</value>
 </data>
-<data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+<data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>מדיניות משלימה מיומני MDE Advanced Hunting - {0}</value>
 </data>
 <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>אין יומנים או קבצים ברשתות נתונים כלשהן ליצירת מדיניות משלימה עבורם.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>אזור ההכנה לא נמצא</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>המדיניות נוצרה ונפרסה בהצלחה.</value>
 </data>
@@ -4402,9 +4263,6 @@
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>צפויה תגית בלוק V8 '8', התקבלה '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>צפויה תגית סיום מדיניות '{0}', התקבלה '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>סוג המדיניות הוא {0} ויש לה אפשרות כלל {1} שאינה חוקית. רק ל-{2} יכולה להיות אפשרות זו.</value>
@@ -4658,9 +4516,6 @@
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>לאישור חייב להיות מפתח פרטי.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>חתימת PKCS #7 (תוכן מוטבע, אישור כלול) נכתבה ל- {0}</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>SignerSignEx3 נכשל עם HRESULT: 0x{0:X}</value>
 </data>
@@ -4687,9 +4542,6 @@
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>היישום הופעל באמצעות הפעלת קובץ אך ללא ארגומנטים של הפעלת קובץ</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>המשתמש ביטל את הנחיית UAC.</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>נדרשה בקשת הרשאה לעיבוד הקובץ הנבחר אך היא נדחתה על ידי המשתמש. יוצא מהיישום.</value>
@@ -4729,12 +4581,6 @@
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>קובץ מדיניות ה-XML הנבחר הוא מדיניות בסיס אך ה-BasePolicyID וה-PolicyID שלו אינם זהים, מה שמצביע על כך שזוהי מדיניות משלימה, משנה את הסוג.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>המדיניות במיקום '{0}' הוגדרה בהצלחה. כעת יש לה סוג '{1}', BasePolicyID '{2}' ו-PolicyID '{3}'.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>גרסת קובץ המדיניות במיקום '{0}' שונתה בהצלחה מ-'{1}' ל-'{2}'.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: מתחיל את תהליך הפרדת הנתונים.</value>
@@ -4831,9 +4677,6 @@
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>אחד מקובצי ה-XML מכיל יותר מחותם אחד עם אותו מזהה (ID) `{0}`</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>הגדרת HVCI בקובץ המדיניות '{0}' ל-Strict בוצעה בהצלחה.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>JumpList אינו נתמך.</value>
@@ -5300,10 +5143,7 @@
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>לא זוהו חותמי WHQLFilePublisher ליצירת כללי אישור עבורם.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>צומת EKUs לא נמצא</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>לא זוהו חותמי WHQLFilePublisher ליצירת כללי מניעה עבורם.</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@
     <value>זמן יצירה</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>פרטי פריסת מדיניות Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ציין את פרטי פריסת מדיניות Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ציין את פרטי פריסת מדיניות Intune</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>צור קבוצה חדשה</value>
@@ -5634,7 +5468,7 @@
 <data name="GroupType" xml:space="preserve">
   <value>סוג קבוצה:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>נהל את קבוצות Entra בדייר שלך ובחר את הקבוצות שאליהן תרצה לפרוס את המדיניות.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,8 @@
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>בקש אישור לפני סגירת האפליקציה רק בנסיבות מסוימות, כאשר מתבצעת פעולה.</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>קיימים עדיין פריטי מדיניות שלא נשמרו בספריית סרגל הצד, והם יאבדו אם תסגור את היישום. האם אתה בטוח שברצונך לצאת?</value>
   </data>
 </root>

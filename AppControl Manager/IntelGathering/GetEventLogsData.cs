@@ -230,7 +230,7 @@ internal static class GetEventLogsData
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
-					foreach (EventRecord correlatedEvent in correlatedEvents)
+					foreach (EventRecord correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 					{
 						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
@@ -364,7 +364,7 @@ internal static class GetEventLogsData
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
-					foreach (EventRecord correlatedEvent in correlatedEvents)
+					foreach (EventRecord correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 					{
 						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
@@ -583,7 +583,7 @@ internal static class GetEventLogsData
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
-					foreach (EventRecord correlatedEvent in correlatedEvents)
+					foreach (EventRecord correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 					{
 						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
@@ -692,7 +692,7 @@ internal static class GetEventLogsData
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
-					foreach (EventRecord correlatedEvent in correlatedEvents)
+					foreach (EventRecord correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 					{
 						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
@@ -744,7 +744,7 @@ internal static class GetEventLogsData
 		}
 		finally
 		{
-			foreach (EventRecord item in rawEvents)
+			foreach (EventRecord item in CollectionsMarshal.AsSpan(rawEvents))
 			{
 				item.Dispose();
 			}
@@ -922,6 +922,8 @@ internal static class GetEventLogsData
 	/// <returns></returns>
 	internal static async Task<HashSet<FileIdentity>> GetAppControlEvents(string? CodeIntegrityEvtxFilePath = null, string? AppLockerEvtxFilePath = null, int EventsToCapture = 0)
 	{
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 		// Output
 		HashSet<FileIdentity> combinedResult = [];
 

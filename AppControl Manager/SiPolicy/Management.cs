@@ -18,13 +18,11 @@
 using System.IO;
 using System.Xml;
 using AppControlManager.Main;
-using AppControlManager.XMLOps;
 
 namespace AppControlManager.SiPolicy;
 
 internal static class Management
 {
-
 	/// <summary>
 	/// Initializes the <see cref="SiPolicy.SiPolicy"/> object by accepting a string path to a valid XML file or an XmlDocument object.
 	/// </summary>
@@ -39,16 +37,33 @@ internal static class Management
 	/// Converts a Code Integrity policy to CIP binary file.
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
-	/// <param name="XmlObj"></param>
 	/// <param name="BinPath"></param>
-	internal static void ConvertXMLToBinary(string? xmlFilePath, XmlDocument? XmlObj, string BinPath)
+	internal static void ConvertXMLToBinary(string? xmlFilePath, string BinPath)
 	{
 		if (File.Exists(BinPath))
 			File.Delete(BinPath);
 
-		SiPolicy policyObj = Initialize(xmlFilePath, XmlObj);
+		SiPolicy policyObj = CustomDeserialization.DeserializeSiPolicy(xmlFilePath, null);
 		using FileStream honeyStream = new(BinPath, FileMode.Create, FileAccess.ReadWrite);
 		BinaryOpsForward.ConvertPolicyToBinary(policyObj, honeyStream);
+	}
+
+	internal static void ConvertXMLToBinary(SiPolicy policyObj, string BinPath)
+	{
+		using FileStream honeyStream = new(BinPath, FileMode.Create, FileAccess.ReadWrite);
+		BinaryOpsForward.ConvertPolicyToBinary(policyObj, honeyStream);
+	}
+
+	/// <summary>
+	/// Converts a SiPolicy object to bytes array (CIP binary format).
+	/// </summary>
+	/// <param name="policyObj">The SiPolicy object to convert.</param>
+	/// <returns>bytes array</returns>
+	internal static byte[] ConvertXMLToBinary(SiPolicy policyObj)
+	{
+		using MemoryStream honeyStream = new();
+		BinaryOpsForward.ConvertPolicyToBinary(policyObj, honeyStream);
+		return honeyStream.ToArray();
 	}
 
 	/// <summary>

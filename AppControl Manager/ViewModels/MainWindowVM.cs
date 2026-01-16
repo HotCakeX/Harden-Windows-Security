@@ -18,8 +18,12 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using AnimatedVisuals;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -34,19 +38,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 {
 
 	/// <summary>
-	/// The text in the SidebarPolicyPathTextBox
+	/// Collection bound to the UI's ItemsRepeater ItemsSource.
 	/// </summary>
-	internal string? SidebarBasePolicyPathTextBoxText
-	{
-		get; set
-		{
-			if (SP(ref field, value))
-			{
-				SidebarBasePolicyPathTextBoxTextStatic = field;
-			}
-		}
-	}
-	internal static string? SidebarBasePolicyPathTextBoxTextStatic { get; private set; }
+	internal readonly UniquePolicyFileRepresentObservableCollection SidebarPoliciesLibrary = [];
 
 	/// <summary>
 	/// Pages that are allowed to run when running without Administrator privileges
@@ -62,7 +56,19 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.Settings),
 		typeof(Pages.ConfigurePolicyRuleOptions),
 		typeof(Pages.ViewFileCertificates),
-		typeof(Pages.Home)
+		typeof(Pages.Home),
+		typeof(Pages.CreatePolicy),
+		typeof(Pages.MDEAHPolicyCreation),
+		typeof(Pages.MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage),
+		typeof(Pages.IntuneDeploymentDetails),
+		typeof(Pages.EventLogsPolicyCreation),
+		typeof(Pages.CreateDenyPolicy),
+		typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults),
+		typeof(Pages.CreateSupplementalPolicy),
+		typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults),
+		typeof(Pages.StrictKernelPolicyScanResults),
+		typeof(Pages.Simulation),
+		typeof(Pages.GetSecurePolicySettings)
 		];
 
 
@@ -102,7 +108,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.Settings)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("SettingsNavItem/Content")],
+			titles: [GlobalVars.GetStr("SettingsNavItemContent")],
 			pages: [typeof(Pages.Settings)]
 		);
 
@@ -144,13 +150,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.DeploymentPage)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItemContent")],
 			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.IntuneDeploymentDetails)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItemContent")],
 			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
 		);
 
@@ -299,7 +305,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MSFTDocsNavItem/Content")] = typeof(Pages.MicrosoftDocumentation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GetSecurePolicySettingsNavItem/Content")] = typeof(Pages.GetSecurePolicySettings);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("SettingsNavItem/Content")] = typeof(Pages.Settings);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("SettingsNavItemContent")] = typeof(Pages.Settings);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("SystemInformationNavItem/Content")] = typeof(Pages.SystemInformation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/Content")] = typeof(Pages.ConfigurePolicyRuleOptions);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("LogsNavItem/Content")] = typeof(Pages.Logs);
@@ -321,11 +327,14 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		RebuildBreadcrumbMappings();
 		RebuildNavigationPageToItemContentMapForSearch();
 
+		// Subscribe to the collection changed event
+		SidebarPoliciesLibrary.CollectionChanged += (s, e) => UpdateSidebarVisibilities();
+
+		// Initial visibility update
+		UpdateSidebarVisibilities();
+
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
 		AppUpdate.UpdateAvailable += OnUpdateAvailable!;
-
-		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
-		AutomaticAssignmentSidebarToggleSwitchToggledState = App.Settings.AutomaticAssignmentSidebar;
 
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
@@ -334,16 +343,81 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// Then make the update page available for non-elevated usage.
 		if (App.PackageSource is 1)
 			UnelevatedPages.Add(typeof(Pages.UpdatePage));
+
+		// If Persistent library is enabled, populate the policies library on the Sidebar with the local cache content
+		// Fire and forget since this runs at startup and we can't let it slow us down
+		if (AppSettings.PersistentPoliciesLibrary)
+		{
+			_ = Task.Run(() =>
+			{
+				try
+				{
+					// Get all of the files in the cache first
+					IEnumerable<string> currentFiles = Directory.EnumerateFiles(SidebarPoliciesLibraryCache);
+
+					foreach (string file in currentFiles)
+					{
+						try
+						{
+							ReadOnlySpan<char> uniqueID = Path.GetFileNameWithoutExtension(file);
+
+							PolicyFileRepresent policyToAdd = new(Management.Initialize(file, null))
+							{
+								UniqueObjID = Guid.Parse(uniqueID)
+							};
+
+							_ = Dispatcher.TryEnqueue(() =>
+							{
+								SidebarPoliciesLibrary.Add(policyToAdd);
+							});
+						}
+						catch (Exception ex)
+						{
+							Logger.Write(ex);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex);
+				}
+			});
+		}
+	}
+
+	/// <summary>
+	/// Local cache of the Sidebar's policies library where policies are kept for persistence.
+	/// </summary>
+	internal static readonly string SidebarPoliciesLibraryCache = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "PoliciesLibraryCache")).FullName;
+
+	/// <summary>
+	/// Visibility for the ItemsRepeater in the sidebar
+	/// </summary>
+	internal Visibility SidebarRepeaterVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	/// <summary>
+	/// Visibility for the Shimmer effect in the sidebar
+	/// </summary>
+	internal Visibility SidebarShimmerVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
+
+	/// <summary>
+	/// Updates the visibility of the sidebar elements based on the number of items in the library.
+	/// </summary>
+	private void UpdateSidebarVisibilities()
+	{
+		if (SidebarPoliciesLibrary.Count > 0)
+		{
+			SidebarRepeaterVisibility = Visibility.Visible;
+			SidebarShimmerVisibility = Visibility.Collapsed;
+		}
+		else
+		{
+			SidebarRepeaterVisibility = Visibility.Collapsed;
+			SidebarShimmerVisibility = Visibility.Visible;
+		}
 	}
 
 	#region UI-Bound Properties
-
-	/// <summary>
-	/// Indicates whether the automatic assignment sidebar toggle switch is in a toggled state. It stores a boolean value.
-	/// </summary>
-	internal bool AutomaticAssignmentSidebarToggleSwitchToggledState { get; set => SP(ref field, value); }
-
-	// Navigation Icon Properties
 
 	/// <summary>
 	/// Icon for the Create Policy navigation item.
@@ -458,40 +532,33 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	#endregion
 
 	/// <summary>
-	/// Event handler for the sidebar toggle button for auto assignment
+	/// The only method used to add new policies to the Sidebar's Policies Library.
 	/// </summary>
-	internal void AutomaticAssignmentSidebarToggleSwitch_Toggled()
+	/// <param name="policy"></param>
+	internal async void AssignToSidebar(SiPolicy.PolicyFileRepresent policy)
 	{
-		// Save the status in app settings
-		App.Settings.AutomaticAssignmentSidebar = AutomaticAssignmentSidebarToggleSwitchToggledState;
-	}
-
-	/// <summary>
-	/// Event handler for sidebar settings cards for auto assignment
-	/// </summary>
-	internal void AutomaticAssignmentSidebarSettingsCard_Click()
-	{
-		AutomaticAssignmentSidebarToggleSwitchToggledState = !AutomaticAssignmentSidebarToggleSwitchToggledState;
-
-		// Save the status in app settings
-		App.Settings.AutomaticAssignmentSidebar = AutomaticAssignmentSidebarToggleSwitchToggledState;
-	}
-
-
-	/// <summary>
-	/// Method used by other methods that create base policies so they can assign the path to the sidebar after creation
-	/// If the toggle switch for automatic assignment is on
-	/// </summary>
-	/// <param name="unsignedPolicyPath"></param>
-	internal void AssignToSidebar(string unsignedPolicyPath)
-	{
-		_ = Dispatcher.TryEnqueue(() =>
+		try
 		{
-			if (AutomaticAssignmentSidebarToggleSwitchToggledState)
+			_ = Dispatcher.TryEnqueue(() =>
 			{
-				SidebarBasePolicyPathTextBoxText = unsignedPolicyPath;
+				SidebarPoliciesLibrary.Add(policy);
+			});
+
+			// If the library should be persistent
+			if (AppSettings.PersistentPoliciesLibrary)
+			{
+				await Task.Run(() =>
+				{
+					string filePath = Path.Combine(SidebarPoliciesLibraryCache, $"{policy.UniqueObjID}.xml");
+
+					Management.SavePolicyToFile(policy.PolicyObj, filePath);
+				});
 			}
-		});
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
 	}
 
 	/// <summary>
@@ -626,7 +693,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					CreateDenyPolicyIcon = new AnimatedIcon
 					{
 						Margin = new Thickness(0, -9, -9, -9),
-						Source = new Deny()
+						Source = new AnimatedVisuals.Deny()
 					};
 
 					ValidatePoliciesIcon = new AnimatedIcon

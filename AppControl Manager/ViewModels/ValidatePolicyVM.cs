@@ -19,7 +19,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using AppControlManager.Main;
-using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -159,8 +158,6 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 	/// </summary>
 	private async Task ValidateLogic()
 	{
-		string? stagingArea = null;
-
 		try
 		{
 			ElementsAreEnabled = false;
@@ -192,31 +189,13 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 					{
 						XmlDocument xmlObj = SiPolicy.CustomSerialization.CreateXmlFromSiPolicy(temp);
 
-						if (!App.IsElevated)
-						{
-							string tempDir = Path.GetTempPath();
-							string randomFolderName = Path.GetRandomFileName();
-							string fullPath = Path.Combine(tempDir, randomFolderName);
-
-							stagingArea = Directory.CreateDirectory(fullPath).FullName;
-						}
-						else
-						{
-							stagingArea = StagingArea.NewStagingArea("Level4Validation").FullName;
-						}
-
-						string tempPolicyCIPPath = Path.Combine(stagingArea, $"test.cip");
-						string tempPolicyXMLPath = Path.Combine(stagingArea, $"test.xml");
-
-						xmlObj.Save(tempPolicyXMLPath);
-
 						if (Level4Test)
 						{
-							SiPolicy.Management.ConvertXMLToBinary(tempPolicyXMLPath, null, tempPolicyCIPPath);
+							SiPolicy.SiPolicy temp2 = SiPolicy.CustomDeserialization.DeserializeSiPolicy(null, xmlObj);
 
-							FileInfo fileInfo = new(tempPolicyCIPPath);
+							ReadOnlySpan<byte> cipContent = SiPolicy.Management.ConvertXMLToBinary(temp2);
 
-							CIPSize = Math.Round(fileInfo.Length / 1024.0, 2);
+							CIPSize = Math.Round(cipContent.Length / 1024.0, 2);
 						}
 					}
 				}
@@ -255,15 +234,6 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 		{
 			ElementsAreEnabled = true;
 			MainInfoBarIsClosable = true;
-
-			if (Directory.Exists(stagingArea))
-			{
-				try
-				{
-					Directory.Delete(stagingArea, true);
-				}
-				catch { }
-			}
 		}
 	}
 }

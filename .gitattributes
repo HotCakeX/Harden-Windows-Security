@@ -16,3 +16,9 @@ images export-ignore
 *.md text eol=crlf
 *.xml text eol=crlf
 *.json text eol=crlf
+
+# Prevent README and Wiki posts from syncing with upstream
+README.md merge=ours
+"Wiki posts/**" merge=ours
+
+

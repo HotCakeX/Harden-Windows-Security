@@ -32,46 +32,45 @@ jobs:
       contents: write # Required for adding files to the GitHub draft release
 
     steps:
-
-#      - name: Updating Winget
-#        shell: pwsh
-#        run: |
-#          try {
-#              Write-Host -Object 'The version of the pre-installed Winget on the Runner:'
-#              Write-Host -Object (winget --version)
-#          }
-#          catch {
-#              Write-Host -Object 'Winget is not installed.'
-#          }
-#
-#          # Retrieve the latest Winget release information
-#          $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
-#          $LatestRelease = $WingetReleases | Select-Object -First 1
-#          # Direct links to the latest Winget release assets
-#          [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
-#          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
-#          [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
-#          [hashtable]$Downloads = @{
-#              # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
-#              'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
-#              'Winget.msixbundle'                    = $WingetURL
-#              'License1.xml'                         = $WingetLicense
-#          }
-#          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
-#              Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
-#          }
-#
-#          Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
-#          # Get the paths to all of the dependencies
-#          [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
-#
-#          # Required to update the Winget
-#          Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
-#
-#          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
-#
-#          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
-#
+      #      - name: Updating Winget
+      #        shell: pwsh
+      #        run: |
+      #          try {
+      #              Write-Host -Object 'The version of the pre-installed Winget on the Runner:'
+      #              Write-Host -Object (winget --version)
+      #          }
+      #          catch {
+      #              Write-Host -Object 'Winget is not installed.'
+      #          }
+      #
+      #          # Retrieve the latest Winget release information
+      #          $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
+      #          $LatestRelease = $WingetReleases | Select-Object -First 1
+      #          # Direct links to the latest Winget release assets
+      #          [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
+      #          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
+      #          [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
+      #          [hashtable]$Downloads = @{
+      #              # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
+      #              'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
+      #              'Winget.msixbundle'                    = $WingetURL
+      #              'License1.xml'                         = $WingetLicense
+      #          }
+      #          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
+      #              Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
+      #          }
+      #
+      #          Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
+      #          # Get the paths to all of the dependencies
+      #          [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
+      #
+      #          # Required to update the Winget
+      #          Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
+      #
+      #          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
+      #
+      #          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
+      #
 
       - name: Check out the repository code
         uses: actions/checkout@v6
@@ -84,7 +83,7 @@ jobs:
           PARTNERCENTER_CLIENTID: ${{ secrets.PARTNERCENTER_CLIENTID }}
           PARTNERCENTER_CLIENTSECRET: ${{ secrets.PARTNERCENTER_CLIENTSECRET }}
           PARTNERCENTER_TOKENENDPOINT: ${{ secrets.PARTNERCENTER_TOKENENDPOINT }}
-        working-directory: './AppControl Manager' # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
+        working-directory: "./AppControl Manager" # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
         run: |
           # Requires -Version 5.1
           # Requires -RunAsAdministrator
@@ -140,7 +139,7 @@ jobs:
 
                   [System.String]$BranchName = 'main'
                   [System.String]$RepoName = 'Harden-Windows-Security'
-                  [System.String]$RepoUrl = "https://github.com/HotCakeX/$RepoName/archive/refs/heads/$BranchName.zip"
+                  [System.String]$RepoUrl = "https://github.com/OFFSECHQ/$RepoName/archive/refs/heads/$BranchName.zip"
                   [System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
                   [System.String]$InitialWorkingDirectory = $PWD.Path
                   $script:AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'AppControl Manager')
@@ -731,7 +730,7 @@ jobs:
                   Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${Env:RUNNER_TEMP}\sbom-tool.exe"
 
                   # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
-                  . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv $MSIXVersion -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true -lto 80
+                  . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'OFFSECHQ' -pv $MSIXVersion -nsb 'https://github.com/OFFSECHQ/harden-windows-security' -V Verbose -gt true -li true -pm true -D true -lto 80
 
                   # Saving the details of the SBOM file
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_PATH=$MSIXBundleOutput/_manifest/spdx_2.2/manifest.spdx.json"
@@ -739,7 +738,7 @@ jobs:
               }
 
               if ($Install -and $PackageFamilyName -eq 'AppControlManager_sadt7br7jpt02') {
-                  (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1') + "AppControl -Verbose -MSIXBundlePath '$MSIXBundle'" | Invoke-Expression
+                  (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OFFSECHQ/harden-windows-security/main/Harden-Windows-Security.ps1') + "AppControl -Verbose -MSIXBundlePath '$MSIXBundle'" | Invoke-Expression
               }
 
               if ($Upload) {
@@ -896,7 +895,6 @@ jobs:
       id-token: write
 
     steps:
-
       - name: Downloading all Artifacts
         uses: actions/download-artifact@v7
         with:
@@ -909,7 +907,7 @@ jobs:
       - name: Generating Artifact Attestation
         uses: actions/attest-build-provenance@v3
         with:
-        # subject-path: "${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
+          # subject-path: "${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
           subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder
 
   SbomAttest:
@@ -921,7 +919,6 @@ jobs:
       id-token: write
 
     steps:
-
       - name: Downloading all Artifacts
         uses: actions/download-artifact@v7
         with:
@@ -934,7 +931,7 @@ jobs:
       - name: Generating SBOM attestation
         uses: actions/attest-sbom@v3
         with:
-        # subject-path: "${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
+          # subject-path: "${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
           subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder
           sbom-path: ./Downloaded-Artifacts/manifest.spdx.json
           show-summary: true
@@ -947,7 +944,6 @@ jobs:
       pull-requests: write
 
     steps:
-
       - name: Check out the repository code
         uses: actions/checkout@v6
 
@@ -979,8 +975,8 @@ jobs:
           Write-Host -Object "Updated version.txt with version: $PACKAGE_VERSION"
 
           # Configure Git for committing changes
-          git config --global user.email 'spynetgirl@outlook.com'
-          git config --global user.name 'HotCakeX'
+          git config --global user.email '101721830+OFFSECHQ@users.noreply.github.com'
+          git config --global user.name 'offsechq'
 
           # Create a new branch for the pull request, making sure branch name has valid characters
           [string]$NewBranchName = 'AppControl-Manager-DownloadLink-Version-Update'
@@ -1009,7 +1005,7 @@ jobs:
           "@
 
           # Create the pull request
-          gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX
+          gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee OFFSECHQ
 
       - name: Add Body Text to the Draft Release
         shell: pwsh
@@ -1027,7 +1023,7 @@ jobs:
 
           **Install it from the Microsoft Store: https://apps.microsoft.com/detail/9png1jddtgp8**
 
-          [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+          [**Documentation**](https://github.com/OFFSECHQ/harden-windows-security/wiki/AppControl-Manager)
 
           ## What's New
 
@@ -1038,7 +1034,7 @@ jobs:
           How to [verify](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds#verifying-artifact-attestations-with-the-github-cli) the MSIXBundle's authenticity:
 
           ``````
-          gh attestation verify "Path To MSIXBundle" --repo HotCakeX/Harden-Windows-Security --format json
+          gh attestation verify "Path To MSIXBundle" --repo OFFSECHQ/harden-windows-security --format json
           ``````
 
           You can [install the GitHub CLI](https://github.com/cli/cli?tab=readme-ov-file#windows) from Winget:

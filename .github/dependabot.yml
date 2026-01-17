@@ -23,7 +23,7 @@ updates:
     schedule:
       interval: "daily"
       time: "07:30"
-      timezone: "Israel"
+      timezone: "Africa/Khartoum"
     labels:
       - "Dependabot ✨"
   - package-ecosystem: "github-actions"
@@ -39,4 +39,4 @@ updates:
     schedule:
       interval: "daily"
       time: "07:30"
-      timezone: "Israel"
+      timezone: "Africa/Khartoum"

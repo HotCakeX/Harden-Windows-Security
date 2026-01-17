@@ -21,4 +21,20 @@ images export-ignore
 README.md merge=ours
 "Wiki posts/**" merge=ours
 
+# Prevent OFFSECHQ customizations from being overwritten by upstream
+LICENSE merge=ours
+Harden-Windows-Security.ps1 merge=ours
+.gitattributes merge=ours
 
+# Protect app manifests (display names, publisher)
+"Harden System Security/Package.appxmanifest" merge=ours
+"AppControl Manager/Package.appxmanifest" merge=ours
+
+# Protect project files (titles, URLs, branding)
+"Harden System Security/Harden System Security.csproj" merge=ours
+"AppControl Manager/AppControl Manager.csproj" merge=ours
+
+# Protect custom workflows
+".github/workflows/sync-upstream.yml" merge=ours
+".github/workflows/Build System Security Studio MSIX Package.yml" merge=ours
+".github/workflows/Build App Control Studio MSIX Package.yml" merge=ours

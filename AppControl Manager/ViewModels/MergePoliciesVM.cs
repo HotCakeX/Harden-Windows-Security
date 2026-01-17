@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -126,6 +127,8 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 				if (ShouldDeploy)
 				{
 					MainInfoBar.WriteInfo(GlobalVars.GetStr("MergePolicies_DeployingMessage"));
+
+					PreDeploymentChecks.CheckForSignatureConflict(MainPolicy.PolicyObj);
 
 					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
 					if (SupplementalForSelf.IsEligible(MainPolicy.PolicyObj))

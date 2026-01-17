@@ -154,7 +154,7 @@ internal static class AppControlSimulation
 
 		#region Region Making Sure No AllowAll Rule Exists
 
-		if (CheckForAllowAll.Check(policyObj))
+		if (PreDeploymentChecks.CheckForAllowAll(policyObj))
 		{
 			Logger.Write(string.Format(
 			  GlobalVars.GetStr("XmlFileAllowsAllFilesMessage"),

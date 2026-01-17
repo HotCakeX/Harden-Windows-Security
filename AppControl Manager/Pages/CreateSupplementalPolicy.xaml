@@ -419,6 +419,7 @@
                                                 HorizontalSpacing="15">
 
                                 <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
+                                                   x:Name="SelectPolicyFileToAddRulesToButton"
                                                    Margin="15,0,0,0"
                                                    ObservedData="{x:Bind ViewModel.PolicyFileToMergeWith.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                    Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
@@ -427,6 +428,13 @@
                                     <customUI:ButtonV2.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
+
+                                                <AnimatedIcon Visibility="{x:Bind vm:ViewModelProvider.CreateSupplementalPolicyVM.PolicyFileToMergeWithLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
+                                                    <AnimatedIcon.Source>
+                                                        <animatedvisuals:Light/>
+                                                    </AnimatedIcon.Source>
+                                                </AnimatedIcon>
+
                                                 <FontIcon Glyph="&#xE8DA;" FontSize="16"/>
                                                 <TextBlock Text="{x:Bind}"/>
                                             </StackPanel>
@@ -434,7 +442,7 @@
                                     </customUI:ButtonV2.ContentTemplate>
 
                                     <customUI:ButtonV2.Flyout>
-                                        <Flyout>
+                                        <Flyout x:Name="SelectPolicyFileToAddRulesToButton_FlyOut">
 
                                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -451,7 +459,7 @@
 
                                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                                <TextBox Text="{x:Bind ViewModel.PolicyFileToMergeWith, Mode=OneWay}"
+                                                <TextBox Text="{x:Bind ViewModel.PolicyFileToMergeWith.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                     MinWidth="400" IsReadOnly="True" />
 

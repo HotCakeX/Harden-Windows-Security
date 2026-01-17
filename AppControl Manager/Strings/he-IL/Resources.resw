@@ -6212,4 +6212,325 @@
     <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>קיימים עדיין פריטי מדיניות שלא נשמרו בספריית סרגל הצד, והם יאבדו אם תסגור את היישום. האם אתה בטוח שברצונך לצאת?</value>
   </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>זוהי הספרייה עבור פריטי מדיניות ה-App Control שלך, שבה תוכל לאחסן פריטי מדיניות ולהשתמש בהם בחלקים שונים של האפליקציה. הם זמינים בזיכרון בלבד אלא אם תשמור אותם לקובץ או אם אפשרות ההתמדה מופעלת.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>ספריית פריטי מדיניות</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>ספרייה קבועה</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, כל פריטי המדיניות הזמינים בספרייה ימשיכו להיות שם גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מסופקת על ידי שמירת עותק של פריטי המדיניות בספרייה במטמון פרטי בדיסק. המטמון נמחק אוטומטית בעת הסרת התקנת האפליקציה.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, כל פריטי המדיניות הזמינים בספרייה ימשיכו להיות שם גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מסופקת על ידי שמירת עותק של פריטי המדיניות בספרייה במיקום פרטי בדיסק. המטמון נמחק אוטומטית בעת הסרת התקנת האפליקציה.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, כ�� פריטי המדיניות הזמינים בספרייה ימשיכו להיות שם גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מסופקת על ידי שמירת עותק של פריטי המדיניות בספרייה במיקום פרטי בדיסק. המטמון נמחק אוטומטית בעת הסרת התקנת האפליקציה.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>שמור כ-CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר מיקום שבו המדיניות שנבחרה תישמר כקובץ CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר מיקום שבו המדיניות שנבחרה תישמר כקובץ CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>שמור כ-XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר מיקום שבו המדיניות שנבחרה תישמר כקובץ XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר מיקום שבו המדיניות שנבחרה תישמר כקובץ XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את המדיניות מהספרייה. אם תכונת הספרייה הקבועה מופעלת, המדיניות שנבחרה תוסר גם מהמטמון המקומי.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את המדיניות מהספרייה. אם תכונת הספרייה הקבועה מופעלת, המדיניות שנבחרה תוסר גם מהמטמון המקומי.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>פרוס</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פורס את המדיניות שנבחרה במערכת המקומית.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פורס את המדיניות שנבחרה במערכת המקומית.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>הקצה</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הקצה את המדיניות שנבחרה בספרייה למדורים רלוונטיים שונים בדף המוצג כעת.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הקצה את המדיניות שנבחרה בספרייה למדורים רלוונטיים שונים בדף המוצג כעת.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>הוסף פריטי מדיניות</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר קובצי מדיניות להוספה לספרייה. אם תכונת הספרייה הקבועה מופעלת, הם יגובו אוטומטית גם במטמון המקומי כך שפריטי המדיניות שלך יישארו זמינים לאחר שתסגור ותפתח מחדש את האפליקציה.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר קובצי מדיניות להוספה לספרייה. אם תכונת הספרייה הקבועה מופעלת, הם יגובו אוטומטית גם במטמון המקומי כך שפריטי המדיניות שלך יישארו זמינים לאחר שתסגור ותפתח מחדש את האפליקציה.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>הסר הכל</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את כל פריטי המדיניות מהספרייה. אם תכונת הספרייה הקבועה מופעלת, פריטי המדיניות יימחקו גם מהמטמון המקומי.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את כל פריטי המדיניות מהספרייה. אם תכונת הספרייה הקבועה מופעלת, פריטי המדיניות יימחקו גם מהמטמון המקומי.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>גבה הכל</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר ספרייה שבה כל פריטי המדיניות שבספרייה יגובו כקובצי XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר ספרייה שבה כל פריטי המדיניות שבספרייה יגובו כקובצי XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>מדיניות משלימה מתוך יומני אירועים - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>צור אקראית</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>��ור GUID חוקי אקראי עבור מזהה מדיניות הבסיס (Base Policy ID).</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור GUID חוקי אקראי עבור מזהה מדיניות הבסיס (Base Policy ID).</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>חתום</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>לא חתום</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>העתק מזהה מדיניות</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מעתיק את מזהה המדיניות ללוח</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מעתיק את מזהה המדיניות ללוח</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>העתק מזהה מדיניות בסיס</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מעתיק את מזהה מדיניות הבסיס ללוח</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מעתיק את מזהה מדיניות הבסיס ללוח</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: מעבד נתוני שם קובץ (FileName)</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} כללי שם קובץ.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>לא זוהו נתוני שם קובץ ליצירת כללי התרה (Allow).</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>לא זוהו נתוני שם קובץ ליצירת כללי דחייה (Deny).</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>ישנם {0} כללי שם קובץ להוספה למדיניות</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>סוג כלל שם קובץ</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>קובץ מדיניות XML (אופציונלי)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>קובץ מדיניות ה-XML של המדיניות החתומה שמיועדת להסרה. זהו שדה אופציונלי ואינו חובה.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קובץ מדיניות ה-XML של המדיניות החתומה שמיועדת להסרה. זהו שדה אופציונלי ואינו חובה.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קובץ מדיניות ה-XML של המדיניות החתומה שמיועדת להסרה. זהו שדה אופציונלי ואינו חובה.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>אנא ספק את הפרטים שישמשו לחתימה מחדש של מדיניות ה-App Control שנבחרה, כך שניתן יהיה להסירה באתחול הבא.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>באפשרותך להגדיר את הפרטים הבאים בהגדרות האפליקציה באופן חד-פעמי, ובכך לחסוך את הצורך להזין אותם שוב ושוב.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>בחר קובצי Code Integrity EVTX</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר קובצי Code Integrity EVTX לסריקה.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר קובצי Code Integrity EVTX לסריקה.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>בחר קובצי AppLocker EVTX</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר קובצי AppLocker EVTX לסריקה.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר קובצי AppLocker EVTX לסריקה.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>אתה פורס מדיניות App Control המשתמשת ב-Intelligent Security Graph, ו-Smart App Control אינו כבוי. מומלץ לכבות את Smart App Control במצב זה.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>גרסת מדיניות ה-CIP היא '{0}' בעוד AppControl Manager תומך עד גרסה '{1}'. לא ניתן היה לפענח את כל תכונות המדיניות.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>הקובץ הבינארי P7B הומר בהצלחה ל-XML והקובץ נשמר בנתיב:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>צור מדיניות תיוג App ID עבור תבנית המדיניות הנוכחית.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>מדיניות תיוג App ID</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור מדיניות תיוג App ID עבור תבנית המדיניות הנוכחית.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור מדיניות תיוג App ID עבור תבנית המדיניות הנוכחית.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>אזור זה מספק תכונות מתקדמות להתאמה אישית של פריטי מדיניות App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>תכונות מתקדמות</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אזור זה מספק תכונות מתקדמות להתאמה אישית של פריטי מדיניות App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אזור זה מספק תכונות מתקדמות להתאמה אישית של פריטי מדיניות App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>בחר פריטי מדיניות להמרה לסוג תיוג App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>המר פריטי מדיניות לתיוג App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר פריטי מדיניות להמרה לסוג תיוג App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר פריטי מדיניות להמרה לסוג תיוג App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>המר</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>המר את פריטי המדיניות שנבחרו לתיוג App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>המר את פריטי המדיניות שנבחרו לתיוג App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>מתקדם</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>כל פריטי המדיניות שנבחרו הומרו בהצלחה לתיוג App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>בחר תרחיש חתימה (Signing Scenario) להסרה מפריטי המדיניות שבחרת.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>הסרת תרחיש חתימה</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר תרחיש חתימה (Signing Scenario) להסרה מפריטי המדיניות שבחרת.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר תרחיש חתימה (Signing Scenario) להסרה מפריטי המדיניות שבחרת.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל בהסרת תרחיש החתימה.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל בהסרת תרחיש החתימה.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>כל הנתונים הקשורים לתרחיש החתימה שנבחר הוסרו בהצלחה.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>שם ידידותי למדיניות</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>השם הידידותי של מדיניות ה-App Control שנבחרה</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השם הידידותי של מדיניות ה-App Control שנבחרה</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השם הידידותי של מדיניות ה-App Control שנבחרה</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>מפתח</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>ערך</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>הקשר</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>תגי App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>הוסף תג חדש</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף תג App ID חדש על סמך המפתח והערך שהזנת.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף תג App ID חדש על סמך המפתח והערך שהזנת.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>מפתח</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הזן כאן את מפתח תג ה-App ID.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הזן כאן את מפתח תג ה-App ID.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>ערך</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הזן כאן את ערך תג ה-App ID.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הזן כאן את ערך תג ה-App ID.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>מדיניות ראשית</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>פריטי מדיניות אחרים</value>
+  </data>
 </root>

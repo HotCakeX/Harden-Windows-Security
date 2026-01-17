@@ -6212,4 +6212,325 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>W bibliotece paska bocznego wciąż znajdują się niezapisane zasady. Zostaną one utracone po zamknięciu aplikacji. Czy na pewno chcesz wyjść?</value>
   </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>To jest biblioteka zasad App Control, w której możesz przechowywać zasady i używać ich w różnych częściach aplikacji. Są one dostępne tylko w pamięci, chyba że zapiszesz je w pliku lub włączona jest trwałość.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Biblioteka zasad</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Biblioteka trwała</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>Po włączeniu wszystkie zasady dostępne w bibliotece pozostaną tam nawet po ponownym uruchomieniu aplikacji. Funkcjonalność ta jest zapewniana poprzez przechowywanie kopii zasad z biblioteki w prywatnej pamięci podręcznej na dysku. Pamięć podręczna jest usuwana automatycznie po odinstalowaniu aplikacji.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Po włączeniu wszystkie zasady dostępne w bibliotece pozostaną tam nawet po ponownym uruchomieniu aplikacji. Funkcjonalność ta jest zapewniana poprzez przechowywanie kopii zasad z biblioteki w prywatnej lokalizacji na dysku. Pamięć podręczna jest usuwana automatycznie po odinstalowaniu aplikacji.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Po włączeniu wszystkie zasady dostępne w bibliotece pozostaną tam nawet po ponownym uruchomieniu aplikacji. Funkcjonalność ta jest zapewniana poprzez przechowywanie kopii zasad z biblioteki w prywatnej lokalizacji na dysku. Pamięć podręczna jest usuwana automatycznie po odinstalowaniu aplikacji.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zapisz jako CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz lokalizację, w której wybrana zasada zostanie zapisana jako plik CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz lokalizację, w której wybrana zasada zostanie zapisana jako plik CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zapisz jako XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz lokalizację, w której wybrana zasada zostanie zapisana jako plik XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz lokalizację, w której wybrana zasada zostanie zapisana jako plik XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń zasadę z biblioteki. Jeśli funkcja biblioteki trwałej jest włączona, wybrana zasada zostanie również usunięta z lokalnej pamięci podręcznej.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń zasadę z biblioteki. Jeśli funkcja biblioteki trwałej jest włączona, wybrana zasada zostanie również usunięta z lokalnej pamięci podręcznej.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Wdróż</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wdraża wybraną zasadę w systemie lokalnym.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wdraża wybraną zasadę w systemie lokalnym.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Przypisz</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przypisz wybraną w bibliotece zasadę do różnych odpowiednich sekcji na aktualnie widocznej stronie.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przypisz wybraną w bibliotece zasadę do różnych odpowiednich sekcji na aktualnie widocznej stronie.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Dodaj zasady</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj pliki zasad, aby dodać je do biblioteki. Jeśli funkcja biblioteki trwałej jest włączona, zostaną one automatycznie zarchiwizowane w lokalnej pamięci podręcznej, dzięki czemu Twoje zasady pozostaną dostępne po zamknięciu i ponownym otwarciu aplikacji.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj pliki zasad, aby dodać je do biblioteki. Jeśli funkcja biblioteki trwałej jest włączona, zostaną one automatycznie zarchiwizowane w lokalnej pamięci podręcznej, dzięki czemu Twoje zasady pozostaną dostępne po zamknięciu i ponownym otwarciu aplikacji.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Usuń wszystko</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wszystkie zasady z biblioteki. Jeśli funkcja biblioteki trwałej jest włączona, zasady zostaną również usunięte z lokalnej pamięci podręcznej.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wszystkie zasady z biblioteki. Jeśli funkcja biblioteki trwałej jest włączona, zasady zostaną również usunięte z lokalnej pamięci podręcznej.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Utwórz kopię zapasową wszystkiego</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz katalog, w którym zostaną utworzone kopie zapasowe wszystkich zasad z biblioteki jako pliki XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz katalog, w którym zostaną utworzone kopie zapasowe wszystkich zasad z biblioteki jako pliki XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Zasada uzupełniająca z dzienników zdarzeń - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Generuj losowo</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wygeneruj losowy prawidłowy identyfikator GUID dla identyfikatora zasady podstawowej.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wygeneruj losowy prawidłowy identyfikator GUID dla identyfikatora zasady podstawowej.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Podpisana</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Niepodpisana</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Kopiuj identyfikator zasady</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiuje identyfikator zasady do schowka</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kopiuje identyfikator zasady do schowka</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Kopiuj identyfikator zasady podstawowej</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiuje identyfikator zasady podstawowej do schowka</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kopiuje identyfikator zasady podstawowej do schowka</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie danych FileName</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reguł FileName.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>nie wykryto danych FileName do utworzenia reguł zezwalania.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>nie wykryto danych FileName do utworzenia reguł blokowania.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>Liczba reguł nazwy pliku do dodania do zasady: {0}</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>Typ reguły nazwy pliku</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>Plik zasad XML (opcjonalny)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>Plik XML podpisanej zasady, która ma zostać usunięta. Jest to opcjonalne i nie jest wymagane.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Plik XML podpisanej zasady, która ma zostać usunięta. Jest to opcjonalne i nie jest wymagane.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Plik XML podpisanej zasady, która ma zostać usunięta. Jest to opcjonalne i nie jest wymagane.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Podaj szczegóły, które zostaną użyte do ponownego podpisania wybranej zasady App Control, aby można ją było usunąć przy następnym ponownym uruchomieniu.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>Możesz skonfigurować następujące szczegóły w ustawieniach aplikacji jednorazowo, eliminując konieczność ich wielokrotnego wprowadzania.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Wybierz pliki Code Integrity EVTX</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików Code Integrity EVTX do przeskanowania.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików Code Integrity EVTX do przeskanowania.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>Wybierz pliki AppLocker EVTX</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików AppLocker EVTX do przeskanowania.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików AppLocker EVTX do przeskanowania.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>Wdrażasz zasadę App Control korzystającą z Intelligent Security Graph, a funkcja Smart App Control nie jest wyłączona. W tej sytuacji zaleca się wyłączenie Smart App Control.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>Wersja zasady CIP to '{0}', podczas gdy AppControl Manager obsługuje wersje tylko do '{1}'. Nie wszystkie funkcje zasady mogły zostać zdekodowane.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>Plik binarny P7B został pomyślnie przekonwertowany na XML, a plik został zapisany w:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Utwórz zasadę tagowania App ID dla bieżącego szablonu zasad.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>Zasada tagowania App ID</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz zasadę tagowania App ID dla bieżącego szablonu zasad.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz zasadę tagowania App ID dla bieżącego szablonu zasad.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>Ten obszar zapewnia zaawansowane funkcje dostosowywania zasad App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Funkcje zaawansowane</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ten obszar zapewnia zaawansowane funkcje dostosowywania zasad App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ten obszar zapewnia zaawansowane funkcje dostosowywania zasad App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz zasady do przekonwertowania na typ tagowania App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Konwertuj zasady na tagowanie App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz zasady do przekonwertowania na typ tagowania App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz zasady do przekonwertowania na typ tagowania App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Konwertuj</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Konwertuj wybrane zasady na tagowanie App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Konwertuj wybrane zasady na tagowanie App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Zaawansowane</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Pomyślnie przekonwertowano wszystkie wybrane zasady na tagowanie App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz scenariusz podpisywania (Signing Scenario), który ma zostać usunięty z wybranych zasad.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Usuwanie scenariusza podpisywania</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz scenariusz podpisywania (Signing Scenario), który ma zostać usunięty z wybranych zasad.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz scenariusz podpisywania (Signing Scenario), który ma zostać usunięty z wybranych zasad.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozpocznij usuwanie scenariusza podpisywania.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozpocznij usuwanie scenariusza podpisywania.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Pomyślnie usunięto wszystkie dane związane z wybranym scenariuszem podpisywania.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Przyjazna nazwa zasady</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>Przyjazna nazwa wybranej zasady App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przyjazna nazwa wybranej zasady App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przyjazna nazwa wybranej zasady App Control</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Klucz</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Wartość</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Kontekst</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>Tagi App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Dodaj nowy tag</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj nowy tag App ID na podstawie wprowadzonego klucza i wartości.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj nowy tag App ID na podstawie wprowadzonego klucza i wartości.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Klucz</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wprowadź klucz tagu App ID tutaj.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wprowadź klucz tagu App ID tutaj.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Wartość</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wprowadź wartość tagu App ID tutaj.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wprowadź wartość tagu App ID tutaj.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Zasada główna</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Inne zasady</value>
+  </data>
 </root>

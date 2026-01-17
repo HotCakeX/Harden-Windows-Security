@@ -67,8 +67,7 @@ internal static class CertificateHelper
 			}
 
 			// Feed the data into the hash object.
-			byte[] dataArray = data.ToArray();
-			if (!NativeMethods.CryptHashData(hHash, dataArray, (uint)dataArray.Length, 0))
+			if (!NativeMethods.CryptHashData(hHash, data, (uint)data.Length, 0))
 			{
 				int error = Marshal.GetLastPInvokeError();
 
@@ -142,7 +141,7 @@ internal static class CertificateHelper
 		string algorithmOid = signatureAlgorithm.ReadObjectIdentifier();
 
 		// Select the correct hash function. Here we add MD2 support.
-		byte[] hash = algorithmOid switch
+		ReadOnlySpan<byte> hash = algorithmOid switch
 		{
 			"1.2.840.113549.1.1.2" => ComputeMd2(tbsCertificate.Span), // MD2 with RSA encryption. Windows still allows drivers signed by MD2Rsa Root certificates to load.
 			"1.2.840.113549.1.1.4" => MD5.HashData(tbsCertificate.Span),

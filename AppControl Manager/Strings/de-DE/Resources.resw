@@ -6212,4 +6212,325 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>Es befinden sich noch ungespeicherte Richtlinien in der Bibliothek der Seitenleiste. Diese gehen verloren, wenn Sie die Anwendung schließen. Sind Sie sicher, dass Sie beenden möchten?</value>
   </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Dies ist die Bibliothek für Ihre App Control-Richtlinien, in der Sie Richtlinien speichern und in verschiedenen Bereichen der App verwenden können. Sie sind nur im Arbeitsspeicher verfügbar, es sei denn, Sie speichern sie in einer Datei oder die Persistenz ist aktiviert.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Richtlinienbibliothek</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Persistente Bibliothek</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>Wenn aktiviert, bleiben alle in der Bibliothek verfügbaren Richtlinien auch nach einem Neustart der App erhalten. Diese Funktionalität wird bereitgestellt, indem eine Kopie der Richtlinien in der Bibliothek in einem privaten Cache auf der Festplatte gespeichert wird. Der Cache wird bei der Deinstallation der App automatisch gelöscht.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wenn aktiviert, bleiben alle in der Bibliothek verfügbaren Richtlinien auch nach einem Neustart der App erhalten. Diese Funktionalität wird bereitgestellt, indem eine Kopie der Richtlinien in der Bibliothek an einem privaten Speicherort auf der Festplatte gespeichert wird. Der Cache wird bei der Deinstallation der App automatisch gelöscht.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wenn aktiviert, bleiben alle in der Bibliothek verfügbaren Richtlinien auch nach einem Neustart der App erhalten. Diese Funktionalität wird bereitgestellt, indem eine Kopie der Richtlinien in der Bibliothek an einem privaten Speicherort auf der Festplatte gespeichert wird. Der Cache wird bei der Deinstallation der App automatisch gelöscht.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Als CIP speichern</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie einen Speicherort, an dem die ausgewählte Richtlinie als CIP-Datei gespeichert werden soll.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie einen Speicherort, an dem die ausgewählte Richtlinie als CIP-Datei gespeichert werden soll.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Als XML speichern</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie einen Speicherort, an dem die ausgewählte Richtlinie als XML-Datei gespeichert werden soll.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie einen Speicherort, an dem die ausgewählte Richtlinie als XML-Datei gespeichert werden soll.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Entfernen Sie die Richtlinie aus der Bibliothek. Wenn die Funktion für persistente Bibliotheken aktiviert ist, wird die ausgewählte Richtlinie auch aus dem lokalen Cache entfernt.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Entfernen Sie die Richtlinie aus der Bibliothek. Wenn die Funktion für persistente Bibliotheken aktiviert ist, wird die ausgewählte Richtlinie auch aus dem lokalen Cache entfernt.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Bereitstellen</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Stellt die ausgewählte Richtlinie auf dem lokalen System bereit.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Stellt die ausgewählte Richtlinie auf dem lokalen System bereit.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Zuweisen</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Weisen Sie die ausgewählte Richtlinie in der Bibliothek verschiedenen anwendbaren Bereichen auf der aktuell sichtbaren Seite zu.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Weisen Sie die ausgewählte Richtlinie in der Bibliothek verschiedenen anwendbaren Bereichen auf der aktuell sichtbaren Seite zu.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Richtlinien hinzufügen</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie Dateien nach Richtlinien, die der Bibliothek hinzugefügt werden sollen. Wenn die Funktion für persistente Bibliotheken aktiviert ist, werden diese automatisch auch im lokalen Cache gesichert, sodass Ihre Richtlinien auch nach dem Schließen und erneuten Öffnen der App verfügbar bleiben.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie Dateien nach Richtlinien, die der Bibliothek hinzugefügt werden sollen. Wenn die Funktion für persistente Bibliotheken aktiviert ist, werden diese automatisch auch im lokalen Cache gesichert, sodass Ihre Richtlinien auch nach dem Schließen und erneuten Öffnen der App verfügbar bleiben.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Alle entfernen</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Entfernen Sie alle Richtlinien aus der Bibliothek. Wenn die Funktion für persistente Bibliotheken aktiviert ist, werden die Richtlinien auch aus dem lokalen Cache gelöscht.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Entfernen Sie alle Richtlinien aus der Bibliothek. Wenn die Funktion für persistente Bibliotheken aktiviert ist, werden die Richtlinien auch aus dem lokalen Cache gelöscht.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Alle sichern</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie ein Verzeichnis, in dem alle Richtlinien der Bibliothek als XML-Dateien gesichert werden sollen.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie ein Verzeichnis, in dem alle Richtlinien der Bibliothek als XML-Dateien gesichert werden sollen.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Ergänzende Richtlinie aus Ereignisprotokollen - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Zufällig generieren</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Generieren Sie eine zufällige, gültige GUID für die Basisrichtlinien-ID.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Generieren Sie eine zufällige, gültige GUID für die Basisrichtlinien-ID.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Signiert</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Unsigniert</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Richtlinien-ID kopieren</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiert die Richtlinien-ID in die Zwischenablage</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kopiert die Richtlinien-ID in die Zwischenablage</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Basisrichtlinien-ID kopieren</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiert die Basisrichtlinien-ID in die Zwischenablage</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kopiert die Basisrichtlinien-ID in die Zwischenablage</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Verarbeite FileName-Daten</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} FileName-Regeln.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>keine FileName-Daten erkannt, um Zulassungsregeln zu erstellen.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>keine FileName-Daten erkannt, um Verweigerungsregeln zu erstellen.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>Es gibt {0} Dateinamenregeln, die der Richtlinie hinzugefügt werden müssen</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>Dateinamen-Regeltyp</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>XML-Richtliniendatei (Optional)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>Die XML-Richtliniendatei der signierten Richtlinie, die entfernt werden soll. Dies ist optional und nicht erforderlich.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die XML-Richtliniendatei der signierten Richtlinie, die entfernt werden soll. Dies ist optional und nicht erforderlich.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die XML-Richtliniendatei der signierten Richtlinie, die entfernt werden soll. Dies ist optional und nicht erforderlich.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Bitte geben Sie die Details an, die zum erneuten Signieren der ausgewählten App Control-Richtlinie verwendet werden sollen, damit diese beim nächsten Neustart entfernt werden kann.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>Sie können die folgenden Details einmalig in den App-Einstellungen konfigurieren, sodass Sie sie nicht wiederholt eingeben müssen.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Code Integrity EVTX-Dateien auswählen</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Suchen Sie nach Code Integrity EVTX-Dateien zum Scannen.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Suchen Sie nach Code Integrity EVTX-Dateien zum Scannen.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>AppLocker EVTX-Dateien auswählen</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Suchen Sie nach AppLocker EVTX-Dateien zum Scannen.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Suchen Sie nach AppLocker EVTX-Dateien zum Scannen.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>Sie stellen eine App Control-Richtlinie bereit, die den Intelligent Security Graph verwendet, und Smart App Control ist nicht deaktiviert. Es wird empfohlen, Smart App Control in dieser Situation zu deaktivieren.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>Die CIP-Richtlinienversion ist '{0}', während AppControl Manager nur bis zur Version '{1}' unterstützt. Nicht alle Funktionen der Richtlinie konnten dekodiert werden.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>Die P7B-Binärdatei wurde erfolgreich in XML konvertiert und die Datei wurde gespeichert unter:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Erstellen Sie eine App ID-Tagging-Richtlinie für die aktuelle Richtlinienvorlage.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>App ID-Tagging-Richtlinie</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erstellen Sie eine App ID-Tagging-Richtlinie für die aktuelle Richtlinienvorlage.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erstellen Sie eine App ID-Tagging-Richtlinie für die aktuelle Richtlinienvorlage.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>Dieser Bereich bietet erweiterte Funktionen zur Anpassung von App Control-Richtlinien.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Erweiterte Funktionen</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dieser Bereich bietet erweiterte Funktionen zur Anpassung von App Control-Richtlinien.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dieser Bereich bietet erweiterte Funktionen zur Anpassung von App Control-Richtlinien.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Wählen Sie Richtlinien aus, die in den App ID-Tagging-Typ konvertiert werden sollen.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Richtlinien in App ID-Tagging konvertieren</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie Richtlinien aus, die in den App ID-Tagging-Typ konvertiert werden sollen.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie Richtlinien aus, die in den App ID-Tagging-Typ konvertiert werden sollen.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Konvertieren</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Konvertiert die ausgewählten Richtlinien in App ID-Tagging</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Konvertiert die ausgewählten Richtlinien in App ID-Tagging</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Erweitert</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Alle ausgewählten Richtlinien wurden erfolgreich in App ID-Tagging konvertiert.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Wählen Sie ein Signaturszenario aus, das aus den ausgewählten Richtlinien entfernt werden soll.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Signaturszenario entfernen</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie ein Signaturszenario aus, das aus den ausgewählten Richtlinien entfernt werden soll.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie ein Signaturszenario aus, das aus den ausgewählten Richtlinien entfernt werden soll.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Beginnen Sie mit der Entfernung des Signaturszenarios.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Beginnen Sie mit der Entfernung des Signaturszenarios.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Alle Daten im Zusammenhang mit dem ausgewählten Signaturszenario wurden erfolgreich entfernt.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Anzeigename der Richtlinie</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>Der Anzeigename der ausgewählten App Control-Richtlinie</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Der Anzeigename der ausgewählten App Control-Richtlinie</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Der Anzeigename der ausgewählten App Control-Richtlinie</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Schlüssel</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Kontext</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>App ID-Tags</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Neues Tag hinzufügen</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fügen Sie basierend auf dem eingegebenen Schlüssel und Wert ein neues App ID-Tag hinzu.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Fügen Sie basierend auf dem eingegebenen Schlüssel und Wert ein neues App ID-Tag hinzu.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Schlüssel</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Geben Sie hier den Schlüssel des App ID-Tags ein.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Geben Sie hier den Schlüssel des App ID-Tags ein.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Geben Sie hier den Wert des App ID-Tags ein.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Geben Sie hier den Wert des App ID-Tags ein.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Hauptrichtlinie</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Andere Richtlinien</value>
+  </data>
 </root>

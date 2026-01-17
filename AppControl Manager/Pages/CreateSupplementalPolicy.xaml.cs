@@ -48,6 +48,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		ViewModel.StrictKernelModeBasePolicyLightAnimatedIconVisibility = visibility;
 		ViewModel.PFNBasePolicyPathLightAnimatedIconVisibility = visibility;
 		ViewModel.CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility = visibility;
+		ViewModel.PolicyFileToMergeWithLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("FilesAndFoldersSupplementalPolicyLabel")),
@@ -55,7 +56,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			actionPack3: (LightUp3, GlobalVars.GetStr("ISGSupplementalPolicyLabel")),
 			actionPack4: (LightUp4, GlobalVars.GetStr("StrictKernelModeSupplementalPolicyLabel")),
 			actionPack5: (LightUp5, GlobalVars.GetStr("PFNSupplementalPolicyLabel")),
-			actionPack6: (LightUp6, GlobalVars.GetStr("CustomPatternBasedSupplementalPolicyLabel"))
+			actionPack6: (LightUp6, GlobalVars.GetStr("CustomPatternBasedSupplementalPolicyLabel")),
+			actionPack7: (LightUp7, GlobalVars.GetStr("PolicyToAddNewRulesTo"))
 		);
 	}
 
@@ -139,6 +141,16 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.CustomPatternBasedFileRuleBasedBasePolicy = policy;
+		}
+	}
+
+	private void LightUp7(object? param)
+	{
+		SelectPolicyFileToAddRulesToButton_FlyOut.ShowAt(SelectPolicyFileToAddRulesToButton);
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.PolicyFileToMergeWith = policy;
 		}
 	}
 

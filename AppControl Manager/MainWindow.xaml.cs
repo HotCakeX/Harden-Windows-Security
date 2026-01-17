@@ -36,9 +36,9 @@ using System.IO;
 using System.Collections.Generic;
 using AppControlManager.Others;
 
-
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
+using AppControlManager.XMLOps;
 using AppControlManager.WindowComponents;
 using AppControlManager.SiPolicy;
 namespace AppControlManager;
@@ -1207,6 +1207,8 @@ internal sealed partial class MainWindow : Window
 				await Task.Run(() =>
 				{
 					Logger.Write($"Deploying the policy: {policyContext.PolicyIdentifier}");
+
+					PreDeploymentChecks.CheckForSignatureConflict(policyContext.PolicyObj);
 
 					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
 					if (SupplementalForSelf.IsEligible(policyContext.PolicyObj))

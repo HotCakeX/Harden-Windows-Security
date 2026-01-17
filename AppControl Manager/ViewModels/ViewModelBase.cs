@@ -165,11 +165,11 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
 	[
-		new ScanLevelsComboBoxType("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
-		new ScanLevelsComboBoxType("File Publisher", ScanLevels.FilePublisher, 4),
-		new ScanLevelsComboBoxType("Publisher", ScanLevels.Publisher, 3),
-		new ScanLevelsComboBoxType("Hash", ScanLevels.Hash, 5),
-		new ScanLevelsComboBoxType("File Name", ScanLevels.FileName, 2)
+		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
+		new("File Publisher", ScanLevels.FilePublisher, 4),
+		new("Publisher", ScanLevels.Publisher, 3),
+		new("Hash", ScanLevels.Hash, 5),
+		new("File Name", ScanLevels.FileName, 2)
 	];
 
 	/// <summary>

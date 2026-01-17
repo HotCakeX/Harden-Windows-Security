@@ -6212,4 +6212,325 @@
     <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>لا تزال هناك سياسات غير محفوظة في مكتبة الشريط الجانبي، وسيتم فقدها في حال إغلاق التطبيق. هل أنت متأكد من رغبتك في الخروج؟</value>
   </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>هذه هي المكتبة الخاصة بسياسات التحكم في التطبيقات (App Control) الخاصة بك حيث يمكنك تخزين السياسات واستخدامها في أجزاء مختلفة من التطبيق. تكون هذه السياسات متوفرة فقط في الذاكرة ما لم تقم بحفظها في ملف أو في حال تم تمكين ميزة الاستدامة.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>مكتبة السياسات</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>المكتبة الدائمة</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>عند التمكين، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه الوظيفة من خلال الاحتفاظ بنسخة من السياسات الموجودة في المكتبة في ذاكرة تخزين مؤقت خاصة على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عند التمكين، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه الوظيفة من خلال الاحتفاظ بنسخة من السياسات الموجودة في المكتبة في موقع خاص على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عند التمكين، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه ال��ظيفة من خلال الاحتفاظ بنسخة من السياسات الموجودة في المكتبة في موقع خاص على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حفظ بتنسيق CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر موقعًا حيث سيتم حفظ السياسة المحددة كملف CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر موقعًا حيث سيتم حفظ السياسة المحددة كملف CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حفظ بتنسيق XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر موقعًا حيث سيتم حفظ السياسة المحددة كملف XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر موقعًا حيث سيتم حفظ السياسة المحددة كملف XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>إزالة</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة السياسة من المكتبة. إذا تم تمكين ميزة المكتبة الدائمة، فستتم إزالة السياسة المحددة أيضًا من ذاكرة التخزين المؤقت المحلية.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إزالة السياسة من المكتبة. إذا تم تمكين ميزة المكتبة الدائمة، فستتم إزالة السياسة المحددة أيضًا من ذاكرة التخزين المؤقت المحلية.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>نشر</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يقوم بنشر السياسة المحددة على النظام المحلي.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يقوم بنشر السياسة المحددة على النظام المحلي.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>تعيين</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تعيين السياسة المحددة في المكتبة إلى أقسام مختلفة قابلة للتطبيق في الصفحة الظاهرة حاليًا.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تعيين السياسة المحددة في المكتبة إلى أقسام مختلفة قابلة للتطبيق في الصفحة الظاهرة حاليًا.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>إضافة سياسات</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض بحثًا عن ملفات السياسات لإضافتها إلى المكتبة. إذا تم تمكين ميزة المكتبة الدائمة، فسيتم نسخها احتياطيًا تلقائيًا في ذاكرة التخزين المؤقت المحلية أيضًا بحيث تظل سياساتك متاحة بعد إغلاق التطبيق وإعادة فتحه.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض بحثًا عن ملفات السياسات لإضافتها إلى المكتبة. إذا تم تمكين ميزة المكتبة الدائمة، فسيتم نسخها احتياطيًا تلقائيًا في ذاكرة التخزين المؤقت المحلية أيضًا بحيث تظل سياساتك متاحة بعد إغلاق التطبيق وإعادة فتحه.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>إزالة الكل</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة كافة السياسات من المكتبة. إذا تم تمكين ميزة المكتبة الدائمة، فسيتم حذف السياسات أيضًا من ذاكرة التخزين المؤقت المحلية.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إزالة كافة السياسات من المكتبة. إذا تم تمكين ميزة المكتبة الدائمة، فسيتم حذف السياسات أيضًا من ذاكرة التخزين المؤقت المحلية.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>نسخ احتياطي للكل</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر دليلاً حيث سيتم نسخ كافة السياسات الموجودة في المكتبة احتياطيًا كملفات XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر دليلاً حيث سيتم نسخ كافة السياسات الموجودة في المكتبة احتياطيًا كملفات XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>سياسة تكميلية من سجلات الأحداث - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>توليد عشوائي</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>توليد معرف GUID صالح وعشوائي لمعرف السياسة الأساسي (Base Policy ID).</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>توليد معرف GUID صالح وعشوائي لمعرف السياسة الأساسي (Base Policy ID).</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>موقعة</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>غير موقعة</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>نسخ معرف السياسة</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ينسخ معرف السياسة إلى الحافظة</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ينسخ معرف السياسة إلى الحافظة</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>نسخ معرف السياسة الأساسي</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ينسخ معرف السياسة الأساسي إلى الحافظة</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ينسخ معرف السياسة الأساسي إلى الحافظة</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: جاري معالجة بيانات اسم الملف (FileName)</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} قواعد اسم ملف.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>لم يتم اكتشاف بيانات اسم ملف لإنشاء قواعد سماح لها.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>لم يتم اكتشاف بيانات اسم ملف لإنشاء قواعد رفض لها.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>يوجد {0} قواعد اسم ملف لإضافتها إلى السياسة</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>نوع قاعدة اسم الملف</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>ملف سياسة XML (اختياري)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>ملف سياسة XML الخاص بالسياسة الموقعة المراد إزالتها. هذا الحقل اختياري وليس مطلوبًا.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ملف سياسة XML الخاص بالسياسة الموقعة المراد إزالتها. هذا الحقل اختياري وليس مطلوبًا.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ملف سياسة XML الخاص بالسياسة الموقعة المراد إزالتها. هذا الحقل اختياري وليس مطلوبًا.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>يرجى تقديم التفاصيل التي سيتم استخدامها لإعادة توقيع سياسة App Control المحددة بحيث يمكن إزالتها عند إعادة التشغيل التالية.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>يمكنك تكوين التفاصيل التالية في إعدادات التطبيق مرة واحدة، مما يغني عن الحاجة لإدخالها بشكل متكرر.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>تحديد ملفات Code Integrity EVTX</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للبحث عن ملفات Code Integrity EVTX للمسح الضوئي.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للبحث عن ملفات Code Integrity EVTX للمسح الضوئي.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>تحديد ملفات AppLocker EVTX</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للبحث عن ملفات AppLocker EVTX للمسح الضوئي.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للبحث عن ملفات AppLocker EVTX للمسح الضوئي.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>أنت تقوم بنشر سياسة App Control تستخدم Intelligent Security Graph وميزة Smart App Control ليست متوقفة. يوصى بإيقاف تشغيل Smart App Control في هذه الحالة.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>إصدار سياسة CIP هو '{0}' بينما يدعم AppControl Manager حتى الإصدار '{1}' فقط. لم يتم فك تشفير كافة ميزات السياسة.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>تم تحويل ملف P7B الثنائي بنجاح إلى XML وتم حفظ الملف في:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>إنشاء سياسة وضع علامات App ID لقالب السياسة الحالي.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>سياسة وضع علامات App ID</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إنشاء سياسة وضع علامات App ID لقالب السياسة الحالي.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إنشاء سياسة وضع علامات App ID لقالب السياسة الحالي.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>توفر هذه المنطقة ميزات متقدمة لتخصيص سياسات App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>ميزات متقدمة</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>توفر هذه المنطقة ميزات متقدمة لتخصيص سياسات App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>توفر هذه المنطقة ميزات متقدمة لتخصيص سياسات App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>تحديد السياسات للتحويل إلى نوع وضع علامات App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>تحويل السياسات إلى وضع علامات App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحديد السياسات للتحويل إلى نوع وضع علامات App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحديد السياسات للتحويل إلى نوع وضع علامات App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>تحويل</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحويل السياسات المحددة إلى وضع علامات App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحويل السياسات المحددة إلى وضع علامات App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>متقدم</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>تم تحويل كافة السياسات المحددة بنجاح إلى وضع علامات App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>حدد سيناريو توقيع (Signing Scenario) لإزالته من السياسات التي حددتها.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>إزالة سيناريو التوقيع</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد سيناريو توقيع (Signing Scenario) لإزالته من السياسات التي حددتها.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد سيناريو توقيع (Signing Scenario) لإزالته من السياسات التي حددتها.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>إزالة</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>بدء إزالة سيناريو التوقيع.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>بدء إزالة سيناريو التوقيع.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>تمت إزالة كافة البيانات المتعلقة بسيناريو التوقيع المحدد بنجاح.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>الاسم الودي للسياسة</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>الاسم الودي لسياسة App Control المحددة</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الاسم الودي لسياسة App Control المحددة</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الاسم الودي لسياسة App Control المحددة</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>المفتاح</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>السياق</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>علامات App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>إضافة علامة جديدة</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أضف علامة App ID جديدة بناءً على المفتاح والقيمة اللذين أدخلتهما.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أضف علامة App ID جديدة بناءً على المفتاح والقيمة اللذين أدخلتهما.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>المفتاح</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أدخل مفتاح علامة App ID هنا.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أدخل مفتاح علامة App ID هنا.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أدخل قيمة علامة App ID هنا.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أدخل قيمة علامة App ID هنا.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>السياسة الرئيسية</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>سياسات أخرى</value>
+  </data>
 </root>

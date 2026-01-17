@@ -35,7 +35,6 @@ namespace AppControlManager.WindowComponents;
 using AppControlManager.WindowComponents;
 using HardenSystemSecurity.ViewModels;
 using System.Collections.Frozen;
-using System.Runtime.InteropServices;
 namespace HardenSystemSecurity.WindowComponents;
 #endif
 

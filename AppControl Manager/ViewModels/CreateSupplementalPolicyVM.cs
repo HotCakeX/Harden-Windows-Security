@@ -159,6 +159,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal Visibility StrictKernelModeBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility PFNBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility PolicyFileToMergeWithLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	#region Files and Folders scan
 
@@ -507,17 +508,19 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
-
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Save the results back to the user-selected policy file
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_FilesAndFoldersSupplementalPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -549,10 +552,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					// Set policy version
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
-				}
 
-				// Assign the supplemental policy to the local variable
-				_FilesAndFoldersSupplementalPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_FilesAndFoldersSupplementalPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_FilesAndFoldersSupplementalPolicyPath);
@@ -566,7 +569,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FilesAndFoldersSupplementalPolicyPath.PolicyObj));
 				}
 			});
 
@@ -849,13 +852,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
-
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Save the policy to the path user selected
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_CertificatesSupplementalPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -871,9 +878,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					// Set policy version
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
-				}
 
-				_CertificatesSupplementalPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_CertificatesSupplementalPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_CertificatesSupplementalPolicyPath);
@@ -885,7 +893,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					CertificatesBasedInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_CertificatesSupplementalPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -1009,13 +1017,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					// Instantiate the user-selected policy file.
-					finalPolicyObj = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
-
 					// Configure policy rule options only
-					finalPolicyObj = CiRuleOptions.Set(policyObj: finalPolicyObj, rulesToAdd: [OptionType.EnabledIntelligentSecurityGraphAuthorization, OptionType.EnabledInvalidateEAsonReboot]);
+					PolicyFileToMergeWith!.PolicyObj = CiRuleOptions.Set(policyObj: PolicyFileToMergeWith.PolicyObj, rulesToAdd: [OptionType.EnabledIntelligentSecurityGraphAuthorization, OptionType.EnabledInvalidateEAsonReboot]);
 
-					Management.SavePolicyToFile(finalPolicyObj, PolicyFileToMergeWith!.FilePath!);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_ISGSupplementalPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -1029,9 +1041,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					// Replace the BasePolicyID in the Supplemental policy
 					finalPolicyObj.BasePolicyID = ISGBasedBasePolicy.PolicyObj.BasePolicyID;
-				}
 
-				_ISGSupplementalPolicyPath = new(finalPolicyObj);
+					// Assign the new supplemental policy to the local variable
+					_ISGSupplementalPolicyPath = new(finalPolicyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_ISGSupplementalPolicyPath);
@@ -1047,7 +1060,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					await ConfigureISGServices.Configure();
 
 					// Deploy the signed CIP file
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(finalPolicyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_ISGSupplementalPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -1448,13 +1461,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
-
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Save the policy to the user selected policy path
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_StrictKernelModeSupplementalPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -1473,9 +1490,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					// Remove all User-Mode signing scenarios from the policy
 					policyObj = RemoveSigningScenarios.RemoveUserMode(policyObj);
-				}
 
-				_StrictKernelModeSupplementalPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_StrictKernelModeSupplementalPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_StrictKernelModeSupplementalPolicyPath);
@@ -1487,7 +1505,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_StrictKernelModeSupplementalPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -2039,13 +2057,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
-
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Save the policy to the user selected file path
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_PFNSupplementalPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -2063,9 +2085,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					// Set policy version
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
-				}
 
-				_PFNSupplementalPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_PFNSupplementalPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_PFNSupplementalPolicyPath);
@@ -2081,7 +2104,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_PFNSupplementalPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -2387,13 +2410,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
-
 					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Save the policy to the user selected policy path
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_CustomPatternBasedFileRuleSupplementalPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -2411,9 +2438,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					// Set policy version
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
-				}
 
-				_CustomPatternBasedFileRuleSupplementalPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_CustomPatternBasedFileRuleSupplementalPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_CustomPatternBasedFileRuleSupplementalPolicyPath);
@@ -2427,7 +2455,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_CustomPatternBasedFileRuleSupplementalPolicyPath.PolicyObj));
 				}
 			});
 		}

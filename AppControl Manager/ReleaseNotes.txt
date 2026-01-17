@@ -10,7 +10,7 @@
 
 * A new section has been added to the Sidebar that provides a library for all of your policies. You can import as many policies to it as you want and use them in different parts of the app. Policies in the library exist in the app's memory at runtime. You can import both XML and CIP file types to the library.
 
-* Added a new Scan Level, called "File Name", for local files and event logs which can be used for both signed and unsigned files. 
+* Added a new Scan Level, called "File Name", for local files and event logs which can be used for both signed and unsigned files.
 
 * You can now remove Signed Policies Without Policy Files.
 

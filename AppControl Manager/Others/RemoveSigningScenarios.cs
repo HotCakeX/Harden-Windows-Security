@@ -80,7 +80,7 @@ internal static class RemoveSigningScenarios
 			// Remove all Signers that are for User-Mode signing scenario
 			_ = policyObj.Signers?.RemoveAll(s => userModeSignerIDs.Contains(s.ID));
 
-			// Remove any Allow/Deny/FileRule/FileAttrib that belongs to User-Mode signing scenario			
+			// Remove any Allow/Deny/FileRule/FileAttrib that belongs to User-Mode signing scenario
 			_ = policyObj.FileRules?.RemoveAll(
 				f => (f is Allow allowRule && userModeFileRules.Contains(allowRule.ID)) ||
 					 (f is Deny denyRule && userModeFileRules.Contains(denyRule.ID)) ||
@@ -153,7 +153,7 @@ internal static class RemoveSigningScenarios
 			// Remove all Signers that are for kernel-Mode signing scenario
 			_ = policyObj.Signers?.RemoveAll(s => kernelModeSignerIDs.Contains(s.ID));
 
-			// Remove any Allow/Deny/FileRule/FileAttrib that belongs to kernel-Mode signing scenario			
+			// Remove any Allow/Deny/FileRule/FileAttrib that belongs to kernel-Mode signing scenario
 			_ = policyObj.FileRules?.RemoveAll(
 				f => (f is Allow allowRule && kernelModeFileRules.Contains(allowRule.ID)) ||
 					 (f is Deny denyRule && kernelModeFileRules.Contains(denyRule.ID)) ||

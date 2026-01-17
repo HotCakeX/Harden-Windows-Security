@@ -598,7 +598,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								// If policy file was provided by the dialog/user then use it
 								if (!string.IsNullOrEmpty(XMLPolicyPath))
 								{
-									// Initialize the user-selected policy file		
+									// Initialize the user-selected policy file
 									policyObj = Management.Initialize(XMLPolicyPath, null);
 								}
 								// If not then find the corresponding CIP file and use that instead

@@ -443,8 +443,6 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal void ListView_Loaded(object sender, RoutedEventArgs e)
-	{
-		LogListView = (ListView)sender;
-	}
+	internal void ListView_Loaded(object sender, RoutedEventArgs e) => LogListView = (ListView)sender;
+
 }

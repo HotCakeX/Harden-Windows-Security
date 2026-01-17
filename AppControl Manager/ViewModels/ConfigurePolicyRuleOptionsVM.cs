@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -210,6 +211,8 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 						MainInfoBar.WriteWarning(GlobalVars.GetStr("TeachingTipSubtitlePolicyRequiresSigning"));
 						return;
 					}
+
+					PreDeploymentChecks.CheckForSignatureConflict(SelectedPolicy.PolicyObj);
 
 					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
 					if (SupplementalForSelf.IsEligible(SelectedPolicy.PolicyObj))

@@ -6212,4 +6212,325 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>साइडबार की लाइब्रेरी में अभी भी बिना सहेजी गई नीतियां हैं, यदि आप एप्लिकेशन बंद करते हैं तो ��े नष्ट हो जाएंगी। क्या आप वाकई बाहर निकलना चाहते हैं?</value>
   </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>यह आपकी ऐप कंट्रोल (App Control) नीतियों के लिए लाइब्रेरी है जहां आप नीतियों को संग्रहीत कर सकते हैं और ऐप के विभिन्न हिस्सों में उनका उपयोग कर सकते हैं। जब त��� आप उन्हें किसी फ़ाइल में सहेजते नहीं हैं या 'स्थायी' (persistence) सुविधा सक्षम नहीं होती है, तब तक वे केवल मेमोरी में उपलब्ध रहती हैं।</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>नीति लाइब्रेरी</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>स्थायी लाइब्रेरी</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>सक्षम होने पर, लाइब्रेरी में उपलब्ध सभी नीतियां ऐप के पुनरारंभ होने के बाद भी वहीं रहेंगी। यह कार्यक्षमता डिस्क पर एक निजी कैश (cache) में लाइब्रेरी की नीतियों की एक प्रति रखकर प्रदान की जाती है। ऐप अनइंस्टॉल होने पर कैश अपने आप हट जाता है।</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सक्षम होने पर, लाइब्रेरी में उपलब्ध सभी नीतियां ऐप के पुनरारंभ होने के बाद भी वहीं रहेंगी। यह कार्यक्षमता डिस्क पर एक निजी स्थान में लाइब्रेरी की नीतियों की एक प्रति रखकर प्रदान की जाती है। ऐप अनइंस्टॉल होने पर कैश अपने आप हट जाता है।</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सक्षम होने पर, लाइब्रेरी में उपलब्ध सभी नीतियां ऐप के पुनरारंभ होने के बाद भी वहीं रहेंगी। यह कार्यक्षमता डिस्क पर एक निजी स्थान में लाइब्रेरी की नीतियों की एक प्रति रखकर प्रदान की जाती है। ऐप अनइंस्टॉल होने पर कैश अपने आप हट जाता है।</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>CIP के रूप में सहेजें</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वह स्थान चुनें जहाँ चयनित नीति को CIP फ़ाइल के रूप में सहेजा जाएगा।</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वह स्थान चुनें जहाँ चयनित नीति को CIP फ़ाइल के रूप में सहेजा जाएगा।</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>XML के रूप में सहेजें</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वह स्थान चुनें जहाँ चयनित नीति को XML फ़ाइल के रूप में सहेजा जाएगा।</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वह स्थान चुनें जहाँ चयनित नीति को XML फ़ाइल के रूप में सहेजा जाएगा।</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>लाइब्रेरी से नीति को हटाएं। यदि स्थायी लाइब्रेरी सुविधा सक्षम है, तो चयनित नीति को स्थानीय कैश से भी हटा दिया जाएगा।</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>लाइब्रेरी से नीति को हटाएं। यदि स्थायी लाइब्रेरी सुविधा सक्षम है, तो चयनित नीति को स्थानीय कैश से भी हटा दिया जाएगा।</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>लागू करें</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्थानीय सिस्टम पर चयनित नीति को लागू (Deploy) करता है।</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>स्थानीय सिस्टम पर चयनित नीति को लागू (Deploy) करता है।</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>असाइन करें</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान में दिखाई देने वाले पृष्ठ के विभिन्न लागू अनुभागों में लाइब्रेरी से चयनित नीति को असाइन करें।</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वर्तमान में दिखाई देने वाले पृष्ठ क��� विभिन्न लागू अनुभागों में लाइब्रेरी से चयनित नीति को असाइन करें।</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>नीतियां जोड़ें</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>लाइब्रेरी में जोड़ने के लिए नीति फ़ाइलों को ब्राउज़ करें। यदि स्थायी लाइब्रेरी सुविधा सक्षम है, तो उनका स्थानीय कैश में भी स्वचालित रूप से बैकअप लिया जाएगा ताकि ऐप को बंद करने और फिर से खोलने के बाद भी आपकी नीतियां उपलब्ध रहें।</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>लाइब्रेरी में जोड़ने के लिए नीति फ़ाइलों को ब्राउज़ करें। यदि स्थायी लाइब्रेरी सुविधा सक्षम है, तो उनका स्थानीय कैश में भी स्वचालित रूप से बैकअप लिया जाएगा ताकि ऐप को बंद करने और फिर से खोलने के बाद भी आपकी नीतियां उपलब्ध रहें।</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>सभी हटाएं</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>लाइब्रेरी से सभी नीतियां हटाएं। यदि स्थायी लाइब्रेरी सुविधा सक्षम है, तो नीतियों को स्थानीय कैश से भी हटा दिया जाएगा।</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>लाइब्रेरी से सभी नीतियां हटाएं। यदि स्थायी लाइब्रेरी सुविधा सक्षम है, तो नीतियों को स्थानीय कैश से भी हटा दिया जाएगा।</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>सभी का बैकअप लें</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक डायरेक्टरी चुनें जहां लाइब्रेरी की सभी नीतियों का XML फ़ाइलों के रूप में बैकअप लिया जाएगा।</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक डायरेक्टरी चुनें जहां लाइब्रेरी की सभी नीतियों का XML फ़ाइलों के रूप में बैकअप लिया जाएगा।</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>इवेंट लॉग से पूरक नीति - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>यादृच्छिक बनाएं</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बेस नीति आईडी के लिए एक यादृच्छिक वैध GUID उत्पन्न करें।</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बेस नीति आईडी के लिए एक यादृच्छिक वैध GUID उत्पन्न करें।</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>हस्ताक्षरित</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>अहस्ताक्षरित</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>नीति आईडी कॉपी करें</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>नीति आईडी को क्लिपबोर्ड पर कॉपी करता है</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>नीति आईडी को क्लिपबोर्ड पर कॉपी करता है</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>बेस नीति आईडी कॉपी करें</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बेस नीति आईडी को क्लिपबोर्ड पर कॉपी करता है</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बेस नीति आईडी को क्लिपबोर्ड पर कॉपी करता है</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: FileName डेटा संसाधित किया जा रहा है</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} FileName नियम।</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>अनुमति नियम बनाने के लिए कोई FileName डेटा नहीं मिला।</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>अस्वीकार नियम बनाने के लिए कोई FileName डेटा नहीं मिला।</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>नीति में जोड़ने के लिए {0} फ़ाइल नाम नियम हैं</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>फ़ाइल नाम नियम प्रकार</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>XML नीति फ़ाइल (वैकल्पिक)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>हस्ताक्षरित नीति की XML नीति फ़ाइल जिसे हटाया जाना है। यह वैकल्पिक है और आवश्यक नहीं है।</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>हस्ताक्षरित नीति की XML नीति फ़ाइल जिसे हटाया जाना है। यह वैकल्पिक है और आवश्यक नहीं है।</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>हस्ताक्षरित नीति की XML नीति फ़ाइल जिसे हटाया जाना है। यह वैकल्पिक है और आवश्यक नहीं है।</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>कृपया वह विवरण प्रदान करें जिसका उपयोग चयनित ऐप कंट्रोल नीति पर फिर से हस्ताक्षर करने के लिए किया जाएगा ताकि अगले रिबूट पर इसे हटाया जा सके।</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>आप ऐप सेटिंग में निम्नलिखित विवरणों को एक बार कॉन्फ़िगर कर सकते हैं, जिससे उन्हें बार-बार दर्ज करने की आवश्यकता समाप्त हो जाएगी।</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Code Integrity EVTX फ़ाइलें चुनें</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्कैन करने के लिए Code Integrity EVTX फ़ाइलों को ब्राउ���़ करें।</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>स्कैन करने के लिए Code Integrity EVTX फ़ाइलों को ब्राउज़ करें।</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>AppLocker EVTX फ़ाइलें चुनें</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्कैन करने के लिए AppLocker EVTX फ़ाइलों को ब्राउज़ करें।</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>स्कैन करने के लिए AppLocker EVTX फ़ाइलों को ब्राउज़ करें।</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>आप एक ऐप कंट्रोल नीति लागू कर रहे हैं जो 'इंटेलिजेंट सिक्योरिटी ग्राफ' का उपयोग करती है और 'स्मार्ट ऐप कंट्रोल' बंद नहीं है। इस स्थिति में स्मार्ट ऐप कंट्रोल को बंद करने की अनुशंसा की जाती है।</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>CIP नीति का संस्करण '{0}' है जबकि AppControl Manager केवल '{1}' संस्करण तक ही समर्थन करता है। नीति की सभी विशेषताओं को डिकोड नहीं किया जा सका।</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>P7B बाइनरी को सफलतापूर्वक XML में बदल दिया गया है और फ़ाइल यहां सहेजी गई है:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>वर्तमान नीति टेम्पलेट के लिए एक ऐप आईडी टैगिंग (App ID Tagging) नीति बनाएं।</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>ऐप आईडी टैगिंग नीति</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान नीति टेम्पलेट के लिए एक ऐप आईडी टैगिंग (App ID Tagging) नीति बनाएं।</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वर्तमान नीति टेम्पलेट के लिए एक ऐप आईडी ट���गिंग (App ID Tagging) नीति बनाएं।</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>यह क्षेत्र ऐप कंट्रोल नीतियों को अनुकूलित करने के लिए उन्नत सुविधाएं प्रदान करता है।</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>उन्नत सुविधाएं</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यह क्षेत्र ऐप कंट्रोल नीतियों को अनुकूलित करने के लिए उन्नत सुविधाएं प्रदान करता है।</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यह क्षेत्र ऐप कंट्रोल नीतियों को अनुकूलित करने के लिए उन्नत सुविधाएं प्रदान करता है।</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>ऐप आईडी टैगिंग प्रकार में बदलने के लिए नीतियां चुनें।</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>नीतियों को ऐप आईडी टैगिंग में बदलें</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप आईडी टैगिंग प्रकार में बदलने के लिए नीतियां चुनें।</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप आईडी टैगिंग प्रकार में बदलने के लिए नीतियां चुनें।</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>बदलें</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित नीतियों को ऐप आईडी टैगिंग में बदलें</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित नीतियों को ऐप आईडी टैगिंग में बदलें</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>उन्नत</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>सभी चयनित नीतियों को सफलतापूर्वक ऐप आईडी टैगिंग में बदल दिया गया।</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>अपनी चयनित नीतियों से हटाने के लिए एक हस्ताक्षर परिदृश्य (Signing Scenario) चुनें।</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>हस्ताक्षर परिदृश्य हटाना</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अपनी चयनित नीतियों से हटाने के लिए एक हस्ताक्षर परिदृश्य (Signing Scenario) चुनें।</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अपनी चयनित नीतियों से हटाने के लिए एक हस्ताक्षर परिदृश्य (Signing Scenario) चुनें।</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>हस्ताक्षर परिदृश्य हटाना शुरू करें।</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>हस्ताक्षर परिदृश्य हटाना शुरू करें।</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>चयनित हस्ताक्षर परिदृश्य से संबंधित सभी डेटा सफलतापूर्वक हटा दिए गए।</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>नीति का अनुकूल नाम</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>चयनित ऐप कंट्रोल नीति का अनुकूल नाम</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित ऐप कंट्रोल नीति का अनुकूल नाम</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित ऐप कंट्रोल नीति का अनुकूल नाम</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>कुंजी (Key)</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>मान (Value)</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>संदर्भ</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>ऐप आईडी टैग</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>नया टैग जोड़ें</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आपके द्वारा दर्ज की गई कुंजी और मान के आधार पर एक नया ऐप आईडी टैग जोड़ें।</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आपके द्वारा दर्ज की गई कुंजी और मान के आधार पर एक नया ऐप आईडी टैग जोड़ें।</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>कुंजी</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप आईडी टैग की कुंजी यहां दर्ज करें।</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप आईडी टैग की कुंजी यहां दर्ज करें।</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>मान</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप आईडी टैग का मान यहां दर्ज करें।</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप आईडी टैग का मान यहां दर्ज करें।</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>मुख्य नीति</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>अन्य नीतियां</value>
+  </data>
 </root>

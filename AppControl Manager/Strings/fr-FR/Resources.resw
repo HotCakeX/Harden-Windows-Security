@@ -6212,4 +6212,325 @@
   <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>Il reste des stratégies non enregistrées dans la bibliothèque de la barre latérale ; elles seront perdues si vous fermez l'application. Voulez-vous vraiment quitter ?</value>
   </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Ceci est la bibliothèque de vos stratégies App Control, où vous pouvez stocker des stratégies et les utiliser dans différentes parties de l'application. Elles ne sont disponibles qu'en mémoire, à moins que vous ne les enregistriez dans un fichier ou que la persistance ne soit activée.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Bibliothèque de stratégies</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Bibliothèque persistante</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>Lorsqu'elle est activée, toutes les stratégies disponibles dans la bibliothèque continueront d'y être même après le redémarrage de l'application. Cette fonctionnalité est assurée en conservant une copie des stratégies de la bibliothèque dans un cache privé sur le disque. Le cache est automatiquement supprimé lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Lorsqu'elle est activée, toutes les stratégies disponibles dans la bibliothèque continueront d'y être même après le redémarrage de l'application. Cette fonctionnalité est assurée en conservant une copie des stratégies de la bibliothèque dans un emplacement privé sur le disque. Le cache est automatiquement supprimé lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Lorsqu'elle est activée, toutes les stratégies disponibles dans la bibliothèque continueront d'y être même après le redémarrage de l'application. Cette fonctionnalité est assurée en conservant une copie des stratégies de la bibliothèque dans un emplacement privé sur le disque. Le cache est automatiquement supprimé lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Enregistrer sous CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Enregistrer sous XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprime la stratégie de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, la stratégie sélectionnée sera également supprimée du cache local.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprime la stratégie de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, la stratégie sélectionnée sera également supprimée du cache local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Déployer</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Déploie la stratégie sélectionnée sur le système local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Déploie la stratégie sélectionnée sur le système local.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Attribuer</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Attribuer la stratégie sélectionnée dans la bibliothèque à diverses sections applicables de la page actuellement visible.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Attribuer la stratégie sélectionnée dans la bibliothèque à diverses sections applicables de la page actuellement visible.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Ajouter des stratégies</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Parcourir les fichiers de stratégie à ajouter à la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, elles seront également sauvegardées automatiquement dans le cache local afin que vos stratégies restent disponibles après la fermeture et la réouverture de l'application.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Parcourir les fichiers de stratégie à ajouter à la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, elles seront également sauvegardées automatiquement dans le cache local afin que vos stratégies restent disponibles après la fermeture et la réouverture de l'application.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Tout supprimer</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimer toutes les stratégies de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, les stratégies seront également supprimées du cache local.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimer toutes les stratégies de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, les stratégies seront également supprimées du cache local.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Tout sauvegarder</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez un répertoire où toutes les stratégies de la bibliothèque seront sauvegardées sous forme de fichiers XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez un répertoire où toutes les stratégies de la bibliothèque seront sauvegardées sous forme de fichiers XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Stratégie supplémentaire issue des journaux d'événements - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Générer aléatoirement</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Générer un GUID valide aléatoire pour l'ID de stratégie de base.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Générer un GUID valide aléatoire pour l'ID de stratégie de base.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Signé</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Non signé</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copier l'ID de stratégie</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copie l'ID de stratégie dans le presse-papiers</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copie l'ID de stratégie dans le presse-papiers</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copier l'ID de stratégie de base</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copie l'ID de stratégie de base dans le presse-papiers</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copie l'ID de stratégie de base dans le presse-papiers</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects : Traitement des données FileName</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects : {0} règles FileName.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>aucune donnée FileName détectée pour créer des règles d'autorisation.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>aucune donnée FileName détectée pour créer des règles de refus.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>Il y a {0} règles de nom de fichier à ajouter à la stratégie</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>Type de règle de nom de fichier</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>Fichier de stratégie XML (facultatif)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>Le fichier de stratégie XML de la stratégie signée qui va être supprimée. Ceci est facultatif et non requis.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Le fichier de stratégie XML de la stratégie signée qui va être supprimée. Ceci est facultatif et non requis.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Le fichier de stratégie XML de la stratégie signée qui va être supprimée. Ceci est facultatif et non requis.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Veuillez fournir les détails qui seront utilisés pour signer à nouveau la stratégie App Control sélectionnée afin qu'elle puisse être supprimée au prochain redémarrage.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>Vous pouvez configurer les détails suivants dans les paramètres de l'application une seule fois, éliminant ainsi le besoin de les saisir à plusieurs reprises.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Sélectionner les fichiers EVTX Code Integrity</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX Code Integrity à analyser.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX Code Integrity à analyser.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>Sélectionner les fichiers EVTX AppLocker</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX AppLocker à analyser.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX AppLocker à analyser.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>Vous déployez une stratégie App Control qui utilise Intelligent Security Graph et Smart App Control n'est pas désactivé. Il est recommandé de désactiver Smart App Control dans cette situation.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>La version de la stratégie CIP est '{0}' alors qu'AppControl Manager ne prend en charge que jusqu'à la version '{1}'. Toutes les fonctionnalités de la stratégie n'ont pas pu être décodées.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>Le binaire P7B a été converti avec succès en XML et le fichier a été enregistré sous :</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Créez une stratégie de balisage d'ID d'application (App ID Tagging) pour le modèle de stratégie actuel.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>Stratégie de balisage d'ID d'application</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Créez une stratégie de balisage d'ID d'application (App ID Tagging) pour le modèle de stratégie actuel.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Créez une stratégie de balisage d'ID d'application (App ID Tagging) pour le modèle de stratégie actuel.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>Cette zone fournit des fonctionnalités avancées pour personnaliser les stratégies App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Fonctionnalités avancées</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cette zone fournit des fonctionnalités avancées pour personnaliser les stratégies App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cette zone fournit des fonctionnalités avancées pour personnaliser les stratégies App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Sélectionnez les stratégies à convertir en type de balisage App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Convertir les stratégies en balisage App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez les stratégies à convertir en type de balisage App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionnez les stratégies à convertir en type de balisage App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Convertir</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Convertir les stratégies sélectionnées en balisage App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Convertir les stratégies sélectionnées en balisage App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Avancé</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Toutes les stratégies sélectionnées ont été converties avec succès en balisage App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Sélectionnez un scénario de signature à supprimer de vos stratégies sélectionnées.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Suppression du scénario de signature</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez un scénario de signature à supprimer de vos stratégies sélectionnées.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionnez un scénario de signature à supprimer de vos stratégies sélectionnées.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Commencer la suppression du scénario de signature.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Commencer la suppression du scénario de signature.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Toutes les données liées au scénario de signature sélectionné ont été supprimées avec succès.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Nom convivial de la stratégie</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>Le nom convivial de la stratégie App Control sélectionnée</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Le nom convivial de la stratégie App Control sélectionnée</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Le nom convivial de la stratégie App Control sélectionnée</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Clé</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Contexte</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>Balises App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Ajouter une nouvelle balise</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajoutez une nouvelle balise App ID basée sur la clé et la valeur que vous avez saisies.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajoutez une nouvelle balise App ID basée sur la clé et la valeur que vous avez saisies.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Clé</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Saisissez la clé de la balise App ID ici.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Saisissez la clé de la balise App ID ici.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Saisissez la valeur de la balise App ID ici.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Saisissez la valeur de la balise App ID ici.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Stratégie principale</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Autres stratégies</value>
+  </data>
 </root>

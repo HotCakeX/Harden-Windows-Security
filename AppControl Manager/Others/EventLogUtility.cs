@@ -133,18 +133,15 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// Safely convert registry raw value (int, long, ulong, uint, byte) to uint,
 	/// wrapping negative signed values to the corresponding unsigned representation.
 	/// </summary>
-	private static uint ToUInt32Wrapped(object? raw)
+	private static uint ToUInt32Wrapped(object? raw) => raw switch
 	{
-		return raw switch
-		{
-			int i => unchecked((uint)i),
-			long l => unchecked((uint)l),
-			ulong ul => unchecked((uint)ul),
-			uint u => u,
-			byte b => b,
-			_ => 0u,
-		};
-	}
+		int i => unchecked((uint)i),
+		long l => unchecked((uint)l),
+		ulong ul => unchecked((uint)ul),
+		uint u => u,
+		byte b => b,
+		_ => 0u,
+	};
 
 	private void ReArmNotification()
 	{

@@ -266,6 +266,8 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 					}
 					else
 					{
+						PreDeploymentChecks.CheckForSignatureConflict(file.PolicyObj);
+
 						// Deploy the CIP locally
 						CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(file.PolicyObj));
 
@@ -382,6 +384,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		{
 			// Disable the UI elements
 			AreElementsEnabled = false;
+			DeploySignedXMLButtonIsEnabled = false;
 
 			MainInfoBarIsClosable = false;
 
@@ -434,8 +437,9 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 							// Get all of the deployed base and supplemental policies on the system
 							List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
 
+							// Find policies that are Unsigned and have the same PolicyID as the PolicyID of the Signed policy we are deploying so we can remove them.
 							CiPolicyInfo? possibleAlreadyDeployedUnsignedVersion = policies.
-							FirstOrDefault(x => string.Equals(file.PolicyObj.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
+							FirstOrDefault(x => !x.IsSignedPolicy && string.Equals(file.PolicyObj.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
 
 							if (possibleAlreadyDeployedUnsignedVersion is not null)
 							{
@@ -468,6 +472,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		{
 			// Re-enable the UI elements
 			AreElementsEnabled = true;
+			DeploySignedXMLButtonIsEnabled = true;
 
 			MainProgressBarVisibility = Visibility.Collapsed;
 			MainInfoBarIsClosable = true;

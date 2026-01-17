@@ -491,9 +491,9 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 				try
 				{
-					byte[] bytes = await File.ReadAllBytesAsync(selectedFile);
+					ReadOnlySpan<byte> bytes = await File.ReadAllBytesAsync(selectedFile);
 					SignedCms cms = new();
-					cms.Decode(bytes.AsSpan());
+					cms.Decode(bytes);
 					RawCmsDataLength = bytes.Length;
 					ContentInfoDataLength = cms.ContentInfo.Content.Length;
 					CmsVersion = cms.Version;

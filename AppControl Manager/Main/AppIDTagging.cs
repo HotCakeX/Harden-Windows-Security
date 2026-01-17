@@ -49,7 +49,7 @@ internal static class AppIDTagging
 	/// <returns></returns>
 	internal static SiPolicy.SiPolicy Convert(SiPolicy.SiPolicy siPolicy)
 	{
-		// Remove all kernel-mode stuff					
+		// Remove all kernel-mode stuff
 		siPolicy = RemoveSigningScenarios.RemoveKernelMode(siPolicy);
 
 		// Change policy type

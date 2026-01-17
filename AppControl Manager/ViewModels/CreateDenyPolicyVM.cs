@@ -379,13 +379,17 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Merge the new Deny policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
 
-					// Save the policy to the user provided file path
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_FilesAndFoldersDenyPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -399,9 +403,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 					// Set policy version
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
-				}
 
-				_FilesAndFoldersDenyPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_FilesAndFoldersDenyPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_FilesAndFoldersDenyPolicyPath);
@@ -415,7 +420,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				{
 					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FilesAndFoldersDenyPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -780,13 +785,17 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Merge the new Deny policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
 
-					// Save the policy to the user provided file path
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_PFNDenyPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -800,9 +809,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-				}
 
-				_PFNDenyPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_PFNDenyPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_PFNDenyPolicyPath);
@@ -816,7 +826,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				{
 					PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_PFNDenyPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -1075,12 +1085,17 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					SiPolicy.SiPolicy userOriginalPolicy = Management.Initialize(PolicyFileToMergeWith!.FilePath!, null);
+					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
 
-					// Merge the new Deny policy with the user selected policy - user selected policy is the main one in the merge operation
-					policyObj = Merger.Merge(userOriginalPolicy, [policyObj]);
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
 
-					Management.SavePolicyToFile(policyObj, PolicyFileToMergeWith!.FilePath!);
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_CustomPatternBasedFileRuleDenyPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -1094,9 +1109,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-				}
 
-				_CustomPatternBasedFileRuleDenyPolicyPath = new(policyObj);
+					// Assign the new supplemental policy to the local variable
+					_CustomPatternBasedFileRuleDenyPolicyPath = new(policyObj);
+				}
 
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_CustomPatternBasedFileRuleDenyPolicyPath);
@@ -1110,7 +1126,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				{
 					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_CustomPatternBasedFileRuleDenyPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -1175,6 +1191,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	#endregion
 
 	#region Policy Creation Mode
+
+	internal Visibility PolicyFileToMergeWithLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// The policy that user selected to add the new rules to.

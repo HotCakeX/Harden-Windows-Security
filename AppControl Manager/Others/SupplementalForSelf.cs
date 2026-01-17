@@ -125,7 +125,7 @@ internal static class SupplementalForSelf
 				// Make sure the policy is a base policy and it doesn't have allow all rule
 				if (policyObj.PolicyType is PolicyType.BasePolicy)
 				{
-					if (!CheckForAllowAll.Check(policyObj))
+					if (!PreDeploymentChecks.CheckForAllowAll(policyObj))
 					{
 						return true;
 					}

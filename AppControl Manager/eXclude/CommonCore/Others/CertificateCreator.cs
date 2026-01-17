@@ -158,7 +158,7 @@ internal static class CertificateGenerator
 		// Application Policies OID
 		Oid appPoliciesOid = new("1.3.6.1.4.1.311.21.10");
 		// this must be set as specified and not randomly generated
-		byte[] appPoliciesValue = [48, 12, 48, 10, 6, 8, 43, 6, 1, 5, 5, 7, 3, 3];
+		ReadOnlySpan<byte> appPoliciesValue = [48, 12, 48, 10, 6, 8, 43, 6, 1, 5, 5, 7, 3, 3];
 		X509Extension appPoliciesExtension = new(appPoliciesOid, appPoliciesValue, false);
 		request.CertificateExtensions.Add(appPoliciesExtension);
 
@@ -171,7 +171,7 @@ internal static class CertificateGenerator
 
 
 		// Export the certificate for .PFX file as Byte Array
-		byte[] certData = cert.Export(X509ContentType.Pfx, pfxPassword);
+		ReadOnlySpan<byte> certData = cert.Export(X509ContentType.Pfx, pfxPassword);
 
 		// https://learn.microsoft.com/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadpkcs12
 		// https://learn.microsoft.com/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
@@ -200,7 +200,7 @@ internal static class CertificateGenerator
 		if (!string.IsNullOrEmpty(cerExportFilePath))
 		{
 			// Export as DER-encoded X.509 .cer file
-			byte[] cerData = cert.Export(X509ContentType.Cert);
+			ReadOnlySpan<byte> cerData = cert.Export(X509ContentType.Cert);
 			File.WriteAllBytes(cerExportFilePath, cerData);
 		}
 

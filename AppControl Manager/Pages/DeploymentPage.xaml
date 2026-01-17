@@ -226,7 +226,8 @@
 
                         <Button HorizontalAlignment="Center"
                                 IsEnabled="{x:Bind ViewModel.DeploySignedXMLButtonIsEnabled, Mode=OneWay}"
-                                HorizontalContentAlignment="Center" Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
+                                HorizontalContentAlignment="Center"
+                                Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">

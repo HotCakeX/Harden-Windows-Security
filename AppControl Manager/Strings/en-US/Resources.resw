@@ -6212,7 +6212,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>There are still unsaved policies in the Sidebar's library, they will be lost if you close the app. Are you sure you want to exit?</value>
   </data>
-  <!--NEW-->
   <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>This is the library for your App Control policies where you can store policies and use them in different parts of the app. They're only available in memory unless you save them to a file or persistence is enabled.</value>
   </data>
@@ -6533,5 +6532,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="OtherPolicies" xml:space="preserve">
     <value>Other Policies</value>
+  </data>
+  <!--NEW-->
+  <data name="PolicyToAddNewRulesTo" xml:space="preserve">
+    <value>Policy to Add New Rules to</value>
   </data>
 </root>

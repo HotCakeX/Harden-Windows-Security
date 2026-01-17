@@ -30,7 +30,6 @@ internal static class XmlFilePathExtractor
 	/// <returns></returns>
 	internal static HashSet<string> GetFilePaths(SiPolicy.SiPolicy policyObj)
 	{
-		// Initialize HashSet with StringComparer.OrdinalIgnoreCase to ensure case-insensitive, ordinal comparison
 		HashSet<string> filePaths = new(StringComparer.OrdinalIgnoreCase);
 
 		// Select all Allow FileRules

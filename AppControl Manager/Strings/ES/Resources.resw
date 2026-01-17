@@ -6212,4 +6212,325 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>Aún hay directivas sin guardar en la biblioteca de la barra lateral; se perderán si cierra la aplicación. ¿Está seguro de que desea salir?</value>
   </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Esta es la biblioteca de sus directivas de control de aplicaciones, donde puede almacenar directivas y utilizarlas en diferentes partes de la aplicación. Solo están disponibles en memoria a menos que las guarde en un archivo o que la persistencia esté habilitada.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Biblioteca de directivas</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Biblioteca persistente</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>Cuando está habilitada, todas las directivas disponibles en la biblioteca seguirán ahí incluso después de reiniciar la aplicación. Esta funcionalidad se proporciona manteniendo una copia de las directivas de la biblioteca en una caché privada en el disco. La caché se elimina automáticamente cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cuando está habilitada, todas las directivas disponibles en la biblioteca seguirán ahí incluso después de reiniciar la aplicación. Esta funcionalidad se proporciona manteniendo una copia de las directivas de la biblioteca en una ubicación privada en el disco. La caché se elimina automáticamente cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cuando está habilitada, todas las directivas disponibles en la biblioteca seguirán ahí incluso después de reiniciar la aplicación. Esta funcionalidad se proporciona manteniendo una copia de las directivas de la biblioteca en una ubicación privada en el disco. La caché se elimina automáticamente cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Guardar como CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Guardar como XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar la directiva de la biblioteca. Si la característica de biblioteca persistente está habilitada, la directiva seleccionada también se eliminará de la caché local.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quitar la directiva de la biblioteca. Si la característica de biblioteca persistente está habilitada, la directiva seleccionada también se eliminará de la caché local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Implementar</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Implementa la directiva seleccionada en el sistema local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Implementa la directiva seleccionada en el sistema local.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Asignar</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Asignar la directiva seleccionada en la biblioteca a varias secciones aplicables en la página visible actual.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Asignar la directiva seleccionada en la biblioteca a varias secciones aplicables en la página visible actual.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Agregar directivas</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque archivos de directivas para agregarlos a la biblioteca. Si la característica de biblioteca persistente está habilitada, se respaldarán automáticamente en la caché local para que sus directivas permanezcan disponibles después de cerrar y volver a abrir la aplicación.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque archivos de directivas para agregarlos a la biblioteca. Si la característica de biblioteca persistente está habilitada, se respaldarán automáticamente en la caché local para que sus directivas permanezcan disponibles después de cerrar y volver a abrir la aplicación.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Quitar todo</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar todas las directivas de la biblioteca. Si la característica de biblioteca persistente está habilitada, las directivas también se eliminarán de la caché local.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quitar todas las directivas de la biblioteca. Si la característica de biblioteca persistente está habilitada, las directivas también se eliminarán de la caché local.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Respaldar todo</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija un directorio donde todas las directivas de la biblioteca se respaldarán como archivos XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija un directorio donde todas las directivas de la biblioteca se respaldarán como archivos XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Directiva complementaria de registros de eventos - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Aleatorizar</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Genere un GUID válido aleatorio para el ID de directiva base.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Genere un GUID válido aleatorio para el ID de directiva base.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Firmada</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Sin firmar</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copiar ID de directiva</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copia el ID de directiva al portapapeles</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copia el ID de directiva al portapapeles</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copiar ID de directiva base</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copia el ID de directiva base al portapapeles</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copia el ID de directiva base al portapapeles</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Procesando datos de FileName</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reglas de FileName.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>no se detectaron datos de FileName para crear reglas de permiso.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>no se detectaron datos de FileName para crear reglas de denegación.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>Hay {0} reglas de nombre de archivo para agregar a la directiva</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>Tipo de regla de nombre de archivo</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>Archivo de directiva XML (Opcional)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>El archivo de directiva XML de la directiva firmada que se va a quitar. Es opcional y no es obligatorio.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El archivo de directiva XML de la directiva firmada que se va a quitar. Es opcional y no es obligatorio.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El archivo de directiva XML de la directiva firmada que se va a quitar. Es opcional y no es obligatorio.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Proporcione los detalles que se utilizarán para volver a firmar la directiva de App Control seleccionada para que pueda quitarse en el próximo reinicio.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>Puede configurar los siguientes detalles en la configuración de la aplicación una vez, eliminando la necesidad de ingresarlos repetidamente.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Seleccionar archivos EVTX de integridad de código</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque archivos EVTX de integridad de código para escanear.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque archivos EVTX de integridad de código para escanear.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>Seleccionar archivos EVTX de AppLocker</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque archivos EVTX de AppLocker para escanear.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque archivos EVTX de AppLocker para escanear.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>Está implementando una directiva de App Control que utiliza Intelligent Security Graph y Smart App Control no está desactivado. Se recomienda desactivar Smart App Control en esta situación.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>La versión de la directiva CIP es '{0}', mientras que AppControl Manager solo admite hasta la versión '{1}'. No todas las características de la directiva pudieron decodificarse.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>El binario P7B se ha convertido correctamente a XML y el archivo se ha guardado en:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Cree una directiva de etiquetado de ID de aplicación (App ID) para la plantilla de directiva actual.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>Directiva de etiquetado de App ID</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cree una directiva de etiquetado de ID de aplicación (App ID) para la plantilla de directiva actual.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cree una directiva de etiquetado de ID de aplicación (App ID) para la plantilla de directiva actual.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>Esta área proporciona características avanzadas para personalizar las directivas de App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Características avanzadas</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Esta área proporciona características avanzadas para personalizar las directivas de App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Esta área proporciona características avanzadas para personalizar las directivas de App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione las directivas para convertir al tipo de etiquetado de App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Convertir directivas a etiquetado de App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione las directivas para convertir al tipo de etiquetado de App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione las directivas para convertir al tipo de etiquetado de App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Convertir</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Convertir las directivas seleccionadas a etiquetado de App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Convertir las directivas seleccionadas a etiquetado de App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Avanzado</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Se convirtieron correctamente todas las directivas seleccionadas a etiquetado de App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione un escenario de firma para quitar de las directivas seleccionadas.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Eliminación de escenario de firma</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione un escenario de firma para quitar de las directivas seleccionadas.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione un escenario de firma para quitar de las directivas seleccionadas.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comenzar la eliminación del escenario de firma.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comenzar la eliminación del escenario de firma.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Se eliminaron correctamente todos los datos relacionados con el escenario de firma seleccionado.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Nombre descriptivo de la directiva</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>El nombre descriptivo de la directiva de App Control seleccionada</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El nombre descriptivo de la directiva de App Control seleccionada</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El nombre descriptivo de la directiva de App Control seleccionada</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Clave</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Contexto</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>Etiquetas de App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Agregar nueva etiqueta</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregue una nueva etiqueta de App ID basada en la clave y el valor que ingresó.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregue una nueva etiqueta de App ID basada en la clave y el valor que ingresó.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Clave</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingrese la clave de la etiqueta de App ID aquí.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ingrese la clave de la etiqueta de App ID aquí.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingrese el valor de la etiqueta de App ID aquí.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ingrese el valor de la etiqueta de App ID aquí.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Directiva principal</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Otras directivas</value>
+  </data>
 </root>

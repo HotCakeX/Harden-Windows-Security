@@ -40,8 +40,8 @@
   <mp:PhoneIdentity PhoneProductId="4157a676-f4c2-4a8c-a511-b7fb2255c6f5" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
   <Properties>
-    <DisplayName>AppControl Manager</DisplayName>
-    <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
+    <DisplayName>App Control Studio</DisplayName>
+    <PublisherDisplayName>OFFSECHQ</PublisherDisplayName>
     <Description>ms-resource:AppDescription</Description>
     <Logo>Assets\StoreLogo.png</Logo>
     <uap10:PackageIntegrity>
@@ -79,7 +79,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$" uap18:TrustLevel="mediumIL" uap18:RuntimeBehavior="windowsApp">
       <uap:VisualElements
-        DisplayName="AppControl Manager"
+        DisplayName="App Control Studio"
         Description="ms-resource:AppDescription"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
@@ -134,7 +134,7 @@
         </desktop4:Extension>
         <com:Extension Category="windows.comServer">
           <com:ComServer>
-            <com:SurrogateServer DisplayName="AppControl Manager">
+            <com:SurrogateServer DisplayName="App Control Studio">
               <com:Class Id="AF39E5CF-0FDA-4333-BD25-B87D43A71CCA" Path="Shell\Shell.dll" ThreadingModel="STA" />
             </com:SurrogateServer>
           </com:ComServer>

@@ -1,4 +1,4 @@
-name: Build AppControl Manager MSIX Package
+name: Build App Control Studio MSIX Package
 
 on:
   workflow_dispatch: # Only the repository's owner can initiate this workflow
@@ -138,7 +138,7 @@ jobs:
               if ($DownloadRepo) {
 
                   [System.String]$BranchName = 'main'
-                  [System.String]$RepoName = 'Harden-Windows-Security'
+                  [System.String]$RepoName = 'windows-security-studio'
                   [System.String]$RepoUrl = "https://github.com/OFFSECHQ/$RepoName/archive/refs/heads/$BranchName.zip"
                   [System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
                   [System.String]$InitialWorkingDirectory = $PWD.Path
@@ -730,7 +730,7 @@ jobs:
                   Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${Env:RUNNER_TEMP}\sbom-tool.exe"
 
                   # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
-                  . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'OFFSECHQ' -pv $MSIXVersion -nsb 'https://github.com/OFFSECHQ/harden-windows-security' -V Verbose -gt true -li true -pm true -D true -lto 80
+                  . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'App Control Studio' -ps 'OFFSECHQ' -pv $MSIXVersion -nsb 'https://github.com/OFFSECHQ/windows-security-studio' -V Verbose -gt true -li true -pm true -D true -lto 80
 
                   # Saving the details of the SBOM file
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_PATH=$MSIXBundleOutput/_manifest/spdx_2.2/manifest.spdx.json"
@@ -738,7 +738,7 @@ jobs:
               }
 
               if ($Install -and $PackageFamilyName -eq 'AppControlManager_sadt7br7jpt02') {
-                  (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OFFSECHQ/harden-windows-security/main/Harden-Windows-Security.ps1') + "AppControl -Verbose -MSIXBundlePath '$MSIXBundle'" | Invoke-Expression
+                  (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OFFSECHQ/windows-security-studio/main/Harden-Windows-Security.ps1') + "AppControl -Verbose -MSIXBundlePath '$MSIXBundle'" | Invoke-Expression
               }
 
               if ($Upload) {
@@ -1023,7 +1023,7 @@ jobs:
 
           **Install it from the Microsoft Store: https://apps.microsoft.com/detail/9png1jddtgp8**
 
-          [**Documentation**](https://github.com/OFFSECHQ/harden-windows-security/wiki/AppControl-Manager)
+          [**Documentation**](https://github.com/OFFSECHQ/windows-security-studio/wiki/App-Control-Studio)
 
           ## What's New
 
@@ -1034,7 +1034,7 @@ jobs:
           How to [verify](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds#verifying-artifact-attestations-with-the-github-cli) the MSIXBundle's authenticity:
 
           ``````
-          gh attestation verify "Path To MSIXBundle" --repo OFFSECHQ/harden-windows-security --format json
+          gh attestation verify "Path To MSIXBundle" --repo OFFSECHQ/windows-security-studio --format json
           ``````
 
           You can [install the GitHub CLI](https://github.com/cli/cli?tab=readme-ov-file#windows) from Winget:

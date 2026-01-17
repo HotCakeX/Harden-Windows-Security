@@ -41,8 +41,8 @@
   <mp:PhoneIdentity PhoneProductId="74d36aa3-e613-41ec-808e-c5d051224316" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
   <Properties>
-    <DisplayName>Harden System Security</DisplayName>
-    <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
+    <DisplayName>System Security Studio</DisplayName>
+    <PublisherDisplayName>OFFSECHQ</PublisherDisplayName>
     <Description>ms-resource:AppDescription</Description>
     <Logo>Assets\StoreLogo.png</Logo>
     <uap10:PackageIntegrity>
@@ -91,7 +91,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$" uap18:TrustLevel="mediumIL" uap18:RuntimeBehavior="windowsApp">
       <uap:VisualElements
-        DisplayName="Harden System Security"
+        DisplayName="System Security Studio"
         Description="ms-resource:AppDescription"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"

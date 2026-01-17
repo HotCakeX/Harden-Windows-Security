@@ -37,9 +37,9 @@
         https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads
         -->
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-		<Description>Harden System Security application can secure and harden your system against advanced threats using security measures provided by Microsoft and already available in the Windows OS.</Description>
-		<PackageTags>Harden System Security, Harden, Windows, Firewall, Security, BitLocker</PackageTags>
-		<PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
+		<Description>System Security Studio application can secure and harden your system against advanced threats using security measures provided by Microsoft and already available in the Windows OS.</Description>
+		<PackageTags>System Security Studio, Harden, Windows, Firewall, Security, BitLocker, OFFSECHQ</PackageTags>
+		<PackageReleaseNotes>https://github.com/OFFSECHQ/windows-security-studio/releases</PackageReleaseNotes>
 
 		<!-- Automatically created for packing -->
 		<!-- https://learn.microsoft.com/windows/msix/app-installer/create-appinstallerfile-vs -->
@@ -70,7 +70,7 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<Version>$(FileVersion)</Version>
 		<Copyright>© 2024-Present</Copyright>
-		<Title>Harden System Security</Title>
+		<Title>System Security Studio</Title>
 
 		<!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc -->
 		<!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/background-gc -->

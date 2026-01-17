@@ -35,8 +35,8 @@
 
 		<Description>A modern secure application that simplifies management of Application Control in Windows.</Description>
 
-		<PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
-		<PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
+		<PackageTags>App Control Studio, App Control, WDAC, AppControl For Business, OFFSECHQ</PackageTags>
+		<PackageReleaseNotes>https://github.com/OFFSECHQ/windows-security-studio/releases</PackageReleaseNotes>
 
 		<!-- Automatically created for packing -->
 		<!-- https://learn.microsoft.com/windows/msix/app-installer/create-appinstallerfile-vs -->
@@ -70,7 +70,7 @@
 
 		<Version>$(FileVersion)</Version>
 		<Copyright>© 2024-Present</Copyright>
-		<Title>AppControl Manager</Title>
+		<Title>App Control Studio</Title>
 
 		<!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc -->
 		<!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/background-gc -->

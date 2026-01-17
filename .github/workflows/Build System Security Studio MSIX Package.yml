@@ -1,4 +1,4 @@
-name: Build Harden System Security MSIX Package
+name: Build System Security Studio MSIX Package
 
 on:
   workflow_dispatch: # Only the repository's owner can initiate this workflow
@@ -60,7 +60,7 @@ jobs:
               if ($DownloadRepo) {
 
                   [System.String]$BranchName = 'main'
-                  [System.String]$RepoName = 'harden-windows-security'
+                  [System.String]$RepoName = 'windows-security-studio'
                   [System.String]$RepoUrl = "https://github.com/OFFSECHQ/$RepoName/archive/refs/heads/$BranchName.zip"
                   [System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
                   [System.String]$InitialWorkingDirectory = $PWD.Path
@@ -603,7 +603,7 @@ jobs:
                   Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${Env:RUNNER_TEMP}\sbom-tool.exe"
 
                   # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
-                  . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'Harden System Security' -ps 'OFFSECHQ' -pv $MSIXVersion -nsb 'https://github.com/OFFSECHQ/harden-windows-security' -V Verbose -gt true -li true -pm true -D true -lto 80
+                  . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'System Security Studio' -ps 'OFFSECHQ' -pv $MSIXVersion -nsb 'https://github.com/OFFSECHQ/windows-security-studio' -V Verbose -gt true -li true -pm true -D true -lto 80
 
                   # Saving the details of the SBOM file
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_PATH=$MSIXBundleOutput/_manifest/spdx_2.2/manifest.spdx.json"
@@ -861,7 +861,7 @@ jobs:
 
           A Windows application for system security hardening.
 
-          [**Documentation**](https://github.com/OFFSECHQ/harden-windows-security/wiki)
+          [**Documentation**](https://github.com/OFFSECHQ/windows-security-studio/wiki)
 
           ## What's New
 
@@ -872,7 +872,7 @@ jobs:
           How to [verify](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds#verifying-artifact-attestations-with-the-github-cli) the MSIXBundle's authenticity:
 
           ```
-          gh attestation verify "Path To MSIXBundle" --repo OFFSECHQ/harden-windows-security --format json
+          gh attestation verify "Path To MSIXBundle" --repo OFFSECHQ/windows-security-studio --format json
           ```
 
           You can [install the GitHub CLI](https://github.com/cli/cli?tab=readme-ov-file#windows) from Winget:

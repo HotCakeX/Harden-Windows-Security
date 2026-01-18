@@ -120,8 +120,8 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// </summary>
 	private ulong ReadMaxSizeBytes()
 	{
-		object? rawLow = _regKey!.GetValue("MaxSize");
-		object? rawHigh = _regKey.GetValue("MaxSizeUpper");
+		object? rawLow = _regKey?.GetValue("MaxSize");
+		object? rawHigh = _regKey?.GetValue("MaxSizeUpper");
 
 		uint low = ToUInt32Wrapped(rawLow);
 		uint high = ToUInt32Wrapped(rawHigh);
@@ -133,29 +133,30 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// Safely convert registry raw value (int, long, ulong, uint, byte) to uint,
 	/// wrapping negative signed values to the corresponding unsigned representation.
 	/// </summary>
-	private static uint ToUInt32Wrapped(object? raw)
+	private static uint ToUInt32Wrapped(object? raw) => raw switch
 	{
-		return raw switch
-		{
-			int i => unchecked((uint)i),
-			long l => unchecked((uint)l),
-			ulong ul => unchecked((uint)ul),
-			uint u => u,
-			byte b => b,
-			_ => 0u,
-		};
-	}
+		int i => unchecked((uint)i),
+		long l => unchecked((uint)l),
+		ulong ul => unchecked((uint)ul),
+		uint u => u,
+		byte b => b,
+		_ => 0u,
+	};
 
 	private void ReArmNotification()
 	{
 		const RegNotifyFilter filter = RegNotifyFilter.LastSet;
+
+		if (_notificationEvent is null) return;
+
 		int result = NativeMethods.RegNotifyChangeKeyValue(
 			_regHandle!,
 			watchSubtree: false,
 			notifyFilter: filter,
-			hEvent: _notificationEvent!.SafeWaitHandle.DangerousGetHandle(),
+			hEvent: _notificationEvent.SafeWaitHandle.DangerousGetHandle(),
 			asynchronous: true
 		);
+
 		if (result != 0)
 			throw new Win32Exception(result, "Failed to arm registry change notification");
 	}
@@ -202,6 +203,8 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// <param name="logSize">Size of the Code Integrity Operational Event Log (in MB)</param>
 	internal static void SetLogSize(double logSize = 0)
 	{
+		if (!Environment.IsPrivilegedProcess) return;
+
 		Logger.Write(GlobalVars.GetStr("SettingCodeIntegrityLogSizeMessageOnly"));
 
 		try

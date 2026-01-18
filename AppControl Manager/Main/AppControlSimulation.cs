@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
@@ -91,23 +91,20 @@ internal static class AppControlSimulation
 			GlobalVars.GetStr("RunningAppControlSimulationMessage"),
 			threadsCount));
 
-		// Read the content of the XML file into a string
-		string xmlContent = File.ReadAllText(xmlFilePath);
+		// Initialize the user-selected policy file
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(xmlFilePath, null);
 
-		// Convert the string to XML Document
-		XmlDocument XMLData = new();
-		XMLData.LoadXml(xmlContent);
-
-
-		// Get the signer information from the XML
-		List<SignerX> SignerInfo = GetSignerInfo.Get(XMLData);
+		// Get the signer information from the policy
+		List<SignerX> SignerInfo = GetSignerInfo.Get(policyObj);
 
 		#region Region FilePath Rule Checking
+
 		Logger.Write(GlobalVars.GetStr("CheckingFilePathRulesMessage"));
 
-		HashSet<string> FilePathRules = XmlFilePathExtractor.GetFilePaths(xmlFilePath);
+		HashSet<string> FilePathRules = XmlFilePathExtractor.GetFilePaths(policyObj);
 
 		bool HasFilePathRules = FilePathRules.Count > 0;
+
 		#endregion
 
 		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
@@ -126,7 +123,7 @@ internal static class AppControlSimulation
 		Logger.Write(GlobalVars.GetStr("GettingHashValuesOfFileRulesMessage"));
 
 		// All Hash values of all the file rules based on hash in the supplied xml policy file
-		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(XMLData);
+		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(policyObj);
 
 		Logger.Write(GlobalVars.GetStr("GettingSupportedFilePathsMessage"));
 
@@ -157,7 +154,7 @@ internal static class AppControlSimulation
 
 		#region Region Making Sure No AllowAll Rule Exists
 
-		if (CheckForAllowAll.Check(xmlFilePath))
+		if (PreDeploymentChecks.CheckForAllowAll(policyObj))
 		{
 			Logger.Write(string.Format(
 			  GlobalVars.GetStr("XmlFileAllowsAllFilesMessage"),
@@ -208,7 +205,7 @@ internal static class AppControlSimulation
 
 				}, null, 0, 2000) : null;
 
-			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			// split the file paths by ThreadsCount which by default is 2 and minimum 1
 			IEnumerable<string[]> SplitArrays = CollectedFiles.Item1.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
@@ -505,7 +502,7 @@ internal static class AppControlSimulation
 							finally
 							{
 								// Disposing all AllFileSigners instances to free X509Chain native resources.
-								foreach (AllFileSigners signer in FileSignatureResults)
+								foreach (AllFileSigners signer in CollectionsMarshal.AsSpan(FileSignatureResults))
 								{
 									signer.Dispose();
 								}

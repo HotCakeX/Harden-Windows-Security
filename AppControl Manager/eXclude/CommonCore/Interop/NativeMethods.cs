@@ -81,7 +81,7 @@ internal static unsafe partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptHashData(
 		 IntPtr hHash,
-		 [In] byte[] pbData,
+		 ReadOnlySpan<byte> pbData,
 		 uint dataLen,
 		 uint dwFlags);
 

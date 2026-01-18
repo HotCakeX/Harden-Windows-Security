@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>Journaux</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>Paramètres</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>Déploiement de la stratégie principale après la fusion.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>Une erreur s'est produite lors du processus de fusion</value>
   </data>
@@ -936,9 +930,6 @@
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>Recherche de mise à jour</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>Installation du chemin MSIXBundle que vous avez sélectionné : </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>La version actuelle est </value>
@@ -954,9 +945,6 @@
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>Le package MSIXBundle d'AppControl Manager a été téléchargé avec succès vers </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>Aucun chemin MSIXBundle n'a été sélectionné</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Tous les téléchargements sont terminés, installation de la nouvelle version d'AppControl Manager</value>
@@ -1967,73 +1955,73 @@
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Sélectionnez un modèle à appliquer au fichier de politique sélectionné. Les modèles sont des listes prédéfinies d'options de règle de politique.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>Créez des politiques App Control for Business basées sur différents modèles et options de règle. "Signé et Réputé" est idéal pour les nouveaux utilisateurs. "Autoriser Microsoft" autorise uniquement les fichiers signés par les certificats Microsoft. "Windows par Défaut" autorise uniquement les fichiers fournis par défaut avec le système d'exploitation Windows.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>Créez une politique supplémentaire qui étendra la portée d'une politique de base. Les politiques supplémentaires peuvent uniquement autoriser des fichiers, elles ne peuvent pas contenir de règles de refus.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Voir les fichiers détectés utilisés pour créer la politique supplémentaire.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>Déployez tout type de politique App Control localement ou à distance sur les PC gérés dans le cloud.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>Utilisez les journaux système locaux ou les fichiers EVTX pour créer des politiques de contrôle d'application. Seuls les journaux Code Integrity Operational et AppLocker sont requis. Utilisez le bouton Analyser pour remplir la grille. Une fois remplie, utilisez le bouton Créer une Politique pour définir la configuration de sortie et générer le fichier XML.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>Calculez l'intégrité du code et d'autres types de hachages de fichiers.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>Récupérez et interrogez les paramètres sécurisés sur le système.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>Voici les journaux générés automatiquement par AppControl Manager et stockés dans le dossier "AppControl Manager" dans Program Files (si exécuté avec élévation, sinon ils seront enregistrés dans le répertoire TEMP). La taille totale du dossier des journaux ne dépassera jamais 1 Go.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>Utilisez les journaux de chasse avancée de Microsoft Defender pour Endpoint pour créer des politiques de contrôle d'application. Vous pouvez parcourir les fichiers journaux exportés ou les récupérer depuis le cloud en vous connectant à votre compte Microsoft.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>Fusionnez les politiques App Control for Business et dédupliquez-les. Vous pouvez sélectionner la même politique deux fois pour dédupliquer ses règles.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>Modifiez les politiques App Control for Business. Parcourez facilement un fichier de politique XML et chargez ses détails avec le bouton Charger. Une fois chargé, vous pouvez revoir le nombre de chaque règle, supprimer des règles spécifiques et modifier divers autres paramètres.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Personnalisez vos paramètres d'application ici. Vos préférences seront enregistrées afin d'être prêtes à chaque démarrage d'AppControl Manager.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>Effectuez une simulation App Control for Business en sélectionnant des fichiers ou dossiers et un fichier de politique XML, puis utilisez le bouton Commencer la Simulation. Les résultats indiqueront si les fichiers sélectionnés seraient autorisés ou bloqués par votre politique si elle était déployée et si ces fichiers étaient en cours d'exécution.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>Voir les fichiers en mode noyau détectés qui seront utilisés pour créer la politique en mode appliqué. Supprimez de la liste les éléments que vous ne souhaitez pas inclure dans la politique stricte finale en mode noyau.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>Vérifiez les mises à jour sur cette page. Vous pouvez également activer la vérification automatique au démarrage pour être notifié dès qu'une nouvelle version est disponible.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>Validez les politiques App Control pour vous assurer qu'elles sont conformes au schéma officiel. Si vous avez modifié manuellement des fichiers XML, utilisez cette fonctionnalité pour valider vos modifications.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>Affichez des informations complètes sur les certificats utilisés pour signer n'importe quel fichier. Les détails généralement indisponibles dans l'Explorateur de fichiers ou PowerShell sont présentés ici en intégralité.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Voir les fichiers détectés utilisés pour créer la politique de Refus.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>Créez une politique de base de Refus qui refusera explicitement des fichiers ou applications. Gardez à l'esprit que le contrôle d'application est basé sur une liste blanche : tout ce qui n'est pas autorisé par une politique est automatiquement refusé.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>Configurez les options de règle de politique App Control for Business. Des informations détaillées sont fournies à côté de chaque règle ; utilisez le bouton Guide ou ouvrez une discussion sur GitHub pour plus d'informations.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>Créez en toute sécurité des certificats de signature de code adaptés à la signature de politiques App Control.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>Affichez des informations détaillées sur les politiques déployées et l'intégrité du code sur les systèmes locaux ou distants.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>Utilisez cette page pour autoriser de nouvelles applications ou fichiers déjà installés à s'exécuter sur le système.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Rechercher parmi les données de détails du certificat</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>Confirmez que vous souhaitez utiliser le fichier MSIXBundle personnalisé sélectionné au lieu de le télécharger automatiquement depuis GitHub. Cela remplacera la vérification des mises à jour en ligne et contournera le téléchargement du fichier MSIXBundle depuis GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>Confirmer</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Confirmez que vous souhaitez utiliser le fichier MSIXBundle personnalisé sélectionné au lieu de le télécharger automatiquement depuis GitHub. Cela remplacera la vérification des mises à jour en ligne et contournera le téléchargement du fichier MSIXBundle depuis GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Confirmez que vous souhaitez utiliser le fichier MSIXBundle personnalisé sélectionné au lieu de le télécharger automatiquement depuis GitHub. Cela remplacera la vérification des mises à jour en ligne et contournera le téléchargement du fichier MSIXBundle depuis GitHub.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>Plus d'infos</value>
   </data>
@@ -2506,12 +2482,6 @@
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Récupérera les dernières configurations utilisateur et les affichera.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Chemin de Politique Signée :</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Chemin de Politique Non Signée :</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Nom Commun du Certificat :</value>
@@ -2902,18 +2872,6 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Documentation</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>Affectation Automatique</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>Enregistrez automatiquement le chemin des politiques de base créées dans la barre latérale.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Enregistrez automatiquement le chemin des politiques de base créées dans la barre latérale.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Enregistrez automatiquement le chemin des politiques de base créées dans la barre latérale.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>Guide de la Barre Latérale</value>
   </data>
@@ -2923,50 +2881,11 @@
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pour le guide d'utilisation de la barre latérale, visitez la page wiki GitHub en cliquant/appuyant ici.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>Sélectionner</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Affectez le fichier de politique XML sélectionné dans la barre latérale au chemin de politique de base de la section applicable dans la page actuellement visible.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Affectez le fichier de politique XML sélectionné dans la barre latérale au chemin de politique de base de la section applicable dans la page actuellement visible.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>Effacer</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Effacez la zone de texte du chemin de fichier XML sélectionné.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Effacez la zone de texte du chemin de fichier XML sélectionné.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rechercher un fichier de politique XML</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Rechercher un fichier de politique XML</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>Utilisez la barre latérale pour épingler les chemins de fichiers XML et les réutiliser dans différentes parties d'AppControl Manager.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>Barre Latérale</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>Chemin de Politique Épinglé</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Chemin de Politique</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>Vous devez sélectionner un nom pour la Politique Supplémentaire</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>Vous devez sélectionner un chemin de fichier de politique XML</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>Le chemin de fichier XML sélectionné n'existe pas</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>Démarrage...</value>
@@ -3003,9 +2922,6 @@
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>Le fichier CIP en mode Appliqué est introuvable</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>Rechercher un fichier de politique App Control XML</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>Exécution de la Validation</value>
@@ -3216,10 +3132,6 @@
     <value>La propriété 'Id' d'AppManifest est requise et ne peut être ni nulle ni vide.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>Le tableau SettingDefinition contient un élément nul.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>La propriété 'Name' de SettingDefinition est requise et ne peut être ni nulle ni vide.</value>
     <comment>App Manifest Validation</comment>
@@ -3397,9 +3309,6 @@
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>Vous devez sélectionner une option dans la liste de création de politique</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>Politique supplémentaire des journaux d'événements - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>Aucun fichier de politique n'a été sélectionné pour y ajouter les journaux.</value>
@@ -3620,9 +3529,6 @@
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>Le fichier de certificat sélectionné et le nom commun ne correspondent pas.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>Veuillez sélectionner le fichier de politique XML de la politique à supprimer.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>Le chemin de fichier de politique XML sélectionné n'existe pas</value>
   </data>
@@ -3734,9 +3640,6 @@
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>Une erreur s'est produite lors de la récupération d'informations supplémentaires concernant les règles de blocage de pilotes recommandées par Microsoft.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>Le fichier de politique a été créé et enregistré dans {0}</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>Réinitialisation de l'ID de politique et attribution du nom de politique</value>
   </data>
@@ -3764,9 +3667,6 @@
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>Aucun contenu XML trouvé sur la source GitHub Microsoft pour les Règles de Blocage Mode Utilisateur Recommandées par Microsoft.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>Configuration des options de règle de politique pour : {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>Ajout de l'Option de Règle : {0}</value>
   </data>
@@ -3778,12 +3678,6 @@
   </data>
     <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} n'appartient à aucun CN sujet des certificats déployés</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>Le fichier de politique spécifié '{0}' n'est pas signé. Veuillez fournir un fichier de politique signé.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>Le fichier de politique spécifié '{0}' est signé. Veuillez fournir un fichier de politique non signé.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>Tentative d'analyse et de lecture du fichier de configuration utilisateur actuel</value>
@@ -3938,36 +3832,6 @@
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>L'exécution de la commande a échoué avec le code d'erreur {0}. Sortie : {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>CipPath ne peut être ni nul ni vide.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>Le fichier '{0}' n'existe pas.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>Déploiement du fichier CIP suivant : {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>Structure XML invalide, nœud SiPolicy introuvable</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>Nœud Signers introuvable</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Échec de la création ou de la récupération de UMCI_ProductSignersNode</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Échec de la création ou de la récupération de KMCI_ProductSignersNode</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Nœud AllowedSigners des Signataires de Produits introuvable malgré sa création.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Nœud FileRulesRef des Signataires de Produits introuvable malgré sa création.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Nœud DeniedSigners des Signataires de Produits introuvable malgré sa création.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>Un problème est survenu lors de l'exécution de CiTool.exe.</value>
   </data>
@@ -4031,7 +3895,7 @@
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>Vous devez sélectionner une option dans la liste de création de politique.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>Politique supplémentaire des journaux de recherche avancée MDE - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>Il n'y a aucun journal ou fichier dans les grilles de données pour créer une politique supplémentaire.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>Zone de Réalisation introuvable</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>Création et déploiement réussis de la politique.</value>
 </data>
@@ -4402,9 +4263,6 @@
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>Balise de bloc V8 '8' attendue, reçu '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>Balise de fin de politique '{0}' attendue, reçu '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>Le type de politique est {0} et elle a l'option de règle {1} qui est invalide. Seul {2} peut avoir cela.</value>
@@ -4658,9 +4516,6 @@
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>Le certificat doit avoir une clé privée.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>Signature PKCS #7 (contenu intégré, certificat inclus) écrite dans {0}</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>SignerSignEx3 a échoué avec HRESULT: 0x{0:X}</value>
 </data>
@@ -4687,9 +4542,6 @@
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>L'application a été lancée via activation par fichier mais sans aucun argument d'activation par fichier</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>L'utilisateur a annulé l'invite UAC.</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>Une demande d'élévation était requise pour traiter le fichier sélectionné mais elle a été refusée par l'utilisateur. Fermeture de l'application.</value>
@@ -4729,12 +4581,6 @@
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>Le fichier de politique XML sélectionné est une politique de Base mais son BasePolicyID et PolicyID ne sont pas identiques, indiquant qu'il s'agit d'une politique Supplémentaire, changement de type.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>Configuration réussie de la politique à '{0}'. Elle a maintenant le Type '{1}', BasePolicyID '{2}' et PolicyID '{3}'.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>Version du fichier de politique à '{0}' définie avec succès de '{1}' à '{2}'.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects : Démarrage du processus de séparation des données.</value>
@@ -4831,9 +4677,6 @@
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>Un des fichiers XML a plus d'un Signataire avec le même ID `{0}`</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>HVCI définie avec succès sur Strict dans le fichier de politique '{0}'.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>JumpList n'est pas pris en charge.</value>
@@ -5300,10 +5143,7 @@
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>aucun signataire WHQLFilePublisher détecté pour créer des règles d'autorisation.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>Nœud EKUs introuvable</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>aucun signataire WHQLFilePublisher détecté pour créer des règles de refus.</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@
     <value>Heure de Création</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Détails de Déploiement de Politique Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Spécifiez les détails d'un déploiement de Politique Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Spécifiez les détails d'un déploiement de Politique Intune</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>Créer un Nouveau Groupe</value>
@@ -5634,7 +5468,7 @@
 <data name="GroupType" xml:space="preserve">
   <value>Type de Groupe :</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Gérez les groupes Entra dans votre locataire et sélectionnez les groupes sur lesquels vous souhaitez déployer la politique.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,329 @@
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ne demander confirmation avant la fermeture de l'application que dans certaines circonstances, lorsqu'une opération est en cours.</value>
+  </data>
+  <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>Il reste des stratégies non enregistrées dans la bibliothèque de la barre latérale ; elles seront perdues si vous fermez l'application. Voulez-vous vraiment quitter ?</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Ceci est la bibliothèque de vos stratégies App Control, où vous pouvez stocker des stratégies et les utiliser dans différentes parties de l'application. Elles ne sont disponibles qu'en mémoire, à moins que vous ne les enregistriez dans un fichier ou que la persistance ne soit activée.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Bibliothèque de stratégies</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Bibliothèque persistante</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>Lorsqu'elle est activée, toutes les stratégies disponibles dans la bibliothèque continueront d'y être même après le redémarrage de l'application. Cette fonctionnalité est assurée en conservant une copie des stratégies de la bibliothèque dans un cache privé sur le disque. Le cache est automatiquement supprimé lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Lorsqu'elle est activée, toutes les stratégies disponibles dans la bibliothèque continueront d'y être même après le redémarrage de l'application. Cette fonctionnalité est assurée en conservant une copie des stratégies de la bibliothèque dans un emplacement privé sur le disque. Le cache est automatiquement supprimé lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Lorsqu'elle est activée, toutes les stratégies disponibles dans la bibliothèque continueront d'y être même après le redémarrage de l'application. Cette fonctionnalité est assurée en conservant une copie des stratégies de la bibliothèque dans un emplacement privé sur le disque. Le cache est automatiquement supprimé lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Enregistrer sous CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Enregistrer sous XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez un emplacement où la stratégie sélectionnée sera enregistrée en tant que fichier XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprime la stratégie de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, la stratégie sélectionnée sera également supprimée du cache local.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprime la stratégie de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, la stratégie sélectionnée sera également supprimée du cache local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Déployer</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Déploie la stratégie sélectionnée sur le système local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Déploie la stratégie sélectionnée sur le système local.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Attribuer</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Attribuer la stratégie sélectionnée dans la bibliothèque à diverses sections applicables de la page actuellement visible.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Attribuer la stratégie sélectionnée dans la bibliothèque à diverses sections applicables de la page actuellement visible.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Ajouter des stratégies</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Parcourir les fichiers de stratégie à ajouter à la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, elles seront également sauvegardées automatiquement dans le cache local afin que vos stratégies restent disponibles après la fermeture et la réouverture de l'application.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Parcourir les fichiers de stratégie à ajouter à la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, elles seront également sauvegardées automatiquement dans le cache local afin que vos stratégies restent disponibles après la fermeture et la réouverture de l'application.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Tout supprimer</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimer toutes les stratégies de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, les stratégies seront également supprimées du cache local.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimer toutes les stratégies de la bibliothèque. Si la fonctionnalité de bibliothèque persistante est activée, les stratégies seront également supprimées du cache local.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Tout sauvegarder</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez un répertoire où toutes les stratégies de la bibliothèque seront sauvegardées sous forme de fichiers XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez un répertoire où toutes les stratégies de la bibliothèque seront sauvegardées sous forme de fichiers XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Stratégie supplémentaire issue des journaux d'événements - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Générer aléatoirement</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Générer un GUID valide aléatoire pour l'ID de stratégie de base.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Générer un GUID valide aléatoire pour l'ID de stratégie de base.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Signé</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Non signé</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copier l'ID de stratégie</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copie l'ID de stratégie dans le presse-papiers</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copie l'ID de stratégie dans le presse-papiers</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copier l'ID de stratégie de base</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copie l'ID de stratégie de base dans le presse-papiers</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copie l'ID de stratégie de base dans le presse-papiers</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects : Traitement des données FileName</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects : {0} règles FileName.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>aucune donnée FileName détectée pour créer des règles d'autorisation.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>aucune donnée FileName détectée pour créer des règles de refus.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>Il y a {0} règles de nom de fichier à ajouter à la stratégie</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>Type de règle de nom de fichier</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>Fichier de stratégie XML (facultatif)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>Le fichier de stratégie XML de la stratégie signée qui va être supprimée. Ceci est facultatif et non requis.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Le fichier de stratégie XML de la stratégie signée qui va être supprimée. Ceci est facultatif et non requis.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Le fichier de stratégie XML de la stratégie signée qui va être supprimée. Ceci est facultatif et non requis.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Veuillez fournir les détails qui seront utilisés pour signer à nouveau la stratégie App Control sélectionnée afin qu'elle puisse être supprimée au prochain redémarrage.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>Vous pouvez configurer les détails suivants dans les paramètres de l'application une seule fois, éliminant ainsi le besoin de les saisir à plusieurs reprises.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Sélectionner les fichiers EVTX Code Integrity</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX Code Integrity à analyser.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX Code Integrity à analyser.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>Sélectionner les fichiers EVTX AppLocker</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX AppLocker à analyser.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recherchez des fichiers EVTX AppLocker à analyser.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>Vous déployez une stratégie App Control qui utilise Intelligent Security Graph et Smart App Control n'est pas désactivé. Il est recommandé de désactiver Smart App Control dans cette situation.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>La version de la stratégie CIP est '{0}' alors qu'AppControl Manager ne prend en charge que jusqu'à la version '{1}'. Toutes les fonctionnalités de la stratégie n'ont pas pu être décodées.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>Le binaire P7B a été converti avec succès en XML et le fichier a été enregistré sous :</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Créez une stratégie de balisage d'ID d'application (App ID Tagging) pour le modèle de stratégie actuel.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>Stratégie de balisage d'ID d'application</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Créez une stratégie de balisage d'ID d'application (App ID Tagging) pour le modèle de stratégie actuel.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Créez une stratégie de balisage d'ID d'application (App ID Tagging) pour le modèle de stratégie actuel.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>Cette zone fournit des fonctionnalités avancées pour personnaliser les stratégies App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Fonctionnalités avancées</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cette zone fournit des fonctionnalités avancées pour personnaliser les stratégies App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cette zone fournit des fonctionnalités avancées pour personnaliser les stratégies App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Sélectionnez les stratégies à convertir en type de balisage App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Convertir les stratégies en balisage App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez les stratégies à convertir en type de balisage App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionnez les stratégies à convertir en type de balisage App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Convertir</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Convertir les stratégies sélectionnées en balisage App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Convertir les stratégies sélectionnées en balisage App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Avancé</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Toutes les stratégies sélectionnées ont été converties avec succès en balisage App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Sélectionnez un scénario de signature à supprimer de vos stratégies sélectionnées.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Suppression du scénario de signature</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez un scénario de signature à supprimer de vos stratégies sélectionnées.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionnez un scénario de signature à supprimer de vos stratégies sélectionnées.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Commencer la suppression du scénario de signature.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Commencer la suppression du scénario de signature.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Toutes les données liées au scénario de signature sélectionné ont été supprimées avec succès.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Nom convivial de la stratégie</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>Le nom convivial de la stratégie App Control sélectionnée</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Le nom convivial de la stratégie App Control sélectionnée</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Le nom convivial de la stratégie App Control sélectionnée</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Clé</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Contexte</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>Balises App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Ajouter une nouvelle balise</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajoutez une nouvelle balise App ID basée sur la clé et la valeur que vous avez saisies.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajoutez une nouvelle balise App ID basée sur la clé et la valeur que vous avez saisies.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Clé</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Saisissez la clé de la balise App ID ici.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Saisissez la clé de la balise App ID ici.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Saisissez la valeur de la balise App ID ici.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Saisissez la valeur de la balise App ID ici.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Stratégie principale</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Autres stratégies</value>
   </data>
 </root>

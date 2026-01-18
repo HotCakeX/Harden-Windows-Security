@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
@@ -72,8 +73,8 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = GlobalVars.GetStr("LocalDeploymentActive");
 
-	internal readonly UniqueStringObservableCollection XMLFiles = [];
-	internal readonly UniqueStringObservableCollection SignedXMLFiles = [];
+	internal readonly UniquePolicyFileRepresentObservableCollection FilesForUnsignedDeployment = [];
+	internal readonly UniquePolicyFileRepresentObservableCollection FilesForSignedDeployment = [];
 	internal readonly UniqueStringObservableCollection CIPFiles = [];
 	internal readonly UniqueStringObservableCollection XMLFilesToConvertToCIP = [];
 
@@ -82,7 +83,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	internal bool DeploySignedXMLButtonIsEnabled { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// When true, policies will be deployed to Intune instead of locally
+	/// When true, policies will be deployed to Intune instead of the local system.
 	/// </summary>
 	internal bool DeployToIntune { get; set => SP(ref field, value); }
 
@@ -128,18 +129,24 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	internal void BrowseForXMLPolicesButton_Flyout_Clear_Click() => XMLFilesToConvertToCIP.Clear();
 
 	/// <summary>
-	/// Event handler for browse button - Unsigned XML files
+	/// Event handler for browse button - policy files to deploy unsigned.
 	/// </summary>
-	internal void BrowseForXMLPolicyFilesButton_Click()
+	internal async void BrowseForXMLPolicyFilesButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (selectedFiles.Count > 0)
+		try
 		{
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
 			foreach (string file in selectedFiles)
 			{
-				XMLFiles.Add(file);
+				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(file, null));
+
+				FilesForUnsignedDeployment.Add(new(policyObj));
 			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -148,16 +155,11 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// </summary>
 	internal void BrowseForCIPBinaryFilesButton_Click()
 	{
-		const string filter = "CIP file|*.cip";
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CIPFilesPickerFilter);
 
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
-
-		if (selectedFiles.Count > 0)
+		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
-			foreach (string file in selectedFiles)
-			{
-				CIPFiles.Add(file);
-			}
+			CIPFiles.Add(file);
 		}
 	}
 
@@ -169,27 +171,32 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// <summary>
 	/// Clear button for the unsigned files deployment button flyout
 	/// </summary>
-	internal void BrowseForXMLPolicyFilesButton_Flyout_Clear_Click() => XMLFiles.Clear();
+	internal void BrowseForXMLPolicyFilesButton_Flyout_Clear_Click() => FilesForUnsignedDeployment.Clear();
 
 	/// <summary>
 	/// Clear button for the Signed files deployment button flyout
 	/// </summary>
-	internal void BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click() => SignedXMLFiles.Clear();
+	internal void BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click() => FilesForSignedDeployment.Clear();
 
 	/// <summary>
-	/// Event handler for browse button - Signed XML files
+	/// Event handler for browse button - policy files to deploy signed.
 	/// </summary>
-	internal void BrowseForSignedXMLPolicyFilesButton_Click()
+	internal async void BrowseForSignedXMLPolicyFilesButton_Click()
 	{
-
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (selectedFiles.Count > 0)
+		try
 		{
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
 			foreach (string file in selectedFiles)
 			{
-				SignedXMLFiles.Add(file);
+				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(file, null));
+
+				FilesForSignedDeployment.Add(new(policyObj) { FilePath = file });
 			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -200,12 +207,9 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-		if (selectedFiles.Count > 0)
+		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
-			foreach (string file in selectedFiles)
-			{
-				XMLFilesToConvertToCIP.Add(file);
-			}
+			XMLFilesToConvertToCIP.Add(file);
 		}
 	}
 
@@ -222,24 +226,22 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	}
 
 	/// <summary>
-	/// Deploy unsigned XML files button
+	/// Event handler for the button that deploys the user-selected policy files Unsigned.
 	/// </summary>
 	internal async void DeployUnsignedXMLButton_Click()
 	{
-		if (XMLFiles.Count is 0)
+		if (FilesForUnsignedDeployment.Count is 0)
 		{
 			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectUnsignedXMLFilesToDeployWarningMsg"));
 			return;
 		}
-
-		bool errorsOccurred = false;
 
 		try
 		{
 			// Disable the UI elements
 			AreElementsEnabled = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + XMLFiles.Count + GlobalVars.GetStr("UnsignedXMLFiles"));
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + FilesForUnsignedDeployment.Count + GlobalVars.GetStr("UnsignedXMLFiles"));
 
 			MainInfoBarIsClosable = false;
 
@@ -248,69 +250,45 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			// Deploy the selected files
 			await Task.Run(async () =>
 			{
-
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("UnsignedDeployments");
-
 				// Convert and then deploy each XML file
-				foreach (string file in XMLFiles)
+				foreach (PolicyFileRepresent file in FilesForUnsignedDeployment)
 				{
-
-					// Instantiate the policy
-					SiPolicy.SiPolicy policyObject = Management.Initialize(file, null);
-
-					if (!policyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
+					if (!file.PolicyObj.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
 						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SignedPolicyError"), file));
 					}
 
-					string randomString = Guid.CreateVersion7().ToString("N");
-
-					string xmlFileName = Path.GetFileName(file);
-
-					string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
-
 					MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFile") + file + "'");
-
-					// Convert the XML file to CIP
-					Management.ConvertXMLToBinary(file, null, CIPFilePath);
 
 					if (DeployToIntune)
 					{
-						await DeployToIntunePrivate(CIPFilePath, policyObject.PolicyID, file);
-
-						// Delete the CIP file after deployment
-						File.Delete(CIPFilePath);
+						await DeployToIntunePrivate(file.PolicyObj, Management.ConvertXMLToBinary(file.PolicyObj));
 					}
 					else
 					{
-						// Deploy the CIP file locally
-						CiToolHelper.UpdatePolicy(CIPFilePath);
+						PreDeploymentChecks.CheckForSignatureConflict(file.PolicyObj);
 
-						// Delete the CIP file after deployment
-						File.Delete(CIPFilePath);
+						// Deploy the CIP locally
+						CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(file.PolicyObj));
 
 						// Deploy the AppControlManager supplemental policy
-						if (SupplementalForSelf.IsEligible(policyObject, file))
-							SupplementalForSelf.Deploy(stagingArea.FullName, policyObject.PolicyID);
+						if (SupplementalForSelf.IsEligible(file.PolicyObj))
+							SupplementalForSelf.Deploy(file.PolicyObj.PolicyID);
 					}
 				}
 			});
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("DeploymentSuccess"));
+
+			// Clear the lists at the end if no errors occurred
+			FilesForUnsignedDeployment.Clear();
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			MainInfoBar.WriteError(ex, GlobalVars.GetStr("DeploymentError"));
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("DeploymentSuccess"));
-
-				// Clear the lists at the end if no errors occurred
-				XMLFiles.Clear();
-			}
-
 			// Re-enable the UI elements
 			AreElementsEnabled = true;
 
@@ -319,15 +297,15 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		}
 	}
 
-
 	/// <summary>
-	/// Deploys a specified file to Intune using a given policy ID and optionally an XML file for additional settings.
+	/// Deploys a specified SiPolicy object to Intune.
 	/// </summary>
-	/// <param name="file">Specifies the file to be uploaded to Intune.</param>
-	/// <param name="policyID">Identifies the policy under which the file will be deployed.</param>
-	/// <param name="xmlFile">Provides an optional XML file that may contain additional configuration settings.</param>
+	/// <param name="policyBytes">
+	/// This is required for Signed policies because we sign the CIP content and the bytes are needed,
+	/// since we cannot sign the SiPolicy object itself. And for consistency also requiring it for Unsigned policies as well.
+	/// </param>
 	/// <returns>This method does not return a value.</returns>
-	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
+	private async Task DeployToIntunePrivate(SiPolicy.SiPolicy policyObj, byte[] policyBytes)
 	{
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 		{
@@ -344,42 +322,35 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 		await Task.Run(() =>
 		{
-			if (xmlFile is not null)
-			{
-				SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile, null);
+			policyName = PolicySettingsManager.GetPolicyName(policyObj);
 
-				policyName = PolicySettingsManager.GetPolicyName(policyObj, null);
+			// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
+			CiPolicyInfo policy = new(
+				policyID: policyObj.PolicyID,
+				basePolicyID: policyObj.BasePolicyID,
+				friendlyName: policyName,
+				version: null,
+				versionString: policyObj.VersionEx,
+				isSystemPolicy: false,
+				isSignedPolicy: !policyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy),
+				isOnDisk: false,
+				isEnforced: true,
+				isAuthorized: true,
+				policyOptions: policyObj.Rules.Select(x => ((int)x.Item).ToString()).ToList() // Only use the numbers of each rule to save characters since the string limit is 1000 characters for the Description section of Custom policies
+			);
 
-				// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
-				CiPolicyInfo policy = new(
-					policyID: policyObj.PolicyID,
-					basePolicyID: policyObj.BasePolicyID,
-					friendlyName: policyName,
-					version: null,
-					versionString: policyObj.VersionEx,
-					isSystemPolicy: false,
-					isSignedPolicy: !policyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy),
-					isOnDisk: false,
-					isEnforced: true,
-					isAuthorized: true,
-					policyOptions: policyObj.Rules.Select(x => ((int)x.Item).ToString()).ToList() // Only use the numbers of each rule to save characters since the string limit is 1000 characters for the Description section of Custom policies
-				);
-
-				descriptionText = CiPolicyInfo.ToJson(policy);
-			}
+			descriptionText = CiPolicyInfo.ToJson(policy);
 		});
 
-		await CommonCore.MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, IntuneDeploymentDetailsVM.SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
+		await CommonCore.MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, policyBytes, policyObj, IntuneDeploymentDetailsVM.SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, descriptionText);
 	}
 
-
 	/// <summary>
-	/// Deploy Signed XML files button
+	/// Event handler for the button that deploys the user-selected policy files Signed.
 	/// </summary>
-	internal async void DeploySignedXMLButton_Click()
+	internal async void DeploySignedXMLButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-
-		if (SignedXMLFiles.Count is 0)
+		if (FilesForSignedDeployment.Count is 0)
 		{
 			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectXMLFilesToSignAndDeployWarningMsg"));
 			return;
@@ -409,105 +380,104 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 		#endregion
 
-		bool errorsOccurred = false;
-
 		try
 		{
 			// Disable the UI elements
 			AreElementsEnabled = false;
+			DeploySignedXMLButtonIsEnabled = false;
 
 			MainInfoBarIsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + SignedXMLFiles.Count + GlobalVars.GetStr("SignedXMLFiles"));
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + FilesForSignedDeployment.Count + GlobalVars.GetStr("SignedXMLFiles"));
 
 			MainProgressBarVisibility = Visibility.Visible;
 
 			// Deploy the selected files
 			await Task.Run(async () =>
 			{
-
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("SignedDeployments");
-
 				// Convert and then deploy each XML file
-				foreach (string file in SignedXMLFiles)
+				foreach (PolicyFileRepresent file in FilesForSignedDeployment)
 				{
 					MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitch ? GlobalVars.GetStr("CurrentlySigningXMLFile") : GlobalVars.GetStr("DeployingXMLFile")) + file + "'");
 
 					// Add certificate's details to the policy
-					SiPolicy.SiPolicy policyObject = AddSigningDetails.Add(file, CertPath);
+					file.PolicyObj = AddSigningDetails.Add(file.PolicyObj, CertPath);
 
-					// Define the path for the CIP file
-					string randomString = Guid.CreateVersion7().ToString("N");
-					string xmlFileName = Path.GetFileName(file);
-					string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
+					if (file.FilePath is not null)
+					{
+						// Save the XML that has the certificate details back to the file (if file was used)
+						// So that when user uses this in other parts of the app, it will be correctly detected as a signed policy.
+						Management.SavePolicyToFile(file.PolicyObj, file.FilePath);
+					}
 
-					// Convert the XML file to CIP, overwriting the unsigned one
-					Management.ConvertXMLToBinary(file, null, CIPFilePath);
+					// Assign the signed policy (back) to the Sidebar
+					ViewModelProvider.MainWindowVM.AssignToSidebar(file);
 
-					// Sign the CIP
-					CommonCore.Signing.Main.SignCIP(CIPFilePath, CertCN);
+					MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+					// Convert the policy object to CIP content
+					byte[] cipContent = Management.ConvertXMLToBinary(file.PolicyObj);
+
+					// Sign the CIP content
+					cipContent = CommonCore.Signing.Main.SignCIP(cipContent, CertCN);
 
 					// If the SignOnlyNoDeployToggleSwitch is on, don't deploy the policy, only create signed CIP
 					if (SignOnlyNoDeployToggleSwitch)
 					{
-						File.Move(CIPFilePath, Path.Combine(GlobalVars.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP"), true);
+						await File.WriteAllBytesAsync(Path.Combine(GlobalVars.UserConfigDir, $"{file.PolicyIdentifier}.CIP"), cipContent);
 					}
 					else
 					{
 						if (DeployToIntune)
 						{
-							await DeployToIntunePrivate(CIPFilePath, policyObject.PolicyID, file);
+							await DeployToIntunePrivate(file.PolicyObj, cipContent);
 						}
 						else
 						{
-
 							// Get all of the deployed base and supplemental policies on the system
 							List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
 
+							// Find policies that are Unsigned and have the same PolicyID as the PolicyID of the Signed policy we are deploying so we can remove them.
 							CiPolicyInfo? possibleAlreadyDeployedUnsignedVersion = policies.
-							FirstOrDefault(x => string.Equals(policyObject.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
+							FirstOrDefault(x => !x.IsSignedPolicy && string.Equals(file.PolicyObj.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
 
 							if (possibleAlreadyDeployedUnsignedVersion is not null)
 							{
 								Logger.Write(GlobalVars.GetStr("PolicyConflictMessage") + possibleAlreadyDeployedUnsignedVersion.PolicyID + GlobalVars.GetStr("RemovingPolicy"));
 
-								CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID!);
+								CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID);
 							}
 
 							// Sign and deploy the required AppControlManager supplemental policy
-							if (SupplementalForSelf.IsEligible(policyObject, file))
-								SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, CertCN);
+							if (SupplementalForSelf.IsEligible(file.PolicyObj))
+								SupplementalForSelf.DeploySigned(file.PolicyObj.PolicyID, CertPath, CertCN);
 
 							// Deploy the CIP file locally
-							CiToolHelper.UpdatePolicy(CIPFilePath);
+							CiToolHelper.UpdatePolicy(cipContent);
 						}
 					}
 				}
 			});
+
+			MainInfoBar.WriteSuccess(SignOnlyNoDeployToggleSwitch ? GlobalVars.GetStr("SuccessfullyCreatedSignedCIPFiles") : GlobalVars.GetStr("SignedDeploymentSuccess"));
+
+			// Clear the lists at the end if no errors occurred
+			FilesForSignedDeployment.Clear();
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			MainInfoBar.WriteError(ex, GlobalVars.GetStr("DeploymentError"));
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				MainInfoBar.WriteSuccess(SignOnlyNoDeployToggleSwitch ? GlobalVars.GetStr("SuccessfullyCreatedSignedCIPFiles") : GlobalVars.GetStr("SignedDeploymentSuccess"));
-
-				// Clear the lists at the end if no errors occurred
-				SignedXMLFiles.Clear();
-			}
-
 			// Re-enable the UI elements
 			AreElementsEnabled = true;
+			DeploySignedXMLButtonIsEnabled = true;
 
 			MainProgressBarVisibility = Visibility.Collapsed;
 			MainInfoBarIsClosable = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Deploy CIP files button
@@ -519,8 +489,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectCIPFilesToDeployWarningMsg"));
 			return;
 		}
-
-		bool errorsOccurred = false;
 
 		try
 		{
@@ -538,35 +506,32 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				{
 					MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingCIPFile") + file + "'");
 
-					string randomPolicyID = Guid.CreateVersion7().ToString().ToUpperInvariant();
+					// Convert the CIP to a SiPolicy object
+					SiPolicy.SiPolicy policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(file);
 
 					if (DeployToIntune)
 					{
-						await DeployToIntunePrivate(file, randomPolicyID, null);
+						await DeployToIntunePrivate(policyObj, Management.ConvertXMLToBinary(policyObj));
 					}
 					else
 					{
 						// Deploy the CIP file
-						CiToolHelper.UpdatePolicy(file);
+						CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 					}
 				}
 			});
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("CIPDeploymentSuccess"));
+
+			// Clear the list at the end if no errors occurred
+			CIPFiles.Clear();
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			MainInfoBar.WriteError(ex, GlobalVars.GetStr("DeploymentError"));
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("CIPDeploymentSuccess"));
-
-				// Clear the list at the end if no errors occurred
-				CIPFiles.Clear();
-			}
-
 			AreElementsEnabled = true;
 
 			MainProgressBarVisibility = Visibility.Collapsed;
@@ -579,7 +544,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// </summary>
 	internal void SelectGroups_Click()
 	{
-		// Assign the current signed in account to the viewmodel to make it available for usage.
+		// Assign the current signed in account to the ViewModel to make it available for usage.
 		IntuneDeploymentDetailsVM.TargetAccount = AuthCompanionCLS.CurrentActiveAccount;
 
 		ViewModelProvider.NavigationService.Navigate(typeof(IntuneDeploymentDetails), null);
@@ -595,8 +560,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectXMLFilesToDeployWarningMsg"));
 			return;
 		}
-
-		bool ErrorsOccurred = false;
 
 		try
 		{
@@ -622,22 +585,18 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 					}
 
 					// Convert the XML file to CIP
-					Management.ConvertXMLToBinary(file, null, XMLSavePath);
+					Management.ConvertXMLToBinary(file, XMLSavePath);
 				}
 			});
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyConvertedXMLFilesToCIPMessage"));
 		}
 		catch (Exception ex)
 		{
-			ErrorsOccurred = true;
 			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorConvertingXMLToCIPMessage"));
 		}
 		finally
 		{
-			if (!ErrorsOccurred)
-			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyConvertedXMLFilesToCIPMessage"));
-			}
-
 			MainInfoBarIsClosable = true;
 			MainProgressBarVisibility = Visibility.Collapsed;
 

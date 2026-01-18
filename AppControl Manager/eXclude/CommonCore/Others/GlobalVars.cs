@@ -63,6 +63,8 @@ internal static partial class GlobalVars
 	internal const string POLPickerFilter = "Group Policy File|*.pol";
 	internal const string JSONPickerFilter = "JSON Files|*.json";
 	internal const string SecurityINFPickerFilter = "Security INF Files|*.inf";
+	internal const string CIPFilesPickerFilter = "CIP file|*.cip";
+	internal const string XMLAndCIPAndP7BFilePickerFilter = "XML, CIP, P7B files (*.xml;*.cip;*.p7b)|*.xml;*.cip;*.p7b";
 
 	// Name of the special automatic supplemental policy
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
@@ -81,9 +83,6 @@ internal static partial class GlobalVars
 
 	// Path to the Default Windows template policy file
 	internal static readonly string DefaultWindowsTemplatePolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "Default Windows Template.xml");
-
-	// Path to the empty policy file in app resources
-	internal static readonly string EmptyPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "EmptyPolicy.xml");
 
 	// Path to the CppInteropPath directory
 	private static readonly string CppInteropPath = Path.Combine(AppContext.BaseDirectory, "CppInterop");

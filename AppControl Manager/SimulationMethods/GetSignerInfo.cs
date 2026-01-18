@@ -19,7 +19,6 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Xml;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
@@ -44,17 +43,12 @@ internal static class GetSignerInfo
 	private const string WHQLEkuHex = "010A2B0601040182370A0305";
 
 	/// <summary>
-	/// Takes an XML policy content as input and returns an array of Signer objects
-	/// The output contains as much info as possible about each signer
+	/// Parses an App Control policy and returns its Signers.
 	/// </summary>
-	/// <param name="xmlContent"></param>
-	/// <returns></returns>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static List<SignerX> Get(XmlDocument xmlContent)
+	/// <param name="policyObj">an App Control policy</param>
+	/// <returns>a list of Signer objects. The output contains as much info as possible about each signer.</returns>
+	internal static List<SignerX> Get(SiPolicy.SiPolicy policyObj)
 	{
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = Management.Initialize(null, xmlContent);
-
 		SigningScenario? UMCI = policyObj.SigningScenarios?.FirstOrDefault(x => Equals(x.Value, (byte)12));
 		SigningScenario? KMCI = policyObj.SigningScenarios?.FirstOrDefault(x => Equals(x.Value, (byte)131));
 
@@ -65,53 +59,35 @@ internal static class GetSignerInfo
 
 		if (UMCI is not null)
 		{
-			if (UMCI.ProductSigners is not null)
+			if (UMCI.ProductSigners.AllowedSigners is not null)
 			{
-				if (UMCI.ProductSigners.AllowedSigners is not null)
+				foreach (AllowedSigner item in CollectionsMarshal.AsSpan(UMCI.ProductSigners.AllowedSigners.AllowedSigner))
 				{
-					if (UMCI.ProductSigners.AllowedSigners.AllowedSigner is not null)
-					{
-						foreach (AllowedSigner item in CollectionsMarshal.AsSpan(UMCI.ProductSigners.AllowedSigners.AllowedSigner))
-						{
-							_ = allowedUMCISigners.Add(item.SignerId);
-						}
-					}
+					_ = allowedUMCISigners.Add(item.SignerId);
 				}
-				if (UMCI.ProductSigners.DeniedSigners is not null)
+			}
+			if (UMCI.ProductSigners.DeniedSigners is not null)
+			{
+				foreach (DeniedSigner item in CollectionsMarshal.AsSpan(UMCI.ProductSigners.DeniedSigners.DeniedSigner))
 				{
-					if (UMCI.ProductSigners.DeniedSigners.DeniedSigner is not null)
-					{
-						foreach (DeniedSigner item in CollectionsMarshal.AsSpan(UMCI.ProductSigners.DeniedSigners.DeniedSigner))
-						{
-							_ = deniedUMCISigners.Add(item.SignerId);
-						}
-					}
+					_ = deniedUMCISigners.Add(item.SignerId);
 				}
 			}
 		}
 		if (KMCI is not null)
 		{
-			if (KMCI.ProductSigners is not null)
+			if (KMCI.ProductSigners.AllowedSigners is not null)
 			{
-				if (KMCI.ProductSigners.AllowedSigners is not null)
+				foreach (AllowedSigner item in CollectionsMarshal.AsSpan(KMCI.ProductSigners.AllowedSigners.AllowedSigner))
 				{
-					if (KMCI.ProductSigners.AllowedSigners.AllowedSigner is not null)
-					{
-						foreach (AllowedSigner item in CollectionsMarshal.AsSpan(KMCI.ProductSigners.AllowedSigners.AllowedSigner))
-						{
-							_ = allowedKMCISigners.Add(item.SignerId);
-						}
-					}
+					_ = allowedKMCISigners.Add(item.SignerId);
 				}
-				if (KMCI.ProductSigners.DeniedSigners is not null)
+			}
+			if (KMCI.ProductSigners.DeniedSigners is not null)
+			{
+				foreach (DeniedSigner item in CollectionsMarshal.AsSpan(KMCI.ProductSigners.DeniedSigners.DeniedSigner))
 				{
-					if (KMCI.ProductSigners.DeniedSigners.DeniedSigner is not null)
-					{
-						foreach (DeniedSigner item in CollectionsMarshal.AsSpan(KMCI.ProductSigners.DeniedSigners.DeniedSigner))
-						{
-							_ = deniedKMCISigners.Add(item.SignerId);
-						}
-					}
+					_ = deniedKMCISigners.Add(item.SignerId);
 				}
 			}
 		}
@@ -138,10 +114,13 @@ internal static class GetSignerInfo
 
 		// Populate the dictionary with FileAttrib nodes, using their ID as the key
 		if (fileAttributes is not null)
+		{
 			foreach (FileAttrib fileAttrib in fileAttributes)
 			{
 				fileAttribDictionary[fileAttrib.ID] = fileAttrib;
 			}
+		}
+
 		#endregion
 
 
@@ -155,7 +134,7 @@ internal static class GetSignerInfo
 		// Add the EKU IDs and their values to the dictionary
 		if (policyObj.EKUs is not null)
 		{
-			foreach (EKU Eku in policyObj.EKUs)
+			foreach (EKU Eku in CollectionsMarshal.AsSpan(policyObj.EKUs))
 			{
 				EKUAndValuesCorrelation.Add(Eku.ID, CustomSerialization.ConvertByteArrayToHex(Eku.Value));
 			}
@@ -166,9 +145,8 @@ internal static class GetSignerInfo
 		// Loop through each Signer node and extract all of their information
 		if (policyObj.Signers is not null)
 		{
-			foreach (Signer signer in policyObj.Signers)
+			foreach (Signer signer in CollectionsMarshal.AsSpan(policyObj.Signers))
 			{
-
 				// Determine if the signer is Allowed or Denied
 				bool isAllowed;
 				if (allAllowedSigners.Contains(signer.ID))
@@ -263,12 +241,11 @@ internal static class GetSignerInfo
 
 				// The File Attributes property that will be added to the Signer object
 				// It contains details of all File Attributes associated with the Signer
-				Dictionary<string, Dictionary<string, string>> SignerFileAttributesProperty = [];
+				List<ExFileInfo> SignerFileAttributesProperty = [];
 
 				// Determine whether the signer has a FileAttribRef, if it points to a file
 				if (ruleIds.Count > 0)
 				{
-
 					// Create a list to store matching file attributes
 					List<FileAttrib> FileAttribsAssociatedWithTheSigner = [];
 
@@ -282,57 +259,44 @@ internal static class GetSignerInfo
 						}
 					}
 
-
 					// Loop over each FileAttribute associated with the Signer
-					foreach (FileAttrib item in FileAttribsAssociatedWithTheSigner)
+					foreach (FileAttrib item in CollectionsMarshal.AsSpan(FileAttribsAssociatedWithTheSigner))
 					{
+						string? specificFileNameLevel = null;
 
-						// a temp dictionary to store the current FileAttribute details
-						Dictionary<string, string> temp = [];
-
-						string? FileName = item.FileName;
-						string? FileDescription = item.FileDescription;
-						string? InternalName = item.InternalName;
-						string? ProductName = item.ProductName;
-
-						if (FileName is not null)
+						if (item.FileName is not null)
 						{
-							temp.Add("OriginalFileName", FileName);
-							temp.Add("SpecificFileNameLevel", "OriginalFileName");
+							specificFileNameLevel = "Original File Name";
 						}
-						else if (FileDescription is not null)
+						else if (item.FileDescription is not null)
 						{
-							temp.Add("FileDescription", FileDescription);
-							temp.Add("SpecificFileNameLevel", "FileDescription");
+							specificFileNameLevel = "File Description";
 						}
-						else if (InternalName is not null)
+						else if (item.InternalName is not null)
 						{
-							temp.Add("InternalName", InternalName);
-							temp.Add("SpecificFileNameLevel", "InternalName");
+							specificFileNameLevel = "Internal Name";
 						}
-						else if (ProductName is not null)
+						else if (item.ProductName is not null)
 						{
-							temp.Add("ProductName", ProductName);
-							temp.Add("SpecificFileNameLevel", "ProductName");
+							specificFileNameLevel = "Product Name";
 						}
 
-						string? MinimumFileVersion = item.MinimumFileVersion;
-						string? MaximumFileVersion = item.MaximumFileVersion;
-
-						if (MinimumFileVersion is not null)
+						// Store the current FileAttribute's details
+						ExFileInfo currentFileAttribDetails = new(
+							originalFileName: item.FileName,
+							fileDescription: item.FileDescription,
+							internalName: item.InternalName,
+							productName: item.ProductName,
+							version: null
+							)
 						{
-							temp.Add("MinimumFileVersion", MinimumFileVersion);
-						}
+							MinimumFileVersion = item.MinimumFileVersion is not null ? new(item.MinimumFileVersion) : null,
+							MaximumFileVersion = item.MaximumFileVersion is not null ? new(item.MaximumFileVersion) : null,
+							SpecificFileNameLevel = specificFileNameLevel
+						};
 
-						if (MaximumFileVersion is not null)
-						{
-							temp.Add("MaximumFileVersion", MaximumFileVersion);
-						}
-
-						SignerFileAttributesProperty.Add(item.ID, temp);
-
+						SignerFileAttributesProperty.Add(currentFileAttribDetails);
 					}
-
 				}
 
 				#endregion
@@ -360,7 +324,7 @@ internal static class GetSignerInfo
 					}
 				}
 
-				foreach (string EkuID in CertEKUIDs)
+				foreach (string EkuID in CollectionsMarshal.AsSpan(CertEKUIDs))
 				{
 					if (EKUAndValuesCorrelation.TryGetValue(EkuID, out string? EkuValue))
 					{
@@ -387,9 +351,9 @@ internal static class GetSignerInfo
 						certRoot: certRootValue,
 						certPublisher: signer.CertPublisher?.Value,
 						certIssuer: signer.CertIssuer?.Value,
-						certEKU: [.. CertEKUs],
+						certEKU: CertEKUs,
 						certOemID: signer.CertOemID?.Value,
-						fileAttribRef: [.. ruleIds],
+						fileAttribRef: ruleIds,
 						fileAttrib: SignerFileAttributesProperty,
 						signerScope: signerScope,
 						isWHQL: IsWHQL,

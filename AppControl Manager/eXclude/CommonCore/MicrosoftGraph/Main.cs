@@ -20,10 +20,14 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+#if APP_CONTROL_MANAGER
+using AppControlManager.SiPolicy;
+#endif
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Broker;
 
@@ -423,41 +427,52 @@ DeviceEvents
 			account.Username));
 	}
 
-
+#if APP_CONTROL_MANAGER
 	/// <summary>
-	/// Grabs the path to a CIP file and upload it to Intune.
+	/// Gets a CIP file content as ReadOnlySpan<byte> and uploads it to Intune.
 	/// </summary>
-	/// <param name="policyPath"></param>
-	/// <param name="groupIds"></param>
-	/// <param name="policyName"></param>
-	/// <param name="policyID"></param>
-	/// <param name="descriptionText"></param>
-	/// <param name="account"></param>
+	/// <param name="account">The account whose authentication we use for upload.</param>
+	/// <param name="policyObj">The policy to upload to Intune.</param>
+	/// <param name="groupIds">ID(s) of the Intune group(s) to assign to the uploaded policy.</param>
+	/// <param name="policyName">The name of the policy to upload.</param>
+	/// <param name="descriptionText">A descriptive text for the policy we are uploading.</param>
+	/// <param name="policyBytes">The actual policy's bytes that will be uploaded.</param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts account, string policyPath, List<string> groupIds, string? policyName, string policyID, string descriptionText)
+	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts account, byte[] policyBytes, SiPolicy policyObj, List<string> groupIds, string? policyName, string descriptionText)
 	{
 		// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-app-control-policies-with-custom-oma-uri
-		string base64String = ConvertBinFileToBase64(policyPath, 350000);
+		const int maxPolicySize = 350000;
+
+		// Check the file size
+		if (policyBytes.Length > maxPolicySize)
+		{
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.GetStr("CipPolicyFileSizeExceedsLimitMessage"),
+				policyName,
+				maxPolicySize,
+				policyBytes.Length));
+		}
+
+		// Read the file and convert to Base64
+		string base64String = Convert.ToBase64String(policyBytes);
 
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		// Call Microsoft Graph API to create the custom policy
-		string? policyId = await CreateCustomIntunePolicy(accessToken, base64String, policyName, policyID, descriptionText);
+		string? intunePolicyId = await CreateCustomIntunePolicy(accessToken, base64String, policyName, policyObj.PolicyID, descriptionText);
 
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("PolicyCreatedMessage"),
-			policyId));
+			intunePolicyId));
 
-		if (groupIds.Count > 0 && policyId is not null)
+		if (groupIds.Count > 0 && intunePolicyId is not null)
 		{
-			await AssignIntunePolicyToGroup(policyId, accessToken, groupIds);
+			await AssignIntunePolicyToGroup(intunePolicyId, accessToken, groupIds);
 		}
-
-		// await GetPoliciesAndAssignments(result.AccessToken);
 	}
-
+#endif
 
 	/// <summary>
 	/// Assigns a group to the created Intune policy for multiple groups.
@@ -685,33 +700,6 @@ DeviceEvents
 		}
 	}
 	*/
-
-
-	/// <summary>
-	/// Converts a binary file to a Base64 string after checking its size against a specified limit.
-	/// </summary>
-	/// <param name="filePath">Specifies the location of the binary file to be converted.</param>
-	/// <param name="maxSizeInBytes">Defines the maximum allowable size for the file before conversion.</param>
-	/// <returns>Returns the Base64 encoded string of the file's contents.</returns>
-	/// <exception cref="InvalidOperationException">Thrown when the file size exceeds the specified maximum limit.</exception>
-	private static string ConvertBinFileToBase64(string filePath, int maxSizeInBytes)
-	{
-		FileInfo fileInfo = new(filePath);
-
-		// Check the file size
-		if (fileInfo.Length > maxSizeInBytes)
-		{
-			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("CipPolicyFileSizeExceedsLimitMessage"),
-				filePath,
-				maxSizeInBytes,
-				fileInfo.Length));
-		}
-
-		// Read the file and convert to Base64
-		byte[] fileBytes = File.ReadAllBytes(filePath);
-		return Convert.ToBase64String(fileBytes);
-	}
 
 
 	/// <summary>
@@ -1161,7 +1149,7 @@ DeviceEvents
 		// Build the assignments payload using strongly-typed envelope.
 		List<AssignmentPayload> assignments = new();
 
-		foreach (string gid in groupIds)
+		foreach (string gid in CollectionsMarshal.AsSpan(groupIds))
 		{
 			Dictionary<string, object> target = new()
 			{

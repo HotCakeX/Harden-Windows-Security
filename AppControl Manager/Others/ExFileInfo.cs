@@ -50,4 +50,19 @@ internal sealed class ExFileInfo(
 	/// Represents an optional description of a file. It can hold a string value or be null.
 	/// </summary>
 	internal string? FileDescription => fileDescription;
+
+	/// <summary>
+	/// Used by Simulation.
+	/// </summary>
+	internal Version? MinimumFileVersion { get; init; }
+
+	/// <summary>
+	/// Used by Simulation.
+	/// </summary>
+	internal Version? MaximumFileVersion { get; init; }
+
+	/// <summary>
+	/// Used by Simulation.
+	/// </summary>
+	internal string? SpecificFileNameLevel { get; init; }
 }

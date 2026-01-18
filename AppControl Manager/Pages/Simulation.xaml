@@ -61,7 +61,16 @@
 
                                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectXmlFileButton_Flyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectXmlFileButton_Flyout_Clear_Click}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
 
                                     <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -96,7 +105,16 @@
 
                                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFilesButton_Flyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFilesButton_Flyout_Clear_Click}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
 
                                     <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -131,7 +149,16 @@
 
                                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFoldersButton_Flyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFoldersButton_Flyout_Clear_Click}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
 
                                     <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 

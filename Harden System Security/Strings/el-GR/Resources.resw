@@ -205,7 +205,7 @@
   <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Υποστήριξη - Κάντε ερωτήσεις</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Προσαρμόστε τις ρυθμίσεις της εφαρμογής σας εδώ. Οι προτιμήσεις σας θα αποθηκευτούν ώστε να είναι έτοιμες για εσάς κάθε φορά που εκκινείτε το Harden System Security.</value>
   </data>
   <data name="Appearance.Text" xml:space="preserve">
@@ -580,10 +580,7 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Τεκμηρίωση</value>
   </data>
-  <data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>Ο χρήστης ακύρωσε την προτροπή UAC.</value>
-  </data>
-    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Επιλέξτε μία από τις προκαθορισμένες ρυθμίσεις προστασίας για εφαρμογή, είναι προκαθορισμένα σύνολα διαμορφώσεων που έχουν γίνει για διαφορετικά επίπεδα ασφάλειας.</value>
   </data>
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -4457,7 +4454,7 @@
 <data name="GroupType" xml:space="preserve">
   <value>Τύπος ομάδας:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Διαχειριστείτε τις ομάδες Entra στον μισθωτή σας και επιλέξτε τις ομάδες στις οποίες θέλετε να αναπτύξετε την πολιτική.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">

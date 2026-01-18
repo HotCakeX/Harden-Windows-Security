@@ -15,9 +15,6 @@
       <Option>Enabled:Invalidate EAs on Reboot</Option>
     </Rule>
   </Rules>
-  <EKUs/>
-  <FileRules/>
-  <Signers/>
   <SigningScenarios>
     <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1">
       <ProductSigners/>
@@ -26,8 +23,6 @@
       <ProductSigners/>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners/>
-  <CiSigners/>
   <HvciOptions>2</HvciOptions>
   <Settings>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">

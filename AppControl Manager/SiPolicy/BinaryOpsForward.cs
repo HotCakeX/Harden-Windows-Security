@@ -46,29 +46,24 @@ internal static partial class BinaryOpsForward
 		}
 		else
 		{
-			WriteString(value);
+			byte[] utf16Bytes = Encoding.Unicode.GetBytes(value);
+			uint length = (uint)utf16Bytes.Length;
+
+			BodyWriter.Write(length);
+
+			BodyWriter.Write(utf16Bytes);
+
+			int pad = (int)(-length & 3);
+			if (pad > 0)
+			{
+				Span<byte> padding = stackalloc byte[3];
+				padding.Clear();
+				BodyWriter.Write(padding[..pad]);
+			}
 		}
 
 		// and in every case, emit the trailing zero terminator
 		BodyWriter.Write(Terminator);
-	}
-
-	internal static void WriteString(string stringToWrite)
-	{
-		byte[] utf16Bytes = Encoding.Unicode.GetBytes(stringToWrite);
-		uint length = (uint)utf16Bytes.Length;
-
-		BodyWriter.Write(length);
-
-		BodyWriter.Write(utf16Bytes);
-
-		int pad = (int)(-length & 3);
-		if (pad > 0)
-		{
-			Span<byte> padding = stackalloc byte[3];
-			padding.Clear();
-			BodyWriter.Write(padding[..pad]);
-		}
 	}
 
 	/// <summary>
@@ -94,7 +89,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes a file rule as binary (for main file rules block).
 	/// </summary>
-	internal static void ConvertFileRuleToBinary(
+	private static void ConvertFileRuleToBinary(
 		ref Dictionary<string, uint> fileRuleIdToIndexMap,
 		object fileRule,
 		uint fileRuleIndex)
@@ -266,7 +261,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes InternalName, FileDescription, ProductName for file rules.
 	/// </summary>
-	internal static void WriteFileMetadata(object rule)
+	private static void WriteFileMetadata(object rule)
 	{
 		switch (rule)
 		{
@@ -296,7 +291,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes PackageFamilyName and PackageVersion for file rules.
 	/// </summary>
-	internal static void WritePackageInfo(object fileRule)
+	private static void WritePackageInfo(object fileRule)
 	{
 		switch (fileRule)
 		{
@@ -338,7 +333,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes FilePath for file rules.
 	/// </summary>
-	internal static void WriteFilePath(object rule)
+	private static void WriteFilePath(object rule)
 	{
 		switch (rule)
 		{
@@ -362,14 +357,12 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes a Signer into binary format.
 	/// </summary>
-	internal static void ConvertSignerToBinary(
+	private static void ConvertSignerToBinary(
 	Signer signerData,
 	Dictionary<string, uint> ekuIdToIndexMap,
 	Dictionary<string, uint> fileRuleIdToIndexMap,
 	List<object>? fileRuleArray)
 	{
-		ArgumentNullException.ThrowIfNull(fileRuleArray);
-
 		uint tbsCertIndicator = 0;
 
 		if (signerData.CertRoot.Type is CertEnumType.TBS)
@@ -436,6 +429,9 @@ internal static partial class BinaryOpsForward
 
 		if (signerData.FileAttribRef is not null)
 		{
+			// Only check if FileRules section is null or not when the Signer has any FileAttrib Refs, otherwise it's perfectly valid for a policy to not have a FileRules node/section and Signer not have any FileRule Refs.
+			ArgumentNullException.ThrowIfNull(fileRuleArray);
+
 			BodyWriter.Write((uint)signerData.FileAttribRef.Count);
 
 			for (uint fileAttribRefIndex = 0; fileAttribRefIndex < signerData.FileAttribRef.Count; ++fileAttribRefIndex)
@@ -469,7 +465,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes a SigningScenario to binary.
 	/// </summary>
-	internal static void ConvertScenarioToBinary(
+	private static void ConvertScenarioToBinary(
 		SigningScenario signingScenario,
 		Dictionary<string, uint> scenarioIdToIndexMap)
 	{
@@ -478,13 +474,13 @@ internal static partial class BinaryOpsForward
 
 		if (signingScenario.InheritedScenarios is not null)
 		{
-			string[] splittedInheritedScenarios = signingScenario
+			string[] splitInheritedScenarios = signingScenario
 				.InheritedScenarios
 				.Split([",", signingScenario.ID], StringSplitOptions.RemoveEmptyEntries);
 
-			BodyWriter.Write((uint)splittedInheritedScenarios.Length);
+			BodyWriter.Write((uint)splitInheritedScenarios.Length);
 
-			foreach (string scenarioKey in splittedInheritedScenarios)
+			foreach (string scenarioKey in splitInheritedScenarios)
 			{
 				if (!scenarioIdToIndexMap.TryGetValue(scenarioKey, out uint foundScenarioIndex))
 				{
@@ -513,15 +509,13 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes AllowedSigners to binary.
 	/// </summary>
-	internal static void ConvertAllowedSignersToBinary(
+	private static void ConvertAllowedSignersToBinary(
 	AllowedSigners? allowedSigners,
 	Dictionary<string, uint> signerIdToIndexMap,
 	Dictionary<string, uint> fileRuleIdToIndexMap,
 	List<object>? fileRuleArray)
 	{
-		ArgumentNullException.ThrowIfNull(fileRuleArray);
-
-		if (allowedSigners is null || allowedSigners.AllowedSigner is null)
+		if (allowedSigners is null)
 		{
 			BodyWriter.Write(0U);
 			return;
@@ -544,6 +538,10 @@ internal static partial class BinaryOpsForward
 
 			if (signer.ExceptDenyRule is not null)
 			{
+				// Only check if <FileRules> node exists if ExceptDenyRule is being used
+				// Otherwise it can be null and policy will be valid.
+				ArgumentNullException.ThrowIfNull(fileRuleArray);
+
 				BodyWriter.Write((uint)signer.ExceptDenyRule.Count);
 
 				for (uint denyRuleCounter = 0; denyRuleCounter < signer.ExceptDenyRule.Count; ++denyRuleCounter)
@@ -581,15 +579,13 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes DeniedSigners to binary.
 	/// </summary>
-	internal static void ConvertDeniedSignersToBinary(
+	private static void ConvertDeniedSignersToBinary(
 	DeniedSigners? deniedSigners,
 	Dictionary<string, uint> signerIdToIndexMap,
 	Dictionary<string, uint> fileRuleIdToIndexMap,
 	List<object>? fileRuleArray)
 	{
-		ArgumentNullException.ThrowIfNull(fileRuleArray);
-
-		if (deniedSigners is null || deniedSigners.DeniedSigner is null)
+		if (deniedSigners is null)
 		{
 			BodyWriter.Write(0U);
 			return;
@@ -612,6 +608,10 @@ internal static partial class BinaryOpsForward
 
 			if (exceptAllow is not null)
 			{
+				// Only check if <FileRules> node in the policy exists if ExceptAllowRule is being used,
+				// Otherwise it can be null and policy will be valid.
+				ArgumentNullException.ThrowIfNull(fileRuleArray);
+
 				BodyWriter.Write((uint)exceptAllow.Count);
 
 				for (uint allowRuleIndex = 0; allowRuleIndex < exceptAllow.Count; ++allowRuleIndex)
@@ -653,9 +653,9 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes secure settings to binary.
 	/// </summary>
-	internal static void ConvertSecureSettingsToBinary(Setting[] secureSetting)
+	private static void ConvertSecureSettingsToBinary(Setting[] secureSetting)
 	{
-		if (secureSetting is null)
+		if (secureSetting.Length == 0)
 		{
 			BodyWriter.Write(0U);
 			return;
@@ -726,7 +726,7 @@ internal static partial class BinaryOpsForward
 
 			fileRuleIndexes.Sort();
 
-			foreach (uint fileRuleIndex in fileRuleIndexes)
+			foreach (uint fileRuleIndex in CollectionsMarshal.AsSpan(fileRuleIndexes))
 			{
 				BodyWriter.Write(fileRuleIndex);
 			}
@@ -756,7 +756,7 @@ internal static partial class BinaryOpsForward
 
 		BodyWriter.Write((uint)values.Count);
 
-		foreach (string rawValue in values)
+		foreach (string rawValue in CollectionsMarshal.AsSpan(values))
 		{
 			WriteOptionalStringValue(rawValue);
 		}
@@ -835,7 +835,7 @@ internal static partial class BinaryOpsForward
 
 			BodyWriter.Write((uint)applicationManifest.SettingDefinition.Count);
 
-			foreach (SettingDefinition currentDefinitionInLoop in applicationManifest.SettingDefinition)
+			foreach (SettingDefinition currentDefinitionInLoop in CollectionsMarshal.AsSpan(applicationManifest.SettingDefinition))
 			{
 				AppSetting? foundSetting = appRootItem.Setting?
 					.FirstOrDefault(policySetting =>
@@ -940,11 +940,11 @@ internal static partial class BinaryOpsForward
 					value: new SettingValueType(item: true)
 				));
 
-				policyOptionFlags |= Helper.Options[OptionType.EnabledAuditMode];
-				policyOptionFlags |= Helper.Options[OptionType.EnabledUMCI];
-				policyOptionFlags |= Helper.Options[OptionType.RequiredEnforceStoreApplications];
-				policyOptionFlags |= Helper.Options[OptionType.EnabledAdvancedBootOptionsMenu];
-				policyOptionFlags |= Helper.Options[OptionType.DisabledScriptEnforcement];
+				policyOptionFlags |= (uint)OptionType.EnabledAuditMode;
+				policyOptionFlags |= (uint)OptionType.EnabledUMCI;
+				policyOptionFlags |= (uint)OptionType.RequiredEnforceStoreApplications;
+				policyOptionFlags |= (uint)OptionType.EnabledAdvancedBootOptionsMenu;
+				policyOptionFlags |= (uint)OptionType.DisabledScriptEnforcement;
 			}
 
 			// Always set the high-order bit to indicate a signed policy
@@ -997,7 +997,7 @@ internal static partial class BinaryOpsForward
 				{
 					ekuIdToIndexMap.Add(policyData.EKUs[(int)ruleIndex].ID, ruleIndex);
 				}
-				foreach (EKU eku in policyData.EKUs)
+				foreach (EKU eku in CollectionsMarshal.AsSpan(policyData.EKUs))
 				{
 					WritePaddedCountedBytes(eku.Value);
 				}
@@ -1041,7 +1041,7 @@ internal static partial class BinaryOpsForward
 			// Serialize each signer, projecting CI signers if needed for AppID policies
 			if (policyData.Signers is not null)
 			{
-				foreach (Signer signer in policyData.Signers)
+				foreach (Signer signer in CollectionsMarshal.AsSpan(policyData.Signers))
 				{
 					ConvertSignerToBinary(signer, ekuIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
 					if (policyData.PolicyType is PolicyType.AppIDTaggingPolicy
@@ -1056,7 +1056,7 @@ internal static partial class BinaryOpsForward
 			if (policyData.UpdatePolicySigners is not null && policyData.UpdatePolicySigners.Count != 0)
 			{
 				BodyWriter.Write((uint)policyData.UpdatePolicySigners.Count);
-				foreach (UpdatePolicySigner updateSignerRef in policyData.UpdatePolicySigners)
+				foreach (UpdatePolicySigner updateSignerRef in CollectionsMarshal.AsSpan(policyData.UpdatePolicySigners))
 				{
 					if (!signerIdToIndexMap.TryGetValue(updateSignerRef.SignerId, out uint signerIndex))
 					{
@@ -1088,7 +1088,7 @@ internal static partial class BinaryOpsForward
 			else if (convertedCiSignerList.Count != 0)
 			{
 				BodyWriter.Write((uint)convertedCiSignerList.Count);
-				foreach (CiSigner ciSigner in convertedCiSignerList)
+				foreach (CiSigner ciSigner in CollectionsMarshal.AsSpan(convertedCiSignerList))
 				{
 					if (!signerIdToIndexMap.TryGetValue(ciSigner.SignerId, out uint signerIndex))
 					{
@@ -1106,23 +1106,14 @@ internal static partial class BinaryOpsForward
 			// Serialize each signing scenario along with allowed/denied signers and file rules
 			if (policyData.SigningScenarios is not null)
 			{
-				foreach (SigningScenario scenario in policyData.SigningScenarios)
+				foreach (SigningScenario scenario in CollectionsMarshal.AsSpan(policyData.SigningScenarios))
 				{
 					ConvertScenarioToBinary(scenario, scenarioIdToIndexMap);
 
 					// ProductSigners: allowed, denied, required file rules (or zeros if null)
-					if (scenario.ProductSigners is null)
-					{
-						BodyWriter.Write(0U);
-						BodyWriter.Write(0U);
-						BodyWriter.Write(0U);
-					}
-					else
-					{
-						ConvertAllowedSignersToBinary(scenario.ProductSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-						ConvertDeniedSignersToBinary(scenario.ProductSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-						ConvertRequiredFileRulesToBinary(scenario.ProductSigners.FileRulesRef, fileRuleIdToIndexMap);
-					}
+					ConvertAllowedSignersToBinary(scenario.ProductSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
+					ConvertDeniedSignersToBinary(scenario.ProductSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
+					ConvertRequiredFileRulesToBinary(scenario.ProductSigners.FileRulesRef, fileRuleIdToIndexMap);
 
 					// TestSigners: allowed, denied, required file rules (or zeros if null)
 					if (scenario.TestSigners is null)
@@ -1188,7 +1179,7 @@ internal static partial class BinaryOpsForward
 			// Write signing timestamps (or zero if not set)
 			if (policyData.Signers is not null)
 			{
-				foreach (Signer signer in policyData.Signers)
+				foreach (Signer signer in CollectionsMarshal.AsSpan(policyData.Signers))
 				{
 					if (signer.SignTimeAfter is { } dt && dt != DateTime.MinValue)
 					{

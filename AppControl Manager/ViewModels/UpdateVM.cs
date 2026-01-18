@@ -143,6 +143,9 @@ internal sealed partial class UpdateVM : ViewModelBase
 			else
 			{
 #if APP_CONTROL_MANAGER
+
+				string stagingArea = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath, "AppUpdate")).FullName;
+
 				try
 				{
 					MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdate"));
@@ -156,8 +159,6 @@ internal sealed partial class UpdateVM : ViewModelBase
 						MainInfoBar.WriteInfo(GlobalVars.GetStr("VersionComparison") + App.currentAppVersion + GlobalVars.GetStr("WhileOnlineVersion") + updateCheckResult.OnlineVersion + GlobalVars.GetStr("UpdatingApplication"));
 
 						WhatsNewInfoBarIsOpen = true;
-
-						string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
 
 						// store the latest MSIXBundle version download link after retrieving it from GitHub text file
 						Uri onlineDownloadURL = new(await SecHttpClient.Instance.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
@@ -215,11 +216,8 @@ internal sealed partial class UpdateVM : ViewModelBase
 												// Update the last reported progress
 												lastReportedProgress = progressPercentage;
 
-												// Update the UI ProgressBar value on the dispatcher thread
-												_ = Dispatcher.TryEnqueue(() =>
-												{
-													ProgressBarValue = progressPercentage;
-												});
+												// Update the UI ProgressBar value
+												ProgressBarValue = progressPercentage;
 											}
 										}
 									}
@@ -248,6 +246,10 @@ internal sealed partial class UpdateVM : ViewModelBase
 				{
 					WhatsNewInfoBarIsOpen = false;
 					throw;
+				}
+				finally
+				{
+					Directory.Delete(stagingArea, true);
 				}
 #endif
 			}

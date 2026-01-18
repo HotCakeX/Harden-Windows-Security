@@ -32,16 +32,15 @@
 
             <TextBlock IsTextSelectionEnabled="True" Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Please provide the required details that will be used to sign the XML App Control Policies." />
 
-            <InfoBar
-                Margin="15"
-                Grid.Row="1"
-                BorderThickness="0"
-                CornerRadius="0"
-                IsIconVisible="True"
-                IsOpen="True"
-                IsClosable="False"
-                Message="You can configure the following details in the app settings once, eliminating the need to enter them repeatedly"
-                Severity="Informational">
+            <InfoBar Margin="15"
+                     Grid.Row="1"
+                     BorderThickness="0"
+                     CornerRadius="0"
+                     IsIconVisible="True"
+                     IsOpen="True"
+                     IsClosable="False"
+                     x:Uid="PolicyManagementDialogTopInfoBar"
+                     Severity="Informational">
                 <InfoBar.ActionButton>
                     <Button x:Uid="GoToSettingsButton" Click="{x:Bind OpenAppSettingsButton_Click}" />
                 </InfoBar.ActionButton>
@@ -49,7 +48,8 @@
 
 
             <StackPanel HorizontalAlignment="Stretch"
-            Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2">
+                        Spacing="{StaticResource SettingsCardSpacing}"
+                        Grid.Row="2">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -58,7 +58,7 @@
 
 
                 <controls:SettingsCard x:Uid="CertificateDetailsSettingsCard"
-                 HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
 
@@ -70,7 +70,7 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard x:Uid="CertificateCommonNameSettingsCard"
-                 HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -105,8 +105,8 @@
                 </Button>
 
                 <TeachingTip x:Name="VerifyButtonTeachingTip"
-                            Target="{x:Bind VerifyButton}"
-                            Title="Error">
+                             Target="{x:Bind VerifyButton}"
+                             Title="Error">
                 </TeachingTip>
 
             </controls:WrapPanel>

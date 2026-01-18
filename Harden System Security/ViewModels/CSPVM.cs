@@ -174,7 +174,7 @@ internal sealed partial class CSPVM : ViewModelBase
 	private ReadOnlyMemory<byte>? CachedZipData;
 
 	/// <summary>
-	/// To dispaly the source of the DDF data on the UI.
+	/// To display the source of the DDF data on the UI.
 	/// </summary>
 	internal DDFDataSource DataSourceName { get; set => SP(ref field, value); } = DDFDataSource.NotLoaded;
 

@@ -43,7 +43,7 @@ internal static class WebView2Config
 #endif
 
 	/// <summary>
-	/// Used by all WebView2 elements in the entier app.
+	/// Used by all WebView2 elements in the entire app.
 	/// </summary>
 	private static readonly Lazy<CoreWebView2Environment> CoreWebView2Instance = new(() =>
 	{
@@ -80,7 +80,7 @@ internal static class WebView2Config
 		{
 			try
 			{
-				// GetProcessById can throw if the process already exite, aka process with the specified ID is not running.
+				// GetProcessById can throw if the process already exited, aka process with the specified ID is not running.
 				Process proc = Process.GetProcessById(item.ProcessId);
 
 				try

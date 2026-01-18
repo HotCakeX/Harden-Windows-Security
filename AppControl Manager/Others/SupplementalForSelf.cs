@@ -16,8 +16,8 @@
 //
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
@@ -31,18 +31,11 @@ internal static class SupplementalForSelf
 	/// Deploys the Supplemental Policy that allows the Application to be allowed to run after deployment.
 	/// Each Base policy should have this supplemental policy.
 	/// </summary>
-	/// <param name="StagingArea">Specifies the directory where the policy files will be saved.</param>
 	/// <param name="basePolicyID">Identifies the base policy to which the supplemental policy is associated.</param>
-	internal static void Deploy(string StagingArea, string basePolicyID)
+	internal static void Deploy(string basePolicyID)
 	{
 		SiPolicy.SiPolicy policyObj = SwapDetails(basePolicyID);
 
-		string savePath = Path.Combine(StagingArea, $"{GlobalVars.AppControlManagerSpecialPolicyName}.xml");
-
-		string cipPath = Path.Combine(StagingArea, $"{GlobalVars.AppControlManagerSpecialPolicyName}.cip");
-
-		// Save the XML to the path as XML file
-		Management.SavePolicyToFile(policyObj, savePath);
 
 		Logger.Write(string.Format(GlobalVars.GetStr("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
 
@@ -65,9 +58,7 @@ internal static class SupplementalForSelf
 		{
 			Logger.Write(string.Format(GlobalVars.GetStr("LogSupplementalPolicyNotDeployedDeploying"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
 
-			Management.ConvertXMLToBinary(savePath, null, cipPath);
-
-			CiToolHelper.UpdatePolicy(cipPath);
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 	}
 
@@ -80,15 +71,7 @@ internal static class SupplementalForSelf
 	/// <param name="CertCN">Represents the common name of the certificate for signing purposes.</param>
 	internal static void DeploySigned(string basePolicyID, string CertPath, string CertCN)
 	{
-
-		DirectoryInfo stagingArea = StagingArea.NewStagingArea("SignedSupplementalPolicySpecialDeployment");
-
 		SiPolicy.SiPolicy policyObj = SwapDetails(basePolicyID);
-
-		string savePath = Path.Combine(stagingArea.FullName, $"{GlobalVars.AppControlManagerSpecialPolicyName}.xml");
-
-		// Save the XML to the path as XML file
-		Management.SavePolicyToFile(policyObj, savePath);
 
 		Logger.Write(string.Format(GlobalVars.GetStr("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
 
@@ -107,38 +90,32 @@ internal static class SupplementalForSelf
 
 		if (CurrentlyDeployedSupplementalPolicy.Count > 0)
 		{
-			foreach (CiPolicyInfo item in CurrentlyDeployedSupplementalPolicy)
+			foreach (CiPolicyInfo item in CollectionsMarshal.AsSpan(CurrentlyDeployedSupplementalPolicy))
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("LogRemovingUnsignedSupplementalForSigned"), item.PolicyID!, item.FriendlyName));
-				CiToolHelper.RemovePolicy(item.PolicyID!);
+				Logger.Write(string.Format(GlobalVars.GetStr("LogRemovingUnsignedSupplementalForSigned"), item.PolicyID, item.FriendlyName));
+				CiToolHelper.RemovePolicy(item.PolicyID);
 			}
 		}
 
 		// Add the certificate's details to the policy
-		_ = AddSigningDetails.Add(savePath, CertPath);
-
-		// Define the path for the CIP file
-		string randomString = Guid.CreateVersion7().ToString("N");
-		string xmlFileName = Path.GetFileName(savePath);
-		string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
+		policyObj = AddSigningDetails.Add(policyObj, CertPath);
 
 		// Convert the XML file to CIP
-		Management.ConvertXMLToBinary(savePath, null, CIPFilePath);
+		byte[] cipContent = Management.ConvertXMLToBinary(policyObj);
 
 		// Sign the CIP
-		CommonCore.Signing.Main.SignCIP(CIPFilePath, CertCN);
+		cipContent = CommonCore.Signing.Main.SignCIP(cipContent, CertCN);
 
 		// Deploy the signed CIP file
-		CiToolHelper.UpdatePolicy(CIPFilePath);
+		CiToolHelper.UpdatePolicy(cipContent);
 	}
 
 	/// <summary>
 	/// Checks whether an App Control policy is eligible to have the AppControlManager supplemental policy
 	/// </summary>
 	/// <param name="policyObj"></param>
-	/// <param name="policyFile"></param>
 	/// <returns></returns>
-	internal static bool IsEligible(SiPolicy.SiPolicy policyObj, string policyFile)
+	internal static bool IsEligible(SiPolicy.SiPolicy policyObj)
 	{
 		// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
 		if (!string.Equals(policyObj.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
@@ -148,7 +125,7 @@ internal static class SupplementalForSelf
 				// Make sure the policy is a base policy and it doesn't have allow all rule
 				if (policyObj.PolicyType is PolicyType.BasePolicy)
 				{
-					if (!CheckForAllowAll.Check(policyFile))
+					if (!PreDeploymentChecks.CheckForAllowAll(policyObj))
 					{
 						return true;
 					}

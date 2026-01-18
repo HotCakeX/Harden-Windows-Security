@@ -77,7 +77,7 @@ internal sealed class UpdatePolicySignerRuleComparer : IEqualityComparer<UpdateP
 		}
 
 		// Include CertRoot.Value in hash calculation if present
-		if (signer.CertRoot?.Value is not null)
+		if (!signer.CertRoot.Value.IsEmpty)
 		{
 			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}

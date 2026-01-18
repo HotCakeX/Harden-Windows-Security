@@ -79,6 +79,6 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 		args.Handled = true;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("StrictKernelModePolicyScanResultsPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("StrictKernelModePolicyScanResultsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

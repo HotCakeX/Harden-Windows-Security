@@ -302,79 +302,78 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 				return;
 			}
 
-			#endregion
-
-			#region Verify the XML policy path
-
-			if (string.IsNullOrWhiteSpace(XMLPolicyFileTextBox.Text))
-			{
-				ShowTeachingTip(GlobalVars.GetStr("PleaseSelectXmlPolicyFileMessage"));
-				return;
-			}
-
-			if (!File.Exists(XMLPolicyFileTextBox.Text))
-			{
-				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyFilePathNotExistMessage"));
-				return;
-			}
-
-			if (!string.Equals(Path.GetExtension(XMLPolicyFileTextBox.Text), ".xml", StringComparison.OrdinalIgnoreCase))
-			{
-				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyExtensionInvalidMessage"));
-				return;
-			}
-
-			string? possibleDeployedPolicy = null;
-			string policyPathFromUI = XMLPolicyFileTextBox.Text;
-			SiPolicy.SiPolicy? policyObject = null;
-
-			await Task.Run(() =>
-			{
-				// Instantiate the selected XML policy file
-				policyObject = SiPolicy.Management.Initialize(policyPathFromUI, null);
-
-				// See if the deployed base policy IDs contain the ID of the policy being removed
-				// Only checking among base policies because supplemental policies can be removed normally whether they're signed or not
-				possibleDeployedPolicy = basePolicyIDs.FirstOrDefault(
-				   x => string.Equals($"{{{x}}}", policyObject.PolicyID, StringComparison.OrdinalIgnoreCase));
-			});
-
-			if (possibleDeployedPolicy is null)
-			{
-				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotDeployedMessage"));
-				return;
-			}
-
-			if (!string.Equals(policyObject!.PolicyID, $"{{{policyIDBeingRemoved}}}", StringComparison.OrdinalIgnoreCase))
-			{
-				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotBeingRemovedMessage"));
-				return;
-			}
-
-			if (policyObject.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
-			{
-				ShowTeachingTip(GlobalVars.GetStr("SupplementalPoliciesRemovalMessage"));
-				return;
-			}
-
-			#endregion
-
-			#region Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
-
 			string certFilePath = CertFilePathTextBox.Text;
 			string certCN = CertificateCommonNameAutoSuggestBox.Text;
 
-			bool certIsUpdatePolicySigner = false;
+			#endregion
 
-			await Task.Run(() =>
-			{
-				certIsUpdatePolicySigner = CertificatePresence.InferCertificatePresence(policyObject, certFilePath, certCN);
-			});
+			#region Verify the XML policy path - If Provided
 
-			if (!certIsUpdatePolicySigner)
+			// It's okay to be empty, we don't need it but if user provides it then we'll perform the checks.
+			if (!string.IsNullOrWhiteSpace(XMLPolicyFileTextBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.GetStr("CertificateNotInPolicyRemovalMessage"));
-				return;
+
+				if (!File.Exists(XMLPolicyFileTextBox.Text))
+				{
+					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyFilePathNotExistMessage"));
+					return;
+				}
+
+				if (!string.Equals(Path.GetExtension(XMLPolicyFileTextBox.Text), ".xml", StringComparison.OrdinalIgnoreCase))
+				{
+					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyExtensionInvalidMessage"));
+					return;
+				}
+
+				string? possibleDeployedPolicy = null;
+				string policyPathFromUI = XMLPolicyFileTextBox.Text;
+
+				SiPolicy.SiPolicy policyObject = await Task.Run(() =>
+				{
+					// Instantiate the selected XML policy file
+					SiPolicy.SiPolicy policyObject = SiPolicy.Management.Initialize(policyPathFromUI, null);
+
+					// See if the deployed base policy IDs contain the ID of the policy being removed
+					// Only checking among base policies because supplemental policies can be removed normally whether they're signed or not
+					possibleDeployedPolicy = basePolicyIDs.FirstOrDefault(
+					   x => string.Equals($"{{{x}}}", policyObject.PolicyID, StringComparison.OrdinalIgnoreCase));
+
+					return policyObject;
+				});
+
+				if (possibleDeployedPolicy is null)
+				{
+					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotDeployedMessage"));
+					return;
+				}
+
+				if (!string.Equals(policyObject.PolicyID, $"{{{policyIDBeingRemoved}}}", StringComparison.OrdinalIgnoreCase))
+				{
+					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotBeingRemovedMessage"));
+					return;
+				}
+
+				if (policyObject.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
+				{
+					ShowTeachingTip(GlobalVars.GetStr("SupplementalPoliciesRemovalMessage"));
+					return;
+				}
+
+				// Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
+
+				bool certIsUpdatePolicySigner = false;
+
+				await Task.Run(() =>
+				{
+					certIsUpdatePolicySigner = CertificatePresence.InferCertificatePresence(policyObject, certFilePath, certCN, SiPolicy.PolicyFileRepresentKind.XML);
+				});
+
+				if (!certIsUpdatePolicySigner)
+				{
+					ShowTeachingTip(GlobalVars.GetStr("CertificateNotInPolicyRemovalMessage"));
+					return;
+				}
+
 			}
 
 			#endregion

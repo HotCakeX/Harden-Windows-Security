@@ -88,7 +88,7 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
-		if (signer.CertRoot?.Value is not null)
+		if (!signer.CertRoot.Value.IsEmpty)
 		{
 			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}
@@ -104,7 +104,7 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
-		if (signer.CertRoot?.Value is not null)
+		if (!signer.CertRoot.Value.IsEmpty)
 		{
 			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
 		}

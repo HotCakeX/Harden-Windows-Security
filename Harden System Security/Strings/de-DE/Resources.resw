@@ -205,7 +205,7 @@
   <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Support - Fragen stellen</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Passen Sie hier Ihre App-Einstellungen an. Ihre Präferenzen werden gespeichert und stehen bei jedem Start von Harden System Security bereit.</value>
   </data>
   <data name="Appearance.Text" xml:space="preserve">
@@ -580,10 +580,7 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Dokumentation</value>
   </data>
-  <data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>Der Benutzer hat die UAC-Eingabeaufforderung abgebrochen.</value>
-  </data>
-    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wählen Sie eine der Schutz-Voreinstellungen, die angewendet werden sollen; dies sind vorkonfigurierte Konfigurationssätze für unterschiedliche Sicherheitsstufen.</value>
   </data>
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -4457,7 +4454,7 @@ Fingerabdruck: {3}</value>
 <data name="GroupType" xml:space="preserve">
   <value>Gruppentyp:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Verwalten Sie die Entra‑Gruppen in Ihrem Mandanten und wählen Sie die Gruppen aus, auf die die Richtlinie bereitgestellt werden soll.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">

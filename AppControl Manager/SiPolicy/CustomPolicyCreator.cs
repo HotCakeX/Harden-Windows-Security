@@ -15,33 +15,28 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.IO;
+namespace AppControlManager.SiPolicy;
 
-namespace AppControlManager.Others;
-
-internal static class StagingArea
+internal static class CustomPolicyCreator
 {
 	/// <summary>
-	/// Creating a directory as a staging area for a job and returns the path to that directory
+	/// Creates an empty <see cref="SiPolicy"/> with minimal settings, serving as a vessel for new rules.
 	/// </summary>
-	/// <param name="name"></param>
 	/// <returns></returns>
-	/// <exception cref="ArgumentException"></exception>
-	internal static DirectoryInfo NewStagingArea(string name)
+	internal static SiPolicy CreateEmpty() => new(
+			versionEx: "1.0.0.0",
+			platformID: "{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}",
+			policyID: "{7AE40A06-9CFC-47E7-A74C-0B6BC71E3B93}",
+			basePolicyID: "{7AE40A06-9CFC-47E7-A74C-0B6BC71E3B93}",
+			rules: [new(OptionType.EnabledUnsignedSystemIntegrityPolicy)],
+			policyType: PolicyType.BasePolicy
+		)
 	{
+		HvciOptions = 2,
+		Settings = [
+				new(provider: "AllHostIds", key: "AllKeys", valueName: "EnterpriseDefinedClsId", value: new(true)),
+				new(provider: "PolicyInfo", key: "Information", valueName: "Id", value: new("129661"))
+				]
+	};
 
-		// Define a staging area
-		string stagingArea = Path.Combine(GlobalVars.StagingArea, name);
-
-		// Delete it if it already exists with possible content from previous runs
-		if (Directory.Exists(stagingArea))
-		{
-			Directory.Delete(stagingArea, true);
-		}
-
-		// Create the staging area
-		DirectoryInfo stagingAreaInfo = Directory.CreateDirectory(stagingArea);
-
-		return stagingAreaInfo;
-	}
 }

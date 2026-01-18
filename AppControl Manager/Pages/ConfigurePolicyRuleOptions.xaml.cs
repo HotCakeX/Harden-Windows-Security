@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
@@ -43,20 +44,24 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => LightUp1(), GlobalVars.GetStr("ConfigurePolicyRuleOptions_ButtonContent")));
+			actionPack1: (LightUp1, GlobalVars.GetStr("ConfigurePolicyRuleOptions_ButtonContent")));
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	private async void LightUp1()
+	private void LightUp1(object? param)
 	{
 		try
 		{
 			PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
-			ViewModel.SelectedFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 
-			await ViewModel.LoadPolicyOptionsFromXML();
+			if (param is PolicyFileRepresent policy)
+			{
+				ViewModel.SelectedPolicy = policy;
+			}
+
+			ViewModel.LoadPolicyOptionsFromXML();
 		}
 		catch (Exception ex)
 		{
@@ -66,6 +71,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ConfigurePolicyRuleOptionsPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ConfigurePolicyRuleOptionsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options");
 }

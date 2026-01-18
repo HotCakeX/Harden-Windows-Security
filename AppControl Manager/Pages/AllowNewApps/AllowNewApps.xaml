@@ -32,7 +32,7 @@
 
                 <NavigationViewItem.InfoBadge>
                     <InfoBadge x:Name="LocalFilesCountInfoBadge"
-                            Value="{x:Bind ViewModel.LocalFilesCountInfoBadgeValue, Mode=OneWay}" Opacity="{x:Bind ViewModel.LocalFilesCountInfoBadgeOpacity, Mode=OneWay}"
+                            Value="{x:Bind ViewModel.LocalFilesFileIdentities.Count, Mode=OneWay}"
                             Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                         <InfoBadge.IconSource>
                             <FontIconSource Glyph="&#xEA6A;"/>
@@ -49,7 +49,7 @@
 
                 <NavigationViewItem.InfoBadge>
                     <InfoBadge x:Name="EventLogsCountInfoBadge"
-                            Value="{x:Bind ViewModel.EventLogsCountInfoBadgeValue, Mode=OneWay}" Opacity="{x:Bind ViewModel.EventLogsCountInfoBadgeOpacity, Mode=OneWay}"
+                            Value="{x:Bind ViewModel.EventLogsFileIdentities.Count, Mode=OneWay}"
                             Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                         <InfoBadge.IconSource>
                             <FontIconSource Glyph="&#xEA6A;"/>

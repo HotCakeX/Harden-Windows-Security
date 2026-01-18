@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>ലോഗുകൾ</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>ക്രമീകരണങ്ങൾ</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>ലയിപ്പിച്ച ശേഷം പ്രധാന നയം വിന്യസിക്കുന്നു.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>പോളിസിമെർജർ</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>ലയിപ്പിച്ചനയം.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>ലയന പ്രക്രിയയിൽ ഒരു പിശക് സംഭവിച്ചു</value>
   </data>
@@ -936,9 +930,6 @@
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>അപ്‌ഡേറ്റിനായി പരിശോധിക്കുന്നു</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത MSIXBundle പാത ഇൻസ്റ്റാൾ ചെയ്യുന്നു: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>നിലവിലെ പതിപ്പ് </value>
@@ -954,9 +945,6 @@
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>ആപ്പ്കൺട്രോൾ മാനേജർ MSIXBundle പാക്കേജ് വിജയകരമായി ഡൗൺലോഡ് ചെയ്‌തു </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>MSIXBundle പാതയൊന്നും തിരഞ്ഞെടുത്തിട്ടില്ല</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>എല്ലാ ഡൗൺലോഡുകളും പൂർത്തിയായി, പുതിയ ആപ്പ്കൺട്രോൾ മാനേജർ പതിപ്പ് ഇൻസ്റ്റാൾ ചെയ്യുന്നു</value>
@@ -1967,73 +1955,73 @@
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത നയ ഫയലിൽ പ്രയോഗിക്കുന്നതിന് ഒരു ടെംപ്ലേറ്റ് തിരഞ്ഞെടുക്കുക. ടെംപ്ലേറ്റുകൾ നയ നിയമ ഓപ്ഷനുകളുടെ മുൻകൂട്ടി നിശ്ചയിച്ച ലിസ്റ്റുകളാണ്.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>വ്യത്യസ്ത ടെംപ്ലേറ്റുകളും നയ നിയമ ഓപ്ഷനുകളും അടിസ്ഥാനമാക്കി ബിസിനസ്സിനായുള്ള ആപ്പ് കൺട്രോൾ നയങ്ങൾ സൃഷ്ടിക്കുക. പുതിയ ഉപയോക്താക്കൾക്ക് സൈൻഡ് ആൻഡ് റെപ്യൂട്ടബിൾ മികച്ചതാണ്. മൈക്രോസോഫ്റ്റ് മാത്രം അനുവദിക്കുക എന്നത് മൈക്രോസോഫ്റ്റിന്റെ സർട്ടിഫിക്കറ്റുകൾ ഉപയോഗിച്ച് ഒപ്പിട്ട ഫയലുകൾ മാത്രം അനുവദിക്കുന്നു. ഡിഫോൾട്ട് വിൻഡോസ് എന്നത് വിൻഡോസ് ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിനൊപ്പം ഡിഫോൾട്ടായി വരുന്ന ഫയലുകൾ മാത്രം അനുവദിക്കുന്നു.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>ഒരു അടിസ്ഥാന നയത്തിന്റെ വ്യാപ്തി വികസിപ്പിക്കുന്ന ഒരു അനുബന്ധ നയം സൃഷ്ടിക്കുക. അനുബന്ധ നയങ്ങൾക്ക് ഫയലുകൾ അനുവദിക്കാൻ മാത്രമേ കഴിയൂ, അവയിൽ നിഷേധിക്കൽ നിയമങ്ങൾ ഉണ്ടാകാൻ പാടില്ല.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>അനുബന്ധ നയം സൃഷ്ടിക്കാൻ ഉപയോഗിച്ച കണ്ടെത്തിയ ഫയലുകൾ കാണുക.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>ഏത് തരത്തിലുള്ള ആപ്പ് കൺട്രോൾ നയവും പ്രാദേശികമായോ വിദൂരമായോ ക്ലൗഡ് നിയന്ത്രിത പിസികളിലേക്ക് വിന്യസിക്കുക.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>ആപ്ലിക്കേഷൻ കൺട്രോൾ നയങ്ങൾ സൃഷ്ടിക്കുന്നതിന് പ്രാദേശിക സിസ്റ്റം ലോഗുകളോ EVTX ലോഗ് ഫയലുകളോ പ്രയോജനപ്പെടുത്തുക. കോഡ് ഇന്റഗ്രിറ്റി ഓപ്പറേഷണൽ, ആപ്പ്ലോക്കർ ലോഗുകൾ മാത്രം മതി. ഡാറ്റാ ഗ്രിഡ് പോപ്പുലേറ്റ് ചെയ്യുന്നതിന് സ്കാൻ ബട്ടൺ ഉപയോഗിക്കുക. പോപ്പുലേറ്റ് ചെയ്ത ശേഷം, ഔട്ട്‌പുട്ട് കോൺഫിഗറേഷൻ നിർവചിക്കുന്നതിനും XML നയ ഫയൽ സൃഷ്ടിക്കുന്നതിനും നയം സൃഷ്ടിക്കുക ബട്ടൺ ഉപയോഗിക്കുക.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>ഫയലുകളുടെ കോഡ് ഇന്റഗ്രിറ്റിയും മറ്റ് തരത്തിലുള്ള ഹാഷുകളും കണക്കാക്കുക.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>സിസ്റ്റത്തിലെ സുരക്ഷിത ക്രമീകരണങ്ങൾ വീണ്ടെടുക്കുകയും അന്വേഷിക്കുകയും ചെയ്യുക.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>താഴെ പറയുന്നവ ആപ്പ്കൺട്രോൾ മാനേജർ സ്വയം സൃഷ്ടിക്കുകയും പ്രോഗ്രാം ഫയലുകളിലെ "ആപ്പ്കൺട്രോൾ മാനേജർ" ഫോൾഡറിൽ സംഭരിക്കുകയും ചെയ്യുന്ന ലോഗുകളാണ് (എലിവേറ്റഡ് ആയി പ്രവർത്തിക്കുകയാണെങ്കിൽ, അല്ലെങ്കിൽ അവ TEMP ഡയറക്ടറിയിൽ സംരക്ഷിക്കപ്പെടും). ലോഗ്സ് ഫോൾഡറിന്റെ ആകെ വലുപ്പം 1GB കവിയരുത്.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>ആപ്ലിക്കേഷൻ കൺട്രോൾ നയങ്ങൾ നിർമ്മിക്കുന്നതിന് Microsoft Defender for Endpoint അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾ പ്രയോജനപ്പെടുത്തുക. നിങ്ങൾക്ക് എക്‌സ്‌പോർട്ട് ചെയ്‌ത ലോഗ് ഫയലുകൾക്കായി ബ്രൗസ് ചെയ്യാം അല്ലെങ്കിൽ നിങ്ങളുടെ Microsoft അക്കൗണ്ടിലേക്ക് സൈൻ ഇൻ ചെയ്‌ത് ക്ലൗഡിൽ നിന്ന് അവ വീണ്ടെടുക്കാം.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>ബിസിനസ്സിനായുള്ള ആപ്പ് കൺട്രോൾ നയങ്ങൾ ലയിപ്പിക്കുകയും ഡ്യൂപ്ലിക്കേറ്റ് ചെയ്യുകയും ചെയ്യുക. അതിന്റെ നിയമങ്ങൾ ഡ്യൂപ്ലിക്കേറ്റ് ചെയ്യുന്നതിനായി നിങ്ങൾക്ക് ഒരേ നയം രണ്ടുതവണ തിരഞ്ഞെടുക്കാം.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>ബിസിനസ്സിനായുള്ള ആപ്പ് കൺട്രോൾ നയങ്ങൾ എഡിറ്റ് ചെയ്യുക. ഒരു നയ XML ഫയലിനായി എളുപ്പത്തിൽ ബ്രൗസ് ചെയ്യുകയും ലോഡ് ബട്ടൺ ഉപയോഗിച്ച് അതിന്റെ വിശദാംശങ്ങൾ ലോഡ് ചെയ്യുകയും ചെയ്യുക. ലോഡ് ചെയ്തുകഴിഞ്ഞാൽ, നയത്തിനുള്ളിലെ ഓരോ നിയമത്തിന്റെയും എണ്ണം നിങ്ങൾക്ക് അവലോകനം ചെയ്യാനും നിർദ്ദിഷ്ട നിയമങ്ങൾ നീക്കം ചെയ്യാനും മറ്റ് വിവിധ നയ ക്രമീകരണങ്ങൾ പരിഷ്കരിക്കാനും കഴിയും.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>നിങ്ങളുടെ ആപ്പ് ക്രമീകരണങ്ങൾ ഇവിടെ ഇഷ്ടാനുസൃതമാക്കുക. നിങ്ങളുടെ മുൻഗണനകൾ സംരക്ഷിക്കപ്പെടും, അതിനാൽ നിങ്ങൾ ആപ്പ്കൺട്രോൾ മാനേജർ ആരംഭിക്കുമ്പോഴെല്ലാം അവ നിങ്ങൾക്കായി തയ്യാറായിരിക്കും.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>ഫയലുകളോ ഫോൾഡറുകളോ ഒരു XML നയ ഫയലോ തിരഞ്ഞെടുത്ത് ബിസിനസ്സിനായുള്ള ആപ്പ് കൺട്രോൾ സിമുലേഷൻ നടത്തുക, തുടർന്ന് ഡാറ്റാ ഗ്രിഡ് പോപ്പുലേറ്റ് ചെയ്യുന്നതിന് സിമുലേഷൻ ആരംഭിക്കുക ബട്ടൺ ഉപയോഗിക്കുക. നിങ്ങളുടെ ആപ്പ് കൺട്രോൾ നയം ഒരു സിസ്റ്റത്തിൽ യഥാർത്ഥത്തിൽ വിന്യസിക്കുകയും ആ ഫയലുകൾ പ്രവർത്തിക്കുകയും ചെയ്തിരുന്നെങ്കിൽ തിരഞ്ഞെടുത്ത ഫയലുകൾ അനുവദിക്കപ്പെടുമോ തടയപ്പെടുമോ എന്ന് ഫലങ്ങൾ നിങ്ങളെ കാണിക്കും.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>എൻഫോഴ്‌സ്ഡ് മോഡ് നയം സൃഷ്ടിക്കാൻ ഉപയോഗിക്കുന്ന കണ്ടെത്തിയ കേർണൽ-മോഡ് ഫയലുകൾ കാണുക. അന്തിമ സ്ട്രിക്റ്റ് കേർണൽ-മോഡ് നയത്തിൽ ഉൾപ്പെടുത്താൻ നിങ്ങൾ ആഗ്രഹിക്കാത്ത ഇനങ്ങൾ ലിസ്റ്റിൽ നിന്ന് നീക്കം ചെയ്യുക.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ അപ്‌ഡേറ്റുകൾക്കായി പരിശോധിക്കുക. നിങ്ങൾക്ക് യാന്ത്രിക അപ്‌ഡേറ്റ് പരിശോധന പ്രവർത്തനക്ഷമമാക്കാനും കഴിയും, അത് സ്റ്റാർട്ടപ്പിൽ ഒരിക്കൽ സംഭവിക്കുകയും പുതിയ പതിപ്പ് ലഭ്യമാകുമ്പോഴെല്ലാം നിങ്ങളെ അറിയിക്കുകയും ചെയ്യും.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>ഔദ്യോഗിക സ്കീമയുമായി പൊരുത്തപ്പെടുന്നുണ്ടെന്ന് ഉറപ്പാക്കാൻ ആപ്പ് കൺട്രോൾ നയങ്ങൾ സാധൂകരിക്കുക. നിങ്ങൾ XML നയ ഫയലുകൾ സ്വമേധയാ പരിഷ്കരിക്കുകയും നിങ്ങളുടെ പരിഷ്കാരങ്ങൾ ശരിയാണെന്ന് ഉറപ്പാക്കാൻ ആഗ്രഹിക്കുകയും ചെയ്യുന്നുവെങ്കിൽ, അവ സാധൂകരിക്കുന്നതിന് ഈ സവിശേഷത ഉപയോഗിക്കുക.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>ഏതെങ്കിലും ഫയൽ ഒപ്പിടാൻ ഉപയോഗിച്ച സർട്ടിഫിക്കറ്റുകളെക്കുറിച്ചുള്ള സമഗ്രമായ വിവരങ്ങൾ കാണുക. ഫയൽ എക്സ്പ്ലോറർ പ്രോപ്പർട്ടികളിലോ PowerShell cmdlets-ലോ സാധാരണയായി ലഭ്യമല്ലാത്ത വിശദാംശങ്ങൾ ഇവിടെ പൂർണ്ണമായി അവതരിപ്പിച്ചിരിക്കുന്നു.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>നിഷേധിക്കൽ നയം സൃഷ്ടിക്കാൻ ഉപയോഗിച്ച കണ്ടെത്തിയ ഫയലുകൾ കാണുക.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>ഫയലുകളെയോ ആപ്ലിക്കേഷനുകളെയോ വ്യക്തമായി നിഷേധിക്കുന്ന ഒരു നിഷേധിക്കൽ അടിസ്ഥാന നയം സൃഷ്ടിക്കുക. ആപ്ലിക്കേഷൻ കൺട്രോൾ അടിസ്ഥാനപരമായി അനുവദിക്കൽ-ലിസ്റ്റിംഗിനെ അടിസ്ഥാനമാക്കിയുള്ളതാണെന്ന് ഓർമ്മിക്കുക, അതായത് ഒരു നയത്താൽ അനുവദിക്കപ്പെടാത്ത എന്തും ഇതിനകം സ്വയം നിഷേധിക്കപ്പെട്ടിരിക്കുന്നു.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>ബിസിനസ്സിനായുള്ള ആപ്പ് കൺട്രോൾ നയ നിയമ ഓപ്ഷനുകൾ ക്രമീകരിക്കുക. ഓരോ നിയമത്തിനും അടുത്തായി വിശദമായ വിവരങ്ങൾ നൽകിയിട്ടുണ്ട്, നിങ്ങൾക്ക് കൂടുതൽ വിവരങ്ങൾ ആവശ്യമുണ്ടെങ്കിൽ ഗൈഡ് ബട്ടൺ ഉപയോഗിക്കാം അല്ലെങ്കിൽ GitHub-ൽ ഒരു ചർച്ച തുറക്കാം.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>ആപ്പ് കൺട്രോൾ നയങ്ങൾ ഒപ്പിടാൻ അനുയോജ്യമായ കോഡ് സൈനിംഗ് സർട്ടിഫിക്കറ്റുകൾ സുരക്ഷിതമായി നിർമ്മിക്കുക.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>പ്രാദേശിക അല്ലെങ്കിൽ വിദൂര സിസ്റ്റങ്ങളിലെ വിന്യസിച്ച നയങ്ങളെയും കോഡ് ഇന്റഗ്രിറ്റിയെയും കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ കാണുക.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>സിസ്റ്റത്തിൽ പുതിയതോ ഇതിനകം ഇൻസ്റ്റാൾ ചെയ്തതോ ആയ ആപ്പുകളോ ഫയലുകളോ പ്രവർത്തിപ്പിക്കാൻ അനുവദിക്കുന്നതിന് ഈ പേജ് ഉപയോഗിക്കുക.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>സർട്ടിഫിക്കറ്റ് വിശദാംശ ഡാറ്റയിൽ തിരയുക</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>GitHub-ൽ നിന്ന് യാന്ത്രികമായി ഡൗൺലോഡ് ചെയ്യുന്നതിനു പകരം തിരഞ്ഞെടുത്ത ഇഷ്ടാനുസൃത MSIXBundle ഫയൽ ഉപയോഗിക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുവെന്ന് സ്ഥിരീകരിക്കുക. ഇത് ഓൺലൈൻ അപ്‌ഡേറ്റ് പരിശോധനയെ മറികടക്കുകയും GitHub-ൽ നിന്നുള്ള MSIXBundle ഫയലിന്റെ ഡൗൺലോഡ് ഒഴിവാക്കുകയും ചെയ്യും.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>സ്ഥിരീകരിക്കുക</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>GitHub-ൽ നിന്ന് യാന്ത്രികമായി ഡൗൺലോഡ് ചെയ്യുന്നതിനു പകരം തിരഞ്ഞെടുത്ത ഇഷ്ടാനുസൃത MSIXBundle ഫയൽ ഉപയോഗിക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുവെന്ന് സ്ഥിരീകരിക്കുക. ഇത് ഓൺലൈൻ അപ്‌ഡേറ്റ് പരിശോധനയെ മറികടക്കുകയും GitHub-ൽ നിന്നുള്ള MSIXBundle ഫയലിന്റെ ഡൗൺലോഡ് ഒഴിവാക്കുകയും ചെയ്യും.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>GitHub-ൽ നിന്ന് യാന്ത്രികമായി ഡൗൺലോഡ് ചെയ്യുന്നതിനു പകരം തിരഞ്ഞെടുത്ത ഇഷ്ടാനുസൃത MSIXBundle ഫയൽ ഉപയോഗിക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുവെന്ന് സ്ഥിരീകരിക്കുക. ഇത് ഓൺലൈൻ അപ്‌ഡേറ്റ് പരിശോധനയെ മറികടക്കുകയും GitHub-ൽ നിന്നുള്ള MSIXBundle ഫയലിന്റെ ഡൗൺലോഡ് ഒഴിവാക്കുകയും ചെയ്യും.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>കൂടുതൽ വിവരങ്ങൾ</value>
   </data>
@@ -2506,12 +2482,6 @@
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഇത് ഏറ്റവും പുതിയ ഉപയോക്തൃ കോൺഫിഗറേഷനുകൾ വീണ്ടെടുക്കുകയും പ്രദർശിപ്പിക്കുകയും ചെയ്യും.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>ഒപ്പിട്ട നയ പാത:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>ഒപ്പിടാത്ത നയ പാത:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>സർട്ടിഫിക്കറ്റ് പൊതുനാമം:</value>
@@ -2902,18 +2872,6 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>പ്രമാണീകരണം</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>യാന്ത്രിക നിയമനം</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>സൈഡ്‌ബാറിൽ നിങ്ങൾ സൃഷ്‌ടിക്കുന്ന അടിസ്ഥാന നയങ്ങളിലേക്കുള്ള പാത യാന്ത്രികമായി സംരക്ഷിക്കുക.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>സൈഡ്‌ബാറിൽ നിങ്ങൾ സൃഷ്‌ടിക്കുന്ന അടിസ്ഥാന നയങ്ങളിലേക്കുള്ള പാത യാന്ത്രികമായി സംരക്ഷിക്കുക.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>സൈഡ്‌ബാറിൽ നിങ്ങൾ സൃഷ്‌ടിക്കുന്ന അടിസ്ഥാന നയങ്ങളിലേക്കുള്ള പാത യാന്ത്രികമായി സംരക്ഷിക്കുക.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>സൈഡ്‌ബാർ ഗൈഡ്</value>
   </data>
@@ -2923,50 +2881,11 @@
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>സൈഡ്‌ബാർ ഉപയോഗ ഗൈഡിനായി ദയവായി ഇവിടെ ക്ലിക്ക്/ടാപ്പ് ചെയ്ത് GitHub വിക്കി പേജ് സന്ദർശിക്കുക.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>തിരഞ്ഞെടുക്കുക</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>നിലവിൽ ദൃശ്യമായ പേജിലെ ബാധകമായ വിഭാഗത്തിന്റെ അടിസ്ഥാന നയ പാതയിലേക്ക് സൈഡ്‌ബാറിലെ തിരഞ്ഞെടുത്ത XML നയ ഫയൽ നിയോഗിക്കുക.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>നിലവിൽ ദൃശ്യമായ പേജിലെ ബാധകമായ വിഭാഗത്തിന്റെ അടിസ്ഥാന നയ പാതയിലേക്ക് സൈഡ്‌ബാറിലെ തിരഞ്ഞെടുത്ത XML നയ ഫയൽ നിയോഗിക്കുക.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>മായ്ക്കുക</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത XML ഫയൽ പാത ടെക്സ്റ്റ് ബോക്സ് മായ്‌ക്കുക.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത XML ഫയൽ പാത ടെക്സ്റ്റ് ബോക്സ് മായ്‌ക്കുക.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഒരു XML നയ ഫയലിനായി ബ്രൗസ് ചെയ്യുക</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഒരു XML നയ ഫയലിനായി ബ്രൗസ് ചെയ്യുക</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>XML ഫയൽ പാതകൾ പിൻ ചെയ്യാനും ആപ്പ്കൺട്രോൾ മാനേജറിന്റെ വിവിധ ഭാഗങ്ങളിൽ അവ വീണ്ടും ഉപയോഗിക്കാനും സൈഡ്‌ബാർ ഉപയോഗിക്കുക.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>സൈഡ്‌ബാർ</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>പിൻ ചെയ്‌ത നയ പാത</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>നയ പാത</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>അനുബന്ധ നയത്തിനായി നിങ്ങൾ ഒരു പേര് തിരഞ്ഞെടുക്കേണ്ടതുണ്ട്</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>നിങ്ങൾ ഒരു XML നയ ഫയൽ പാത തിരഞ്ഞെടുക്കേണ്ടതുണ്ട്</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത XML ഫയൽ പാത നിലവിലില്ല</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>ആരംഭിക്കുന്നു...</value>
@@ -3003,9 +2922,6 @@
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>എൻഫോഴ്‌സ്ഡ് മോഡ് CIP ഫയൽ കണ്ടെത്താൻ കഴിഞ്ഞില്ല</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>ഒരു ആപ്പ് കൺട്രോൾ XML നയ ഫയലിനായി ബ്രൗസ് ചെയ്യുക</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>സാധൂകരണം നടത്തുന്നു</value>
@@ -3216,10 +3132,6 @@
     <comment>App Manifest Validation</comment>
     <value>AppManifest-ന്റെ 'Id' പ്രോപ്പർട്ടി ആവശ്യമാണ്, അത് ശൂന്യമോ ശൂന്യമോ ആയിരിക്കാൻ പാടില്ല.</value>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <comment>App Manifest Validation</comment>
-    <value>SettingDefinition അറേയിൽ ഒരു ശൂന്യ ഘടകം അടങ്ങിയിരിക്കുന്നു.</value>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <comment>App Manifest Validation</comment>
     <value>SettingDefinition-ന്റെ 'Name' പ്രോപ്പർട്ടി ആവശ്യമാണ്, അത് ശൂന്യമോ ശൂന്യമോ ആയിരിക്കാൻ പാടില്ല.</value>
@@ -3397,9 +3309,6 @@
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>നയ സൃഷ്ടിക്കൽ ലിസ്റ്റിൽ നിന്ന് നിങ്ങൾ ഒരു ഓപ്ഷൻ തിരഞ്ഞെടുക്കണം</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>ഇവന്റ് ലോഗുകളിൽ നിന്നുള്ള അനുബന്ധ നയം - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>ലോഗുകൾ ചേർക്കുന്നതിന് ഒരു നയ ഫയലും തിരഞ്ഞെടുത്തിട്ടില്ല.</value>
@@ -3620,9 +3529,6 @@
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത സർട്ടിഫിക്കറ്റ് ഫയലും പൊതുനാമവും പൊരുത്തപ്പെടുന്നില്ല.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>നീക്കം ചെയ്യുന്ന നയത്തിന്റെ XML നയ ഫയൽ ദയവായി തിരഞ്ഞെടുക്കുക.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത XML നയ ഫയൽ പാത നിലവിലില്ല</value>
   </data>
@@ -3734,9 +3640,6 @@
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>മൈക്രോസോഫ്റ്റ് ശുപാർശിത ഡ്രൈവർ ബ്ലോക്ക് നിയമങ്ങളുമായി ബന്ധപ്പെട്ട അധിക വിവരങ്ങൾ വീണ്ടെടുക്കുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>നയ ഫയൽ സൃഷ്‌ടിക്കുകയും {0} എന്നതിലേക്ക് സംരക്ഷിക്കുകയും ചെയ്‌തു</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>നയ ഐഡി പുനഃസജ്ജമാക്കുകയും നയ നാമം നൽകുകയും ചെയ്യുന്നു</value>
   </data>
@@ -3764,9 +3667,6 @@
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>മൈക്രോസോഫ്റ്റ് ശുപാർശിത യൂസർ മോഡ് ബ്ലോക്ക് നിയമങ്ങൾക്കായി മൈക്രോസോഫ്റ്റ് GitHub ഉറവിടത്തിൽ XML ഉള്ളടക്കമൊന്നും കണ്ടെത്തിയില്ല.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>ഇതിനായി നയ നിയമ ഓപ്ഷനുകൾ ക്രമീകരിക്കുന്നു: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>നിയമ ഓപ്ഷൻ ചേർക്കുന്നു: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@
   </data>
   <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} വിന്യസിച്ച ഏതെങ്കിലും സർട്ടിഫിക്കറ്റുകളുടെ ഒരു സബ്ജക്റ്റ് CN-ൽ ഉൾപ്പെടുന്നില്ല</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>നിർദ്ദിഷ്‌ട നയ ഫയൽ '{0}' ഒപ്പിട്ടിട്ടില്ല. ദയവായി ഒപ്പിട്ട ഒരു നയ ഫയൽ നൽകുക.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>നിർദ്ദിഷ്‌ട നയ ഫയൽ '{0}' ഒപ്പിട്ടിട്ടുണ്ട്. ദയവായി ഒപ്പിടാത്ത ഒരു നയ ഫയൽ നൽകുക.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>നിലവിലെ ഉപയോക്താവിന്റെ കോൺഫിഗറേഷൻ ഫയൽ പാഴ്‌സ് ചെയ്യാനും വായിക്കാനും ശ്രമിക്കുന്നു</value>
@@ -3938,36 +3832,6 @@
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>{0} പിശക് കോഡ് ഉപയോഗിച്ച് കമാൻഡ് നിർവ്വഹണം പരാജയപ്പെട്ടു. ഔട്ട്‌പുട്ട്: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>CipPath ശൂന്യമോ ശൂന്യമോ ആയിരിക്കാൻ പാടില്ല.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>'{0}' ഫയൽ നിലവിലില്ല.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>താഴെപ്പറയുന്ന CIP ഫയൽ വിന്യസിക്കുന്നു: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>അസാധുവായ XML ഘടന, SiPolicy നോഡ് കണ്ടെത്തിയില്ല</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>സൈനർ നോഡ് കണ്ടെത്തിയില്ല</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>UMCI_ProductSignersNode സൃഷ്ടിക്കുന്നതിനോ വീണ്ടെടുക്കുന്നതിനോ പരാജയപ്പെട്ടു</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>KMCI_ProductSignersNode സൃഷ്ടിക്കുന്നതിനോ വീണ്ടെടുക്കുന്നതിനോ പരാജയപ്പെട്ടു</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>സൃഷ്ടിച്ചിട്ടും {0} ഉൽപ്പന്ന സൈനർമാരുടെ AllowedSigners നോഡ് കണ്ടെത്തിയില്ല.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>സൃഷ്ടിച്ചിട്ടും {0} ഉൽപ്പന്ന സൈനർമാരുടെ FileRulesRef നോഡ് കണ്ടെത്തിയില്ല.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>സൃഷ്ടിച്ചിട്ടും {0} ഉൽപ്പന്ന സൈനർമാരുടെ DeniedSigners നോഡ് കണ്ടെത്തിയില്ല.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>CiTool.exe പ്രവർത്തിപ്പിക്കുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി.</value>
   </data>
@@ -4031,7 +3895,7 @@
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>നയ സൃഷ്ടിക്കൽ ലിസ്റ്റിൽ നിന്ന് നിങ്ങൾ ഒരു ഓപ്ഷൻ തിരഞ്ഞെടുക്കണം.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകളിൽ നിന്നുള്ള അനുബന്ധ നയം - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>സപ്ലിമെന്റൽ പോളിസി നിർമ്മിക്കുന്നതിനായി ഡാറ്റാ ഗ്രിഡുകളിൽ ലോഗുകളോ ഫയലുകളോ ലഭ്യമല്ല.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>സ്റ്റേജിംഗ് ഏരിയ കണ്ടെത്താനായില്ല</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>പോളിസി വിജയകരമായി നിർമ്മിക്കുകയും വിന്യസിക്കുകയും ചെയ്തു.</value>
 </data>
@@ -4402,9 +4263,6 @@
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>പ്രതീക്ഷിച്ച V8 ബ്ലോക്ക് ടാഗ് '8', ലഭിച്ചത് '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>പ്രതീക്ഷിച്ച പോളിസി എൻഡ് ടാഗ് '{0}', ലഭിച്ചത് '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>പോളിസി ടൈപ്പ് {0} ആണ്, അതിന് {1} റൂൾ ഓപ്ഷൻ ഉണ്ട്, അത് അസാധുവാണ്. {2}-ന് മാത്രമേ അത് ഉണ്ടാകാൻ കഴിയൂ.</value>
@@ -4658,9 +4516,6 @@
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>സർട്ടിഫിക്കറ്റിന് ഒരു സ്വകാര്യ കീ ഉണ്ടായിരിക്കണം.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>PKCS #7 സിഗ്നേച്ചർ (ഉള്ളടക്കം ഉൾച്ചേർത്തത്, സർട്ടിഫിക്കറ്റ് ഉൾപ്പെടുത്തിയത്) {0} എന്നതിലേക്ക് എഴുതി</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>SignerSignEx3 HRESULT: 0x{0:X} ഉപയോഗിച്ച് പരാജയപ്പെട്ടു</value>
 </data>
@@ -4687,9 +4542,6 @@
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>ഫയൽ ആക്ടിവേഷൻ വഴി ആപ്പ് സമാരംഭിച്ചു, പക്ഷേ ഫയൽ ആക്ടിവേഷൻ ആർഗ്യുമെന്റുകളൊന്നും ഉണ്ടായിരുന്നില്ല</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>ഉപയോക്താവ് UAC പ്രോംപ്റ്റ് റദ്ദാക്കി.</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>തിരഞ്ഞെടുത്ത ഫയൽ പ്രോസസ് ചെയ്യുന്നതിന് എലിവേഷൻ അഭ്യർത്ഥന ആവശ്യമായിരുന്നു, പക്ഷേ ഉപയോക്താവ് അത് നിരസിച്ചു. ആപ്പിൽ നിന്ന് പുറത്തുകടക്കുന്നു.</value>
@@ -4729,12 +4581,6 @@
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>തിരഞ്ഞെടുത്ത XML പോളിസി ഫയൽ ഒരു ബേസ് പോളിസിയാണ്, എന്നാൽ അതിന്റെ BasePolicyID-യും PolicyID-യും ഒന്നല്ല, ഇത് ഒരു സപ്ലിമെന്റൽ പോളിസിയാണെന്ന് സൂചിപ്പിക്കുന്നു, തരം മാറ്റുന്നു.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>'{0}' എന്നതിലെ പോളിസി വിജയകരമായി കോൺഫിഗർ ചെയ്തു. ഇപ്പോൾ അതിന് '{1}' തരം, BasePolicyID '{2}', PolicyID '{3}' എന്നിവയുണ്ട്.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>'{0}' എന്നതിലെ പോളിസി ഫയലിന്റെ പതിപ്പ് '{1}' എന്നതിൽ നിന്ന് '{2}' എന്നതിലേക്ക് വിജയകരമായി സജ്ജീകരിച്ചു.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: ഡാറ്റാ വിഭജന പ്രക്രിയ ആരംഭിക്കുന്നു.</value>
@@ -4831,9 +4677,6 @@
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>XML ഫയലുകളിലൊന്നിൽ ഒരേ ഐഡി '{0}' ഉള്ള ഒന്നിൽ കൂടുതൽ സൈനർ ഉണ്ട്</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>'{0}' പോളിസി ഫയലിലെ HVCI വിജയകരമായി സ്ട്രിക്റ്റിലേക്ക് സജ്ജമാക്കി.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>ജമ്പ്‌ലിസ്റ്റ് പിന്തുണയ്ക്കുന്നില്ല.</value>
@@ -5300,10 +5143,7 @@
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി WHQLFilePublisher ഒപ്പിടുന്നവരെ കണ്ടെത്തിയില്ല।</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>EKUs നോഡ് കണ്ടെത്തിയില്ല</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>നിഷേധ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി WHQLFilePublisher ഒപ്പിടുന്നവരെ കണ്ടെത്തിയില്ല।</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@
     <value>സൃഷ്ടിച്ച സമയം</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Intune നയം വിന്യസിക്കൽ വിശദാംശങ്ങൾ</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Intune നയം വിന്യസിക്കൽ വിവരങ്ങൾ വ്യക്തമാക്കുക</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Intune നയം വിന്യസിക്കൽ വിവരങ്ങൾ വ്യക്തമാക്കുക</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>പുതിയ ഗ്രൂപ്പ് സൃഷ്ടിക്കുക</value>
@@ -5634,7 +5468,7 @@
 <data name="GroupType" xml:space="preserve">
   <value>ഗ്രൂപ്പ് തരം:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>നിങ്ങളുടെ ടേനന്റിലെ Entra ഗ്രൂപ്പുകൾ നിയന്ത്രിച്ച് നയം വിന്യസിക്കേണ്ട ഗ്രൂപ്പുകൾ തിരഞ്ഞെടുക്കുക.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,329 @@
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>എന്തെങ്കിലും പ്രവർത്തനം നടക്കുമ്പോൾ ചില പ്രത്യേക സാഹചര്യങ്ങളിൽ മാത്രം ആപ്പ് ക്ലോസ് ചെയ്യുന്നതിന് മുമ്പ് സ്ഥിരീകരണം ചോദിക്കുക.</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>സൈഡ്‌ബാർ ലൈബ്രറിയിൽ സേവ് ചെയ്യാത്ത പോളിസികൾ ഇപ്പോഴുമുണ്ട്, ആപ്ലിക്കേഷൻ ക്ലോസ് ചെയ്താൽ അവ നഷ്ടപ്പെടും. നിങ്ങൾക്ക് തീർച്ചയായും പുറത്തുകടക്കണോ?</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>ഇതാണ് നിങ്ങളുടെ ആപ്പ് കൺട്രോൾ പോളിസികൾക്കായുള്ള ലൈബ്രറി. നിങ്ങൾക്ക് ഇവിടെ പോളിസികൾ സംഭരിക്കാനും ആപ്പിന്റെ വിവിധ ഭാഗങ്ങളിൽ ഉപയോഗിക്കാനും കഴിയും. നിങ്ങൾ അവ ഒരു ഫയലിലേക്ക് സേവ് ചെയ്യുകയോ അല്ലെങ്കിൽ പെർസിസ്റ്റൻസ് (Persistence) പ്രവർത്തനക്ഷമമാക്കുകയോ ച���യ്തിട്ടില്ലെങ്കിൽ അവ മെമ്മറിയിൽ മാത്രമേ ലഭ്യമാകൂ.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>പോളിസി ലൈബ്രറി</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>പെർസിസ്റ്റന്റ് ലൈബ്രറി</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>ഇത് പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ലൈബ്രറിയിൽ ലഭ്യമായ എല്ലാ പോളിസികളും ആപ്പ് പുനരാരംഭിച്ചതിന് ശേഷവും അവിടെത്തന്നെ തുടരും. ഡിസ്കിലെ ഒരു സ്വകാര്യ കാഷെയിൽ (cache) ലൈബ്രറിയിലെ പോളിസികളുടെ ഒരു പകർപ്പ് സൂക്ഷിച്ചുകൊണ്ടാണ് ഈ പ്രവർത്തനം സാധ്യമാക്കുന്നത്. ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ കാഷെ സ്വയമേവ ഇല്ലാതാക്കപ്പെടും.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇത് പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ലൈബ്രറിയിൽ ലഭ്യമായ എല്ലാ പോളിസികളും ആപ്പ് പുനരാരംഭിച്ചതിന് ശേഷവും അവിടെത്തന്നെ തുടരും. ഡിസ്കിലെ ഒരു സ്വകാര്യ ലൊക്കേഷനിൽ ലൈബ്രറിയിലെ പോളിസികളുടെ ഒരു പകർപ്പ് സൂക്ഷിച്ചുകൊണ്ടാണ് ഈ പ്രവർത്തനം സാധ്യമാക്കുന്നത്. ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ കാഷെ സ്വയമേവ ഇല്ലാതാക്കപ്പെടും.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇത് പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ലൈബ്രറിയിൽ ലഭ്യമായ എല്ലാ പോളിസികളും ആപ്പ് പുനരാരംഭിച്ചതിന് ശേഷവും അവിടെത്തന്നെ തുടരും. ഡിസ്കിലെ ഒരു സ്വകാര്യ ലൊക്കേഷനിൽ ലൈബ്രറിയിലെ പോളിസികളുടെ ഒരു പകർപ്പ് സൂക്ഷിച്ചുകൊണ്ടാണ് ഈ പ്രവർത്തനം സാധ്യമാക്കുന്നത്. ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ കാഷെ സ്വയമേവ ഇല്ലാതാക്കപ്പെടും.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>CIP ആയി സേവ് ചെയ്യുക</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി ഒരു CIP ഫയലായി സേവ് ചെയ്യേണ്ട ലൊക്കേഷൻ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി ഒരു CIP ഫയലായി സേവ് ചെയ്യേണ്ട ലൊക്കേഷൻ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>XML ആയി സേവ് ചെയ്യുക</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി ഒരു XML ഫയലായി സേവ് ചെയ്യേണ്ട ലൊക്കേഷൻ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി ഒരു XML ഫയലായി സേവ് ചെയ്യേണ്ട ലൊക്കേഷൻ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ നിന്ന് പോളിസി നീക്കം ചെയ്യുക. പെർസിസ്റ്റന്റ് ലൈബ്രറി ഫീച്ചർ പ്രവർത്തനക്ഷമമാണെങ്കിൽ, തിരഞ്ഞെടുത്ത പോളിസി ലോക്കൽ കാഷെയിൽ നിന്നും നീക്കം ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ നിന്ന് പോളിസി നീക്കം ചെയ്യുക. പെർസിസ്റ്റന്റ് ലൈബ്രറി ഫീച്ചർ പ്രവർത്തനക്ഷമമാണെങ്കിൽ, തിരഞ്ഞെടുത്ത പോളിസി ലോക്കൽ കാഷെയിൽ നിന്നും നീക്കം ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>വിന്യസിക്കുക</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി ലോക്കൽ സിസ്റ്റത്തിൽ വിന്യസിക്കുന്നു.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി ലോക്കൽ സിസ്റ്റത്തിൽ വിന്യസിക്കുന്നു.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>അസൈൻ ചെയ്യുക</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ തിരഞ്ഞെടുത്ത പോളിസി നിലവിൽ കാണുന്ന പേജിലെ അനുയോജ്യമായ വിവിധ വിഭാഗങ്ങളിലേക്ക് അസൈൻ ചെയ്യുക.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ തിരഞ്ഞെടുത്ത പോളിസി നിലവിൽ കാണുന്ന പേജിലെ അനുയോജ്യമായ വിവിധ വിഭാഗങ്ങളിലേക്ക് അസൈൻ ചെയ്യുക.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>പോളിസികൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലൈബ്രറിയിലേക്ക് ചേർക്കുന്നതിനായി പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക. പെർസിസ്റ്റന്റ് ലൈബ്രറി ഫീച്ചർ പ്രവർത്തനക്ഷമമാണെങ്കിൽ, അവ ലോക്കൽ കാഷെയിലും സ്വയമേവ ബാക്കപ്പ് ചെയ്യപ്പെടും, അതിനാൽ ആപ്പ് അടച്ച് വീണ്ടും തുറന്നതിന് ശേഷവും നിങ്ങളുടെ പോളിസികൾ ലഭ്യമായിരിക്കും.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലൈബ്രറിയിലേക്ക് ചേർക്കുന്നതിനായി പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക. പെർസിസ്റ്റന്റ് ലൈബ്രറി ഫീച്ചർ പ്രവർത്തനക്ഷമമാണെങ്കിൽ, അവ ലോക്കൽ കാഷെയിലും സ്വയമേവ ബാക്കപ്പ് ചെയ്യപ്പെടും, അതിനാൽ ആപ്പ് അടച്ച് വീണ്ടും തുറന്നതിന് ശേഷവും നിങ്ങളുടെ പോളിസികൾ ലഭ്യമായിരിക്കും.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>എല്ലാം നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ നിന്ന് എല്ലാ പോളിസികളും നീക്കം ചെയ്യുക. പെർസിസ്റ്റന്റ് ലൈബ്രറി ഫീച്ചർ പ്രവർത്തനക്ഷമമാണെങ്കിൽ, പോളിസികൾ ലോക്കൽ കാഷെയിൽ നിന്നും ഇല്ലാതാക്കപ്പെടും.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ നിന്ന് എല്ലാ പോളിസികളും നീക്കം ചെയ്യുക. പെർസിസ്റ്റന്റ് ലൈബ്രറി ഫീച്ചർ പ്രവർത്തനക്ഷമമാണെങ്കിൽ, പോളിസികൾ ലോക്കൽ കാഷെയിൽ നിന്നും ഇല്ലാതാക്കപ്പെടും.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>എല്ലാം ബാക്കപ്പ് ചെയ്യുക</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലൈബ്രറിയിലെ എല്ലാ പോളിസികളും XML ഫയലുകളായി ബാക്കപ്പ് ചെയ്യേണ്ട ഒരു ഡയറക്ടറി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലൈബ്രറിയിലെ എല്ലാ പോളിസികളും XML ഫയലുകളായി ബാക്കപ്പ് ചെയ്യേണ്ട ഒരു ഡയറക്ടറി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകളിൽ നിന്നുള്ള സപ്ലിമെന്റൽ പോളിസി - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>ക്രമരഹിതമാക്കുക</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബേസ് പോളിസി ഐഡിക്കായി സാധുതയുള്ള ഒരു റാൻഡം GUID സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബേസ് പോളിസി ഐഡിക്കായി സാധുതയുള്ള ഒരു റാൻഡം GUID സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>ഒപ്പിട്ടത്</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>ഒപ്പിടാത്തത്</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പോളിസി ഐഡി പകർത്തുക</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് പോളിസി ഐഡി പകർത്തുന്നു</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് പോളിസി ഐഡി പകർത്തുന്നു</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ബേസ് പോളിസി ഐഡി പകർത്തുക</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് ബേസ് പോളിസി ഐഡി പകർത്തുന്നു</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് ബേസ് പോളിസി ഐഡി പകർത്തുന്നു</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: FileName ഡാറ്റ പ്രോസസ്സ് ചെയ്യുന്നു</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} FileName റൂളുകൾ.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>അനുമതി റൂളുകൾ സൃഷ്ടിക്കാൻ FileName ഡാറ്റയൊന്നും കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>നിരസിക്കൽ റൂളുകൾ സൃഷ്ടിക്കാൻ FileName ഡാറ്റയൊന്നും കണ്ടെത്തിയില്ല.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>പോളിസിയിലേക്ക് ചേർക്കാൻ {0} ഫയൽ നെയിം റൂളുകൾ ഉണ്ട്</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>ഫയൽ നെയിം റൂൾ തരം</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>XML പോളിസി ഫയൽ (നിർബന്ധമല്ല)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>നീക്കം ചെയ്യാൻ പോകുന്ന ഒപ്പിട്ട പോളിസിയുടെ XML പോളിസി ഫയൽ. ഇത് ഓപ്ഷണലാണ്, ആവശ്യമില്ല.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നീക്കം ചെയ്യാൻ പോകുന്ന ഒപ്പിട്ട പോളിസിയുടെ XML പോളിസി ഫയൽ. ഇത് ഓപ്ഷണലാണ്, ആവശ്യമില്ല.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നീക്കം ചെയ്യാൻ പോകുന്ന ഒപ്പിട്ട പോളിസിയുടെ XML പോളിസി ഫയൽ. ഇത് ഓപ്ഷണലാണ്, ആവശ്യമില്ല.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>അടുത്ത റീബൂട്ടിൽ നീക്കം ചെയ്യാൻ കഴിയുന്ന തരത്തിൽ തിരഞ്ഞെടുത്ത ആപ്പ് കൺട്രോൾ പോളിസി വീണ്ടും ഒപ്പിടാൻ ഉപയോഗിക്കേണ്ട വിശദാംശങ്ങൾ ദയവായി നൽകുക.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങളിൽ നിങ്ങൾക്ക് ഇനിപ്പറയുന്ന വിശദാംശങ്ങൾ ഒരിക്കൽ കോൺഫിഗർ ചെയ്യാൻ കഴിയും, ഇത് ആവർത്തിച്ച് നൽകേണ്ടതിന്റെ ആവശ്യകത ഒഴിവാക്കുന്നു.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Code Integrity EVTX ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സ്കാൻ ചെയ്യാൻ Code Integrity EVTX ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സ്കാൻ ചെയ്യാൻ Code Integrity EVTX ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>AppLocker EVTX ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സ്കാൻ ചെയ്യാൻ AppLocker EVTX ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സ്കാൻ ചെയ്യാൻ AppLocker EVTX ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>ഇന്റലിജന്റ് സെക്യൂരിറ്റി ഗ്രാഫ് ഉപയോഗിക്കുന്ന ഒരു ആപ്പ് കൺട്രോൾ പോളിസിയാണ് നിങ്ങൾ വിന്യസിക്കുന്നത്, സ്മാർട്ട് ആപ്പ് കൺട്രോൾ ഓഫ് ചെയ്തിട്ടില്ല. ഈ സാഹചര്യത്തിൽ സ്മാർട്ട് ആപ്പ് കൺട്രോൾ ഓഫ് ചെയ്യാൻ ശുപാർശ ചെയ്യുന്നു.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>CIP പോളിസി പതിപ്പ് '{0}' ആണ്, എന്നാൽ AppControl Manager പതിപ്പ് '{1}' വരെ മാത്രമേ പിന്തുണയ്ക്കൂ. പോളിസിയുടെ എല്ലാ ഫീച്ചറുകളും ഡീകോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>P7B ബൈനറി വിജയകരമായി XML-ലേക്ക് മാറ്റി, ഫയൽ ഇവിടെ സേവ് ചെയ്തു:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>നിലവിലെ പോളിസി ടെംപ്ലേറ്റിനായി ഒരു ആപ്പ് ഐഡി ടാഗിംഗ് (App ID Tagging) പോളിസി സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് പോളിസി</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ പോളിസി ടെംപ്ലേറ്റിനായി ഒരു ആപ്പ് ഐഡി ടാഗിംഗ് (App ID Tagging) പോളിസി സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലെ പോളിസി ടെംപ്ലേറ്റിനായി ഒരു ആപ്പ് ഐഡി ടാഗിംഗ് (App ID Tagging) പോളിസി സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>ആപ്പ് കൺട്രോൾ പോളിസികൾ ഇഷ്‌ടാനുസൃതമാക്കുന്നതിനുള്ള വിപുലമായ ഫീച്ചറുകൾ ഈ ഏരിയ നൽകുന്നു.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>വിപുലമായ ഫീച്ചറുകൾ</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് കൺട്രോൾ പോളിസികൾ ഇഷ്‌ടാനുസൃതമാക്കുന്നതിനുള്ള വിപുലമായ ഫീച്ചറുകൾ ഈ ഏരിയ നൽകുന്നു.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് കൺട്രോൾ പോളിസികൾ ഇഷ്‌ടാനുസൃതമാക്കുന്നതിനുള്ള വിപുലമായ ഫീച്ചറുകൾ ഈ ഏരിയ നൽകുന്നു.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് തരത്തിലേക്ക് മാറ്റാൻ പോളിസികൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>പോളിസികൾ ആപ്പ് ഐഡി ടാഗിംഗിലേക്ക് മാറ്റുക</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് തരത്തിലേക്ക് മാറ്റാൻ പോളിസികൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് തരത്തിലേക്ക് മാറ്റാൻ പോളിസികൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>മാറ്റുക</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസികൾ ആപ്പ് ഐഡി ടാഗിംഗിലേക്ക് മാറ്റുക</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസികൾ ആപ്പ് ഐഡി ടാഗിംഗിലേക്ക് മാറ്റുക</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>അഡ്വാൻസ്ഡ്</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത എല്ലാ പോളിസികളും ആപ്പ് ഐഡി ടാഗിംഗിലേക്ക് വിജയകരമായി മാറ്റി.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസികളിൽ നിന്ന് നീക്കം ചെയ്യുന്നതിനായി ഒരു സൈനിംഗ് സിനാരിയോ (Signing Scenario) തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>സൈനിംഗ് സിനാരിയോ നീക്കം ചെയ്യൽ</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസികളിൽ നിന്ന് നീക്കം ചെയ്യുന്നതിനായി ഒരു സൈനിംഗ് സിനാരിയോ (Signing Scenario) തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസികളിൽ നിന്ന് നീക്കം ചെയ്യുന്നതിനായി ഒരു സൈനിംഗ് സിനാരിയോ (Signing Scenario) തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൈനിംഗ് സിനാരിയോ നീക്കം ചെയ്യൽ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൈനിംഗ് സിനാരിയോ നീക്കം ചെയ്യൽ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സൈനിംഗ് സിനാരിയോയുമായി ബന്ധപ്പെട്ട എല്ലാ ഡാറ്റയും വിജയകരമായി നീക്കം ചെയ്തു.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>പോളിസി ഫ്രണ്ട്ലി നെയിം</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് കൺട്രോൾ പോളിസിയുടെ ഫ്രണ്ട്ലി നെയിം</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് കൺട്രോൾ പോളിസിയുടെ ഫ്രണ്ട്ലി നെയിം</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് കൺട്രോൾ പോളിസിയുടെ ഫ്രണ്ട്ലി നെയിം</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>കീ</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>മൂല്യം</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>സന്ദർഭം</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗുകൾ</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>പുതിയ ടാഗ് ചേർക്കുക</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ നൽകിയ കീയും മൂല്യവും അടിസ്ഥാനമാക്കി ഒരു പുതിയ ആപ്പ് ഐഡി ടാഗ് ചേർക്കുക.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങൾ നൽകിയ കീയും മൂല്യവും അടിസ്ഥാനമാക്കി ഒരു പുതിയ ആപ്പ് ഐഡി ടാഗ് ചേർക്കുക.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>കീ</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിന്റെ കീ ഇവിടെ നൽകുക.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിന്റെ കീ ഇവിടെ നൽകുക.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>മൂല്യം</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിന്റെ മൂല്യം ഇവിടെ നൽകുക.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിന്റെ മൂല്യം ഇവിടെ നൽകുക.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>പ്രധാന പോളിസി</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>മറ്റ് പോളിസികൾ</value>
   </data>
 </root>

@@ -47,11 +47,11 @@ internal sealed class NullableBoolJsonConverter : JsonConverter<bool?>
 				return boolValue;
 			}
 			// handle numeric strings "1" or "0", just for future proofing
-			if (strValue == "1")
+			if (string.Equals(strValue, "1", StringComparison.OrdinalIgnoreCase))
 			{
 				return true;
 			}
-			if (strValue == "0")
+			if (string.Equals(strValue, "0", StringComparison.OrdinalIgnoreCase))
 			{
 				return false;
 			}

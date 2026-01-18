@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>Αρχεία Καταγραφής</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>Ρυθμίσεις</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>Ανάπτυξη της κύριας πολιτικής μετά τη συγχώνευση.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>Παρουσιάστηκε σφάλμα κατά τη διαδικασία συγχώνευσης</value>
   </data>
@@ -936,9 +930,6 @@
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>Έλεγχος για ενημέρωση</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>Εγκατάσταση της διαδρομής MSIXBundle που επιλέξατε: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>Η τρέχουσα έκδοση είναι </value>
@@ -954,9 +945,6 @@
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>Το πακέτο MSIXBundle του AppControl Manager λήφθηκε με επιτυχία στο </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>Δεν επιλέχθηκε διαδρομή MSIXBundle</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Όλες οι λήψεις ολοκληρώθηκαν, εγκατάσταση της νέας έκδοσης του AppControl Manager</value>
@@ -1967,73 +1955,73 @@
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Επιλέξτε ένα πρότυπο για να εφαρμόσετε στο επιλεγμένο αρχείο πολιτικής. Τα πρότυπα είναι προκαθορισμένες λίστες επιλογών κανόνων πολιτικής.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>Δημιουργήστε πολιτικές Ελέγχου Εφαρμογών για Επιχειρήσεις βασισμένες σε διαφορετικά πρότυπα και επιλογές κανόνων πολιτικής. Το Signed And Reputable είναι ιδανικό για νέους χρήστες. Το Allow Microsoft επιτρέπει μόνο αρχεία υπογεγραμμένα από τα πιστοποιητικά της Microsoft. Το Default Windows επιτρέπει μόνο αρχεία που έρχονται από προεπιλογή με το λειτουργικό σύστημα Windows.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>Δημιουργήστε μια Συμπληρωματική πολιτική που θα επεκτείνει το πεδίο μιας βασικής πολιτικής. Οι Συμπληρωματικές πολιτικές μπορούν μόνο να επιτρέπουν αρχεία, δεν μπορούν να έχουν κανόνες απαγόρευσης σε αυτές.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Προβολή των ανιχνευθέντων αρχείων που χρησιμοποιήθηκαν για τη δημιουργία της Συμπληρωματικής πολιτικής.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>Αναπτύξτε οποιονδήποτε τύπο Πολιτικής Ελέγχου Εφαρμογών τοπικά ή απομακρυσμένα σε υπολογιστές που διαχειρίζονται στο cloud.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>Χρησιμοποιήστε τα αρχεία καταγραφής του τοπικού συστήματος ή αρχεία καταγραφής EVTX για να δημιουργήσετε Πολιτικές Ελέγχου Εφαρμογών. Απαιτούνται μόνο αρχεία καταγραφής Code Integrity Operational και AppLocker. Χρησιμοποιήστε το κουμπί Σάρωση για να συμπληρώσετε το πλέγμα δεδομένων. Μόλις συμπληρωθεί, χρησιμοποιήστε το κουμπί Δημιουργία Πολιτικής για να ορίσετε τη διαμόρφωση εξόδου και να δημιουργήσετε το αρχείο πολιτικής XML.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>Υπολογίστε τους κατακερματισμούς Ακεραιότητας Κώδικα και άλλους τύπους κατακερματισμών αρχείων.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>Ανακτήστε και ερωτήστε τις Ασφαλείς Ρυθμίσεις στο σύστημα.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>Τα παρακάτω είναι τα αρχεία καταγραφής που ο AppControl Manager δημιουργεί αυτόματα και αποθηκεύει στο φάκελο "AppControl Manager" στα Program Files (εάν εκτελείται με ανύψωση, διαφορετικά θα αποθηκευτούν στον κατάλογο TEMP). Το συνολικό μέγεθος του φακέλου αρχείων καταγραφής δεν θα υπερβεί ποτέ το 1GB.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>Χρησιμοποιήστε τα αρχεία καταγραφής Προηγμένης Αναζήτησης του Microsoft Defender for Endpoint για να δημιουργήσετε Πολιτικές Ελέγχου Εφαρμογών. Μπορείτε είτε να αναζητήσετε εξαγόμενα αρχεία καταγραφής είτε να τα ανακτήσετε από το cloud συνδεόμενοι στον λογαριασμό σας Microsoft.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>Συγχωνεύστε πολιτικές Ελέγχου Εφαρμογών για Επιχειρήσεις και απομακρύνετε τα διπλά. Μπορείτε να επιλέξετε την ίδια πολιτική δύο φορές για να απομακρύνετε τους διπλούς κανόνες της.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>Επεξεργαστείτε Πολιτικές Ελέγχου Εφαρμογών για Επιχειρήσεις. Αναζητήστε εύκολα ένα αρχείο πολιτικής XML και φορτώστε τις λεπτομέρειές του χρησιμοποιώντας το κουμπί Φόρτωση. Μόλις φορτωθεί, μπορείτε να εξετάσετε τον αριθμό κάθε κανόνα εντός της πολιτικής, να αφαιρέσετε συγκεκριμένους κανόνες και να τροποποιήσετε διάφορες άλλες ρυθμίσεις πολιτικής.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Προσαρμόστε τις ρυθμίσεις της εφαρμογής σας εδώ. Οι προτιμήσεις σας θα αποθηκευτούν ώστε να είναι έτοιμες για εσάς κάθε φορά που ξεκινάτε τον AppControl Manager.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>Εκτελέστε Προσομοίωση Ελέγχου Εφαρμογών για Επιχειρήσεις επιλέγοντας αρχεία ή φακέλους και ένα αρχείο πολιτικής XML, στη συνέχεια χρησιμοποιήστε το κουμπί Έναρξη Προσομοίωσης για να συμπληρώσετε το πλέγμα δεδομένων. Τα αποτελέσματα θα σας δείξουν εάν τα επιλεγμένα αρχεία θα επιτρέπονταν ή θα μπλοκαρίζονταν από την πολιτική Ελέγχου Εφαρμογών σας εάν ήταν πράγματι αναπτυγμένη σε ένα σύστημα και αυτά τα αρχεία εκτελούνταν.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>Προβολή των ανιχνευθέντων αρχείων λειτουργίας πυρήνα που θα χρησιμοποιηθούν για τη δημιουργία της πολιτικής λειτουργίας επιβολής. Αφαιρέστε στοιχεία που δεν θέλετε να συμπεριληφθούν στην τελική πολιτική Strict Kernel-mode από τη λίστα.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>Ελέγξτε για ενημερώσεις σε αυτήν τη σελίδα. Μπορείτε επίσης να ενεργοποιήσετε τον αυτόματο έλεγχο ενημερώσεων που θα γίνεται μία φορά κατά την εκκίνηση και θα ειδοποιείστε όποτε είναι διαθέσιμη μια νέα έκδοση.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>Επικυρώστε Πολιτικές Ελέγχου Εφαρμογών για να βεβαιωθείτε ότι είναι συμβατές με το επίσημο σχήμα. Εάν τροποποιήσατε χειροκίνητα αρχεία πολιτικής XML και θέλετε να βεβαιωθείτε ότι οι τροποποιήσεις σας είναι σωστές, χρησιμοποιήστε αυτήν τη δυνατότητα για να τις επικυρώσετε.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>Προβολή Ολοκληρωμένων πληροφοριών σχετικά με τα πιστοποιητικά που χρησιμοποιούνται για την υπογραφή οποιουδήποτε αρχείου. Λεπτομέρειες που συνήθως δεν είναι διαθέσιμες στις ιδιότητες του File Explorer ή στα cmdlets του PowerShell παρουσιάζονται εδώ πλήρως.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Προβολή των ανιχνευθέντων αρχείων που χρησιμοποιήθηκαν για τη δημιουργία της πολιτικής Απαγόρευσης.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>Δημιουργήστε μια Βασική πολιτική Απαγόρευσης που θα απαγορεύει ρητά αρχεία ή εφαρμογές. Λάβετε υπόψη ότι ο Έλεγχος Εφαρμογών βασίζεται θεμελιωδώς σε λευκές λίστες, πράγμα που σημαίνει ότι οτιδήποτε δεν επιτρέπεται από μια πολιτική είναι ήδη αυτόματα απαγορευμένο.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>Διαμορφώστε τις επιλογές κανόνων πολιτικής Ελέγχου Εφαρμογών για Επιχειρήσεις. Παρέχονται λεπτομερείς πληροφορίες δίπλα σε κάθε κανόνα και μπορείτε να χρησιμοποιήσετε το κουμπί Οδηγός ή να ανοίξετε μια συζήτηση στο GitHub εάν χρειάζεστε περισσότερες πληροφορίες.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>Δημιουργήστε με ασφάλεια Πιστοποιητικά Υπογραφής Κώδικα που είναι κατάλληλα για την υπογραφή πολιτικών Ελέγχου Εφαρμογών.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>Προβολή λεπτομερών πληροφοριών σχετικά με τις Αναπτυγμένες πολιτικές και την Ακεραιότητα Κώδικα στα τοπικά ή απομακρυσμένα συστήματα.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>Χρησιμοποιήστε αυτήν τη σελίδα για να Επιτρέψετε σε νέες ή ήδη εγκατεστημένες εφαρμογές ή αρχεία να εκτελούνται στο σύστημα.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αναζήτηση μεταξύ των δεδομένων λεπτομερειών πιστοποιητικού</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>Επιβεβαιώστε ότι θέλετε να χρησιμοποιήσετε το επιλεγμένο προσαρμοσμένο αρχείο MSIXBundle αντί να το κατεβάσετε αυτόματα από το GitHub. Αυτό θα παρακάμψει τον διαδικτυακό έλεγχο ενημέρωσης και θα παραλείψει τη λήψη του αρχείου MSIXBundle από το GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>Επιβεβαίωση</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Επιβεβαιώστε ότι θέλετε να χρησιμοποιήσετε το επιλεγμένο προσαρμοσμένο αρχείο MSIXBundle αντί να το κατεβάσετε αυτόματα από το GitHub. Αυτό θα παρακάμψει τον διαδικτυακό έλεγχο ενημέρωσης και θα παραλείψει τη λήψη του αρχείου MSIXBundle από το GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Επιβεβαιώστε ότι θέλετε να χρησιμοποιήσετε το επιλεγμένο προσαρμοσμένο αρχείο MSIXBundle αντί να το κατεβάσετε αυτόματα από το GitHub. Αυτό θα παρακάμψει τον διαδικτυακό έλεγχο ενημέρωσης και θα παραλείψει τη λήψη του αρχείου MSIXBundle από το GitHub.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>Περισσότερες πληροφορίες</value>
   </data>
@@ -2506,12 +2482,6 @@
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Θα ανακτήσει τις πιο πρόσφατες διαμορφώσεις χρήστη και θα τις εμφανίσει.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Διαδρομή Υπογεγραμμένης Πολιτικής:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Διαδρομή Μη Υπογεγραμμένης Πολιτικής:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Κοινό Όνομα Πιστοποιητικού:</value>
@@ -2902,18 +2872,6 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Τεκμηρίωση</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>Αυτόματη Ανάθεση</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>Αυτόματη αποθήκευση της διαδρομής προς τις βασικές πολιτικές που δημιουργείτε στην Πλευρική Γραμμή.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αυτόματη αποθήκευση της διαδρομής προς τις βασικές πολιτικές που δημιουργείτε στην Πλευρική Γραμμή.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αυτόματη αποθήκευση της διαδρομής προς τις βασικές πολιτικές που δημιουργείτε στην Πλευρική Γραμμή.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>Οδηγός Πλευρικής Γραμμής</value>
   </data>
@@ -2923,50 +2881,11 @@
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Για τον οδηγός χρήσης της Πλευρικής Γραμμής, παρακαλώ επισκεφθείτε τη σελίδα wiki του GitHub κάνοντας κλικ/πατώντας εδώ.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>Επιλογή</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ανάθεση του επιλεγμένου αρχείου πολιτικής XML στην Πλευρική Γραμμή στη διαδρομή της βασικής πολιτικής της εφαρμόσιμης ενότητας στην τρέχουσα ορατή σελίδα.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ανάθεση του επιλεγμένου αρχείου πολιτικής XML στην Πλευρική Γραμμή στη διαδρομή της βασικής πολιτικής της εφαρμόσιμης ενότητας στην τρέχουσα ορατή σελίδα.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>Εκκαθάριση</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Εκκαθάριση του κειμένου της διαδρομής του επιλεγμένου αρχείου XML.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Εκκαθάριση του κειμένου της διαδρομής του επιλεγμένου αρχείου XML.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση για ένα αρχείο πολιτικής XML</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση για ένα αρχείο πολιτικής XML</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>Χρησιμοποιήστε την Πλευρική Γραμμή για να καρφιτσώσετε διαδρομές αρχείων XML και να τις επαναχρησιμοποιήσετε σε διαφορετικά μέρη του AppControl Manager.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>Πλευρική Γραμμή</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>Καρφιτσωμένη Διαδρομή Πολιτικής</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Διαδρομή Πολιτικής</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>Πρέπει να επιλέξετε ένα όνομα για τη Συμπληρωματική Πολιτική</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>Πρέπει να επιλέξετε μια διαδρομή αρχείου πολιτικής XML</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>Η επιλεγμένη διαδρομή αρχείου XML δεν υπάρχει</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>Εκκίνηση...</value>
@@ -3003,9 +2922,6 @@
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>Το αρχείο CIP Λειτουργίας Επιβολής δεν μπόρεσε να βρεθεί</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>Αναζήτηση για ένα αρχείο πολιτικής XML Ελέγχου Εφαρμογών</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>Εκτέλεση Επικύρωσης</value>
@@ -3216,10 +3132,6 @@
     <value>Η ιδιότητα 'Id' του AppManifest είναι απαραίτητη και δεν μπορεί να είναι null ή κενή.</value>
     <comment>Επικύρωση App Manifest</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>Ο πίνακας SettingDefinition περιέχει ένα null στοιχείο.</value>
-    <comment>Επικύρωση App Manifest</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>Η ιδιότητα 'Name' του SettingDefinition είναι απαραίτητη και δεν μπορεί να είναι null ή κενή.</value>
     <comment>Επικύρωση App Manifest</comment>
@@ -3397,9 +3309,6 @@
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>Πρέπει να επιλέξετε μια επιλογή από τη λίστα δημιουργίας πολιτικής</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>Συμπληρωματική πολιτική από αρχεία καταγραφής συμβάντων - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>Δεν επιλέχθηκε αρχείο πολιτικής για να προστεθούν τα αρχεία καταγραφής σε αυτό.</value>
@@ -3620,9 +3529,6 @@
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>Το επιλεγμένο αρχείο πιστοποιητικού και το κοινό όνομα δεν ταιριάζουν.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>Παρακαλώ επιλέξτε το αρχείο πολιτικής XML που αφαιρείται.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>Η διαδρομή του επιλεγμένου αρχείου πολιτικής XML δεν υπάρχει</value>
   </data>
@@ -3734,9 +3640,6 @@
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>Παρουσιάστηκε σφάλμα κατά την ανάκτηση πρόσθετων πληροφοριών σχετικά με τους συνιστώμενους από τη Microsoft κανόνες αποκλεισμού προγραμμάτων οδήγησης.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>Το αρχείο πολιτικής δημιουργήθηκε και αποθηκεύτηκε στο {0}</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>Επαναφορά του αναγνωριστικού πολιτικής και ανάθεση ονόματος πολιτικής</value>
   </data>
@@ -3764,9 +3667,6 @@
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>Δεν βρέθηκε περιεχόμενο XML στην πηγή GitHub της Microsoft για τους Συνιστώμενους Κανόνες Αποκλεισμού Λειτουργίας Χρήστη.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>Διαμόρφωση επιλογών κανόνων πολιτικής για: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>Προσθήκη Επιλογής Κανόνα: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@
   </data>
   <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} δεν ανήκει σε κανένα subject CN από τα αναπτυγμένα πιστοποιητικά</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>Το συγκεκριμένο αρχείο πολιτικής '{0}' δεν είναι υπογεγραμμένο. Παρακαλώ παρέχετε υπογεγραμμένο αρχείο πολιτικής.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>Το συγκεκριμένο αρχείο πολιτικής '{0}' είναι υπογεγραμμένο. Παρακαλώ παρέχετε μη υπογεγραμμένο αρχείο πολιτικής.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>Προσπάθεια ανάλυσης και ανάγνωσης του αρχείου ρυθμίσεων χρήστη</value>
@@ -3938,36 +3832,6 @@
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>Η εκτέλεση της εντολής απέτυχε με κωδικό σφάλματος {0}. Έξοδος: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>Το CipPath δεν μπορεί να είναι null ή κενό.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>Το αρχείο '{0}' δεν υπάρχει.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>Ανάπτυξη του ακόλουθου αρχείου CIP: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>Μη έγκυρη δομή XML, δεν βρέθηκε κόμβος SiPolicy</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>Δεν βρέθηκε κόμβος Signers</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Αποτυχία δημιουργίας ή ανάκτησης του κόμβου UMCI_ProductSignersNode</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Αποτυχία δημιουργίας ή ανάκτησης του κόμβου KMCI_ProductSignersNode</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>Ο κόμβος AllowedSigners για το προϊόν {0} δεν βρέθηκε παρά τη δημιουργία του.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>Ο κόμβος FileRulesRef για το προϊόν {0} δεν βρέθηκε παρά τη δημιουργία του.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>Ο κόμβος DeniedSigners για το προϊόν {0} δεν βρέθηκε παρά τη δημιουργία του.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>Παρουσιάστηκε πρόβλημα κατά την εκτέλεση του CiTool.exe.</value>
   </data>
@@ -4031,7 +3895,7 @@
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>Πρέπει να επιλέξετε μια επιλογή από τη λίστα δημιουργίας πολιτικής.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>Συμπληρωματική πολιτική από αρχεία καταγραφής MDE Advanced Hunting - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>Δεν υπάρχουν αρχεία καταγραφής ή αρχεία σε κανένα πλέγμα δεδομένων για τη δημιουργία συμπληρωματικής πολιτικής.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>Η περιοχή προετοιμασίας δεν βρέθηκε</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>Η πολιτική δημιουργήθηκε και αναπτύχθηκε με επιτυχία.</value>
 </data>
@@ -4402,9 +4263,6 @@
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>Αναμενόταν ετικέτα μπλοκ V8 '8', λήφθηκε '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>Αναμενόταν ετικέτα τέλους πολιτικής '{0}', λήφθηκε '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>Ο τύπος πολιτικής είναι {0} και έχει την επιλογή κανόνα {1} η οποία είναι μη έγκυρη. Μόνο το {2} μπορεί να την έχει.</value>
@@ -4658,9 +4516,6 @@
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>Το πιστοποιητικό πρέπει να διαθέτει ιδιωτικό κλειδί.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>Η υπογραφή PKCS #7 (ενσωματωμένο περιεχόμενο, συμπεριλαμβάνεται πιστοποιητικό) γράφτηκε στο {0}</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>Η SignerSignEx3 απέτυχε με HRESULT: 0x{0:X}</value>
 </data>
@@ -4687,9 +4542,6 @@
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>Η εφαρμογή εκκινήθηκε μέσω ενεργοποίησης αρχείου αλλά χωρίς ορίσματα ενεργοποίησης αρχείου</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>Ο χρήστης ακύρωσε την προτροπή UAC.</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>Απαιτήθηκε αίτημα ανύψωσης δικαιωμάτων για την επεξεργασία του επιλεγμένου αρχείου, αλλά απορρίφθηκε από τον χρήστη. Έξοδος από την εφαρμογή.</value>
@@ -4729,12 +4581,6 @@
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>Το επιλεγμένο αρχείο πολιτικής XML είναι μια Βασική πολιτική, αλλά το BasePolicyID και το PolicyID του δεν είναι ίδια, υποδεικνύοντας ότι πρόκειται για μια Συμπληρωματική πολιτική. Αλλαγή τύπου.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>Η πολιτική ρυθμίστηκε επιτυχώς στη θέση '{0}'. Τώρα έχει τον Τύπο '{1}', BasePolicyID '{2}' και PolicyID '{3}'.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>Η έκδοση του αρχείου πολιτικής στη θέση '{0}' ορίστηκε επιτυχώς από '{1}' σε '{2}'.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: Έναρξη της διαδικασίας διαχωρισμού δεδομένων.</value>
@@ -4831,9 +4677,6 @@
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>Ένα από τα αρχεία XML έχει περισσότερους από 1 Υπογράφοντες με το ίδιο ID `{0}`</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>Το HVCI στο αρχείο πολιτικής '{0}' ορίστηκε επιτυχώς σε Strict.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>Η Λίστα Γρήγορης Πρόσβασης δεν υποστηρίζεται.</value>
@@ -5300,10 +5143,7 @@
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>δεν εντοπίστηκαν υπογραφείς WHQLFilePublisher για τη δημιουργία κανόνων έγκρισης.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>Ο κόμβος EKUs δεν βρέθηκε</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>δεν εντοπίστηκαν υπογραφείς WHQLFilePublisher για τη δημιουργία κανόνων άρνησης.</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@
     <value>Χρόνος δημιουργίας</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Λεπτομέρειες ανάπτυξης πολιτικής Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Καθορίστε τις λεπτομέρειες μιας ανάπτυξης πολιτικής Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Καθορίστε τις λεπτομέρειες μιας ανάπτυξης πολιτικής Intune</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>Δημιουργία νέας ομάδας</value>
@@ -5634,7 +5468,7 @@
 <data name="GroupType" xml:space="preserve">
   <value>Τύπος ομάδας:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Διαχειριστείτε τις ομάδες Entra στον μισθωτή σας και επιλέξτε τις ομάδες στις οποίες θέλετε να αναπτύξετε την πολιτική.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,329 @@
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Να ζητείται επιβεβαίωση πριν από το κλείσιμο της εφαρμογής μόνο υπό ορισμένες συνθήκες, όταν υπάρχει λειτουργία σε εξέλιξη.</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>Υπάρχουν ακόμη μη αποθηκευμένες πολιτικές στη βιβλιοθήκη της πλευρικής στήλης. Αυτές θα χαθούν εάν κλείσετε την εφαρμογή. Είστε βέβαιοι ότι θέλετε να εξέλθετε;</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Αυτή είναι η βιβλιοθήκη για τις πολιτικές ελέγχου εφαρμογών (App Control) όπου μπορείτε να αποθηκεύετε πολιτικές και να τις χρησιμοποιείτε σε διάφορα μέρη της εφαρμογής. Είναι διαθέσιμες μόνο στη μνήμη, εκτό�� αν τις αποθηκεύσετε σε αρχείο ή αν είναι ενεργοποιημένη η επιλογή διατήρησης.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Βιβλιοθήκη Πολιτικών</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Μόνιμη Βιβλιοθήκη</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, όλες οι πολιτικές που είναι διαθέσιμες στη βιβλιοθήκη θα συνεχίσουν να υπάρχουν ακόμα και μετά την επανεκκίνηση της εφαρμογής. Αυτή η λειτουργία παρέχεται διατηρώντας ένα αντίγραφο των πολιτικών της βιβλιοθήκης σε ιδιωτική κρυφή μνήμη στον δίσκο. Η κρυφή μνήμη διαγράφεται αυτόματα όταν απεγκατασταθεί η εφαρμογή.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, όλες οι πολιτικές που είναι διαθέσιμες στη βιβλιοθήκη θα συνεχίσουν να υπάρχουν ακόμα και μετά την επανεκκίνηση της εφαρμογής. Αυτή η λειτουργία παρέχεται διατηρώντας ένα αντίγραφο των πολιτικών της βιβλιοθήκης σε ιδιωτική τοποθεσία στον δίσκο. Η κρυφή μνήμη διαγράφεται αυτόματα όταν απεγκατασταθεί η εφαρμογή.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, όλες οι πολιτικές που είναι διαθέσιμες στη βιβλιοθήκη θα συνεχίσουν να υπάρχουν ακόμα και μετά την επανεκκίνηση της εφαρμογής. Αυτή η λειτουργία παρέχεται διατηρώντας ένα αντίγραφο των πολιτικών της βιβλιοθήκης σε ιδιωτική τοποθεσία στον δίσκο. Η κρυφή μνήμη διαγράφεται αυτόματα όταν απεγκατασταθεί η εφαρμογή.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αποθήκευση ως CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε μια τοποθεσία όπου η επιλεγμένη πολιτική θα αποθηκευτεί ως αρχείο CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε μια τοποθεσία όπου η επιλεγμένη πολιτική θα αποθηκε��τεί ως αρχείο CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αποθήκευση ως XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε μια τοποθεσία όπου η επιλεγμένη πολιτική θα αποθηκευτεί ως αρχείο XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε μια τοποθεσία όπου η επιλεγμένη πολιτική θα αποθηκευτεί ως αρχείο XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Κατάργηση</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση της πολιτικής από τη βιβλιοθήκη. Εάν είναι ενεργοποιημένη η λειτουργία μόνιμης βιβλιοθήκης, η επιλεγμένη πολιτική θα αφαιρεθεί επίσης από την τοπική κρυφή μνήμη.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση της πολιτικής από τη βιβλιοθήκη. Εάν είναι ενεργοποιημένη η λειτουργία μόνιμης βιβλιοθήκης, η επιλεγμένη πολιτική θα αφαιρεθεί επίσης από την τοπική κρυφή μνήμη.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Ανάπτυξη</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναπτύσσει την επιλεγμένη πολιτική στο τοπικό σύστημα.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναπτύσσει την επιλεγμένη πολιτική στο τοπικό σύστημα.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Ανάθεση</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναθέστε την επιλεγμένη πολιτική της βιβλιοθήκης σε διάφορες κατάλληλες ενότητες στην τρέχουσα ορατή σελίδα.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναθέστε την επιλεγμένη πολιτική της βιβλιοθήκης σε διάφορες κατάλληλες ενότητες στην τρέχουσα ορατή σελίδα.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Προσθήκη Πολιτικών</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικών για προσθήκη στη βιβλιοθήκη. Εάν είναι ενεργοποιημένη η λειτουργία μόνιμης βιβλιοθήκης, θα δημιουργηθούν αυτόματα αντίγραφα ασφαλείας στην τοπική κρυφή μνήμη, ώστε οι πολιτικές σας να παραμείνουν διαθέσιμες μετά το κλείσιμο και το άνοιγμα της εφαρμογής.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε αρχεία πολιτικών για προσθήκη στη βιβλιοθήκη. Εάν είναι ενεργοποιημένη η λειτουργία μόνιμης βιβλιοθήκης, θα δημιουργηθούν αυτόματα αντίγραφα ασφαλείας στην τοπική κρυφή μνήμη, ώστε οι πολιτικές σας να παραμείνουν διαθέσιμες μετά το κλείσιμο και το άνοιγμα της εφαρμογής.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Κατάργηση Όλων</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση όλων των πολιτικών από τη βιβλιοθήκη. Εάν είναι ενεργοποιημένη η λειτουργία μόνιμης βιβλιοθήκης, οι πολιτικές θα διαγραφούν επίσης από την τοπική κρυφή μνήμη.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση όλων των πολιτικών από τη βιβλιοθήκη. Εάν είναι ενεργοποιημένη η λειτουργία μόνιμης βιβλιοθήκης, οι πολιτικές θα διαγραφούν επίσης από την τοπική κρυφή μνήμη.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Αντίγραφο Ασφαλείας Όλων</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε έναν κατάλογο όπου θα δημιουργηθούν αντίγραφα ασφαλείας όλων των πολιτικών της βιβλιοθήκης ως αρχεία XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε έναν κατάλογο όπου θα δημιουργηθούν αντίγραφα ασφαλείας όλων των πολιτικών της βιβλιοθήκης ως αρχεία XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Συμπληρωματική πολιτική από αρχεία καταγραφής συμβάντων - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Τυχαιοποίηση</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργία ενός τυχαίου έγκυρου GUID για το αναγνωριστικό της Βασικής πολιτικής.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργία ενός τυχαίου έγκυρου GUID για το αναγνωριστικό της Βασικής πολιτικής.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Υπογεγραμμένο</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Ανυπόγραφο</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αντιγραφή Αναγνωριστικού Πολιτικής</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγράφει το αναγνωριστικό πολιτικής στο πρόχειρο</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγράφει το αναγνωριστικό πολιτικής στο πρόχειρο</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αντιγραφή Αναγνωριστικού Βασικής Πολιτικής</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγράφει το αναγνωριστικό βασικής πολιτικής στο πρόχειρο</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγράφει το αναγνωριστικό βασικής πολιτικής στο πρόχειρο</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων FileName</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} Κανόνες FileName.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>δεν εντοπίστηκαν δεδομένα FileName για τη δημιουργία κανόνων αποδοχής.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν δεδομένα FileName για τη δημιουργία κανόνων άρνησης.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>Υπάρχουν {0} κανόνες Ονόματος Αρχείου που πρέπει να προστεθούν στην πολιτική</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>Τύπος Κανόνα Ονόματος Αρχείου</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>Αρχείο Πολιτικής XML (Προαιρετικό)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>Το αρχείο πολιτικής XML της Υπογεγραμμένης πολιτικής που πρόκειται να καταργηθεί. Είναι προαιρετικό και δεν απαιτείται.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το αρχείο πολιτικής XML της Υπογεγραμμένης πολιτικής που πρόκειται να καταργηθεί. Είναι προαιρετικό και δεν απαιτείται.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το αρχείο πολιτικής XML της Υπογεγραμμένης πολιτικής που πρόκειται να καταργηθεί. Είναι προαιρετικό και δεν απαιτείται.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Παρακαλούμε δώστε τις λεπτομέρειες που θα χρησιμοποιηθούν για την εκ νέου υπογραφή της επιλεγμένης πολιτικής App Control, ώστε να είναι δυνατή η κατάργησή της στην επόμενη επανεκκίνηση.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>Μπορείτε να διαμορφώσετε τις ακόλουθες λεπτομέρειες στις ρυθμίσεις της εφαρμογής μία φορά, εξαλείφοντας την ανάγκη να τις εισάγετε επανειλημμένα.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Επιλογή Αρχείων Code Integrity EVTX</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση αρχείων Code Integrity EVTX για σάρωση.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση αρχείων Code Integrity EVTX για σάρωση.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>Επιλογή Αρχείων AppLocker EVTX</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση αρχείων AppLocker EVTX για σάρωση.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση αρχείων AppLocker EVTX για σάρωση.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>Αναπτύσσετε μια πολιτική App Control που χρησιμοποιεί το Intelligent Security Graph και το Smart App Control δεν είναι απενεργοποιημένο. Συνιστάται να απενεργοποιήσετε το Smart App Control σε αυτήν την περίπτωση.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>Η έκδοση της πολιτικής CIP είναι '{0}' ενώ το AppControl Manager υποστηρίζει έως την έκδοση '{1}'. Δεν ήταν δυνατή η αποκωδικοποίηση όλων των δυνατοτήτων της πολιτικής.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>Το δυαδικό αρχείο P7B μετατράπηκε επιτυχώς σε XML και το αρχείο αποθηκεύτηκε στη θέση:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Δημιουργήστε μια πολιτική προσθήκης ετικετών App ID για το τρέχον πρότυπο πολιτικής.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>Πολιτική Προσθήκης Ετικετών App ID</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε μια πολιτική προσθήκης ετικετών App ID για το τρέχον πρότυπο πολιτικής.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε μια πολιτική προσθήκης ετικετών App ID για το τρέχον πρότυπο πολιτικής.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>Αυτή η περιοχή παρέχει προηγμένες δυνατότητες για την προσαρμογή των πολιτικών App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Προηγμένες Δυνατότητες</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αυτή η περιοχή παρέχει προηγμένες δυνατότητες για την προσαρμογή των πολιτικών App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αυτή η περιοχή παρέχει προηγμένες δυνατότητες για την προσαρμογή των πολιτικών App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε πολιτικές για μετατροπή σε τύπο προσθήκης ετικετών App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Μετατροπή Πολιτικών σε Προσθήκη Ετικετών App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε πολιτικές για μετατροπή σε τύπο προσθήκης ετικετών App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε πολιτικές για μετατροπή σε τύπο προσθήκης ετικετών App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Μετατροπή</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μετατροπή των επιλεγμένων πολιτικών σε προσθήκη ετικετών App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μετατροπή των επιλεγμένων πολιτικών σε προσθήκη ετικετών App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Για Προχωρημένους</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Όλες οι επιλεγμένες πολιτικές μετατράπηκαν επιτυχώς σε προσθήκη ετικετών App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε ένα Σενάριο Υπογραφής για κατάργηση από τις πολιτικές που επιλέξατε.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Κατάργηση Σεναρίου Υπογραφής</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε ένα Σενάριο Υπογραφής για κατάργηση από τις πολιτικές που επιλέξατε.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε ένα Σενάριο Υπογραφής για κατάργηση από τις πολιτικές που επιλέξατε.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Κατάργηση</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έναρξη κατάργησης σεναρίου υπογραφής.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έναρξη κατάργησης σεναρίου υπογραφής.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Όλα τα δεδομένα που σχετίζονται με το επιλεγμένο σενάριο υπογραφής καταργήθηκαν επιτυχώς.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Φιλικό Όνομα Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>Το φιλικό όνομα της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το φιλικό όνομα της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το φιλικό όνομα της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Κλειδί</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Τιμή</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Πλαίσιο</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>Ετικέτες App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Προσθήκη Νέας Ετικέτας</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη νέας ετικέτας App ID με βάση το κλειδί και την τιμή που εισαγάγατε.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη νέας ετικέτας App ID με βάση το κλειδί και την τιμή που εισαγάγατε.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Κλειδί</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εισαγάγετε το κλειδί της ετικέτας App ID εδώ.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισαγάγετε το κλειδί της ετικέτας App ID εδώ.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Τιμή</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εισαγάγετε την τιμή της ετικέτας App ID εδώ.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισαγάγετε την τιμή της ετικέτας App ID εδώ.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Κύρια Πολιτική</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Άλλες Πολιτικές</value>
   </data>
 </root>

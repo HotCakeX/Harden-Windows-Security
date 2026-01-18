@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.Helpers;
 using Microsoft.UI.Xaml;

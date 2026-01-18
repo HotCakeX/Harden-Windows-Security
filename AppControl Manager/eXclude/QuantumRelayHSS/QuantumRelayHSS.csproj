@@ -1,38 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<Version>$(FileVersion)</Version>
-		<FileVersion>1.0.0.0</FileVersion>
-		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
-		<Title>HSS Quantum Relay Service</Title>
-		<Copyright>Violet Hansen</Copyright>
-		<Description>Quantum Relay Service for the Harden System Security App</Description>
-		<StartupObject>QuantumRelayHSS.Program</StartupObject>
-		<DebugSymbols>false</DebugSymbols>
-		<DebugType>none</DebugType>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <Version>$(FileVersion)</Version>
+        <FileVersion>1.0.0.0</FileVersion>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <Title>HSS Quantum Relay Service</Title>
+        <Copyright>Violet Hansen</Copyright>
+        <Description>Quantum Relay Service for the Harden System Security App</Description>
+        <StartupObject>QuantumRelayHSS.Program</StartupObject>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>none</DebugType>
 
-		<!--Trim And Native AOT-->
-		<PublishAot>True</PublishAot>
-		<PublishTrimmed>True</PublishTrimmed>
-		<TrimMode>full</TrimMode>
-		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-		<ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-		<TrimmerSingleWarn>false</TrimmerSingleWarn>
-		<UseNativeHttpHandler>true</UseNativeHttpHandler>
-		<MetricsSupport>false</MetricsSupport>
-		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
-		<Http3Support>false</Http3Support>
-	</PropertyGroup>
+        <!--Trim And Native AOT-->
+        <PublishAot>True</PublishAot>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <UseNativeHttpHandler>true</UseNativeHttpHandler>
+        <MetricsSupport>false</MetricsSupport>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+        <Http3Support>false</Http3Support>
+    </PropertyGroup>
 
-	<Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
+    <Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
 
-	<ItemGroup>
-		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.1" />
-		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.2" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.2" />
+        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.2" />
+    </ItemGroup>
 
 </Project>

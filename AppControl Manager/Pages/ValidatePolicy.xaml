@@ -18,15 +18,15 @@
             <controls:WrapPanel Grid.Row="0" HorizontalAlignment="Center" HorizontalSpacing="15" VerticalSpacing="10">
 
                 <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                         IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
-                         Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                         Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                         Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
-                         IsIconVisible="True">
+                                    IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
+                                    Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                    Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                    Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
+                                    IsIconVisible="True">
                 </customUI:InfoBarV2>
 
                 <ProgressRing IsIndeterminate="True"
-                    Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}" />
+                              Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}" />
 
             </controls:WrapPanel>
 
@@ -65,8 +65,19 @@
                             <customUI:ButtonV2.Flyout>
                                 <Flyout>
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
-                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedPolicy}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedPolicy}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+
                                         <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
                                         <TextBox Text="{x:Bind ViewModel.SelectedPolicyPath, Mode=OneWay}"
                                                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                  MinWidth="400" IsReadOnly="True" />

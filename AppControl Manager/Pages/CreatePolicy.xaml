@@ -69,22 +69,26 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button
-                        x:Uid="AllowMicrosoftCreateButton"
-                        Style="{StaticResource AccentButtonStyle}"
-                        Margin="0,0,15,0"
-                        IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.AllowMicrosoftCreate_Click}" />
+                    <Button x:Uid="AllowMicrosoftCreateButton"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Margin="0,0,15,0"
+                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.AllowMicrosoftCreate_Click}" />
 
-                    <ToggleButton
-                        IsChecked="{x:Bind ViewModel.AllowMicrosoftCreateAndDeploy, Mode=TwoWay}"
-                        IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
-                        x:Uid="DeployAfterCreationButton"
-                        Margin="0,0,15,0" />
+                    <ToggleButton IsChecked="{x:Bind ViewModel.AllowMicrosoftCreateAndDeploy, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                  x:Uid="DeployAfterCreationButton"
+                                  Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
+
+                    <customUI:SettingsCardV2 x:Uid="MakeAppIDTaggingPolicySettingsCard">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftAppIDTaggingToggle, Mode=TwoWay}"
+                                      x:Uid="ToggleSwitchGeneral"
+                                      IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                    </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
                         <ToggleSwitch
@@ -93,7 +97,7 @@
                             IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
-                    <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
+                    <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind ViewModel.IsElevated}">
 
                         <NumberBox
                             x:Uid="LogSizeNumberBox"
@@ -200,13 +204,19 @@
 
                     <ToggleButton
                         IsChecked="{x:Bind ViewModel.DefaultWindowsCreateAndDeploy, Mode=TwoWay}"
-                        IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
+
+                    <customUI:SettingsCardV2 x:Uid="MakeAppIDTaggingPolicySettingsCard">
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.DefaultWindowsAppIDTaggingToggle, Mode=TwoWay}"
+                                      x:Uid="ToggleSwitchGeneral"
+                                      IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
+                    </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
                         <ToggleSwitch
@@ -215,7 +225,7 @@
                             IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
-                    <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
+                    <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind ViewModel.IsElevated}">
 
                         <NumberBox
                             x:Uid="LogSizeNumberBox"
@@ -323,7 +333,7 @@
 
                     <ToggleButton
                         IsChecked="{x:Bind ViewModel.SignedAndReputableCreateAndDeploy, Mode=TwoWay}"
-                        IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />
 
@@ -338,7 +348,7 @@
                             IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
-                    <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
+                    <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind ViewModel.IsElevated}">
 
                         <NumberBox
                             x:Uid="LogSizeNumberBox"
@@ -445,14 +455,14 @@
 
                     <ToggleButton
                         IsChecked="{x:Bind ViewModel.RecommendedDriverBlockRulesCreateAndDeploy, Mode=TwoWay}"
-                        IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />
 
                     <Button
                         x:Uid="RecommendedDriverBlockRulesScheduledAutoUpdate"
                         Style="{StaticResource AccentButtonStyle}"
-                        IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         Click="{x:Bind ViewModel.RecommendedDriverBlockRulesScheduledAutoUpdate_Click}"
                         Margin="0,0,15,0" />
 
@@ -537,7 +547,7 @@
                         Click="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreate_Click}" />
 
                     <ToggleButton
-                        IsEnabled="{x:Bind ViewModel.RecommendedUserModeBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         IsChecked="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreateAndDeploy, Mode=TwoWay}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />
@@ -606,7 +616,7 @@
                         x:Uid="StrictKernelModePolicyCreateButton" />
 
                     <ToggleButton
-                        IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         IsChecked="{x:Bind ViewModel.StrictKernelModesCreateAndDeploy, Mode=TwoWay}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />
@@ -692,7 +702,7 @@
                         x:Uid="RMMBlockingCreateButton" />
 
                     <ToggleButton
-                        IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         IsChecked="{x:Bind ViewModel.RMMBlockingCreateAndDeploy, Mode=TwoWay}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />
@@ -771,7 +781,7 @@
                         x:Uid="DownloadsDefenseMeasureCreateButton" />
 
                     <ToggleButton
-                        IsEnabled="{x:Bind ViewModel.DownloadsDefenseMeasureSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         IsChecked="{x:Bind ViewModel.DownloadsDefenseMeasureCreateAndDeploy, Mode=TwoWay}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />
@@ -851,7 +861,7 @@
                         x:Uid="DangerousScriptHostsBlockingCreateButton" />
 
                     <ToggleButton
-                        IsEnabled="{x:Bind ViewModel.DangerousScriptHostsBlockingSectionIsEnabled, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsElevated}"
                         IsChecked="{x:Bind ViewModel.DangerousScriptHostsBlockingCreateAndDeploy, Mode=TwoWay}"
                         x:Uid="DeployAfterCreationButton"
                         Margin="0,0,15,0" />

@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>Logs</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>Deploying the main policy after merge.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>PolicyMerger</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>MergedPolicy.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>An error occurred during the merge process</value>
   </data>
@@ -936,9 +930,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>Checking for update</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>Installing the MSIXBundle path that you selected: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>The current version is </value>
@@ -954,9 +945,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>The AppControl Manager MSIXBundle package has been successfully downloaded to </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>No MSIXBundle path was selected</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>All Downloads finished, installing the new AppControl Manager version</value>
@@ -1967,73 +1955,73 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Select a template to apply to the selected policy file. Templates are predefined lists of policy rule options.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>Create App Control for Business policies based on different templates and policy rule options. Signed And Reputable is great for new users. Allow Microsoft only allows files signed by Microsoft's certificates. Default Windows only allows files that come by default with the Windows OS.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>Create a Supplemental policy that will expand the scope of a base policy. Supplemental policies can only allow files, they cannot have deny rules in them.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>View the detected files that were used to create the Supplemental policy.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>Deploy any type of App Control Policy locally or remotely to the cloud managed PCs.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>Leverage the local system logs or EVTX log files to create Application Control Policies. Only Code Integrity Operational and AppLocker logs are required. Use the Scan button to populate the data grid. Once populated, use the Create Policy button to define output configuration and generate the XML policy file.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>Calculate the Code Integrity and other types of hashes of files.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>Retrieve and query the Secure Settings on the system.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>The following are the logs that the AppControl Manager automatically generates and stores in the &quot;AppControl Manager&quot; folder in Program Files (if running elevated, otherwise they will be saved in the TEMP directory). The total size of the logs folder will never exceed 1GB.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>Leverage the Microsoft Defender for Endpoint Advanced Hunting logs to build Application Control Policies. You can either browse for exported log files or retrieve them from the cloud by signing into your Microsoft account.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>Merge App Control for Business policies and deduplicate them. You can select the same policy twice in order to deduplicate its rules.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>Edit App Control for Business Policies. Easily browse for a policy XML file and load its details using the Load button. Once loaded, you can review the number of each rule within the policy, remove specific rules, and modify various other policy settings.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Customize your app settings here. Your preferences will be saved so they're ready for you every time you start the AppControl Manager.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>Perform App Control for Business Simulation by selecting files or folders, and an XML policy file, then use the Begin Simulation button to populate the data grid. The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were running.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>Check for updates on this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>Validate App Control Policies to ensure they are compliant with the official schema. If you manually modified XML policy files and want to ensure your modifications are correct, use this feature to validate them.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>View Comprehensive information about the certificates used to sign any file. Details that are typically unavailable in File Explorer properties or PowerShell cmdlets are presented here in full.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>View the detected files that were used to create the Deny policy.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>Create a Deny Base policy that will explicitly deny files or applications. Keep in mind that Application Control is fundamentally based on allow-listing, which means anything that is not allowed by a policy is already automatically denied.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>Configure App Control for Business policy rule options. Detailed info is provided next to each rule and you can use the Guide button or open a discussion on GitHub if you need more information.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>Securely Build Code Signing Certificates that are suitable for signing App Control polices.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>View detailed information about the Deployed policies and Code Integrity on the local or remote systems.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>Use this page to Allow new or already installed apps or files to run on the system.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Search among the certificate details data</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>Confirm</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>More info</value>
   </data>
@@ -2506,12 +2482,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>It will retrieve the latest user configurations and display them.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Signed Policy Path:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Unsigned Policy Path:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Certificate Common Name:</value>
@@ -2902,18 +2872,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Documentation</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>Automatic Assignment</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>Automatically save the path to the base policies you create in the Sidebar.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Automatically save the path to the base policies you create in the Sidebar.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Automatically save the path to the base policies you create in the Sidebar.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>Sidebar Guide</value>
   </data>
@@ -2923,50 +2881,11 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>For Sidebar usage guide please visit the GitHub wiki page by clicking/tapping here.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>Select</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>Clear</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Clear the selected XML file path text box.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Clear the selected XML file path text box.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for an XML policy file</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for an XML policy file</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>Use the sidebar to pin XML file paths and reuse them in different parts of the AppControl Manager.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>Sidebar</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>Pinned Policy Path</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Policy Path</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>You need to select a name for the Supplemental Policy</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>You need to select an XML policy file path</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>The selected XML file path doesn't exist</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>Starting...</value>
@@ -3003,9 +2922,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>Enforced mode CIP file could not be found</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>Browse for an App Control XML policy file</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>Performing Validation</value>
@@ -3216,10 +3132,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The 'Id' property of AppManifest is required and cannot be null or empty.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>SettingDefinition array contains a null element.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>The 'Name' property of SettingDefinition is required and cannot be null or empty.</value>
     <comment>App Manifest Validation</comment>
@@ -3397,9 +3309,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>You must select an option from the policy creation list</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>Supplemental policy from event logs - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>No policy file was selected to add the logs to.</value>
@@ -3620,9 +3529,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>The selected certificate file and common name don't match.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>Please select the XML policy file of the policy being removed.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>The selected XML policy file path does not exist</value>
   </data>
@@ -3734,9 +3640,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>An error occurred while retrieving additional information related to the Microsoft recommended driver block rules.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>The policy file was created and saved to {0}</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>Resetting the policy ID and assigning policy name</value>
   </data>
@@ -3764,9 +3667,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>No XML content found on the Microsoft GitHub source for Microsoft Recommended User Mode Block Rules.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>Configuring the policy rule options for: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>Adding Rule Option: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
     <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} does not belong to a subject CN of any of the deployed certificates</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>The specified policy file '{0}' is not signed. Please provide a signed policy file.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>The specified policy file '{0}' is signed. Please provide an Unsigned policy file.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>Trying to parse and read the current user configurations file</value>
@@ -3938,36 +3832,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>Command execution failed with error code {0}. Output: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>CipPath cannot be null or empty.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>The file '{0}' does not exist.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>Deploying the following CIP file: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>Invalid XML structure, SiPolicy node not found</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>Signers node not found</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Failed to create or retrieve UMCI_ProductSignersNode</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Failed to create or retrieve KMCI_ProductSignersNode</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Product Signers AllowedSigners node not found despite creating it.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Product Signers FileRulesRef node not found despite creating it.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>{0} Product Signers DeniedSigners node not found despite creating it.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>There was a problem running the CiTool.exe.</value>
   </data>
@@ -4031,7 +3895,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>You must select an option from the policy creation list.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>Supplemental policy from MDE Advanced Hunting logs - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>There are no logs or files in any data grids to create a Supplemental policy for.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>Staging Area wasn't found</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>Successfully created and deployed the policy.</value>
 </data>
@@ -4402,9 +4263,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>Expected V8 block tag '8', got '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>Expected policy end tag '{0}', got '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>The policy type is {0} and it has {1} rule option which is invalid. Only {2} can have that.</value>
@@ -4658,9 +4516,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>Certificate must have a private key.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>PKCS #7 signature (content embedded, cert included) written to {0}</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>SignerSignEx3 failed with HRESULT: 0x{0:X}</value>
 </data>
@@ -4687,9 +4542,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>App was launched via File activation but without any file activation arguments</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>User canceled the UAC prompt.</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>Elevation request was required to process the selected file but it was denied by the user. Exiting the app.</value>
@@ -4729,12 +4581,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>The selected XML policy file is a Base policy but its BasePolicyID and PolicyID are not the same, indicating it is a Supplemental policy, changing the type.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>Successfully configured the policy at '{0}'. Now it has the Type '{1}', BasePolicyID '{2}' and PolicyID '{3}'.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>Successfully set the version of the policy file at '{0}' from '{1}' to '{2}'.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: Starting the data separation process.</value>
@@ -4831,9 +4677,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>One of the XML files has more than 1 Signer with the same ID `{0}`</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>Successfully set the HVCI in the policy file '{0}' to Strict.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>JumpList is not supported.</value>
@@ -5300,9 +5143,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>no WHQLFilePublisher signers detected to create allow rules for.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>EKUs node not found</value>
-  </data>
   <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>no WHQLFilePublisher signers detected to create deny rules for.</value>
   </data>
@@ -5571,14 +5411,8 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Creation Time</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Intune Policy Deployment Details</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Specify the details of an Intune Policy deployment</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Specify the details of an Intune Policy deployment</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>Create New Group</value>
@@ -5634,7 +5468,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="GroupType" xml:space="preserve">
   <value>Group Type:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Manage the Entra groups in your tenant and select the groups you want to deploy the policy to.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,333 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Only ask for confirmation before closing the app under certain circumstances when there is an ongoing operation.</value>
+  </data>
+  <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>There are still unsaved policies in the Sidebar's library, they will be lost if you close the app. Are you sure you want to exit?</value>
+  </data>
+  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>This is the library for your App Control policies where you can store policies and use them in different parts of the app. They're only available in memory unless you save them to a file or persistence is enabled.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Policies Library</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Persistent Library</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>When enabled, all of the policies available in the library will continue to be there even after app restarts. This functionality is provided by keeping a copy of the policies in the library in a private cache on disk. The cache is automatically deleted when the app is uninstalled.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>When enabled, all of the policies available in the library will continue to be there even after app restarts. This functionality is provided by keeping a copy of the policies in the library in a private location on disk. The cache is automatically deleted when the app is uninstalled.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>When enabled, all of the policies available in the library will continue to be there even after app restarts. This functionality is provided by keeping a copy of the policies in the library in a private location on disk. The cache is automatically deleted when the app is uninstalled.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Save as CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a location where the selected policy will be saved to as a CIP file.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pick a location where the selected policy will be saved to as a CIP file.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Save as XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a location where the selected policy will be saved to as a XML file.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pick a location where the selected policy will be saved to as a XML file.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove the policy from the library. If persistent library feature is enabled, the selected policy will also be removed from the local cache.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove the policy from the library. If persistent library feature is enabled, the selected policy will also be removed from the local cache.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Deploy</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deploys the selected policy on the local system.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deploys the selected policy on the local system.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Assign</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Assign the selected policy in the library to various applicable sections in the currently visible page.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Assign the selected policy in the library to various applicable sections in the currently visible page.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Add Policies</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for policy files to add to the library. If persistent library feature is enabled, they will be automatically backed up in the local cache as well so that your policies will remain available after you close and reopen the app.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for policy files to add to the library. If persistent library feature is enabled, they will be automatically backed up in the local cache as well so that your policies will remain available after you close and reopen the app.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Remove All</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove all policies from the library. If persistent library feature is enabled, the policies will also be deleted from the local cache.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove all policies from the library. If persistent library feature is enabled, the policies will also be deleted from the local cache.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Backup All</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a directory where all of the policies in the library will be backed up to as XML files.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pick a directory where all of the policies in the library will be backed up to as XML files.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Supplemental policy from Event logs - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Randomize</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Generate a random valid GUID for the Base policy ID.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Generate a random valid GUID for the Base policy ID.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Signed</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Unsigned</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copy Policy ID</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copies the Policy ID to the clipboard</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copies the Policy ID to the clipboard</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copy Base Policy ID</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copies the Base Policy ID to the clipboard</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copies the Base Policy ID to the clipboard</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Processing FileName data</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} FileName Rules.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>no FileName data detected to create allow rules for.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>no FileName data detected to create deny rules for.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>There are {0} File Name rules to be added to the policy</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>File Name Rule Type</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>XML Policy File (Optional)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>The XML policy file of the Signed policy that is going to be removed. It is optional and not required.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The XML policy file of the Signed policy that is going to be removed. It is optional and not required.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The XML policy file of the Signed policy that is going to be removed. It is optional and not required.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Please provide the details that will be used to re-sign the selected App Control Policy so that it will be removable on the next reboot.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>You can configure the following details in the app settings once, eliminating the need to enter them repeatedly.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Select Code Integrity EVTX Files</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for Code Integrity EVTX files to scan.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for Code Integrity EVTX files to scan.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>Select AppLocker EVTX Files</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for AppLocker EVTX files to scan.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for AppLocker EVTX files to scan.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>You're deploying an App Control policy that uses the Intelligent Security Graph and Smart App Control is not off. It's recommended to turn off Smart App Control in this situation.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>The CIP policy version is '{0}' while AppControl Manager only supports up to version '{1}'. Not all policy's features could be decoded.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>The P7B binary has been successfully converted to XML and the file has been saved to:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Create an App ID Tagging policy for the current policy template.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>App ID Tagging Policy</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create an App ID Tagging policy for the current policy template.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create an App ID Tagging policy for the current policy template.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>This area provides advanced features to customize App Control policies.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Advanced Features</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This area provides advanced features to customize App Control policies.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This area provides advanced features to customize App Control policies.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Select policies to convert to App ID Tagging type.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Convert Policies To App ID Tagging</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select policies to convert to App ID Tagging type.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select policies to convert to App ID Tagging type.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Convert</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Convert the selected policies to App ID Tagging</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Convert the selected policies to App ID Tagging</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Successfully converted all selected policies to App ID Tagging.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Select a Signing Scenario to remove from the policies you select.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Signing Scenario Removal</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select a Signing Scenario to remove from the policies you select.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select a Signing Scenario to remove from the policies you select.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Begin signing scenario removal.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Begin signing scenario removal.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Successfully removed all data related to the selected signing scenario.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Policy Friendly Name</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>The friendly name of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The friendly name of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The friendly name of the selected App Control policy</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Context</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>App ID Tags</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Add New Tag</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add a new App ID Tag based on the key and value that you entered.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add a new App ID Tag based on the key and value that you entered.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enter the App ID Tag's key in here.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter the App ID Tag's key in here.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Value</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enter the App ID Tag's value in here.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter the App ID Tag's value in here.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Main Policy</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Other Policies</value>
+  </data>
+  <!--NEW-->
+  <data name="PolicyToAddNewRulesTo" xml:space="preserve">
+    <value>Policy to Add New Rules to</value>
   </data>
 </root>

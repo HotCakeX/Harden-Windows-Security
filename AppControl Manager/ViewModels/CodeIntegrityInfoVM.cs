@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
@@ -76,7 +77,7 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 
 			codeIntegrityOptions.Clear();
 
-			foreach (CodeIntegrityOption item in codeIntegrityInfoResult.CodeIntegrityDetails)
+			foreach (CodeIntegrityOption item in CollectionsMarshal.AsSpan(codeIntegrityInfoResult.CodeIntegrityDetails))
 			{
 				codeIntegrityOptions.Add(item);
 			}

@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -193,7 +194,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 							List<string> optionsToReplaceWith = [];
 
-							foreach (string item2 in policyResult.Item2.PolicyOptions)
+							foreach (string item2 in CollectionsMarshal.AsSpan(policyResult.Item2.PolicyOptions))
 							{
 								try
 								{
@@ -232,7 +233,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 					else
 					{
 						CiPolicyInfo policy = new(
-							policyID: null,
+							policyID: string.Empty,
 							basePolicyID: null,
 							friendlyName: item.DisplayName,
 							version: null,
@@ -260,7 +261,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			foreach (DeviceHealthScript script in managedInstallers)
 			{
 				CiPolicyInfo miPolicy = new(
-					policyID: script.Id,
+					policyID: script.Id ?? string.Empty,
 					basePolicyID: null,
 					friendlyName: script.DisplayName,
 					version: null,
@@ -347,7 +348,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			{
 				// Perform a case-insensitive search in all relevant fields
 				filteredResults = AllPoliciesOutput.Where(p =>
-				(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				p.PolicyID.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||

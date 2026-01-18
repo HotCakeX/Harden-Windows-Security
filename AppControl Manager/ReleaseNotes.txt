@@ -1,9 +1,23 @@
-* Improved the performance of network requests made by the app to prevent port/socket exhaustion during heavy usage scenarios. Creation will be added in the next update.
+* All parts of the AppControl Manager now supports App ID Tags.
 
-* The home page now has a new section that shows whether your Windows is activated and if so how. It shows detailed information that are not normally visible in the operating system interface about activation method being used, license status, expiration date (if applicable), and more.
+* You can now create App ID Tagging policies in the Create Policies page.
 
-* The Update page now has a new section that allows you to install any MSIX/MSIXBundle package on your system. If the package you're trying to install is signed then it will be directly installed. If it is not signed, its designated certificate common name and hashing algorithm will be detected from its manifest, a unique matching certificate will be generated on your system in order to sign the package and then install it. This significantly simplifies any app package installation by abstracting and automating the entire process.
+* Added Advanced Features section to the Policy Merger page where you can customize your App Control policies further.
 
-* The app now asks for confirmation before closing when there are ongoing operations such as file scans, policy creations, log scans and so on, to prevent accidental termination of important long running tasks. You can configure this new feature in the app's settings page. It has 3 modes: Always ask for confirmation, Automatic (which will only ask if there are ongoing operations and is the default value), and Never ask for confirmation.
+* You can now view all of the App ID Tags in the loaded policy in Policy Editor
 
-* See the complete list on the GitHub.
+* A lot of pages and section in the app now work when running unelevated (not as Admin).
+
+* A new section has been added to the Sidebar that provides a library for all of your policies. You can import as many policies to it as you want and use them in different parts of the app. Policies in the library exist in the app's memory at runtime. You can import both XML and CIP file types to the library.
+
+* Added a new Scan Level, called "File Name", for local files and event logs which can be used for both signed and unsigned files.
+
+* You can now remove Signed Policies Without Policy Files.
+
+* Noticeable performance improvements for policy creations.
+
+* Reduced the disk usage and temporary file creations by 95% by making a lot of actions done in memory; That means you will no longer see `StagingArea` directories created under `C:\Program Files\AppControl Manager`.
+
+* Added icons to the Clear buttons of selected files/folders fly-outs across the app.
+
+* Please see the GitHub repository's release section for full info because it's not possible to include full details here.

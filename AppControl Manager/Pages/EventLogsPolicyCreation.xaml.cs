@@ -15,18 +15,22 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AnimatedVisuals;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class EventLogsPolicyCreation : Page, CommonCore.UI.IPageHeaderProvider
+internal sealed partial class EventLogsPolicyCreation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private EventLogsPolicyCreationVM ViewModel { get; } = ViewModelProvider.EventLogsPolicyCreationVM;
+	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal EventLogsPolicyCreation()
 	{
@@ -34,6 +38,58 @@ internal sealed partial class EventLogsPolicyCreation : Page, CommonCore.UI.IPag
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	#region Augmentation Interface
+
+	public void SetVisibility(Visibility visibility)
+	{
+		// Light up the local page's button icon
+		ViewModel.LightAnimatedIconVisibility = visibility;
+
+		sideBarVM.AssignActionPacks(
+			actionPack1: (LightUp1, GlobalVars.GetStr("AddToPolicySegmentedItem/Content")),
+			actionPack2: (LightUp2, GlobalVars.GetStr("BasePolicyFileSegmentedItem/Content"))
+		);
+	}
+
+	/// <summary>
+	/// Local event handlers that are assigned to the sidebar button
+	/// </summary>
+	private void LightUp1(object? param)
+	{
+		// Show the first flyout for the Split button
+		MainSplitButton.Flyout.ShowAt(MainSplitButton);
+
+		// Switch to the correct index in the Segmented control
+		ViewModel.SelectedCreationMethod = 0;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.PolicyToAddLogsTo = policy;
+		}
+
+		// XAML Root problem
+		// PolicyToAddLogsToButton_FlyOut.ShowAt(PolicyToAddLogsToButton);
+	}
+
+	private void LightUp2(object? param)
+	{
+		// Show the first flyout for the Split button
+		MainSplitButton.Flyout.ShowAt(MainSplitButton);
+
+		// Switch to the correct index in the Segmented control
+		ViewModel.SelectedCreationMethod = 1;
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.BasePolicyXMLFile = policy;
+		}
+
+		// XAML Root problem
+		// BasePolicyButton_FlyOut.ShowAt(BasePolicyButton);
+	}
+
+	#endregion
 
 	/// <summary>
 	/// Click event handler for copy
@@ -49,7 +105,7 @@ internal sealed partial class EventLogsPolicyCreation : Page, CommonCore.UI.IPag
 		}
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("EventLogsPolicyCreationPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("EventLogsPolicyCreationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs");
 
 }

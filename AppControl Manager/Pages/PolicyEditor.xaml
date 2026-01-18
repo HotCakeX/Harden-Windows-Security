@@ -38,7 +38,7 @@
                 <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
                                    VerticalAlignment="Center"
-                                   ObservedData="{x:Bind ViewModel.SelectedPolicyFile, Mode=OneWay}"
+                                   ObservedData="{x:Bind ViewModel.SelectedPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                    HorizontalAlignment="Center"
                                    x:Uid="SelectAppControlPolicyFileButton">
 
@@ -60,11 +60,20 @@
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearButton_Click}" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearButton_Click}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
 
                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox Text="{x:Bind ViewModel.SelectedPolicyFile, Mode=OneWay}"
+                                <TextBox Text="{x:Bind ViewModel.SelectedPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                          MinWidth="400" IsReadOnly="True" />
 
@@ -121,7 +130,7 @@
 
                 <ToggleSwitch HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Toggled="{x:Bind ViewModel.ChangeTextSelectionsState}"
+                              IsOn="{x:Bind ViewModel.TextsAreSelectableToggleState, Mode=TwoWay}"
                               x:Uid="TextSelectionStateToggleSwitch"
                               IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"/>
 
@@ -212,10 +221,16 @@
             </TabView.TabStripFooter>
 
             <!-- File-based rules tab -->
-            <TabViewItem Header="{x:Bind ViewModel.FileBasedCollectionTabItemHeader, Mode=OneWay}" IsClosable="False" MinWidth="280" MinHeight="40">
+            <TabViewItem IsClosable="False" MinWidth="280" MinHeight="40">
+                <TabViewItem.Header>
+                    <TextBlock>
+                        <Run>File-based Rules - count:</Run>
+                        <Run Text="{x:Bind ViewModel.FileRulesCollection.Count, Mode=OneWay}" />
+                    </TextBlock>
+                </TabViewItem.Header>
 
                 <TabViewItem.IconSource>
-                    <BitmapIconSource UriSource="/Assets/External/file.png" ShowAsMonochrome="False" />
+                    <BitmapIconSource UriSource="ms-appx:///Assets/External/file.png" ShowAsMonochrome="False" />
                 </TabViewItem.IconSource>
                 <TabViewItem.Content>
 
@@ -351,9 +366,16 @@
             </TabViewItem>
 
             <!-- Signature-based rules tab -->
-            <TabViewItem Header="{x:Bind ViewModel.SignatureBasedCollectionTabItemHeader, Mode=OneWay}" IsClosable="False" MinWidth="300">
+            <TabViewItem IsClosable="False" MinWidth="300">
+                <TabViewItem.Header>
+                    <TextBlock>
+                        <Run>Signature-based Rules - count:</Run>
+                        <Run Text="{x:Bind ViewModel.SignatureRulesCollection.Count, Mode=OneWay}" />
+                    </TextBlock>
+                </TabViewItem.Header>
+
                 <TabViewItem.IconSource>
-                    <BitmapIconSource UriSource="/Assets/External/signature.png" ShowAsMonochrome="False" />
+                    <BitmapIconSource UriSource="ms-appx:///Assets/External/signature.png" ShowAsMonochrome="False" />
                 </TabViewItem.IconSource>
                 <TabViewItem.Content>
 
@@ -455,7 +477,7 @@
 
             <TabViewItem x:Uid="PolicyDetails" IsClosable="False" Visibility="Visible" MinWidth="200">
                 <TabViewItem.IconSource>
-                    <BitmapIconSource UriSource="/Assets/External/Sparkle.png" ShowAsMonochrome="False" />
+                    <BitmapIconSource UriSource="ms-appx:///Assets/External/Sparkle.png" ShowAsMonochrome="False" />
                 </TabViewItem.IconSource>
                 <TabViewItem.Content>
 
@@ -554,6 +576,122 @@
 
                                 </customUI:SettingsCardV2>
 
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"
+                                                       HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}"
+                                                       IsClickEnabled="False">
+
+                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             x:Uid="PolicyEditorPolicyName"
+                                             Text="{x:Bind ViewModel.PolicyFriendlyNameTextBox, Mode=TwoWay}" />
+
+                                </controls:SettingsCard>
+
+                                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
+                                           x:Uid="AppIDTags" />
+
+                                <Border BorderThickness="1"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        CornerRadius="5">
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" Margin="5,8,5,8" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="6">
+
+                                            <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                                    Click="{x:Bind ViewModel.AddNewAppIDTag}"
+                                                    Style="{ThemeResource AccentButtonStyle}"
+                                                    x:Uid="AddNewAppIDTagButton">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE710;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <TextBox Text="{x:Bind ViewModel.NewAppIDTagKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="KeyPlaceHolder" />
+                                            <TextBox Text="{x:Bind ViewModel.NewAppIDTagValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="ValuePlaceHolder" />
+
+                                        </StackPanel>
+
+                                        <ListView AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                                  Grid.Row="1"
+                                                  CanDragItems="{x:Bind ViewModel.IsNotElevated}"
+                                                  CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                                  IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                                  SelectionMode="Single"
+                                                  Height="300"
+                                                  ItemsSource="{x:Bind ViewModel.AppIDTagsCollection, Mode=OneWay}">
+
+                                            <ListView.Header>
+
+                                                <Border CornerRadius="5"
+                                                Background="Black"
+                                                customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
+                                                            <ColumnDefinition Width="{x:Bind ViewModel.AppIDTagsColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                                            <ColumnDefinition Width="{x:Bind ViewModel.AppIDTagsColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                                            <ColumnDefinition Width="{x:Bind ViewModel.AppIDTagsColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <!-- Header TextBlocks -->
+                                                        <TextBlock x:Uid="KeyHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                                        <TextBlock x:Uid="ValueHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                                        <TextBlock x:Uid="ContextHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+                                                        <!-- GridSplitters between columns -->
+                                                        <controls:GridSplitter Grid.Column="1" />
+                                                        <controls:GridSplitter Grid.Column="2" />
+                                                    </Grid>
+                                                </Border>
+                                            </ListView.Header>
+
+                                            <!-- DataTemplate for ListView items -->
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate x:DataType="PolicyEditor:AppIDTagsWithContext" xmlns:VMs="using:AppControlManager.ViewModels">
+                                                    <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
+                                                    <Grid Background="Transparent">
+
+                                                        <Grid.ContextFlyout>
+                                                            <MenuFlyout>
+
+                                                                <MenuFlyoutItem x:Uid="DeleteRow"
+                                                                            DataContext="{x:Bind}"
+                                                                            Click="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppIDTagsListView_DeleteItems}">
+                                                                    <MenuFlyoutItem.Icon>
+                                                                        <FontIcon Glyph="&#xE74D;" />
+                                                                    </MenuFlyoutItem.Icon>
+                                                                </MenuFlyoutItem>
+
+                                                            </MenuFlyout>
+                                                        </Grid.ContextFlyout>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppIDTagsColumnWidth1, Mode=OneWay}" />
+                                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppIDTagsColumnWidth2, Mode=OneWay}" />
+                                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppIDTagsColumnWidth3, Mode=OneWay}" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind AppIDTag.Key}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind AppIDTag.Value}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Context}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+
+                                    </Grid>
+
+                                </Border>
+
                             </StackPanel>
 
                         </Grid>
@@ -570,7 +708,7 @@
                          IsEnabled="True"
                          MinWidth="260">
                 <TabViewItem.IconSource>
-                    <BitmapIconSource UriSource="/Assets/External/setting.png" ShowAsMonochrome="False" />
+                    <BitmapIconSource UriSource="ms-appx:///Assets/External/setting.png" ShowAsMonochrome="False" />
                 </TabViewItem.IconSource>
                 <TabViewItem.Content>
                     <Grid>

@@ -22,7 +22,7 @@ namespace CommonCore;
 internal static partial class CIManager
 {
 
-	internal static unsafe void Add(byte[] bytes)
+	internal static unsafe void Add(ReadOnlySpan<byte> bytes)
 	{
 		// ManageCI's upsert takes a 32-bit size
 		if ((ulong)bytes.Length > uint.MaxValue)
@@ -86,8 +86,8 @@ internal static partial class CIManager
 				string friendlyName = GetFriendlyNameFromSiPolicyView(siPolicyView);
 
 				Logger.Write("Details of the policy being deployed:");
-				Logger.Write($"Policy ID: {parsedPolicyId.ToString("D")}");
-				Logger.Write($"Base Policy ID: {parsedBasePolicyId.ToString("D")}");
+				Logger.Write($"Policy ID: {parsedPolicyId:D}");
+				Logger.Write($"Base Policy ID: {parsedBasePolicyId:D}");
 				Logger.Write($"Friendly Name: {friendlyName}");
 
 				// Queue the upsert using the prefixed wrapper that takes the management "this":

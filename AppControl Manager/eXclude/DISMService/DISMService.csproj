@@ -1,31 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<Version>$(FileVersion)</Version>
-		<FileVersion>1.0.0.0</FileVersion>
-		<Title>DISMService</Title>
-		<Copyright>Violet Hansen</Copyright>
-		<Description>DISM Service Component of the Harden System Security app.</Description>
-		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
-		<PublishAot>True</PublishAot>
-		<PublishTrimmed>True</PublishTrimmed>
-		<TrimMode>full</TrimMode>
-		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-		<ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-		<TrimmerSingleWarn>false</TrimmerSingleWarn>
-		<UseNativeHttpHandler>false</UseNativeHttpHandler>
-		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-		<Http3Support>false</Http3Support>
-		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<DebugType>none</DebugType>
-	</PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <Version>$(FileVersion)</Version>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Title>DISMService</Title>
+        <Copyright>Violet Hansen</Copyright>
+        <Description>DISM Service Component of the Harden System Security app.</Description>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <PublishAot>True</PublishAot>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <UseNativeHttpHandler>false</UseNativeHttpHandler>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <Http3Support>false</Http3Support>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
 
-	<Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
+    <Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
 
-	<ItemGroup>
-		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.2" />
-		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.2" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.2" />
+        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.2" />
+    </ItemGroup>
 </Project>

@@ -17,10 +17,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
-using AppControlManager.XMLOps;
 
 namespace AppControlManager.SiPolicy;
 
@@ -43,31 +43,25 @@ namespace AppControlManager.SiPolicy;
 /// </summary>
 internal static class Merger
 {
-
 	/// <summary>
-	/// This is the Main method that is responsible for merging 2 XML files.
-	/// The result will be saved in the first XL file and there will be no duplicate data.
-	/// The first XML file's data that are non-arrays will be maintained.
-	/// Only the data that are arrays will be merged.
+	/// This is the Main method that is responsible for merging 2 or more App Control policies,
+	/// Or only acting on 1 policy which will result in de-duplication.
+	/// The result will be saved in the first policy and there will be no duplicate data.
+	/// The first policy's data that are non-collections will be maintained.
+	/// Only the data that are collections will be merged.
 	/// No date is lost in the merge process.
 	/// </summary>
-	/// <param name="mainXmlFilePath"></param>
-	/// <param name="otherXmlFilePaths"></param>
-	internal static void Merge(string mainXmlFilePath, List<string> otherXmlFilePaths)
+	/// <param name="mainPolicy"></param>
+	/// <param name="otherPolicies"></param>
+	internal static SiPolicy Merge(SiPolicy mainPolicy, List<SiPolicy>? otherPolicies)
 	{
-		// Create a list of all SiPolicy objects representing the instantiation of otherXmlFilePaths
-		List<SiPolicy> allPolicies = [];
+		// Create a list of all SiPolicy objects that will participate in the merge process.
+		// Add the main policy.
+		List<SiPolicy> allPolicies = [mainPolicy];
 
-		foreach (string item in otherXmlFilePaths)
-		{
-			allPolicies.Add(Management.Initialize(item, null));
-		}
-
-		// Instantiate the main policy
-		SiPolicy mainXML = Management.Initialize(mainXmlFilePath, null);
-
-		// Add the main policy to the mix
-		allPolicies.Add(mainXML);
+		// Add any other policies
+		if (otherPolicies is not null)
+			allPolicies.AddRange(otherPolicies);
 
 		// Collections used to store the data and pass between methods
 		List<EKU> ekusToUse = [];
@@ -86,9 +80,11 @@ internal static class Merger
 		SignerCollection? signerCollection = null; // Not used by the policy generator method in here
 		List<FileRuleRef> kernelModeFileRulesRefs = [];
 		List<FileRuleRef> userModeFileRulesRefs = [];
-
+		AppIDTags? userModeAppIDTags = null;
+		AppIDTags? kernelModeAppIDTags = null;
 
 		// Deserialize, de-duplicate, merge
+		// Doesn't return anything and only acts on the referenced collections.
 		PolicyDeserializer(
 		   allPolicies,
 		   ref ekusToUse,
@@ -106,14 +102,15 @@ internal static class Merger
 		   ref allowRules,
 		   ref signerCollection,
 		   ref kernelModeFileRulesRefs,
-		   ref userModeFileRulesRefs
+		   ref userModeFileRulesRefs,
+		   ref userModeAppIDTags,
+		   ref kernelModeAppIDTags
 		   );
 
 
-		// Generate the policy
-		PolicyGenerator(
-		   mainXmlFilePath,
-		   mainXML,
+		// Generate the policy and return it
+		return PolicyGenerator(
+		   mainPolicy,
 		   ekusToUse,
 		   fileRulesNode,
 		   signers,
@@ -126,13 +123,14 @@ internal static class Merger
 		   updatePolicySignersCol,
 		   kernelModeFileRulesRefs,
 		   userModeFileRulesRefs,
-		   mainXML.Settings); // Pass the main policy's Settings for the merge unless there is a need to merge the Settings during a merge operation.
+		   mainPolicy.Settings, // Pass the main policy's Settings for the merge unless there is a need to merge the Settings during a merge operation.
+		   userModeAppIDTags,
+		   kernelModeAppIDTags);
 	}
 
 
 	/// <summary>
-	/// Accepts mainXML and allPolicies, and accepts many other collections, fills them with data.
-	/// It can be used for a single SiPolicy as well, just supply the same object for both parameters.
+	/// Accepts a list of SiPolicy objects, and accepts many other collections, fills them with data.
 	/// </summary>
 	/// <param name="allPolicies">Input data</param>
 	/// <param name="ekusToUse">Output data</param>
@@ -168,7 +166,9 @@ internal static class Merger
 		ref HashSet<AllowRule> allowRules,
 		ref SignerCollection? signerCollection,
 		ref List<FileRuleRef> kernelModeFileRulesRefs,
-		ref List<FileRuleRef> userModeFileRulesRefs
+		ref List<FileRuleRef> userModeFileRulesRefs,
+		ref AppIDTags? userModeAppIDTags,
+		ref AppIDTags? kernelModeAppIDTags
 		)
 	{
 		// Data aggregation
@@ -443,13 +443,94 @@ internal static class Merger
 			kernelModeAllowedSigners,
 			kernelModeDeniedSigners
 			);
+
+
+		#region AppID Tags
+
+		List<AppIDTag> userModeAppIDTagsCol = [];
+		List<AppIDTag> kernelModeAppIDTagsCol = [];
+
+		bool enforceDllUserMode = false;
+		bool enforceDllKernelMode = false;
+
+		HashSet<string> currentTagKeysUserMode = new(StringComparer.Ordinal);
+
+		HashSet<string> currentTagKeysKernelMode = new(StringComparer.Ordinal);
+
+		// Collect AppIDTags from all policies for each signing scenario
+		foreach (SiPolicy policy in CollectionsMarshal.AsSpan(allPolicies))
+		{
+			foreach (SigningScenario sc in CollectionsMarshal.AsSpan(policy.SigningScenarios))
+			{
+				// User-Mode Signing Scenario
+				if (string.Equals(sc.Value.ToString(), "12", StringComparison.OrdinalIgnoreCase))
+				{
+					// Only flip it from false to true
+					if (!enforceDllUserMode)
+					{
+						enforceDllUserMode = sc.AppIDTags?.EnforceDLL == true;
+					}
+
+					foreach (AppIDTag appIDTag in CollectionsMarshal.AsSpan(sc.AppIDTags?.AppIDTag))
+					{
+						// Ensure only Unique keys for User-mode will be in the policy.
+						if (currentTagKeysUserMode.Add(appIDTag.Key))
+						{
+							userModeAppIDTagsCol.Add(appIDTag);
+						}
+					}
+				}
+
+				// kernel-Mode Signing Scenario
+				if (string.Equals(sc.Value.ToString(), "131", StringComparison.OrdinalIgnoreCase))
+				{
+					// Only flip it from false to true
+					if (!enforceDllKernelMode)
+					{
+						enforceDllKernelMode = sc.AppIDTags?.EnforceDLL == true;
+					}
+
+					foreach (AppIDTag appIDTag in CollectionsMarshal.AsSpan(sc.AppIDTags?.AppIDTag))
+					{
+						// Ensure only Unique keys pairs for Kernel-mode will be in the policy.
+						if (currentTagKeysKernelMode.Add(appIDTag.Key))
+						{
+							kernelModeAppIDTagsCol.Add(appIDTag);
+						}
+					}
+				}
+			}
+		}
+
+
+		if (userModeAppIDTagsCol.Count > 0)
+		{
+			// Assign the results to the Ref vars
+			userModeAppIDTags = new()
+			{
+				EnforceDLL = enforceDllUserMode,
+				AppIDTag = userModeAppIDTagsCol
+			};
+		}
+
+		if (kernelModeAppIDTagsCol.Count > 0)
+		{
+			// Assign the results to the Ref vars
+			kernelModeAppIDTags = new()
+			{
+				EnforceDLL = enforceDllKernelMode,
+				AppIDTag = kernelModeAppIDTagsCol
+			};
+		}
+
+		#endregion
+
 	}
 
 	/// <summary>
 	/// Creates an App Control policy from the deserialized data
 	/// </summary>
-	/// <param name="mainXmlFilePath">The file path where the generated policy will be saved</param>
-	/// <param name="mainXML">The deserialized SiPolicy object of the main policy</param>
+	/// <param name="mainPolicy">The deserialized SiPolicy object of the main policy</param>
 	/// <param name="ekusToUse">EKUs collection of data used to generate the policy</param>
 	/// <param name="fileRulesNode"></param>
 	/// <param name="signers"></param>
@@ -462,9 +543,8 @@ internal static class Merger
 	/// <param name="updatePolicySignersCol"></param>
 	/// <param name="kernelModeFileRulesRefs"></param>
 	/// <param name="userModeFileRulesRefs"></param>
-	internal static void PolicyGenerator(
-		string? mainXmlFilePath,
-		SiPolicy? mainXML,
+	internal static SiPolicy PolicyGenerator(
+		SiPolicy mainPolicy,
 		List<EKU> ekusToUse,
 		List<object> fileRulesNode,
 		List<Signer> signers,
@@ -477,19 +557,17 @@ internal static class Merger
 		List<UpdatePolicySigner> updatePolicySignersCol,
 		List<FileRuleRef> kernelModeFileRulesRefs,
 		List<FileRuleRef> userModeFileRulesRefs,
-		List<Setting>? policySettings
+		List<Setting>? policySettings,
+		AppIDTags? userModeAppIDTags,
+		AppIDTags? kernelModeAppIDTags
 		)
 	{
-
-		ArgumentNullException.ThrowIfNull(mainXmlFilePath, nameof(mainXmlFilePath));
-		ArgumentNullException.ThrowIfNull(mainXML, nameof(mainXML));
-
 		// Get any possible SigningScenario from XML1 (main)
 		// Will use some of its rare details when building the new policy
-		SigningScenario? mainXMLUserModeSigningScenario = mainXML.SigningScenarios?
+		SigningScenario? mainPolicyUserModeSigningScenario = mainPolicy.SigningScenarios?
 		  .FirstOrDefault(s => s.Value == 12);
 
-		SigningScenario? mainXMLKernelModeSigningScenario = mainXML.SigningScenarios?
+		SigningScenario? mainPolicyKernelModeSigningScenario = mainPolicy.SigningScenarios?
 			.FirstOrDefault(s => s.Value == 131);
 
 		// Construct the User Mode Signing Scenario
@@ -514,21 +592,21 @@ internal static class Merger
 			)
 		{
 			FriendlyName = "User Mode Code Integrity",
-			// Add miscellaneous settings to the User Mode Signing Scenario from the Main XML
-			MinimumHashAlgorithm = mainXMLUserModeSigningScenario?.MinimumHashAlgorithm
+			// Add miscellaneous settings to the User Mode Signing Scenario from the Main policy
+			MinimumHashAlgorithm = mainPolicyUserModeSigningScenario?.MinimumHashAlgorithm
 		};
 
-		if (mainXMLUserModeSigningScenario is { InheritedScenarios: not null })
-			UMCISigningScenario.InheritedScenarios = mainXMLUserModeSigningScenario.InheritedScenarios;
+		if (mainPolicyUserModeSigningScenario is { InheritedScenarios: not null })
+			UMCISigningScenario.InheritedScenarios = mainPolicyUserModeSigningScenario.InheritedScenarios;
 
-		if (mainXMLUserModeSigningScenario is { AppIDTags: not null })
-			UMCISigningScenario.AppIDTags = mainXMLUserModeSigningScenario.AppIDTags;
+		if (userModeAppIDTags is not null)
+			UMCISigningScenario.AppIDTags = userModeAppIDTags;
 
-		if (mainXMLUserModeSigningScenario is { TestSigners: not null })
-			UMCISigningScenario.TestSigners = mainXMLUserModeSigningScenario.TestSigners;
+		if (mainPolicyUserModeSigningScenario is { TestSigners: not null })
+			UMCISigningScenario.TestSigners = mainPolicyUserModeSigningScenario.TestSigners;
 
-		if (mainXMLUserModeSigningScenario is { TestSigningSigners: not null })
-			UMCISigningScenario.TestSigningSigners = mainXMLUserModeSigningScenario.TestSigningSigners;
+		if (mainPolicyUserModeSigningScenario is { TestSigningSigners: not null })
+			UMCISigningScenario.TestSigningSigners = mainPolicyUserModeSigningScenario.TestSigningSigners;
 
 
 		// Construct the Kernel Mode Signing Scenario
@@ -553,107 +631,153 @@ internal static class Merger
 			)
 		{
 			FriendlyName = "Kernel Mode Code Integrity",
-			// Add miscellaneous settings to the Kernel Mode Signing Scenario from the Main XML
-			MinimumHashAlgorithm = mainXMLKernelModeSigningScenario?.MinimumHashAlgorithm
+			// Add miscellaneous settings to the Kernel Mode Signing Scenario from the Main policy
+			MinimumHashAlgorithm = mainPolicyKernelModeSigningScenario?.MinimumHashAlgorithm
 		};
 
-		if (mainXMLKernelModeSigningScenario is { InheritedScenarios: not null })
-			KMCISigningScenario.InheritedScenarios = mainXMLKernelModeSigningScenario.InheritedScenarios;
+		if (mainPolicyKernelModeSigningScenario is { InheritedScenarios: not null })
+			KMCISigningScenario.InheritedScenarios = mainPolicyKernelModeSigningScenario.InheritedScenarios;
 
-		if (mainXMLKernelModeSigningScenario is { AppIDTags: not null })
-			KMCISigningScenario.AppIDTags = mainXMLKernelModeSigningScenario.AppIDTags;
+		if (kernelModeAppIDTags is not null)
+			KMCISigningScenario.AppIDTags = kernelModeAppIDTags;
 
-		if (mainXMLKernelModeSigningScenario is { TestSigners: not null })
-			KMCISigningScenario.TestSigners = mainXMLKernelModeSigningScenario.TestSigners;
+		if (mainPolicyKernelModeSigningScenario is { TestSigners: not null })
+			KMCISigningScenario.TestSigners = mainPolicyKernelModeSigningScenario.TestSigners;
 
-		if (mainXMLKernelModeSigningScenario is { TestSigningSigners: not null })
-			KMCISigningScenario.TestSigningSigners = mainXMLKernelModeSigningScenario.TestSigningSigners;
+		if (mainPolicyKernelModeSigningScenario is { TestSigningSigners: not null })
+			KMCISigningScenario.TestSigningSigners = mainPolicyKernelModeSigningScenario.TestSigningSigners;
 
 
-		// Create the final policy data, it will replace the content in the main XML file
+		// Create the final policy data, it will replace the content in the main policy
 		SiPolicy output = new(
-			versionEx: mainXML.VersionEx, // Main policy takes priority
-			platformID: mainXML.PlatformID, // Main policy takes priority
-			policyID: mainXML.PolicyID, // Main policy takes priority
-			basePolicyID: mainXML.BasePolicyID, // Main policy takes priority
-			rules: mainXML.Rules, // Main policy takes priority
-			policyType: mainXML.PolicyType // Main policy takes priority
+			versionEx: mainPolicy.VersionEx, // Main policy takes priority
+			platformID: mainPolicy.PlatformID, // Main policy takes priority
+			policyID: mainPolicy.PolicyID, // Main policy takes priority
+			basePolicyID: mainPolicy.BasePolicyID, // Main policy takes priority
+			rules: mainPolicy.Rules, // Main policy takes priority
+			policyType: mainPolicy.PolicyType // Main policy takes priority
 		)
 		{
-			PolicyTypeID = mainXML.PolicyTypeID, // Main policy takes priority
+			PolicyTypeID = mainPolicy.PolicyTypeID, // Main policy takes priority
 			EKUs = ekusToUse, // Aggregated data
 			FileRules = fileRulesNode, // Aggregated data
 			Signers = signers, // Aggregated data
 			SigningScenarios = [UMCISigningScenario, KMCISigningScenario], // Aggregated data
 			UpdatePolicySigners = updatePolicySignersCol, // Aggregated data
 			CiSigners = [.. ciSigners], // Aggregated data
-			HvciOptions = mainXML.HvciOptions, // Main policy takes priority
+			HvciOptions = mainPolicy.HvciOptions, // Main policy takes priority
 			Settings = policySettings, // Depends
-			Macros = mainXML.Macros, // Main policy takes priority
+			Macros = mainPolicy.Macros, // Main policy takes priority
 			SupplementalPolicySigners = supplementalPolicySignersCol, // Aggregated data
-			AppSettings = mainXML.AppSettings, // Main policy takes priority
-			FriendlyName = mainXML.FriendlyName // Main policy takes priority
+			AppSettings = mainPolicy.AppSettings, // Main policy takes priority
+			FriendlyName = mainPolicy.FriendlyName // Main policy takes priority
 		};
 
-		// Save the changes to the main XML File
-		Management.SavePolicyToFile(output, mainXmlFilePath);
+		// Make sure no Kernel-mode stuff exists if the type is AppIDTagging
+		if (output.PolicyType is PolicyType.AppIDTaggingPolicy)
+		{
+			output = RemoveSigningScenarios.RemoveKernelMode(output);
+		}
 
-		// The reason this method is being used to go over the XML one more time and its logic wasn't implemented during policy creation
+		// The reason this method is being used to go over the policy object one more time and its logic wasn't implemented during policy creation
 		// is because this operation needs the complete view of the policy, whereas the policy creation operation micro-manages things
 		// And puts each element in their own box, so they don't have access to the complete view of the policy.
 		// Another reason is because multiple different elements refer to the same EKU, which again can't be put in those specific element "boxes" since they don't have information about other "boxes".
-		EnsureUniqueEKUs(mainXmlFilePath);
+		output = EnsureUniqueEKUs(output);
+
+		return output;
 	}
 
-
 	/// <summary>
-	/// Helper method to de-duplicate EKUs
+	/// Helper method to de-duplicate EKUs directly on the SiPolicy object.
+	/// Identifies duplicate EKUs based on their Value, keeps one master,
+	/// updates all Signer references to point to the master, and removes duplicates.
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
-	private static void EnsureUniqueEKUs(string xmlFilePath)
+	/// <param name="policy">The SiPolicy object to process.</param>
+	/// <returns>The modified SiPolicy object.</returns>
+	private static SiPolicy EnsureUniqueEKUs(SiPolicy policy)
 	{
-		// Load the XML document
-		XDocument doc = XDocument.Load(xmlFilePath);
-		XNamespace ns = GlobalVars.SiPolicyNamespace;
-
-		// Get all EKU elements
-		List<XElement> ekuElements = [.. doc.Descendants(ns + "EKU")];
-
-		// Group EKUs by their Value attribute to identify duplicates
-		List<IGrouping<string, XElement>> duplicateGroups = [.. ekuElements
-			.GroupBy(e => (string)e.Attribute("Value")!)
-			.Where(g => g.Count() > 1)];
-
-		foreach (IGrouping<string, XElement> group in duplicateGroups)
+		// If there are no EKUs or Signers, there is nothing to deduplicate or update.
+		if (policy.EKUs is null || policy.EKUs.Count == 0)
 		{
-			// Keep the first EKU as the "master" and remove the others
-			XElement ekuToKeep = group.First();
-			List<XElement> ekusToRemove = [.. group.Skip(1)];
+			return policy;
+		}
 
-			string ekuToKeepId = (string)ekuToKeep.Attribute("ID")!;
+		// 1. Group EKUs by their Value to find duplicates.
+		Dictionary<string, string> ekuIdRemap = new(StringComparer.OrdinalIgnoreCase);
 
-			// Update Signer CertEKU references to point to the retained EKU
-			foreach (XElement ekuToRemove in ekusToRemove)
+		// List to hold the unique EKUs that will remain in the policy.
+		List<EKU> uniqueEKUs = [];
+
+		// We use a dictionary to track unique values encountered so far: HexString -> Master EKU ID
+		// Converting to Hex String is a safe way to use byte arrays as dictionary keys.
+		Dictionary<string, string> uniqueValuesMap = new(StringComparer.Ordinal);
+
+		foreach (EKU eku in CollectionsMarshal.AsSpan(policy.EKUs))
+		{
+			// Convert the memory to a hex string for easy comparison/keying
+			string hexValue = CustomSerialization.ConvertByteArrayToHex(eku.Value);
+
+			if (uniqueValuesMap.TryGetValue(hexValue, out string? masterId))
 			{
-				string ekuToRemoveId = (string)ekuToRemove.Attribute("ID")!;
-
-				IEnumerable<XElement> certEKURefs = doc.Descendants(ns + "CertEKU")
-					.Where(e => string.Equals((string)e.Attribute("ID")!, ekuToRemoveId, StringComparison.OrdinalIgnoreCase));
-
-				foreach (XElement certEKURef in certEKURefs)
-				{
-					certEKURef.SetAttributeValue("ID", ekuToKeepId);
-				}
-
-				// Remove the duplicate EKU from the document
-				ekuToRemove.Remove();
+				// This is a duplicate.
+				// Map this EKU's ID to the Master ID.
+				ekuIdRemap[eku.ID] = masterId;
+			}
+			else
+			{
+				// This is a new unique EKU.
+				// Add it to the map.
+				uniqueValuesMap[hexValue] = eku.ID;
+				// Add to the final list.
+				uniqueEKUs.Add(eku);
 			}
 		}
 
-		// Save the updated XML document
-		doc.Save(xmlFilePath);
-	}
+		// If no remapping is needed (no duplicates found), we can return early.
+		if (ekuIdRemap.Count == 0)
+		{
+			return policy;
+		}
 
+		// 2. Update all Signers to use the new Master IDs.
+		if (policy.Signers is not null)
+		{
+			foreach (Signer signer in CollectionsMarshal.AsSpan(policy.Signers))
+			{
+				if (signer.CertEKU is not null && signer.CertEKU.Count > 0)
+				{
+					// We need to iterate through the CertEKUs and update IDs if they are in the remap dictionary.
+					// We might also end up with duplicate CertEKU entries within a single signer if multiple old IDs map to the same new ID,
+					// so we should distinct them as well.
+
+					// Create a set to track IDs for this signer to avoid duplicates within the signer itself
+					HashSet<string> signerCertIds = [];
+					List<CertEKU> newCertEkuList = [];
+
+					foreach (CertEKU certEku in CollectionsMarshal.AsSpan(signer.CertEKU))
+					{
+						// Determine the effective ID (either remap it or keep original)
+						string effectiveId = ekuIdRemap.TryGetValue(certEku.ID, out string? newId) ? newId : certEku.ID;
+
+						// Only add if we haven't added this ID to this signer yet
+						if (signerCertIds.Add(effectiveId))
+						{
+							newCertEkuList.Add(new CertEKU(effectiveId));
+						}
+					}
+
+					// Update the signer's list
+					signer.CertEKU = newCertEkuList;
+				}
+			}
+		}
+
+		// 3. Replace the policy's EKU list with the unique list.
+		policy.EKUs = uniqueEKUs;
+
+		return policy;
+	}
 
 	/// <summary>
 	/// Rule 1: Name, CertRoot.Value, CertPublisher.Value must match
@@ -666,7 +790,7 @@ internal static class Merger
 		return !string.IsNullOrWhiteSpace(signerX.Name) &&
 			   !string.IsNullOrWhiteSpace(signerY.Name) &&
 			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   signerX.CertRoot is not null && signerY.CertRoot is not null && signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span) &&
+			   signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span) &&
 			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
 	}
 
@@ -681,7 +805,7 @@ internal static class Merger
 		return !string.IsNullOrWhiteSpace(signerX.Name) &&
 			   !string.IsNullOrWhiteSpace(signerY.Name) &&
 			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   signerX.CertRoot is not null && signerY.CertRoot is not null && signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span);
+			   signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span);
 	}
 
 	/// <summary>
@@ -692,7 +816,6 @@ internal static class Merger
 	/// <returns>True if EKU values match</returns>
 	internal static bool DoEKUsMatch(List<EKU> ekusX, List<EKU> ekusY)
 	{
-
 		// Extract EKU values and ignore IDs
 		HashSet<int> ekuValuesX = [.. ekusX.Where(e => !e.Value.IsEmpty).Select(e => CustomMethods.GetByteArrayHashCode(e.Value.Span))];
 
@@ -707,34 +830,12 @@ internal static class Merger
 	/// Compares the common properties of two rule objects.
 	/// For properties that aren't applicable in a given rule type, pass null.
 	/// </summary>
-	/// <param name="signingScenarioX"></param>
-	/// <param name="signingScenarioY"></param>
-	/// <param name="ruleTypeX"></param>
-	/// <param name="ruleTypeY"></param>
-	/// <param name="packageFamilyNameX"></param>
-	/// <param name="packageFamilyNameY"></param>
-	/// <param name="hashX"></param>
-	/// <param name="hashY"></param>
-	/// <param name="filePathX"></param>
-	/// <param name="filePathY"></param>
-	/// <param name="fileNameX"></param>
-	/// <param name="fileNameY"></param>
-	/// <param name="minimumFileVersionX"></param>
-	/// <param name="minimumFileVersionY"></param>
-	/// <param name="maximumFileVersionX"></param>
-	/// <param name="maximumFileVersionY"></param>
-	/// <param name="internalNameX"></param>
-	/// <param name="internalNameY"></param>
-	/// <param name="fileDescriptionX"></param>
-	/// <param name="fileDescriptionY"></param>
-	/// <param name="productNameX"></param>
-	/// <param name="productNameY"></param>
 	/// <returns>True if the rules are considered equal according to the common logic; otherwise false.</returns>
 	internal static bool CompareCommonRuleProperties(
 	SSType? signingScenarioX, SSType? signingScenarioY,
 	RuleTypeType? ruleTypeX, RuleTypeType? ruleTypeY, // Ony for FileRule type
 	string? packageFamilyNameX, string? packageFamilyNameY,
-	ReadOnlyMemory<byte>? hashX, ReadOnlyMemory<byte>? hashY,
+	ReadOnlyMemory<byte> hashX, ReadOnlyMemory<byte> hashY,
 	string? filePathX, string? filePathY,
 	string? fileNameX, string? fileNameY,
 	string? minimumFileVersionX, string? minimumFileVersionY,
@@ -769,8 +870,8 @@ internal static class Merger
 			return true;
 		}
 
-		// Rule 2: If both have non-null Hash values that are byte-for-byte equal, consider them equal.
-		if (hashX is not null && hashY is not null && hashX.Value.Span.SequenceEqual(hashY.Value.Span))
+		// Rule 2: If both have non-empty Hash values that are byte-for-byte equal, consider them equal.
+		if (!hashX.Span.IsEmpty && !hashY.Span.IsEmpty && hashX.Span.SequenceEqual(hashY.Span))
 		{
 			return true;
 		}

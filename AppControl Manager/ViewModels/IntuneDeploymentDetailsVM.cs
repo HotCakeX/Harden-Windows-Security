@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -227,7 +228,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			SelectedIntuneGroups.Clear();
 
 			// Update the ListView with group names
-			foreach (IntuneGroupItemListView item in groups)
+			foreach (IntuneGroupItemListView item in CollectionsMarshal.AsSpan(groups))
 			{
 				GroupNamesCollection.Add(item);
 				AllGroupItems.Add(item);
@@ -335,6 +336,12 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 			if (savePath is null)
 				return;
+
+			// Ensure the file path ends with .json
+			if (!savePath.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+			{
+				savePath += ".json";
+			}
 
 			List<IntuneGroupItemListView> dataToExport = [];
 

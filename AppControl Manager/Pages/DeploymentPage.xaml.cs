@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
@@ -44,36 +45,36 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, Comm
 		ViewModel.SignedXMLFilesLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => LightUp1(), GlobalVars.GetStr("DeployUnsignedPolicy")),
-			actionPack2: (param => LightUp2(), GlobalVars.GetStr("DeploySignedPolicy")));
+			actionPack1: (LightUp1, GlobalVars.GetStr("DeployUnsignedPolicy")),
+			actionPack2: (LightUp2, GlobalVars.GetStr("DeploySignedPolicy")));
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	private void LightUp1()
+	private void LightUp1(object? param)
 	{
-		if (!string.IsNullOrWhiteSpace(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic))
+		if (param is PolicyFileRepresent policy)
 		{
-			ViewModel.XMLFiles.Add(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic);
-
-			BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
+			ViewModel.FilesForUnsignedDeployment.Add(policy);
 		}
+
+		BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
 	}
 
-	private void LightUp2()
+	private void LightUp2(object? param)
 	{
-		if (!string.IsNullOrWhiteSpace(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic))
+		if (param is PolicyFileRepresent policy)
 		{
-			ViewModel.SignedXMLFiles.Add(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic);
-
-			BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
+			ViewModel.FilesForSignedDeployment.Add(policy);
 		}
+
+		BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
 	}
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DeploymentPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DeploymentPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy");
 
 }

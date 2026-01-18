@@ -95,7 +95,7 @@
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
                         <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton"
-                                           ObservedData="{x:Bind ViewModel.XMLFiles.Count, Mode=OneWay}"
+                                           ObservedData="{x:Bind ViewModel.FilesForUnsignedDeployment.Count, Mode=OneWay}"
                                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Click}">
                             <customUI:ButtonV2.Content>
@@ -121,13 +121,22 @@
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                         <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Flyout_Clear_Click}" />
+                                                Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Flyout_Clear_Click}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
                                         <customUI:ListBoxV2 MinWidth="400"
                                                  SelectionMode="Single"
-                                                 ItemsSource="{x:Bind ViewModel.XMLFiles, Mode=OneWay}" />
+                                                 ItemsSource="{x:Bind ViewModel.FilesForUnsignedDeployment, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 
@@ -166,7 +175,7 @@
 
                         <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton"
                                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                           ObservedData="{x:Bind ViewModel.SignedXMLFiles.Count, Mode=OneWay}"
+                                           ObservedData="{x:Bind ViewModel.FilesForSignedDeployment.Count, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Click}">
                             <customUI:ButtonV2.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
@@ -191,13 +200,22 @@
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                         <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click}" />
+                                                Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
                                         <customUI:ListBoxV2 MinWidth="400"
                                                  SelectionMode="Single"
-                                                 ItemsSource="{x:Bind ViewModel.SignedXMLFiles, Mode=OneWay}" />
+                                                 ItemsSource="{x:Bind ViewModel.FilesForSignedDeployment, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 
@@ -208,7 +226,8 @@
 
                         <Button HorizontalAlignment="Center"
                                 IsEnabled="{x:Bind ViewModel.DeploySignedXMLButtonIsEnabled, Mode=OneWay}"
-                                HorizontalContentAlignment="Center" Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
+                                HorizontalContentAlignment="Center"
+                                Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -258,7 +277,16 @@
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                         <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Flyout_Clear_Click}" />
+                                                Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Flyout_Clear_Click}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewSelectedCIPFilesTextBlock"
                                                    TextWrapping="WrapWholeWords" />
@@ -315,7 +343,16 @@
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                         <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Flyout_Clear_Click}" />
+                                                Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Flyout_Clear_Click}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewSelectedXMLFilesTextBlock"
                                                    TextWrapping="WrapWholeWords" />

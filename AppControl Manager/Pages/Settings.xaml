@@ -58,30 +58,6 @@
                         <controls:SettingsCard ContentAlignment="Left">
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-                                <!-- Signed Policy Path -->
-                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox x:Uid="SignedPolicyPathTextBox"
-                                             Text="{x:Bind ViewModel.SignedPolicyPathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                             MinWidth="300"
-                                             Margin="0,0,10,0"
-                                             VerticalAlignment="Center"/>
-                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_SignedPolicyPath_Click}"/>
-                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_SignedPolicyPath_Click}"/>
-                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="{x:Bind ViewModel.BrowseButton_SignedPolicyPath_Click}"/>
-                                    </CommandBar>
-                                </controls:WrapPanel>
-
-                                <!-- Unsigned Policy Path -->
-                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox x:Uid="UnsignedPolicyPathTextBox" Text="{x:Bind ViewModel.UnsignedPolicyPathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_UnsignedPolicyPath_Click}"/>
-                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_UnsignedPolicyPath_Click}"/>
-                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="{x:Bind ViewModel.BrowseButton_UnsignedPolicyPath_Click}"/>
-                                    </CommandBar>
-                                </controls:WrapPanel>
-
                                 <!-- Certificate Common Name -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
 

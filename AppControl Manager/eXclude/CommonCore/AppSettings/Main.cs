@@ -53,7 +53,6 @@ internal sealed partial class Main : ViewModelBase
 		StickyHeadersForListViews = ReadValue(nameof(StickyHeadersForListViews), StickyHeadersForListViews);
 		CacheSecurityCatalogsScanResults = ReadValue(nameof(CacheSecurityCatalogsScanResults), CacheSecurityCatalogsScanResults);
 		PromptForElevationOnStartup = ReadValue(nameof(PromptForElevationOnStartup), PromptForElevationOnStartup);
-		AutomaticAssignmentSidebar = ReadValue(nameof(AutomaticAssignmentSidebar), AutomaticAssignmentSidebar);
 		AutoCheckForUpdateAtStartup = ReadValue(nameof(AutoCheckForUpdateAtStartup), AutoCheckForUpdateAtStartup);
 		ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), ApplicationGlobalLanguage);
 		ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), ApplicationGlobalFlowDirection);
@@ -68,6 +67,7 @@ internal sealed partial class Main : ViewModelBase
 		CustomAppWindowsBorder = ReadValue(nameof(CustomAppWindowsBorder), CustomAppWindowsBorder);
 		UseV2CIManagement = ReadValue(nameof(UseV2CIManagement), UseV2CIManagement);
 		AppCloseConfirmationBehavior = ReadValue(nameof(AppCloseConfirmationBehavior), AppCloseConfirmationBehavior);
+		PersistentPoliciesLibrary = ReadValue(nameof(PersistentPoliciesLibrary), PersistentPoliciesLibrary);
 	}
 
 	/// <summary>
@@ -298,20 +298,6 @@ internal sealed partial class Main : ViewModelBase
 	}
 
 	/// <summary>
-	/// Automatically assign the generated base policies to the Sidebar's selected policy field for easy usage in pages that support the augmentation.
-	/// </summary>
-	internal bool AutomaticAssignmentSidebar
-	{
-		get; set
-		{
-			if (SP(ref field, value))
-			{
-				SaveValue(nameof(AutomaticAssignmentSidebar), field);
-			}
-		}
-	} = true;
-
-	/// <summary>
 	/// Automatically check for updates on app startup.
 	/// </summary>
 	internal bool AutoCheckForUpdateAtStartup
@@ -510,4 +496,18 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = 1; // 0 = Always confirm, 1 = Automatic, 2 = Never confirm
+
+	/// <summary>
+	/// Whether the policies in the Sidebar's library must stay in sync with local files version so that closing/starting the app will not cause in-memory policies to be lost.
+	/// </summary>
+	internal bool PersistentPoliciesLibrary
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(PersistentPoliciesLibrary), field);
+			}
+		}
+	} = true;
 }

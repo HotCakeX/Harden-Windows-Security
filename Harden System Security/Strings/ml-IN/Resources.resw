@@ -205,7 +205,7 @@
   <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>സഹായം - ചോദ്യങ്ങൾ ചോദിക്കുക</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>നിങ്ങളുടെ ആപ്ലിക്കേഷൻ സെറ്റിംഗുകൾ ഇവിടെ കസ്റ്റമൈസ് ചെയ്യുക. നിങ്ങളുടെ മുൻഗണനകൾ സേവ് ചെയ്യപ്പെടും, അതിനാൽ നിങ്ങൾ Harden System Security ആരംഭിക്കുമ്പോഴൊക്കെ അവ നിങ്ങൾക്കായി തയ്യാറായിരിക്കും.</value>
   </data>
   <data name="Appearance.Text" xml:space="preserve">
@@ -580,10 +580,7 @@
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>ഡോക്യുമെന്റേഷൻ</value>
   </data>
-  <data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>ഉപയോക്താവ് UAC പ്രോംപ്റ്റ് റദ്ദാക്കി.</value>
-  </data>
-    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>പ്രയോഗിക്കാനുള്ള സംരക്ഷണ പ്രീസെറ്റുകളിൽ ഒന്ന് തിരഞ്ഞെടുക്കുക, അവ വിവിധ സുരക്ഷാ നിലകൾക്കായി നിർമ്മിച്ച മുൻകൂട്ടി നിർണ്ണയിച്ച കോൺഫിഗറേഷൻ സെറ്റുകളാണ്.</value>
   </data>
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -4457,7 +4454,7 @@
 <data name="GroupType" xml:space="preserve">
   <value>ഗ്രൂപ്പ് തരം:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>നിങ്ങളുടെ ടേനന്റിലെ Entra ഗ്രൂപ്പുകൾ നിയന്ത്രിച്ച്, നയം വിന്യസിക്കാൻ ആഗ്രഹിക്കുന്ന ഗ്രൂപ്പുകൾ തിരഞ്ഞെടുക്കുക.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">

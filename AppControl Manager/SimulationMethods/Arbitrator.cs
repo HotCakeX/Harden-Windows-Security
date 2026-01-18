@@ -29,9 +29,6 @@ namespace AppControlManager.SimulationMethods;
 
 internal static class Arbitrator
 {
-
-	private static readonly string[] SpecificFileNames = ["OriginalFileName", "InternalName", "ProductName", "Version", "FileDescription"];
-
 	/// <summary>
 	/// The method that compares the signer information from the App Control policy XML file with the certificate details of the signed file
 	/// </summary>
@@ -42,26 +39,15 @@ internal static class Arbitrator
 		// Get the extended file attributes
 		ExFileInfo ExtendedFileInfo = GetExtendedFileAttrib.Get(simulationInput.FilePath.FullName);
 
-		// Create a dictionary out of the ExtendedFileInfo so we can perform high performance lookups later on in the loops without resorting to reflection
-		Dictionary<string, string> ExtendedFileInfoDict = [];
-
-		// Add all properties to the dictionary
-		if (ExtendedFileInfo.OriginalFileName is not null) ExtendedFileInfoDict["OriginalFileName"] = ExtendedFileInfo.OriginalFileName;
-		if (ExtendedFileInfo.InternalName is not null) ExtendedFileInfoDict["InternalName"] = ExtendedFileInfo.InternalName;
-		if (ExtendedFileInfo.ProductName is not null) ExtendedFileInfoDict["ProductName"] = ExtendedFileInfo.ProductName;
-		if (ExtendedFileInfo.FileDescription is not null) ExtendedFileInfoDict["FileDescription"] = ExtendedFileInfo.FileDescription;
-		if (ExtendedFileInfo.Version is not null) ExtendedFileInfoDict["Version"] = ExtendedFileInfo.Version.ToString();
-
-
 		// Loop through each signer in the signer information array, these are the signers in the XML policy file
 		foreach (SignerX signer in CollectionsMarshal.AsSpan(simulationInput.SignerInfo))
 		{
-
 			// Make sure it's an allowed signer and not a denier
-			if (signer.IsAllowed is not true)
-				continue;
+			if (!signer.IsAllowed) continue;
 
-			// Logger.Write($"Checking the signer: {signer.Name}");
+#if DEBUG
+			Logger.Write($"Checking the signer: {signer.Name}");
+#endif
 
 			// If the signer has any EKUs, try to match it with the file's EKU OIDs
 			if (signer.HasEKU)
@@ -81,16 +67,14 @@ internal static class Arbitrator
 					}
 				}
 
-				// If both the file and signer had EKUs and they match
+				// If both the file and signer had EKUs and they matched
 				if (EKUsMatch)
 				{
-
 					Logger.Write(string.Format(GlobalVars.GetStr("SignerEKUsMatchedFileEKUs"), signer.Name));
 
 					// If the signer and file have matching EKUs and the signer is WHQL then start checking for OemID
 					if (signer.IsWHQL)
 					{
-
 						Logger.Write(string.Format(GlobalVars.GetStr("SignerIsWHQL"), signer.Name));
 
 						// At this point the file is definitely WHQL-Signed
@@ -103,6 +87,32 @@ internal static class Arbitrator
 						  .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
 						  .Any(oid => oid.Value is not null && oid.Value.Contains(LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))))];
 
+						// Same logic as above, without using Linq
+						/*
+
+						List<ChainPackage> WHQLChainPackagesCandidates = [];
+
+						foreach (ChainPackage chainPackage in CollectionsMarshal.AsSpan(simulationInput.AllFileSigners))
+						{
+							if (chainPackage.LeafCertificate is not null)
+							{
+								foreach (X509Extension extension in chainPackage.LeafCertificate.Certificate.Extensions)
+								{
+									if (extension is X509EnhancedKeyUsageExtension eku)
+									{
+										foreach (Oid oid in eku.EnhancedKeyUsages)
+										{
+											if (oid.Value is not null && oid.Value.Contains(LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))
+											{
+												WHQLChainPackagesCandidates.Add(chainPackage);
+											}
+										}
+									}
+								}
+							}
+						}
+
+						*/
 
 						// HashSet to store all of the Opus data from the WHQL chain packages candidates
 						HashSet<string> Current_Chain_Opus = [];
@@ -113,23 +123,21 @@ internal static class Arbitrator
 						// Loop through each candidate WHQL chain package
 						foreach (ChainPackage chainPackage in CollectionsMarshal.AsSpan(WHQLChainPackagesCandidates))
 						{
-							List<string> CurrentOpusData = [];
-
 							try
 							{
 								// Try to get the Opus data of the current chain (essentially the current chain's leaf certificate)
-								CurrentOpusData = [.. Opus.GetOpusData(chainPackage.SignedCms).Select(p => p.CertOemID)];
+								List<OpusInfoObj> CurrentOpusData = Opus.GetOpusData(chainPackage.SignedCms);
+
+								// If there was Opus data
+								foreach (OpusInfoObj item in CollectionsMarshal.AsSpan(CurrentOpusData))
+								{
+									// Add the Opus data to the HashSet
+									_ = Current_Chain_Opus.Add(item.CertOemID);
+								}
 							}
 							catch
 							{
 								Logger.Write(GlobalVars.GetStr("FailedToGetOpusDataCurrentChain"));
-							}
-
-							// If there was Opus data
-							foreach (string item in CurrentOpusData)
-							{
-								// Add the Opus data to the HashSet
-								_ = Current_Chain_Opus.Add(item);
 							}
 
 							// Capture the details of the WHQL signers, aka Intermediate certificate(s) of the signer package that had WHQL EKU
@@ -138,7 +146,7 @@ internal static class Arbitrator
 
 							if (chainPackage.IntermediateCertificates is not null)
 							{
-								foreach (ChainElement IntermediateCert in chainPackage.IntermediateCertificates)
+								foreach (ChainElement IntermediateCert in CollectionsMarshal.AsSpan(chainPackage.IntermediateCertificates))
 								{
 									OpusSigner OS = new(
 										IntermediateCert.TBSValue,
@@ -158,9 +166,8 @@ internal static class Arbitrator
 
 						// Loop through each OpusSigner
 						// This is to ensure when a file is signed by more than 1 WHQL signer then it will be properly validated as these are pairs of TBSHash and SubjectCN of each WHQL signer's details
-						foreach (OpusSigner opusSigner in OpusSigners)
+						foreach (OpusSigner opusSigner in CollectionsMarshal.AsSpan(OpusSigners))
 						{
-
 							// Check if the selected file's signer chain's intermediate certificates match the current signer's details
 							if (string.Equals(signer.CertRoot, opusSigner.TBSHash, StringComparison.OrdinalIgnoreCase) &&
 								string.Equals(signer.Name, opusSigner.SubjectCN, StringComparison.OrdinalIgnoreCase))
@@ -170,73 +177,66 @@ internal static class Arbitrator
 								// Indicating it's WHQLFilePublisher signer
 								if (OpusMatch && signer.FileAttrib.Count > 0)
 								{
+									List<ExFileInfo> CandidateFileAttrib = [];
 
-									List<Dictionary<string, string>> CandidateFileAttrib = [];
-
-									foreach (KeyValuePair<string, Dictionary<string, string>> Attrib in signer.FileAttrib)
+									foreach (ExFileInfo Attrib in CollectionsMarshal.AsSpan(signer.FileAttrib))
 									{
-
-										if (!Attrib.Value.TryGetValue("MinimumFileVersion", out string? MinimumFileVersion))
+										if (Attrib.MinimumFileVersion is null)
 										{
 											Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
 											continue;
 										}
 
-										Version tempVer = new(MinimumFileVersion);
-
-										if (ExtendedFileInfo.Version >= tempVer)
+										if (ExtendedFileInfo.Version >= Attrib.MinimumFileVersion)
 										{
-											CandidateFileAttrib.Add(Attrib.Value);
+											CandidateFileAttrib.Add(Attrib);
 										}
 									}
 
 									// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
-									foreach (Dictionary<string, string> FileAttrib in CollectionsMarshal.AsSpan(CandidateFileAttrib))
+									foreach (ExFileInfo FileAttrib in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 									{
-										// Loop over each SpecificFileName
-										for (int i = 0; i < SpecificFileNames.Length; i++)
+										if (
+											string.Equals(FileAttrib.InternalName, ExtendedFileInfo.InternalName, StringComparison.OrdinalIgnoreCase) ||
+											string.Equals(FileAttrib.FileDescription, ExtendedFileInfo.FileDescription, StringComparison.OrdinalIgnoreCase) ||
+											string.Equals(FileAttrib.ProductName, ExtendedFileInfo.ProductName, StringComparison.OrdinalIgnoreCase) ||
+											string.Equals(FileAttrib.OriginalFileName, ExtendedFileInfo.OriginalFileName, StringComparison.OrdinalIgnoreCase)
+											)
 										{
-											string keyItem = SpecificFileNames[i];
+											// Excessive logging
+											// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
 
-											if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
-											 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
-											 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
-											{
-												// Excessive logging
-												// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
+											/*
+												If there was a match then assign the keyItem, which is the name of the SpecificFileNameLevel option, to the SpecificFileNameLevelMatchCriteria of the SimulationOutput
 
-												/*
-													If there was a match then assign the keyItem, which is the name of the SpecificFileNameLevel option, to the SpecificFileNameLevelMatchCriteria of the SimulationOutput
+												ELIGIBILITY CHECK FOR LEVELS: WHQLFilePublisher
 
-													ELIGIBILITY CHECK FOR LEVELS: WHQLFilePublisher
+												CRITERIA:
+												1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
+												2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
+												3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
+												4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
+												5) The signer's FileAttribRef(s) point to the same file that is currently being investigated
+												*/
 
-													CRITERIA:
-													1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
-													2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
-													3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
-													4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
-													5) The signer's FileAttribRef(s) point to the same file that is currently being investigated
-													*/
-
-												return new SimulationOutput(
-													Path.GetFileName(simulationInput.FilePath.ToString()),
-													SimulationOutputSource.Signer,
-													true,
-													signer.ID,
-													signer.Name,
-													signer.CertRoot,
-													signer.CertPublisher,
-													signer.SignerScope,
-													signer.FileAttribRef,
-													"WHQLFilePublisher",
-													keyItem,
-													opusSigner.SubjectCN,
-													null,
-													null,
-													opusSigner.TBSHash,
-													simulationInput.FilePath.ToString()
-													);
-											}
+											return new SimulationOutput(
+												simulationInput.FilePath.Name,
+												SimulationOutputSource.Signer,
+												true,
+												signer.ID,
+												signer.Name,
+												signer.CertRoot,
+												signer.CertPublisher,
+												signer.SignerScope,
+												signer.FileAttribRef,
+												"WHQLFilePublisher",
+												FileAttrib.SpecificFileNameLevel,
+												opusSigner.SubjectCN,
+												null,
+												null,
+												opusSigner.TBSHash,
+												simulationInput.FilePath.ToString()
+												);
 										}
 									}
 								}
@@ -255,7 +255,7 @@ internal static class Arbitrator
 								else if (OpusMatch && signer.FileAttribRef is null)
 								{
 									return new SimulationOutput(
-										Path.GetFileName(simulationInput.FilePath.ToString()),
+										simulationInput.FilePath.Name,
 										SimulationOutputSource.Signer,
 										true,
 										signer.ID,
@@ -290,7 +290,7 @@ internal static class Arbitrator
 										continue;
 
 									return new SimulationOutput(
-										Path.GetFileName(simulationInput.FilePath.ToString()),
+										simulationInput.FilePath.Name,
 										SimulationOutputSource.Signer,
 										true,
 										signer.ID,
@@ -307,8 +307,6 @@ internal static class Arbitrator
 										opusSigner.TBSHash,
 										simulationInput.FilePath.ToString()
 										);
-
-
 								}
 							}
 						}
@@ -338,15 +336,12 @@ internal static class Arbitrator
 			// Loop through each certificate chain
 			foreach (ChainPackage chain in CollectionsMarshal.AsSpan(simulationInput.AllFileSigners))
 			{
-
 				// If the file has any intermediate certificates
 				if (chain.IntermediateCertificates is not null)
 				{
-
 					// Loop over each intermediate certificate in the chain
 					foreach (ChainElement IntermediateCert in CollectionsMarshal.AsSpan(chain.IntermediateCertificates))
 					{
-
 						/*
 							ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
 
@@ -369,24 +364,19 @@ internal static class Arbitrator
 								// Which we retrieved based on the <FileAttribRef> elements under the Signer
 								// And only keep those <FileAttrib> where the current file being examined has an equal or higher version than the version in those <FileAttrib> elements
 
-								List<Dictionary<string, string>> CandidateFileAttrib = [];
+								List<ExFileInfo> CandidateFileAttrib = [];
 
-								foreach (KeyValuePair<string, Dictionary<string, string>> Attrib in signer.FileAttrib)
+								foreach (ExFileInfo Attrib in CollectionsMarshal.AsSpan(signer.FileAttrib))
 								{
-
-									_ = Attrib.Value.TryGetValue("MinimumFileVersion", out string? MinimumFileVersion);
-
-									if (MinimumFileVersion is null)
+									if (Attrib.MinimumFileVersion is null)
 									{
 										Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
 										continue;
 									}
 
-									Version tempVer = new(MinimumFileVersion);
-
-									if (ExtendedFileInfo.Version >= tempVer)
+									if (ExtendedFileInfo.Version >= Attrib.MinimumFileVersion)
 									{
-										CandidateFileAttrib.Add(Attrib.Value);
+										CandidateFileAttrib.Add(Attrib);
 									}
 								}
 
@@ -395,12 +385,12 @@ internal static class Arbitrator
 								// Note: If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
 
 								// This loop is potentially unnecessary because of the comments above but keeping it for now
-								foreach (Dictionary<string, string> dict in CandidateFileAttrib)
+								foreach (ExFileInfo dict in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 								{
-									if (dict.TryGetValue("OriginalFileName", out string? originalFileName) && string.Equals(originalFileName, "*", StringComparison.OrdinalIgnoreCase))
+									if (string.Equals(dict.OriginalFileName, "*", StringComparison.OrdinalIgnoreCase))
 									{
 										return new SimulationOutput(
-										Path.GetFileName(simulationInput.FilePath.ToString()),
+										simulationInput.FilePath.Name,
 										SimulationOutputSource.Signer,
 										true,
 										signer.ID,
@@ -421,42 +411,36 @@ internal static class Arbitrator
 								}
 
 								// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
-								foreach (Dictionary<string, string> FileAttrib in CandidateFileAttrib)
+								foreach (ExFileInfo FileAttrib in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 								{
-									// Loop over each SpecificFileName
-									for (int i = 0; i < SpecificFileNames.Length; i++)
+									if (
+										string.Equals(FileAttrib.InternalName, ExtendedFileInfo.InternalName, StringComparison.OrdinalIgnoreCase) ||
+										string.Equals(FileAttrib.FileDescription, ExtendedFileInfo.FileDescription, StringComparison.OrdinalIgnoreCase) ||
+										string.Equals(FileAttrib.ProductName, ExtendedFileInfo.ProductName, StringComparison.OrdinalIgnoreCase) ||
+										string.Equals(FileAttrib.OriginalFileName, ExtendedFileInfo.OriginalFileName, StringComparison.OrdinalIgnoreCase)
+										)
 									{
-										string keyItem = SpecificFileNames[i];
+										// Excessive logging
+										// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
 
-										if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
-										 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
-										 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
-										{
-											// Excessive logging
-											// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
-
-
-											// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
-											// And break out of the loop by validating the signer as suitable for FilePublisher level
-											return new SimulationOutput(
-											Path.GetFileName(simulationInput.FilePath.ToString()),
-											SimulationOutputSource.Signer,
-											true,
-											signer.ID,
-											signer.Name,
-											signer.CertRoot,
-											signer.CertPublisher,
-											signer.SignerScope,
-											signer.FileAttribRef,
-											"FilePublisher",
-											keyItem,
-											IntermediateCert.SubjectCN,
-											IntermediateCert.IssuerCN,
-											IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
-											IntermediateCert.TBSValue,
-											simulationInput.FilePath.ToString()
-											);
-										}
+										return new SimulationOutput(
+										simulationInput.FilePath.Name,
+										SimulationOutputSource.Signer,
+										true,
+										signer.ID,
+										signer.Name,
+										signer.CertRoot,
+										signer.CertPublisher,
+										signer.SignerScope,
+										signer.FileAttribRef,
+										"FilePublisher",
+										FileAttrib.SpecificFileNameLevel,
+										IntermediateCert.SubjectCN,
+										IntermediateCert.IssuerCN,
+										IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
+										IntermediateCert.TBSValue,
+										simulationInput.FilePath.ToString()
+										);
 									}
 								}
 							}
@@ -464,13 +448,12 @@ internal static class Arbitrator
 							// If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
 							else
 							{
-
 								// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
 								if (signer.FileAttribRef.Count > 0)
 									continue;
 
 								return new SimulationOutput(
-									 Path.GetFileName(simulationInput.FilePath.ToString()),
+									 simulationInput.FilePath.Name,
 									 SimulationOutputSource.Signer,
 									 true,
 									 signer.ID,
@@ -507,7 +490,7 @@ internal static class Arbitrator
 								continue;
 
 							return new SimulationOutput(
-									Path.GetFileName(simulationInput.FilePath.ToString()),
+									simulationInput.FilePath.Name,
 									SimulationOutputSource.Signer,
 									true,
 									signer.ID,
@@ -526,7 +509,6 @@ internal static class Arbitrator
 									);
 						}
 					}
-
 				}
 
 				/*
@@ -546,7 +528,7 @@ internal static class Arbitrator
 						continue;
 
 					return new SimulationOutput(
-							Path.GetFileName(simulationInput.FilePath.ToString()),
+							simulationInput.FilePath.Name,
 							SimulationOutputSource.Signer,
 							true,
 							signer.ID,
@@ -565,7 +547,6 @@ internal static class Arbitrator
 							);
 				}
 
-
 				/*
 					Region ROOT CERTIFICATE ELIGIBILITY CHECK
 
@@ -580,33 +561,30 @@ internal static class Arbitrator
 					*/
 
 				if (string.Equals(signer.CertRoot, chain.RootCertificate.TBSValue, StringComparison.OrdinalIgnoreCase) &&
-				   string.Equals(signer.Name, chain.RootCertificate.SubjectCN, StringComparison.OrdinalIgnoreCase) &&
-				   string.Equals(signer.CertPublisher, chain.RootCertificate.SubjectCN, StringComparison.OrdinalIgnoreCase))
-				{
+					// Sometimes a file is signed by 1 certificate, which should mean it only has root certificate, but that certificate's issuer and publisher are not the same so this special condition (the 2nd part of the OR) will account for such situations.
+					(string.Equals(signer.Name, chain.RootCertificate.SubjectCN, StringComparison.OrdinalIgnoreCase) || string.Equals(signer.CertPublisher, chain.RootCertificate.SubjectCN, StringComparison.OrdinalIgnoreCase))
 
+				  // Commenting this out to improve compatibility with rare edge cases.
+				  // && string.Equals(signer.CertPublisher, chain.RootCertificate.SubjectCN, StringComparison.OrdinalIgnoreCase)
+				  )
+				{
 					// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
 					if (signer.FileAttrib.Count > 0)
 					{
-
-						List<Dictionary<string, string>> CandidateFileAttrib = [];
+						List<ExFileInfo> CandidateFileAttrib = [];
 
 						// Get all of the File Attributes associated with the signer and check if the file's version is greater than or equal to the minimum version in them
-						foreach (KeyValuePair<string, Dictionary<string, string>> Attrib in signer.FileAttrib)
+						foreach (ExFileInfo Attrib in CollectionsMarshal.AsSpan(signer.FileAttrib))
 						{
-
-							_ = Attrib.Value.TryGetValue("MinimumFileVersion", out string? MinimumFileVersion);
-
-							if (MinimumFileVersion is null)
+							if (Attrib.MinimumFileVersion is null)
 							{
 								Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
 								continue;
 							}
 
-							Version tempVer = new(MinimumFileVersion);
-
-							if (ExtendedFileInfo.Version >= tempVer)
+							if (ExtendedFileInfo.Version >= Attrib.MinimumFileVersion)
 							{
-								CandidateFileAttrib.Add(Attrib.Value);
+								CandidateFileAttrib.Add(Attrib);
 							}
 						}
 
@@ -617,13 +595,12 @@ internal static class Arbitrator
 						if (CandidateFileAttrib.Count == 1)
 						{
 							// This loop is potentially unnecessary because of the comments above but keeping it for now
-							foreach (Dictionary<string, string> dict in CandidateFileAttrib)
+							foreach (ExFileInfo dict in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 							{
-								if (dict.TryGetValue("OriginalFileName", out string? originalFileName) && string.Equals(originalFileName, "*", StringComparison.OrdinalIgnoreCase))
+								if (string.Equals(dict.OriginalFileName, "*", StringComparison.OrdinalIgnoreCase))
 								{
-
 									return new SimulationOutput(
-									   Path.GetFileName(simulationInput.FilePath.ToString()),
+									   simulationInput.FilePath.Name,
 									   SimulationOutputSource.Signer,
 									   true,
 									   signer.ID,
@@ -645,42 +622,36 @@ internal static class Arbitrator
 						}
 
 						// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
-						foreach (Dictionary<string, string> FileAttrib in CandidateFileAttrib)
+						foreach (ExFileInfo FileAttrib in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 						{
-							// Loop over each SpecificFileName
-							for (int i = 0; i < SpecificFileNames.Length; i++)
+							if (
+								string.Equals(FileAttrib.InternalName, ExtendedFileInfo.InternalName, StringComparison.OrdinalIgnoreCase) ||
+								string.Equals(FileAttrib.FileDescription, ExtendedFileInfo.FileDescription, StringComparison.OrdinalIgnoreCase) ||
+								string.Equals(FileAttrib.ProductName, ExtendedFileInfo.ProductName, StringComparison.OrdinalIgnoreCase) ||
+								string.Equals(FileAttrib.OriginalFileName, ExtendedFileInfo.OriginalFileName, StringComparison.OrdinalIgnoreCase)
+								)
 							{
-								string keyItem = SpecificFileNames[i];
+								// Excessive logging
+								// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
 
-								if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
-								 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
-								 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
-								{
-									// Excessive logging
-									// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
-
-									// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
-									// And break out of the loop by validating the signer as suitable for FilePublisher level
-
-									return new SimulationOutput(
-										Path.GetFileName(simulationInput.FilePath.ToString()),
-										SimulationOutputSource.Signer,
-										true,
-										signer.ID,
-										signer.Name,
-										signer.CertRoot,
-										signer.CertPublisher,
-										signer.SignerScope,
-										signer.FileAttribRef,
-										"FilePublisher",
-										keyItem,
-										chain.RootCertificate.SubjectCN,
-										chain.RootCertificate.IssuerCN,
-										chain.RootCertificate.NotAfter.ToString(CultureInfo.InvariantCulture),
-										chain.RootCertificate.TBSValue,
-										simulationInput.FilePath.ToString()
-									);
-								}
+								return new SimulationOutput(
+									simulationInput.FilePath.Name,
+									SimulationOutputSource.Signer,
+									true,
+									signer.ID,
+									signer.Name,
+									signer.CertRoot,
+									signer.CertPublisher,
+									signer.SignerScope,
+									signer.FileAttribRef,
+									"FilePublisher",
+									FileAttrib.SpecificFileNameLevel,
+									chain.RootCertificate.SubjectCN,
+									chain.RootCertificate.IssuerCN,
+									chain.RootCertificate.NotAfter.ToString(CultureInfo.InvariantCulture),
+									chain.RootCertificate.TBSValue,
+									simulationInput.FilePath.ToString()
+								);
 							}
 						}
 					}
@@ -693,7 +664,7 @@ internal static class Arbitrator
 							continue;
 
 						return new SimulationOutput(
-									 Path.GetFileName(simulationInput.FilePath.ToString()),
+									 simulationInput.FilePath.Name,
 									 SimulationOutputSource.Signer,
 									 true,
 									 signer.ID,
@@ -730,7 +701,7 @@ internal static class Arbitrator
 						continue;
 
 					return new SimulationOutput(
-							 Path.GetFileName(simulationInput.FilePath.ToString()),
+							 simulationInput.FilePath.Name,
 							 SimulationOutputSource.Signer,
 							 true,
 							 signer.ID,
@@ -754,7 +725,7 @@ internal static class Arbitrator
 
 		// The file is signed but the signer wasn't found in the policy file that allows it
 		return new SimulationOutput(
-			Path.GetFileName(simulationInput.FilePath.ToString()),
+			simulationInput.FilePath.Name,
 			SimulationOutputSource.Signer,
 			false,
 			null,

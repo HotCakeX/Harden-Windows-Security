@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
@@ -264,7 +265,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 		FileCertificates.Clear();
 
-		foreach (FileCertificateInfoCol item in results)
+		foreach (FileCertificateInfoCol item in CollectionsMarshal.AsSpan(results))
 		{
 			FileCertificates.Add(item);
 		}
@@ -490,9 +491,9 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 				try
 				{
-					byte[] bytes = await File.ReadAllBytesAsync(selectedFile);
+					ReadOnlySpan<byte> bytes = await File.ReadAllBytesAsync(selectedFile);
 					SignedCms cms = new();
-					cms.Decode(bytes.AsSpan());
+					cms.Decode(bytes);
 					RawCmsDataLength = bytes.Length;
 					ContentInfoDataLength = cms.ContentInfo.Content.Length;
 					CmsVersion = cms.Version;
@@ -585,7 +586,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 						int i = 1;
 
 						// Loop over every signer of the file
-						foreach (ChainPackage signer in result)
+						foreach (ChainPackage signer in CollectionsMarshal.AsSpan(result))
 						{
 							// If the signer has Leaf certificate
 							if (signer.LeafCertificate is not null)
@@ -597,7 +598,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 							if (signer.IntermediateCertificates is not null)
 							{
 								// Loop over Intermediate certificates of the file
-								foreach (ChainElement intermediate in signer.IntermediateCertificates)
+								foreach (ChainElement intermediate in CollectionsMarshal.AsSpan(signer.IntermediateCertificates))
 								{
 									output.Add(ProcessAndAddCertificates(intermediate.Certificate, i, CertificateType.Intermediate));
 								}
@@ -616,7 +617,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 					{
 						// Disposing AllFileSigners to release X509Chain native resources
 						// after extracting all needed certificate/chain information.
-						foreach (AllFileSigners signer in signerDetails)
+						foreach (AllFileSigners signer in CollectionsMarshal.AsSpan(signerDetails))
 						{
 							signer.Dispose();
 						}
@@ -637,7 +638,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 			FilteredCertificates.AddRange(output);
 
-			foreach (FileCertificateInfoCol item in output)
+			foreach (FileCertificateInfoCol item in CollectionsMarshal.AsSpan(output))
 			{
 				FileCertificates.Add(item);
 			}
@@ -790,7 +791,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				try
 				{
 					int i = 1;
-					foreach (object item in uefiItems)
+					foreach (object item in CollectionsMarshal.AsSpan(uefiItems))
 					{
 						if (item is X509Certificate2 cert)
 						{
@@ -806,7 +807,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				finally
 				{
 					// Ensure all disposable items (X509Certificate2) are disposed
-					foreach (object item in uefiItems)
+					foreach (object item in CollectionsMarshal.AsSpan(uefiItems))
 					{
 						if (item is IDisposable disposable)
 						{
@@ -820,7 +821,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			FilteredCertificates.Clear();
 			FilteredCertificates.AddRange(output);
 
-			foreach (FileCertificateInfoCol item in output)
+			foreach (FileCertificateInfoCol item in CollectionsMarshal.AsSpan(output))
 			{
 				FileCertificates.Add(item);
 			}
@@ -939,17 +940,17 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		int publicKeyLength = 0;
 		try
 		{
-			if (cert?.PublicKey?.Oid?.Value == "1.2.840.113549.1.1.1")
+			if (string.Equals(cert?.PublicKey?.Oid?.Value, "1.2.840.113549.1.1.1", StringComparison.OrdinalIgnoreCase))
 			{
-				using RSA? rsa = cert.GetRSAPublicKey();
+				using RSA? rsa = cert?.GetRSAPublicKey();
 				if (rsa != null)
 				{
 					publicKeyLength = rsa.KeySize;
 				}
 			}
-			else if (cert?.PublicKey?.Oid?.Value == "1.2.840.10045.2.1")
+			else if (string.Equals(cert?.PublicKey?.Oid?.Value, "1.2.840.10045.2.1", StringComparison.OrdinalIgnoreCase))
 			{
-				using ECDsa? ecdsa = cert.GetECDsaPublicKey();
+				using ECDsa? ecdsa = cert?.GetECDsaPublicKey();
 				if (ecdsa != null)
 				{
 					publicKeyLength = ecdsa.KeySize;
@@ -1083,6 +1084,12 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 			if (savePath is null)
 				return;
+
+			// Ensure the file path ends with .json
+			if (!savePath.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+			{
+				savePath += ".json";
+			}
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
 

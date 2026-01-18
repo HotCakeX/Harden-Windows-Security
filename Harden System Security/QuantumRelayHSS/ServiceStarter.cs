@@ -100,7 +100,10 @@ internal static partial class ServiceStarter
 					_ = NativeMethods.CloseServiceHandle(serviceHandle);
 				}
 			}
-			catch { }
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
 			try
 			{
@@ -109,7 +112,10 @@ internal static partial class ServiceStarter
 					_ = NativeMethods.CloseServiceHandle(scmHandle);
 				}
 			}
-			catch { }
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 		}
 	}
 

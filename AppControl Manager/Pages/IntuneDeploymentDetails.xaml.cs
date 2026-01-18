@@ -36,7 +36,7 @@ internal sealed partial class IntuneDeploymentDetails : Page, CommonCore.UI.IPag
 		DataContext = this;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("IntuneDeploymentDetailsPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("IntuneDeploymentDetailsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 
 }

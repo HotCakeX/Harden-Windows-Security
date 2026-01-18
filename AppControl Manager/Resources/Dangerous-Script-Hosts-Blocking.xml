@@ -31,7 +31,6 @@
       <Option>Enabled:Revoked Expired As Unsigned</Option>
     </Rule>
   </Rules>
-  <EKUs />
   <FileRules>
     <FileAttrib ID="ID_FILEATTRIB_F_2F" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
     <FileAttrib ID="ID_FILEATTRIB_F_32" FriendlyName="mshta.exe FileAttribute" FileName="MSHTA.EXE" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
@@ -67,7 +66,6 @@
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners />
   <CiSigners>
     <CiSigner SignerId="ID_SIGNER_F_7" />
   </CiSigners>

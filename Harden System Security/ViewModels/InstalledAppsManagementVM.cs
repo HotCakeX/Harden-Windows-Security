@@ -636,7 +636,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			}
 
 			// Open the folder in File Explorer
-			await OpenInDefaultFileHandler(targetApp.InstallLocation);
+			await OpenFileInDefaultFileHandler(targetApp.InstallLocation);
 
 			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("OpenedInstallationLocation"), targetApp.DisplayName));
 		}

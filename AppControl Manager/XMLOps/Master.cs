@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.IO;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
@@ -28,20 +27,17 @@ internal static class Master
 	/// Uses the scan data to generate an App Control policy and makes sure the data are unique
 	/// </summary>
 	/// <param name="incomingData">Contains information about file publisher signers, publisher signers, complete hashes, file paths, and PFN rules.</param>
-	/// <param name="xmlFilePath">Specifies the path to the XML file where the merged policy rules will be saved.</param>
 	/// <param name="authorization">Determines whether to allow or deny the specified rules during the merging process.</param>
-	/// <param name="stagingArea">Indicates the location where temporary files can be stored during the merging operation.</param>
 	/// <param name="noAllowAllWildCards">If true, the policy containing the 2 Allow all rules for user mode and kernel mode file authorization will not be merged with the final policy.</param>
-	internal static void Initiate(
+	internal static SiPolicy.SiPolicy Initiate(
 		FileBasedInfoPackage incomingData,
-		string xmlFilePath,
 		SiPolicyIntel.Authorization authorization,
-		string? stagingArea = null,
 		bool noAllowAllWildCards = false)
 	{
 		Logger.Write(GlobalVars.GetStr("MergingRulesMessage"));
 
-		SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFilePath, null);
+		// Grab a copy of an empty policy object for data insertion
+		SiPolicy.SiPolicy policyObj = CustomPolicyCreator.CreateEmpty();
 
 		if (authorization is SiPolicyIntel.Authorization.Allow)
 		{
@@ -51,10 +47,9 @@ internal static class Master
 			policyObj = NewHashLevelRules.CreateAllow(policyObj, incomingData.CompleteHashes);
 			policyObj = NewFilePathRules.CreateAllow(policyObj, incomingData.FilePaths);
 			policyObj = NewPFNLevelRules.CreateAllow(policyObj, incomingData.PFNRules);
+			policyObj = NewFileNameLevelRules.CreateAllow(policyObj, incomingData.FileNameRules);
 
-			Management.SavePolicyToFile(policyObj, xmlFilePath);
-
-			SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath]);
+			policyObj = Merger.Merge(policyObj, null);
 		}
 		else
 		{
@@ -64,22 +59,21 @@ internal static class Master
 			policyObj = NewHashLevelRules.CreateDenyEx(policyObj, incomingData.CompleteHashes);
 			policyObj = NewFilePathRules.CreateDenyEx(policyObj, incomingData.FilePaths);
 			policyObj = NewPFNLevelRules.CreateDenyEx(policyObj, incomingData.PFNRules);
-
-			Management.SavePolicyToFile(policyObj, xmlFilePath);
-
-			string finalAllowAllFilePath = Path.Combine(stagingArea!, "AllowAll.xml");
-			File.Copy(GlobalVars.AllowAllTemplatePolicyPath, finalAllowAllFilePath, true);
+			policyObj = NewFileNameLevelRules.CreateDeny(policyObj, incomingData.FileNameRules);
 
 			if (noAllowAllWildCards)
 			{
-				SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath]);
+				policyObj = Merger.Merge(policyObj, null);
 			}
 			else
 			{
+				SiPolicy.SiPolicy allowAllPolicyObj = Management.Initialize(GlobalVars.AllowAllTemplatePolicyPath, null);
+
 				// Merge the policy with the AllowAll XML policy since this is a Deny policy type
-				SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath, finalAllowAllFilePath]);
+				policyObj = Merger.Merge(policyObj, [allowAllPolicyObj]);
 			}
 		}
 
+		return policyObj;
 	}
 }

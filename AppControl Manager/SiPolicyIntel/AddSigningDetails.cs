@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -30,9 +29,9 @@ internal static class AddSigningDetails
 	/// Regardless of how many chains a certificate contains, only the leaf certificate will be used.
 	/// It will also remove the unsigned policy rule option.
 	/// </summary>
-	/// <param name="xmlPolicyFile"></param>
+	/// <param name="policyObject"></param>
 	/// <param name="certificateFile"></param>
-	internal static SiPolicy.SiPolicy Add(string xmlPolicyFile, string certificateFile)
+	internal static SiPolicy.SiPolicy Add(SiPolicy.SiPolicy policyObject, string certificateFile)
 	{
 		// Create a certificate object from the .cer file
 		X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificateFile);
@@ -42,8 +41,6 @@ internal static class AddSigningDetails
 
 		// Get the Common Name of the certificate
 		string CertCommonName = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false);
-
-		SiPolicy.SiPolicy policyObject = Management.Initialize(xmlPolicyFile, null);
 
 		// Create a Cert root object that will be used by signers
 		CertRoot certRoot = new(
@@ -67,61 +64,29 @@ internal static class AddSigningDetails
 
 		UpdatePolicySigner updatePolicySigner1 = new(signerID: updatePolicySigner.ID);
 
-		// If the policy has <Signers> node.
-		if (policyObject.Signers is not null)
-		{
-			policyObject.Signers.Add(updatePolicySigner);
-
-			// Only add the SupplementalPolicySigner if the policy is not a SupplementalPolicy
-			// Because only Base policies can have that
-			if (policyObject.PolicyType is not PolicyType.SupplementalPolicy)
-			{
-				policyObject.Signers.Add(supplementalPolicySigner);
-			}
-		}
-		// If the policy has no <Signers> node.
-		else
-		{
-			List<Signer> signersList = [];
-
-			signersList.Add(updatePolicySigner);
-
-			if (policyObject.PolicyType is not PolicyType.SupplementalPolicy)
-			{
-				signersList.Add(supplementalPolicySigner);
-			}
-
-			policyObject.Signers = signersList;
-		}
-
+		// Ensure the policy has <Signers> node/block and then add the signer details.
+		policyObject.Signers ??= [];
+		policyObject.Signers.Add(updatePolicySigner);
 
 		if (policyObject.PolicyType is not PolicyType.SupplementalPolicy)
 		{
-			if (policyObject.SupplementalPolicySigners is not null)
-			{
-				policyObject.SupplementalPolicySigners.Add(supplementalPolicySigner1);
-			}
-			else
-			{
-				policyObject.SupplementalPolicySigners = [supplementalPolicySigner1];
-			}
+			// Only add the SupplementalPolicySigner if the policy is not a SupplementalPolicy
+			// Because only Base policies can have that
+			policyObject.Signers.Add(supplementalPolicySigner);
+
+			policyObject.SupplementalPolicySigners ??= [];
+			policyObject.SupplementalPolicySigners.Add(supplementalPolicySigner1);
 		}
 
-
-		if (policyObject.UpdatePolicySigners is not null)
-		{
-			policyObject.UpdatePolicySigners.Add(updatePolicySigner1);
-		}
-		else
-		{
-			policyObject.UpdatePolicySigners = [updatePolicySigner1];
-		}
+		policyObject.UpdatePolicySigners ??= [];
+		policyObject.UpdatePolicySigners.Add(updatePolicySigner1);
 
 		// Remove the unsigned policy rule option from the policy
 		// And save the final result to the file
-		CiRuleOptions.Set(filePath: xmlPolicyFile,
-			rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy],
-			DirectPolicyObj: policyObject);
+		policyObject = CiRuleOptions.Set(
+			policyObj: policyObject,
+			rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]
+			);
 
 		return policyObject;
 	}

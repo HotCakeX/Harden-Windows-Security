@@ -42,8 +42,8 @@ internal static class NewFilePathRules
 
 		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
 
-		// Initialize FileRules list
-		List<object> fileRules = policyObj.FileRules ?? [];
+		// Ensure the lists are initialized.
+		policyObj.FileRules ??= [];
 
 		// Ensure UMCI Scenario exists
 		SigningScenario? umciScenario = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
@@ -62,14 +62,8 @@ internal static class NewFilePathRules
 			policyObj.SigningScenarios = scenarios;
 		}
 
-		// Ensure ProductSigners exists
-		umciScenario.ProductSigners ??= new ProductSigners();
-
 		// Ensure FileRulesRef exists
 		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-
-		// Prepare FileRuleRef list
-		List<FileRuleRef> umciFileRuleRefs = umciScenario.ProductSigners.FileRulesRef.FileRuleRef ?? [];
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in CollectionsMarshal.AsSpan(data))
@@ -87,22 +81,18 @@ internal static class NewFilePathRules
 				FilePath = item.FilePath
 			};
 
-			fileRules.Add(newAllowRule);
+			policyObj.FileRules.Add(newAllowRule);
 
 			// For User-Mode files only as FilePath rules are not applicable to Kernel-Mode drivers
 			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umciFileRuleRefs.Add(new FileRuleRef(ruleID: allowRuleID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowRuleID));
 			}
 			else
 			{
 				Logger.Write(string.Format(GlobalVars.GetStr("KernelModeFilePathRuleWarningMessage"), item.FilePath));
 			}
 		}
-
-		// Update the policy object
-		policyObj.FileRules = fileRules;
-		umciScenario.ProductSigners.FileRulesRef.FileRuleRef = umciFileRuleRefs;
 
 		return policyObj;
 	}
@@ -124,8 +114,8 @@ internal static class NewFilePathRules
 
 		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
 
-		// Initialize FileRules list
-		List<object> fileRules = policyObj.FileRules ?? [];
+		// Ensure the lists are Initialized.
+		policyObj.FileRules ??= [];
 
 		// Ensure UMCI Scenario exists
 		SigningScenario? umciScenario = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
@@ -144,14 +134,8 @@ internal static class NewFilePathRules
 			policyObj.SigningScenarios = scenarios;
 		}
 
-		// Ensure ProductSigners exists
-		umciScenario.ProductSigners ??= new ProductSigners();
-
 		// Ensure FileRulesRef exists
 		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-
-		// Prepare FileRuleRef list
-		List<FileRuleRef> umciFileRuleRefs = umciScenario.ProductSigners.FileRulesRef.FileRuleRef ?? [];
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in CollectionsMarshal.AsSpan(data))
@@ -168,22 +152,18 @@ internal static class NewFilePathRules
 				FilePath = item.FilePath
 			};
 
-			fileRules.Add(newDenyRule);
+			policyObj.FileRules.Add(newDenyRule);
 
 			// For User-Mode files
 			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umciFileRuleRefs.Add(new FileRuleRef(ruleID: denyRuleID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyRuleID));
 			}
 			else
 			{
 				Logger.Write(string.Format(GlobalVars.GetStr("KernelModeFilePathRuleWarningMessage"), item.FilePath));
 			}
 		}
-
-		// Update the policy object
-		policyObj.FileRules = fileRules;
-		umciScenario.ProductSigners.FileRulesRef.FileRuleRef = umciFileRuleRefs;
 
 		return policyObj;
 	}

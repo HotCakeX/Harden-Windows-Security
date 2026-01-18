@@ -80,7 +80,7 @@
                                  Tag="Active">
                             <controls:SegmentedItem.Icon>
                                 <IconSourceElement>
-                                    <BitmapIconSource UriSource="/Assets/External/Bottle.png" ShowAsMonochrome="False" />
+                                    <BitmapIconSource UriSource="ms-appx:///Assets/External/Bottle.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
                             </controls:SegmentedItem.Icon>
 
@@ -90,7 +90,7 @@
                                                 Tag="Authentication" >
                             <controls:SegmentedItem.Icon>
                                 <IconSourceElement>
-                                    <BitmapIconSource UriSource="/Assets/External/Authentication.png" ShowAsMonochrome="False" />
+                                    <BitmapIconSource UriSource="ms-appx:///Assets/External/Authentication.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
                             </controls:SegmentedItem.Icon>
                         </controls:SegmentedItem>
@@ -99,7 +99,7 @@
                                                 Tag="SignedIn">
                             <controls:SegmentedItem.Icon>
                                 <IconSourceElement>
-                                    <BitmapIconSource UriSource="/Assets/External/Vault.png" ShowAsMonochrome="False" />
+                                    <BitmapIconSource UriSource="ms-appx:///Assets/External/Vault.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
                             </controls:SegmentedItem.Icon>
                         </controls:SegmentedItem>

@@ -23,7 +23,7 @@ namespace AppControlManager.IntelGathering;
 /// A custom collection that manages a set of FileIdentity objects,
 /// prioritizing newer FileIdentity items over older ones when adding items
 /// with identical properties, based on the custom equality comparer.
-/// Used by event logs scanning.
+/// Used by event logs and MDE Advanced Hunting logs scanning.
 ///
 /// If an equivalent item (based on the FileIdentityComparer which takes priority) already exists,
 /// the method checks the TimeCreated property of both the existing item and the new item:

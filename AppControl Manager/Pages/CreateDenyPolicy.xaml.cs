@@ -15,7 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -23,9 +25,10 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class CreateDenyPolicy : Page, CommonCore.UI.IPageHeaderProvider
+internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
+	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal CreateDenyPolicy()
 	{
@@ -33,6 +36,33 @@ internal sealed partial class CreateDenyPolicy : Page, CommonCore.UI.IPageHeader
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	#region Augmentation Interface
+
+	public void SetVisibility(Visibility visibility)
+	{
+		// Light up the local page's button icons
+		ViewModel.PolicyFileToMergeWithLightAnimatedIconVisibility = visibility;
+
+		sideBarVM.AssignActionPacks(
+			actionPack1: (LightUp1, GlobalVars.GetStr("PolicyToAddNewRulesTo"))
+		);
+	}
+
+	/// <summary>
+	/// Local event handlers that are assigned to the sidebar button
+	/// </summary>
+	private void LightUp1(object? param)
+	{
+		SelectPolicyFileToAddRulesToButton_FlyOut.ShowAt(SelectPolicyFileToAddRulesToButton);
+
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.PolicyFileToMergeWith = policy;
+		}
+	}
+
+	#endregion
 
 	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
 	{
@@ -43,6 +73,6 @@ internal sealed partial class CreateDenyPolicy : Page, CommonCore.UI.IPageHeader
 		await ShadowExitAnimation.StartAsync((UIElement)sender);
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Deny-App-Control-Policy");
 }

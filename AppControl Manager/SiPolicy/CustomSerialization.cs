@@ -68,9 +68,9 @@ internal static class CustomSerialization
 		XmlElement rulesElement = xmlDoc.CreateElement("Rules", GlobalVars.SiPolicyNamespace);
 		_ = root.AppendChild(rulesElement);
 
-		if (policy.Rules is { Count: > 0 })
+		if (policy.Rules.Count > 0)
 		{
-			foreach (RuleType rule in policy.Rules)
+			foreach (RuleType rule in CollectionsMarshal.AsSpan(policy.Rules))
 			{
 				XmlElement ruleElement = xmlDoc.CreateElement("Rule", GlobalVars.SiPolicyNamespace);
 
@@ -87,7 +87,7 @@ internal static class CustomSerialization
 			XmlElement ekusElement = xmlDoc.CreateElement("EKUs", GlobalVars.SiPolicyNamespace);
 			_ = root.AppendChild(ekusElement);
 
-			foreach (EKU eku in policy.EKUs)
+			foreach (EKU eku in CollectionsMarshal.AsSpan(policy.EKUs))
 			{
 				XmlElement ekuElement = xmlDoc.CreateElement("EKU", GlobalVars.SiPolicyNamespace);
 				ekuElement.SetAttribute("ID", eku.ID);
@@ -137,7 +137,7 @@ internal static class CustomSerialization
 
 			int totalValidSignerElements = 0;
 
-			foreach (Signer signer in policy.Signers)
+			foreach (Signer signer in CollectionsMarshal.AsSpan(policy.Signers))
 			{
 				XmlElement signerElement = xmlDoc.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
 				signerElement.SetAttribute("ID", signer.ID);
@@ -211,7 +211,7 @@ internal static class CustomSerialization
 			XmlElement signingScenariosElement = xmlDoc.CreateElement("SigningScenarios", GlobalVars.SiPolicyNamespace);
 			_ = root.AppendChild(signingScenariosElement);
 
-			foreach (SigningScenario scenario in policy.SigningScenarios)
+			foreach (SigningScenario scenario in CollectionsMarshal.AsSpan(policy.SigningScenarios))
 			{
 				XmlElement scenarioElement = xmlDoc.CreateElement("SigningScenario", GlobalVars.SiPolicyNamespace);
 				scenarioElement.SetAttribute("Value", scenario.Value.ToString());
@@ -274,7 +274,7 @@ internal static class CustomSerialization
 			XmlElement upsElement = xmlDoc.CreateElement("UpdatePolicySigners", GlobalVars.SiPolicyNamespace);
 			_ = root.AppendChild(upsElement);
 
-			foreach (UpdatePolicySigner ups in policy.UpdatePolicySigners)
+			foreach (UpdatePolicySigner ups in CollectionsMarshal.AsSpan(policy.UpdatePolicySigners))
 			{
 				XmlElement upsChild = xmlDoc.CreateElement("UpdatePolicySigner", GlobalVars.SiPolicyNamespace);
 				upsChild.SetAttribute("SignerId", ups.SignerId);
@@ -300,7 +300,7 @@ internal static class CustomSerialization
 		if (policy.HvciOptions is not null)
 			if (!AppendTextElement(xmlDoc, root, "HvciOptions", policy.HvciOptions.ToString()))
 			{
-				throw new InvalidOperationException("Could not get the HVCI Optons value");
+				throw new InvalidOperationException("Could not get the HVCI Options value");
 			}
 
 		// Settings
@@ -404,7 +404,7 @@ internal static class CustomSerialization
 			_ = root.AppendChild(appSettingsElement);
 			if (policy.AppSettings.App is not null)
 			{
-				foreach (AppRoot app in policy.AppSettings.App)
+				foreach (AppRoot app in CollectionsMarshal.AsSpan(policy.AppSettings.App))
 				{
 					XmlElement appElement = xmlDoc.CreateElement("App", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(app.Manifest))
@@ -836,13 +836,13 @@ internal static class CustomSerialization
 	*/
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static unsafe string ConvertByteArrayToHex(ReadOnlyMemory<byte>? data)
+	internal static unsafe string ConvertByteArrayToHex(ReadOnlyMemory<byte> data)
 	{
 		// If the input data is null or empty, return an empty string immediately.
-		if (!data.HasValue || data.Value.IsEmpty)
+		if (data.Span.IsEmpty)
 			return string.Empty;
 
-		ReadOnlySpan<byte> byteSpan = data.Value.Span;
+		ReadOnlySpan<byte> byteSpan = data.Span;
 		int length = byteSpan.Length;
 
 		// Pre-allocate a string to hold the hexadecimal representation.

@@ -25,7 +25,6 @@ using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
@@ -118,8 +117,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal bool IsLoading
 	{
-		get;
-		private set
+		get; private set
 		{
 			if (SP(ref field, value))
 			{
@@ -432,7 +430,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			await OpenInDefaultFileHandler(App.LogsDirectory);
+			await OpenFileInDefaultFileHandler(App.LogsDirectory);
 		}
 		catch (Exception ex)
 		{
@@ -445,8 +443,6 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal void ListView_Loaded(object sender, RoutedEventArgs e)
-	{
-		LogListView = (ListView)sender;
-	}
+	internal void ListView_Loaded(object sender, RoutedEventArgs e) => LogListView = (ListView)sender;
+
 }

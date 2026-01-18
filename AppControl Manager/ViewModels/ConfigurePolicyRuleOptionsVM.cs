@@ -16,12 +16,12 @@
 //
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -57,9 +57,9 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	internal bool AreUnsupportedRuleOptionsEnabled { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// To store the selected policy path
+	/// To store the selected policy.
 	/// </summary>
-	internal string? SelectedFilePath { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? SelectedPolicy { get; set => SP(ref field, value); }
 
 	#region CheckBox Properties
 
@@ -100,10 +100,16 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 			if (!string.IsNullOrWhiteSpace(selectedFile))
 			{
-				SelectedFilePath = selectedFile;
+				await Task.Run(() =>
+				{
+					// Initialize the policy
+					SiPolicy.SiPolicy tempPolicyObj = Management.Initialize(selectedFile, null);
+
+					SelectedPolicy = new(tempPolicyObj) { FilePath = selectedFile };
+				});
 
 				// Load the policy options from the XML and update the UI
-				await LoadPolicyOptionsFromXML();
+				LoadPolicyOptionsFromXML();
 			}
 		}
 		catch (Exception ex)
@@ -113,46 +119,45 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// When the XML policy file is selected by the user, get its rule options and check/uncheck the check boxes in the UI accordingly
+	/// When the policy file is selected by the user, get its rule options and check/uncheck the check boxes in the UI accordingly
 	/// </summary>
-	internal async Task LoadPolicyOptionsFromXML()
+	internal void LoadPolicyOptionsFromXML()
 	{
 		try
 		{
-			SiPolicy.SiPolicy policyObj = null!;
-
-			await Task.Run(() =>
+			if (SelectedPolicy is null)
 			{
-				policyObj = Management.Initialize(SelectedFilePath, null);
-			});
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeRetrievingOptions"));
+				return;
+			}
 
 			// All the Policy OptionTypes in the selected XML file
-			List<OptionType> policyRules = policyObj.Rules.Select(x => x.Item).ToList();
+			List<OptionType> policyRules = SelectedPolicy.PolicyObj.Rules.Select(x => x.Item).ToList();
 
 			// Update each checkbox state based on the policy rules
-			EnabledUMCICheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:UMCI"));
-			EnabledBootMenuProtectionCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Boot Menu Protection"));
-			RequiredWHQLCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Required:WHQL"));
-			EnabledAuditModeCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Audit Mode"));
-			DisabledFlightSigningCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Disabled:Flight Signing"));
-			EnabledInheritDefaultPolicyCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Inherit Default Policy"));
-			EnabledUnsignedSystemIntegrityPolicyCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Unsigned System Integrity Policy"));
-			RequiredEVSignersCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Required:EV Signers"));
-			EnabledAdvancedBootOptionsMenuCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Advanced Boot Options Menu"));
-			EnabledBootAuditOnFailureCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Boot Audit On Failure"));
-			DisabledScriptEnforcementCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Disabled:Script Enforcement"));
-			RequiredEnforceStoreApplicationsCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Required:Enforce Store Applications"));
-			EnabledManagedInstallerCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Managed Installer"));
-			EnabledIntelligentSecurityGraphAuthorizationCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Intelligent Security Graph Authorization"));
-			EnabledInvalidateEAsOnRebootCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Invalidate EAs on Reboot"));
-			EnabledUpdatePolicyNoRebootCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Update Policy No Reboot"));
-			EnabledAllowSupplementalPoliciesCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Allow Supplemental Policies"));
-			DisabledRuntimeFilePathRuleProtectionCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Disabled:Runtime FilePath Rule Protection"));
-			EnabledDynamicCodeSecurityCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Dynamic Code Security"));
-			EnabledRevokedExpiredAsUnsignedCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Revoked Expired As Unsigned"));
-			EnabledDeveloperModeDynamicCodeTrustCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Developer Mode Dynamic Code Trust"));
-			EnabledSecureSettingPolicyCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Secure Setting Policy"));
-			EnabledConditionalWindowsLockdownPolicyCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Conditional Windows Lockdown Policy"));
+			EnabledUMCICheckBox = policyRules.Contains(OptionType.EnabledUMCI);
+			EnabledBootMenuProtectionCheckBox = policyRules.Contains(OptionType.EnabledBootMenuProtection);
+			RequiredWHQLCheckBox = policyRules.Contains(OptionType.RequiredWHQL);
+			EnabledAuditModeCheckBox = policyRules.Contains(OptionType.EnabledAuditMode);
+			DisabledFlightSigningCheckBox = policyRules.Contains(OptionType.DisabledFlightSigning);
+			EnabledInheritDefaultPolicyCheckBox = policyRules.Contains(OptionType.EnabledInheritDefaultPolicy);
+			EnabledUnsignedSystemIntegrityPolicyCheckBox = policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy);
+			RequiredEVSignersCheckBox = policyRules.Contains(OptionType.RequiredEVSigners);
+			EnabledAdvancedBootOptionsMenuCheckBox = policyRules.Contains(OptionType.EnabledAdvancedBootOptionsMenu);
+			EnabledBootAuditOnFailureCheckBox = policyRules.Contains(OptionType.EnabledBootAuditOnFailure);
+			DisabledScriptEnforcementCheckBox = policyRules.Contains(OptionType.DisabledScriptEnforcement);
+			RequiredEnforceStoreApplicationsCheckBox = policyRules.Contains(OptionType.RequiredEnforceStoreApplications);
+			EnabledManagedInstallerCheckBox = policyRules.Contains(OptionType.EnabledManagedInstaller);
+			EnabledIntelligentSecurityGraphAuthorizationCheckBox = policyRules.Contains(OptionType.EnabledIntelligentSecurityGraphAuthorization);
+			EnabledInvalidateEAsOnRebootCheckBox = policyRules.Contains(OptionType.EnabledInvalidateEAsonReboot);
+			EnabledUpdatePolicyNoRebootCheckBox = policyRules.Contains(OptionType.EnabledUpdatePolicyNoReboot);
+			EnabledAllowSupplementalPoliciesCheckBox = policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies);
+			DisabledRuntimeFilePathRuleProtectionCheckBox = policyRules.Contains(OptionType.DisabledRuntimeFilePathRuleProtection);
+			EnabledDynamicCodeSecurityCheckBox = policyRules.Contains(OptionType.EnabledDynamicCodeSecurity);
+			EnabledRevokedExpiredAsUnsignedCheckBox = policyRules.Contains(OptionType.EnabledRevokedExpiredAsUnsigned);
+			EnabledDeveloperModeDynamicCodeTrustCheckBox = policyRules.Contains(OptionType.EnabledDeveloperModeDynamicCodeTrust);
+			EnabledSecureSettingPolicyCheckBox = policyRules.Contains(OptionType.EnabledSecureSettingPolicy);
+			EnabledConditionalWindowsLockdownPolicyCheckBox = policyRules.Contains(OptionType.EnabledConditionalWindowsLockdownPolicy);
 
 			// Expand the settings expander to display the settings.
 			SettingsExpanderIsExpanded = true;
@@ -166,50 +171,54 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// Event handler for when the Apply button is pressed
 	/// </summary>
-	internal async void ApplyTheChangesButton_Click()
+	internal async void ApplyTheChangesButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
-
 		try
 		{
 			ElementsAreEnabled = false;
 
-			if (string.IsNullOrWhiteSpace(SelectedFilePath))
+			if (SelectedPolicy is null)
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeAddingOptions"));
 				return;
 			}
 
 			// Gather selected rules to add
-			OptionType[] selectedOptions = [.. GetSelectedPolicyRuleOptions()];
+			List<OptionType> selectedOptions = GetSelectedPolicyRuleOptions();
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
-				CiRuleOptions.Set(SelectedFilePath, rulesToAdd: selectedOptions, RemoveAll: true);
+				SelectedPolicy.PolicyObj = CiRuleOptions.Set(SelectedPolicy.PolicyObj, rulesToAdd: selectedOptions, RemoveAll: true);
+
+				if (SelectedPolicy.FilePath is not null)
+				{
+					// Save the changes to the policy XML file.
+					Management.SavePolicyToFile(SelectedPolicy.PolicyObj, SelectedPolicy.FilePath);
+				}
+
+				// Assign the modified policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(SelectedPolicy);
+
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 			});
 
 			if (DeployAfterApplyingToggleButton)
 			{
 				await Task.Run(() =>
 				{
-					DirectoryInfo stagingArea = StagingArea.NewStagingArea("ConfigurePolicyRuleOptionsDeployment");
-
-					string cipPath = Path.Combine(stagingArea.FullName, $"{Path.GetFileName(SelectedFilePath)}.cip");
-
-					SiPolicy.SiPolicy policyObj = Management.Initialize(SelectedFilePath, null);
-
-					if (!policyObj.Rules.Any(x => x.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
+					if (!SelectedPolicy.PolicyObj.Rules.Any(x => x.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
 						MainInfoBar.WriteWarning(GlobalVars.GetStr("TeachingTipSubtitlePolicyRequiresSigning"));
 						return;
 					}
 
-					Management.ConvertXMLToBinary(SelectedFilePath, null, cipPath);
+					PreDeploymentChecks.CheckForSignatureConflict(SelectedPolicy.PolicyObj);
 
 					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
-					if (SupplementalForSelf.IsEligible(policyObj, SelectedFilePath))
-						SupplementalForSelf.Deploy(stagingArea.FullName, policyObj.PolicyID);
+					if (SupplementalForSelf.IsEligible(SelectedPolicy.PolicyObj))
+						SupplementalForSelf.Deploy(SelectedPolicy.PolicyObj.PolicyID);
 
-					CiToolHelper.UpdatePolicy(cipPath);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(SelectedPolicy.PolicyObj));
 				});
 			}
 		}
@@ -226,13 +235,13 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the Set button click in the PolicyTemplate section
 	/// </summary>
-	internal async void SetPolicyTemplate_Click()
+	internal async void SetPolicyTemplate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
 		{
 			ElementsAreEnabled = false;
 
-			if (string.IsNullOrWhiteSpace(SelectedFilePath))
+			if (SelectedPolicy is null)
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeSettingTemplate"));
 				return;
@@ -242,13 +251,24 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			CiRuleOptions.PolicyTemplate template = Enum.Parse<CiRuleOptions.PolicyTemplate>(PolicyTemplatesComboBoxSelectedItem);
 
 			// Call the Set method with only the filePath and template parameters
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
-				CiRuleOptions.Set(SelectedFilePath, template: template);
+				SelectedPolicy.PolicyObj = CiRuleOptions.Set(SelectedPolicy.PolicyObj, template: template);
+
+				if (SelectedPolicy.FilePath is not null)
+				{
+					// Save the changes to the policy XML file.
+					Management.SavePolicyToFile(SelectedPolicy.PolicyObj, SelectedPolicy.FilePath);
+				}
+
+				// Assign the modified policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(SelectedPolicy);
+
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 			});
 
 			// Refresh the UI check boxes
-			await LoadPolicyOptionsFromXML();
+			LoadPolicyOptionsFromXML();
 		}
 		catch (Exception ex)
 		{
@@ -265,7 +285,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// </summary>
 	internal void PickPolicyFileButton_FlyOut_Clear_Click()
 	{
-		SelectedFilePath = null;
+		SelectedPolicy = null;
 		ClearAllCheckBoxes();
 	}
 
@@ -278,9 +298,9 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 
-			if (SelectedFilePath is not null)
+			if (SelectedPolicy is not null)
 			{
-				await LoadPolicyOptionsFromXML();
+				LoadPolicyOptionsFromXML();
 			}
 			else
 			{
@@ -298,9 +318,8 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 		}
 	}
 
-
 	/// <summary>
-	/// Helper method to get selected policy rule options from the UI checkboxes
+	/// Helper method to get selected policy rule options from the UI checkboxes.
 	/// </summary>
 	/// <returns></returns>
 	internal List<OptionType> GetSelectedPolicyRuleOptions()
@@ -309,57 +328,57 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 		// Check each checkbox individually
 		if (EnabledUMCICheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:UMCI"));
+			selectedRules.Add(OptionType.EnabledUMCI);
 		if (EnabledBootMenuProtectionCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Boot Menu Protection"));
+			selectedRules.Add(OptionType.EnabledBootMenuProtection);
 		if (RequiredWHQLCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Required:WHQL"));
+			selectedRules.Add(OptionType.RequiredWHQL);
 		if (EnabledAuditModeCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Audit Mode"));
+			selectedRules.Add(OptionType.EnabledAuditMode);
 		if (DisabledFlightSigningCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Disabled:Flight Signing"));
+			selectedRules.Add(OptionType.DisabledFlightSigning);
 		if (EnabledInheritDefaultPolicyCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Inherit Default Policy"));
+			selectedRules.Add(OptionType.EnabledInheritDefaultPolicy);
 		if (EnabledUnsignedSystemIntegrityPolicyCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Unsigned System Integrity Policy"));
+			selectedRules.Add(OptionType.EnabledUnsignedSystemIntegrityPolicy);
 		if (RequiredEVSignersCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Required:EV Signers"));
+			selectedRules.Add(OptionType.RequiredEVSigners);
 		if (EnabledAdvancedBootOptionsMenuCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Advanced Boot Options Menu"));
+			selectedRules.Add(OptionType.EnabledAdvancedBootOptionsMenu);
 		if (EnabledBootAuditOnFailureCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Boot Audit On Failure"));
+			selectedRules.Add(OptionType.EnabledBootAuditOnFailure);
 		if (DisabledScriptEnforcementCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Disabled:Script Enforcement"));
+			selectedRules.Add(OptionType.DisabledScriptEnforcement);
 		if (RequiredEnforceStoreApplicationsCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Required:Enforce Store Applications"));
+			selectedRules.Add(OptionType.RequiredEnforceStoreApplications);
 		if (EnabledManagedInstallerCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Managed Installer"));
+			selectedRules.Add(OptionType.EnabledManagedInstaller);
 		if (EnabledIntelligentSecurityGraphAuthorizationCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Intelligent Security Graph Authorization"));
+			selectedRules.Add(OptionType.EnabledIntelligentSecurityGraphAuthorization);
 		if (EnabledInvalidateEAsOnRebootCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Invalidate EAs on Reboot"));
+			selectedRules.Add(OptionType.EnabledInvalidateEAsonReboot);
 		if (EnabledUpdatePolicyNoRebootCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Update Policy No Reboot"));
+			selectedRules.Add(OptionType.EnabledUpdatePolicyNoReboot);
 		if (EnabledAllowSupplementalPoliciesCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Allow Supplemental Policies"));
+			selectedRules.Add(OptionType.EnabledAllowSupplementalPolicies);
 		if (DisabledRuntimeFilePathRuleProtectionCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Disabled:Runtime FilePath Rule Protection"));
+			selectedRules.Add(OptionType.DisabledRuntimeFilePathRuleProtection);
 		if (EnabledDynamicCodeSecurityCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Dynamic Code Security"));
+			selectedRules.Add(OptionType.EnabledDynamicCodeSecurity);
 		if (EnabledRevokedExpiredAsUnsignedCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Revoked Expired As Unsigned"));
+			selectedRules.Add(OptionType.EnabledRevokedExpiredAsUnsigned);
 		if (EnabledDeveloperModeDynamicCodeTrustCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Developer Mode Dynamic Code Trust"));
+			selectedRules.Add(OptionType.EnabledDeveloperModeDynamicCodeTrust);
 		if (EnabledSecureSettingPolicyCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Secure Setting Policy"));
+			selectedRules.Add(OptionType.EnabledSecureSettingPolicy);
 		if (EnabledConditionalWindowsLockdownPolicyCheckBox)
-			selectedRules.Add(CustomDeserialization.ConvertStringToOptionType("Enabled:Conditional Windows Lockdown Policy"));
+			selectedRules.Add(OptionType.EnabledConditionalWindowsLockdownPolicy);
 
 		return selectedRules;
 	}
 
 	/// <summary>
-	/// Uncheck all of the rule options check boxes in the UI
+	/// Uncheck all of the rule options check boxes in the UI.
 	/// </summary>
 	internal void ClearAllCheckBoxes()
 	{
@@ -388,6 +407,9 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 		EnabledConditionalWindowsLockdownPolicyCheckBox = false;
 	}
 
+	/// <summary>
+	/// Used by the XAML UI.
+	/// </summary>
 	internal readonly Dictionary<string, string> RuleOptions = new()
 	{
 		{ "Enabled:UMCI", GlobalVars.GetStr("RuleOption_EnabledUMCI") },
@@ -415,30 +437,35 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.GetStr("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
 	};
 
-
 	/// <summary>
 	/// Used by any code from the app to use the functionalities in this VM.
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	internal async Task OpenInConfigurePolicyRuleOptions(string? filePath)
+	internal async Task OpenInConfigurePolicyRuleOptions(SiPolicy.PolicyFileRepresent? policy)
 	{
 		try
 		{
-			if (filePath is null) return;
+			if (policy is null) return;
+
+			ElementsAreEnabled = false;
 
 			// Navigate to the Configure Policy Rule Options page
 			ViewModelProvider.NavigationService.Navigate(typeof(Pages.ConfigurePolicyRuleOptions), null);
 
 			// Assign the policy file path to the local variable
-			SelectedFilePath = filePath;
+			SelectedPolicy = policy;
 
 			// Load the policy options from the XML and update the UI
-			await LoadPolicyOptionsFromXML();
+			LoadPolicyOptionsFromXML();
 		}
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
 		}
 	}
 }

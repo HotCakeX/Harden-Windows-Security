@@ -26,7 +26,7 @@ using Microsoft.UI.Xaml.Controls;
 namespace HardenSystemSecurity.Helpers;
 
 /// <summary>
-/// Viewmodels that utilize the <see cref="AppControlManager.CustomUIElements.MUnitListViewControl"/> must inherit from this base class.
+/// ViewModels that utilize the <see cref="AppControlManager.CustomUIElements.MUnitListViewControl"/> must inherit from this base class.
 /// </summary>
 internal abstract partial class MUnitListViewModelBase : ViewModelBase, IMUnitListViewModel
 {

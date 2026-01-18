@@ -137,11 +137,6 @@ public partial class App : Application
 	{
 		InitializeComponent();
 
-		// Location where File/Folder picker dialog will be opened
-#if APP_CONTROL_MANAGER
-		FileDialogHelper.DirectoryToOpen = IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory) ?? "C:";
-#endif
-
 		// Capture the dispatcher queue as early as possible.
 		AppDispatcher = DispatcherQueue.GetForCurrentThread();
 
@@ -283,12 +278,6 @@ public partial class App : Application
 			CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrameForAppShutdown();
 		}
 		catch { }
-
-		// Clean up the staging area
-		if (IsElevated && Directory.Exists(GlobalVars.StagingArea))
-		{
-			Directory.Delete(GlobalVars.StagingArea, true);
-		}
 
 		if (MainWindow is not null)
 		{

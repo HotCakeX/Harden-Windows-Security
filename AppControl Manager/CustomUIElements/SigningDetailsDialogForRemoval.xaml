@@ -30,25 +30,29 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock IsTextSelectionEnabled="True" Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Please provide the required details that will be used to re-sign the XML App Control Policy so that it will be removable on next reboot." />
+            <TextBlock IsTextSelectionEnabled="True"
+                       x:Uid="PolicyRemovalDialogTopTextBlock"
+                       Grid.Row="0"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Top" />
 
-            <InfoBar
-                Margin="15"
-                Grid.Row="1"
-                BorderThickness="0"
-                CornerRadius="0"
-                IsIconVisible="True"
-                IsOpen="True"
-                IsClosable="False"
-                Message="You can configure the following details in the app settings once, eliminating the need to enter them repeatedly"
-                Severity="Informational">
+            <InfoBar Margin="15"
+                     Grid.Row="1"
+                     BorderThickness="0"
+                     CornerRadius="0"
+                     IsIconVisible="True"
+                     IsOpen="True"
+                     IsClosable="False"
+                     x:Uid="PolicyManagementDialogTopInfoBar"
+                     Severity="Informational">
                 <InfoBar.ActionButton>
                     <Button x:Uid="GoToSettingsButton" Click="{x:Bind OpenAppSettingsButton_Click}" />
                 </InfoBar.ActionButton>
             </InfoBar>
 
             <StackPanel HorizontalAlignment="Stretch"
-            Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2">
+                        Spacing="{StaticResource SettingsCardSpacing}"
+                        Grid.Row="2">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -56,7 +60,7 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsCard x:Uid="CertificateDetailsSettingsCard"
-                 HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
 
@@ -68,24 +72,23 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard x:Uid="CertificateCommonNameSettingsCard"
-                 HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
                         <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
-                           MaxWidth="700"
-                            QueryIcon="Find"
-                            GotFocus="{x:Bind CertificateCommonNameAutoSuggestBox_GotFocus}"
-                            TextChanged="{x:Bind CertificateCNAutoSuggestBox_TextChanged}"
-                            PlaceholderText="Find Certificate Common Names"/>
+                                        MaxWidth="700"
+                                        QueryIcon="Find"
+                                        GotFocus="{x:Bind CertificateCommonNameAutoSuggestBox_GotFocus}"
+                                        TextChanged="{x:Bind CertificateCNAutoSuggestBox_TextChanged}"
+                                        PlaceholderText="Find Certificate Common Names"/>
 
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Header="XML File"
-                    Description="The XML file of the Signed policy that is going to be removed"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
+                <controls:SettingsCard x:Uid="XMLPolicyPathForRemovalSettingsCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
 

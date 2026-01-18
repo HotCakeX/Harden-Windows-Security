@@ -88,8 +88,8 @@ internal static class CiRuleOptions
 	private static readonly HashSet<OptionType> RequireEVSignersRules = [OptionType.RequiredEVSigners];
 	private static readonly HashSet<OptionType> ScriptEnforcementRules = [OptionType.DisabledScriptEnforcement];
 	private static readonly HashSet<OptionType> TestModeRules = [OptionType.EnabledAdvancedBootOptionsMenu, OptionType.EnabledBootAuditOnFailure];
-	#endregion
 
+	#endregion
 
 	private static readonly HashSet<OptionType> SupplementalPolicyAllowedRuleOptions = [
 		OptionType.DisabledRuntimeFilePathRuleProtection,
@@ -100,48 +100,36 @@ internal static class CiRuleOptions
 		];
 
 	/// <summary>
-	/// Configures the Policy rule options in a given XML file and sets the HVCI to Strict in the output XML file.
-	/// It offers many ways to configure the policy rule options in a given XML file.
+	/// Configures the Policy rule options in a given SiPolicy and sets the HVCI to Strict in it.
 	/// All of its various parameters provide the flexibility that ensures only one pass is needed to configure the policy rule options.
 	/// First the template is processed, then the individual boolean parameters, and finally the individual rules to add and remove.
 	/// </summary>
-	/// <param name="filePath">  Specifies the path to the XML file that contains the CI policy rules </param>
+	/// <param name="policyObj"> The main policy object to act on. </param>
 	/// <param name="template"> Specifies the template to use for the CI policy rules </param>
-	/// <param name="rulesToAdd"> Specifies the rule options to add to the policy XML file </param>
-	/// <param name="rulesToRemove">  Specifies the rule options to remove from the policy XML file </param>
+	/// <param name="rulesToAdd"> Specifies the rule options to add to the policy </param>
+	/// <param name="rulesToRemove"> Specifies the rule options to remove from the policy </param>
 	/// <param name="RequireWHQL"> Specifies whether to require WHQL signatures for all drivers </param>
 	/// <param name="EnableAuditMode"> Specifies whether to enable audit mode </param>
 	/// <param name="DisableFlightSigning"> Specifies whether to disable flight signing </param>
 	/// <param name="RequireEVSigners"> Specifies whether to require EV signers </param>
 	/// <param name="ScriptEnforcement"> Specifies whether to disable script enforcement </param>
 	/// <param name="TestMode"> Specifies whether to enable test mode </param>
-	/// <param name="RemoveAll"> Removes all the existing rule options from the policy XML file </param>
-	/// <param name="DirectPolicyObj"> Instead of supplying a policy file, use the de-serialized SiPolicy object. The changes will still be saved to the policy file path that is provided which is a mandatory parameter. </param>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static void Set(
-		string filePath,
+	/// <param name="RemoveAll"> Removes all the existing rule options from the policy </param>
+	internal static SiPolicy.SiPolicy Set(
+		SiPolicy.SiPolicy policyObj,
 		PolicyTemplate? template = null,
-		OptionType[]? rulesToAdd = null,
-		OptionType[]? rulesToRemove = null,
+		List<OptionType>? rulesToAdd = null,
+		List<OptionType>? rulesToRemove = null,
 		bool? RequireWHQL = null,
 		bool? EnableAuditMode = null,
 		bool? DisableFlightSigning = null,
 		bool? RequireEVSigners = null,
 		bool? ScriptEnforcement = null,
 		bool? TestMode = null,
-		bool? RemoveAll = null,
-		SiPolicy.SiPolicy? DirectPolicyObj = null
+		bool? RemoveAll = null
 		)
 	{
-
-		Logger.Write(string.Format(
-			GlobalVars.GetStr("ConfiguringPolicyRuleOptionsForMessage"),
-			filePath));
-
-		// Instantiate the policy or use the supplied SiPolicy object
-		SiPolicy.SiPolicy policyObj = DirectPolicyObj ?? Management.Initialize(filePath, null);
-
-		// To store the existing rule options in the XML policy file
+		// To store the existing rule options in the policy
 		HashSet<OptionType> ExistingRuleOptions = [];
 
 		// The final rule options to implement which contains only unique values
@@ -156,14 +144,9 @@ internal static class CiRuleOptions
 		}
 
 		// Store the current policy rules
-		if (policyObj.Rules.Count > 0)
+		foreach (RuleType rule in CollectionsMarshal.AsSpan(policyObj.Rules))
 		{
-			// Iterating through each <Rule> node in the supplied XML file
-			foreach (RuleType rule in CollectionsMarshal.AsSpan(policyObj.Rules))
-			{
-				// Add the option text and its corresponding int value to the dictionary
-				_ = ExistingRuleOptions.Add(rule.Item);
-			}
+			_ = ExistingRuleOptions.Add(rule.Item);
 		}
 
 		if (!ClearAllRules && ExistingRuleOptions.Count > 0)
@@ -276,7 +259,7 @@ internal static class CiRuleOptions
 			_ = RuleOptionsToImplement.RemoveWhere(rule => !SupplementalPolicyAllowedRuleOptions.Contains(rule));
 		}
 
-		#region Compare the existing rule options in the policy XML file with the rule options to implement
+		#region Compare the existing rule options in the policy with the rule options to implement
 
 		// Find elements in RuleOptionsToImplement that are not in ExistingRuleOptions
 		IEnumerable<OptionType> toAdd = RuleOptionsToImplement.Except(ExistingRuleOptions);
@@ -298,21 +281,19 @@ internal static class CiRuleOptions
 		}
 		#endregion
 
-		List<RuleType> finalRuleToImplement = [];
+		// Clear any existing rules.
+		policyObj.Rules.Clear();
 
-		// Create new Rules
+		// Create new Rules to implement on the policy object.
 		foreach (OptionType rule in RuleOptionsToImplement)
 		{
-			finalRuleToImplement.Add(new RuleType(item: rule));
+			policyObj.Rules.Add(new RuleType(item: rule));
 		}
 
-		// Assign the new rules to implement on the policy object, replacing any existing rules
-		policyObj.Rules = finalRuleToImplement;
-
-		// Save the XML
-		Management.SavePolicyToFile(policyObj, filePath);
-
 		// Set the HVCI to Strict
-		UpdateHvciOptions.Update(filePath);
+		policyObj = PolicySettingsManager.UpdateHVCIOptions(policyObj);
+
+		// Return the updated policy object
+		return policyObj;
 	}
 }

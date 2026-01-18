@@ -26,7 +26,6 @@ namespace HardenSystemSecurity.Traverse;
 
 internal static class Generator
 {
-
 	/// <summary>
 	/// Helper to verify all MUnits in a ViewModel and compute score + items for Traverse
 	/// </summary>

@@ -38,6 +38,8 @@ using System.Diagnostics;
 using AppControlManager.IntelGathering;
 using System.Collections.ObjectModel;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
+using System.IO;
 #endif
 
 namespace AppControlManager.ViewModels;
@@ -157,15 +159,17 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		new("Publisher", ScanLevels.Publisher, 3),
 		new("Hash", ScanLevels.Hash, 5),
 		new("File Path", ScanLevels.FilePath, 2),
-		new("Wildcard Folder Path", ScanLevels.WildCardFolderPath, 1)
+		new("Wildcard Folder Path", ScanLevels.WildCardFolderPath, 1),
+		new("File Name", ScanLevels.FileName, 2)
 	];
 
 	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
 	[
-		new ScanLevelsComboBoxType("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
-		new ScanLevelsComboBoxType("File Publisher", ScanLevels.FilePublisher, 4),
-		new ScanLevelsComboBoxType("Publisher", ScanLevels.Publisher, 3),
-		new ScanLevelsComboBoxType("Hash", ScanLevels.Hash, 5)
+		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
+		new("File Publisher", ScanLevels.FilePublisher, 4),
+		new("Publisher", ScanLevels.Publisher, 3),
+		new("Hash", ScanLevels.Hash, 5),
+		new("File Name", ScanLevels.FileName, 2)
 	];
 
 	/// <summary>
@@ -414,13 +418,36 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 			_ = Process.Start(processInfo);
 		}
 	}
+
+	/// <summary>
+	/// Accepts a policy file representation, offers a save dialog so user can save it somewhere,
+	/// Then opens the file in the default file handler in the OS.
+	/// </summary>
+	/// <param name="policy"></param>
+	internal static async Task OpenInDefaultFileHandler(PolicyFileRepresent? policy)
+	{
+		try
+		{
+			if (policy is null) return;
+
+			string? savePath = Path.Exists(policy.FilePath) ? policy.FilePath : await MainWindow.ExecuteSaveAsXML(policy);
+
+			if (savePath is not null)
+				_ = await Launcher.LaunchUriAsync(new Uri(savePath));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
 #endif
 
 	/// <summary>
 	/// Opens a file in the default file handler in the OS.
 	/// </summary>
 	/// <param name="filePath"></param>
-	internal static async Task OpenInDefaultFileHandler(string? filePath)
+	internal static async Task OpenFileInDefaultFileHandler(string? filePath)
 	{
 		try
 		{

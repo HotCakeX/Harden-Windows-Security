@@ -25,17 +25,16 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
+using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 
 namespace AppControlManager.Main;
 
 internal static partial class BasePolicyCreator
 {
-
-	private static MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
 
 	/// <summary>
 	/// Creates scheduled task that keeps the Microsoft recommended driver block rules up to date on the system
@@ -122,135 +121,87 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		}
 	}
 
-
 	/// <summary>
-	/// A method to deploy the Vulnerable Driver Block List from the Microsoft servers and deploy it to the system
+	/// A method to retrieve the Vulnerable Driver Block List from the Microsoft servers and deploy it to the system.
 	/// </summary>
-	/// <param name="StagingArea">The directory to use for temporary files</param>
-	/// <exception cref="Exception"></exception>
-	internal static (string?, string) DeployDriversBlockRules(string StagingArea)
+	/// <returns>The policy that was downloaded and created.</returns>
+	internal static PolicyFileRepresent DeployDriversBlockRules()
 	{
-		// The location where the downloaded zip file will be saved
-		string DownloadSaveLocation = Path.Combine(StagingArea, "VulnerableDriverBlockList.zip");
-
-		// The location where the zip file will be extracted
-		string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
-
 		// Initialize the final destination of the SiPolicy file
 		string SiPolicyFinalDestination = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
 
 		// Download the zip file
 		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL)
 								 .GetAwaiter().GetResult();
-		File.WriteAllBytes(DownloadSaveLocation, fileBytes);
 
-		// Extract the contents of the zip file, overwriting any existing files
-		ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
+		// Process the zip file in memory
+		using MemoryStream zipStream = new(fileBytes);
+		using ZipArchive zipArchive = new(zipStream, ZipArchiveMode.Read);
 
-		// Get the path of the SiPolicy file
-		string[] SiPolicyPaths = Directory.GetFiles(
-			ZipExtractionDir,
-			"SiPolicy_Enforced.p7b",
-			SearchOption.AllDirectories);
+		// Locate the SiPolicy_Enforced.p7b file within the zip archive
+		ZipArchiveEntry? siPolicyEntry = zipArchive.Entries.FirstOrDefault(entry => entry.Name.Equals("SiPolicy_Enforced.p7b", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("SiPolicy_Enforced.p7b was not found in the downloaded zip file.");
 
-		// Make sure to get only one file if there is more than one (which is unexpected)
-		string SiPolicyPath = SiPolicyPaths[0];
+		// Locate the SiPolicy_Enforced.xml file within the zip archive
+		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(entry => entry.Name.Equals("SiPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("SiPolicy_Enforced.xml was not found in the downloaded zip file.");
 
-		// Get the path of the XML file - just to extract the version
-		string[] XMLFilePaths = Directory.GetFiles(
-			ZipExtractionDir,
-			"SiPolicy_Enforced.xml",
-			SearchOption.AllDirectories);
+		// Load the content of the XML file into an XmlDocument
+		XmlDocument xmlDoc = new();
+		using Stream xmlStream = xmlEntry.Open();
 
-		// Make sure to get only one file if there is more than one (which is unexpected)
-		string XMLFilePath = XMLFilePaths[0];
+		xmlDoc.Load(xmlStream);
 
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(XMLFilePath, null);
-
-		string policyVersion = policyObj.VersionEx;
-
-		// If the SiPolicy file already exists, delete it
-		if (File.Exists(SiPolicyFinalDestination))
-		{
-			File.Delete(SiPolicyFinalDestination);
-		}
-
-		// Move the SiPolicy file to the final destination, renaming it in the process
-		File.Move(SiPolicyPath, SiPolicyFinalDestination);
+		// Extract the SiPolicy file directly to the final destination, overwriting if it exists
+		siPolicyEntry.ExtractToFile(SiPolicyFinalDestination, true);
 
 		Logger.Write(GlobalVars.GetStr("DeployDriversBlockRulesRefreshPoliciesMessage"));
+
 		CiToolHelper.RefreshPolicy();
 
 		Logger.Write(GlobalVars.GetStr("DeployDriversBlockRulesDeployedMessage"));
 
-		return (null, policyVersion);
+		return new(Management.Initialize(null, xmlDoc));
 	}
-
 
 	/// <summary>
 	/// Downloads the latest Microsoft Recommended Block rules from Microsoft's GitHub repository
 	/// And creates a valid Code Integrity XML policy file from it.
 	/// </summary>
-	/// <param name="StagingArea">The directory where the XML file will be saved to.</param>
-	/// <returns>the path to the Microsoft recommended driver block rules base policy path and the policy version</returns>
-	internal static (string, string) GetDriversBlockRules(string StagingArea)
+	/// <returns>the the Microsoft recommended driver block rules base policy</returns>
+	internal static PolicyFileRepresent GetDriversBlockRules()
 	{
 		const string name = "Microsoft Recommended Driver Block Rules";
 
-		// The location where the downloaded zip file will be saved
-		string DownloadSaveLocation = Path.Combine(StagingArea, "VulnerableDriverBlockList.zip");
-
-		// The location where the zip file will be extracted
-		string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
-
 		// Download the zip file
-		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
-		File.WriteAllBytes(DownloadSaveLocation, fileBytes);
+		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL)
+								 .GetAwaiter().GetResult();
 
-		// Extract the contents of the zip file, overwriting any existing files
-		ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
+		// Process the zip file in memory
+		using MemoryStream zipStream = new(fileBytes);
+		using ZipArchive zipArchive = new(zipStream, ZipArchiveMode.Read);
 
-		// Get the path of the XML file
-		string[] SiPolicyPaths = Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.xml", SearchOption.AllDirectories);
+		// Locate the SiPolicy_Enforced.xml file within the zip archive
+		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(entry => entry.Name.Equals("SiPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("SiPolicy_Enforced.xml was not found in the downloaded zip file.");
 
-		// Make sure to get only one file if there is more than one (which is unexpected)
-		string SiPolicyPath = SiPolicyPaths[0];
+		// Load the content of the XML file into an XmlDocument
+		XmlDocument xmlDoc = new();
+		using Stream xmlStream = xmlEntry.Open();
+		xmlDoc.Load(xmlStream);
 
 		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(SiPolicyPath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(null, xmlDoc);
 
 		// Set the policy name
 		PolicySettingsManager.SetPolicyName(policyObj, name);
 
-		string policyVersion = policyObj.VersionEx;
+		// Remove the audit mode rule option from it if it has it
+		policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToRemove: [OptionType.EnabledAuditMode]);
 
-		// Generate the path for the XML file
-		string xmlPath = Path.Combine(StagingArea, $"{name}.xml");
-
-		// Save the XML content to a file
-		SiPolicy.Management.SavePolicyToFile(policyObj, xmlPath);
-
-		CiRuleOptions.Set(filePath: xmlPath, rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode]);
-
-		// The final path where the XML policy file will be located
-		string savePathLocation = Path.Combine(GlobalVars.UserConfigDir, $"{name}.xml");
-
-		// Copy the result to the User Config directory at the end
-		File.Copy(xmlPath, savePathLocation, true);
-
-		Logger.Write(string.Format(
-			  GlobalVars.GetStr("PolicyFileCreatedSavedMessage"),
-			  savePathLocation));
-
-		return (savePathLocation, policyVersion);
+		return new(policyObj);
 	}
-
 
 	/// <summary>
 	/// Creates and deploys an AllowMicrosoft policy based on various configurations and parameters.
 	/// </summary>
-	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
 	/// <param name="IsAudit">Indicates whether the policy should operate in audit mode, affecting logging behavior.</param>
 	/// <param name="LogSize">Sets the size of the log for audit events, defaulting to zero if not specified.</param>
 	/// <param name="deploy">Determines if the policy should be deployed after creation, enabling further actions.</param>
@@ -258,10 +209,10 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="EnableScriptEnforcement">Controls whether script enforcement is enabled within the policy.</param>
 	/// <param name="TestMode">Indicates if the policy should be created in test mode, affecting its execution.</param>
 	/// <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
-	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
+	/// <param name="PolicyIDToUse">Allows the use of a specific ID if provided, overriding the generated one for both PolicyID and BasePolicyID.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
-	/// <returns>Returns the path to the created policy</returns>
-	internal static string BuildAllowMSFT(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	/// <returns>Returns the created policy</returns>
+	internal static PolicyFileRepresent BuildAllowMSFT(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 		string policyName;
 
@@ -276,49 +227,42 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			policyName = "AllowMicrosoft";
 		}
 
-		// Paths only used during staging area processing
-		string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
-		string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
-
-		// Final Policy Path
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
 		// Get/Deploy the block rules if this base policy is not being swapped
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
-			_ = GetBlockRules(StagingArea, deploy);
+			_ = GetBlockRules(deploy);
 
-		File.Copy(GlobalVars.AllowMicrosoftTemplatePolicyPath, tempPolicyPath, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AllowMicrosoftTemplatePolicyPath, null);
 
 		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
-		// Get the policy ID of the policy being created
-		string policyID = SetCiPolicyInfo.Set(
-			tempPolicyPath,
+		// Reset PolicyID and BasePolicyID and set a new name
+		policyObj = SetCiPolicyInfo.Set(
+			policyObj,
 			true,
 			$"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}",
-			null,
 			null);
 
 		if (PolicyIDToUse is not null)
 		{
-			policyID = PolicyIDToUse;
+			policyObj.PolicyID = PolicyIDToUse;
+			policyObj.BasePolicyID = PolicyIDToUse;
 		}
 
 		if (deployAppControlSupplementalPolicy)
 		{
 			// Supply the policy ID of the policy being deployed to this method
-			SupplementalForSelf.Deploy(StagingArea, policyID);
+			SupplementalForSelf.Deploy(policyObj.PolicyID);
 		}
 
 		// Finalize CI policy metadata
-		SetCiPolicyInfo.Set(
-			tempPolicyPath,
+		policyObj = SetCiPolicyInfo.Set(
+			policyObj,
 			new Version("1.0.0.0"),
 			PolicyIDToUse);
 
 		// Apply rule options
-		CiRuleOptions.Set(
-			tempPolicyPath,
+		policyObj = CiRuleOptions.Set(
+			policyObj,
 			template: CiRuleOptions.PolicyTemplate.Base,
 			EnableAuditMode: IsAudit,
 			RequireEVSigners: RequireEVSigners,
@@ -329,28 +273,17 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		{
 			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
-			SiPolicy.Management.ConvertXMLToBinary(
-				tempPolicyPath,
-				null,
-				tempPolicyCIPPath);
-
-			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		File.Copy(tempPolicyPath, finalPolicyPath, true);
-
-		// Assign the created policy path to the Sidebar if condition is met
-		ViewModel.AssignToSidebar(finalPolicyPath);
-
-		return finalPolicyPath;
+		return new(policyObj);
 	}
 
-
 	/// <summary>
-	/// Creates and configures a DefaultWindows policy based on various parameters, handling staging and deployment
+	/// Creates and configures a DefaultWindows policy based on various parameters.
 	/// options.
 	/// </summary>
-	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
 	/// <param name="IsAudit">Indicates whether the policy should operate in audit mode, affecting logging behavior.</param>
 	/// <param name="LogSize">Sets the size limit for the event log if audit mode is enabled.</param>
 	/// <param name="deploy">Determines whether the policy should be deployed after creation.</param>
@@ -358,10 +291,10 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="EnableScriptEnforcement">Controls whether script enforcement is enabled in the policy.</param>
 	/// <param name="TestMode">Indicates if the policy should be created in test mode, affecting its enforcement.</param>
 	/// <param name="deployAppControlSupplementalPolicy">Specifies if a supplemental policy should be deployed alongside the main policy.</param>
-	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID instead of generating a new one.</param>
+	/// <param name="PolicyIDToUse">Allows the use of a specific ID if provided, overriding the generated one for both PolicyID and BasePolicyID.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Indicates whether to retrieve and deploy Microsoft recommended block rules.</param>
-	/// <returns>Returns the path to the created Default Windows base policy</returns>
-	internal static string BuildDefaultWindows(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	/// <returns>Returns the created Default Windows base policy</returns>
+	internal static PolicyFileRepresent BuildDefaultWindows(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 		string policyName;
 
@@ -375,49 +308,42 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			policyName = "DefaultWindows";
 		}
 
-		// Paths only used during staging area processing
-		string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
-		string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
-
-		// Final Policy Path
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
 		// Get/Deploy the block rules if this base policy is not being swapped
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
-			_ = GetBlockRules(StagingArea, deploy);
+			_ = GetBlockRules(deploy);
 
-		File.Copy(GlobalVars.DefaultWindowsTemplatePolicyPath, tempPolicyPath, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.DefaultWindowsTemplatePolicyPath, null);
 
 		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
-		// Get the policy ID of the policy being created
-		string policyID = SetCiPolicyInfo.Set(
-			tempPolicyPath,
+		// Reset PolicyID and BasePolicyID and set a new name
+		policyObj = SetCiPolicyInfo.Set(
+			policyObj,
 			true,
 			$"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}",
-			null,
 			null);
 
 		if (PolicyIDToUse is not null)
 		{
-			policyID = PolicyIDToUse;
+			policyObj.PolicyID = PolicyIDToUse;
+			policyObj.BasePolicyID = PolicyIDToUse;
 		}
 
 		if (deployAppControlSupplementalPolicy)
 		{
 			// Supply the policy ID of the policy being deployed to this method
-			SupplementalForSelf.Deploy(StagingArea, policyID);
+			SupplementalForSelf.Deploy(policyObj.PolicyID);
 		}
 
 		// Finalize CI policy metadata
-		SetCiPolicyInfo.Set(
-			tempPolicyPath,
+		policyObj = SetCiPolicyInfo.Set(
+			policyObj,
 			new Version("1.0.0.0"),
 			PolicyIDToUse);
 
 		// Apply rule options
-		CiRuleOptions.Set(
-			tempPolicyPath,
+		policyObj = CiRuleOptions.Set(
+			policyObj,
 			template: CiRuleOptions.PolicyTemplate.Base,
 			EnableAuditMode: IsAudit,
 			RequireEVSigners: RequireEVSigners,
@@ -428,34 +354,22 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		{
 			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
-			SiPolicy.Management.ConvertXMLToBinary(
-				tempPolicyPath,
-				null,
-				tempPolicyCIPPath);
-
-			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		File.Copy(tempPolicyPath, finalPolicyPath, true);
-
-		// Assign the created policy path to the Sidebar if condition is met
-		ViewModel.AssignToSidebar(finalPolicyPath);
-
-		return finalPolicyPath;
+		return new(policyObj);
 	}
-
 
 	/// <summary>
 	/// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
 	/// It generates a XML file compliant with CI Policies Schema.
 	/// </summary>
-	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
 	/// <param name="deploy">Indicates whether the policy should be deployed after processing.</param>
 	/// <exception cref="InvalidOperationException">Thrown when no XML content is found in the downloaded markdown from the Microsoft GitHub source.</exception>
-	/// <returns>path to the created policy.</returns>
-	internal static string GetBlockRules(string StagingArea, bool deploy)
+	/// <returns>the created policy.</returns>
+	internal static PolicyFileRepresent GetBlockRules(bool deploy)
 	{
-
 		const string policyName = "Microsoft Windows Recommended User Mode BlockList";
 
 		Logger.Write(string.Format(
@@ -476,28 +390,19 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		userModeBlockRulesXML.LoadXml(xmlContent);
 
 		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(
+		SiPolicy.SiPolicy policyObj = Management.Initialize(
 			null,
 			userModeBlockRulesXML);
 
-		// Paths only used during staging area processing
-		string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
-		string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
-
-		// Save the XML content to a file
-		SiPolicy.Management.SavePolicyToFile(policyObj, tempPolicyPath);
-
-		CiRuleOptions.Set(
-			filePath: tempPolicyPath,
-			rulesToAdd: [SiPolicy.OptionType.EnabledUpdatePolicyNoReboot, SiPolicy.OptionType.DisabledScriptEnforcement],
-			rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode, SiPolicy.OptionType.EnabledAdvancedBootOptionsMenu]);
+		policyObj = CiRuleOptions.Set(
+			policyObj: policyObj,
+			rulesToAdd: [OptionType.EnabledUpdatePolicyNoReboot, OptionType.DisabledScriptEnforcement],
+			rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledAdvancedBootOptionsMenu]);
 
 		Logger.Write(GlobalVars.GetStr("AssigningPolicyNameAndResettingPolicyIDMessage"));
 
-		// Get the policyID of the policy being created
-		_ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
-
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+		// Reset PolicyID and BasePolicyID and set a new name
+		policyObj = SetCiPolicyInfo.Set(policyObj, true, policyName, null);
 
 		if (deploy)
 		{
@@ -518,15 +423,15 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			if (CurrentlyDeployedBlockRules.Count > 0)
 			{
 				// Get the ID of the policy
-				string CurrentlyDeployedBlockRulesGUID = CurrentlyDeployedBlockRules.First().PolicyID!;
+				string CurrentlyDeployedBlockRulesGUID = CurrentlyDeployedBlockRules.First().PolicyID;
 
 				Logger.Write(string.Format(
 					GlobalVars.GetStr("PolicyAlreadyDeployedUpdatingUsingSameGuidMessage"),
 					policyName,
 					CurrentlyDeployedBlockRulesGUID));
 
-				// Swap the policyID in the current policy XML file with the one from the deployed policy
-				XMLOps.PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, tempPolicyPath);
+				// Swap the PolicyID and BasePolicyID in the current policy XML file with the one from the deployed policy
+				policyObj = SetCiPolicyInfo.SetPolicyIDs(CurrentlyDeployedBlockRulesGUID, policyObj);
 			}
 			else
 			{
@@ -535,18 +440,12 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 					policyName));
 			}
 
-			// Convert it to CIP
-			SiPolicy.Management.ConvertXMLToBinary(tempPolicyPath, null, tempPolicyCIPPath);
-
-			// Deploy the CIP file
-			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		File.Copy(tempPolicyPath, finalPolicyPath, true);
-
-		return finalPolicyPath;
+		return new(policyObj);
 	}
-
 
 	// Extracts the first <code class="lang-xml">...</code> block, decodes HTML entities and returns the raw XML text ready for XmlDocument.LoadXml.
 	private static string ExtractXmlFromHtml(string content)
@@ -584,7 +483,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// Creates SignedAndReputable App Control policy which is based on AllowMicrosoft template policy.
 	/// It uses ISG to authorize files with good reputation.
 	/// </summary>
-	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
 	/// <param name="IsAudit">Indicates whether the operation should be performed in audit mode.</param>
 	/// <param name="LogSize">Sets the size of the event log for recording actions taken during the process.</param>
 	/// <param name="deploy">Determines if the policy should be deployed after creation.</param>
@@ -592,12 +490,11 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="EnableScriptEnforcement">Controls whether script enforcement is enabled in the policy.</param>
 	/// <param name="TestMode">Indicates if the operation should run in test mode without making permanent changes.</param>
 	/// <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
-	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
+	/// <param name="PolicyIDToUse">Allows the use of a specific ID if provided, overriding the generated one for both PolicyID and BasePolicyID.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to retrieve and deploy Microsoft recommended block rules.</param>
-	/// <returns>Returns the signed and reputable base policy file path</returns>
-	internal static string BuildSignedAndReputable(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	/// <returns>Returns the signed and reputable base policy</returns>
+	internal static async Task<PolicyFileRepresent> BuildSignedAndReputable(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
-
 		string policyName;
 
 		if (IsAudit)
@@ -611,214 +508,157 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			policyName = "SignedAndReputable";
 		}
 
-		// Paths only used during staging area processing
-		string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
-		string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
-
-		// Final policy XML path
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
 		// Get/Deploy the block rules if this base policy is not being swapped
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
-			_ = GetBlockRules(StagingArea, deploy);
+			_ = GetBlockRules(deploy);
 
-		File.Copy(GlobalVars.AllowMicrosoftTemplatePolicyPath, tempPolicyPath, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AllowMicrosoftTemplatePolicyPath, null);
 
-		CiRuleOptions.Set(
-			tempPolicyPath,
+		policyObj = CiRuleOptions.Set(
+			policyObj,
 			template: CiRuleOptions.PolicyTemplate.BaseISG,
 			EnableAuditMode: IsAudit,
 			RequireEVSigners: RequireEVSigners,
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
 
-
 		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
-		// Get the policyID of the policy being created
-		string policyID = SetCiPolicyInfo.Set(
-			tempPolicyPath,
+		// Reset PolicyID and BasePolicyID and set a new name
+		policyObj = SetCiPolicyInfo.Set(
+			policyObj,
 			true,
 			$"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}",
-			null,
 			null);
 
 		if (PolicyIDToUse is not null)
 		{
-			policyID = PolicyIDToUse;
+			policyObj.PolicyID = PolicyIDToUse;
+			policyObj.BasePolicyID = PolicyIDToUse;
 		}
 
 		if (deployAppControlSupplementalPolicy)
 		{
 			// Supply the policy ID of the policy being deployed to this method
-			SupplementalForSelf.Deploy(StagingArea, policyID);
+			SupplementalForSelf.Deploy(policyObj.PolicyID);
 		}
 
-		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"), PolicyIDToUse);
+		policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), PolicyIDToUse);
 
 		if (deploy)
 		{
-			ConfigureISGServices.Configure();
+			await ConfigureISGServices.Configure();
 
 			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
-			SiPolicy.Management.ConvertXMLToBinary(tempPolicyPath, null, tempPolicyCIPPath);
-
-			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		File.Copy(tempPolicyPath, finalPolicyPath, true);
-
-		// Assign the created policy path to the Sidebar if condition is met
-		ViewModel.AssignToSidebar(finalPolicyPath);
-
-		return finalPolicyPath;
+		return new(policyObj);
 	}
-
 
 	/// <summary>
 	/// Creates and deploys the Strict Kernel-mode base policy
 	/// Since this is only Kernel-mode, we don't need to deploy the special AppControl Manager supplemental policy
 	/// </summary>
-	/// <param name="StagingArea">Specifies the directory where the policy file will be created and stored.</param>
 	/// <param name="IsAudit">Indicates whether to add audit mode rules to the policy.</param>
 	/// <param name="NoFlightRoots">Determines the filename variant used for the policy based on flight root settings.</param>
 	/// <param name="deploy">Indicates whether the policy should be deployed after creation.</param>
-	/// <param name="PolicyIDToUse">Specifies an optional policy ID to associate with the created policy.</param>
-	/// <returns>the path to the Strict Kernel-mode base policy path</returns>
-	internal static string BuildStrictKernelMode(string StagingArea, bool IsAudit, bool NoFlightRoots, bool deploy, string? PolicyIDToUse = null)
+	/// <param name="PolicyIDToUse">Allows the use of a specific ID if provided, overriding the generated one for both PolicyID and BasePolicyID.</param>
+	/// <returns>the Strict Kernel-mode base policy</returns>
+	internal static PolicyFileRepresent BuildStrictKernelMode(bool IsAudit, bool NoFlightRoots, bool deploy, string? PolicyIDToUse = null)
 	{
 
 		string fileName = NoFlightRoots ? "StrictKernelMode_NoFlightRoots" : "StrictKernelMode";
 
-		// Path of the policy file in the staging area
-		string policyPath = Path.Combine(StagingArea, $"{fileName}.xml");
-
 		// path of the policy in the app's resources directory
 		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
-		// path of the policy in user configurations directory
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
-
-		// Copy the policy from app's directory to the staging area
-		File.Copy(policyPathInResourcesDir, policyPath, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 
 		if (IsAudit)
 		{
 			// Add the audit mode rule option to the policy
-			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
+			policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
 		}
-
-		string policyID;
 
 		if (PolicyIDToUse is not null)
 		{
-			SetCiPolicyInfo.Set(policyPath, new Version("1.0.0.0"), PolicyIDToUse);
-			policyID = PolicyIDToUse;
+			policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), PolicyIDToUse);
 		}
 		else
 		{
-			// Reset the policy ID
-			policyID = SetCiPolicyInfo.Set(policyPath, true, null, null, null);
+			// Reset PolicyID and BasePolicyID
+			policyObj = SetCiPolicyInfo.Set(policyObj, true, null, null);
 		}
-
-		// Copy the policy to the user configurations directory
-		File.Copy(policyPath, finalPolicyPath, true);
 
 		// If it is to be deployed
 		if (deploy)
 		{
 			Logger.Write(string.Format(
 				GlobalVars.GetStr("DeployingStrictKernelModePolicyMessage"),
-				policyID));
+				policyObj.PolicyID));
 
-			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
-
-			// Convert the XML to CiP
-			SiPolicy.Management.ConvertXMLToBinary(policyPath, null, cipPath);
-
-			// Deploy the CiP file
-			CiToolHelper.UpdatePolicy(cipPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		return finalPolicyPath;
+		return new(policyObj);
 	}
 
 	/// <summary>
 	/// Creates the base policy responsible for blocking a large number of RMMs, Remote Monitoring and Management software.
 	/// </summary>
-	/// <param name="StagingArea"></param>
 	/// <param name="IsAudit"></param>
 	/// <param name="deploy"></param>
 	/// <returns></returns>
-	internal static string BuildRMMBlocking(string StagingArea, bool IsAudit, bool deploy)
+	internal static PolicyFileRepresent BuildRMMBlocking(bool IsAudit, bool deploy)
 	{
-
 		const string fileName = "Blocking RMMs - Remote Monitor and Management";
-
-		// Path of the policy file in the staging area
-		string policyPath = Path.Combine(StagingArea, $"{fileName}.xml");
 
 		// path of the policy in the app's resources directory
 		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
-		// path of the policy in user configurations directory
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
-
-		// Copy the policy from app's directory to the staging area
-		File.Copy(policyPathInResourcesDir, policyPath, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 
 		if (IsAudit)
 		{
 			// Add the audit mode rule option to the policy
-			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
+			policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
 		}
-
-		// Copy the policy to the user configurations directory
-		File.Copy(policyPath, finalPolicyPath, true);
 
 		// If it is to be deployed
 		if (deploy)
 		{
-			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
-
-			// Convert the XML to CiP
-			SiPolicy.Management.ConvertXMLToBinary(policyPath, null, cipPath);
-
-			// Deploy the CiP file
-			CiToolHelper.UpdatePolicy(cipPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		return finalPolicyPath;
+		return new(policyObj);
 	}
 
 	/// <summary>
 	/// Creates the base policy for Downloads Defense Measures.
 	/// </summary>
-	/// <param name="StagingArea"></param>
 	/// <param name="IsAudit"></param>
 	/// <param name="deploy"></param>
-	internal static string BuildDownloadsDefenseMeasures(string StagingArea, bool IsAudit, bool deploy)
+	internal static PolicyFileRepresent BuildDownloadsDefenseMeasures(bool IsAudit, bool deploy)
 	{
-
 		const string fileName = "Downloads-Defense-Measures";
 
 		// GUID for the Downloads folder
 		Guid FolderDownloads = new("374DE290-123F-4565-9164-39C4925E467B");
 
-		// Path of the policy file in the staging area
-		string policyPath = Path.Combine(StagingArea, $"{fileName}.xml");
-
 		// path of the policy in the app's resources directory
 		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
-		// Copy the policy from app's directory to the staging area
-		File.Copy(policyPathInResourcesDir, policyPath, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 
 		if (IsAudit)
 		{
 			// Add the audit mode rule option to the policy
-			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
+			policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
 		}
 
 		IntPtr pathPtr = IntPtr.Zero;
@@ -857,93 +697,49 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 
 		string pathToUse = Path.Combine(downloadsPath, "*");
 
-		XmlDocument doc = new();
-		doc.Load(policyPath);
-
-		XmlNamespaceManager nsmgr = new(doc.NameTable);
-		nsmgr.AddNamespace("sip", "urn:schemas-microsoft-com:sipolicy");
-
-		// Find all 'FileRules/Allow' or 'FileRules/Deny' elements
-		XmlNodeList fileRules = doc.SelectNodes("//sip:FileRules/*[@FilePath]", nsmgr)!;
-
-		foreach (XmlNode node in fileRules)
-		{
-			XmlAttribute filePathAttr = node.Attributes!["FilePath"]!;
-			if (string.Equals(filePathAttr.Value, "To-Be-Detected", StringComparison.OrdinalIgnoreCase))
-			{
-				filePathAttr.Value = pathToUse;
-			}
-		}
-
-		doc.Save(policyPath);
-
-		// path of the policy in user configurations directory
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
-
-		// Copy the policy to the user configurations directory
-		File.Copy(policyPath, finalPolicyPath, true);
+		policyObj.FileRules?.OfType<Deny>().Where(x => string.Equals(x.FilePath, "To-Be-Detected", StringComparison.OrdinalIgnoreCase))
+			.ToList()
+			.ForEach(x => x.FilePath = pathToUse);
 
 		// If it is to be deployed
 		if (deploy)
 		{
-			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
-
-			// Convert the XML to CiP
-			SiPolicy.Management.ConvertXMLToBinary(finalPolicyPath, null, cipPath);
-
-			// Deploy the CiP file
-			CiToolHelper.UpdatePolicy(cipPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		return finalPolicyPath;
+		return new(policyObj);
 	}
 
 	/// <summary>
 	/// Creates the base policy for blocking dangerous script hosts and engines.
 	/// </summary>
-	/// <param name="StagingArea"></param>
 	/// <param name="IsAudit"></param>
 	/// <param name="deploy"></param>
 	/// <returns></returns>
-	internal static string BuildDangerousScriptBlockingPolicy(string StagingArea, bool IsAudit, bool deploy)
+	internal static PolicyFileRepresent BuildDangerousScriptBlockingPolicy(bool IsAudit, bool deploy)
 	{
-
 		const string fileName = "Dangerous-Script-Hosts-Blocking";
-
-		// Path of the policy file in the staging area
-		string policyPath = Path.Combine(StagingArea, $"{fileName}.xml");
 
 		// path of the policy in the app's resources directory
 		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
-		// path of the policy in user configurations directory
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
-
-		// Copy the policy from app's directory to the staging area
-		File.Copy(policyPathInResourcesDir, policyPath, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 
 		if (IsAudit)
 		{
 			// Add the audit mode rule option to the policy
-			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
+			policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
 		}
-
-		// Copy the policy to the user configurations directory
-		File.Copy(policyPath, finalPolicyPath, true);
 
 		// If it is to be deployed
 		if (deploy)
 		{
-			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
-
-			// Convert the XML to CiP
-			SiPolicy.Management.ConvertXMLToBinary(policyPath, null, cipPath);
-
-			// Deploy the CiP file
-			CiToolHelper.UpdatePolicy(cipPath);
+			// Deploy the CIP
+			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
 
-		return finalPolicyPath;
+		return new(policyObj);
 	}
 
 

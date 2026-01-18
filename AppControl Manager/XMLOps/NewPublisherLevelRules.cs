@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
@@ -41,28 +42,21 @@ internal static class NewPublisherLevelRules
 
 		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
 
-		// Get or Initialize lists
-		List<Signer> signers = policyObj.Signers ?? [];
-		List<CiSigner> ciSigners = policyObj.CiSigners ?? [];
+		// Ensure the lists are initialized.
+		policyObj.Signers ??= [];
+		policyObj.CiSigners ??= [];
 
 		// Ensure Scenarios exist
 		SigningScenario umciScenario = EnsureScenario(policyObj, 12);
 		SigningScenario kmciScenario = EnsureScenario(policyObj, 131);
 
-		// Ensure ProductSigners exist
-		umciScenario.ProductSigners ??= new ProductSigners();
-		kmciScenario.ProductSigners ??= new ProductSigners();
-
 		// Ensure AllowedSigners exist
 		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
 		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
 
-		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
-		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
-
-		foreach (PublisherSignerCreator publisherData in publisherSigners)
+		foreach (PublisherSignerCreator publisherData in CollectionsMarshal.AsSpan(publisherSigners))
 		{
-			foreach (CertificateDetailsCreator signerData in publisherData.CertificateDetails)
+			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(publisherData.CertificateDetails))
 			{
 				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string SignerID = $"ID_SIGNER_B_{guid}";
@@ -79,28 +73,21 @@ internal static class NewPublisherLevelRules
 					CertPublisher = new CertPublisher(value: signerData.LeafCertName)
 				};
 
-				signers.Add(newSigner);
+				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
 				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					umciAllowedSigners.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
-					ciSigners.Add(new CiSigner(signerID: SignerID));
+					umciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
+					policyObj.CiSigners.Add(new CiSigner(signerID: SignerID));
 				}
 				// For Kernel-Mode files
 				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					kmciAllowedSigners.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
+					kmciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
 				}
 			}
 		}
-
-		// Update Policy Object
-		policyObj.Signers = signers;
-		policyObj.CiSigners = ciSigners;
-
-		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners;
-		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners;
 
 		return policyObj;
 	}
@@ -122,28 +109,21 @@ internal static class NewPublisherLevelRules
 
 		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
 
-		// Get or Initialize lists
-		List<Signer> signers = policyObj.Signers ?? [];
-		List<CiSigner> ciSigners = policyObj.CiSigners ?? [];
+		// Ensure the lists initialized.
+		policyObj.Signers ??= [];
+		policyObj.CiSigners ??= [];
 
 		// Ensure Scenarios exist
 		SigningScenario umciScenario = EnsureScenario(policyObj, 12);
 		SigningScenario kmciScenario = EnsureScenario(policyObj, 131);
 
-		// Ensure ProductSigners exist
-		umciScenario.ProductSigners ??= new ProductSigners();
-		kmciScenario.ProductSigners ??= new ProductSigners();
-
 		// Ensure DeniedSigners exist
 		umciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners([]);
 		kmciScenario.ProductSigners.DeniedSigners ??= new DeniedSigners([]);
 
-		List<DeniedSigner> umciDeniedSigners = umciScenario.ProductSigners.DeniedSigners.DeniedSigner ?? [];
-		List<DeniedSigner> kmciDeniedSigners = kmciScenario.ProductSigners.DeniedSigners.DeniedSigner ?? [];
-
-		foreach (PublisherSignerCreator publisherData in publisherSigners)
+		foreach (PublisherSignerCreator publisherData in CollectionsMarshal.AsSpan(publisherSigners))
 		{
-			foreach (CertificateDetailsCreator signerData in publisherData.CertificateDetails)
+			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(publisherData.CertificateDetails))
 			{
 				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string SignerID = $"ID_SIGNER_B_{guid}";
@@ -160,28 +140,21 @@ internal static class NewPublisherLevelRules
 					CertPublisher = new CertPublisher(value: signerData.LeafCertName)
 				};
 
-				signers.Add(newSigner);
+				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
 				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
-					umciDeniedSigners.Add(new DeniedSigner(signerId: SignerID, exceptAllowRule: null));
-					ciSigners.Add(new CiSigner(signerID: SignerID));
+					umciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: SignerID, exceptAllowRule: null));
+					policyObj.CiSigners.Add(new CiSigner(signerID: SignerID));
 				}
 				// For Kernel-Mode files
 				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-					kmciDeniedSigners.Add(new DeniedSigner(signerId: SignerID, exceptAllowRule: null));
+					kmciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: SignerID, exceptAllowRule: null));
 				}
 			}
 		}
-
-		// Update Policy Object
-		policyObj.Signers = signers;
-		policyObj.CiSigners = ciSigners;
-
-		umciScenario.ProductSigners.DeniedSigners.DeniedSigner = umciDeniedSigners;
-		kmciScenario.ProductSigners.DeniedSigners.DeniedSigner = kmciDeniedSigners;
 
 		return policyObj;
 	}

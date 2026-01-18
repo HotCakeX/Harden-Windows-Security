@@ -30,7 +30,6 @@ namespace AppControlManager.Others;
 /// <param name="originalFileName"></param>
 /// <param name="packageFamilyName"></param>
 /// <param name="productName"></param>
-/// <param name="fileName"></param>
 /// <param name="authenticodeSHA256"></param>
 /// <param name="authenticodeSHA1"></param>
 /// <param name="siSigningScenario"></param>
@@ -42,7 +41,6 @@ internal sealed class FilePublisherSignerCreator(
 	string? originalFileName,
 	string? packageFamilyName,
 	string? productName,
-	string? fileName,
 	string? authenticodeSHA256,
 	string? authenticodeSHA1,
 	SSType siSigningScenario)
@@ -54,7 +52,6 @@ internal sealed class FilePublisherSignerCreator(
 	internal string? OriginalFileName => originalFileName;
 	internal string? PackageFamilyName => packageFamilyName;
 	internal string? ProductName => productName;
-	internal string? FileName => fileName;
 	internal string? AuthenticodeSHA256 => authenticodeSHA256;
 	internal string? AuthenticodeSHA1 => authenticodeSHA1;
 	internal SSType SiSigningScenario => siSigningScenario;

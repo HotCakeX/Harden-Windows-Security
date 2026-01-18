@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.IncrementalCollection;
 using AppControlManager.IntelGathering;
@@ -246,7 +247,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Main button's event handler for files and folders Deny policy creation
 	/// </summary>
-	internal async void CreateFilesAndFoldersDenyPolicyButton_Click()
+	internal async void CreateFilesAndFoldersDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		FilesAndFoldersSettingsExpanderIsExpanded = true;
 
@@ -368,81 +369,60 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersDenyPolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName, OperationModeComboBoxSelectedIndex is 1);
-
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{filesAndFoldersDenyPolicyName}.xml");
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Deny, OperationModeComboBoxSelectedIndex is 1);
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					// Merge the new Deny policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
+
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_FilesAndFoldersDenyPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
-					// Set policy name and reset the policy ID
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersDenyPolicyName, null, null);
+					// Reset PolicyID and BasePolicyID and set a new name
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, filesAndFoldersDenyPolicyName, null);
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
+					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Base);
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
+					// Assign the new supplemental policy to the local variable
+					_FilesAndFoldersDenyPolicyPath = new(policyObj);
 				}
 
-				_FilesAndFoldersDenyPolicyPath = OutputPath;
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FilesAndFoldersDenyPolicyPath);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the Deny policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1
-					? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip"
-					: $"{filesAndFoldersDenyPolicyName}.cip";
-
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
-
-				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(CIPPath);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FilesAndFoldersDenyPolicyPath.PolicyObj));
 				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
-				}
-
 			});
-
-			// Final check for cancellation after Task.Run completes
-			FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-
 		}
 		catch (Exception ex)
 		{
@@ -476,12 +456,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	{
 		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles.Count > 0)
+		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
-			foreach (string file in selectedFiles)
-			{
-				filesAndFoldersFilePaths.Add(file);
-			}
+			filesAndFoldersFilePaths.Add(file);
 		}
 	}
 
@@ -492,12 +469,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	{
 		List<string> selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedDirectories.Count > 0)
+		foreach (string dir in CollectionsMarshal.AsSpan(selectedDirectories))
 		{
-			foreach (string dir in selectedDirectories)
-			{
-				filesAndFoldersFolderPaths.Add(dir);
-			}
+			filesAndFoldersFolderPaths.Add(dir);
 		}
 	}
 
@@ -515,9 +489,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	internal void FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click() => filesAndFoldersFilePaths.Clear();
 
 	/// <summary>
-	/// Path to the Files and Folders Deny policy XML file
+	/// The final Files and Folders Deny policy that is created.
 	/// </summary>
-	private string? _FilesAndFoldersDenyPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _FilesAndFoldersDenyPolicyPath;
 
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified Deny policy path.
@@ -735,7 +709,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Main button's event handler - Create Deny policy based on PFNs
 	/// </summary>
-	internal async void CreatePFNDenyPolicyButton_Click()
+	internal async void CreatePFNDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		PFNBasedSettingsExpanderIsExpanded = true;
 
@@ -799,75 +773,60 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 			await Task.Run(() =>
 			{
-
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PFNDenyPolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(level: ScanLevels.PFN, packageFamilyNames: selectedAppsPFNs);
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName, OperationModeComboBoxSelectedIndex is 1);
-
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedDenyPolicyName}.xml");
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Deny, OperationModeComboBoxSelectedIndex is 1);
 
 				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					// Merge the new Deny policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
+
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_PFNDenyPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
-					// Set policy name and reset the policy ID
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedDenyPolicyName, null, null);
+					// Reset PolicyID and BasePolicyID and set a new name
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, PFNBasedDenyPolicyName, null);
 
 					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
+					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Base);
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
+					// Assign the new supplemental policy to the local variable
+					_PFNDenyPolicyPath = new(policyObj);
 				}
 
-				_PFNDenyPolicyPath = OutputPath;
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_PFNDenyPolicyPath);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the Deny policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1
-					? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip"
-					: $"{PFNBasedDenyPolicyName}.cip";
-
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
-
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (PFNBasedShouldDeploy)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(CIPPath);
-				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_PFNDenyPolicyPath.PolicyObj));
 				}
 			});
 		}
@@ -877,7 +836,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 		finally
 		{
-
 			if (PFNBasedCancellableButton.wasCancelled)
 			{
 				PFNInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
@@ -898,9 +856,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Path to the PFN Deny policy XML file
+	/// The final PFN Deny policy that is created.
 	/// </summary>
-	private string? _PFNDenyPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _PFNDenyPolicyPath;
 
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified Deny policy path.
@@ -1007,7 +965,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			}
 
 			// Open the folder in File Explorer
-			await OpenInDefaultFileHandler(targetApp.InstallLocation);
+			await OpenFileInDefaultFileHandler(targetApp.InstallLocation);
 
 			PFNInfoBar.WriteInfo($"Opened installation location for {targetApp.DisplayName}");
 		}
@@ -1065,7 +1023,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Event handler for the main button - to create Deny pattern based File path policy
 	/// </summary>
-	internal async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click()
+	internal async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 
 		CustomFilePathRulesSettingsExpanderIsExpanded = true;
@@ -1115,78 +1073,61 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 			await Task.Run(() =>
 			{
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PatternBasedFilePathRuleDenyPolicy");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [DenyPolicyCustomPatternBasedCustomPatternTextBox]);
 
 				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName, OperationModeComboBoxSelectedIndex is 1);
-
-				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.xml");
+				// Create a new SiPolicy object with the data package.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Deny, OperationModeComboBoxSelectedIndex is 1);
 
 				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
-					// Merge the new Deny policy with the user selected policy - user selected policy is the main one in the merge operation
-					Merger.Merge(OutputPath, [EmptyPolicyPath]);
+					// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
+					PolicyFileToMergeWith!.PolicyObj = Merger.Merge(PolicyFileToMergeWith.PolicyObj, [policyObj]);
+
+					// Save the results back to the user-selected policy file if provided.
+					if (PolicyFileToMergeWith.FilePath is not null)
+					{
+						Management.SavePolicyToFile(PolicyFileToMergeWith.PolicyObj, PolicyFileToMergeWith.FilePath);
+					}
+
+					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
+					_CustomPatternBasedFileRuleDenyPolicyPath = PolicyFileToMergeWith;
 				}
 				else
 				{
-					// Set policy name and reset the policy ID
-					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedDenyPolicyName, null, null);
+					// Reset PolicyID and BasePolicyID and set a new name
+					policyObj = SetCiPolicyInfo.Set(policyObj, true, CustomPatternBasedFileRuleBasedDenyPolicyName, null);
 
 					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
+					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Base);
 
 					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
+					// Assign the new supplemental policy to the local variable
+					_CustomPatternBasedFileRuleDenyPolicyPath = new(policyObj);
 				}
 
-				_CustomPatternBasedFileRuleDenyPolicyPath = OutputPath;
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_CustomPatternBasedFileRuleDenyPolicyPath);
 
-				// Use the name of the user selected file for CIP file name, otherwise use the name of the Deny policy provided by the user
-				string CIPName = OperationModeComboBoxSelectedIndex is 1
-					? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip"
-					: $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.cip";
-
-				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
-
-				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
-
-				// Convert the XML file to CIP and save it in the defined path
-				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(CIPPath);
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_CustomPatternBasedFileRuleDenyPolicyPath.PolicyObj));
 				}
-				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
-				else
-				{
-					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
-					File.Copy(CIPPath, finalCIPPath, true);
-				}
-
 			});
 		}
 		catch (Exception ex)
@@ -1236,9 +1177,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Path to the CustomPatternBasedFileRule Deny policy XML file
+	/// The final CustomPatternBasedFileRule Deny policy that is created.
 	/// </summary>
-	private string? _CustomPatternBasedFileRuleDenyPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _CustomPatternBasedFileRuleDenyPolicyPath;
 
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified Deny policy path.
@@ -1251,10 +1192,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 	#region Policy Creation Mode
 
+	internal Visibility PolicyFileToMergeWithLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
 	/// <summary>
-	/// The path to the policy file that user selected to add the new rules to.
+	/// The policy that user selected to add the new rules to.
 	/// </summary>
-	internal string? PolicyFileToMergeWith { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? PolicyFileToMergeWith { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Whether the button that allows for picking a policy file to add the rules to is enabled or disabled.
@@ -1292,19 +1235,27 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Clears the PolicyFileToMergeWith
 	/// </summary>
-	internal void ClearPolicyFileToMergeWith()
-	{
-		PolicyFileToMergeWith = null;
-	}
+	internal void ClearPolicyFileToMergeWith() => PolicyFileToMergeWith = null;
 
-	internal void PolicyFileToMergeWithButton_Click()
+	internal async void PolicyFileToMergeWithButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			PolicyFileToMergeWith = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				await Task.Run(() =>
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(selectedFile, null);
+
+					PolicyFileToMergeWith = new(policyObj) { FilePath = selectedFile };
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			FilesAndFoldersInfoBar.WriteError(ex);
 		}
 	}
 

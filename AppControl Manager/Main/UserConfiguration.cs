@@ -21,26 +21,20 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AppControlManager.IntelGathering;
-using AppControlManager.Others;
 
 namespace AppControlManager.Main;
 
-// This is to ensure the Serialize method works when trimming is enabled
-// Using source-generated context improves performance
-// Embeds the WriteIndented = true configuration into the generated metadata. This means the resulting JSON will be formatted with indentation.
+// WriteIndented = true means the resulting JSON will be formatted with indentation.
 [JsonSerializable(typeof(UserConfiguration), GenerationMode = JsonSourceGenerationMode.Serialization)]
 [JsonSourceGenerationOptions(WriteIndented = true)]
 internal sealed partial class UserConfigurationContext : JsonSerializerContext
 {
 }
 
-
 // Represents an instance of the User configurations JSON settings file
 // Maintains the order of the properties when writing to the JSON file
 // Includes the methods for interacting with user configurations JSON file
 internal sealed partial class UserConfiguration(
-		string? signedPolicyPath,
-		string? unsignedPolicyPath,
 		string? certificateCommonName,
 		string? certificatePath,
 		Guid? strictKernelPolicyGUID,
@@ -48,12 +42,6 @@ internal sealed partial class UserConfiguration(
 		Dictionary<string, DateTime>? signedPolicyStage1RemovalTimes = null
 	)
 {
-	[JsonInclude]
-	internal string? SignedPolicyPath { get; set; } = signedPolicyPath;
-
-	[JsonInclude]
-	internal string? UnsignedPolicyPath { get; set; } = unsignedPolicyPath;
-
 	[JsonInclude]
 	internal string? CertificateCommonName { get; set; } = certificateCommonName;
 
@@ -74,8 +62,6 @@ internal sealed partial class UserConfiguration(
 	/// Sets user configuration settings to the JSON file
 	/// By default all params are null, so use named parameters when calling this method for easy invocation
 	/// </summary>
-	/// <param name="SignedPolicyPath"></param>
-	/// <param name="UnsignedPolicyPath"></param>
 	/// <param name="CertificateCommonName"></param>
 	/// <param name="CertificatePath"></param>
 	/// <param name="StrictKernelPolicyGUID"></param>
@@ -84,8 +70,6 @@ internal sealed partial class UserConfiguration(
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static UserConfiguration Set(
-	string? SignedPolicyPath = null,
-	string? UnsignedPolicyPath = null,
 	string? CertificateCommonName = null,
 	string? CertificatePath = null,
 	Guid? StrictKernelPolicyGUID = null,
@@ -108,36 +92,10 @@ internal sealed partial class UserConfiguration(
 			}
 		}
 
-		// Validate the SignedPolicyPath parameter
-		if (!string.IsNullOrWhiteSpace(SignedPolicyPath))
-		{
-			if (PolicyFileSigningStatusDetection.Check(SignedPolicyPath) is not SignatureStatus.IsSigned)
-			{
-				throw new InvalidOperationException(
-					string.Format(
-						GlobalVars.GetStr("PolicyFileNotSignedErrorMessage"),
-						SignedPolicyPath));
-			}
-		}
-
-		// Validate the UnsignedPolicyPath parameter
-		if (!string.IsNullOrWhiteSpace(UnsignedPolicyPath))
-		{
-			if (PolicyFileSigningStatusDetection.Check(UnsignedPolicyPath) is SignatureStatus.IsSigned)
-			{
-				throw new InvalidOperationException(
-					string.Format(
-						GlobalVars.GetStr("PolicyFileSignedErrorMessage"),
-						UnsignedPolicyPath));
-			}
-		}
-
 		Logger.Write(GlobalVars.GetStr("ReadingUserConfigurationsFileMessage"));
 		UserConfiguration UserConfiguration = ReadUserConfiguration();
 
 		// Modify the properties based on the input
-		if (!string.IsNullOrWhiteSpace(SignedPolicyPath)) UserConfiguration.SignedPolicyPath = SignedPolicyPath;
-		if (!string.IsNullOrWhiteSpace(UnsignedPolicyPath)) UserConfiguration.UnsignedPolicyPath = UnsignedPolicyPath;
 		if (!string.IsNullOrWhiteSpace(CertificateCommonName)) UserConfiguration.CertificateCommonName = CertificateCommonName;
 		if (!string.IsNullOrWhiteSpace(CertificatePath)) UserConfiguration.CertificatePath = CertificatePath;
 		if (StrictKernelPolicyGUID.HasValue) UserConfiguration.StrictKernelPolicyGUID = StrictKernelPolicyGUID;
@@ -154,32 +112,21 @@ internal sealed partial class UserConfiguration(
 		return UserConfiguration;
 	}
 
-
 	/// <summary>
 	/// Gets the current user configuration settings from the JSON file and return them
 	/// </summary>
 	/// <returns></returns>
-	internal static UserConfiguration Get()
-	{
-		// Read the current configuration
-		UserConfiguration currentConfig = ReadUserConfiguration();
-		return currentConfig;
-	}
-
+	internal static UserConfiguration Get() => ReadUserConfiguration();
 
 	/// <summary>
 	/// Removes the user configurations from the JSON file one by one using the provided parameters
 	/// </summary>
-	/// <param name="SignedPolicyPath"></param>
-	/// <param name="UnsignedPolicyPath"></param>
 	/// <param name="CertificateCommonName"></param>
 	/// <param name="CertificatePath"></param>
 	/// <param name="StrictKernelPolicyGUID"></param>
 	/// <param name="AutoUpdateCheck"></param>
 	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	internal static void Remove(
-	bool SignedPolicyPath = false,
-	bool UnsignedPolicyPath = false,
 	bool CertificateCommonName = false,
 	bool CertificatePath = false,
 	bool StrictKernelPolicyGUID = false,
@@ -191,8 +138,6 @@ internal sealed partial class UserConfiguration(
 		UserConfiguration currentConfig = ReadUserConfiguration();
 
 		// Remove properties by setting them to null based on the specified flags
-		if (SignedPolicyPath) currentConfig.SignedPolicyPath = null;
-		if (UnsignedPolicyPath) currentConfig.UnsignedPolicyPath = null;
 		if (CertificateCommonName) currentConfig.CertificateCommonName = null;
 		if (CertificatePath) currentConfig.CertificatePath = null;
 		if (StrictKernelPolicyGUID) currentConfig.StrictKernelPolicyGUID = null;
@@ -204,7 +149,6 @@ internal sealed partial class UserConfiguration(
 
 		Logger.Write(GlobalVars.GetStr("SpecifiedPropertiesRemovedAndSetToNullMessage"));
 	}
-
 
 	private static UserConfiguration ReadUserConfiguration()
 	{
@@ -237,7 +181,7 @@ internal sealed partial class UserConfiguration(
 				ex.Message));
 
 			// Create a new configuration with default values and write it to the file
-			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null);
+			UserConfiguration defaultConfig = new(null, null, null, null, null);
 			WriteUserConfiguration(defaultConfig);
 
 			return defaultConfig;
@@ -255,8 +199,6 @@ internal sealed partial class UserConfiguration(
 		JsonElement root = doc.RootElement;
 
 		return new UserConfiguration(
-			TryGetStringProperty(root, nameof(SignedPolicyPath)),
-			TryGetStringProperty(root, nameof(UnsignedPolicyPath)),
 			TryGetStringProperty(root, nameof(CertificateCommonName)),
 			TryGetStringProperty(root, nameof(CertificatePath)),
 			TryGetGuidProperty(root, nameof(StrictKernelPolicyGUID)),
@@ -313,9 +255,7 @@ internal sealed partial class UserConfiguration(
 				return null;
 			}
 		}
-
 	}
-
 
 	/// <summary>
 	/// Writes the UserConfiguration object to the JSON file
@@ -329,7 +269,6 @@ internal sealed partial class UserConfiguration(
 		File.WriteAllText(GlobalVars.UserConfigJson, jsonString);
 		Logger.Write(GlobalVars.GetStr("UserConfigurationsFileUpdatedSuccessfullyMessage"));
 	}
-
 
 	/// <summary>
 	/// Adds a new key-value pair to the SignedPolicyStage1RemovalTimes dictionary.
@@ -356,7 +295,6 @@ internal sealed partial class UserConfiguration(
 			value));
 	}
 
-
 	/// <summary>
 	/// Queries the SignedPolicyStage1RemovalTimes dictionary by key and returns the corresponding value.
 	/// </summary>
@@ -376,7 +314,6 @@ internal sealed partial class UserConfiguration(
 		// Return null if the key doesn't exist
 		return null;
 	}
-
 
 	/// <summary>
 	/// Removes a key-value pair from the SignedPolicyStage1RemovalTimes dictionary by key.

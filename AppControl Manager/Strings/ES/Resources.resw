@@ -226,7 +226,7 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>Registros</value>
   </data>
-  <data name="SettingsNavItem.Content" xml:space="preserve">
+  <data name="SettingsNavItemContent" xml:space="preserve">
     <value>Configuración</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -922,12 +922,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
     <value>Implementando la directiva principal después de la fusión.</value>
   </data>
-  <data name="MergePolicies_StagingAreaName" xml:space="preserve">
-    <value>FusionadorDeDirectivas</value>
-  </data>
-  <data name="MergePolicies_MergedPolicyFileName" xml:space="preserve">
-    <value>DirectivaFusionada.cip</value>
-  </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
     <value>Ocurrió un error durante el proceso de fusión</value>
   </data>
@@ -936,9 +930,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>Buscando actualización</value>
-  </data>
-  <data name="InstallingCustomPath" xml:space="preserve">
-    <value>Instalando la ruta del MSIXBundle que seleccionó: </value>
   </data>
   <data name="VersionComparison" xml:space="preserve">
     <value>La versión actual es </value>
@@ -954,9 +945,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
     <value>El paquete MSIXBundle de AppControl Manager se ha descargado correctamente en </value>
-  </data>
-  <data name="NoMSIXBundlePath" xml:space="preserve">
-    <value>No se seleccionó ninguna ruta de MSIXBundle</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Todas las descargas finalizaron, instalando la nueva versión de AppControl Manager</value>
@@ -1967,73 +1955,73 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Seleccione una plantilla para aplicar al archivo de directiva seleccionado. Las plantillas son listas predefinidas de opciones de regla de directiva.</value>
   </data>
-  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreatePolicyPageTitle" xml:space="preserve">
     <value>Crear directivas de App Control for Business basadas en diferentes plantillas y opciones de regla de directiva. Firmado y de Buena Reputación es ideal para nuevos usuarios. Permitir Solo Microsoft solo permite archivos firmados por certificados de Microsoft. Windows Predeterminado solo permite archivos que vienen por defecto con el SO Windows.</value>
   </data>
-  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyPageTitle" xml:space="preserve">
     <value>Crear una directiva Suplementaria que ampliará el alcance de una directiva base. Las directivas suplementarias solo pueden permitir archivos, no pueden tener reglas de denegación en ellas.</value>
   </data>
-  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Ver los archivos detectados que se utilizaron para crear la directiva Suplementaria.</value>
   </data>
-  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+  <data name="DeploymentPageTitle" xml:space="preserve">
     <value>Implementar cualquier tipo de Directiva de App Control localmente o remotamente en las PC administradas en la nube.</value>
   </data>
-  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="EventLogsPolicyCreationPageTitle" xml:space="preserve">
     <value>Aproveche los registros del sistema local o los archivos de registro EVTX para crear Directivas de Control de Aplicaciones. Solo se requieren registros Operacionales de Integridad de Código y AppLocker. Use el botón Escanear para poblar la cuadrícula de datos. Una vez poblada, use el botón Crear Directiva para definir la configuración de salida y generar el archivo de directiva XML.</value>
   </data>
-  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+  <data name="GetCIHashesPageTitle" xml:space="preserve">
     <value>Calcular la Integridad de Código y otros tipos de hashes de archivos.</value>
   </data>
-  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+  <data name="GetSecurePolicySettingsPageTitle" xml:space="preserve">
     <value>Recuperar y consultar las Configuraciones Seguras en el sistema.</value>
   </data>
   <data name="LogsPageTitle" xml:space="preserve">
     <value>Los siguientes son los registros que AppControl Manager genera y almacena automáticamente en la carpeta "AppControl Manager" en Archivos de Programa (si se ejecuta con privilegios elevados, de lo contrario se guardarán en el directorio TEMP). El tamaño total de la carpeta de registros nunca excederá 1 GB.</value>
   </data>
-  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+  <data name="MDEAHPolicyCreationPageTitle" xml:space="preserve">
     <value>Aproveche los registros de Búsqueda Avanzada de Microsoft Defender para Endpoint para crear Directivas de Control de Aplicaciones. Puede buscar archivos de registro exportados o recuperarlos de la nube iniciando sesión en su cuenta de Microsoft.</value>
   </data>
-  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+  <data name="MergePoliciesPageTitle" xml:space="preserve">
     <value>Fusionar directivas de App Control for Business y deduplicarlas. Puede seleccionar la misma directiva dos veces para deduplicar sus reglas.</value>
   </data>
-  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="PolicyEditorPageTitle" xml:space="preserve">
     <value>Editar Directivas de App Control for Business. Busque fácilmente un archivo XML de directiva y cargue sus detalles usando el botón Cargar. Una vez cargado, puede revisar el número de cada regla dentro de la directiva, eliminar reglas específicas y modificar varias otras configuraciones de directiva.</value>
   </data>
-  <data name="SettingsPageTitle.Text" xml:space="preserve">
+  <data name="SettingsPageTitle" xml:space="preserve">
     <value>Personalice la configuración de su aplicación aquí. Sus preferencias se guardarán para que estén listas cada vez que inicie AppControl Manager.</value>
   </data>
-  <data name="SimulationPageTitle.Text" xml:space="preserve">
+  <data name="SimulationPageTitle" xml:space="preserve">
     <value>Realice una Simulación de App Control for Business seleccionando archivos o carpetas, y un archivo de directiva XML, luego use el botón Iniciar Simulación para poblar la cuadrícula de datos. Los resultados le mostrarán si los archivos seleccionados serían permitidos o bloqueados por su directiva de App Control si realmente estuviera implementada en un sistema y esos archivos se estuvieran ejecutando.</value>
   </data>
-  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="StrictKernelModePolicyScanResultsPageTitle" xml:space="preserve">
     <value>Ver los archivos de modo Kernel detectados que se utilizarán para crear la directiva en modo forzado. Elimine de la lista los elementos que no desea que se incluyan en la directiva final de modo Kernel Estricto.</value>
   </data>
   <data name="UpdatePageTitle" xml:space="preserve">
     <value>Busque actualizaciones en esta página. También puede habilitar la verificación automática de actualizaciones que ocurrirá una vez al iniciar y se le notificará cada vez que haya una nueva versión disponible.</value>
   </data>
-  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+  <data name="ValidatePolicyPageTitle" xml:space="preserve">
     <value>Valide las Directivas de App Control para asegurarse de que cumplen con el esquema oficial. Si modificó manualmente los archivos de directiva XML y desea asegurarse de que sus modificaciones son correctas, utilice esta función para validarlas.</value>
   </data>
-  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+  <data name="ViewFileCertificatesPageTitle" xml:space="preserve">
     <value>Ver información completa sobre los certificados utilizados para firmar cualquier archivo. Los detalles que normalmente no están disponibles en las propiedades del Explorador de Archivos o en los cmdlets de PowerShell se presentan aquí en su totalidad.</value>
   </data>
-  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" xml:space="preserve">
     <value>Ver los archivos detectados que se utilizaron para crear la directiva de Denegación.</value>
   </data>
-  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+  <data name="CreateDenyPolicyPageTitle" xml:space="preserve">
     <value>Crear una directiva Base de Denegación que denegará explícitamente archivos o aplicaciones. Tenga en cuenta que el Control de Aplicaciones se basa fundamentalmente en listas blancas, lo que significa que todo lo que no esté permitido por una directiva ya está automáticamente denegado.</value>
   </data>
-  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+  <data name="ConfigurePolicyRuleOptionsPageTitle" xml:space="preserve">
     <value>Configurar las opciones de regla de directiva de App Control for Business. Se proporciona información detallada junto a cada regla y puede usar el botón Guía o abrir una discusión en GitHub si necesita más información.</value>
   </data>
-  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+  <data name="BuildNewCertificatePageTitle" xml:space="preserve">
     <value>Construya de forma segura Certificados de Firma de Código que sean adecuados para firmar directivas de App Control.</value>
   </data>
-  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+  <data name="SystemInformationPageTitle" xml:space="preserve">
     <value>Ver información detallada sobre las directivas Implementadas y la Integridad de Código en los sistemas locales o remotos.</value>
   </data>
-  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+  <data name="AllowNewAppsPageTitle" xml:space="preserve">
     <value>Utilice esta página para Permitir que aplicaciones o archivos nuevos o ya instalados se ejecuten en el sistema.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
@@ -2378,18 +2366,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Buscar entre los datos de detalles del certificado</value>
   </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>Confirme que desea utilizar el archivo MSIXBundle personalizado seleccionado en lugar de descargarlo automáticamente desde GitHub. Esto anulará la comprobación de actualizaciones en línea y omitirá la descarga del archivo MSIXBundle desde GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>Confirmar</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Confirme que desea utilizar el archivo MSIXBundle personalizado seleccionado en lugar de descargarlo automáticamente desde GitHub. Esto anulará la comprobación de actualizaciones en línea y omitirá la descarga del archivo MSIXBundle desde GitHub.</value>
-  </data>
-  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Confirme que desea utilizar el archivo MSIXBundle personalizado seleccionado en lugar de descargarlo automáticamente desde GitHub. Esto anulará la comprobación de actualizaciones en línea y omitirá la descarga del archivo MSIXBundle desde GitHub.</value>
-  </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>Más información</value>
   </data>
@@ -2506,12 +2482,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Recuperará las últimas configuraciones del usuario y las mostrará.</value>
-  </data>
-  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Ruta de la Directiva Firmada:</value>
-  </data>
-  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
-    <value>Ruta de la Directiva Sin Firmar:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Nombre Común del Certificado:</value>
@@ -2902,18 +2872,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Documentación</value>
   </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
-    <value>Asignación Automática</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
-    <value>Guardar automáticamente la ruta a las directivas base que cree en la Barra Lateral.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Guardar automáticamente la ruta a las directivas base que cree en la Barra Lateral.</value>
-  </data>
-  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Guardar automáticamente la ruta a las directivas base que cree en la Barra Lateral.</value>
-  </data>
   <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
     <value>Guía de la Barra Lateral</value>
   </data>
@@ -2923,50 +2881,11 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Para obtener la guía de uso de la Barra Lateral, visite la página wiki de GitHub haciendo clic/tocando aquí.</value>
   </data>
-  <data name="SelectTextBlock.Text" xml:space="preserve">
-    <value>Seleccionar</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Asignar el archivo de directiva XML seleccionado en la barra lateral a la ruta de la directiva base de la sección aplicable en la página actualmente visible.</value>
-  </data>
-  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Asignar el archivo de directiva XML seleccionado en la barra lateral a la ruta de la directiva base de la sección aplicable en la página actualmente visible.</value>
-  </data>
-  <data name="ClearTextBlock.Text" xml:space="preserve">
-    <value>Limpiar</value>
-  </data>
-  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Limpiar el cuadro de texto de la ruta del archivo XML seleccionado.</value>
-  </data>
-  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Limpiar el cuadro de texto de la ruta del archivo XML seleccionado.</value>
-  </data>
-  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Buscar un archivo de directiva XML</value>
-  </data>
-  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Buscar un archivo de directiva XML</value>
-  </data>
-  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>Utilice la barra lateral para anclar rutas de archivos XML y reutilizarlas en diferentes partes de AppControl Manager.</value>
-  </data>
-  <data name="SidebarTextBlock.Text" xml:space="preserve">
-    <value>Barra Lateral</value>
-  </data>
-  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
-    <value>Ruta de Directiva Anclada</value>
-  </data>
-  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Ruta de Directiva</value>
-  </data>
   <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
     <value>Necesita seleccionar un nombre para la Directiva Suplementaria</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
     <value>Necesita seleccionar una ruta de archivo de directiva XML</value>
-  </data>
-  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>La ruta del archivo XML seleccionado no existe</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>Iniciando...</value>
@@ -3003,9 +2922,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
     <value>No se pudo encontrar el archivo CIP del modo Forzado</value>
-  </data>
-  <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>Buscar un archivo de directiva XML de App Control</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>Realizando Validación</value>
@@ -3216,10 +3132,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>La propiedad 'Id' de AppManifest es requerida y no puede ser nula o vacía.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>El array SettingDefinition contiene un elemento nulo.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
     <value>La propiedad 'Name' de SettingDefinition es requerida y no puede ser nula o vacía.</value>
     <comment>App Manifest Validation</comment>
@@ -3397,9 +3309,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>Debe seleccionar una opción de la lista de creación de directivas</value>
-  </data>
-  <data name="DefaultPolicyNameFormat" xml:space="preserve">
-    <value>Directiva suplementaria de registros de eventos - {0}</value>
   </data>
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>No se seleccionó ningún archivo de directiva para agregarle los registros.</value>
@@ -3620,9 +3529,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>El archivo de certificado y el nombre común seleccionados no coinciden.</value>
   </data>
-  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>Por favor, seleccione el archivo de directiva XML de la directiva que se está eliminando.</value>
-  </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
     <value>La ruta del archivo de directiva XML seleccionado no existe</value>
   </data>
@@ -3734,9 +3640,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
     <value>Ocurrió un error al recuperar información adicional relacionada con las reglas de bloqueo de controladores recomendadas por Microsoft.</value>
   </data>
-  <data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
-    <value>El archivo de directiva se creó y guardó en {0}</value>
-  </data>
   <data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
     <value>Restableciendo el ID de la directiva y asignando el nombre de la directiva</value>
   </data>
@@ -3764,9 +3667,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
     <value>No se encontró contenido XML en el código fuente de Microsoft GitHub para las Reglas de Bloqueo de Modo Usuario Recomendadas por Microsoft.</value>
   </data>
-  <data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
-    <value>Configurando las opciones de regla de directiva para: {0}</value>
-  </data>
   <data name="AddingRuleOptionMessage" xml:space="preserve">
     <value>Agregando Opción de Regla: {0}</value>
   </data>
@@ -3778,12 +3678,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
     <data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
     <value>{0} no pertenece a un CN de sujeto de ninguno de los certificados implementados</value>
-  </data>
-  <data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
-    <value>El archivo de directiva especificado '{0}' no está firmado. Proporcione un archivo de directiva firmado.</value>
-  </data>
-  <data name="PolicyFileSignedErrorMessage" xml:space="preserve">
-    <value>El archivo de directiva especificado '{0}' está firmado. Proporcione un archivo de directiva Sin Firmar.</value>
   </data>
   <data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
     <value>Intentando analizar y leer el archivo de configuraciones del usuario actual</value>
@@ -3938,36 +3832,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
     <value>La ejecución del comando falló con el código de error {0}. Salida: {1}</value>
   </data>
-  <data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
-    <value>CipPath no puede ser nulo o vacío.</value>
-  </data>
-  <data name="CipFileNotFoundMessage" xml:space="preserve">
-    <value>El archivo '{0}' no existe.</value>
-  </data>
-  <data name="DeployingCipFileMessage" xml:space="preserve">
-    <value>Implementando el siguiente archivo CIP: {0}</value>
-  </data>
-  <data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
-    <value>Estructura XML inválida, no se encontró el nodo SiPolicy</value>
-  </data>
-  <data name="SignersNodeNotFoundMessage" xml:space="preserve">
-    <value>No se encontró el nodo Signers</value>
-  </data>
-  <data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Error al crear o recuperar UMCI_ProductSignersNode</value>
-  </data>
-  <data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
-    <value>Error al crear o recuperar KMCI_ProductSignersNode</value>
-  </data>
-  <data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>No se encontró el nodo AllowedSigners de {0} Product Signers a pesar de haberlo creado.</value>
-  </data>
-  <data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>No se encontró el nodo FileRulesRef de {0} Product Signers a pesar de haberlo creado.</value>
-  </data>
-  <data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
-    <value>No se encontró el nodo DeniedSigners de {0} Product Signers a pesar de haberlo creado.</value>
-  </data>
   <data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
     <value>Hubo un problema al ejecutar CiTool.exe.</value>
   </data>
@@ -4031,7 +3895,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
     <value>Debe seleccionar una opción de la lista de creación de directivas.</value>
   </data>
-  <data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+  <data name="DefaultSupplementalPolicyNameFormatMDEAH" xml:space="preserve">
     <value>Directiva suplementaria de registros de Búsqueda Avanzada de MDE - {0}</value>
   </data>
   <data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
@@ -4316,9 +4180,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 <data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
   <value>No hay registros ni archivos en ninguna cuadrícula de datos para crear una directiva Suplementaria.</value>
 </data>
-<data name="StagingAreaNotFound" xml:space="preserve">
-  <value>No se encontró el Área de preparación</value>
-</data>
 <data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
   <value>Se creó e implementó correctamente la directiva.</value>
 </data>
@@ -4402,9 +4263,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
   <value>Se esperaba la etiqueta de bloque V8 '8', se obtuvo '{0}'.</value>
-</data>
-<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
-  <value>Se esperaba la etiqueta de fin de directiva '{0}', se obtuvo '{1}'.</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>El tipo de directiva es {0} y tiene la opción de regla {1} que no es válida. Solo {2} puede tenerla.</value>
@@ -4658,9 +4516,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 <data name="CertificateMustHavePrivateKey" xml:space="preserve">
   <value>El certificado debe tener una clave privada.</value>
 </data>
-<data name="PKCS7SignatureWritten" xml:space="preserve">
-  <value>Firma PKCS #7 (contenido incrustado, certificado incluido) escrita en {0}</value>
-</data>
 <data name="SignerSignEx3Failed" xml:space="preserve">
   <value>SignerSignEx3 falló con HRESULT: 0x{0:X}</value>
 </data>
@@ -4687,9 +4542,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
   <value>La aplicación se inició mediante activación de archivo pero sin argumentos de activación de archivo</value>
-</data>
-<data name="UserCanceledUACMessage" xml:space="preserve">
-  <value>El usuario canceló la solicitud de UAC.</value>
 </data>
 <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
   <value>Se requería elevación para procesar el archivo seleccionado pero fue denegada por el usuario. Saliendo de la aplicación.</value>
@@ -4729,12 +4581,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
   <value>El archivo de directiva XML seleccionado es una directiva base, pero su BasePolicyID y PolicyID no son idénticos, lo que indica que es una directiva complementaria; se cambiará el tipo.</value>
-</data>
-<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
-  <value>Se configuró correctamente la directiva en '{0}'. Ahora tiene el Tipo '{1}', BasePolicyID '{2}' y PolicyID '{3}'.</value>
-</data>
-<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
-  <value>Se estableció correctamente la versión del archivo de directiva en '{0}' de '{1}' a '{2}'.</value>
 </data>
 <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: Iniciando el proceso de separación de datos.</value>
@@ -4831,9 +4677,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="DuplicateSignerIdMessage" xml:space="preserve">
   <value>Uno de los archivos XML tiene más de 1 Firmante con el mismo ID `{0}`</value>
-</data>
-<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
-  <value>Se estableció correctamente HVCI en el archivo de directiva '{0}' como Estricto.</value>
 </data>
 <data name="JumpListNotSupportedMessage" xml:space="preserve">
   <value>JumpList no es compatible.</value>
@@ -5300,10 +5143,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
     <value>no se detectaron firmantes WHQLFilePublisher para crear reglas de autorización.</value>
   </data>
-    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
-    <value>Nodo EKUs no encontrado</value>
-  </data>
-  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>no se detectaron firmantes WHQLFilePublisher para crear reglas de denegación.</value>
   </data>
   <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
@@ -5571,14 +5411,8 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Hora de creación</value>
   </data>
   <!-- End Of For Intune Groups ListView - Buttons -->
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <data name="IntuneDeploymentDetailsNavItemContent" xml:space="preserve">
     <value>Detalles de implementación de la política de Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Especifique los detalles de una implementación de política de Intune</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Especifique los detalles de una implementación de política de Intune</value>
   </data>
   <data name="CreateGroupButton.Content" xml:space="preserve">
     <value>Crear nuevo grupo</value>
@@ -5634,7 +5468,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 <data name="GroupType" xml:space="preserve">
   <value>Tipo de grupo:</value>
 </data>
-<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+<data name="IntuneDeploymentDetailsPageTitle" xml:space="preserve">
   <value>Administre los grupos de Entra en su inquilino y seleccione los grupos a los que desea implementar la política.</value>
 </data>
 <data name="SelectedGroups.Text" xml:space="preserve">
@@ -6374,5 +6208,329 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Solo pedir confirmación antes de cerrar la aplicación bajo ciertas circunstancias cuando haya una operación en curso.</value>
+  </data>
+    <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
+    <value>Aún hay directivas sin guardar en la biblioteca de la barra lateral; se perderán si cierra la aplicación. ¿Está seguro de que desea salir?</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Esta es la biblioteca de sus directivas de control de aplicaciones, donde puede almacenar directivas y utilizarlas en diferentes partes de la aplicación. Solo están disponibles en memoria a menos que las guarde en un archivo o que la persistencia esté habilitada.</value>
+  </data>
+  <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
+    <value>Biblioteca de directivas</value>
+  </data>
+   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+    <value>Biblioteca persistente</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
+    <value>Cuando está habilitada, todas las directivas disponibles en la biblioteca seguirán ahí incluso después de reiniciar la aplicación. Esta funcionalidad se proporciona manteniendo una copia de las directivas de la biblioteca en una caché privada en el disco. La caché se elimina automáticamente cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cuando está habilitada, todas las directivas disponibles en la biblioteca seguirán ahí incluso después de reiniciar la aplicación. Esta funcionalidad se proporciona manteniendo una copia de las directivas de la biblioteca en una ubicación privada en el disco. La caché se elimina automáticamente cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cuando está habilitada, todas las directivas disponibles en la biblioteca seguirán ahí incluso después de reiniciar la aplicación. Esta funcionalidad se proporciona manteniendo una copia de las directivas de la biblioteca en una ubicación privada en el disco. La caché se elimina automáticamente cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Guardar como CIP</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo CIP.</value>
+  </data>
+  <data name="SaveAsCIPMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo CIP.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Guardar como XML</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo XML.</value>
+  </data>
+  <data name="SaveAsXMLMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija una ubicación donde la directiva seleccionada se guardará como un archivo XML.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar la directiva de la biblioteca. Si la característica de biblioteca persistente está habilitada, la directiva seleccionada también se eliminará de la caché local.</value>
+  </data>
+  <data name="RemovePolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quitar la directiva de la biblioteca. Si la característica de biblioteca persistente está habilitada, la directiva seleccionada también se eliminará de la caché local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.Text" xml:space="preserve">
+    <value>Implementar</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Implementa la directiva seleccionada en el sistema local.</value>
+  </data>
+  <data name="DeployPolicyFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Implementa la directiva seleccionada en el sistema local.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Asignar</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Asignar la directiva seleccionada en la biblioteca a varias secciones aplicables en la página visible actual.</value>
+  </data>
+  <data name="SidebarPolicyAssignmentMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Asignar la directiva seleccionada en la biblioteca a varias secciones aplicables en la página visible actual.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Agregar directivas</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque archivos de directivas para agregarlos a la biblioteca. Si la característica de biblioteca persistente está habilitada, se respaldarán automáticamente en la caché local para que sus directivas permanezcan disponibles después de cerrar y volver a abrir la aplicación.</value>
+  </data>
+  <data name="AddPoliciesMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque archivos de directivas para agregarlos a la biblioteca. Si la característica de biblioteca persistente está habilitada, se respaldarán automáticamente en la caché local para que sus directivas permanezcan disponibles después de cerrar y volver a abrir la aplicación.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Quitar todo</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar todas las directivas de la biblioteca. Si la característica de biblioteca persistente está habilitada, las directivas también se eliminarán de la caché local.</value>
+  </data>
+  <data name="RemoveAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quitar todas las directivas de la biblioteca. Si la característica de biblioteca persistente está habilitada, las directivas también se eliminarán de la caché local.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Respaldar todo</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija un directorio donde todas las directivas de la biblioteca se respaldarán como archivos XML.</value>
+  </data>
+  <data name="BackupAllMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija un directorio donde todas las directivas de la biblioteca se respaldarán como archivos XML.</value>
+  </data>
+  <data name="DefaultSupplementalPolicyNameFormatEventLogs" xml:space="preserve">
+    <value>Directiva complementaria de registros de eventos - {0}</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
+    <value>Aleatorizar</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Genere un GUID válido aleatorio para el ID de directiva base.</value>
+  </data>
+  <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Genere un GUID válido aleatorio para el ID de directiva base.</value>
+  </data>
+  <data name="Signed" xml:space="preserve">
+    <value>Firmada</value>
+  </data>
+  <data name="Unsigned" xml:space="preserve">
+    <value>Sin firmar</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copiar ID de directiva</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copia el ID de directiva al portapapeles</value>
+  </data>
+  <data name="CopyPolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copia el ID de directiva al portapapeles</value>
+  </data>
+    <data name="CopyBasePolicyIDMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copiar ID de directiva base</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copia el ID de directiva base al portapapeles</value>
+  </data>
+  <data name="CopyBasePolicyIDMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copia el ID de directiva base al portapapeles</value>
+  </data>
+  <data name="BuildSignerProcessingFileNameMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Procesando datos de FileName</value>
+  </data>
+  <data name="BuildSignerFileNameRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reglas de FileName.</value>
+  </data>
+  <data name="NoFileNameDetectedAllowMessage" xml:space="preserve">
+    <value>no se detectaron datos de FileName para crear reglas de permiso.</value>
+  </data>
+  <data name="NoFileNameDetectedDenyMessage" xml:space="preserve">
+  <value>no se detectaron datos de FileName para crear reglas de denegación.</value>
+    </data>
+  <data name="FileNameRulesToAddMessage" xml:space="preserve">
+    <value>Hay {0} reglas de nombre de archivo para agregar a la directiva</value>
+  </data>
+  <data name="FileNameRuleTypeFriendlyName" xml:space="preserve">
+    <value>Tipo de regla de nombre de archivo</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Header" xml:space="preserve">
+    <value>Archivo de directiva XML (Opcional)</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.Description" xml:space="preserve">
+    <value>El archivo de directiva XML de la directiva firmada que se va a quitar. Es opcional y no es obligatorio.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El archivo de directiva XML de la directiva firmada que se va a quitar. Es opcional y no es obligatorio.</value>
+  </data>
+  <data name="XMLPolicyPathForRemovalSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El archivo de directiva XML de la directiva firmada que se va a quitar. Es opcional y no es obligatorio.</value>
+  </data>
+  <data name="PolicyRemovalDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Proporcione los detalles que se utilizarán para volver a firmar la directiva de App Control seleccionada para que pueda quitarse en el próximo reinicio.</value>
+  </data>
+  <data name="PolicyManagementDialogTopInfoBar.Message" xml:space="preserve">
+    <value>Puede configurar los siguientes detalles en la configuración de la aplicación una vez, eliminando la necesidad de ingresarlos repetidamente.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.Content" xml:space="preserve">
+    <value>Seleccionar archivos EVTX de integridad de código</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque archivos EVTX de integridad de código para escanear.</value>
+  </data>
+  <data name="SelectCodeIntegrityEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque archivos EVTX de integridad de código para escanear.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.Content" xml:space="preserve">
+    <value>Seleccionar archivos EVTX de AppLocker</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque archivos EVTX de AppLocker para escanear.</value>
+  </data>
+  <data name="SelectAppLockerEVTXButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque archivos EVTX de AppLocker para escanear.</value>
+  </data>
+  <data name="SACIsNotOffForISGPolicyWarning" xml:space="preserve">
+    <value>Está implementando una directiva de App Control que utiliza Intelligent Security Graph y Smart App Control no está desactivado. Se recomienda desactivar Smart App Control en esta situación.</value>
+  </data>
+  <data name="WarningReverseConvertingNewerPolicyVersion" xml:space="preserve">
+    <value>La versión de la directiva CIP es '{0}', mientras que AppControl Manager solo admite hasta la versión '{1}'. No todas las características de la directiva pudieron decodificarse.</value>
+  </data>
+  <data name="DialogContentP7BConvertedToXML" xml:space="preserve">
+    <value>El binario P7B se ha convertido correctamente a XML y el archivo se ha guardado en:</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Description" xml:space="preserve">
+    <value>Cree una directiva de etiquetado de ID de aplicación (App ID) para la plantilla de directiva actual.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.Header" xml:space="preserve">
+    <value>Directiva de etiquetado de App ID</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cree una directiva de etiquetado de ID de aplicación (App ID) para la plantilla de directiva actual.</value>
+  </data>
+  <data name="MakeAppIDTaggingPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cree una directiva de etiquetado de ID de aplicación (App ID) para la plantilla de directiva actual.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Description" xml:space="preserve">
+    <value>Esta área proporciona características avanzadas para personalizar las directivas de App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.Header" xml:space="preserve">
+    <value>Características avanzadas</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Esta área proporciona características avanzadas para personalizar las directivas de App Control.</value>
+  </data>
+  <data name="AdvancedFeaturesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Esta área proporciona características avanzadas para personalizar las directivas de App Control.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione las directivas para convertir al tipo de etiquetado de App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.Header" xml:space="preserve">
+    <value>Convertir directivas a etiquetado de App ID</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione las directivas para convertir al tipo de etiquetado de App ID.</value>
+  </data>
+  <data name="ConvertPoliciesToAppIDTaggingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione las directivas para convertir al tipo de etiquetado de App ID.</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.Content" xml:space="preserve">
+    <value>Convertir</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Convertir las directivas seleccionadas a etiquetado de App ID</value>
+  </data>
+  <data name="ConvertToAppIDTaggingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Convertir las directivas seleccionadas a etiquetado de App ID</value>
+  </data>
+  <data name="Advanced.Text" xml:space="preserve">
+    <value>Avanzado</value>
+  </data>
+  <data name="SuccessMsgConvertingPoliciesToAppIDTagging" xml:space="preserve">
+    <value>Se convirtieron correctamente todas las directivas seleccionadas a etiquetado de App ID.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione un escenario de firma para quitar de las directivas seleccionadas.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.Header" xml:space="preserve">
+    <value>Eliminación de escenario de firma</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione un escenario de firma para quitar de las directivas seleccionadas.</value>
+  </data>
+  <data name="RemoveSigningScenarioFeatureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione un escenario de firma para quitar de las directivas seleccionadas.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.Content" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comenzar la eliminación del escenario de firma.</value>
+  </data>
+  <data name="RemoveSigningScenarioButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comenzar la eliminación del escenario de firma.</value>
+  </data>
+  <data name="SuccessMsgSigningScenarioRemoval" xml:space="preserve">
+    <value>Se eliminaron correctamente todos los datos relacionados con el escenario de firma seleccionado.</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Header" xml:space="preserve">
+    <value>Nombre descriptivo de la directiva</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.Description" xml:space="preserve">
+    <value>El nombre descriptivo de la directiva de App Control seleccionada</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El nombre descriptivo de la directiva de App Control seleccionada</value>
+  </data>
+  <data name="PolicyEditorPolicyFriendlyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El nombre descriptivo de la directiva de App Control seleccionada</value>
+  </data>
+  <data name="KeyHeader.Text" xml:space="preserve">
+    <value>Clave</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Contexto</value>
+  </data>
+  <data name="AppIDTags.Text" xml:space="preserve">
+    <value>Etiquetas de App ID</value>
+  </data>
+  <data name="AddNewAppIDTagButton.Content" xml:space="preserve">
+    <value>Agregar nueva etiqueta</value>
+  </data>
+  <data name="AddNewAppIDTagButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregue una nueva etiqueta de App ID basada en la clave y el valor que ingresó.</value>
+  </data>
+  <data name="AddNewAppIDTagButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregue una nueva etiqueta de App ID basada en la clave y el valor que ingresó.</value>
+  </data>
+  <data name="KeyPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Clave</value>
+  </data>
+  <data name="KeyPlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingrese la clave de la etiqueta de App ID aquí.</value>
+  </data>
+    <data name="KeyPlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ingrese la clave de la etiqueta de App ID aquí.</value>
+  </data>
+  <data name="ValuePlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+    <data name="ValuePlaceHolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingrese el valor de la etiqueta de App ID aquí.</value>
+  </data>
+  <data name="ValuePlaceHolder.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ingrese el valor de la etiqueta de App ID aquí.</value>
+  </data>
+  <data name="MainPolicy" xml:space="preserve">
+    <value>Directiva principal</value>
+  </data>
+  <data name="OtherPolicies" xml:space="preserve">
+    <value>Otras directivas</value>
   </data>
 </root>

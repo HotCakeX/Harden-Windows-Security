@@ -33,13 +33,13 @@
                     </Button>
 
                     <!-- Input Fields -->
-                    <TextBox Text="{x:Bind ViewModel.Provider, Mode=TwoWay}"
+                    <TextBox Text="{x:Bind ViewModel.Provider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              x:Uid="SecureSettingProviderTextBox"
                              MinWidth="200"/>
-                    <TextBox Text="{x:Bind ViewModel.Key, Mode=TwoWay}"
+                    <TextBox Text="{x:Bind ViewModel.Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              x:Uid="SecureSettingKeyTextBox"
                              MinWidth="200"/>
-                    <TextBox Text="{x:Bind ViewModel.ValueName, Mode=TwoWay}"
+                    <TextBox Text="{x:Bind ViewModel.ValueName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              x:Uid="SecureSettingValueNameTextBox"
                              MinWidth="200"/>
 

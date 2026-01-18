@@ -22,11 +22,10 @@ using HardenSystemSecurity.Arcane;
 namespace HardenSystemSecurity.Traverse;
 
 /// <summary>
-/// This class hosts overrides so certain classes are excempt from deserialization.
+/// This class hosts overrides so certain classes are exempt from deserialization.
 /// </summary>
 internal static class DeserializationOverrides
 {
-
 	/// <summary>
 	/// Write-only converter for <see cref="MContainer.OptionalWindowsFeatures"/>
 	/// </summary>

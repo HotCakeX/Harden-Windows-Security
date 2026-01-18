@@ -29,7 +29,8 @@ internal enum ScanLevels
 	FilePath,
 	WildCardFolderPath, // Only for folders
 	PFN,
-	CustomFileRulePattern
+	CustomFileRulePattern,
+	FileName
 }
 
 /// <summary>

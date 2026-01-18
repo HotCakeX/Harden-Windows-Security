@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
@@ -39,26 +40,19 @@ internal static class NewCertificateSignerRules
 			return policyObj;
 		}
 
-		// Get or Initialize lists
-		List<Signer> signers = policyObj.Signers ?? [];
-		List<CiSigner> ciSigners = policyObj.CiSigners ?? [];
+		// Ensure the lists are initialized
+		policyObj.Signers ??= [];
+		policyObj.CiSigners ??= [];
 
 		// Ensure Scenarios exist
 		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
 		SigningScenario kmciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 131);
 
-		// Ensure ProductSigners exist
-		umciScenario.ProductSigners ??= new ProductSigners();
-		kmciScenario.ProductSigners ??= new ProductSigners();
-
 		// Ensure AllowedSigners exist
 		umciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
 		kmciScenario.ProductSigners.AllowedSigners ??= new AllowedSigners([]);
 
-		List<AllowedSigner> umciAllowedSigners = umciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
-		List<AllowedSigner> kmciAllowedSigners = kmciScenario.ProductSigners.AllowedSigners.AllowedSigner ?? [];
-
-		foreach (CertificateSignerCreator signer in signerData)
+		foreach (CertificateSignerCreator signer in CollectionsMarshal.AsSpan(signerData))
 		{
 			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 			string SignerID = $"ID_SIGNER_R_{guid}";
@@ -72,27 +66,20 @@ internal static class NewCertificateSignerRules
 					value: Convert.FromHexString(signer.TBS)
 				));
 
-			signers.Add(newSigner);
+			policyObj.Signers.Add(newSigner);
 
 			// For User-Mode files
 			if (signer.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umciAllowedSigners.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
-				ciSigners.Add(new CiSigner(signerID: SignerID));
+				umciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
+				policyObj.CiSigners.Add(new CiSigner(signerID: SignerID));
 			}
 			// For Kernel-Mode files - they don't need CI Signers
 			else if (signer.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
-				kmciAllowedSigners.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
+				kmciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
 			}
 		}
-
-		// Update Policy Object
-		policyObj.Signers = signers;
-		policyObj.CiSigners = ciSigners;
-
-		umciScenario.ProductSigners.AllowedSigners.AllowedSigner = umciAllowedSigners;
-		kmciScenario.ProductSigners.AllowedSigners.AllowedSigner = kmciAllowedSigners;
 
 		return policyObj;
 	}

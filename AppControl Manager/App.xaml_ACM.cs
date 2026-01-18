@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
@@ -198,7 +199,12 @@ public partial class App : Application
 
 			try
 			{
-				await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_activationFilePath);
+				SiPolicy.PolicyFileRepresent policyRep = await Task.Run(() =>
+				{
+					return PolicyEditorVM.ParseFilePathAsPolicyRepresent(_activationFilePath);
+				});
+
+				await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(policyRep);
 			}
 			catch (Exception ex)
 			{
@@ -225,7 +231,10 @@ public partial class App : Application
 					{
 						case ViewModelBase.LaunchProtocolActions.PolicyEditor:
 							{
-								await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_activationFilePath);
+								if (_activationFilePath is not null)
+								{
+									await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(PolicyEditorVM.ParseFilePathAsPolicyRepresent(_activationFilePath));
+								}
 								break;
 							}
 						case ViewModelBase.LaunchProtocolActions.FileSignature:
@@ -320,7 +329,7 @@ public partial class App : Application
 	/// <summary>
 	/// Builds the argument string to pass to the elevated instance so that it can re-create the original launch intent without persisting anything.
 	/// File activation is converted into a PolicyEditor action since the app only supports handling .CIP/XML files from File explorer at the moment.
-	/// If in the future more file types are supported we can detect type based on file extenson and implement different behaviors.
+	/// If in the future more file types are supported we can detect type based on file extension and implement different behaviors.
 	/// </summary>
 	private static string? BuildRelaunchArguments()
 	{

@@ -32,7 +32,7 @@ internal sealed partial class CreatePolicy : Page, CommonCore.UI.IPageHeaderProv
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreatePolicyPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreatePolicyPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy");
 
 }

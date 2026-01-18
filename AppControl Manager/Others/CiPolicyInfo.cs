@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -25,7 +26,7 @@ namespace AppControlManager.Others;
 /// Represents a policy with various attributes.
 /// </summary>
 internal sealed class CiPolicyInfo(
-	string? policyID,
+	string policyID,
 	string? basePolicyID,
 	string? friendlyName,
 	Version? version,
@@ -43,7 +44,7 @@ internal sealed class CiPolicyInfo(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("policyID")]
-	internal string? PolicyID { get; } = policyID;
+	internal string PolicyID { get; } = policyID;
 
 	/// <summary>
 	/// Identifier for the base policy.
@@ -203,7 +204,7 @@ internal sealed class CiPolicyInfo(
 		unchecked // Allow arithmetic overflow without exception (standard for hash code generation)
 		{
 			int hash = 17;
-			hash = hash * 23 + (PolicyID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(PolicyID));
+			hash = hash * 23 + StringComparer.OrdinalIgnoreCase.GetHashCode(PolicyID);
 			hash = hash * 23 + (BasePolicyID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(BasePolicyID));
 			hash = hash * 23 + (FriendlyName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(FriendlyName));
 			hash = hash * 23 + (Version is null ? 0 : Version.GetHashCode());
@@ -216,7 +217,7 @@ internal sealed class CiPolicyInfo(
 			hash = hash * 23 + IsManagedInstaller.GetHashCode();
 			if (PolicyOptions != null)
 			{
-				foreach (string option in PolicyOptions)
+				foreach (string option in CollectionsMarshal.AsSpan(PolicyOptions))
 				{
 					hash = hash * 23 + (option is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(option));
 				}

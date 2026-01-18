@@ -31,6 +31,7 @@ internal sealed partial class SidebarVM : ViewModelBase
 	internal Visibility SidebarPolicyConnect4Visibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility SidebarPolicyConnect5Visibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility SidebarPolicyConnect6Visibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility SidebarPolicyConnect7Visibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal string? SidebarPolicyConnect1Content { get; set => SP(ref field, value); }
 	internal string? SidebarPolicyConnect2Content { get; set => SP(ref field, value); }
@@ -38,6 +39,7 @@ internal sealed partial class SidebarVM : ViewModelBase
 	internal string? SidebarPolicyConnect4Content { get; set => SP(ref field, value); }
 	internal string? SidebarPolicyConnect5Content { get; set => SP(ref field, value); }
 	internal string? SidebarPolicyConnect6Content { get; set => SP(ref field, value); }
+	internal string? SidebarPolicyConnect7Content { get; set => SP(ref field, value); }
 
 	internal ICommand? SidebarPolicyConnect1Command
 	{
@@ -105,6 +107,17 @@ internal sealed partial class SidebarVM : ViewModelBase
 		}
 	}
 
+	internal ICommand? SidebarPolicyConnect7Command
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SidebarPolicyConnect7Visibility = field is not null ? Visibility.Visible : Visibility.Collapsed;
+			}
+		}
+	}
+
 	internal void Nullify()
 	{
 		SidebarPolicyConnect1Command = null;
@@ -119,6 +132,8 @@ internal sealed partial class SidebarVM : ViewModelBase
 		SidebarPolicyConnect5Content = null;
 		SidebarPolicyConnect6Command = null;
 		SidebarPolicyConnect6Content = null;
+		SidebarPolicyConnect7Command = null;
+		SidebarPolicyConnect7Content = null;
 	}
 
 	internal void AssignActionPacks(
@@ -127,7 +142,8 @@ internal sealed partial class SidebarVM : ViewModelBase
 			(Action<object?>, string)? actionPack3 = null,
 			(Action<object?>, string)? actionPack4 = null,
 			(Action<object?>, string)? actionPack5 = null,
-			(Action<object?>, string)? actionPack6 = null)
+			(Action<object?>, string)? actionPack6 = null,
+			(Action<object?>, string)? actionPack7 = null)
 	{
 		if (actionPack1 is not null)
 		{
@@ -158,6 +174,11 @@ internal sealed partial class SidebarVM : ViewModelBase
 		{
 			SidebarPolicyConnect6Command = new RelayCommand(actionPack6.Value.Item1);
 			SidebarPolicyConnect6Content = actionPack6.Value.Item2;
+		}
+		if (actionPack7 is not null)
+		{
+			SidebarPolicyConnect7Command = new RelayCommand(actionPack7.Value.Item1);
+			SidebarPolicyConnect7Content = actionPack7.Value.Item2;
 		}
 	}
 

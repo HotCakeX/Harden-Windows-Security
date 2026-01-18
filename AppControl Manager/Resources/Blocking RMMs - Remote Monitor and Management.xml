@@ -36,7 +36,6 @@
       <Option>Enabled:Revoked Expired As Unsigned</Option>
     </Rule>
   </Rules>
-  <EKUs />
   <FileRules>
     <Allow ID="ID_ALLOW_A_0197260079077405BBBB1D8682401C3F" FileName="*" />
     <Allow ID="ID_ALLOW_A_0197260079077E17A51407B17115E971" FileName="*" />
@@ -1184,8 +1183,6 @@
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners />
-  <CiSigners />
   <HvciOptions>2</HvciOptions>
   <Settings>
     <Setting Provider="AllHostIds" Key="AllKeys" ValueName="EnterpriseDefinedClsId">

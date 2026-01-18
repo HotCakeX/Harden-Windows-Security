@@ -26,35 +26,7 @@ namespace AppControlManager.SiPolicy;
 
 internal static class Helper
 {
-
 	internal const string DefaultMaxVersion = "65535.65535.65535.65535";
-
-	internal static readonly FrozenDictionary<OptionType, uint> Options = new Dictionary<OptionType, uint>
-	{
-		{ OptionType.EnabledUMCI, 4U },
-		{ OptionType.EnabledBootMenuProtection, 8U },
-		{ OptionType.EnabledIntelligentSecurityGraphAuthorization, 16U  },
-		{ OptionType.EnabledInvalidateEAsonReboot, 32U },
-		{ OptionType.RequiredWHQL, 128U  },
-		{ OptionType.EnabledDeveloperModeDynamicCodeTrust, 256U  },
-		{ OptionType.EnabledAllowSupplementalPolicies, 1024U  },
-		{ OptionType.DisabledRuntimeFilePathRuleProtection, 2048U  },
-		{ OptionType.EnabledRevokedExpiredAsUnsigned, 8192U  },
-		{ OptionType.EnabledAuditMode, 65536U  },
-		{ OptionType.DisabledFlightSigning, 131072U },
-		{ OptionType.EnabledInheritDefaultPolicy, 262144U  },
-		{ OptionType.EnabledUnsignedSystemIntegrityPolicy, 524288U },
-		{ OptionType.EnabledDynamicCodeSecurity, 1048576U  },
-		{ OptionType.RequiredEVSigners, 2097152U  },
-		{ OptionType.EnabledBootAuditOnFailure, 4194304U  },
-		{ OptionType.EnabledAdvancedBootOptionsMenu, 8388608U  },
-		{ OptionType.DisabledScriptEnforcement, 16777216U  },
-		{ OptionType.RequiredEnforceStoreApplications, 33554432U  },
-		{ OptionType.EnabledSecureSettingPolicy, 67108864U  },
-		{ OptionType.EnabledManagedInstaller, 134217728U  },
-		{ OptionType.EnabledUpdatePolicyNoReboot, 268435456U  },
-		{ OptionType.EnabledConditionalWindowsLockdownPolicy, 536870912U  }
-	}.ToFrozenDictionary();
 
 	internal static readonly Dictionary<OptionType, Setting> RuleToSettingMapping = new()
 	{
@@ -110,14 +82,14 @@ internal static class Helper
 	/// <summary>
 	/// Compare two byte arrays lexicographically, then by length.
 	/// </summary>
-	private static int CompareByteArrays(ReadOnlyMemory<byte>? x, ReadOnlyMemory<byte>? y)
+	private static int CompareByteArrays(ReadOnlyMemory<byte> x, ReadOnlyMemory<byte> y)
 	{
-		if (x is null && y is null) return 0;
-		if (x is null) return -1;
-		if (y is null) return 1;
+		if (x.IsEmpty && y.IsEmpty) return 0;
+		if (x.IsEmpty) return -1;
+		if (y.IsEmpty) return 1;
 
 		// lexicographical compare, then by length
-		return x.Value.Span.SequenceCompareTo(y.Value.Span);
+		return x.Span.SequenceCompareTo(y.Span);
 	}
 
 	/// <summary>
@@ -132,7 +104,7 @@ internal static class Helper
 				string? ProductName,
 				string? PackageFamilyName,
 				string? FilePath,
-				ReadOnlyMemory<byte>? Hash) DeconstructRule(object o) => o switch
+				ReadOnlyMemory<byte> Hash) DeconstructRule(object o) => o switch
 				{
 					Deny d => (0, d.FileName, d.InternalName, d.FileDescription, d.ProductName, d.PackageFamilyName, d.FilePath, d.Hash),
 					Allow a => (1, a.FileName, a.InternalName, a.FileDescription, a.ProductName, a.PackageFamilyName, a.FilePath, a.Hash),
@@ -174,58 +146,55 @@ internal static class Helper
 	/// <summary>
 	/// Converts a generic FileRule object into a typed file rule (Allow, Deny, FileAttrib).
 	/// </summary>
-	internal static object AdaptGenericFileRule(FileRule rule)
+	internal static object AdaptGenericFileRule(FileRule rule) => rule.Type switch
 	{
-		return rule.Type switch
+		RuleTypeType.Match => new Allow(id: rule.ID)
 		{
-			RuleTypeType.Match => new Allow(id: rule.ID)
-			{
-				FriendlyName = rule.FriendlyName,
-				FileName = rule.FileName,
-				InternalName = rule.InternalName,
-				FileDescription = rule.FileDescription,
-				ProductName = rule.ProductName,
-				PackageFamilyName = rule.PackageFamilyName,
-				PackageVersion = rule.PackageVersion,
-				MinimumFileVersion = rule.MinimumFileVersion,
-				MaximumFileVersion = rule.MaximumFileVersion,
-				Hash = rule.Hash,
-				AppIDs = rule.AppIDs,
-				FilePath = rule.FilePath
-			},
-			RuleTypeType.Exclude => new Deny(id: rule.ID)
-			{
-				FriendlyName = rule.FriendlyName,
-				FileName = rule.FileName,
-				InternalName = rule.InternalName,
-				FileDescription = rule.FileDescription,
-				ProductName = rule.ProductName,
-				PackageFamilyName = rule.PackageFamilyName,
-				PackageVersion = rule.PackageVersion,
-				MinimumFileVersion = rule.MinimumFileVersion,
-				MaximumFileVersion = rule.MaximumFileVersion,
-				Hash = rule.Hash,
-				AppIDs = rule.AppIDs,
-				FilePath = rule.FilePath
-			},
-			RuleTypeType.Attribute => new FileAttrib(id: rule.ID)
-			{
-				FriendlyName = rule.FriendlyName,
-				FileName = rule.FileName,
-				InternalName = rule.InternalName,
-				FileDescription = rule.FileDescription,
-				ProductName = rule.ProductName,
-				PackageFamilyName = rule.PackageFamilyName,
-				PackageVersion = rule.PackageVersion,
-				MinimumFileVersion = rule.MinimumFileVersion,
-				MaximumFileVersion = rule.MaximumFileVersion,
-				Hash = rule.Hash,
-				AppIDs = rule.AppIDs,
-				FilePath = rule.FilePath
-			},
-			_ => throw new InvalidOperationException(GlobalVars.GetStr("EncounteredInvalidFileRule"))
-		};
-	}
+			FriendlyName = rule.FriendlyName,
+			FileName = rule.FileName,
+			InternalName = rule.InternalName,
+			FileDescription = rule.FileDescription,
+			ProductName = rule.ProductName,
+			PackageFamilyName = rule.PackageFamilyName,
+			PackageVersion = rule.PackageVersion,
+			MinimumFileVersion = rule.MinimumFileVersion,
+			MaximumFileVersion = rule.MaximumFileVersion,
+			Hash = rule.Hash,
+			AppIDs = rule.AppIDs,
+			FilePath = rule.FilePath
+		},
+		RuleTypeType.Exclude => new Deny(id: rule.ID)
+		{
+			FriendlyName = rule.FriendlyName,
+			FileName = rule.FileName,
+			InternalName = rule.InternalName,
+			FileDescription = rule.FileDescription,
+			ProductName = rule.ProductName,
+			PackageFamilyName = rule.PackageFamilyName,
+			PackageVersion = rule.PackageVersion,
+			MinimumFileVersion = rule.MinimumFileVersion,
+			MaximumFileVersion = rule.MaximumFileVersion,
+			Hash = rule.Hash,
+			AppIDs = rule.AppIDs,
+			FilePath = rule.FilePath
+		},
+		RuleTypeType.Attribute => new FileAttrib(id: rule.ID)
+		{
+			FriendlyName = rule.FriendlyName,
+			FileName = rule.FileName,
+			InternalName = rule.InternalName,
+			FileDescription = rule.FileDescription,
+			ProductName = rule.ProductName,
+			PackageFamilyName = rule.PackageFamilyName,
+			PackageVersion = rule.PackageVersion,
+			MinimumFileVersion = rule.MinimumFileVersion,
+			MaximumFileVersion = rule.MaximumFileVersion,
+			Hash = rule.Hash,
+			AppIDs = rule.AppIDs,
+			FilePath = rule.FilePath
+		},
+		_ => throw new InvalidOperationException(GlobalVars.GetStr("EncounteredInvalidFileRule"))
+	};
 
 	/// <summary>
 	/// Converts AppIDTags into a list of secure Settings.
@@ -389,11 +358,9 @@ internal static class Helper
 
 		foreach (RuleType rule in CollectionsMarshal.AsSpan(Policy.Rules))
 		{
-			if (rule.Item is OptionType key
-				&& !RuleToSettingMapping.ContainsKey(key)
-				&& Options.TryGetValue(key, out uint value))
+			if (!RuleToSettingMapping.ContainsKey(rule.Item))
 			{
-				flags |= value;
+				flags |= (uint)rule.Item;
 			}
 		}
 

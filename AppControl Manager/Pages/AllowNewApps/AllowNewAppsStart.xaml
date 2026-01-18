@@ -70,7 +70,7 @@
                                            IsEnabled="{x:Bind ViewModel.BrowseForXMLPolicyButtonIsEnabled, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Click}"
                                            Margin="0,27,0,0"
-                                           ObservedData="{x:Bind ViewModel.selectedXMLFilePath, Mode=OneWay}"
+                                           ObservedData="{x:Bind ViewModel.selectedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                            ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
 
                             <customUI:ButtonV2.Flyout>
@@ -78,13 +78,22 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Flyout_Clear_Click}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Flyout_Clear_Click}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <TextBox Text="{x:Bind ViewModel.selectedXMLFilePath, Mode=TwoWay}"
-                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                            MinWidth="400" IsReadOnly="True" />
+                                        <TextBox Text="{x:Bind ViewModel.selectedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                 MinWidth="400" IsReadOnly="True" />
 
                                     </controls:WrapPanel>
 
@@ -194,7 +203,16 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedDirectoriesButton_Click}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedDirectoriesButton_Click}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                         <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" Width="400" />
 

@@ -1389,7 +1389,9 @@ fn validate_xuid_usage(
     allowed.insert(
         "ComboBoxItem",
         vec![
-            "Content"
+            "Content",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip"
         ],
     );
     allowed.insert(

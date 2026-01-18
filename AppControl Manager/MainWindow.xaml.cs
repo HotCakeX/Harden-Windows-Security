@@ -27,10 +27,20 @@ using AnimatedVisuals;
 using Microsoft.UI.Xaml.Automation;
 using CommonCore.AppSettings;
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml.Hosting;
+using System.Numerics;
+using Windows.Foundation;
+using Microsoft.UI.Dispatching;
+using System.Threading.Tasks;
+using System.IO;
+using System.Collections.Generic;
+using AppControlManager.Others;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
+using AppControlManager.XMLOps;
 using AppControlManager.WindowComponents;
+using AppControlManager.SiPolicy;
 namespace AppControlManager;
 #endif
 
@@ -46,11 +56,33 @@ namespace HardenSystemSecurity;
 /// </summary>
 internal sealed partial class MainWindow : Window
 {
-
 	private MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
 	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+
 #if APP_CONTROL_MANAGER
+
 	private SidebarVM sidebarVM => ViewModelProvider.SidebarVM;
+
+	// Animated ItemsRepeater fields
+	private double AnimatedBtnHeight;
+	private Thickness AnimatedBtnMargin;
+
+	/// <summary>
+	/// Track the currently selected sidebar item (The inner Grid 'ItemRoot') to apply styles
+	/// </summary>
+	private Grid? _lastSelectedSidebarGrid;
+
+	/// <summary>
+	/// Flag to ignore scroll-based selection updates when the user has explicitly clicked an item.
+	/// This prevents the scroll logic from immediately overriding the user's selection.
+	/// </summary>
+	private bool _ignoreScrollUpdates;
+
+	/// <summary>
+	/// Timer to reset the scroll update lock after an animation completes.
+	/// </summary>
+	private readonly DispatcherQueueTimer? _resetScrollUpdateTimer;
+
 #endif
 
 	internal static Grid? RootGridPub { get; private set; }
@@ -112,7 +144,45 @@ internal sealed partial class MainWindow : Window
 
 		// Set the initial App Theme based on the user's settings
 		OnAppThemeChanged(null, new(App.Settings.AppTheme));
+
+#if APP_CONTROL_MANAGER
+
+		// Initialize the TransferIcon visual state here.
+		// By setting Composition Opacity to 0 here (and keeping XAML Opacity at 1),
+		// we ensure the render engine is aware of the element but it remains invisible
+		// until we animate it. This fixes the issue where the animation fails on the first click.
+		Microsoft.UI.Composition.Visual transferIconVisual = ElementCompositionPreview.GetElementVisual(TransferIcon);
+		transferIconVisual.Opacity = 0.0f;
+
+		// Initialize the timer for scroll locking
+		_resetScrollUpdateTimer = DispatcherQueue.CreateTimer();
+		_resetScrollUpdateTimer.Interval = TimeSpan.FromMilliseconds(600); // Slightly longer than standard animations (500ms)
+		_resetScrollUpdateTimer.Tick += (s, e) =>
+		{
+			// Re-enable scroll-based updates after the "BringIntoView" animation is likely finished
+			_ignoreScrollUpdates = false;
+			_resetScrollUpdateTimer.Stop();
+		};
+
+#endif
+
 	}
+
+#if APP_CONTROL_MANAGER
+
+	/// <summary>
+	/// Static method to trigger the transfer icon animation from anywhere in the app.
+	/// </summary>
+	/// <param name="sourceElement">The UIElement that starts the animation.</param>
+	internal static void TriggerTransferIconAnimationStatic(UIElement sourceElement)
+	{
+		_ = App.AppDispatcher.TryEnqueue(() =>
+		{
+			((MainWindow)App.MainWindow!).TriggerTransferIconAnimation(sourceElement);
+		});
+	}
+
+#endif
 
 	/// <summary>
 	/// Specifies the interactive (passthrough) regions of the title bar-including proper RTL mirroring.
@@ -164,7 +234,6 @@ internal sealed partial class MainWindow : Window
 		);
 	}
 
-
 	/*
 
 	 This will make keep the title bar text white even on light theme, making it unreadable
@@ -177,7 +246,6 @@ internal sealed partial class MainWindow : Window
 	/// <param name="args"></param>
 	private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
 	{
-
 		if (args.WindowActivationState == WindowActivationState.Deactivated)
 		{
 			TitleBarTextBlock.Foreground =
@@ -188,11 +256,9 @@ internal sealed partial class MainWindow : Window
 			TitleBarTextBlock.Foreground =
 				(SolidColorBrush)Application.Current.Resources["WindowCaptionForeground"];
 		}
-
 	}
 
 	*/
-
 
 	/*
 	//This is already retrieved by m_AppWindow in the class, keeping it just in case
@@ -202,7 +268,6 @@ internal sealed partial class MainWindow : Window
 		return AppWindow.GetFromWindowId(windowId);
 	}
 	*/
-
 
 	/// <summary>
 	/// Event handler for the global NavigationView location change event
@@ -258,11 +323,8 @@ internal sealed partial class MainWindow : Window
 		// Get the current theme
 		ElementTheme currentTheme = RootGrid.ActualTheme;
 
-		// Calculate the opposite theme
-		ElementTheme oppositeTheme = currentTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
-
-		// Switch to opposite theme
-		RootGrid.RequestedTheme = oppositeTheme;
+		// Calculate the opposite theme and switch to it
+		RootGrid.RequestedTheme = currentTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
 
 		// Perform NavigationView background changes based on the settings' page's button
 		if (e.IsBackgroundOn)
@@ -414,7 +476,7 @@ internal sealed partial class MainWindow : Window
 		// If we should automatically/conditionally ask for confirmation
 		else if (AppSettings.AppCloseConfirmationBehavior == 1)
 		{
-			if (!CommonCore.TaskTracking.AppNeedsCloseConfirmation)
+			if (!TaskTracking.AppNeedsCloseConfirmation)
 			{
 				return;
 			}
@@ -440,10 +502,15 @@ internal sealed partial class MainWindow : Window
 			using AppControlManager.CustomUIElements.ContentDialogV2 confirmCloseDialog = new()
 			{
 				Title = GlobalVars.GetStr("ConfirmExitTitle"),
+#if APP_CONTROL_MANAGER
+				// if there is no policy in the Policies library in the Sidebar or if there is but Persistence is enabled
+				Content = (ViewModel.SidebarPoliciesLibrary.Count == 0 || AppControlManager.App.Settings.PersistentPoliciesLibrary) ? GlobalVars.GetStr("ConfirmExitMsg") : GlobalVars.GetStr("ConfirmExitForUnsavedPoliciesMsg"),
+#else
 				Content = GlobalVars.GetStr("ConfirmExitMsg"),
+#endif
 				PrimaryButtonText = GlobalVars.GetStr("Yes"),
 				CloseButtonText = GlobalVars.GetStr("No"),
-				DefaultButton = ContentDialogButton.Primary
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await confirmCloseDialog.ShowAsync();
@@ -699,29 +766,7 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(ValidatePoliciesNavItem, GlobalVars.GetStr("ValidatePoliciesNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(ValidatePoliciesNavItem, GlobalVars.GetStr("ValidatePoliciesNavItem/ToolTipService/ToolTip"));
 
-			SidebarPinnedPolicyPathTextBlock.Text = GlobalVars.GetStr("SidebarPinnedPolicyPathTextBlock/Text");
-
-			SidebarPolicyPathPlaceHolder.PlaceholderText = GlobalVars.GetStr("SidebarPolicyPathPlaceHolder/PlaceholderText");
-
-			AutomationProperties.SetHelpText(SidebarBrowseButton, GlobalVars.GetStr("SidebarBrowseButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarBrowseButton, GlobalVars.GetStr("SidebarBrowseButton/ToolTipService/ToolTip"));
-
-			BrowseTextBlock.Text = GlobalVars.GetStr("BrowseTextBlock/Text");
-
-			AutomationProperties.SetHelpText(SidebarClearButton, GlobalVars.GetStr("SidebarClearButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarClearButton, GlobalVars.GetStr("SidebarClearButton/ToolTipService/ToolTip"));
-
-			ClearTextBlock.Text = GlobalVars.GetStr("ClearTextBlock/Text");
-
-			AutomationProperties.SetHelpText(SidebarPolicySelectAssignmentButton, GlobalVars.GetStr("SidebarPolicySelectAssignmentButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarPolicySelectAssignmentButton, GlobalVars.GetStr("SidebarPolicySelectAssignmentButton/ToolTipService/ToolTip"));
-
-			SelectTextBlock.Text = GlobalVars.GetStr("SelectTextBlock/Text");
-
-			SidebarAutomaticAssignmentSettingsCard.Header = GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/Header");
-			SidebarAutomaticAssignmentSettingsCard.Description = GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/Description");
-			AutomationProperties.SetHelpText(SidebarAutomaticAssignmentSettingsCard, GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarAutomaticAssignmentSettingsCard, GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/ToolTipService/ToolTip"));
+			SidebarPoliciesLibraryTextBlock.Text = GlobalVars.GetStr("SidebarPoliciesLibraryTextBlock/Text");
 
 			OpenConfigDirectoryButtonText.Text = GlobalVars.GetStr("OpenConfigDirectoryButtonText/Text");
 
@@ -732,8 +777,8 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(OpenConfigDirectoryButton, GlobalVars.GetStr("OpenConfigDirectoryButton/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(OpenConfigDirectoryButton, GlobalVars.GetStr("OpenConfigDirectoryButton/ToolTipService/ToolTip"));
 
-			AutomaticAssignmentSidebarToggleSwitch.OnContent = GlobalVars.GetStr("ToggleSwitchGeneral/OnContent");
-			AutomaticAssignmentSidebarToggleSwitch.OffContent = GlobalVars.GetStr("ToggleSwitchGeneral/OffContent");
+			PersistentPoliciesLibraryToggleSwitch.OnContent = GlobalVars.GetStr("ToggleSwitchGeneral/OnContent");
+			PersistentPoliciesLibraryToggleSwitch.OffContent = GlobalVars.GetStr("ToggleSwitchGeneral/OffContent");
 #endif
 
 			Logger.Write("MainWindow localized text refreshed successfully");
@@ -743,5 +788,656 @@ internal sealed partial class MainWindow : Window
 			Logger.Write($"Error refreshing localized text: {ex.Message}");
 		}
 	}
+
+#if APP_CONTROL_MANAGER
+
+	/// <summary>
+	/// Handles clicking on a sidebar item.
+	/// 1. Finds the parent Grid (ItemRoot).
+	/// 2. Manually applies the active visual state (Border + Elevation).
+	/// 3. Sets a lock (_ignoreScrollUpdates) so the scroll logic doesn't override this selection immediately.
+	/// </summary>
+	private void OnAnimatedItemClicked(object sender, RoutedEventArgs e)
+	{
+		Button button = (Button)sender;
+
+		// Walk up the visual tree to find the root Grid of the DataTemplate (ItemRoot)
+		// Structure: Button -> Grid (ItemRoot) -> SwipeControl
+		Grid? itemRoot = null;
+
+		DependencyObject parent = VisualTreeHelper.GetParent(button);
+		while (parent != null)
+		{
+			if (parent is Grid grid && string.Equals(grid.Name, "ItemRoot", StringComparison.Ordinal))
+			{
+				itemRoot = grid;
+				break;
+			}
+			parent = VisualTreeHelper.GetParent(parent);
+		}
+
+		if (itemRoot != null)
+		{
+			// Disable scroll-based auto-selection temporarily
+			// This ensures that clicking an item (even in a small list where it doesn't move to center)
+			// will still select it visually.
+			_ignoreScrollUpdates = true;
+			_resetScrollUpdateTimer?.Start();
+
+			// Apply active visual state to the clicked item
+			UpdateActiveSidebarItemVisuals(itemRoot);
+
+			// Start the bring-into-view animation
+			itemRoot.StartBringIntoView(new BringIntoViewOptions()
+			{
+				VerticalAlignmentRatio = 0.5,
+				AnimationDesired = true,
+			});
+		}
+	}
+
+	/// <summary>
+	/// Handles automatic selection of the center item during scrolling.
+	/// respects the _ignoreScrollUpdates lock to prevent overriding explicit clicks.
+	/// </summary>
+	private void Animated_ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+	{
+		// If the user just clicked an item, ignore scroll updates for a short time
+		if (_ignoreScrollUpdates) return;
+
+		// Ensure we have items
+		if (animatedScrollRepeater.ItemsSource is not System.Collections.IEnumerable source || !source.GetEnumerator().MoveNext())
+			return;
+
+		// Calculate the vertical center of the viewport.
+		// Since we will transform item coordinates directly to the ScrollViewer, we just need the center of the visible area (ViewportHeight / 2).
+		double viewportCenterY = Animated_ScrollViewer.ViewportHeight / 2.0;
+
+		double minDistance = double.MaxValue;
+		Grid? closestElement = null;
+
+		// Iterate through realized elements
+		for (int i = 0; i < ViewModel.SidebarPoliciesLibrary.Count; i++)
+		{
+			// TryGetElement returns the Root of DataTemplate -> SwipeControl
+			UIElement? element = animatedScrollRepeater.TryGetElement(i);
+
+			if (element is SwipeControl swipeControl && swipeControl.Content is Grid itemRoot)
+			{
+				// Get position relative to the ScrollViewer directly.
+				// This handles cases where the ItemsRepeater is centered inside the ScrollViewer (via Grid wrapper).
+				GeneralTransform transform = swipeControl.TransformToVisual(Animated_ScrollViewer);
+				Point position = transform.TransformPoint(new Point(0, 0));
+
+				// Calculate the center Y of the item itself
+				double itemCenterY = position.Y + (swipeControl.ActualSize.Y / 2.0);
+
+				// Distance from viewport center
+				double distance = Math.Abs(itemCenterY - viewportCenterY);
+
+				if (distance < minDistance)
+				{
+					minDistance = distance;
+					closestElement = itemRoot; // We still want to style the inner Grid
+				}
+			}
+		}
+
+		if (closestElement != null)
+		{
+			UpdateActiveSidebarItemVisuals(closestElement);
+		}
+	}
+
+	/// <summary>
+	/// Applies visual styles (Gradient Border + Elevation) to the target Grid.
+	/// </summary>
+	private void UpdateActiveSidebarItemVisuals(Grid newGrid)
+	{
+		// 1. Reset the previously selected item if it's different
+		if (_lastSelectedSidebarGrid != null && _lastSelectedSidebarGrid != newGrid)
+		{
+			ResetSidebarItemVisuals(_lastSelectedSidebarGrid);
+		}
+
+		// Avoid unnecessary property setting if it's the same item
+		if (_lastSelectedSidebarGrid == newGrid)
+			return;
+
+		// 2. Apply active styles
+
+		// Elevation: Lift the Grid up by 32px on Z-axis to cast Shadow
+		newGrid.Translation = new Vector3(0, 0, 32);
+
+		// Gradient Border: Find the overlay border and set Opacity to 1
+		// Visual Tree: Grid(ItemRoot) -> Children -> Border
+		foreach (UIElement child in newGrid.Children)
+		{
+			if (child is Border border && string.Equals(border.Name, "HighlightBorder", StringComparison.Ordinal))
+			{
+				border.Opacity = 1.0;
+				break;
+			}
+		}
+
+		// 3. Update reference
+		_lastSelectedSidebarGrid = newGrid;
+	}
+
+	/// <summary>
+	/// Resets the visual state of a sidebar item to its default (inactive) state.
+	/// </summary>
+	private static void ResetSidebarItemVisuals(Grid grid)
+	{
+		// Reset Elevation
+		grid.Translation = Vector3.Zero;
+
+		// Hide Gradient Border
+		foreach (UIElement child in grid.Children)
+		{
+			if (child is Border border && string.Equals(border.Name, "HighlightBorder", StringComparison.Ordinal))
+			{
+				border.Opacity = 0.0;
+				break;
+			}
+		}
+	}
+
+	private void OnAnimatedItemGotFocus(object sender, RoutedEventArgs e)
+	{
+		// When the clicked item has been received, bring it to the middle of the viewport.
+		((FrameworkElement)sender).StartBringIntoView(new BringIntoViewOptions()
+		{
+			VerticalAlignmentRatio = 0.5,
+			AnimationDesired = true,
+		});
+	}
+
+	/// <summary>
+	/// Occurs each time an element is made ready for use, necessary for virtualization.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void OnElementPrepared(ItemsRepeater sender, ItemsRepeaterElementPreparedEventArgs args)
+	{
+		// Cache Height and Margin for optimization
+		if (AnimatedBtnHeight == 0)
+		{
+			if (args.Element is Control control)
+			{
+				AnimatedBtnHeight = control.ActualHeight;
+				AnimatedBtnMargin = control.Margin;
+			}
+		}
+
+		// Handle Element Reset and Composition Animation
+		// Root is SwipeControl
+		if (args.Element is SwipeControl swipeControl)
+		{
+			// 1. Reset Visuals on Inner Grid
+			if (swipeControl.Content is Grid itemRoot)
+			{
+				ResetSidebarItemVisuals(itemRoot);
+
+				if (_lastSelectedSidebarGrid == itemRoot)
+				{
+					_lastSelectedSidebarGrid = null;
+				}
+			}
+
+			// 2. Apply Composition Scaling Animation to the SwipeControl (Stable Root)
+			Microsoft.UI.Composition.Visual item = ElementCompositionPreview.GetElementVisual(swipeControl);
+			Microsoft.UI.Composition.Visual svVisual = ElementCompositionPreview.GetElementVisual(Animated_ScrollViewer);
+
+			// We also need the ItemsRepeater visual to account for its Offset (Centering logic in XAML)
+			Microsoft.UI.Composition.Visual repeaterVisual = ElementCompositionPreview.GetElementVisual(sender);
+
+			Microsoft.UI.Composition.CompositionPropertySet scrollProperties = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(Animated_ScrollViewer);
+
+			Microsoft.UI.Composition.ExpressionAnimation scaleExpression = scrollProperties.Compositor.CreateExpressionAnimation();
+			scaleExpression.SetReferenceParameter("svVisual", svVisual);
+			scaleExpression.SetReferenceParameter("scrollProperties", scrollProperties);
+			scaleExpression.SetReferenceParameter("item", item);
+			scaleExpression.SetReferenceParameter("repeaterVisual", repeaterVisual);
+
+			// Scale the item based on the distance of the item relative to the center of the viewport.
+			// This operates on the Visual layer (Scale), while our active logic operates on Translation and Border Opacity.
+			// Adding 'repeaterVisual.Offset.Y' to the item position calculation
+			// So that when the list is short, the ItemsRepeater is centered in the Grid, creating a Y Offset.
+			// We must add this offset to the item's local offset to get the true visual position relative to the ScrollViewer's content root.
+			scaleExpression.Expression = "1 - abs((svVisual.Size.Y/2 - scrollProperties.Translation.Y) - (repeaterVisual.Offset.Y + item.Offset.Y + item.Size.Y/2))*(.25/(svVisual.Size.Y/2))";
+
+			// Animate the item based on its distance to the center of the viewport.
+			item.StartAnimation("Scale.X", scaleExpression);
+			item.StartAnimation("Scale.Y", scaleExpression);
+			Microsoft.UI.Composition.ExpressionAnimation centerPointExpression = scrollProperties.Compositor.CreateExpressionAnimation();
+			centerPointExpression.SetReferenceParameter("item", item);
+			centerPointExpression.Expression = "Vector3(item.Size.X/2, item.Size.Y/2, 0)";
+			item.StartAnimation("CenterPoint", centerPointExpression);
+		}
+	}
+
+	/// <summary>
+	/// Triggers the transfer icon animation from any source UIElement to the SidebarButton.
+	/// </summary>
+	/// <param name="sourceElement">The element starting the animation.</param>
+	internal void TriggerTransferIconAnimation(UIElement? sourceElement)
+	{
+		if (sourceElement == null || AnimationOverlay == null || SidebarButton == null || TransferIcon == null)
+			return;
+
+		// Get the visual of the TransferIcon icon
+		Microsoft.UI.Composition.Visual transferIconVisual = ElementCompositionPreview.GetElementVisual(TransferIcon);
+		Microsoft.UI.Composition.Compositor compositor = transferIconVisual.Compositor;
+
+		// Calculate Start Position (Center of the source element)
+		// We calculate relative to AnimationOverlay to ensure coordinates match the Canvas coordinate space directly
+		GeneralTransform buttonTransform = sourceElement.TransformToVisual(AnimationOverlay);
+		Point buttonPosition = buttonTransform.TransformPoint(new Point(0, 0));
+
+		// Use ActualSize if available (FrameworkElement), otherwise 0
+		double sourceWidth = (sourceElement as FrameworkElement)?.ActualWidth ?? 0;
+		double sourceHeight = (sourceElement as FrameworkElement)?.ActualHeight ?? 0;
+
+		float startX = (float)buttonPosition.X + (float)sourceWidth / 2 - (float)TransferIcon.ActualWidth / 2;
+		float startY = (float)buttonPosition.Y + (float)sourceHeight / 2 - (float)TransferIcon.ActualHeight / 2;
+
+		// Calculate End Position (Center of the SidebarButton in the TitleBar)
+		GeneralTransform targetTransform = SidebarButton.TransformToVisual(AnimationOverlay);
+		Point targetPosition = targetTransform.TransformPoint(new Point(0, 0));
+		float endX = (float)targetPosition.X + (float)SidebarButton.ActualWidth / 2 - (float)TransferIcon.ActualWidth / 2;
+		float endY = (float)targetPosition.Y + (float)SidebarButton.ActualHeight / 2 - (float)TransferIcon.ActualHeight / 2;
+
+		// Reset visual state before starting animation
+		transferIconVisual.Offset = new Vector3(startX, startY, 0);
+		transferIconVisual.Opacity = 0.0f;
+		transferIconVisual.Scale = new Vector3(1.0f, 1.0f, 1.0f); // Fixed size at 1.0
+
+		// Create the easing function
+		// Use a cubic bezier for a swoosh effect (starts slow, speeds up, slows down)
+		Microsoft.UI.Composition.CubicBezierEasingFunction swooshEasing = compositor.CreateCubicBezierEasingFunction(new Vector2(0.55f, 0.055f), new Vector2(0.675f, 0.19f));
+
+		// 1. Movement Animation (Vector3)
+		Microsoft.UI.Composition.Vector3KeyFrameAnimation offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
+		offsetAnimation.InsertKeyFrame(0.0f, new Vector3(startX, startY, 0)); // Start at button
+		offsetAnimation.InsertKeyFrame(1.0f, new Vector3(endX, endY, 0), swooshEasing);     // End at sidebar button
+		offsetAnimation.Duration = TimeSpan.FromMilliseconds(800);
+
+		// Set the target property for the offset animation
+		offsetAnimation.Target = "Offset";
+
+		// 2. Opacity Animation (Fade In then Fade Out)
+		Microsoft.UI.Composition.ScalarKeyFrameAnimation opacityAnimation = compositor.CreateScalarKeyFrameAnimation();
+		opacityAnimation.InsertKeyFrame(0.0f, 0.0f); // Invisible at start
+		opacityAnimation.InsertKeyFrame(0.1f, 1.0f); // Quickly visible
+		opacityAnimation.InsertKeyFrame(0.9f, 1.0f); // Stay visible until 90%
+		opacityAnimation.InsertKeyFrame(1.0f, 0.0f); // Fade out rapidly at the very end
+		opacityAnimation.Duration = TimeSpan.FromMilliseconds(800);
+
+		// Set the target property for the opacity animation
+		opacityAnimation.Target = "Opacity";
+
+		// Create an Animation Group
+		Microsoft.UI.Composition.CompositionAnimationGroup animationGroup = compositor.CreateAnimationGroup();
+		animationGroup.Add(offsetAnimation);
+		animationGroup.Add(opacityAnimation);
+
+		// Start the animation
+		// We use Offset for position relative to the Canvas parent
+		// StartAnimationGroup expects animations inside to have their Target property set.
+		transferIconVisual.StartAnimationGroup(animationGroup);
+	}
+
+
+	#region Event handlers for the Sidebar's Policies Library
+
+	private async void OnSwipeSaveAsXML(SwipeItem sender, SwipeItemInvokedEventArgs args)
+	{
+		if (sender.CommandParameter is PolicyFileRepresent policyContext)
+		{
+			try
+			{
+				_ = await ExecuteSaveAsXML(policyContext);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+	}
+
+	private async void OnSwipeSaveAsCIP(SwipeItem sender, SwipeItemInvokedEventArgs args)
+	{
+		if (sender.CommandParameter is PolicyFileRepresent policyContext)
+		{
+			try
+			{
+				await ExecuteSaveAsCIP(policyContext);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+	}
+
+	private async void OnSwipeRemove(SwipeItem sender, SwipeItemInvokedEventArgs args)
+	{
+		if (sender.CommandParameter is PolicyFileRepresent policyContext)
+		{
+			await ExecuteRemove(policyContext);
+		}
+	}
+
+	private async void OnSwipeOpenInPolicyEditor(SwipeItem sender, SwipeItemInvokedEventArgs args)
+	{
+		if (sender.CommandParameter is PolicyFileRepresent policyContext)
+		{
+			await ExecuteOpenInPolicyEditor(policyContext);
+		}
+	}
+
+	private async void OnSaveAsXMLClicked(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			try
+			{
+				_ = await ExecuteSaveAsXML(policyContext);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+	}
+
+	private async void OnSaveAsCIPClicked(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			try
+			{
+				await ExecuteSaveAsCIP(policyContext);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+	}
+
+	private async void OnRemoveClicked(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			await ExecuteRemove(policyContext);
+		}
+	}
+
+	private async void OnOpenInPolicyEditorClicked(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			await ExecuteOpenInPolicyEditor(policyContext);
+		}
+	}
+
+	private async void OnConfigureRuleOptionsClicked(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			try
+			{
+				await ViewModelProvider.ConfigurePolicyRuleOptionsVM.OpenInConfigurePolicyRuleOptions(policyContext);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+	}
+
+	private async void OnDeployClicked(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			try
+			{
+				await Task.Run(() =>
+				{
+					Logger.Write($"Deploying the policy: {policyContext.PolicyIdentifier}");
+
+					PreDeploymentChecks.CheckForSignatureConflict(policyContext.PolicyObj);
+
+					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+					if (SupplementalForSelf.IsEligible(policyContext.PolicyObj))
+						SupplementalForSelf.Deploy(policyContext.PolicyObj.PolicyID);
+
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyContext.PolicyObj));
+
+					Logger.Write($"Successfully deployed the policy: {policyContext.PolicyIdentifier}");
+				});
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+	}
+
+	internal static async Task<string?> ExecuteSaveAsXML(PolicyFileRepresent policyContext)
+	{
+		string fileName = $"{policyContext.PolicyIdentifier}.xml";
+
+		string? savePath = await App.AppDispatcher.EnqueueAsync(() =>
+			 FileDialogHelper.ShowSaveFileDialog(GlobalVars.XMLFilePickerFilter, fileName)
+		);
+
+		if (savePath is null)
+			return null;
+
+		// Ensure the file path ends with .xml
+		if (!savePath.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+		{
+			savePath += ".xml";
+		}
+
+		Management.SavePolicyToFile(policyContext.PolicyObj, savePath);
+
+		return savePath;
+	}
+
+	private static async Task ExecuteSaveAsCIP(PolicyFileRepresent policyContext)
+	{
+		string fileName = $"{policyContext.PolicyIdentifier}.cip";
+
+		string? savePath = await App.AppDispatcher.EnqueueAsync(() =>
+			FileDialogHelper.ShowSaveFileDialog(GlobalVars.CIPFilesPickerFilter, fileName)
+		);
+
+		if (savePath is null)
+			return;
+
+		// Ensure the file path ends with .cip
+		if (!savePath.EndsWith(".cip", StringComparison.OrdinalIgnoreCase))
+		{
+			savePath += ".cip";
+		}
+
+		Management.ConvertXMLToBinary(policyContext.PolicyObj, savePath);
+	}
+
+	/// <summary>
+	/// Used when searching for policies in the Policies Library local cache.
+	/// </summary>
+	private static readonly EnumerationOptions enumerationOptionsForPoliciesLibraryRemoval = new()
+	{
+		RecurseSubdirectories = false,
+		MatchCasing = MatchCasing.CaseInsensitive
+	};
+
+	/// <summary>
+	/// The only method that should ever remove policies from the Sidebar Library.
+	/// </summary>
+	/// <param name="policyContext"></param>
+	/// <exception cref="InvalidOperationException"></exception>
+	private async Task ExecuteRemove(PolicyFileRepresent policyContext)
+	{
+		try
+		{
+			if (!ViewModel.SidebarPoliciesLibrary.Remove(policyContext))
+			{
+				throw new InvalidOperationException("Failed to remove the policy from the sidebar library.");
+			}
+
+			if (ViewModel.SidebarPoliciesLibrary.Count == 0)
+			{
+				// Hide the animated icons on the currently visible page
+				Nav.AffectPagesAnimatedIconsVisibilitiesEx(false);
+
+				sidebarVM.Nullify();
+			}
+
+			// If the library should be persistent
+			if (AppSettings.PersistentPoliciesLibrary)
+			{
+				await Task.Run(() =>
+				{
+					IEnumerable<string> currentFiles = Directory.EnumerateFiles(MainWindowVM.SidebarPoliciesLibraryCache, $"{policyContext.UniqueObjID}.xml", enumerationOptionsForPoliciesLibraryRemoval);
+					foreach (string file in currentFiles)
+					{
+						File.Delete(file);
+					}
+				});
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Opens a policy from the Sidebar's Library in the Policy Editor.
+	/// </summary>
+	/// <param name="policyContext"></param>
+	/// <returns></returns>
+	private static async Task ExecuteOpenInPolicyEditor(PolicyFileRepresent policyContext)
+	{
+		try
+		{
+			await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(policyContext);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// The method responsible for clearing the Sidebar's policies library.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void ClearPoliciesLibrary(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			// If library is persistent then remove one by one from the cache first
+			if (AppSettings.PersistentPoliciesLibrary)
+			{
+				// Get all of the files in the cache first
+				IEnumerable<string> currentFiles = Directory.EnumerateFiles(MainWindowVM.SidebarPoliciesLibraryCache);
+
+				// Loop over all of the policies in the in-memory library
+				foreach (PolicyFileRepresent item in ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary)
+				{
+					foreach (string file in currentFiles)
+					{
+						if (file.EndsWith($"{item.UniqueObjID}.xml", StringComparison.OrdinalIgnoreCase))
+						{
+							File.Delete(file);
+						}
+					}
+				}
+			}
+
+			// Bulk remove from the in-memory library
+			ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Clear();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// The method responsible for backing up the entire Policies Library to XML files.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void BackupLibrary(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			if (ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Count is 0)
+			{
+				Logger.Write("The Policies Library is empty. Nothing to back up.");
+				return;
+			}
+
+			Logger.Write("Backing up the Policies Library");
+
+			string? selectedDirectory = FileDialogHelper.ShowDirectoryPickerDialog();
+
+			if (selectedDirectory is null)
+				return;
+
+			await Task.Run(() =>
+			{
+				foreach (PolicyFileRepresent item in ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary)
+				{
+					string savePath = Path.Combine(selectedDirectory, $"{item.UniqueObjID}.xml");
+
+					Management.SavePolicyToFile(item.PolicyObj, savePath);
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for right-click context menu option for each policy in the library.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void OnCopyPolicyID(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			ClipboardManagement.CopyText(policyContext.PolicyObj.PolicyID);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for right-click context menu option for each policy in the library.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void OnCopyBasePolicyID(object sender, RoutedEventArgs e)
+	{
+		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
+		{
+			ClipboardManagement.CopyText(policyContext.PolicyObj.BasePolicyID);
+		}
+	}
+
+	#endregion
+
+#endif
 
 }

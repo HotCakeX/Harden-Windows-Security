@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <SiPolicy PolicyType="Base Policy" xmlns="urn:schemas-microsoft-com:sipolicy">
   <VersionEx>1.0.0.0</VersionEx>
   <PolicyID>{0B769010-94AA-4505-ADE2-799F41362905}</PolicyID>
@@ -27,30 +27,26 @@
       <Option>Disabled:Script Enforcement</Option>
     </Rule>
   </Rules>
-  <EKUs />
   <FileRules>
-    <Allow ID="ID_ALLOW_A_0196C2F2BB537A558B835E34A6FDEFD8" FileName="*" />
-    <Allow ID="ID_ALLOW_A_0196C2F2BB5471AA8979D7832F7CEA7E" FileName="*" />
+    <Allow ID="ID_ALLOW_A_019BB10FD96D7E0CADDB2CD0CE92FC62" FileName="*" />
+    <Allow ID="ID_ALLOW_A_019BB10FD96E77E3A6D3B7AE355740A4" FileName="*" />
   </FileRules>
-  <Signers />
   <SigningScenarios>
     <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Code Integrity">
       <ProductSigners>
         <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_0196C2F2BB5471AA8979D7832F7CEA7E" />
+          <FileRuleRef RuleID="ID_ALLOW_A_019BB10FD96D7E0CADDB2CD0CE92FC62" />
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>
     <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel Mode Code Integrity">
       <ProductSigners>
         <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_0196C2F2BB537A558B835E34A6FDEFD8" />
+          <FileRuleRef RuleID="ID_ALLOW_A_019BB10FD96E77E3A6D3B7AE355740A4" />
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners />
-  <CiSigners />
   <HvciOptions>2</HvciOptions>
   <Settings>
     <Setting Provider="AllHostIds" Key="AllKeys" ValueName="EnterpriseDefinedClsId">

@@ -44,7 +44,7 @@ internal sealed class SignerX(
 	List<string>? certEKU,
 	string? certOemID,
 	List<string> fileAttribRef,
-	Dictionary<string, Dictionary<string, string>> fileAttrib,
+	List<ExFileInfo> fileAttrib,
 	string signerScope,
 	bool isWHQL,
 	bool isAllowed,
@@ -59,7 +59,7 @@ internal sealed class SignerX(
 	internal List<string>? CertEKU => certEKU;
 	internal string? CertOemID => certOemID;
 	internal List<string> FileAttribRef => fileAttribRef;
-	internal Dictionary<string, Dictionary<string, string>> FileAttrib => fileAttrib;
+	internal List<ExFileInfo> FileAttrib => fileAttrib;
 	internal string SignerScope => signerScope;
 	internal bool IsWHQL => isWHQL;
 	internal bool IsAllowed => isAllowed;

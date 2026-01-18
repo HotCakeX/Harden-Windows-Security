@@ -182,7 +182,7 @@ jobs:
                   # winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
 
                   # Using this until version 18 build tools are added to Winget
-                  Invoke-RestMethod -Uri "https://aka.ms/vs/18/insiders/vs_BuildTools.exe" -OutFile "vs_BuildTools.exe"
+                  Invoke-RestMethod -Uri 'https://aka.ms/vs/18/insiders/vs_BuildTools.exe' -OutFile 'vs_BuildTools.exe'
                   Start-Process -Wait -FilePath .\vs_BuildTools.exe -ArgumentList '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
 
                   if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
@@ -546,7 +546,6 @@ jobs:
 
               [System.String]$versionARM64 = $MatchARM64.Groups[1].Value
 
-
               if ($versionX64 -ne $versionARM64) {
                   throw [System.InvalidOperationException]::New('The versions in X64 and ARM64 files do not match')
               }
@@ -688,14 +687,14 @@ jobs:
 
                   $Elapsed = $Stopwatch.Elapsed
                   [string]$Result = @"
-                  Execution Time:
-                  ----------------------------
-                  Total Time   : $($Elapsed.ToString('g'))
-                  Hours        : $($Elapsed.Hours)
-                  Minutes      : $($Elapsed.Minutes)
-                  Seconds      : $($Elapsed.Seconds)
-                  Milliseconds : $($Elapsed.Milliseconds)
-                  ----------------------------
+                            Execution Time:
+                            ----------------------------
+                            Total Time   : $($Elapsed.ToString('g'))
+                            Hours        : $($Elapsed.Hours)
+                            Minutes      : $($Elapsed.Minutes)
+                            Seconds      : $($Elapsed.Seconds)
+                            Milliseconds : $($Elapsed.Milliseconds)
+                            ----------------------------
           "@
 
                   Write-Host -Object $Result -ForegroundColor Cyan

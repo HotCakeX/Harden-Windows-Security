@@ -43,7 +43,7 @@
 		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 		<AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
 		<!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
-		<AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 
 		<!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->

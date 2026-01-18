@@ -6,7 +6,7 @@ Thank you for using AppControl Manager ("the App"). This Privacy Policy outlines
 
 ## 1. Information We Collect
 
-The App stores user configurations in `C:\Program Files\AppControl Manager`. The User Configuration file is a JSON file that includes information such as the path to the XML files created by the app. User has full control over this process and can remove or replace the data at any time. No other kind of information is collected or stored.
+The App stores user configurations in `C:\Program Files\AppControl Manager`. User has full control over this process and can remove or replace the data at any time. The app also stores information in its virtualized local file system that is automatically removed when the app is uninstalled. No other kind of information is collected or stored.
 
 ## 2. Use of Your Data
 

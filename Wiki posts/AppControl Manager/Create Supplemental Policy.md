@@ -21,11 +21,13 @@ Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
 This page has 2 modes of operation:
 
-1. **Create New Policy**: In this mode, whenever you create a Supplemental policy, a new policy XML file will be created in the `AppControl Manager` directory.
+1. **Create New Policy**: In this mode, whenever you create a Supplemental policy, a new policy will be created and added to the Policies Library.
 
-2. **Add to Existing Policy**: In this mode, you will have to select an existing App Control XML policy file so that any policy you create will be directly and automatically added to this policy and no new policy file will be created.
+2. **Add to Existing Policy**: In this mode, you will have to select an existing App Control policy so that any policy/rules you create will be directly and automatically added to this policy and no new policy will be created.
 
-   * When this mode is active, elements related to `Policy Name` and `Base Policy File` will be automatically hidden since they won't be needed anymore.
+   * When this mode is active, elements related to `Policy Name` and `Base Policy` will be automatically hidden since they won't be needed anymore.
+
+   * This is a great way to expand your existing policies by adding new rules to them.
 
 <br>
 
@@ -47,7 +49,7 @@ With AppControl Manager, you can easily create a supplemental policy by scanning
 
 * **Select Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
 
-* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Supplemental policy that is created in the end will be deployed on the system.
 
 > [!TIP]\
 > Use the ***View Detected File Details*** section to view highly detailed results of the files and folders scans.
@@ -68,7 +70,7 @@ If you have certificate `.cer` files, you can use this feature to scan them and 
 
 * **Signing Scenario**: Choose between User Mode or Kernel Mode signing scenarios. If you choose User Mode, the supplemental policy will only allow User Mode files signed by that certificate to run and Kernel mode files such as drivers will remain blocked.
 
-* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Supplemental policy that is created in the end will be deployed on the system.
 
 <br>
 
@@ -82,7 +84,7 @@ This supplemental policy does not explicitly permit any files or applications by
 
 * **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
 
-* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Supplemental policy that is created in the end will be deployed on the system.
 
 <br>
 
@@ -102,7 +104,7 @@ This supplemental policy can be created only for Kernel-mode files/drivers, typi
 
 * **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
 
-* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Supplemental policy that is created in the end will be deployed on the system.
 
 <br>
 
@@ -122,7 +124,7 @@ You can create Supplemental policies for the installed packaged apps. These are 
 
    * Use the Refresh button to refresh the list of installed apps in case you removed/installed any apps after the list was loaded.
 
-* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Supplemental policy that is created in the end will be deployed on the system.
 
 <br>
 
@@ -140,7 +142,7 @@ Keep in mind that file rules are only supported for user-mode files. Using file 
 
 * **Custom Pattern-based File Rule**: Enter your pattern here. It will be used as is without any further modifications to it. What you enter here will be what you see in the XML file.
 
-* **Deploy After Creation**: If toggled, only the Supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Supplemental policy that is created in the end will be deployed on the system.
 
 > [!TIP]\
 > Use the ***More Information*** section to view examples and description of different patterns that you can use in this section.

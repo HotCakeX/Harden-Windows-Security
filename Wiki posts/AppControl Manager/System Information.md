@@ -70,7 +70,9 @@ Signed Base policies require additional information during the removal process. 
 
 * **Certificate Common Name**: The Common Name (CN) of the same certificate file you select.
 
-* **XML File**: The path to the XML policy file of the same policy you're trying to remove from the system.
+* **XML File - OPTIONAL**: The path to the XML policy file of the same policy you're trying to remove from the system.
+
+    * If you do not provide the file, the policy will still be successfully removed from the system. If you do provide the file, it will be adjusted and converted to an Unsigned policy.
 
 Once all three fields are populated, press the **Verify** button. This action validates your inputs and enables the **Submit** button, allowing you to proceed with the removal process. All of the information you submit will be saved in app settings so that the next time they will be automatically populated for you.
 
@@ -78,6 +80,8 @@ Following this step, the policy will be re-signed and redeployed on the system w
 
 > [!IMPORTANT]\
 > After completing this process, restart your system. Since signed policies are tamper-resistant, they leverage Secure Boot and reside in the EFI partition. Upon reboot, select the same signed policy and press the Remove **button**. The AppControl Manager will detect the policy as safe for removal and delete it from the system without requiring further input. (**If you do not reboot your system and attempt to remove the signed policy that was just re-signed and re-deployed, it will lead to boot failure.**)
+>
+> AppControl Manager has built-in detection for such situations and will warn you.
 
 <br>
 

@@ -50,7 +50,7 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 
 * **Policy Name**: Enter the name of the policy that will be created from the event logs.
 
-* **Filters logs by date**: Use the calendar to filter the logs based on date they were generated.
+* **Filter by Date**: Use the calendar to filter the logs based on date they were generated.
 
 * **Deploy policy after creation**: Use this toggle button to tell the application that you want to deploy the policy after creation.
 

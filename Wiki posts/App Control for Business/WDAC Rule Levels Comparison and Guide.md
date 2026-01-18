@@ -5,8 +5,10 @@ This document lists all of the levels of App Control rules. **From Top to bottom
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number0.gif" width="40" alt="Neon number"> Hash
 
 * File's SHA2-256 Authenticode hash
+* File's SHA1-160 Authenticode hash
 
 * File's SHA2-256 Page hash
+* File's SHA1-160 Page hash
 
 <br>
 

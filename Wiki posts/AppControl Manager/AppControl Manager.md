@@ -175,7 +175,7 @@ The codebase is extensively and thoughtfully documented, enabling reviewers to t
 
 * AppControl Manager employs MediumIL (Medium Integrity Level) when running as an Administrator, ensuring that non-elevated processes cannot access its memory or attach debuggers. Given that the app handles sensitive information—such as Microsoft 365 authentication tokens stored in private variables—this design decision safeguards these tokens from unauthorized, unelevated access or tampering.
 
-* Administrator privileges are required for scanning Code Integrity and AppLocker logs. These scans are integral to several application functions, providing enhanced insights and enabling the generation of precise supplemental policies tailored to your needs.
+* Administrator privileges are required for scanning certain files in the operating system directory. These scans are integral to several application functions, providing enhanced insights and enabling the generation of precise supplemental policies tailored to your needs.
 
 * Deploying, removing, modifying, or checking the status of policies also necessitates Administrator privileges to ensure secure and reliable execution of these operations.
 
@@ -193,8 +193,6 @@ C:\Program Files\AppControl Manager
 
 Everything the AppControl Manager creates/generates will be saved in that directory ***or one of its sub-directories***, such as:
 
-* XML policy files
-* CIP files
 * Generated certificates
 * Logs
 * User Configurations JSON file
@@ -334,48 +332,11 @@ explorer.exe shell:AppsFolder\VioletHansen.AppControlManager_ea7andspwdn10!App
 
 <br>
 
-## How To Install AppControl Manager Completely Offline?
-
-1. Download [this PowerShell script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1).
-
-2. Have `SignTool.exe`. You can find it in [here](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/) if you don't already have it.
-
-3. Download the latest MSIXBundle package of the AppControl Manager from the [GitHub releases](https://github.com/HotCakeX/Harden-Windows-Security/releases) or build it from [the source code](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager) yourself.
-
-4. Start an elevated PowerShell and import the script file via `Import-Module "Path to script file"`.
-
-5. Use the following syntax to Install the AppControl Manager
-
-```powershell
-AppControl -MSIXBundlePath "Path To the MSIXBundle" -SignTool "Path to signtool.exe" -Verbose
-```
-
-<br>
-
-## About the GitHub Packages Installation Process
-
-> [!Warning]\
-> The following only happens during GitHub installation method, when you run the one-liner script to install the AppControl Manager then the steps described below will automatically run. **However, if you choose to install the AppControl Manager from the [Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8) then the following steps are not necessary and will not be used.**
-
-The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:
-
-* The latest version of the AppControl Manager MSIXBundle package is securely downloaded from the GitHub release page, where it is built publicly with full artifact attestation and SBOMs.
-
-* The `SignTool.exe` utility is sourced directly from Microsoft by retrieving the associated [NuGet package](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/), ensuring a trusted origin.
-
-* A secure, on-device code-signing certificate is then generated. This certificate, managed by the Microsoft-signed `SignTool.exe`, is used to sign the [MSIXBundle package](https://learn.microsoft.com/windows/msix/packaging-tool/bundle-msix-packages) obtained from GitHub.
-
-* The private key of the certificate is non-exportable, never written on the disk and is securely discarded once signing is complete, leaving only the public key on the device to allow AppControl Manager to function properly on the system and prevent the certificate from being able to sign anything else.
-
-* The entire process is designed to leave no residual files. Each time the script runs, any certificates from previous executions are detected and removed, ensuring a clean system.
-
-<br>
-
 ## How To Build The AppControl Manager Locally?
 
 You can build the AppControl Manager application directly from the source code locally on your device without using any 3rd party tools in a completely automated way.
 
-It will create the MSIXBundle file containing the X64 and ARM64 MSIX packages. You can even optionally chain it with the [Bootstrapper script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) to sign and install the application on your system at the end.
+It will create the MSIXBundle file containing the X64 and ARM64 MSIX packages.
 
 The build process will generate complete log files and you can use the [MSBuild Structured Log Viewer](https://learn.microsoft.com/shows/visual-studio-toolbox/msbuild-structured-log-viewer) to inspect them.
 

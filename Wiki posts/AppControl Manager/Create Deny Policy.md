@@ -23,6 +23,18 @@ All Deny policies have 2 allow all rules so that anything not denied by them wil
 
 <br>
 
+This page has 2 modes of operation:
+
+1. **Create New Policy**: In this mode, whenever you create a Deny policy, a new policy will be created and added to the Policies Library.
+
+2. **Add to Existing Policy**: In this mode, you will have to select an existing App Control policy so that any policy/rules you create will be directly and automatically added to this policy and no new policy will be created.
+
+   * When this mode is active, elements related to `Policy Name` will be automatically hidden since they won't be needed anymore.
+
+   * This is a great way to expand your existing policies by adding new rules to them.
+
+<br>
+
 ## Create a Deny Policy by Files or Folders Scan
 
 With AppControl Manager, you can easily create a Deny base policy by scanning files or folders.
@@ -39,7 +51,7 @@ With AppControl Manager, you can easily create a Deny base policy by scanning fi
 
 * **Select Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
 
-* **Deploy After Creation**: If toggled, only the Deny policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Deny policy that is created in the end will be deployed on the system.
 
 > [!TIP]\
 > Use the ***View Detected File Details*** section to view highly detailed results of the files and folders scans.
@@ -60,7 +72,7 @@ You can create Deny policies for the installed packaged apps. This is useful for
 
    * Use the Refresh button to refresh the list of installed apps in case you removed/installed any apps after the list was loaded.
 
-* **Deploy After Creation**: If toggled, only the Deny policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Deny policy that is created in the end will be deployed on the system.
 
 <br>
 
@@ -76,7 +88,7 @@ Keep in mind that file rules are only supported for user-mode files. Using file 
 
 * **Custom Pattern-based File Rule**: Enter your pattern here. It will be used as is without any further modifications to it. What you enter here will be what you see in the XML file.
 
-* **Deploy After Creation**: If toggled, only the Deny policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the Deny policy that is created in the end will be deployed on the system.
 
 > [!TIP]\
 > Use the ***More Information*** section to view examples and description of different patterns that you can use in this section.

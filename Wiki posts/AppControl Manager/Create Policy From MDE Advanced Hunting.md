@@ -20,9 +20,31 @@ Performing Advanced Hunting queries requires `ThreatHunting.Read.All` [permissio
 
 <br>
 
+### Supported Event Types
+
+Only the following [event types](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-id-explanations) are processed because they are the only ones that provide sufficient detail about applications allowed or blocked by Code Integrity or AppLocker to reliably generate supplemental policies.
+
+* **Code Integrity**:
+
+  * **Event ID `3076`:** This event is the main App Control block event for audit mode policies. It indicates that the file would have been blocked if the policy was enforced.
+
+  * **Event ID `3077`:** This event is the main App Control block event for enforced policies. It indicates that the file didn't pass your policy and was blocked.
+
+  * **Event ID `3089`:** This event contains signature information for files that were blocked or audit blocked by App Control. One of these events is created for each signature of a file.
+
+* **AppLocker**:
+
+  * **Event ID `8028`:** This event indicates that a script host, such as PowerShell, queried App Control about a file the script host was about to run. Since the policy was in audit mode, the script or MSI file should have run, but wouldn't have passed the App Control policy if it was enforced.
+
+  * **Event ID `8029`:** This event is the enforcement mode equivalent of event 8028. Note: While this event says that a script was blocked, the script hosts control the actual script enforcement behavior.
+
+  * **Event ID `8038`:** Signing information event correlated with either an 8028 or 8029 event. One 8038 event is generated for each signature of a script file. Contains the total number of signatures on a script file and an index as to which signature it is.
+
+<br>
+
 ## Configuration Details
 
-* **Filters logs by date**: Use the calendar to filter the logs based on date they were generated.
+* **Filter by Date**: Use the calendar to filter the logs based on date they were generated.
 
 * **Search box**: Use this box to search for specific logs based on any available criteria/column.
 
@@ -69,5 +91,13 @@ Performing Advanced Hunting queries requires `ThreatHunting.Read.All` [permissio
 * **Actions -> Deploy Policy After Creation**: Use this option to automatically deploy the App Control policy that you create with MDE Advanced Hunting logs to the local system.
 
 * **Only Use Selected Items**: If this button is toggled, only the items in the List View that are highlighted will be added to the Supplemental policy. If this button is not toggled, then everything available in the List View will be added to the Supplemental policy.
+
+<br>
+
+> [!TIP]\
+> The MDE Advanced Hunting parsing engine in the AppControl Manager performs deduplication based on the following 2 rules in order to present actionable data to you:
+>
+> 1. If there are more than 1 logs **for the same exact file**, and one of them is signed and the other is unsigned, the one that is signed is kept and the unsigned ones are discarded. These kinds of logs can sometimes be generated in Code Integrity Operational or MDE data, that is why this deduplication rule exists.
+> 2. If there are more than 1 logs **for the same exact file**, and the only property that is different in them is the Time Stamp, then the log that is the newest is kept and the rest are discarded.
 
 <br>

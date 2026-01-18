@@ -26,7 +26,7 @@ Assuming you've already deployed a base policy, you can create a supplemental po
 
 In the **Files and Folders section**, browse for your base policy's XML file. Enter a descriptive name for the supplemental policy that will be created and browse for files and/or folders to scan. If you select folders, they will be scanned recursively, meaning any file(s) in the sub-folder(s) will also be included in the scan.
 
-The default [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) is set to `File Publisher` but you can change it to another level that meets your needs. This level will create signature-based rules for signed files and hash based rules for unsigned files.
+The default [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) is set to `WHQL File Publisher` but you can change it to another level that meets your needs. This level will create signature-based rules for signed files and hash based rules for unsigned files.
 
 <br>
 
@@ -40,9 +40,9 @@ The default [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDA
 
 <br>
 
-After you've submitted the necessary details, press the `Create Supplemental Policy` button. The scan will begin and you will be able to view the progress in real time. If you toggle the `Deploy After Creation` button, the policy will be automatically deployed on the local system, otherwise the XML file will just be created.
+After you've submitted the necessary details, press the `Create Supplemental Policy` button. The scan will begin and you will be able to view the progress in real time. If you toggle the `Deploy After Creation` button, the policy will be automatically deployed on the local system, otherwise only the policy will be created and added to the Policies Library on the Sidebar.
 
-You can customize the XML file further using different pages and features of the AppControl Manager.
+You can customize the created policy further using different pages and features of the AppControl Manager.
 
 <br>
 

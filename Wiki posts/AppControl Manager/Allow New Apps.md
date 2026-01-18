@@ -30,7 +30,7 @@ If something like a power outage occurs during the audit mode phase, on the next
 > This feature can also detect and create supplemental policy for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode so that it can capture those executables.
 
 > [!TIP]\
-> You can use both Signed and Unsigned App Control policies. The app will automatically detect the signing status of the XML policy file that you select and prompt for any additional information required.
+> You can use both Signed and Unsigned App Control policies. The app will automatically detect the signing status of the policy that you select and prompt for any additional information required.
 
 <br>
 
@@ -38,11 +38,11 @@ If something like a power outage occurs during the audit mode phase, on the next
 
 You can also use this page to create supplemental policies for every program you wish to deploy to your endpoints. For example, if your company needs to allow the employees to use 20 programs such as Photoshop, AutoDesk, Visual Studio etc., you can follow these steps:
 
-1. Prepare a clean VM (Virtual Machine such as Hyper-V) by installing the latest OS version on it and updating it. After update and restart of the guest OS in the VM, Install the **AppControl Manager** on it and shut it down. Now create a Hyper-V checkpoint. You will use this checkpoint to return back to this clean state.
+1. Prepare a clean VM (Virtual Machine such as Hyper-V) by installing the latest OS version on it and updating it. After update and restart of the guest OS in the VM, Install the **AppControl Manager** on it and shut it down. Now create a Hyper-V checkpoint. You will use this checkpoint to return back to this clean state later on.
 
 2. Use AppControl Manager to [deploy a base policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) such as `Allow Microsoft`.
 
-3. Use the `Allow New Apps` feature to browse for the base policy and enter the name of the program you wish to create a supplemental policy for.
+3. Use the `Allow New Apps` feature, select the base policy and enter the name of the program you wish to create a supplemental policy for.
 
 4. In `Step 2`, the Audit mode is enabled, so start installing your program. After installation is completed, run the program, use it a bit and close it.
 
@@ -56,7 +56,7 @@ You can also use this page to create supplemental policies for every program you
 
 9. After the policy is deployed, try starting your program again and make sure it 100% works and all of its features are usable.
 
-10. If one of the files of the program still gets blocked, that means you didn't browse for the directory where that file is located or you didn't use the program's feature that would trigger audit logs to be generated for its files. AppControl Manager offers multiple features that you can use to generate supplemental policies and then [merge them all](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies) into one. For example, you can [create a supplemental policy just from the event logs](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs).
+10. If one of the files of the program still gets blocked, that means you didn't browse for the directory where that file is located or you didn't use the program's feature that would trigger audit logs to be generated for its files. AppControl Manager offers multiple features that you can use to generate supplemental policies and then [merge them all](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies) into one. For example, you can [create a supplemental policy just from the event logs](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs). You can also easily and quickly expand the supplemental policy that you just created by adding new rules to it.
 
 <br>
 
@@ -64,7 +64,7 @@ You can also use this page to create supplemental policies for every program you
 
 * **Supplemental Policy Name**: Enter the name for the Supplemental policy that will be created. Preferably use the name of the app you're trying to install so that you will be able to recognize the policy in System Information page easily.
 
-* **Browse for a Policy XML file**: Use this button to browse for the path to the base policy file.
+* **Browse for a Policy XML file**: Use this button to browse for the path to the base policy file, or pick a policy from the Policies Library on the Sidebar.
 
 * **Log Size**: Use this number box to increase or decrease the maximum capacity of the `Code Integrity/Operational` logs. The bigger the number, the more events will be captured without being overwritten.
 
@@ -72,6 +72,6 @@ You can also use this page to create supplemental policies for every program you
 
 * **Browse for folders**: Use this button in Step 2 to browse for the installation directories of the app(s) you installed. This will help improve the accuracy of the supplemental policy that will be created. If for some reason you cannot locate the installation directory of the app you installed, ensure you start the app after installation, use it as you normally would so that audit logs will be generated for all of its files and components. These audit logs will then be displayed to you in the `Review the Event Logs` tab.
 
-* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+* **Deploy After Creation**: If toggled, the supplemental policy that is created in the end will be deployed on the system.
 
 <br>

@@ -10,8 +10,13 @@
 
 <br>
 
-Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) page to validate AppControl Manager XML files against the official schema that is located in `C:\Windows\schemas\CodeIntegrity\cipolicy.xsd`.
+Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) page to validate App Control policies and make sure they are correct. If you manually modified some parts of an App Control policy, this is a great way to ensure your modifications are valid. If the policy is not valid, you will see an error message that will help you understand what is wrong with the policy so you can fix it.
 
-If you manually modified some parts of an App Control policy, this is a great way to ensure your modifications are valid. If the policy is not valid, you will see an error message that will help you understand what is wrong with the policy so you can fix it.
+There are multiple phases of validation that you can use:
+
+1. Validation against the official schema that is located in `C:\Windows\schemas\CodeIntegrity\cipolicy.xsd`.
+2. Deeper analysis of the policy content.
+3. Extended tests on the policy content to make sure they are valid.
+4. Ensure the policy can be correctly converted to binary CIP and display the binary size.
 
 <br>

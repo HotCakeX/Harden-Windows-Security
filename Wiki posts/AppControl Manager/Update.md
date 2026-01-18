@@ -10,13 +10,12 @@
 
 <br>
 
-> [!NOTE]\
-> This page is only available if you installed the AppControl Manager from the GitHub source. If you installed it from Microsoft Store, you will be using Microsoft Store to receive new features and updates.
+In the [AppControl Manager's](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) update page you can configure the app to automatically check for updates at startup. Updates are installed from the Microsoft Store. You also have the option to rate and review the AppControl Manager on the Store.
 
-In the [AppControl Manager's](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) update page you can configure the app to automatically check for updates at startup. Alternatively, you can manually check for updates or customize the update behavior to use a hardened update procedure for enhanced security.
+## Install App Packages
 
-Additionally, you can select an MSIXBundle to install as an update for AppControl Manager. This feature is particularly useful if you've already downloaded the MSIXBundle file from GitHub or [built the application from the source code yourself](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#how-to-build-the-appcontrol-manager-locally).
+This section, which is available when running elevated (aka as an Administrator), allows you to install any MSIX/MSIXBundle package on your system. If the package you're trying to install is signed then it will be directly installed. If it is not signed, its designated certificate common name and hashing algorithm will be detected from its manifest, a unique matching certificate will be generated on your system in order to sign the package and then install it. This significantly simplifies any app package installation by abstracting and automating the entire process.
 
-The update experience is very convenient and non-intrusive because when the app is updated, it won't restart itself, instead it will wait for you to close it and the next time you open it you will be automatically using the new version.
+* Hardened Update Procedure: when this option is enabled, the temporary private key of the on-device generated certificate used to sign the unsigned MSIX/MSIXBundle package, will be linked to the user's account, requiring confirmation of prompts before it can be used for signing.
 
 <br>

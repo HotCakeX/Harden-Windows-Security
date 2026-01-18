@@ -10,11 +10,11 @@
 
 <br>
 
-Use this page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to build a new Code Signing certificate that is suitable for signing App Control policies according to the [Microsoft's requirements](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering). This page offers multiple options to configure the generated certificate according to your needs and requirements. The keys use `SHA2-512` hashing algorithm.
+Use this page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to build a new Code Signing certificate that is suitable for signing App Control policies according to the [Microsoft's requirements](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering). This page offers multiple options to configure the generated certificate according to your needs and requirements.
 
 You will see a prompt asking for password during certificate building process. This is the password that will be used to protect the certificate's private key on your system. You can uncheck the box for passwords and only use confirmation prompts. The password or confirmation prompt will be displayed to you every time the private key of the certificate is going to be used to sign a file.
 
-After building the certificate, 2 files will be created in the `C:\Program Files\WDACConfig` directory with `.cer` and `.pfx` extensions and the same name as the common name you selected.
+After building the certificate, 2 files will be created in the `C:\Program Files\AppControl Manager` directory with `.cer` and `.pfx` extensions and the same name as the common name you selected.
 
    * The file with the `.cer` extension contains the public key of the certificate.
 
@@ -25,6 +25,8 @@ After building the certificate, 2 files will be created in the `C:\Program Files
 ## Configuration Details
 
 * **Key Size**: The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate. It uses the RSA algorithm. App Control only supports key sizes up to `4096`.
+
+* **Algorithm**: The cryptographic algorithm used for encryption. `SHA2-512` is the default and is the most secure option supported by App Control policies at this time. There are other algorithms you can use such as SHA-3 family of hashes.
 
 * **Common Name**: The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for.
 

@@ -39,7 +39,10 @@ namespace PartnerCenter;
 
 [JsonSerializable(typeof(ApplicationPackage))]
 [JsonSerializable(typeof(ApplicationPackage[]))]
-[JsonSourceGenerationOptions(WriteIndented = false)]
+[JsonSourceGenerationOptions(
+	WriteIndented = false,
+	PropertyNameCaseInsensitive = true,
+	DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 internal sealed partial class ApplicationPackageJsonContext : JsonSerializerContext
 {
 }
@@ -47,57 +50,49 @@ internal sealed partial class ApplicationPackageJsonContext : JsonSerializerCont
 internal sealed class ApplicationPackage
 {
 	[JsonInclude]
-	[JsonPropertyName("fileName")]
+	[JsonPropertyName("FileName")]
 	internal string FileName { get; init; } = string.Empty;
 
 	[JsonInclude]
-	[JsonPropertyName("fileStatus")]
+	[JsonPropertyName("FileStatus")]
 	internal string FileStatus { get; init; } = "PendingUpload";
 
 	[JsonInclude]
-	[JsonPropertyName("minimumDirectXVersion")]
+	[JsonPropertyName("MinimumDirectXVersion")]
 	internal string MinimumDirectXVersion { get; init; } = "None";
 
 	[JsonInclude]
-	[JsonPropertyName("minimumSystemRam")]
+	[JsonPropertyName("MinimumSystemRam")]
 	internal string MinimumSystemRam { get; init; } = "None";
 
 	[JsonInclude]
-	[JsonPropertyName("id")]
+	[JsonPropertyName("Id")]
 	internal string? Id { get; init; }
 
 	[JsonInclude]
-	[JsonPropertyName("version")]
+	[JsonPropertyName("Version")]
 	internal string? Version { get; init; }
 
 	[JsonInclude]
-	[JsonPropertyName("architecture")]
+	[JsonPropertyName("Architecture")]
 	internal string? Architecture { get; init; }
 
 	[JsonInclude]
-	[JsonPropertyName("targetPlatform")]
-	internal string? TargetPlatform { get; init; }
-
-	[JsonInclude]
-	[JsonPropertyName("languages")]
+	[JsonPropertyName("Languages")]
 	internal string[]? Languages { get; init; }
 
 	[JsonInclude]
-	[JsonPropertyName("capabilities")]
+	[JsonPropertyName("Capabilities")]
 	internal string[]? Capabilities { get; init; }
-
-	[JsonInclude]
-	[JsonPropertyName("targetDeviceFamilies")]
-	internal string[]? TargetDeviceFamilies { get; init; }
 
 	/// <summary>
 	/// Validates that the JSON object contains exactly the expected properties.
-	/// Throws an exception if there are missing or extra properties.
+	/// Throws an exception if there are extra properties.
 	/// </summary>
 	internal static void ValidateJsonStructure(JsonElement jsonElement)
 	{
 		// Defining the expected properties
-		HashSet<string> expectedProperties = new(StringComparer.Ordinal)
+		HashSet<string> expectedProperties = new(StringComparer.OrdinalIgnoreCase)
 		{
 			"fileName",
 			"fileStatus",
@@ -113,7 +108,7 @@ internal sealed class ApplicationPackage
 		};
 
 		// Get actual properties from JSON
-		HashSet<string> actualProperties = new();
+		HashSet<string> actualProperties = new(StringComparer.OrdinalIgnoreCase);
 		foreach (JsonProperty property in jsonElement.EnumerateObject())
 		{
 			_ = actualProperties.Add(property.Name);
@@ -148,7 +143,7 @@ internal sealed class ApplicationPackage
 	/// </summary>
 	internal static ApplicationPackage FromJsonElement(JsonElement jsonElement)
 	{
-		ValidateJsonStructure(jsonElement);
+		// ValidateJsonStructure(jsonElement);
 
 		ApplicationPackage? package = JsonSerializer.Deserialize(jsonElement.GetRawText(), ApplicationPackageJsonContext.Default.ApplicationPackage);
 		return package ?? throw new InvalidOperationException("Failed to deserialize ApplicationPackage");
@@ -795,7 +790,7 @@ internal static class Helpers
 
 		Console.WriteLine($"Total packages after adding new one: {existingPackages.Count}");
 
-		// Serialize the updated packages array
+		// Serialize the updated packages array		
 		string packagesJson = JsonSerializer.Serialize(existingPackages.ToArray(), ApplicationPackageJsonContext.Default.ApplicationPackageArray);
 
 		// Parse the packages JSON as a JsonArray and update the submission
@@ -921,7 +916,7 @@ internal static class Helpers
 		}
 
 		// Set fileStatus = PendingDelete (must keep ALL other fields intact; API requires retaining the entry)
-		// If fileStatus property missing, we add it.
+		// If fileStatus property missing, we add it.		
 		oldest.PackageObject["fileStatus"] = "PendingDelete";
 
 		string removedFileName = oldest.PackageObject.TryGetPropertyValue("fileName", out JsonNode? removedNameNode)

@@ -935,7 +935,7 @@ function Build_ACM {
         [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
         [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID
         [System.String]$ClientSecret = $env:PARTNERCENTER_CLIENTSECRET
-        [System.String]$ApplicationId = $env:PARTNERCENTER_APPLICATIONID
+        [System.String]$ApplicationId = $env:PARTNERCENTER_APPLICATIONID_ACM
 
         [System.String]$PackageFilePath = $MSIXBundle
         [System.String]$ReleaseNotesFilePath = (Resolve-Path -Path ReleaseNotes.txt).Path

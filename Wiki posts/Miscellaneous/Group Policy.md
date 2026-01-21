@@ -203,22 +203,6 @@ Note: At first, when we clean install Windows, the Group Policy folder `C:\Windo
 
 <br>
 
-## How to verify Security-Baselines-X directory and 100% trust it?
-
-1. Download [the files from here](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X).
-2. Open the Policy Analyzer, Navigate to Add -> File -> Select either `Add User Configuration (registry.pol)` or `Add Security Template (*.inf)` -> Browse for the `Security-Baselines-X` directory, navigate to the category you want.
-3. Select either `.pol` or `.inf` file, Import it, give it a name, save it in `\Documents\PolicyAnalyzer\`
-
-4. Back at the main window, use "Compare to Effective State" button to view what policies are included in the file.
-
-5. As you will see, everything is according to what has been explicitly stated in the [GitHub's Readme page](https://github.com/HotCakeX/Harden-Windows-Security).
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
 ## Using Configuration Service Providers (CSPs) and Provisioning Packages (Work in Progress)
 
 This command gets the information about all installed provisioning packages on your system.

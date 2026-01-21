@@ -44,7 +44,7 @@ Exploit protection helps protect devices from malware that uses exploits to spre
 
 * [Read More](https://learn.microsoft.com/en-us/defender-endpoint/evaluate-exploit-protection)
 
-* [Read More](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv)
+* [Read More](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/Resources/Mitigations/ProcessMitigations.csv)
 
 <br>
 

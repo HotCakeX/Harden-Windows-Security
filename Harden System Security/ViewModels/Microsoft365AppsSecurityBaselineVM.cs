@@ -534,12 +534,12 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// </summary>
 	private static readonly FrozenDictionary<string, string> DownloadURLs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 	{
-		{"Microsoft 365 Apps for Enterprise 2412", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip"}
+		{"Microsoft 365 Apps for Enterprise 2512", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Microsoft%20365%20Apps%20for%20Enterprise%202512.zip"}
 	}.ToFrozenDictionary<string, string>();
 
 	internal List<string> SecurityBaselinesComboBoxItemsSource => DownloadURLs.Keys.ToList();
 
-	internal string SecurityBaselinesComboBoxSelectedItem { get; set => SP(ref field, value); } = "Microsoft 365 Apps for Enterprise 2412";
+	internal string SecurityBaselinesComboBoxSelectedItem { get; set => SP(ref field, value); } = "Microsoft 365 Apps for Enterprise 2512";
 
 	/// <summary>
 	/// The path to the custom baseline file, if any.

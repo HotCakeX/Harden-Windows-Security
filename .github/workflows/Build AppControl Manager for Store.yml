@@ -707,7 +707,7 @@ jobs:
           # Build_ACM -IsNonStore $true -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Upload $false
 
       - name: Configure Microsoft Store CLI 
-        uses: microsoft/microsoft-store-apppublisher@v1.1 
+        uses: microsoft/microsoft-store-apppublisher@v1.3 
 
       - name: Reconfigure store credentials
         run: | 

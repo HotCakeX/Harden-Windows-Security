@@ -709,12 +709,10 @@ jobs:
       - name: Configure Microsoft Store CLI 
         uses: microsoft/microsoft-store-apppublisher@v1.1 
 
-      - name: Reconfigure store credentials 
-        run: msstore reconfigure ` 
-                      --tenantId ${{ secrets.PARTNERCENTER_TENANTID }} ` 
-                      --sellerId ${{ secrets.PARTNERCENTER_SELLERID }} ` 
-                      --clientId ${{ secrets.PARTNERCENTER_CLIENTID }} ` 
-                      --clientSecret ${{ secrets.PARTNERCENTER_CLIENTSECRET }} 
+      - name: Reconfigure store credentials
+        shell: pwsh 
+        run: msstore reconfigure --tenantId "${{ secrets.PARTNERCENTER_TENANTID }}" --sellerId "${{ secrets.PARTNERCENTER_SELLERID }}" --clientId "${{ secrets.PARTNERCENTER_CLIENTID }}" --clientSecret "${{ secrets.PARTNERCENTER_CLIENTSECRET }}"
 
       - name: Publish App package 
-        run: msstore publish '${{ env.MSIXBundle_PATH }}' -id 9PNG1JDDTGP8
+        shell: pwsh
+        run: msstore publish "${{ env.MSIXBundle_PATH }}" -id "9PNG1JDDTGP8"

@@ -1,3 +1,1 @@
-* Updated dependencies to the latest version.
-
-* In the app close confirmation dialog, the default selected button is now set to "No" instead of "Yes" to follow best practices.
+* Updated the Microsoft 365 Apps Security Baseline from 24H2 to 25H2.

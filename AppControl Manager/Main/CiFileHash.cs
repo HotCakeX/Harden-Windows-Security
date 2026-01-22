@@ -136,7 +136,7 @@ internal static class CiFileHash
 		return results;
 	}
 
-	private static string?[] GetAllAuthenticodeHashesManual(string filePath)
+	private static unsafe string?[] GetAllAuthenticodeHashesManual(string filePath)
 	{
 		// Results array with same order as input hashAlgorithms array
 		string?[] results = new string?[HashAlgorithmsManual.Length];
@@ -209,28 +209,30 @@ internal static class CiFileHash
 			// Parse PE structure to get ranges to hash
 			var hashRanges = GetAuthenticodeHashRangesFromMemoryMappedCached(filePath, accessor, fileStream.Length);
 
-			// Hash each range for all algorithms with optimized chunking
-			foreach ((long Start, long Length) in hashRanges)
+			byte* basePointer = null;
+			accessor.SafeMemoryMappedViewHandle.AcquirePointer(ref basePointer);
+
+			try
 			{
-				long remaining = Length;
-				long currentOffset = Start;
-
-				while (remaining > 0)
+				// Hash each range for all algorithms with optimized chunking
+				foreach ((long Start, long Length) in hashRanges)
 				{
-					int currentChunkSize = (int)Math.Min(remaining, ChunkAndBufferSize);
+					long remaining = Length;
+					long currentOffset = Start;
 
-					byte[] chunkData = BufferPool.Rent(currentChunkSize);
-					try
+					while (remaining > 0)
 					{
-						// Read chunk from memory-mapped file
-						_ = accessor.ReadArray(currentOffset, chunkData, 0, currentChunkSize);
+						int currentChunkSize = (int)Math.Min(remaining, ChunkAndBufferSize);
+
+						// Direct pointer access
+						byte* chunkPtr = basePointer + currentOffset;
 
 						// Hash this chunk for all algorithms
 						for (int i = 0; i < HashAlgorithmsManual.Length; i++)
 						{
-							int status = NativeMethods.BCryptHashData(
+							int status = NativeMethods.BCryptHashData_Ptr(
 								hashObjectHandles[i],
-								chunkData,
+								chunkPtr,
 								(uint)currentChunkSize,
 								0);
 
@@ -239,15 +241,15 @@ internal static class CiFileHash
 								throw new InvalidOperationException($"Failed to hash data range for {HashAlgorithmsManual[i]}. Status: 0x{status:X8}");
 							}
 						}
-					}
-					finally
-					{
-						BufferPool.Return(chunkData);
-					}
 
-					currentOffset += currentChunkSize;
-					remaining -= currentChunkSize;
+						currentOffset += currentChunkSize;
+						remaining -= currentChunkSize;
+					}
 				}
+			}
+			finally
+			{
+				accessor.SafeMemoryMappedViewHandle.ReleasePointer();
 			}
 
 			// Finish all hashes and convert to hex strings
@@ -701,7 +703,7 @@ internal static class CiFileHash
 					while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
 					{
 						// Update SHA3-512 hash with the current chunk
-						status = NativeMethods.BCryptHashData(
+						status = NativeMethods.BCryptHashData_Byte(
 							sha3_512HashObjectHandle,
 							buffer,
 							(uint)bytesRead,
@@ -713,7 +715,7 @@ internal static class CiFileHash
 						}
 
 						// Update SHA3-384 hash with the current chunk
-						status = NativeMethods.BCryptHashData(
+						status = NativeMethods.BCryptHashData_Byte(
 							sha3_384HashObjectHandle,
 							buffer,
 							(uint)bytesRead,

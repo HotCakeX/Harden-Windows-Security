@@ -5162,4 +5162,10 @@
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>എന്തെങ്കിലും പ്രവർത്തനം നടക്കുമ്പോൾ ചില പ്രത്യേക സാഹചര്യങ്ങളിൽ മാത്രം ആപ്പ് ക്ലോസ് ചെയ്യുന്നതിന് മുമ്പ് സ്ഥിരീകരണം ചോദിക്കുക.</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>അതെ</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>അല്ല</value>
+  </data>
 </root>

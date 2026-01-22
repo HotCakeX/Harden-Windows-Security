@@ -857,7 +857,8 @@ internal sealed partial class MainWindow : Window
 		Grid? closestElement = null;
 
 		// Iterate through realized elements
-		for (int i = 0; i < ViewModel.SidebarPoliciesLibrary.Count; i++)
+		// Using FilteredSidebarPolicies because that's what the ItemsRepeater is bound to.
+		for (int i = 0; i < ViewModel.FilteredSidebarPolicies.Count; i++)
 		{
 			// TryGetElement returns the Root of DataTemplate -> SwipeControl
 			UIElement? element = animatedScrollRepeater.TryGetElement(i);

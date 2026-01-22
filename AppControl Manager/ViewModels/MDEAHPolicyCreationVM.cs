@@ -576,7 +576,7 @@ DeviceEvents
 
 				foreach (string file in MDEAdvancedHuntingLogs.UniqueItems)
 				{
-					List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(file);
+					List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.ReadCsv(file);
 
 					HashSet<FileIdentity> data = GetMDEAdvancedHuntingLogsData.Retrieve(MDEAHCSVData);
 

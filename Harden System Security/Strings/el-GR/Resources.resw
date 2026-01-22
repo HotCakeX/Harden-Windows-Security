@@ -5162,4 +5162,10 @@
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Να ζητείται επιβεβαίωση πριν από το κλείσιμο της εφαρμογής μόνο υπό ορισμένες συνθήκες, όταν υπάρχει λειτουργία σε εξέλιξη.</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>Ναι</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Όχι</value>
+  </data>
 </root>

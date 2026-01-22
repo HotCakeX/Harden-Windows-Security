@@ -5162,4 +5162,10 @@ Fingerabdruck: {3}</value>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Nur unter bestimmten Umständen vor dem Schließen der App nach einer Bestätigung fragen, wenn ein Vorgang läuft.</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
 </root>

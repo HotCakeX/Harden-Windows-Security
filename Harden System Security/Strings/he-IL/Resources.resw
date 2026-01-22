@@ -5162,4 +5162,10 @@
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>בקש אישור לפני סגירת האפליקציה רק בנסיבות מסוימות, כאשר מתבצעת פעולה.</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>כן</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>לא</value>
+  </data>
 </root>

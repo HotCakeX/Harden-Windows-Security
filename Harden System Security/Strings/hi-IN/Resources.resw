@@ -5162,4 +5162,10 @@
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>केवल कुछ परिस्थितियों में ऐप बंद करने से पहले पुष्टि मांगें जब कोई ऑपरेशन चल रहा हो।</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>हाँ</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>नहीं</value>
+  </data>
 </root>

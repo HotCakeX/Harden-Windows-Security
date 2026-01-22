@@ -5162,4 +5162,10 @@ Odcisk Palca: {3}</value>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pytaj o potwierdzenie przed zamknięciem aplikacji tylko w określonych okolicznościach, gdy trwa operacja.</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>Tak</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nie</value>
+  </data>
 </root>

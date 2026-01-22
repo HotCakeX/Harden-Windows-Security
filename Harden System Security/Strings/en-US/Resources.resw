@@ -5162,7 +5162,6 @@ Thumbprint: {3}</value>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Only ask for confirmation before closing the app under certain circumstances when there is an ongoing operation.</value>
   </data>
-  <!--NEW-->
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>

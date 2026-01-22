@@ -6533,4 +6533,10 @@
   <data name="OtherPolicies" xml:space="preserve">
     <value>Άλλες Πολιτικές</value>
   </data>
+  <data name="PolicyToAddNewRulesTo" xml:space="preserve">
+    <value>Πολιτική για την προσθήκη νέων κανόνων</value>
+  </data>
+    <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
+    <value>Αναζήτηση πολιτικών στη βιβλιοθήκη</value>
+  </data>
 </root>

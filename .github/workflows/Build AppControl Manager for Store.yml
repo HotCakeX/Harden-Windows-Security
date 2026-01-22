@@ -700,22 +700,23 @@ jobs:
           }
 
           # For GitHub workflow 1
-          Build_ACM -IsNonStore $false -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Upload $false
+          Build_ACM -IsNonStore $false -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Upload $true
           # For GitHub workflow 2
           # Build_ACM -IsNonStore $true -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Upload $false
           # Local Test - ARM64 + X64
           # Build_ACM -IsNonStore $true -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Upload $false
 
-      - name: Configure Microsoft Store CLI 
-        uses: microsoft/microsoft-store-apppublisher@v1.3
-
-      - name: Reconfigure store credentials 
-        run: msstore reconfigure ` 
-              --tenantId ${{ secrets.PARTNERCENTER_TENANTID }} ` 
-              --sellerId ${{ secrets.PARTNERCENTER_SELLERID }} ` 
-              --clientId ${{ secrets.PARTNERCENTER_CLIENTID }} ` 
-              --clientSecret ${{ secrets.PARTNERCENTER_CLIENTSECRET }} 
-
-      - name: Publish App package 
-        shell: pwsh
-        run: msstore publish "${{ env.MSIXBundle_PATH }}" -id "9PNG1JDDTGP8"
+#      - name: Configure Microsoft Store CLI 
+#        uses: microsoft/microsoft-store-apppublisher@v1.3
+#
+#      - name: Reconfigure store credentials 
+#        run: msstore reconfigure ` 
+#              --tenantId ${{ secrets.PARTNERCENTER_TENANTID }} ` 
+#              --sellerId ${{ secrets.PARTNERCENTER_SELLERID }} ` 
+#              --clientId ${{ secrets.PARTNERCENTER_CLIENTID }} ` 
+#              --clientSecret ${{ secrets.PARTNERCENTER_CLIENTSECRET }} 
+#
+#      - name: Publish App package 
+#        shell: pwsh
+#        run: msstore publish "${{ env.MSIXBundle_PATH }}" -id "9PNG1JDDTGP8"
+#

@@ -50,6 +50,14 @@ Pages within the AppControl Manager that require a policy automatically recogniz
 
 <br>
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControlManagerSidebarUsageGuide.gif" alt="AppControl Manager Application's Sidebar">
+
+</div>
+
+<br>
+
 ### Configuration Details
 
 * **Sidebar Guide**: Use this button to open this page in the browser.

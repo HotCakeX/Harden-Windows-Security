@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -80,22 +79,14 @@ internal static class Arbitrator
 						// At this point the file is definitely WHQL-Signed
 
 						// Get the WHQL chain packages by checking for any chain whose leaf certificate contains the WHQL EKU OID
-						List<ChainPackage> WHQLChainPackagesCandidates = [.. simulationInput.AllFileSigners
-						  .Where(sig => sig.LeafCertificate is not null &&
-						  sig.LeafCertificate.Certificate.Extensions
-						  .OfType<X509EnhancedKeyUsageExtension>()
-						  .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
-						  .Any(oid => oid.Value is not null && oid.Value.Contains(LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))))];
-
-						// Same logic as above, without using Linq
-						/*
-
 						List<ChainPackage> WHQLChainPackagesCandidates = [];
 
 						foreach (ChainPackage chainPackage in CollectionsMarshal.AsSpan(simulationInput.AllFileSigners))
 						{
 							if (chainPackage.LeafCertificate is not null)
 							{
+								bool matchFound = false;
+
 								foreach (X509Extension extension in chainPackage.LeafCertificate.Certificate.Extensions)
 								{
 									if (extension is X509EnhancedKeyUsageExtension eku)
@@ -105,14 +96,21 @@ internal static class Arbitrator
 											if (oid.Value is not null && oid.Value.Contains(LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))
 											{
 												WHQLChainPackagesCandidates.Add(chainPackage);
+												matchFound = true;
+												break; // Break the OID loop
 											}
 										}
+									}
+
+									// If we found a match in the inner loop, break the outer extension loop
+									// to prevent adding the same chainPackage multiple times
+									if (matchFound)
+									{
+										break;
 									}
 								}
 							}
 						}
-
-						*/
 
 						// HashSet to store all of the Opus data from the WHQL chain packages candidates
 						HashSet<string> Current_Chain_Opus = [];
@@ -235,7 +233,7 @@ internal static class Arbitrator
 												null,
 												null,
 												opusSigner.TBSHash,
-												simulationInput.FilePath.ToString()
+												simulationInput.FilePath.FullName
 												);
 										}
 									}
@@ -270,7 +268,7 @@ internal static class Arbitrator
 										null,
 										null,
 										opusSigner.TBSHash,
-										simulationInput.FilePath.ToString()
+										simulationInput.FilePath.FullName
 										);
 								}
 
@@ -305,7 +303,7 @@ internal static class Arbitrator
 										null,
 										null,
 										opusSigner.TBSHash,
-										simulationInput.FilePath.ToString()
+										simulationInput.FilePath.FullName
 										);
 								}
 							}
@@ -405,7 +403,7 @@ internal static class Arbitrator
 										IntermediateCert.IssuerCN,
 										IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
 										IntermediateCert.TBSValue,
-										simulationInput.FilePath.ToString()
+										simulationInput.FilePath.FullName
 										);
 									}
 								}
@@ -439,7 +437,7 @@ internal static class Arbitrator
 										IntermediateCert.IssuerCN,
 										IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
 										IntermediateCert.TBSValue,
-										simulationInput.FilePath.ToString()
+										simulationInput.FilePath.FullName
 										);
 									}
 								}
@@ -468,7 +466,7 @@ internal static class Arbitrator
 									 IntermediateCert.IssuerCN,
 									 IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
 									 IntermediateCert.TBSValue,
-									 simulationInput.FilePath.ToString()
+									 simulationInput.FilePath.FullName
 									 );
 							}
 						}
@@ -505,7 +503,7 @@ internal static class Arbitrator
 									IntermediateCert.IssuerCN,
 									IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
 									IntermediateCert.TBSValue,
-									simulationInput.FilePath.ToString()
+									simulationInput.FilePath.FullName
 									);
 						}
 					}
@@ -543,7 +541,7 @@ internal static class Arbitrator
 							chain.LeafCertificate?.IssuerCN,
 							chain.LeafCertificate?.NotAfter.ToString(CultureInfo.InvariantCulture),
 							chain.LeafCertificate?.TBSValue,
-							simulationInput.FilePath.ToString()
+							simulationInput.FilePath.FullName
 							);
 				}
 
@@ -615,7 +613,7 @@ internal static class Arbitrator
 									   chain.RootCertificate.IssuerCN,
 									   chain.RootCertificate.NotAfter.ToString(CultureInfo.InvariantCulture),
 									   chain.RootCertificate.TBSValue,
-									   simulationInput.FilePath.ToString()
+									   simulationInput.FilePath.FullName
 									   );
 								}
 							}
@@ -650,7 +648,7 @@ internal static class Arbitrator
 									chain.RootCertificate.IssuerCN,
 									chain.RootCertificate.NotAfter.ToString(CultureInfo.InvariantCulture),
 									chain.RootCertificate.TBSValue,
-									simulationInput.FilePath.ToString()
+									simulationInput.FilePath.FullName
 								);
 							}
 						}
@@ -679,7 +677,7 @@ internal static class Arbitrator
 									 chain.RootCertificate.IssuerCN,
 									 chain.RootCertificate.NotAfter.ToString(CultureInfo.InvariantCulture),
 									 chain.RootCertificate.TBSValue,
-									 simulationInput.FilePath.ToString()
+									 simulationInput.FilePath.FullName
 									 );
 					}
 				}
@@ -716,7 +714,7 @@ internal static class Arbitrator
 							 chain.RootCertificate.IssuerCN,
 							 chain.RootCertificate.NotAfter.ToString(CultureInfo.InvariantCulture),
 							 chain.RootCertificate.TBSValue,
-							 simulationInput.FilePath.ToString()
+							 simulationInput.FilePath.FullName
 							 );
 				}
 				// Endregion ROOT CERTIFICATE ELIGIBILITY CHECK
@@ -740,7 +738,7 @@ internal static class Arbitrator
 			null,
 			null,
 			null,
-			simulationInput.FilePath.ToString()
+			simulationInput.FilePath.FullName
 			);
 	}
 }

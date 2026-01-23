@@ -15,9 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -248,53 +246,26 @@ internal static class Helper
 		int segmentsParsed = 0;
 
 		// Pin the string's character buffer in memory so we can use unmanaged pointers safely
+		// Get a pointer to the first character in the string
 		fixed (char* pStart = version)
 		{
-			// Compute the end pointer (one past the last character)
+			// Compute the end pointer (one past the last character so we can have clean loop below that doesn't require constantly checking "count < length" inside the loop)
 			char* end = pStart + version.Length;
-
-			//
-			// First pass: count non‐empty segments to detect “> MaxSegments” early
-			//
-			int segmentCount = 0;
-			char* p = pStart;
-			while (p < end)
-			{
-				// Skip any '.' characters between segments
-				while (p < end && *p == '.')
-					p++;
-
-				// If we consumed trailing dots, break out
-				if (p >= end)
-					break;
-
-				// Found the start of a segment
-				segmentCount++;
-
-				// Advance until the next dot (or end)
-				while (p < end && *p != '.')
-					p++;
-			}
-
-			// Too many segments -> malformed version
-			if (segmentCount > MaxSegments)
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("MalformedVersionDetected"), version));
-
-			//
-			// Second pass: extract, parse, and pack each segment into 'result'
-			//
 			char* ptr = pStart;
+
+			// We iterate through the string once
 			while (ptr < end)
 			{
 				// Skip leading dots
 				while (ptr < end && *ptr == '.')
 					ptr++;
 
-				// No more characters -> done
+				// If we hit the end after skipping dots, we are done
 				if (ptr >= end)
 					break;
 
-				// If we already parsed MaxSegments, any extra data is an error
+				// If we are about to parse a segment but we already found 4,
+				// that means this is the 5th segment -> Error.
 				if (segmentsParsed >= MaxSegments)
 					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("MalformedVersionDetected"), version));
 
@@ -308,14 +279,45 @@ internal static class Helper
 
 				// Calculate segment length and allocate a temporary string for parsing
 				int len = (int)(partEnd - partStart);
-				string part = new(partStart, 0, len);
 
-				// Parse as unsigned 16‐bit integer using invariant culture (no signs, no hex)
-				if (!ushort.TryParse(part, NumberStyles.None, CultureInfo.InvariantCulture, out ushort segment))
+				if (len == 0)
 				{
-					// Parsing failed (non‐numeric / overflow) -> invalid format
+					// Empty segment (e.g., "1..2") is invalid
+					string part = new(partStart, 0, len);
 					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
 				}
+
+				uint val = 0;
+				char* pDigit = partStart;
+
+				// Parse digits manually without allocating a string
+				do
+				{
+					// Calculate numeric value of digit
+					// We cast to uint so that if *pDigit is < '0', the result wraps to a large positive number
+					// effectively checking both bounds (>= '0' && <= '9') in a single comparison.
+					uint digit = (uint)(*pDigit - '0');
+
+					if (digit > 9)
+					{
+						// Invalid character encountered
+						string part = new(partStart, 0, len);
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
+					}
+
+					val = (val * 10) + digit;
+
+					// Check for overflow (ushort max is 65535)
+					if (val > 65535)
+					{
+						string part = new(partStart, 0, len);
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
+					}
+
+					pDigit++;
+				} while (pDigit < partEnd);
+
+				ushort segment = (ushort)val;
 
 				// Determine how many bits this segment occupies in the 64-bit result:
 				// Segment 0 (major) -> shift 48 bits; segment 1 -> shift 32; segment 2 -> shift 16; segment 3 -> shift 0.

@@ -479,16 +479,12 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool RecommendedDriverBlockRulesCreateAndDeploy { get; set => SP(ref field, value); }
 
-	internal string? RecommendedDriverBlockRulesVersionTextBlock { get; set => SP(ref field, value); } = "N/A";
-
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended driver block rules policy
 	/// </summary>
 	internal async void RecommendedDriverBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		RecommendedDriverBlockRulesSettingsIsExpanded = true;
-
-		RecommendedDriverBlockRulesVersionTextBlock = "N/A";
 
 		try
 		{
@@ -499,7 +495,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = false;
 			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("CreatingRecommendedDriverBlockRulesPolicy"));
 
-			SiPolicy.PolicyFileRepresent result = await Task.Run(() =>
+			_policyPathMSFTRecommendedDriverBlockRules = await Task.Run(() =>
 			{
 				if (RecommendedDriverBlockRulesCreateAndDeploy)
 				{
@@ -511,9 +507,10 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				}
 			});
 
-			_policyPathMSFTRecommendedDriverBlockRules = result;
+			// Assign the created policy to the Sidebar
+			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathMSFTRecommendedDriverBlockRules);
 
-			RecommendedDriverBlockRulesVersionTextBlock = result.PolicyObj.VersionEx;
+			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedRecommendedDriverBlockRulesPolicy"));
 

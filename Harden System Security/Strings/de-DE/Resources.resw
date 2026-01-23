@@ -5168,4 +5168,22 @@ Fingerabdruck: {3}</value>
   <data name="No" xml:space="preserve">
     <value>Nein</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um auf die Seitenleiste zuzugreifen, in der Sie weitere verfügbare Funktionen nutzen können.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um auf die Seitenleiste zuzugreifen, in der Sie weitere verfügbare Funktionen nutzen können.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um zur vorherigen Seite zurückzukehren.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um zur vorherigen Seite zurückzukehren.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um das Hauptnavigationsmenü der App aufzurufen.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um das Hauptnavigationsmenü der App aufzurufen.</value>
+  </data>
 </root>

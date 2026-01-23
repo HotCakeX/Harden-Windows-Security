@@ -5168,4 +5168,22 @@ Empreinte : {3}</value>
   <data name="No" xml:space="preserve">
     <value>Non</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder à la barre latérale où vous pouvez utiliser des fonctionnalités supplémentaires disponibles.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder à la barre latérale où vous pouvez utiliser des fonctionnalités supplémentaires disponibles.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour revenir à la page précédente.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour revenir à la page précédente.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder au menu de navigation principal de l'application.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder au menu de navigation principal de l'application.</value>
+  </data>
 </root>

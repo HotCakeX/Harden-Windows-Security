@@ -6539,4 +6539,31 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>Wyszukaj zasady w bibliotece</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub naciśnij tutaj, aby uzyskać dostęp do paska bocznego, gdzie można przeglądać bibliotekę zasad i korzystać z zawartych w niej zasad.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kliknij lub naciśnij tutaj, aby uzyskać dostęp do paska bocznego, gdzie można przeglądać bibliotekę zasad i korzystać z zawartych w niej zasad.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub naciśnij tutaj, aby wrócić do poprzedniej strony.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kliknij lub naciśnij tutaj, aby wrócić do poprzedniej strony.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub naciśnij tutaj, aby uzyskać dostęp do głównego menu nawigacyjnego aplikacji.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kliknij lub naciśnij tutaj, aby uzyskać dostęp do głównego menu nawigacyjnego aplikacji.</value>
+  </data>
+    <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Otwórz lokalizację pamięci podręcznej</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przejdź do katalogu, w którym znajduje się pamięć podręczna Biblioteki Zasad. Pamiętaj, że ta lokalizacja jest czyszczona po odinstalowaniu aplikacji.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przejdź do katalogu, w którym znajduje się pamięć podręczna Biblioteki Zasad. Pamiętaj, że ta lokalizacja jest czyszczona po odinstalowaniu aplikacji.</value>
+  </data>
 </root>

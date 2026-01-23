@@ -6539,4 +6539,31 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>Nach Richtlinien in der Bibliothek suchen</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um auf die Seitenleiste zuzugreifen, in der Sie die Richtlinienbibliothek einsehen und die darin enthaltenen Richtlinien verwenden können.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um auf die Seitenleiste zuzugreifen, in der Sie die Richtlinienbibliothek einsehen und die darin enthaltenen Richtlinien verwenden können.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um zur vorherigen Seite zurückzukehren.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um zur vorherigen Seite zurückzukehren.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um das Hauptnavigationsmenü der App aufzurufen.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Klicken oder tippen Sie hier, um das Hauptnavigationsmenü der App aufzurufen.</value>
+  </data>
+    <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Cache-Speicherort öffnen</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Navigieren Sie zu dem Verzeichnis, in dem sich der Cache der Richtlinienbibliothek befindet. Bitte beachten Sie, dass dieser Speicherort bei der Deinstallation der App gelöscht wird.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Navigieren Sie zu dem Verzeichnis, in dem sich der Cache der Richtlinienbibliothek befindet. Bitte beachten Sie, dass dieser Speicherort bei der Deinstallation der App gelöscht wird.</value>
+  </data>
 </root>

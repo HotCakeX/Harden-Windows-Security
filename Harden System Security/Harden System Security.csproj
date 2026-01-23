@@ -137,12 +137,6 @@
 
 		<PublishAot>True</PublishAot>
 		<OptimizationPreference>Speed</OptimizationPreference>
-
-		<!-- https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview -->
-		<EnablePackageValidation>true</EnablePackageValidation>
-		<EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
-		<EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
-
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<NuGetAuditMode>all</NuGetAuditMode>
 		<NuGetAuditLevel>low</NuGetAuditLevel>
@@ -258,7 +252,7 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.251222000" />
         <PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2119" />
 		<PackageReference Include="System.Numerics.Tensors" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.251221100">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

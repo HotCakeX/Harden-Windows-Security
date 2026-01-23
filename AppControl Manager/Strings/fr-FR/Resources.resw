@@ -6539,4 +6539,31 @@
     <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>Rechercher des stratégies dans la bibliothèque</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder à la barre latérale où vous pouvez consulter la bibliothèque de stratégies et utiliser les stratégies qu'elle contient.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder à la barre latérale où vous pouvez consulter la bibliothèque de stratégies et utiliser les stratégies qu'elle contient.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour revenir à la page précédente.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour revenir à la page précédente.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder au menu de navigation principal de l'application.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cliquez ou appuyez ici pour accéder au menu de navigation principal de l'application.</value>
+  </data>
+    <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Ouvrir l'emplacement du cache</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Accédez au répertoire où se trouve le cache de la Bibliothèque de stratégies. Veuillez noter que cet emplacement est effacé lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Accédez au répertoire où se trouve le cache de la Bibliothèque de stratégies. Veuillez noter que cet emplacement est effacé lors de la désinstallation de l'application.</value>
+  </data>
 </root>

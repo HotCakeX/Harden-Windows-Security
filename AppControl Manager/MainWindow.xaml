@@ -103,6 +103,7 @@
 
             <!-- Back button style, mimics the same NavigationView back button's style. If the style isn't set here, we can use the built-in animated icon for the back button -->
             <Button x:Name="BackButtonTitleBar"
+                    x:Uid="BackButtonTitleBar"
                     Style="{StaticResource NavigationBackButtonNormalStyle}"
                     Grid.Column="1"
                     Click="{x:Bind Nav.BackButtonTitleBar_Click}" />
@@ -111,6 +112,7 @@
             <Button VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     x:Name="HamburgerMenuButton"
+                    x:Uid="HamburgerMenuButton"
                     Grid.Column="2"
                     Style="{StaticResource PaneToggleButtonStyle}"
                     Margin="10,0,0,0"
@@ -118,8 +120,8 @@
 
             <!-- App icon -->
             <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png" Grid.Column="3"
-                Width="16" Height="16"
-                Margin="8,0,4,0"/>
+                   Width="16" Height="16"
+                   Margin="8,0,4,0"/>
 
             <!-- App title bar -->
             <TextBlock x:Name="TitleBarTextBlock"
@@ -140,6 +142,7 @@
 
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton"
+                    x:Uid="SidebarButton"
                     Click="{x:Bind ViewModel.SidebarButton_Click}"
                     Grid.Column="8"
                     Height="32"
@@ -303,7 +306,13 @@
 
                                     <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
-                                    <Border Translation="{x:Bind ViewModel.BorderTranslation, Mode=OneWay}" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
+                                    <Border Translation="{x:Bind ViewModel.BorderTranslation, Mode=OneWay}"
+                                            BorderThickness="1"
+                                            CornerRadius="15"
+                                            Shadow="{StaticResource SharedShadow}"
+                                            AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                            DragOver="{x:Bind OnSidebarDragOver}"
+                                            Drop="{x:Bind OnSidebarDrop}">
 
                                         <Border.BorderBrush>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -568,6 +577,11 @@
                                                         <MenuFlyoutItem x:Uid="BackupAllMenuFlyoutSubItem" Click="BackupLibrary">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xEDA2;" />
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+                                                        <MenuFlyoutItem x:Uid="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem" Click="OpenPoliciesLibraryCacheLocation">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="&#xE8DA;" />
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
                                                     </MenuFlyout>

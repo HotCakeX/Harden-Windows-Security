@@ -25,10 +25,7 @@ namespace AppControlManager.SiPolicyIntel;
 /// Provides custom equality comparison for <see cref="FilePublisherSignerRule"/> objects.
 /// Two FilePublisherSignerRule objects are considered equal if:
 /// - Their SigningScenario and Auth properties match.
-/// - Depending on the signer properties, either Rule 1 or Rule 2 conditions are met:
-///   Rule 1: Signer.Name, Signer.CertRoot.Value, and Signer.CertPublisher.Value are equal.
-///   Rule 2: Signer.Name and Signer.CertRoot.Value are equal.
-///
+/// - Their Signer elements have matching properties based on the <see cref="Merger.IsSignerRuleMatch(Signer, Signer)"/>
 /// When a match is found, the FileAttribElements of the new rule are merged into the existing rule.
 /// </summary>
 
@@ -48,21 +45,7 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 			return false;
 		}
 
-		Signer signerX = x.SignerElement;
-		Signer signerY = y.SignerElement;
-
-		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
-		// For intermediate certificate type that uses full proper chain in signer
-		if (Merger.IsSignerRule1Match(signerX, signerY))
-		{
-			// Merge the FileAttribElements of the ignored rule into the existing one
-			MergeFileAttribElements(x, y);
-			return true;
-		}
-
-		// Rule 2: Check if Name and CertRoot.Value are equal
-		// For PCA/Root/Leaf certificate signer types
-		if (Merger.IsSignerRule2Match(signerX, signerY))
+		if (Merger.IsSignerRuleMatch(x.SignerElement, y.SignerElement))
 		{
 			// Merge the FileAttribElements of the ignored rule into the existing one
 			MergeFileAttribElements(x, y);
@@ -75,41 +58,25 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 
 	public int GetHashCode(FilePublisherSignerRule obj)
 	{
+		HashCode hash = new();
+
+		// Include SSType and Authorization in the hash calculation
+		hash.Add(obj.SigningScenario);
+		hash.Add(obj.Auth);
+
 		Signer signer = obj.SignerElement;
-		long hash = 17;  // Start with an initial value
-
-		// First: Include SSType and Authorization in the hash calculation
-		hash = (hash * 31 + obj.SigningScenario.GetHashCode()) % Merger.modulus;
-		hash = (hash * 31 + obj.Auth.GetHashCode()) % Merger.modulus;
-
-		// Rule 1: Use Name, CertRoot.Value, and CertPublisher.Value for hash calculation
-		if (!string.IsNullOrWhiteSpace(signer.Name))
-		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
+		hash.Add(signer.Name, StringComparer.OrdinalIgnoreCase);
 
 		if (!signer.CertRoot.Value.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
+			hash.AddBytes(signer.CertRoot.Value.Span);
 		}
 
-		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
-		{
-			hash = (hash * 31 + signer.CertPublisher.Value.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
+		hash.Add(signer.CertPublisher?.Value, StringComparer.OrdinalIgnoreCase);
+		hash.Add(signer.CertOemID?.Value, StringComparer.OrdinalIgnoreCase);
+		hash.Add(signer.CertIssuer?.Value, StringComparer.OrdinalIgnoreCase);
 
-		// Rule 2: Use Name and CertRoot.Value for hash calculation
-		if (!string.IsNullOrWhiteSpace(signer.Name))
-		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		if (!signer.CertRoot.Value.IsEmpty)
-		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
-		}
-
-		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash value
+		return hash.ToHashCode();
 	}
 
 

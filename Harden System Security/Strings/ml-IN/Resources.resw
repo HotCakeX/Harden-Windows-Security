@@ -4925,10 +4925,10 @@
     <value>രണ്ടും</value>
   </data>
   <data name="FirewallBothDirectionsRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>രണ്ടും എന്നത് ഉപകരണത്തിലേക്ക് വരുന്നതും ഉപകരണത്ത���ൽ നിന്ന് പോകുന്നതുമായ നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+    <value>രണ്ടും എന്നത് കൊണ്ട് അർത്ഥമാക്കുന്നത് ഉപകരണത്തിലേക്ക് വരുന്നതും അവിടെ നിന്ന് പോകുന്നതുമായ നെറ്റ്‌വർക്ക് ട്രാഫിക്കാണ്.</value>
   </data>
   <data name="FirewallBothDirectionsRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>രണ്ടും എന്നത് ഉപകരണത്തിലേക്ക് വരുന്നതും ഉപകരണത്തിൽ നിന്ന് പോകുന്നതുമായ നെറ്റ്‌വർക്ക് ട്രാഫിക് എന്നർത്ഥമാണ്.</value>
+    <value>രണ്ടും എന്നത് കൊണ്ട് അർത്ഥമാക്കുന്നത് ഉപകരണത്തിലേക്ക് വരുന്നതും അവിടെ നിന്ന് പോകുന്നതുമായ നെറ്റ്‌വർക്ക് ട്രാഫിക്കാണ്.</value>
   </data>
   <data name="FirewallAllowActionRadioMenuFlyoutItem.Text" xml:space="preserve">
     <value>അനുവദിക്കുക</value>
@@ -4961,10 +4961,10 @@
     <value>ഫോൾഡറുകൾ തിരഞ്ഞെടുക്കുക</value>
   </data>
   <data name="FirewallSelectFoldersMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>എക്സിക്യൂട്ടബിളുകൾ കണ്ടെത്താൻ ആവർത്തിച്ച് സ്കാൻ ചെയ്യുന്നതിനുള്ള ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക, തുടർന്ന് അവയ്ക്കായി ഫയർവാൾ നിയമങ്ങൾ സ���ഷ്ടിക്കുക.</value>
+    <value>ഫയർവാൾ റൂളുകൾ സൃഷ്ടിക്കുന്നതിനായി എക്സിക്യൂട്ടബിളുകൾ കണ്ടെത്തുന്നതിന്, ഉപഫോൾഡറുകൾ ഉൾപ്പെടെ സ്കാൻ ചെയ്യേണ്ട ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക.</value>
   </data>
   <data name="FirewallSelectFoldersMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>എക്സിക്യൂട്ടബിളുകൾ കണ്ടെത്താൻ ആവർത്തിച്ച് സ്കാൻ ചെയ്യുന്നതിനുള്ള ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക, തുടർന്ന് അവയ്ക്കായി ഫയർവാൾ നിയമങ്ങൾ സൃഷ്ടിക്കുക.</value>
+    <value>ഫയർവാൾ റൂളുകൾ സൃഷ്ടിക്കുന്നതിനായി എക്സിക്യൂട്ടബിളുകൾ കണ്ടെത്തുന്നതിന്, ഉപഫോൾഡറുകൾ ഉൾപ്പെടെ സ്കാൻ ചെയ്യേണ്ട ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക.</value>
   </data>
   <data name="FirewallCreateSplitButton.Content" xml:space="preserve">
     <value>സൃഷ്ടിക്കുക</value>
@@ -5167,5 +5167,23 @@
   </data>
   <data name="No" xml:space="preserve">
     <value>അല്ല</value>
+  </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കൂടുതൽ സവിശേഷതകൾ ഉപയോഗിക്കാൻ കഴിയുന്ന സൈഡ്‌ബാർ ആക്‌സസ് ചെയ്യുന്നതിന് ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കൂടുതൽ സവിശേഷതകൾ ഉപയോഗിക്കാൻ കഴിയുന്ന സൈഡ്‌ബാർ ആക്‌സസ് ചെയ്യുന്നതിന് ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മുൻ പേജിലേക്ക് മടങ്ങാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മുൻ പേജിലേക്ക് മടങ്ങാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ പ്രധാന നാവിഗേഷൻ മെനു ആക്‌സസ് ചെയ്യുന്നതിന് ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ പ്രധാന നാവിഗേഷൻ മെനു ആക്‌സസ് ചെയ്യുന്നതിന് ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
   </data>
 </root>

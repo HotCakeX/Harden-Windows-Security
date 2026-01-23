@@ -6212,8 +6212,8 @@
     <data name="ConfirmExitForUnsavedPoliciesMsg" xml:space="preserve">
     <value>സൈഡ്‌ബാർ ലൈബ്രറിയിൽ സേവ് ചെയ്യാത്ത പോളിസികൾ ഇപ്പോഴുമുണ്ട്, ആപ്ലിക്കേഷൻ ക്ലോസ് ചെയ്താൽ അവ നഷ്ടപ്പെടും. നിങ്ങൾക്ക് തീർച്ചയായും പുറത്തുകടക്കണോ?</value>
   </data>
-    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>ഇതാണ് നിങ്ങളുടെ ആപ്പ് കൺട്രോൾ പോളിസികൾക്കായുള്ള ലൈബ്രറി. നിങ്ങൾക്ക് ഇവിടെ പോളിസികൾ സംഭരിക്കാനും ആപ്പിന്റെ വിവിധ ഭാഗങ്ങളിൽ ഉപയോഗിക്കാനും കഴിയും. നിങ്ങൾ അവ ഒരു ഫയലിലേക്ക് സേവ് ചെയ്യുകയോ അല്ലെങ്കിൽ പെർസിസ്റ്റൻസ് (Persistence) പ്രവർത്തനക്ഷമമാക്കുകയോ ച���യ്തിട്ടില്ലെങ്കിൽ അവ മെമ്മറിയിൽ മാത്രമേ ലഭ്യമാകൂ.</value>
+  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>ഇത് നിങ്ങളുടെ ആപ്പ് കൺട്രോൾ പോളിസികൾക്കായുള്ള ലൈബ്രറിയാണ്, ഇവിടെ നിങ്ങൾക്ക് പോളിസികൾ സൂക്ഷിക്കാനും ആപ്പിന്റെ വിവിധ ഭാഗങ്ങളിൽ അവ ഉപയോഗിക്കാനും സാധിക്കും. നിങ്ങൾ അവ ഒരു ഫയലിലേക്ക് സേവ് ചെയ്യുകയോ അല്ലെങ്കിൽ പെർസിസ്റ്റൻസ് എനേബിൾ ചെയ്യുകയോ ചെയ്തിട്ടില്ലെങ്കിൽ, അവ മെമ്മറിയിൽ മാത്രമേ ലഭ്യമാകൂ.</value>
   </data>
   <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
     <value>പോളിസി ലൈബ്രറി</value>
@@ -6538,5 +6538,32 @@
   </data>
     <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>ലൈബ്രറിയിൽ നയങ്ങൾ തിരയുക</value>
+  </data>
+  <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൈഡ്‌ബാർ ആക്‌സസ് ചെയ്യാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക, അവിടെ നിങ്ങൾക്ക് പോളിസി ലൈബ്രറി കാണാനും അതിലെ പോളിസികൾ ഉപയോഗിക്കാനും സാധിക്കും.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൈഡ്‌ബാർ ആക്‌സസ് ചെയ്യാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക, അവിടെ നിങ്ങൾക്ക് പോളിസി ലൈബ്രറി കാണാനും അതിലെ പോളിസികൾ ഉപയോഗിക്കാനും സാധിക്കും.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മുൻ പേജിലേക്ക് മടങ്ങാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മുൻ പേജിലേക്ക് മടങ്ങാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ പ്രധാന നാവിഗേഷൻ മെനുവിലേക്ക് പ്രവേശിക്കാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ പ്രധാന നാവിഗേഷൻ മെനുവിലേക്ക് പ്രവേശിക്കാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+    <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>കാഷെ ലൊക്കേഷൻ തുറക്കുക</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പോളിസി ലൈബ്രറി കാഷെ സ്ഥിതിചെയ്യുന്ന ഡയറക്ടറിയിലേക്ക് പോകുക. ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ ഈ ലൊക്കേഷൻ മായ്ച്ചുകളയുമെന്ന് ദയവായി ഓർക്കുക.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പോളിസി ലൈബ്രറി കാഷെ സ്ഥിതിചെയ്യുന്ന ഡയറക്ടറിയിലേക്ക് പോകുക. ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ ഈ ലൊക്കേഷൻ മായ്ച്ചുകളയുമെന്ന് ദയവായി ഓർക്കുക.</value>
   </data>
 </root>

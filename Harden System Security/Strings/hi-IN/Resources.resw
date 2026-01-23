@@ -5168,4 +5168,22 @@
   <data name="No" xml:space="preserve">
     <value>नहीं</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>साइडबार तक पहुँचने के लिए यहाँ क्लिक करें या टैप करें जहाँ आप अतिरिक्त उपलब्ध सुविधाओं का उपयोग कर सकते हैं।</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>साइडबार तक पहुँचने के लिए यहाँ क्लिक करें या टैप करें जहाँ आप अतिरिक्त उपलब्ध सुविधाओं का उपयोग कर सकते हैं।</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पिछले पृष्ठ पर वापस जाने के लिए यहाँ क्लिक करें या टैप करें।</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पिछले पृष्ठ पर वापस जाने के लिए यहाँ क्लिक करें या टैप करें।</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप के मुख्य नेविगेशन मेनू तक पहुँचने के लिए यहाँ क्लिक करें या टैप करें।</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप के मुख्य नेविगेशन मेनू तक पहुँचने के लिए यहाँ क्लिक करें या टैप करें।</value>
+  </data>
 </root>

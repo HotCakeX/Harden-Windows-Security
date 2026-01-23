@@ -6218,17 +6218,17 @@
   <data name="SidebarPoliciesLibraryTextBlock.Text" xml:space="preserve">
     <value>مكتبة السياسات</value>
   </data>
-   <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
+  <data name="PersistentPoliciesLibrarySettingsCard.Header" xml:space="preserve">
     <value>المكتبة الدائمة</value>
   </data>
   <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
-    <value>عند التمكين، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه الوظيفة من خلال الاحتفاظ بنسخة من السياسات الموجودة في المكتبة في ذاكرة تخزين مؤقت خاصة على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
+    <value>عند التفعيل، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه الوظيفة من خلال الاحتفاظ بنسخة من السياسات في المكتبة داخل ذاكرة تخزين مؤقت خاصة على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
   </data>
   <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>عند التمكين، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه الوظيفة من خلال الاحتفاظ بنسخة من السياسات الموجودة في المكتبة في موقع خاص على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
+    <value>عند التفعيل، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه الوظيفة من خلال الاحتفاظ بنسخة من السياسات في المكتبة داخل موقع خاص على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
   </data>
   <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>عند التمكين، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه ال��ظيفة من خلال الاحتفاظ بنسخة من السياسات الموجودة في المكتبة في موقع خاص على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
+    <value>عند التفعيل، ستظل كافة السياسات المتوفرة في المكتبة موجودة حتى بعد إعادة تشغيل التطبيق. يتم توفير هذه الوظيفة من خلال الاحتفاظ بنسخة من السياسات في المكتبة داخل موقع خاص على القرص. يتم حذف ذاكرة التخزين المؤقت تلقائيًا عند إلغاء تثبيت التطبيق.</value>
   </data>
   <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
     <value>حفظ بتنسيق CIP</value>
@@ -6538,5 +6538,32 @@
   </data>
     <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>البحث عن النهج في المكتبة</value>
+  </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى الشريط الجانبي حيث يمكنك عرض مكتبة السياسات واستخدام السياسات الموجودة فيها.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى الشريط الجانبي حيث يمكنك عرض مكتبة السياسات واستخدام السياسات الموجودة فيها.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا للعودة إلى الصفحة السابقة.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقر أو اضغط هنا للعودة إلى الصفحة السابقة.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى قائمة التنقل الرئيسية للتطبيق.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى قائمة التنقل الرئيسية للتطبيق.</value>
+  </data>
+    <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>فتح موقع ذاكرة التخزين المؤقت</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انتقل إلى الدليل الذي توجد به ذاكرة التخزين المؤقت لمكتبة السياسات. يرجى ملاحظة أنه يتم مسح هذا الموقع عند إلغاء تثبيت التطبيق.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انتقل إلى الدليل الذي توجد به ذاكرة التخزين المؤقت لمكتبة السياسات. يرجى ملاحظة أنه يتم مسح هذا الموقع عند إلغاء تثبيت التطبيق.</value>
   </data>
 </root>

@@ -5168,4 +5168,22 @@ Thumbprint: {3}</value>
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click or tap here to access the Sidebar where you can use extra available features.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click or tap here to access the Sidebar where you can use extra available features.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click or tap here to go back to the previous page.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click or tap here to go back to the previous page.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click or tap here to access the main navigation menu of the app.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click or tap here to access the main navigation menu of the app.</value>
+  </data>
 </root>

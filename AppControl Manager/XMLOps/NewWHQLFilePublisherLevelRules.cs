@@ -121,6 +121,9 @@ internal static class NewWHQLFilePublisherLevelRules
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string signerID = $"ID_SIGNER_A_{guid2}";
 
+				if (string.IsNullOrWhiteSpace(whqlFilePublisherData.Opus))
+					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID");
+
 				Signer newSigner = new(
 					id: signerID,
 					name: signerData.IntermediateCertName,
@@ -246,6 +249,9 @@ internal static class NewWHQLFilePublisherLevelRules
 
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string signerID = $"ID_SIGNER_A_{guid2}";
+
+				if (string.IsNullOrWhiteSpace(whqlFilePublisherData.Opus))
+					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID");
 
 				Signer newSigner = new(
 					id: signerID,

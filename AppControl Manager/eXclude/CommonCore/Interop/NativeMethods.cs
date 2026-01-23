@@ -687,11 +687,23 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcrypthashdata
 	/// </summary>
-	[LibraryImport("BCRYPT")]
+	[LibraryImport("BCRYPT", EntryPoint = "BCryptHashData")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial int BCryptHashData(
+	internal static partial int BCryptHashData_Byte(
 		IntPtr hHash,
 		[In] byte[] pbInput,
+		uint cbInput,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcrypthashdata
+	/// </summary>
+	[LibraryImport("BCRYPT", EntryPoint = "BCryptHashData")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptHashData_Ptr(
+		IntPtr hHash,
+		byte* pbInput,
 		uint cbInput,
 		uint dwFlags);
 

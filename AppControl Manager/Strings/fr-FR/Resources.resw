@@ -6533,4 +6533,10 @@
   <data name="OtherPolicies" xml:space="preserve">
     <value>Autres stratégies</value>
   </data>
+  <data name="PolicyToAddNewRulesTo" xml:space="preserve">
+    <value>Stratégie pour l'ajout de nouvelles règles</value>
+  </data>
+    <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
+    <value>Rechercher des stratégies dans la bibliothèque</value>
+  </data>
 </root>

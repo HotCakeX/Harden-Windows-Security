@@ -38,9 +38,59 @@ internal sealed partial class MainWindowVM : ViewModelBase
 {
 
 	/// <summary>
-	/// Collection bound to the UI's ItemsRepeater ItemsSource.
+	/// Collection that is the Master List, containing the policies in the Library.
 	/// </summary>
 	internal readonly UniquePolicyFileRepresentObservableCollection SidebarPoliciesLibrary = [];
+
+	/// <summary>
+	/// Collection bound to the UI, representing the filtered version of <see cref="SidebarPoliciesLibrary"/>.
+	/// </summary>
+	internal readonly ObservableCollection<PolicyFileRepresent> FilteredSidebarPolicies = [];
+
+	/// <summary>
+	/// The text used to filter the sidebar policies library.
+	/// </summary>
+	internal string? SidebarSearchText
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+			{
+				PerformSidebarSearch();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Filters the policies based on the search text.
+	/// </summary>
+	private void PerformSidebarSearch()
+	{
+		FilteredSidebarPolicies.Clear();
+
+		if (string.IsNullOrWhiteSpace(SidebarSearchText))
+		{
+			// If search is empty, add all items
+			foreach (PolicyFileRepresent policy in SidebarPoliciesLibrary)
+			{
+				FilteredSidebarPolicies.Add(policy);
+			}
+		}
+		else
+		{
+			// Filter items
+			foreach (PolicyFileRepresent policy in SidebarPoliciesLibrary)
+			{
+				if (policy.PolicyIdentifier.Contains(SidebarSearchText, StringComparison.OrdinalIgnoreCase) ||
+					(policy.FileName is not null && policy.FileName.Contains(SidebarSearchText, StringComparison.OrdinalIgnoreCase)) ||
+					policy.SigningStatus.Contains(SidebarSearchText, StringComparison.OrdinalIgnoreCase)
+					)
+				{
+					FilteredSidebarPolicies.Add(policy);
+				}
+			}
+		}
+	}
 
 	/// <summary>
 	/// Pages that are allowed to run when running without Administrator privileges
@@ -327,8 +377,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		RebuildBreadcrumbMappings();
 		RebuildNavigationPageToItemContentMapForSearch();
 
-		// Subscribe to the collection changed event
-		SidebarPoliciesLibrary.CollectionChanged += (s, e) => UpdateSidebarVisibilities();
+		// Subscribe to the collection changed event to update visibility and maintain the filtered list
+		SidebarPoliciesLibrary.CollectionChanged += (s, e) =>
+		{
+			UpdateSidebarVisibilities();
+			PerformSidebarSearch();
+		};
 
 		// Initial visibility update
 		UpdateSidebarVisibilities();

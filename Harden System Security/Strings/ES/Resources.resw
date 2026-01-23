@@ -5162,4 +5162,10 @@ Huella Digital: {3}</value>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Solo pedir confirmación antes de cerrar la aplicación bajo ciertas circunstancias cuando haya una operación en curso.</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
 </root>

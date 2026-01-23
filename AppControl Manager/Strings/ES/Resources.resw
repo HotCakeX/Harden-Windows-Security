@@ -6533,4 +6533,10 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="OtherPolicies" xml:space="preserve">
     <value>Otras directivas</value>
   </data>
+  <data name="PolicyToAddNewRulesTo" xml:space="preserve">
+    <value>Directiva para agregar nuevas reglas</value>
+  </data>
+    <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
+    <value>Buscar directivas en la biblioteca</value>
+  </data>
 </root>

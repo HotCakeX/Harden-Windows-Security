@@ -314,9 +314,19 @@
 
                                         <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="15" Orientation="Vertical" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
 
+                                            <TextBox x:Uid="SearchBoxTextBox"                                                     
+                                                     Margin="10,15,10,0"
+                                                     Text="{x:Bind ViewModel.SidebarSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                <TextBox.Header>
+                                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                                        <FontIcon Glyph="&#xE721;" FontSize="14" />
+                                                        <TextBlock x:Uid="SearchThePoliciesLibrary" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </TextBox.Header>
+                                            </TextBox>
+
                                             <ScrollViewer x:Name="Animated_ScrollViewer"
                                                           Height="350"
-                                                          Margin="0,15,0,0"
                                                           ViewChanged="{x:Bind Animated_ScrollViewer_ViewChanged}">
 
                                                 <!--
@@ -328,7 +338,7 @@
                                                                    VerticalAlignment="Center"
                                                                    Margin="10,0,10,0"
                                                                    Visibility="{x:Bind ViewModel.SidebarRepeaterVisibility, Mode=OneWay}"
-                                                                   ItemsSource="{x:Bind ViewModel.SidebarPoliciesLibrary}"
+                                                                   ItemsSource="{x:Bind ViewModel.FilteredSidebarPolicies}"
                                                                    ElementPrepared="{x:Bind OnElementPrepared}">
                                                         <DataTemplate x:DataType="siPolicy:PolicyFileRepresent">
 

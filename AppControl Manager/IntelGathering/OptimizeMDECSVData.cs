@@ -27,20 +27,13 @@ namespace AppControlManager.IntelGathering;
 internal static partial class OptimizeMDECSVData
 {
 	/// <summary>
-	/// The Main method of the class.
-	/// Optimizes the MDE CSV data by adding the nested properties in the "AdditionalFields" property to the parent record as first-level properties, all in one class.
-	/// </summary>
-	/// <param name="CSVFilePath"></param>
-	/// <returns></returns>
-	internal static List<MDEAdvancedHuntingData> Optimize(string CSVFilePath) => ReadCsv(CSVFilePath);
-
-	/// <summary>
 	/// Converts an entire MDE Advanced Hunting CSV file into a list of classes.
+	/// Optimizes the MDE CSV data by adding the nested properties in the "AdditionalFields" property to the parent record as first-level properties, all in one class.
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidDataException"></exception>
-	private static List<MDEAdvancedHuntingData> ReadCsv(string filePath)
+	internal static List<MDEAdvancedHuntingData> ReadCsv(string filePath)
 	{
 		// Create a list to store each CSV row record.
 		List<MDEAdvancedHuntingData> records = [];
@@ -168,16 +161,30 @@ internal static partial class OptimizeMDECSVData
 
 	/// <summary>
 	/// Ensures the JSON string is well formatted. If a field has no double quotes, it will add them around it.
+	/// It safely skips values that are already quoted strings to prevent corruption.
 	/// </summary>
 	/// <param name="jsonString"></param>
 	/// <returns></returns>
 	private static string EnsureAllValuesAreQuoted(string jsonString)
 	{
-		// Regex to match unquoted values that are not inside quotes.
+		// Group 'QuotedString': Matches anything inside double quotes (including escaped quotes).
+		// Group 'Prefix' and 'Value': Matches unquoted values (numbers, bools, etc) appearing after a colon.
 		Regex regex = JsonFixerRegex();
 
-		// Replace the matched unquoted values with the same value wrapped in double quotes.
-		string result = regex.Replace(jsonString, match => $"\"{match.Value.Trim()}\"");
+		// Using MatchEvaluator to conditionally replace
+		string result = regex.Replace(jsonString, match =>
+		{
+			// If it matched a quoted string, return it exactly as is.
+			if (match.Groups["QuotedString"].Success)
+			{
+				return match.Value;
+			}
+
+			// Otherwise, it matched an unquoted value. Wrap it in quotes.
+			// Example:  : 123  ->  : "123"
+			return $"{match.Groups["Prefix"].Value}\"{match.Groups["Value"].Value}\"";
+		});
+
 		return result;
 	}
 
@@ -267,33 +274,26 @@ internal static partial class OptimizeMDECSVData
 		return null;
 	}
 
-	// 1. (?<=:)
-	//    Positive Lookbehind: Asserts that the match must be preceded by a colon `:`.
-	//    Ensures that we're matching a value that appears immediately after a key-value colon.
+	// Regex Description:
+	// 1. (?<QuotedString>""[^""\\]*(?:\\.[^""\\]*)*"")
+	//    Matches a standard JSON string: starts with ", contains non-quotes or escaped chars, ends with ".
+	//    We capture this to explicitly identify and preserve strings.
 	//
-	// 2. \s*
-	//    Matches zero or more whitespace characters following the colon.
-	//    Allows for optional spaces between the colon and the value.
+	// 2. |
+	//    OR operator.
 	//
-	// 3. (?!\"\")
-	//    Negative Lookahead: Ensures that the match is NOT followed by a double quote `"` .
-	//    This prevents already quoted values from being matched.
+	// 3. (?<Prefix>:\s*)
+	//    Matches the colon and optional whitespace that precedes a value.
 	//
-	// 4. ([^\"",\s]+)
-	//    Capturing Group: Matches one or more characters that are not a double quote `"`,
-	//    comma `,`, or whitespace. This captures unquoted strings up to a comma, closing
-	//    brace, or space, allowing only unquoted single-word values to be matched.
+	// 4. (?<Value>[^""\s,{}\][]+)
+	//    Matches the unquoted value. It consumes characters until it hits a separator (comma, brace, bracket, whitespace) or a quote.
 	//
-	// 5. (?=\s*,|\s*})
-	//    Positive Lookahead: Asserts that the match must be followed by either a comma `,`
-	//    (indicating another key-value pair) or a closing brace `}`, with optional whitespace.
-	//    This confirms the end of the unquoted value within the JSON structure.
-	//
-	// Summary:
 	// Some MDE AH AdditionalFields JSON content have unquoted fields, this takes care of them.
-	// The regex will fail if the field that is not quoted contains a comma(s), space(s) or double quote(s)
-	// in it before the comma that marks the end of the field.
-	// This is because the regex is designed to match unquoted fields that are single words/digits.
-	[GeneratedRegex(@"(?<=:)\s*(?!\"")([^\"",\s]+)(?=\s*,|\s*})")]
+	//
+	// The logic correctly:
+	// Identifies Strings: Safely "eats" valid strings (like "FileDescription": "WinSCP: SFTP") so they are untouched.
+	// Identifies Unquoted Values: Finds unquoted numbers/booleans (like "USN": 536436000) and quotes them.
+	// Handles Spacing: Respects the existing formatting of the JSON, `key: 123` becomes `key: "123"` and `key:123` becomes `key:"123"`.
+	[GeneratedRegex(@"(?<QuotedString>""[^""\\]*(?:\\.[^""\\]*)*"")|(?<Prefix>:\s*)(?<Value>[^""\s,{}\][]+)")]
 	private static partial Regex JsonFixerRegex();
 }

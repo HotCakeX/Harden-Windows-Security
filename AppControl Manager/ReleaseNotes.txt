@@ -1,23 +1,7 @@
-* All parts of the AppControl Manager now supports App ID Tags.
+* Fixed an issue when parsing CSVs from MDE Advanced Hunting: https://github.com/HotCakeX/Harden-Windows-Security/issues/991
 
-* You can now create App ID Tagging policies in the Create Policies page.
+* The Sidebar's Policies Library now has a search bar where you can search among the policies in there.
 
-* Added Advanced Features section to the Policy Merger page where you can customize your App Control policies further.
+* Improved localization.
 
-* You can now view all of the App ID Tags in the loaded policy in Policy Editor
-
-* A lot of pages and section in the app now work when running unelevated (not as Admin).
-
-* A new section has been added to the Sidebar that provides a library for all of your policies. You can import as many policies to it as you want and use them in different parts of the app. Policies in the library exist in the app's memory at runtime. You can import both XML and CIP file types to the library.
-
-* Added a new Scan Level, called "File Name", for local files and event logs which can be used for both signed and unsigned files.
-
-* You can now remove Signed Policies Without Policy Files.
-
-* Noticeable performance improvements for policy creations.
-
-* Reduced the disk usage and temporary file creations by 95% by making a lot of actions done in memory; That means you will no longer see `StagingArea` directories created under `C:\Program Files\AppControl Manager`.
-
-* Added icons to the Clear buttons of selected files/folders fly-outs across the app.
-
-* Please see the GitHub repository's release section for full info because it's not possible to include full details here.
+* General performance improvements.

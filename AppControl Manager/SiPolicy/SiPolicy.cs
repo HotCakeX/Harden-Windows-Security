@@ -117,7 +117,7 @@ internal sealed class CertIssuer(string value)
 	internal string Value => value;
 }
 
-internal sealed class CertRoot(CertEnumType type, ReadOnlyMemory<byte> value)
+internal readonly struct CertRoot(CertEnumType type, ReadOnlyMemory<byte> value)
 {
 	internal CertEnumType Type => type;
 

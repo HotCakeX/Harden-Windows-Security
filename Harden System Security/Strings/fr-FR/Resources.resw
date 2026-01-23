@@ -5162,4 +5162,10 @@ Empreinte : {3}</value>
   <data name="AppCloseConfirmationOptionAutomaticSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ne demander confirmation avant la fermeture de l'application que dans certaines circonstances, lorsqu'une opération est en cours.</value>
   </data>
+    <data name="Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Non</value>
+  </data>
 </root>

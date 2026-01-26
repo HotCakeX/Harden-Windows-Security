@@ -6566,4 +6566,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Navigate to the directory where the Policies Library cache is located. Please keep in mind that this location is cleared when the app is uninstalled.</value>
   </data>
+  <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Require Hotpatch ID</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Minimum Hotpatch Sequence</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Maximum Hotpatch Sequence</value>
+  </data>
 </root>

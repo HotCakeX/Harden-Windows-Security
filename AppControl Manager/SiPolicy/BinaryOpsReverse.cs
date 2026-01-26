@@ -381,6 +381,28 @@ internal static class BinaryOpsReverse
 			policy.AppSettings = ParseAppSettings(reader);
 		}
 
+		if (version >= 9)
+		{
+			uint tag9 = reader.ReadUInt32();
+			if (tag9 != 9) throw new InvalidOperationException(string.Format("Expected V8 block tag '8', got '{0}'", tag9));
+
+			uint hpCount = reader.ReadUInt32();
+			for (uint i = 0; i < hpCount; i++)
+			{
+				uint baseIdx = reader.ReadUInt32();
+				uint targetIdx = reader.ReadUInt32();
+				uint minSeq = reader.ReadUInt32();
+				uint maxSeq = reader.ReadUInt32();
+
+				if (fileRules[baseIdx] is Allow baseRule && fileRules[targetIdx] is Allow targetRule)
+				{
+					baseRule.RequireHotpatchID = targetRule.ID;
+					targetRule.MinimumHotpatchSequence = minSeq;
+					targetRule.MaximumHotpatchSequence = (maxSeq == uint.MaxValue) ? null : maxSeq;
+				}
+			}
+		}
+
 		// Determine if we've encountered a new policy version.
 		// We have to implement the additional parsing logic for it.
 		uint expectedEndTag = version + 1;

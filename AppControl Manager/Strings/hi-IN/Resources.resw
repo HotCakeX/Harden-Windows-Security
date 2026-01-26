@@ -6566,4 +6566,13 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>उस निर्देशिका पर जाएं जहां नीतियां लाइब्रेरी कैश स्थित है। कृपया ध्यान रखें कि ऐप अनइंस्टॉल होने पर यह स्थान साफ़ कर दिया जाता है।</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Hotpatch ID आवश्यक</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>न्यूनतम Hotpatch अनुक्रम</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>अधिकतम Hotpatch अनुक्रम</value>
+  </data>
 </root>

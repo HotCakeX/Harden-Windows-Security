@@ -6566,4 +6566,13 @@
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>انتقل إلى الدليل الذي توجد به ذاكرة التخزين المؤقت لمكتبة السياسات. يرجى ملاحظة أنه يتم مسح هذا الموقع عند إلغاء تثبيت التطبيق.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>مطلوب معرف Hotpatch</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>الحد الأدنى لتسلسل Hotpatch</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>الحد الأقصى لتسلسل Hotpatch</value>
+  </data>
 </root>

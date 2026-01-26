@@ -6566,4 +6566,13 @@
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>נווט לתיקייה שבה נמצא המטמון של ספריית המדיניות. שים לב שמיקום זה נמחק בעת הסרת התקנת האפליקציה.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>דרוש מזהה Hotpatch</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>רצף Hotpatch מינימלי</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>רצף Hotpatch מקסימלי</value>
+  </data>
 </root>

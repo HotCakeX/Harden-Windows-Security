@@ -510,6 +510,19 @@ internal static class CustomDeserialization
 		string filePathValue = elem.GetAttribute("FilePath");
 		allow.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
+		string requireHotpatchIDValue = elem.GetAttribute("RequireHotpatchID");
+		allow.RequireHotpatchID = string.IsNullOrWhiteSpace(requireHotpatchIDValue) ? null : requireHotpatchIDValue;
+
+		if (elem.HasAttribute("MinimumHotpatchSequence"))
+		{
+			allow.MinimumHotpatchSequence = uint.Parse(elem.GetAttribute("MinimumHotpatchSequence"), CultureInfo.InvariantCulture);
+		}
+
+		if (elem.HasAttribute("MaximumHotpatchSequence"))
+		{
+			allow.MaximumHotpatchSequence = uint.Parse(elem.GetAttribute("MaximumHotpatchSequence"), CultureInfo.InvariantCulture);
+		}
+
 		if (!IDsCollection.Add(allow.ID))
 		{
 			throw new InvalidOperationException($"{GlobalVars.GetStr("AllowRuleDupIDValidationError")}: {allow.ID}");

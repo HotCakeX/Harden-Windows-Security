@@ -271,6 +271,12 @@ internal sealed class Allow(string id)
 	internal string? AppIDs { get; set; }
 
 	internal string? FilePath { get; set; }
+
+	internal string? RequireHotpatchID { get; set; }
+
+	internal uint? MinimumHotpatchSequence { get; set; }
+
+	internal uint? MaximumHotpatchSequence { get; set; }
 }
 
 internal sealed class Deny(string id)

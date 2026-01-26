@@ -54,6 +54,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	internal GridLength FileBasedColumnWidth12 { get; set => SP(ref field, value); }
 	internal GridLength FileBasedColumnWidth13 { get; set => SP(ref field, value); }
 	internal GridLength FileBasedColumnWidth14 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth15 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth16 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth17 { get; set => SP(ref field, value); }
 
 	// ------------ Signature Based ------------
 
@@ -293,6 +296,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageVersionHeader/Text"));
 		double maxWidth13 = ListViewHelper.MeasureText("App IDs");
 		double maxWidth14 = ListViewHelper.MeasureText("Type");
+		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("RequireHotpatchIDHeader/Text"));
+		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("MinimumHotpatchSequenceHeader/Text"));
+		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("MaximumHotpatchSequenceHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (PolicyEditor.FileBasedRulesForListView item in FileRulesCollection)
@@ -311,6 +317,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			maxWidth12 = ListViewHelper.MeasureText(item.PackageVersion, maxWidth12);
 			maxWidth13 = ListViewHelper.MeasureText(item.AppIDs, maxWidth13);
 			maxWidth14 = ListViewHelper.MeasureText(item.Type, maxWidth14);
+			maxWidth15 = ListViewHelper.MeasureText(item.RequireHotpatchID, maxWidth15);
+			maxWidth16 = ListViewHelper.MeasureText(item.MinimumHotpatchSequence.ToString(), maxWidth16);
+			maxWidth17 = ListViewHelper.MeasureText(item.MaximumHotpatchSequence.ToString(), maxWidth17);
 		}
 
 		// Set the column width properties.
@@ -328,6 +337,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		FileBasedColumnWidth12 = new(maxWidth12);
 		FileBasedColumnWidth13 = new(maxWidth13);
 		FileBasedColumnWidth14 = new(maxWidth14);
+		FileBasedColumnWidth15 = new(maxWidth15);
+		FileBasedColumnWidth16 = new(maxWidth16);
+		FileBasedColumnWidth17 = new(maxWidth17);
 	}
 
 	/// <summary>
@@ -516,7 +528,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: allowRule.AllowElement.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.Allow,
-						source: allowRule
+						source: allowRule,
+						requireHotpatchID: allowRule.AllowElement.RequireHotpatchID,
+						minimumHotpatchSequence: allowRule.AllowElement.MinimumHotpatchSequence,
+						maximumHotpatchSequence: allowRule.AllowElement.MaximumHotpatchSequence
 					);
 
 					FileRulesCollection.Add(temp1);
@@ -547,7 +562,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: denyRule.DenyElement.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.Deny,
-						source: denyRule
+						source: denyRule,
+						requireHotpatchID: null,
+						minimumHotpatchSequence: null,
+						maximumHotpatchSequence: null
 					);
 
 					FileRulesCollection.Add(temp2);
@@ -578,7 +596,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: fileRule.FileRuleElement.FilePath,
 						type: fileRule.FileRuleElement.Type.ToString(),
 						sourceType: PolicyEditor.FileBasedRuleType.FileRule,
-						source: fileRule
+						source: fileRule,
+						requireHotpatchID: null,
+						minimumHotpatchSequence: null,
+						maximumHotpatchSequence: null
 					);
 
 					FileRulesCollection.Add(temp3);
@@ -614,7 +635,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: item.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.CompoundPublisher,
-						source: item
+						source: item,
+						requireHotpatchID: null,
+						minimumHotpatchSequence: null,
+						maximumHotpatchSequence: null
 					);
 
 					FileRulesCollection.Add(temp4);

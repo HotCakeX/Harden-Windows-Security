@@ -6566,4 +6566,13 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Navigieren Sie zu dem Verzeichnis, in dem sich der Cache der Richtlinienbibliothek befindet. Bitte beachten Sie, dass dieser Speicherort bei der Deinstallation der App gelöscht wird.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Hotpatch-ID erforderlich</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Minimale Hotpatch-Sequenz</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Maximale Hotpatch-Sequenz</value>
+  </data>
 </root>

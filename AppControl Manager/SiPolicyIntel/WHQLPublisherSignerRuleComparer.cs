@@ -25,9 +25,8 @@ namespace AppControlManager.SiPolicyIntel;
 /// Provides custom equality comparison for <see cref="WHQLPublisher"/> objects.
 /// Two WHQLPublisher objects are considered equal if:
 /// - Their SigningScenario and Auth properties match.
-/// - Their signer elements match based on either:
-///   Rule 1: Name, CertRoot.Value, and CertPublisher.Value match and their EKU lists are equivalent, or
-///   Rule 2: Name and CertRoot.Value match and their EKU lists are equivalent.
+/// - Their Signer elements have matching properties based on the <see cref="Merger.IsSignerRuleMatch(Signer, Signer)"/>
+/// - Their EKU lists are equivalent.
 /// </summary>
 
 internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPublisher>
@@ -46,29 +45,7 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 			return false;
 		}
 
-		// Extract the signer elements from the packages
-		Signer signerX = x.SignerElement;
-		Signer signerY = y.SignerElement;
-
-		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
-		// And CertEKUs match
-		// For intermediate certificate type that uses full proper chain in signer
-		if (Merger.IsSignerRule1Match(signerX, signerY) && Merger.DoEKUsMatch(x.Ekus, y.Ekus))
-		{
-			return true;
-		}
-
-		// Rule 2: Check if Name and CertRoot.Value are equal
-		// And CertEKUs match
-		// For WHQL but PCA/Root/Leaf certificate signer types
-		if (Merger.IsSignerRule2Match(signerX, signerY) && Merger.DoEKUsMatch(x.Ekus, y.Ekus))
-		{
-			return true;
-		}
-
-
-		// If none of the rules match, the WHQLPublisher objects are not equal
-		return false;
+		return Merger.IsSignerRuleMatch(x.SignerElement, y.SignerElement) && Merger.DoEKUsMatch(x.Ekus, y.Ekus);
 	}
 
 	/// <summary>
@@ -76,51 +53,33 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 	/// </summary>
 	public int GetHashCode(WHQLPublisher obj)
 	{
+		HashCode hash = new();
+
+		// Include SSType and Authorization in the hash calculation
+		hash.Add(obj.SigningScenario);
+		hash.Add(obj.Auth);
+
 		Signer signer = obj.SignerElement;
-		long hash = 17;  // Start with an initial value
-
-		// First: Include SSType and Authorization in the hash calculation
-		hash = (hash * 31 + obj.SigningScenario.GetHashCode()) % Merger.modulus;
-		hash = (hash * 31 + obj.Auth.GetHashCode()) % Merger.modulus;
-
-		// Rule 1: Use Name, CertRoot.Value, and CertPublisher.Value for hash calculation
-		if (!string.IsNullOrWhiteSpace(signer.Name))
-		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
+		hash.Add(signer.Name, StringComparer.OrdinalIgnoreCase);
 
 		if (!signer.CertRoot.Value.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
+			hash.AddBytes(signer.CertRoot.Value.Span);
 		}
 
-		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
-		{
-			hash = (hash * 31 + signer.CertPublisher.Value.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
+		hash.Add(signer.CertPublisher?.Value, StringComparer.OrdinalIgnoreCase);
+		hash.Add(signer.CertOemID?.Value, StringComparer.OrdinalIgnoreCase);
+		hash.Add(signer.CertIssuer?.Value, StringComparer.OrdinalIgnoreCase);
 
-		// Rule 2: Use Name and CertRoot.Value for hash calculation
-		if (!string.IsNullOrWhiteSpace(signer.Name))
-		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		if (!signer.CertRoot.Value.IsEmpty)
-		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
-		}
-
-
-		// Rule 3: Include EKU Values
+		// Include EKU Values
 		foreach (EKU eku in CollectionsMarshal.AsSpan(obj.Ekus))
 		{
 			if (!eku.Value.IsEmpty)
 			{
-				hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(eku.Value.Span)) % Merger.modulus;
+				hash.AddBytes(eku.Value.Span);
 			}
 		}
 
-		// Ensure non-negative hash value
-		return (int)(hash & 0x7FFFFFFF);
+		return hash.ToHashCode();
 	}
 }

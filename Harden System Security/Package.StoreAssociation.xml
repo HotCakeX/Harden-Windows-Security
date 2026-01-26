@@ -364,6 +364,14 @@
     <MainPackageIdentityName>VioletHansen.HardenSystemSecurity</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>Harden System Security</ReservedName>
+      <ReservedName>Harden System Security | Leicht, Schnell, Unerbittlich</ReservedName>
+      <ReservedName>Harden System Security | Ελαφρύ, Γρήγορο, Αμείλικτο</ReservedName>
+      <ReservedName>Harden System Security | Lekkie, Szybkie, Nieustępliwe</ReservedName>
+      <ReservedName>Harden System Security | Liviano, Rápido, Implacable</ReservedName>
+      <ReservedName>Harden System Security | קל, מהיר, בלתי מתפשר</ReservedName>
+      <ReservedName>Harden System Security | हल्का, तेज, अथक</ReservedName>
+      <ReservedName>Harden System Security | ലഘുവായ, വേഗമേറിയ, അടങ്ങാത്ത</ReservedName>
+      <ReservedName>Harden System Security | خفيف، سريع، بلا هوادة</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>

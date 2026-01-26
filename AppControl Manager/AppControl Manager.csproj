@@ -61,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.61.0</FileVersion>
+		<FileVersion>2.0.62.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>
@@ -152,20 +152,11 @@
 
 		<PublishAot>True</PublishAot>
 		<OptimizationPreference>Speed</OptimizationPreference>
-
-		<!-- https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview -->
-		<EnablePackageValidation>true</EnablePackageValidation>
-		<EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
-		<EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
-
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-
 		<NuGetAuditMode>all</NuGetAuditMode>
 		<NuGetAuditLevel>low</NuGetAuditLevel>
 
 		<DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
-
-		<PackageReadmeFile>AppControl Manager.md</PackageReadmeFile>
 
 		<!-- Don't need this -->
 		<GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
@@ -241,7 +232,7 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.251222000" />
         <PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2119" />
         <PackageReference Include="System.Numerics.Tensors" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.251221100">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -252,13 +243,7 @@
 		<DefineConstants>$(DefineConstants);APP_CONTROL_MANAGER</DefineConstants>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Content Include="Assets\SplashScreen.scale-200.png" />
-		<Content Include="Assets\LockScreenLogo.scale-200.png" />
-		<Content Include="Assets\Square150x150Logo.scale-200.png" />
-		<Content Include="Assets\Square44x44Logo.scale-200.png" />
-		<Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-		<Content Include="Assets\Wide310x150Logo.scale-200.png" />
+	<ItemGroup>	
 		<Content Include="CppInterop\ComManager.exe">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>

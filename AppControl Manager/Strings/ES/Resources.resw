@@ -6539,4 +6539,31 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>Buscar directivas en la biblioteca</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder a la barra lateral donde podrá ver la biblioteca de directivas y utilizar las directivas que contiene.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder a la barra lateral donde podrá ver la biblioteca de directivas y utilizar las directivas que contiene.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic o pulse aquí para volver a la página anterior.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic o pulse aquí para volver a la página anterior.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder al menú de navegación principal de la aplicación.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder al menú de navegación principal de la aplicación.</value>
+  </data>
+    <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Abrir ubicación de la caché</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Navegue al directorio donde se encuentra la caché de la Biblioteca de directivas. Tenga en cuenta que esta ubicación se elimina al desinstalar la aplicación.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Navegue al directorio donde se encuentra la caché de la Biblioteca de directivas. Tenga en cuenta que esta ubicación se elimina al desinstalar la aplicación.</value>
+  </data>
 </root>

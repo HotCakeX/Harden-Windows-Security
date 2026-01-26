@@ -5168,4 +5168,22 @@
   <data name="No" xml:space="preserve">
     <value>لا</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى الشريط الجانبي حيث يمكنك استخدام الميزات الإضافية المتاحة.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى الشريط الجانبي حيث يمكنك استخدام الميزات الإضافية المتاحة.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا للعودة إلى الصفحة السابقة.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقر أو اضغط هنا للعودة إلى الصفحة السابقة.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى قائمة التنقل الرئيسية للتطبيق.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقر أو اضغط هنا للوصول إلى قائمة التنقل الرئيسية للتطبيق.</value>
+  </data>
 </root>

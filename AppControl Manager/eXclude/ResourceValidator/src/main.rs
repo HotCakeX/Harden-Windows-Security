@@ -1438,6 +1438,30 @@ fn validate_xuid_usage(
             "ToolTipService.ToolTip",
         ],
     );
+    allowed.insert(
+        "SwipeItem",
+        vec![
+            "Text",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
+        ],
+    );
+    allowed.insert(
+        "SplitButton",
+        vec![
+            "Content",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
+        ],
+    );
+    allowed.insert(
+        "RadioMenuFlyoutItem",
+        vec![
+            "Text",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
+        ],
+    );
 
     // Regex to find elements with an x:Uid attribute
     let re: Regex = Regex::new(r#"<([A-Za-z0-9_:]+)\b[^>]*\bx:Uid\s*=\s*"([^"]+)""#)

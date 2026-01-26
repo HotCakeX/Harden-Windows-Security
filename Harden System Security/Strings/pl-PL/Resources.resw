@@ -5168,4 +5168,22 @@ Odcisk Palca: {3}</value>
   <data name="No" xml:space="preserve">
     <value>Nie</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub dotknij tutaj, aby uzyskać dostęp do paska bocznego, gdzie możesz korzystać z dodatkowych dostępnych funkcji.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kliknij lub dotknij tutaj, aby uzyskać dostęp do paska bocznego, gdzie możesz korzystać z dodatkowych dostępnych funkcji.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub dotknij tutaj, aby wrócić do poprzedniej strony.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kliknij lub dotknij tutaj, aby wrócić do poprzedniej strony.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub dotknij tutaj, aby uzyskać dostęp do głównego menu nawigacyjnego aplikacji.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kliknij lub dotknij tutaj, aby uzyskać dostęp do głównego menu nawigacyjnego aplikacji.</value>
+  </data>
 </root>

@@ -1,7 +1,9 @@
-* Fixed an issue when parsing CSVs from MDE Advanced Hunting: https://github.com/HotCakeX/Harden-Windows-Security/issues/991
+* Added tooltip texts to the Back, Menu and Sidebar buttons on the top bar.
 
-* The Sidebar's Policies Library now has a search bar where you can search among the policies in there.
+* You can now drag policy `.XML`/`.CIP`/`.P7B` files onto the Sidebar's Policies Library and drop them there to import them. It only works when the app is running unelevated.
 
-* Improved localization.
+* Added a new option under the Actions button on the Sidebar Policies Library to open the Library's cache location in File Explorer.
 
-* General performance improvements.
+* Updated dependencies to the latest versions.
+
+* Improved overall performance.

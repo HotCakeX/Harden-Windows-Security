@@ -1,1 +1,3 @@
-* Updated the Microsoft 365 Apps Security Baseline from 24H2 to 25H2.
+* Added tooltip texts to the Back, Menu and Sidebar buttons on the top bar.
+
+* Updated dependencies to the latest versions.

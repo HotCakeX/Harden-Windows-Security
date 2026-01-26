@@ -479,7 +479,7 @@
                                 Foreground="Violet"/>
                             <TextBlock
                                 IsTextSelectionEnabled="True"
-                                Text="{x:Bind ViewModel.RecommendedDriverBlockRulesVersionTextBlock, Mode=OneWay}"
+                                Text="{x:Bind ViewModel._policyPathMSFTRecommendedDriverBlockRules.PolicyObj.VersionEx, Mode=OneWay, FallbackValue='N/A'}"
                                 Foreground="Violet"/>
                         </StackPanel>
 

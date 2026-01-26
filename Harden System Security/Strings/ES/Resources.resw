@@ -5168,4 +5168,22 @@ Huella Digital: {3}</value>
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder a la barra lateral donde puede utilizar funciones adicionales disponibles.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder a la barra lateral donde puede utilizar funciones adicionales disponibles.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic o pulse aquí para volver a la página anterior.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic o pulse aquí para volver a la página anterior.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder al menú de navegación principal de la aplicación.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic o pulse aquí para acceder al menú de navegación principal de la aplicación.</value>
+  </data>
 </root>

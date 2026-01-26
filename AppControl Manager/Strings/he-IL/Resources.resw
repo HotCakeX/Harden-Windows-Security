@@ -6222,13 +6222,13 @@
     <value>ספרייה קבועה</value>
   </data>
   <data name="PersistentPoliciesLibrarySettingsCard.Description" xml:space="preserve">
-    <value>כאשר אפשרות זו מופעלת, כל פריטי המדיניות הזמינים בספרייה ימשיכו להיות שם גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מסופקת על ידי שמירת עותק של פריטי המדיניות בספרייה במטמון פרטי בדיסק. המטמון נמחק אוטומטית בעת הסרת התקנת האפליקציה.</value>
+    <value>כאשר אפשרות זו מופעלת, כל המדיניות הזמינה בספרייה תמשיך להיות זמינה גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מתאפשרת על ידי שמירת עותק של המדיניות שבספרייה במטמון פרטי בדיסק. המטמון נמחק באופן אוטומטי בעת הסרת התקנת האפליקציה.</value>
   </data>
   <data name="PersistentPoliciesLibrarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>כאשר אפשרות זו מופעלת, כל פריטי המדיניות הזמינים בספרייה ימשיכו להיות שם גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מסופקת על ידי שמירת עותק של פריטי המדיניות בספרייה במיקום פרטי בדיסק. המטמון נמחק אוטומטית בעת הסרת התקנת האפליקציה.</value>
+    <value>כאשר אפשרות זו מופעלת, כל המדיניות הזמינה בספרייה תמשיך להיות זמינה גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מתאפשרת על ידי שמירת עותק של המדיניות שבספרייה במיקום פרטי בדיסק. המטמון נמחק באופן אוטומטי בעת הסרת התקנת האפליקציה.</value>
   </data>
   <data name="PersistentPoliciesLibrarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>כאשר אפשרות זו מופעלת, כ�� פריטי המדיניות הזמינים בספרייה ימשיכו להיות שם גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מסופקת על ידי שמירת עותק של פריטי המדיניות בספרייה במיקום פרטי בדיסק. המטמון נמחק אוטומטית בעת הסרת התקנת האפליקציה.</value>
+    <value>כאשר אפשרות זו מופעלת, כל המדיניות הזמינה בספרייה תמשיך להיות זמינה גם לאחר הפעלה מחדש של האפליקציה. פונקציונליות זו מתאפשרת על ידי שמירת עותק של המדיניות שבספרייה במיקום פרטי בדיסק. המטמון נמחק באופן אוטומטי בעת הסרת התקנת האפליקציה.</value>
   </data>
   <data name="SaveAsCIPMenuFlyoutItem.Text" xml:space="preserve">
     <value>שמור כ-CIP</value>
@@ -6306,13 +6306,13 @@
     <value>מדיניות משלימה מתוך יומני אירועים - {0}</value>
   </data>
   <data name="GenerateRandomGUIDButton.Content" xml:space="preserve">
-    <value>צור אקראית</value>
+    <value>צור באקראי</value>
   </data>
   <data name="GenerateRandomGUIDButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>��ור GUID חוקי אקראי עבור מזהה מדיניות הבסיס (Base Policy ID).</value>
+    <value>צור מזהה GUID אקראי ותקין עבור מזהה מדיניות הבסיס.</value>
   </data>
   <data name="GenerateRandomGUIDButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור GUID חוקי אקראי עבור מזהה מדיניות הבסיס (Base Policy ID).</value>
+    <value>צור מזהה GUID אקראי ותקין עבור מזהה מדיניות הבסיס.</value>
   </data>
   <data name="Signed" xml:space="preserve">
     <value>חתום</value>
@@ -6538,5 +6538,32 @@
   </data>
     <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>חפש בסיפריית המדיניות</value>
+  </data>
+    <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לחץ או הקש כאן כדי לגשת לסרגל הצד בו תוכל לצפות בספריית המדיניות ולהשתמש במדיניות שבה.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לחץ או הקש כאן כדי לגשת לסרגל הצד בו תוכל לצפות בספריית המדיניות ולהשתמש במדיניות שבה.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לחץ או הקש כאן כדי לחזור לדף הקודם.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לחץ או הקש כאן כדי לחזור לדף הקודם.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לחץ או הקש כאן כדי לגשת לתפריט הניווט הראשי של האפליקציה.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לחץ או הקש כאן כדי לגשת לתפריט הניווט הראשי של האפליקציה.</value>
+  </data>
+    <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>פתח את מיקום המטמון</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נווט לתיקייה שבה נמצא המטמון של ספריית המדיניות. שים לב שמיקום זה נמחק בעת הסרת התקנת האפליקציה.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נווט לתיקייה שבה נמצא המטמון של ספריית המדיניות. שים לב שמיקום זה נמחק בעת הסרת התקנת האפליקציה.</value>
   </data>
 </root>

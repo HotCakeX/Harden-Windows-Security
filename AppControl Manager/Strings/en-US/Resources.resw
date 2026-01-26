@@ -6539,4 +6539,31 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SearchThePoliciesLibrary.Text" xml:space="preserve">
     <value>Search for policies in the library</value>
   </data>
+  <data name="SidebarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click or tap here to access the Sidebar where you can view the policies library and use the policies in it.</value>
+  </data>
+  <data name="SidebarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click or tap here to access the Sidebar where you can view the policies library and use the policies in it.</value>
+  </data>
+  <data name="BackButtonTitleBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click or tap here to go back to the previous page.</value>
+  </data>
+  <data name="BackButtonTitleBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click or tap here to go back to the previous page.</value>
+  </data>
+  <data name="HamburgerMenuButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click or tap here to access the main navigation menu of the app.</value>
+  </data>
+  <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click or tap here to access the main navigation menu of the app.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Open Cache Location</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Navigate to the directory where the Policies Library cache is located. Please keep in mind that this location is cleared when the app is uninstalled.</value>
+  </data>
+  <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Navigate to the directory where the Policies Library cache is located. Please keep in mind that this location is cleared when the app is uninstalled.</value>
+  </data>
 </root>

@@ -423,14 +423,17 @@ internal static class LocalFilesScan
 					if (signerInfo.Certificate is not null)
 					{
 						// Iterate over the certificate extensions and select those of type X509EnhancedKeyUsageExtension.
-						foreach (X509EnhancedKeyUsageExtension extension in signerInfo.Certificate.Extensions.OfType<X509EnhancedKeyUsageExtension>())
+						foreach (X509Extension extension in signerInfo.Certificate.Extensions)
 						{
-							// Iterate over each Oid in the EnhancedKeyUsages.
-							foreach (Oid oid in extension.EnhancedKeyUsages)
+							if (extension is X509EnhancedKeyUsageExtension eku)
 							{
-								if (oid.Value is not null)
+								// Iterate over each Oid in the EnhancedKeyUsages.
+								foreach (Oid oid in eku.EnhancedKeyUsages)
 								{
-									output.Add(oid.Value);
+									if (oid.Value is not null)
+									{
+										output.Add(oid.Value);
+									}
 								}
 							}
 						}

@@ -1437,6 +1437,76 @@ internal sealed partial class MainWindow : Window
 		}
 	}
 
+	/// <summary>
+	/// Event handler for when policies are dragged over the Sidebar's policies library.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void OnSidebarDragOver(object sender, DragEventArgs e)
+	{
+		e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.None;
+
+		if (e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
+		{
+			e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+			e.DragUIOverride.Caption = GlobalVars.GetStr("AddPoliciesMenuFlyoutSubItem/Text");
+		}
+	}
+
+	/// <summary>
+	/// Event handler for when policies are dropped over the Sidebar's policies library.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void OnSidebarDrop(object sender, DragEventArgs e)
+	{
+		try
+		{
+			if (e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
+			{
+				IReadOnlyList<Windows.Storage.IStorageItem> items = await e.DataView.GetStorageItemsAsync();
+				List<string> validFiles = [];
+
+				foreach (Windows.Storage.IStorageItem item in items)
+				{
+					if (item is Windows.Storage.StorageFile file)
+					{
+						string extension = file.FileType;
+						if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase) ||
+							string.Equals(extension, ".cip", StringComparison.OrdinalIgnoreCase) ||
+							string.Equals(extension, ".p7b", StringComparison.OrdinalIgnoreCase))
+						{
+							validFiles.Add(file.Path);
+						}
+					}
+				}
+
+				await Nav.AddPoliciesFromPaths(validFiles);
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the UI button that opens the location of the Policies Library cache on disk.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void OpenPoliciesLibraryCacheLocation(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			await ViewModels.ViewModelBase.OpenFileInDefaultFileHandler(MainWindowVM.SidebarPoliciesLibraryCache);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
 	#endregion
 
 #endif

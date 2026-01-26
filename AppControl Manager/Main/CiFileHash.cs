@@ -18,11 +18,8 @@
 using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 
@@ -38,14 +35,6 @@ internal static class CiFileHash
 	/// Pre-allocated buffer pool for better memory management
 	/// </summary>
 	private static readonly ArrayPool<byte> BufferPool = ArrayPool<byte>.Shared;
-
-	/// <summary>
-	/// Lookup table for hex-nibbles (two chars per byte)
-	/// </summary>
-	private static readonly char[][] HexChars = Enumerable
-		.Range(0, 256)
-		.Select(i => i.ToString("X2", CultureInfo.InvariantCulture).ToCharArray())
-		.ToArray();
 
 	/// <summary>
 	/// Cache for PE hash ranges
@@ -70,11 +59,18 @@ internal static class CiFileHash
 	/// <returns></returns>
 	internal static CodeIntegrityHashes GetCiFileHashes(string filePath)
 	{
+		using FileStream fileStream = File.OpenRead(filePath);
+
+		// DangerousGetHandle returns the raw file handle
+		nint fileStreamHandle = fileStream.SafeFileHandle.DangerousGetHandle();
+		if (fileStreamHandle == nint.Zero)
+			return new(null, null, null, null);
+
 		return new CodeIntegrityHashes(
 			GetPageHash("SHA1", filePath),
 			GetPageHash("SHA256", filePath),
-			GetAuthenticodeHashLegacy(filePath, "SHA1"),
-			GetAuthenticodeHashLegacy(filePath, "SHA256")
+			GetAuthenticodeHashLegacy(filePath, fileStreamHandle, "SHA1"),
+			GetAuthenticodeHashLegacy(filePath, fileStreamHandle, "SHA256")
 		);
 	}
 
@@ -118,9 +114,18 @@ internal static class CiFileHash
 		// Array indices: 0=SHA1, 1=SHA256, 2=SHA384, 3=SHA512, 4=SHA3-256, 5=SHA3-384, 6=SHA3-512
 		string?[] results = new string?[7];
 
-		// Handle legacy algorithms (SHA1, SHA256) using the existing method
-		results[0] = GetAuthenticodeHashLegacy(filePath, "SHA1");
-		results[1] = GetAuthenticodeHashLegacy(filePath, "SHA256");
+		// The GetAllAuthenticodeHashesManual method will reacquire the file handle again so we can enclose the using here.
+		using (FileStream fileStream = File.OpenRead(filePath))
+		{
+			// DangerousGetHandle returns the raw file handle
+			nint fileStreamHandle = fileStream.SafeFileHandle.DangerousGetHandle();
+			if (fileStreamHandle == nint.Zero)
+				return results;
+
+			// Handle legacy algorithms (SHA1, SHA256) using the existing method
+			results[0] = GetAuthenticodeHashLegacy(filePath, fileStreamHandle, "SHA1");
+			results[1] = GetAuthenticodeHashLegacy(filePath, fileStreamHandle, "SHA256");
+		}
 
 		// Handle all other algorithms using manual calculation with single file read
 		string?[] manualResults = GetAllAuthenticodeHashesManual(filePath);
@@ -268,7 +273,7 @@ internal static class CiFileHash
 				}
 
 				// Convert hash to hex string
-				results[i] = ConvertHashToHexString(hashBuffers[i], (int)hashLengths[i]);
+				results[i] = Convert.ToHexString(new ReadOnlySpan<byte>((void*)hashBuffers[i], (int)hashLengths[i]));
 			}
 		}
 		finally
@@ -301,20 +306,21 @@ internal static class CiFileHash
 		return results;
 	}
 
-	private static string? GetAuthenticodeHashLegacy(string filePath, string hashAlgorithm)
+	/// <summary>
+	/// Gets Authenticode Hash of files via legacy methods.
+	/// </summary>
+	/// <param name="filePath">The path of the file, used for logging messages of errors only.</param>
+	/// <param name="fileStreamHandle">Used to hash the file.</param>
+	/// <param name="hashAlgorithm">The hashing algorithm to use.</param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	private static unsafe string? GetAuthenticodeHashLegacy(string filePath, nint fileStreamHandle, string hashAlgorithm)
 	{
 		nint contextHandle = nint.Zero;
 		nint hashValue = nint.Zero;
 
 		try
 		{
-			using FileStream fileStream = File.OpenRead(filePath);
-
-			// DangerousGetHandle returns the raw file handle
-			nint fileStreamHandle = fileStream.SafeFileHandle.DangerousGetHandle();
-			if (fileStreamHandle == nint.Zero)
-				return null;
-
 			if (!NativeMethods.CryptCATAdminAcquireContext2(
 					ref contextHandle,
 					nint.Zero,
@@ -363,8 +369,8 @@ internal static class CiFileHash
 						hashAlgorithm));
 			}
 
-			// Single-allocation conversion of the hash bytes to hex
-			return ConvertHashToHexString(hashValue, hashSize);
+			// Conversion of the hash bytes to hex
+			return Convert.ToHexString(new ReadOnlySpan<byte>((void*)hashValue, hashSize));
 		}
 		finally
 		{
@@ -507,31 +513,12 @@ internal static class CiFileHash
 	}
 
 	/// <summary>
-	/// Convert an unmanaged hash buffer directly into a hex string.
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static string ConvertHashToHexString(nint hashBuffer, int hashLength)
-	{
-		// Allocate a string of exactly hashLength*2 chars and fill it in-place
-		return string.Create(hashLength * 2, (hashBuffer, hashLength), (span, state) =>
-		{
-			(nint ptr, int len) = state;
-			for (int i = 0; i < len; i++)
-			{
-				byte b = Marshal.ReadByte(ptr, i);
-				span[2 * i] = HexChars[b][0];
-				span[2 * i + 1] = HexChars[b][1];
-			}
-		});
-	}
-
-	/// <summary>
 	/// a method to get the hash of the first page of a file as a hexadecimal string
 	/// </summary>
 	/// <param name="algName"></param>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
-	private static string? GetPageHash(string algName, string fileName)
+	private static unsafe string? GetPageHash(string algName, string fileName)
 	{
 		// initialize the buffer pointer to zero
 		IntPtr buffer = IntPtr.Zero;
@@ -563,17 +550,8 @@ internal static class CiFileHash
 			if (firstPageHash2 == 0)
 				return null;
 
-			// Single-allocation hex conversion
-			return string.Create(firstPageHash2 * 2, (buffer, firstPageHash2), (span, state) =>
-			{
-				(nint ptr, int len) = state;
-				for (int i = 0; i < len; i++)
-				{
-					byte b = Marshal.ReadByte(ptr, i);
-					span[2 * i] = HexChars[b][0];
-					span[2 * i + 1] = HexChars[b][1];
-				}
-			});
+			// Hex conversion
+			return Convert.ToHexString(new ReadOnlySpan<byte>((void*)buffer, firstPageHash2));
 		}
 		finally
 		{
@@ -588,7 +566,7 @@ internal static class CiFileHash
 	/// <param name="fileName"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	private static (string?, string?) GetFlatHash(string fileName)
+	private static unsafe (string?, string?) GetFlatHash(string fileName)
 	{
 		if (GlobalVars.IsOlderThan24H2)
 		{
@@ -762,8 +740,8 @@ internal static class CiFileHash
 			}
 
 			// Convert hashes to hex strings
-			SHA3_512Hash = ConvertHashToHexString(sha3_512HashBuffer, (int)sha3_512HashLength);
-			SHA3_384Hash = ConvertHashToHexString(sha3_384HashBuffer, (int)sha3_384HashLength);
+			SHA3_512Hash = Convert.ToHexString(new ReadOnlySpan<byte>((void*)sha3_512HashBuffer, (int)sha3_512HashLength));
+			SHA3_384Hash = Convert.ToHexString(new ReadOnlySpan<byte>((void*)sha3_384HashBuffer, (int)sha3_384HashLength));
 		}
 		finally
 		{

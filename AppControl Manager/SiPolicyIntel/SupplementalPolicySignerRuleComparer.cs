@@ -40,24 +40,7 @@ internal sealed class SupplementalPolicySignerRuleComparer : IEqualityComparer<S
 			return false;
 		}
 
-		// Extract signer elements for comparison
-		Signer signerX = x.SignerElement;
-		Signer signerY = y.SignerElement;
-
-		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
-		if (Merger.IsSignerRule1Match(signerX, signerY))
-		{
-			return true;
-		}
-
-		// Rule 2: Check if Name and CertRoot.Value are equal
-		if (Merger.IsSignerRule2Match(signerX, signerY))
-		{
-			return true;
-		}
-
-		// If none of the rules match, return false
-		return false;
+		return Merger.IsSignerRuleMatch(x.SignerElement, y.SignerElement);
 	}
 
 	/// <summary>
@@ -67,27 +50,20 @@ internal sealed class SupplementalPolicySignerRuleComparer : IEqualityComparer<S
 	/// <returns>A hash code for the object.</returns>
 	public int GetHashCode(SupplementalPolicySignerRule obj)
 	{
+		HashCode hash = new();
 		Signer signer = obj.SignerElement;
-		long hash = 17;  // Initial hash value
 
-		// Include Name in hash calculation if present
-		if (!string.IsNullOrWhiteSpace(signer.Name))
-		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
+		hash.Add(signer.Name, StringComparer.OrdinalIgnoreCase);
 
-		// Include CertRoot.Value in hash calculation if present
 		if (!signer.CertRoot.Value.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value.Span)) % Merger.modulus;
+			hash.AddBytes(signer.CertRoot.Value.Span);
 		}
 
-		// Include CertPublisher.Value in hash calculation if present
-		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
-		{
-			hash = (hash * 31 + signer.CertPublisher.Value.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
+		hash.Add(signer.CertPublisher?.Value, StringComparer.OrdinalIgnoreCase);
+		hash.Add(signer.CertOemID?.Value, StringComparer.OrdinalIgnoreCase);
+		hash.Add(signer.CertIssuer?.Value, StringComparer.OrdinalIgnoreCase);
 
-		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash
+		return hash.ToHashCode();
 	}
 }

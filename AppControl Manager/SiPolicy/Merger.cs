@@ -780,32 +780,23 @@ internal static class Merger
 	}
 
 	/// <summary>
-	/// Rule 1: Name, CertRoot.Value, CertPublisher.Value must match
+	/// 2 Signers are equal if their following properties are equal:
+	/// Name
+	/// CertRoot
+	/// CertPublisher
+	/// CertOemID
+	/// CertIssuer
 	/// </summary>
 	/// <param name="signerX"></param>
 	/// <param name="signerY"></param>
 	/// <returns></returns>
-	internal static bool IsSignerRule1Match(Signer signerX, Signer signerY)
+	internal static bool IsSignerRuleMatch(Signer signerX, Signer signerY)
 	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
+		return string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
 			   signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span) &&
-			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
-	}
-
-	/// <summary>
-	/// Rule 2: Name and CertRoot.Value must match
-	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
-	internal static bool IsSignerRule2Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   signerX.CertRoot.Value.Span.SequenceEqual(signerY.CertRoot.Value.Span);
+			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(signerX.CertOemID?.Value, signerY.CertOemID?.Value, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(signerX.CertIssuer?.Value, signerY.CertIssuer?.Value, StringComparison.OrdinalIgnoreCase);
 	}
 
 	/// <summary>

@@ -492,6 +492,9 @@ internal static class CustomSerialization
 		if (!allow.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(allow.Hash));
 		if (!string.IsNullOrEmpty(allow.AppIDs)) element.SetAttribute("AppIDs", allow.AppIDs);
 		if (!string.IsNullOrEmpty(allow.FilePath)) element.SetAttribute("FilePath", allow.FilePath);
+		if (!string.IsNullOrEmpty(allow.RequireHotpatchID)) element.SetAttribute("RequireHotpatchID", allow.RequireHotpatchID);
+		if (allow.MinimumHotpatchSequence is not null) element.SetAttribute("MinimumHotpatchSequence", allow.MinimumHotpatchSequence.ToString());
+		if (allow.MaximumHotpatchSequence is not null) element.SetAttribute("MaximumHotpatchSequence", allow.MaximumHotpatchSequence.ToString());
 		_ = parent.AppendChild(element);
 	}
 

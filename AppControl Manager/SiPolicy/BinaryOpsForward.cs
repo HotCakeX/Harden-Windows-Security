@@ -199,6 +199,24 @@ internal static partial class BinaryOpsForward
 	}
 
 	/// <summary>
+	/// Helper method to validate that MinVersion <= MaxVersion
+	/// </summary>
+	private static void ValidateVersionRange(string? minVersion, string? maxVersion, string ruleId)
+	{
+		if (maxVersion != null && minVersion != null)
+		{
+			ulong min = Helper.ConvertStringVersionToUInt64(minVersion);
+			ulong max = Helper.ConvertStringVersionToUInt64(maxVersion);
+
+			if (max < min)
+			{
+				throw new InvalidOperationException(
+					string.Format("For rule {0}, the minimum version {1} is greater than the maximum version {2}.", ruleId, minVersion, maxVersion));
+			}
+		}
+	}
+
+	/// <summary>
 	/// Writes AppIDs and MaximumFileVersion for file rules (AppIDs block).
 	/// </summary>
 	internal static void WriteAppIdsAndMaxFileVersion(
@@ -209,6 +227,8 @@ internal static partial class BinaryOpsForward
 		{
 			case Allow allowRule:
 				{
+					ValidateVersionRange(allowRule.MinimumFileVersion, allowRule.MaximumFileVersion, allowRule.ID);
+
 					ulong maxFileVersionNumber = 0;
 					if (allowRule.MaximumFileVersion is not null)
 					{
@@ -216,7 +236,6 @@ internal static partial class BinaryOpsForward
 					}
 
 					BodyWriter.Write((uint)(maxFileVersionNumber & uint.MaxValue));
-
 					BodyWriter.Write((uint)(maxFileVersionNumber >> 32));
 
 					ParseStringMacros(allowRule.AppIDs, ref macroIdToValueMap);
@@ -225,6 +244,8 @@ internal static partial class BinaryOpsForward
 
 			case Deny denyRule:
 				{
+					ValidateVersionRange(denyRule.MinimumFileVersion, denyRule.MaximumFileVersion, denyRule.ID);
+
 					ulong maxFileVersionNumber = 0;
 					if (denyRule.MaximumFileVersion is not null)
 					{
@@ -240,6 +261,8 @@ internal static partial class BinaryOpsForward
 
 			case FileAttrib fileAttributeRule:
 				{
+					ValidateVersionRange(fileAttributeRule.MinimumFileVersion, fileAttributeRule.MaximumFileVersion, fileAttributeRule.ID);
+
 					ulong maxFileVersionNumber = 0;
 					if (fileAttributeRule.MaximumFileVersion is not null)
 					{
@@ -872,6 +895,73 @@ internal static partial class BinaryOpsForward
 		}
 	}
 
+	/// <summary>
+	/// Writes HotPatch (Allow rule relationships) to binary.
+	/// </summary>
+	private static void WriteHotpatchSettings(
+		Dictionary<string, uint> fileRuleIdToIndexMap,
+		List<object>? fileRules)
+	{
+		if (fileRules is null || fileRules.Count == 0)
+		{
+			BodyWriter.Write(0U);
+			return;
+		}
+
+		// Collect hotpatch relationships
+		// (BaseImageAllowID, HotpatchImageAllowID, MinSequenceNumber, MaxSequenceNumber)
+		List<(uint BaseIdx, uint TargetIdx, uint Min, uint Max)> requiredAllowRules = [];
+
+		for (int baseIndex = 0; baseIndex < fileRules.Count; baseIndex++)
+		{
+			if (fileRules[baseIndex] is Allow baseAllow && !string.IsNullOrEmpty(baseAllow.RequireHotpatchID))
+			{
+				// Must resolve the ID of the hotpatch base rule
+				if (!fileRuleIdToIndexMap.TryGetValue(baseAllow.RequireHotpatchID, out uint targetIndex))
+				{
+					throw new InvalidOperationException(
+						$"RequireHotpatchID '{baseAllow.RequireHotpatchID}' referenced by Allow rule '{baseAllow.ID}' was not found.");
+				}
+
+				// The target must also be an Allow rule
+				if (fileRules[(int)targetIndex] is not Allow targetAllow)
+				{
+					throw new InvalidOperationException(
+						$"RequireHotpatchID '{baseAllow.RequireHotpatchID}' must reference an Allow rule.");
+				}
+
+				// Self reference check
+				if (baseIndex == targetIndex)
+				{
+					throw new InvalidOperationException(
+						$"Allow rule '{baseAllow.ID}' cannot reference itself in RequireHotpatchID.");
+				}
+
+				// Chain check: The target cannot itself require a hotpatch
+				if (!string.IsNullOrEmpty(targetAllow.RequireHotpatchID))
+				{
+					throw new InvalidOperationException(
+						$"RequireHotpatchID chain detected. The allow rule {baseAllow.ID} references rule {targetAllow.ID} which itself references rule {targetAllow.RequireHotpatchID}.");
+				}
+
+				uint minSeq = targetAllow.MinimumHotpatchSequence ?? 0;
+				uint maxSeq = targetAllow.MaximumHotpatchSequence ?? uint.MaxValue;
+
+				requiredAllowRules.Add(((uint)baseIndex, targetIndex, minSeq, maxSeq));
+			}
+		}
+
+		BodyWriter.Write((uint)requiredAllowRules.Count);
+
+		foreach ((uint BaseIdx, uint TargetIdx, uint Min, uint Max) in CollectionsMarshal.AsSpan(requiredAllowRules))
+		{
+			BodyWriter.Write(BaseIdx);
+			BodyWriter.Write(TargetIdx);
+			BodyWriter.Write(Min);
+			BodyWriter.Write(Max);
+		}
+	}
+
 	internal static void ConvertPolicyToBinary(SiPolicy policyData, Stream outputStream)
 	{
 		// Create a list to hold secure settings that will be written to the policy body
@@ -902,8 +992,9 @@ internal static partial class BinaryOpsForward
 			Dictionary<string, uint> scenarioIdToIndexMap = [];
 			Dictionary<string, string> macroIdToValueMap = [];
 
-			// Write a fixed header version (8)
-			HeaderWriter.Write(8U);
+			// Write a fixed header version (9)
+			// This is the version of the binary/policy
+			HeaderWriter.Write(9U);
 
 			// Ensure PolicyTypeID matches BasePolicyID for binary serialization
 			policyData.PolicyTypeID = policyData.BasePolicyID;
@@ -1262,8 +1353,12 @@ internal static partial class BinaryOpsForward
 			BodyWriter.Write(8U);
 			WriteAppSettings(policyData.AppSettings);
 
-			// Section marker 9: end of sections
+			// Section marker 9: write Hotpatch settings
 			BodyWriter.Write(9U);
+			WriteHotpatchSettings(fileRuleIdToIndexMap, policyData.FileRules);
+
+			// Section marker 10: end of sections
+			BodyWriter.Write(10U);
 
 			// Calculate and write the size of the body data (excluding the initial size field)
 			uint bodyDataSize = (uint)bodyMemoryStream.Position - 4U;

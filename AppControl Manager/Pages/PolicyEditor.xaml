@@ -271,6 +271,9 @@
                                             <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth12, Mode=TwoWay}" MinWidth="50" />
                                             <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth13, Mode=TwoWay}" MinWidth="50" />
                                             <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth14, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth15, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth16, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth17, Mode=TwoWay}" MinWidth="50" />
                                         </Grid.ColumnDefinitions>
 
                                         <!-- Header TextBlocks -->
@@ -288,6 +291,9 @@
                                         <TextBlock x:Uid="PackageVersionHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="App IDs" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Type" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="RequireHotpatchIDHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="MinimumHotpatchSequenceHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="MaximumHotpatchSequenceHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
 
                                         <!-- GridSplitters between columns -->
                                         <controls:GridSplitter Grid.Column="1" />
@@ -303,6 +309,9 @@
                                         <controls:GridSplitter Grid.Column="11" />
                                         <controls:GridSplitter Grid.Column="12" />
                                         <controls:GridSplitter Grid.Column="13" />
+                                        <controls:GridSplitter Grid.Column="14" />
+                                        <controls:GridSplitter Grid.Column="15" />
+                                        <controls:GridSplitter Grid.Column="16" />
                                     </Grid>
                                 </Border>
                             </customUI:ListViewV2.Header>
@@ -340,6 +349,9 @@
                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth12, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth13, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth14, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth15, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth16, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth17, Mode=OneWay}" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                                         <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
@@ -355,6 +367,9 @@
                                         <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind PackageVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
                                         <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind AppIDs}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
                                         <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Type}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind RequireHotpatchID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind MinimumHotpatchSequence}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind MaximumHotpatchSequence}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
                                     </Grid>
                                 </DataTemplate>
                             </customUI:ListViewV2.ItemTemplate>

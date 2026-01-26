@@ -7,3 +7,5 @@
 * Updated dependencies to the latest versions.
 
 * Improved overall performance.
+
+* Added support for the new App Control policy version 9. AppControl Manager now displays Hot🔥 Patching data available in the policies which are mainly used by the operating system at the moment.

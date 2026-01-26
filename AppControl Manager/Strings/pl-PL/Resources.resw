@@ -6566,4 +6566,13 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przejdź do katalogu, w którym znajduje się pamięć podręczna Biblioteki Zasad. Pamiętaj, że ta lokalizacja jest czyszczona po odinstalowaniu aplikacji.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Wymagaj identyfikatora Hotpatch</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Minimalna sekwencja Hotpatch</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Maksymalna sekwencja Hotpatch</value>
+  </data>
 </root>

@@ -6566,4 +6566,13 @@
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Accédez au répertoire où se trouve le cache de la Bibliothèque de stratégies. Veuillez noter que cet emplacement est effacé lors de la désinstallation de l'application.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Exiger un ID de Hotpatch</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Séquence Hotpatch minimale</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Séquence Hotpatch maximale</value>
+  </data>
 </root>

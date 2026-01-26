@@ -6566,4 +6566,13 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Navegue al directorio donde se encuentra la caché de la Biblioteca de directivas. Tenga en cuenta que esta ubicación se elimina al desinstalar la aplicación.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Requerir identificador de Hotpatch</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Secuencia mínima de Hotpatch</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Secuencia máxima de Hotpatch</value>
+  </data>
 </root>

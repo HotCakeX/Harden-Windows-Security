@@ -6566,4 +6566,13 @@
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>പോളിസി ലൈബ്രറി കാഷെ സ്ഥിതിചെയ്യുന്ന ഡയറക്ടറിയിലേക്ക് പോകുക. ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ ഈ ലൊക്കേഷൻ മായ്ച്ചുകളയുമെന്ന് ദയവായി ഓർക്കുക.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Hotpatch ID ആവശ്യമാണ്</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>കുറഞ്ഞ Hotpatch സീക്വൻസ്</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>കൂടിയ Hotpatch സീക്വൻസ്</value>
+  </data>
 </root>

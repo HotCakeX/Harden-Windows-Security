@@ -6566,4 +6566,13 @@
   <data name="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Μεταβείτε στον κατάλογο όπου βρίσκεται η κρυφή μνήμη της Βιβλιοθήκης Πολιτικών. Λάβετε υπόψη ότι αυτή η τοποθεσία διαγράφεται κατά την απεγκατάσταση της εφαρμογής.</value>
   </data>
+    <data name="RequireHotpatchIDHeader.Text" xml:space="preserve">
+    <value>Απαιτείται αναγνωριστικό Hotpatch</value>
+  </data>
+    <data name="MinimumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Ελάχιστη ακολουθία Hotpatch</value>
+  </data>
+    <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
+    <value>Μέγιστη ακολουθία Hotpatch</value>
+  </data>
 </root>

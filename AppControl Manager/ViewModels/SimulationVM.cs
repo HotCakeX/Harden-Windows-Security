@@ -45,8 +45,29 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 		ProgressRingValueProgress = new Progress<double>(p => ProgressRingValue = p);
 
+		// Initialize the column manager with specific definitions for this page
+		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
+		ColumnManager = new ListViewColumnManager<SimulationOutput>(
+		[
+			new("Path", "PathHeader/Text", x => x.Path),
+			new("Source", "SourceHeader/Text", x => x.Source.ToString()),
+			new("IsAuthorized", "IsAuthorizedHeader/Text", x => x.IsAuthorized.ToString()),
+			new("MatchCriteria", "MatchCriteriaHeader/Text", x => x.MatchCriteria?.ToString()),
+			new("SpecificFileNameLevelMatchCriteria", "SpecificFileNameLevelMatchCriteriaHeader/Text", x => x.SpecificFileNameLevelMatchCriteria),
+			new("SignerID", "SignerIDHeader/Text", x => x.SignerID),
+			new("SignerName", "SignerNameHeader/Text", x => x.SignerName),
+			new("SignerCertRoot", "SignerCertRootHeader/Text", x => x.SignerCertRoot),
+			new("SignerCertPublisher", "SignerCertPublisherHeader/Text", x => x.SignerCertPublisher),
+			new("SignerScope", "SignerScopeHeader/Text", x => x.SignerScope),
+			new("CertSubjectCN", "CertSubjectCNHeader/Text", x => x.CertSubjectCN),
+			new("CertIssuerCN", "CertIssuerCNHeader/Text", x => x.CertIssuerCN),
+			new("CertNotAfter", "CertNotAfterHeader/Text", x => x.CertNotAfter),
+			new("CertTBSValue", "CertTBSValueHeader/Text", x => x.CertTBSValue),
+			new("FilePath", "FilePathHeader/Text", x => x.FilePath)
+		]);
+
 		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateColumnWidths();
+		ColumnManager.CalculateColumnWidths(SimulationOutputs);
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -57,6 +78,11 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// Store all outputs for searching
 	/// </summary>
 	internal readonly List<SimulationOutput> AllSimulationOutputs = [];
+
+	/// <summary>
+	/// The Column Manager Composition
+	/// </summary>
+	internal ListViewColumnManager<SimulationOutput> ColumnManager { get; }
 
 	/// <summary>
 	/// For selected file paths
@@ -125,90 +151,13 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal bool ScanSecurityCatalogs { get; set => SP(ref field, value); } = true;
 
-	#region LISTVIEW IMPLEMENTATIONS
-
-	// Properties to hold each columns' width.
-	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth9 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth10 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth11 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth12 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth13 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth14 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth15 { get; set => SP(ref field, value); }
-
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
 	/// and assigns the value (with a little extra padding) to the corresponding property.
 	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
 	/// And only after this method, the ItemsSource must be assigned to the ListView.
 	/// </summary>
-	internal void CalculateColumnWidths()
-	{
-
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("PathHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SourceHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsAuthorizedHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("MatchCriteriaHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("SpecificFileNameLevelMatchCriteriaHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignerIDHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignerNameHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignerCertRootHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignerCertPublisherHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignerScopeHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("CertSubjectCNHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("CertIssuerCNHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("CertNotAfterHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("CertTBSValueHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (SimulationOutput item in SimulationOutputs)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.Path, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.Source.ToString(), maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.IsAuthorized.ToString(), maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.MatchCriteria?.ToString(), maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.SpecificFileNameLevelMatchCriteria, maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.SignerID, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.SignerName, maxWidth7);
-			maxWidth8 = ListViewHelper.MeasureText(item.SignerCertRoot, maxWidth8);
-			maxWidth9 = ListViewHelper.MeasureText(item.SignerCertPublisher, maxWidth9);
-			maxWidth10 = ListViewHelper.MeasureText(item.SignerScope, maxWidth10);
-			maxWidth11 = ListViewHelper.MeasureText(item.CertSubjectCN, maxWidth11);
-			maxWidth12 = ListViewHelper.MeasureText(item.CertIssuerCN, maxWidth12);
-			maxWidth13 = ListViewHelper.MeasureText(item.CertNotAfter, maxWidth13);
-			maxWidth14 = ListViewHelper.MeasureText(item.CertTBSValue, maxWidth14);
-			maxWidth15 = ListViewHelper.MeasureText(item.FilePath, maxWidth15);
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new(maxWidth1);
-		ColumnWidth2 = new(maxWidth2);
-		ColumnWidth3 = new(maxWidth3);
-		ColumnWidth4 = new(maxWidth4);
-		ColumnWidth5 = new(maxWidth5);
-		ColumnWidth6 = new(maxWidth6);
-		ColumnWidth7 = new(maxWidth7);
-		ColumnWidth8 = new(maxWidth8);
-		ColumnWidth9 = new(maxWidth9);
-		ColumnWidth10 = new(maxWidth10);
-		ColumnWidth11 = new(maxWidth11);
-		ColumnWidth12 = new(maxWidth12);
-		ColumnWidth13 = new(maxWidth13);
-		ColumnWidth14 = new(maxWidth14);
-		ColumnWidth15 = new(maxWidth15);
-	}
-
-	#endregion
+	internal void CalculateColumnWidths() => ColumnManager.CalculateColumnWidths(SimulationOutputs);
 
 	/// <summary>
 	/// Event handler for the SearchBox text change
@@ -388,7 +337,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 				SimulationOutputs.Add(entry.Value);
 			}
 
-			CalculateColumnWidths();
+			await Task.Run(CalculateColumnWidths);
 		}
 		catch (NoValidFilesSelectedException ex)
 		{

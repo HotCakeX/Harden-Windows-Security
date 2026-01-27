@@ -6575,4 +6575,22 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>Maximum Hotpatch Sequence</value>
   </data>
+  <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Manage the visibility of columns in the data grid.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Manage the visibility of columns in the data grid.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>De-select all</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>De-select all</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>De-select all</value>
+  </data>
 </root>

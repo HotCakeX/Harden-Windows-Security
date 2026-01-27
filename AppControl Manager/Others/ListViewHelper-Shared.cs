@@ -226,6 +226,7 @@ internal static partial class ListViewHelper
 	/// <param name="text"></param>
 	/// <param name="maxWidth"></param>
 	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static double MeasureText(string? text, double maxWidth)
 	{
 		tb.Text = text;

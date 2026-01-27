@@ -6575,4 +6575,22 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>Maksymalna sekwencja Hotpatch</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Kolumny</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj widocznością kolumn w siatce danych.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj widocznością kolumn w siatce danych.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>Odznacz wszystko</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odznacz wszystko</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odznacz wszystko</value>
+  </data>
 </root>

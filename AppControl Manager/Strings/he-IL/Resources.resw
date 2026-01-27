@@ -6575,4 +6575,22 @@
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>רצף Hotpatch מקסימלי</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>עמודות</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ניהול נראות העמודות ברשת הנתונים.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ניהול נראות העמודות ברשת הנתונים.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>בטל בחירה של הכל</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל בחירה של הכל</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל בחירה של הכל</value>
+  </data>
 </root>

@@ -230,6 +230,10 @@
                 </Button.ContentTemplate>
             </Button>
 
+            <!-- Columns Selection Button -->
+            <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
+                                     IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
+
             <Button Click="{x:Bind ViewModel.ExportToJSON}"
                     IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                     x:Uid="ExportToJSONButton">
@@ -254,80 +258,80 @@
                 <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth7, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth8, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth9, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth10, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth11, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth12, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth13, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth14, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth15, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth16, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth17, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth18, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth19, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth20, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth21, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth22, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth23, Mode=TwoWay}" MinWidth="50" />
+                            <!-- Binding Mode must be TwoWay for resizing to work from UI back to ViewModel. Binding to .Width property prevents CollectionChanged re-entrancy. -->
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[0].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[1].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[2].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[3].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[4].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[5].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[6].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[7].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[8].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[9].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[10].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[11].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[12].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[13].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[14].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[15].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[16].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[17].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[18].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[19].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[20].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[21].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[22].Width, Mode=TwoWay}" />
                         </Grid.ColumnDefinitions>
 
                         <!-- Header Buttons -->
-                        <Button x:Uid="SignerNumberColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SignerNumber" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="TypeColumnHeaderBtn" Grid.Column="1" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Type" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="SubjectCommonNameColumnHeaderBtn" Grid.Column="2" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SubjectCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="IssuerCommonNameColumnHeaderBtn" Grid.Column="3" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="IssuerCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="NotBeforeColumnHeaderBtn" Grid.Column="4" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="NotBefore" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="NotAfterColumnHeaderBtn" Grid.Column="5" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="NotAfter" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="HashingAlgorithmColumnHeaderBtn" Grid.Column="6" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="HashingAlgorithm" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="SerialNumberColumnHeaderBtn" Grid.Column="7" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SerialNumber" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="ThumbprintColumnHeaderBtn" Grid.Column="8" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Thumbprint" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="TBSHashColumnHeaderBtn" Grid.Column="9" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="TBSHash" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="ExtensionOIDsColumnHeaderBtn" Grid.Column="10" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="OIDs" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="VersionColumnHeaderBtn" Grid.Column="11" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="HasPrivateKeyColumnHeaderBtn" Grid.Column="12" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="HasPrivateKey" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="ArchivedColumnHeaderBtn" Grid.Column="13" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Archived" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="CertificatePoliciesColumnHeaderBtn" Grid.Column="14" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="CertificatePolicies" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="AuthorityInformationAccessColumnHeaderBtn" Grid.Column="15" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="AuthorityInformationAccess" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="CRLDistributionPointsColumnHeaderBtn" Grid.Column="16" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="CRLDistributionPoints" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="BasicConstraintsColumnHeaderBtn" Grid.Column="17" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="BasicConstraints" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="KeyUsageColumnHeaderBtn" Grid.Column="18" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="KeyUsage" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="AuthorityKeyIdentifierColumnHeaderBtn" Grid.Column="19" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="AuthorityKeyIdentifier" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="SubjectKeyIdentifierColumnHeaderBtn" Grid.Column="20" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SubjectKeyIdentifier" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="RawDataLengthColumnHeaderBtn" Grid.Column="21" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="RawDataLength" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="PublicKeyLengthColumnHeaderBtn" Grid.Column="22" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="PublicKeyLength" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="SignerNumberColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SignerNumber" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[0], Mode=OneWay}" />
+                        <Button x:Uid="TypeColumnHeaderBtn" Grid.Column="1" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Type" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[1], Mode=OneWay}" />
+                        <Button x:Uid="SubjectCommonNameColumnHeaderBtn" Grid.Column="2" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SubjectCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[2], Mode=OneWay}" />
+                        <Button x:Uid="IssuerCommonNameColumnHeaderBtn" Grid.Column="3" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="IssuerCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[3], Mode=OneWay}" />
+                        <Button x:Uid="NotBeforeColumnHeaderBtn" Grid.Column="4" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="NotBefore" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[4], Mode=OneWay}" />
+                        <Button x:Uid="NotAfterColumnHeaderBtn" Grid.Column="5" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="NotAfter" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[5], Mode=OneWay}" />
+                        <Button x:Uid="HashingAlgorithmColumnHeaderBtn" Grid.Column="6" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="HashingAlgorithm" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[6], Mode=OneWay}" />
+                        <Button x:Uid="SerialNumberColumnHeaderBtn" Grid.Column="7" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SerialNumber" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[7], Mode=OneWay}" />
+                        <Button x:Uid="ThumbprintColumnHeaderBtn" Grid.Column="8" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Thumbprint" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[8], Mode=OneWay}" />
+                        <Button x:Uid="TBSHashColumnHeaderBtn" Grid.Column="9" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="TBSHash" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[9], Mode=OneWay}" />
+                        <Button x:Uid="ExtensionOIDsColumnHeaderBtn" Grid.Column="10" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="OIDs" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[10], Mode=OneWay}" />
+                        <Button x:Uid="VersionColumnHeaderBtn" Grid.Column="11" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[11], Mode=OneWay}" />
+                        <Button x:Uid="HasPrivateKeyColumnHeaderBtn" Grid.Column="12" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="HasPrivateKey" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[12], Mode=OneWay}" />
+                        <Button x:Uid="ArchivedColumnHeaderBtn" Grid.Column="13" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="Archived" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[13], Mode=OneWay}" />
+                        <Button x:Uid="CertificatePoliciesColumnHeaderBtn" Grid.Column="14" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="CertificatePolicies" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[14], Mode=OneWay}" />
+                        <Button x:Uid="AuthorityInformationAccessColumnHeaderBtn" Grid.Column="15" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="AuthorityInformationAccess" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[15], Mode=OneWay}" />
+                        <Button x:Uid="CRLDistributionPointsColumnHeaderBtn" Grid.Column="16" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="CRLDistributionPoints" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[16], Mode=OneWay}" />
+                        <Button x:Uid="BasicConstraintsColumnHeaderBtn" Grid.Column="17" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="BasicConstraints" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[17], Mode=OneWay}" />
+                        <Button x:Uid="KeyUsageColumnHeaderBtn" Grid.Column="18" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="KeyUsage" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[18], Mode=OneWay}" />
+                        <Button x:Uid="AuthorityKeyIdentifierColumnHeaderBtn" Grid.Column="19" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="AuthorityKeyIdentifier" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
+                        <Button x:Uid="SubjectKeyIdentifierColumnHeaderBtn" Grid.Column="20" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="SubjectKeyIdentifier" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
+                        <Button x:Uid="RawDataLengthColumnHeaderBtn" Grid.Column="21" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="RawDataLength" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
+                        <Button x:Uid="PublicKeyLengthColumnHeaderBtn" Grid.Column="22" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="PublicKeyLength" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" />
-                        <controls:GridSplitter Grid.Column="2" />
-                        <controls:GridSplitter Grid.Column="3" />
-                        <controls:GridSplitter Grid.Column="4" />
-                        <controls:GridSplitter Grid.Column="5" />
-                        <controls:GridSplitter Grid.Column="6" />
-                        <controls:GridSplitter Grid.Column="7" />
-                        <controls:GridSplitter Grid.Column="8" />
-                        <controls:GridSplitter Grid.Column="9" />
-                        <controls:GridSplitter Grid.Column="10" />
-                        <controls:GridSplitter Grid.Column="11" />
-                        <controls:GridSplitter Grid.Column="12" />
-                        <controls:GridSplitter Grid.Column="13" />
-                        <controls:GridSplitter Grid.Column="14" />
-                        <controls:GridSplitter Grid.Column="15" />
-                        <controls:GridSplitter Grid.Column="16" />
-                        <controls:GridSplitter Grid.Column="17" />
-                        <controls:GridSplitter Grid.Column="18" />
-                        <controls:GridSplitter Grid.Column="19" />
-                        <controls:GridSplitter Grid.Column="20" />
-                        <controls:GridSplitter Grid.Column="21" />
-                        <controls:GridSplitter Grid.Column="22" />
+                        <controls:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[34], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[35], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[36], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[37], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[38], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[39], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="17" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[40], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="18" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[41], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="19" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[42], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="20" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[43], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="21" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[44], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="22" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[45], Mode=OneWay}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>
@@ -500,53 +504,53 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth15, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth16, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth17, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth18, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth19, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth20, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth21, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth22, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnWidth23, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[0].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[1].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[2].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[3].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[4].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[5].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[6].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[7].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[8].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[9].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[10].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[11].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[12].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[13].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[14].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[15].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[16].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[17].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[18].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[19].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[20].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[21].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnWidths[22].Width, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind SignerNumber}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind Type}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock Text="{x:Bind SubjectCN}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock Text="{x:Bind IssuerCN}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind NotBefore}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock Text="{x:Bind NotAfter}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                        <TextBlock Text="{x:Bind HashingAlgorithm}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                        <TextBlock Text="{x:Bind SerialNumber}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                        <TextBlock Text="{x:Bind Thumbprint}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                        <TextBlock Text="{x:Bind TBSHash}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                        <TextBlock Text="{x:Bind OIDs}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                        <TextBlock Text="{x:Bind Version}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                        <TextBlock Text="{x:Bind HasPrivateKey}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
-                        <TextBlock Text="{x:Bind Archived}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
-                        <TextBlock Text="{x:Bind CertificatePolicies}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
-                        <TextBlock Text="{x:Bind AuthorityInformationAccess}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
-                        <TextBlock Text="{x:Bind CRLDistributionPoints}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
-                        <TextBlock Text="{x:Bind BasicConstraints}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
-                        <TextBlock Text="{x:Bind KeyUsage}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="18"/>
-                        <TextBlock Text="{x:Bind AuthorityKeyIdentifier}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="19"/>
-                        <TextBlock Text="{x:Bind SubjectKeyIdentifier}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="20"/>
-                        <TextBlock Text="{x:Bind RawDataLength}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="21"/>
-                        <TextBlock Text="{x:Bind PublicKeyLength}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="22"/>
+                        <TextBlock Text="{x:Bind SignerNumber}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[0], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind Type}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[1], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind SubjectCN}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[2], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind IssuerCN}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[3], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind NotBefore}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[4], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind NotAfter}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[5], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind HashingAlgorithm}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[6], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind SerialNumber}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[7], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind Thumbprint}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[8], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind TBSHash}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[9], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind OIDs}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[10], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind Version}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[11], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind HasPrivateKey}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[12], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind Archived}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[13], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind CertificatePolicies}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[14], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind AuthorityInformationAccess}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[15], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind CRLDistributionPoints}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[16], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind BasicConstraints}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[17], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind KeyUsage}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="18" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[18], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind AuthorityKeyIdentifier}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="19" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind SubjectKeyIdentifier}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="20" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind RawDataLength}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="21" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind PublicKeyLength}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="22" Visibility="{x:Bind VMs:ViewModelProvider.ViewFileCertificatesVM.ColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

@@ -6575,4 +6575,22 @@
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>കൂടിയ Hotpatch സീക്വൻസ്</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>കോളങ്ങൾ</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡാറ്റ ഗ്രിഡിലെ കോളങ്ങളുടെ ദൃശ്യപരത നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡാറ്റ ഗ്രിഡിലെ കോളങ്ങളുടെ ദൃശ്യപരത നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുത്തത് മാറ്റുക</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുത്തത് മാറ്റുക</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുത്തത് മാറ്റുക</value>
+  </data>
 </root>

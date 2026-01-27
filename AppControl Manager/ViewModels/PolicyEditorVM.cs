@@ -36,41 +36,12 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class PolicyEditorVM : ViewModelBase
 {
 
-	#region Column Widths
+	#region Column Managers
 
-	// ------------ File Based ------------
-
-	internal GridLength FileBasedColumnWidth1 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth2 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth3 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth4 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth5 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth6 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth7 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth8 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth9 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth10 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth11 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth12 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth13 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth14 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth15 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth16 { get; set => SP(ref field, value); }
-	internal GridLength FileBasedColumnWidth17 { get; set => SP(ref field, value); }
-
-	// ------------ Signature Based ------------
-
-	internal GridLength SignatureBasedColumnWidth1 { get; set => SP(ref field, value); }
-	internal GridLength SignatureBasedColumnWidth2 { get; set => SP(ref field, value); }
-	internal GridLength SignatureBasedColumnWidth3 { get; set => SP(ref field, value); }
-	internal GridLength SignatureBasedColumnWidth4 { get; set => SP(ref field, value); }
-	internal GridLength SignatureBasedColumnWidth5 { get; set => SP(ref field, value); }
-	internal GridLength SignatureBasedColumnWidth6 { get; set => SP(ref field, value); }
-	internal GridLength SignatureBasedColumnWidth7 { get; set => SP(ref field, value); }
-
+	internal ListViewColumnManager<PolicyEditor.FileBasedRulesForListView> FileRulesColumnManager { get; }
+	internal ListViewColumnManager<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesColumnManager { get; }
 
 	// ------------ AppIDTags ------------
-
 	internal GridLength AppIDTagsColumnWidth1 { get; set => SP(ref field, value); }
 	internal GridLength AppIDTagsColumnWidth2 { get; set => SP(ref field, value); }
 	internal GridLength AppIDTagsColumnWidth3 { get; set => SP(ref field, value); }
@@ -131,9 +102,43 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		)
 		];
 
-		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateSignatureBasedListViewColumnWidths();
-		CalculateFileBasedListViewColumnWidths();
+		// Initialize File Rules Column Manager
+		FileRulesColumnManager = new ListViewColumnManager<PolicyEditor.FileBasedRulesForListView>(
+		[
+			new("Id", "IDHeader/Text", x => x.Id),
+			new("FriendlyName", "FriendlyNameHeader/Text", x => x.FriendlyName),
+			new("Hash", "Hash", x => x.Hash, useRawHeader: true),
+			new("FileName", "FileNameHeader/Text", x => x.FileName),
+			new("InternalName", "InternalNameHeader/Text", x => x.InternalName),
+			new("FileDescription", "FileDescriptionHeader/Text", x => x.FileDescription),
+			new("ProductName", "ProductNameHeader/Text", x => x.ProductName),
+			new("FilePath", "FilePathHeader/Text", x => x.FilePath),
+			new("MinimumFileVersion", "MinimumFileVersionHeader/Text", x => x.MinimumFileVersion),
+			new("MaximumFileVersion", "MaximumFileVersionHeader/Text", x => x.MaximumFileVersion),
+			new("PackageFamilyName", "PackageFamilyNameHeader/Text", x => x.PackageFamilyName),
+			new("PackageVersion", "PackageVersionHeader/Text", x => x.PackageVersion),
+			new("AppIDs", "App IDs", x => x.AppIDs, useRawHeader: true),
+			new("Type", "Type", x => x.Type, useRawHeader: true),
+			new("RequireHotpatchID", "RequireHotpatchIDHeader/Text", x => x.RequireHotpatchID, defaultVisibility: Visibility.Collapsed),
+			new("MinimumHotpatchSequence", "MinimumHotpatchSequenceHeader/Text", x => x.MinimumHotpatchSequence?.ToString(), defaultVisibility: Visibility.Collapsed),
+			new("MaximumHotpatchSequence", "MaximumHotpatchSequenceHeader/Text", x => x.MaximumHotpatchSequence?.ToString(), defaultVisibility: Visibility.Collapsed)
+		]);
+
+		// Initialize Signature Rules Column Manager
+		SignatureRulesColumnManager = new ListViewColumnManager<PolicyEditor.SignatureBasedRulesForListView>(
+		[
+			new("Id", "IDHeader/Text", x => x.Id),
+			new("Name", "Name", x => x.Name, useRawHeader: true),
+			new("CertRoot", "Cert Root", x => x.CertRoot, useRawHeader: true),
+			new("CertPublisher", "Cert Publisher", x => x.CertPublisher, useRawHeader: true),
+			new("CertOemID", "Cert OEM ID", x => x.CertOemID, useRawHeader: true),
+			new("CertificateEKU", "Cert EKU", x => x.CertificateEKU, useRawHeader: true),
+			new("CertIssuer", "Cert Issuer", x => x.CertIssuer, useRawHeader: true)
+		]);
+
+		// To adjust the initial width of the columns
+		FileRulesColumnManager.CalculateColumnWidths(FileRulesCollection);
+		SignatureRulesColumnManager.CalculateColumnWidths(SignatureRulesCollection);
 	}
 
 
@@ -270,117 +275,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	// To store the signerCollection
 	private static SignerCollection? SignerCollectionCol;
-
-
-	/// <summary>
-	/// For File Based rules
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
-	/// And only after this method, the ItemsSource must be assigned to the ListView.
-	/// </summary>
-	private void CalculateFileBasedListViewColumnWidths()
-	{
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("IDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText("Hash");
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProductNameHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("MinimumFileVersionHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("MaximumFileVersionHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageFamilyNameHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageVersionHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText("App IDs");
-		double maxWidth14 = ListViewHelper.MeasureText("Type");
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("RequireHotpatchIDHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("MinimumHotpatchSequenceHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("MaximumHotpatchSequenceHeader/Text"));
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (PolicyEditor.FileBasedRulesForListView item in FileRulesCollection)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.Id, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.FriendlyName, maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.Hash, maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.FileName, maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.InternalName, maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.FileDescription, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.ProductName, maxWidth7);
-			maxWidth8 = ListViewHelper.MeasureText(item.FilePath, maxWidth8);
-			maxWidth9 = ListViewHelper.MeasureText(item.MinimumFileVersion, maxWidth9);
-			maxWidth10 = ListViewHelper.MeasureText(item.MaximumFileVersion, maxWidth10);
-			maxWidth11 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth11);
-			maxWidth12 = ListViewHelper.MeasureText(item.PackageVersion, maxWidth12);
-			maxWidth13 = ListViewHelper.MeasureText(item.AppIDs, maxWidth13);
-			maxWidth14 = ListViewHelper.MeasureText(item.Type, maxWidth14);
-			maxWidth15 = ListViewHelper.MeasureText(item.RequireHotpatchID, maxWidth15);
-			maxWidth16 = ListViewHelper.MeasureText(item.MinimumHotpatchSequence.ToString(), maxWidth16);
-			maxWidth17 = ListViewHelper.MeasureText(item.MaximumHotpatchSequence.ToString(), maxWidth17);
-		}
-
-		// Set the column width properties.
-		FileBasedColumnWidth1 = new(maxWidth1);
-		FileBasedColumnWidth2 = new(maxWidth2);
-		FileBasedColumnWidth3 = new(maxWidth3);
-		FileBasedColumnWidth4 = new(maxWidth4);
-		FileBasedColumnWidth5 = new(maxWidth5);
-		FileBasedColumnWidth6 = new(maxWidth6);
-		FileBasedColumnWidth7 = new(maxWidth7);
-		FileBasedColumnWidth8 = new(maxWidth8);
-		FileBasedColumnWidth9 = new(maxWidth9);
-		FileBasedColumnWidth10 = new(maxWidth10);
-		FileBasedColumnWidth11 = new(maxWidth11);
-		FileBasedColumnWidth12 = new(maxWidth12);
-		FileBasedColumnWidth13 = new(maxWidth13);
-		FileBasedColumnWidth14 = new(maxWidth14);
-		FileBasedColumnWidth15 = new(maxWidth15);
-		FileBasedColumnWidth16 = new(maxWidth16);
-		FileBasedColumnWidth17 = new(maxWidth17);
-	}
-
-	/// <summary>
-	/// For Signature Based rules
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
-	/// And only after this method, the ItemsSource must be assigned to the ListView.
-	/// </summary>
-	private void CalculateSignatureBasedListViewColumnWidths()
-	{
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("IDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText("Name");
-		double maxWidth3 = ListViewHelper.MeasureText("Cert Root");
-		double maxWidth4 = ListViewHelper.MeasureText("Cert Publisher");
-		double maxWidth5 = ListViewHelper.MeasureText("Cert OEM ID");
-		double maxWidth6 = ListViewHelper.MeasureText("Cert EKU");
-		double maxWidth7 = ListViewHelper.MeasureText("Cert Issuer");
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (PolicyEditor.SignatureBasedRulesForListView item in SignatureRulesCollection)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.Id, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.Name, maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.CertRoot, maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.CertPublisher, maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.CertOemID, maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.CertificateEKU, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.CertIssuer, maxWidth7);
-		}
-
-		// Set the column width properties.
-		SignatureBasedColumnWidth1 = new(maxWidth1);
-		SignatureBasedColumnWidth2 = new(maxWidth2);
-		SignatureBasedColumnWidth3 = new(maxWidth3);
-		SignatureBasedColumnWidth4 = new(maxWidth4);
-		SignatureBasedColumnWidth5 = new(maxWidth5);
-		SignatureBasedColumnWidth6 = new(maxWidth6);
-		SignatureBasedColumnWidth7 = new(maxWidth7);
-	}
 
 	/// <summary>
 	/// For AppIDTags collection and list view.
@@ -665,7 +559,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 
 				// Calculate the column widths for File Based rules after processing them
-				CalculateFileBasedListViewColumnWidths();
+				FileRulesColumnManager.CalculateColumnWidths(FileRulesCollection);
 
 
 				if (SignerCollectionCol is not null)
@@ -770,7 +664,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					SupplementalPolicySignersCount = $"• Supplemental Policy Signer Rules count: {_SupplementalPolicySignersCount}";
 
 					// Calculate the column widths for Signature Based rules after processing them
-					CalculateSignatureBasedListViewColumnWidths();
+					SignatureRulesColumnManager.CalculateColumnWidths(SignatureRulesCollection);
 				}
 
 				if (SelectedPolicy.PolicyObj is not null)
@@ -1602,8 +1496,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		MainInfoBar.WriteInfo(GlobalVars.GetStr("AllDataClearedMsg"));
 		MainInfoBarIsClosable = true;
 
-		CalculateSignatureBasedListViewColumnWidths();
-		CalculateFileBasedListViewColumnWidths();
+		SignatureRulesColumnManager.CalculateColumnWidths(SignatureRulesCollection);
+		FileRulesColumnManager.CalculateColumnWidths(FileRulesCollection);
 		CalculateAppIDTagsListViewColumnWidths();
 	}
 
@@ -1698,8 +1592,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			}
 
 			// Adjust the column widths after performing search
-			CalculateSignatureBasedListViewColumnWidths();
-			CalculateFileBasedListViewColumnWidths();
+			SignatureRulesColumnManager.CalculateColumnWidths(SignatureRulesCollection);
+			FileRulesColumnManager.CalculateColumnWidths(FileRulesCollection);
 		}
 		catch (Exception ex)
 		{

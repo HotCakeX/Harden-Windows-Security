@@ -790,7 +790,7 @@ internal static class Helpers
 
 		Console.WriteLine($"Total packages after adding new one: {existingPackages.Count}");
 
-		// Serialize the updated packages array		
+		// Serialize the updated packages array
 		string packagesJson = JsonSerializer.Serialize(existingPackages.ToArray(), ApplicationPackageJsonContext.Default.ApplicationPackageArray);
 
 		// Parse the packages JSON as a JsonArray and update the submission
@@ -916,7 +916,7 @@ internal static class Helpers
 		}
 
 		// Set fileStatus = PendingDelete (must keep ALL other fields intact; API requires retaining the entry)
-		// If fileStatus property missing, we add it.		
+		// If fileStatus property missing, we add it.
 		oldest.PackageObject["fileStatus"] = "PendingDelete";
 
 		string removedFileName = oldest.PackageObject.TryGetPropertyValue("fileName", out JsonNode? removedNameNode)

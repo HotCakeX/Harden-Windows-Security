@@ -35,16 +35,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
 
-	private void UpdateButtonsStates(bool on)
-	{
-		// Enable the retrieve button if a valid value is set as Active Account
-		AreElementsEnabled = on;
-	}
+	// Enable the retrieve button if a valid value is set as Active Account
+	private void UpdateButtonsStates(bool on) => AreElementsEnabled = on;
 
 	/// <summary>
 	/// Automatically provided via constructor injection by the DI container during build.
 	/// </summary>
-	/// <param name="GraphVM">The view model instance used to manage data and state related to Microsoft Graph.</param>
 	internal ViewOnlinePoliciesVM()
 	{
 		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
@@ -61,8 +57,20 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
 
+		// Initialize the column manager with specific definitions for this page
+		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
+		ColumnManager = new ListViewColumnManager<CiPolicyInfo>(
+		[
+			new("PolicyID", "PolicyIDHeader/Text", x => x.PolicyID),
+			new("BasePolicyID", "BasePolicyIDHeader/Text", x => x.BasePolicyID),
+			new("FriendlyName", "FriendlyNameHeader/Text", x => x.FriendlyName),
+			new("Version", "VersionHeader/Text", x => x.VersionString),
+			new("IsSignedPolicy", "IsSignedPolicyHeader/Text", x => x.IsSignedPolicy.ToString()),
+			new("PolicyOptions", "PolicyOptionsHeader/Text", x => x.PolicyOptionsDisplay)
+		]);
+
 		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateColumnWidths();
+		ColumnManager.CalculateColumnWidths(AllPolicies);
 	}
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
@@ -95,52 +103,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	// Store all outputs for searching
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];
 
-
-	#region Properties to hold each columns' width.
-
-	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
-
-	#endregion
-
-	/// <summary>
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// </summary>
-	private void CalculateColumnWidths()
-	{
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyIDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("BasePolicyIDHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("VersionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsSignedPolicyHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyOptionsHeader/Text"));
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (CiPolicyInfo item in AllPolicies)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.PolicyID, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.BasePolicyID, maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.FriendlyName, maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.VersionString, maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.IsSignedPolicy.ToString(), maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.PolicyOptionsDisplay, maxWidth6);
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new(maxWidth1);
-		ColumnWidth2 = new(maxWidth2);
-		ColumnWidth3 = new(maxWidth3);
-		ColumnWidth4 = new(maxWidth4);
-		ColumnWidth5 = new(maxWidth5);
-		ColumnWidth6 = new(maxWidth6);
-	}
-
+	// The Column Manager Composition
+	internal ListViewColumnManager<CiPolicyInfo> ColumnManager { get; }
 
 	/// <summary>
 	/// Event handler for the UI button.
@@ -282,8 +246,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 				AllPoliciesOutput.Add(miPolicy);
 			}
 
-
-			CalculateColumnWidths();
+			await Task.Run(() => ColumnManager.CalculateColumnWidths(AllPolicies));
 		}
 		catch (Exception ex)
 		{

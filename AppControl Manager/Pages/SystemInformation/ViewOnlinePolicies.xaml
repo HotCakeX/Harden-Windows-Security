@@ -94,6 +94,10 @@
                          TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
                          VerticalAlignment="Center" />
 
+                <!-- Columns Selection Button -->
+                <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
+
             </controls:WrapPanel>
 
         </Border>
@@ -111,29 +115,29 @@
                 <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=TwoWay}" MinWidth="50" />
+                            <!-- Binding Mode must be TwoWay for resizing to work from UI back to ViewModel. Binding to .Width property prevents CollectionChanged re-entrancy. -->
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[0].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[1].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[2].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[3].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[4].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[5].Width, Mode=TwoWay}" />
                         </Grid.ColumnDefinitions>
 
                         <!-- Header Buttons -->
-                        <Button x:Uid="PolicyIDColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="BasePolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="FriendlyNameColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="FriendlyName" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="VersionColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSignedPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyOptions" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="PolicyIDColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[0], Mode=OneWay}"/>
+                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="BasePolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[1], Mode=OneWay}"/>
+                        <Button x:Uid="FriendlyNameColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="FriendlyName" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[2], Mode=OneWay}"/>
+                        <Button x:Uid="VersionColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[3], Mode=OneWay}"/>
+                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSignedPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[4], Mode=OneWay}"/>
+                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyOptions" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[5], Mode=OneWay}"/>
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" />
-                        <controls:GridSplitter Grid.Column="2" />
-                        <controls:GridSplitter Grid.Column="3" />
-                        <controls:GridSplitter Grid.Column="4" />
-                        <controls:GridSplitter Grid.Column="5" />
+                        <controls:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[7], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[8], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[9], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[10], Mode=OneWay}" />
+                        <controls:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[11], Mode=OneWay}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>
@@ -206,19 +210,19 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnWidths[0].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnWidths[1].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnWidths[2].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnWidths[3].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnWidths[4].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnWidths[5].Width, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind PolicyID}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind BasePolicyID}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock Text="{x:Bind FriendlyName}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock Text="{x:Bind VersionString}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind IsSignedPolicy}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock Text="{x:Bind PolicyOptionsDisplay}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock Text="{x:Bind PolicyID}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0" Visibility="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnVisibilities[0], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind BasePolicyID}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1" Visibility="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnVisibilities[1], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind FriendlyName}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2" Visibility="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnVisibilities[2], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind VersionString}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3" Visibility="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnVisibilities[3], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind IsSignedPolicy}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4" Visibility="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnVisibilities[4], Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind PolicyOptionsDisplay}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5" Visibility="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ColumnManager.ColumnVisibilities[5], Mode=OneWay}" />
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

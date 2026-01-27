@@ -6575,4 +6575,22 @@
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>Séquence Hotpatch maximale</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Colonnes</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gérer la visibilité des colonnes dans la grille de données.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Gérer la visibilité des colonnes dans la grille de données.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>Tout désélectionner</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tout désélectionner</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Tout désélectionner</value>
+  </data>
 </root>

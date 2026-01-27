@@ -221,8 +221,17 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 	internal void FileAndFoldersHeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		string key = (string)((Button)sender).Tag;
-		LVController.SortByHeader(key, FilesAndFoldersScanResultsSearchTextBox);
+		try
+		{
+			FilesAndFoldersElementsAreEnabled = false;
+
+			string key = (string)((Button)sender).Tag;
+			LVController.SortByHeader(key, FilesAndFoldersScanResultsSearchTextBox);
+		}
+		finally
+		{
+			FilesAndFoldersElementsAreEnabled = true;
+		}
 	}
 
 	/// <summary>
@@ -337,17 +346,19 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 					LVController.FullSource.AddRange(LocalFilesResults);
 
+					// If there are more than 100,000 items, enable auto-resizing of columns to improve performance.
+					// Without auto-resize, the column width calculation will run for all items, freezing the UI.
+					if (LVController.FullSource.Count > 100000)
+					{
+						AppSettings.AutoResizeListViewColumns = true;
+					}
+
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						// Creating collection using a simple delegate to fetch pages from the full source
-						GenericIncrementalCollection<FileIdentity> incrementalCollection = new(
-							async (pageIndex, pageSize, ct) =>
-							{
-								// in-memory paging over the FullSource list
-								return await Task.FromResult(LVController.FullSource.Skip(pageIndex * pageSize).Take(pageSize));
-							});
+						// Creating incremental collection by passing the source List.
+						HighPerfIncrementalCollection<FileIdentity> incrementalCollection = new(LVController.FullSource);
 
 						// Replaces the ItemsSource for the results ListView with the incremental collection.
 						LVController.UpdateCollection(incrementalCollection);

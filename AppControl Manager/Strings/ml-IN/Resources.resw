@@ -6593,4 +6593,49 @@
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>എല്ലാം തിരഞ്ഞെടുത്തത് മാറ്റുക</value>
   </data>
+      <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>പെർസിസ്റ്റന്റ് പോളിസി ലൈബ്രറി എൻക്രിപ്റ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ലോക്കൽ കാഷെയിൽ സംഭരിച്ചിരിക്കുന്ന പോളിസി ഫയലുകൾ നിലവിലെ ഉപയോക്തൃ സ്കോപ്പ് ഉള്ള വിൻഡോസ് ഡാറ്റ പ്രൊട്ടക്ഷൻ API ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യുന്നു. ഫയലുകൾ നിങ്ങളുടെ നിർദ്ദിഷ്ട വിൻഡോസ് ഉപയോക്തൃ അക്കൗണ്ടിന് മാത്രമേ ഡീക്രിപ്റ്റ് ചെയ്യാനും വായിക്കാനും കഴിയൂ എന്ന് ഇത് ഉറപ്പാക്കുന്നു. ഈ മെഷീനിലെ മറ്റ് അഡ്മിനിസ്ട്രേറ്റർമാർക്ക് പോലും നിങ്ങളുടെ ലൈബ്രറിയുടെ യഥാർത്ഥ XML ഉള്ളടക്കം വായിക്കാൻ കഴിയില്ല.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ലോക്കൽ കാഷെയിൽ സംഭരിച്ചിരിക്കുന്ന പോളിസി ഫയലുകൾ നിലവിലെ ഉപയോക്തൃ സ്കോപ്പ് ഉള്ള വിൻഡോസ് ഡാറ്റ പ്രൊട്ടക്ഷൻ API ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യുന്നു. ഫയലുകൾ നിങ്ങളുടെ നിർദ്ദിഷ്ട വിൻഡോസ് ഉപയോക്തൃ അക്കൗണ്ടിന് മാത്രമേ ഡീക്രിപ്റ്റ് ചെയ്യാനും വായിക്കാനും കഴിയൂ എന്ന് ഇത് ഉറപ്പാക്കുന്നു. ഈ മെഷീനിലെ മറ്റ് അഡ്മിനിസ്ട്രേറ്റർമാർക്ക് പോലും നിങ്ങളുടെ ലൈബ്രറിയുടെ യഥാർത്ഥ XML ഉള്ളടക്കം വായിക്കാൻ കഴിയില്ല.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ലോക്കൽ കാഷെയിൽ സംഭരിച്ചിരിക്കുന്ന പോളിസി ഫയലുകൾ നിലവിലെ ഉപയോക്തൃ സ്കോപ്പ് ഉള്ള വിൻഡോസ് ഡാറ്റ പ്രൊട്ടക്ഷൻ API ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യുന്നു. ഫയലുകൾ നിങ്ങളുടെ നിർദ്ദിഷ്ട വിൻഡോസ് ഉപയോക്തൃ അക്കൗണ്ടിന് മാത്രമേ ഡീക്രിപ്റ്റ് ചെയ്യാനും വായിക്കാനും കഴിയൂ എന്ന് ഇത് ഉറപ്പാക്കുന്നു. ഈ മെഷീനിലെ മറ്റ് അഡ്മിനിസ്ട്രേറ്റർമാർക്ക് പോലും നിങ്ങളുടെ ലൈബ്രറിയുടെ യഥാർത്ഥ XML ഉള്ളടക്കം വായിക്കാൻ കഴിയില്ല.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>USB ഉപകരണ ചരിത്രം</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ ഉപകരണത്തിൽ കണക്റ്റ് ചെയ്തിട്ടുള്ള എല്ലാ USB ഉപകരണങ്ങളുടെയും ചരിത്രം പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ ഉപകരണത്തിൽ കണക്റ്റ് ചെയ്തിട്ടുള്ള എല്ലാ USB ഉപകരണങ്ങളുടെയും ചരിത്രം പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>USB ഉപകരണ ചരിത്രം കണ്ടെത്താനായില്ല.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>കണക്റ്റ് ചെയ്ത USB ഉപകരണങ്ങളുടെ ആകെ എണ്ണം: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>ഉപയോക്തൃ സ്കോപ്പ്</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>മെഷീൻ സ്കോപ്പ്</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ സ്കോപ്പ്</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>ഒരു എൻക്രിപ്ഷൻ സ്കോപ്പ് തിരഞ്ഞെടുക്കുക: ഉപയോക്താവ്, നിലവിലെ Windows അക്കൗണ്ടിന് മാത്രം എൻക്രിപ്റ്റ് ചെയ്ത നയ ഫയലുകൾ ഡീക്രിപ്റ്റ് ചെയ്യാൻ അനുവദിക്കുന്നു, അല്ലെങ്കിൽ മെഷീൻ, ഈ ഉപകരണത്തിലേക്ക് മാത്രം ഡീക്രിപ്ഷൻ പരിമിതപ്പെടുത്തുന്നു, അതിനാൽ ഫയലുകൾ മറ്റൊരു ഉപകരണത്തിലേക്ക് മാറ്റിയാൽ ഡീക്രിപ്റ്റ് ചെയ്യാൻ കഴിയില്ല.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു എൻക്രിപ്ഷൻ സ്കോപ്പ് തിരഞ്ഞെടുക്കുക: ഉപയോക്താവ്, നിലവിലെ Windows അക്കൗണ്ടിന് മാത്രം എൻക്രിപ്റ്റ് ചെയ്ത നയ ഫയലുകൾ ഡീക്രിപ്റ്റ് ചെയ്യാൻ അനുവദിക്കുന്നു, അല്ലെങ്കിൽ മെഷീൻ, ഈ ഉപകരണത്തിലേക്ക് മാത്രം ഡീക്രിപ്ഷൻ പരിമിതപ്പെടുത്തുന്നു, അതിനാൽ ഫയലുകൾ മറ്റൊരു ഉപകരണത്തിലേക്ക് മാറ്റിയാൽ ഡീക്രിപ്റ്റ് ചെയ്യാൻ കഴിയില്ല.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു എൻക്രിപ്ഷൻ സ്കോപ്പ് തിരഞ്ഞെടുക്കുക: ഉപയോക്താവ്, നിലവിലെ Windows അക്കൗണ്ടിന് മാത്രം എൻക്രിപ്റ്റ് ചെയ്ത നയ ഫയലുകൾ ഡീക്രിപ്റ്റ് ചെയ്യാൻ അനുവദിക്കുന്നു, അല്ലെങ്കിൽ മെഷീൻ, ഈ ഉപകരണത്തിലേക്ക് മാത്രം ഡീക്രിപ്ഷൻ പരിമിതപ്പെടുത്തുന്നു, അതിനാൽ ഫയലുകൾ മറ്റൊരു ഉപകരണത്തിലേക്ക് മാറ്റിയാൽ ഡീക്രിപ്റ്റ് ചെയ്യാൻ കഴിയില്ല.</value>
+  </data>
 </root>

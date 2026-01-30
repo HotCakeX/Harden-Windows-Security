@@ -19,6 +19,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
@@ -714,6 +715,206 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	}
 
 	#endregion
+
+	/// <summary>
+	/// Event handler for the UI to export Local Firewall rules.
+	/// </summary>
+	internal async void ExportLocalFirewallRules() => await ExportFirewallRules(false);
+
+	/// <summary>
+	/// Event handler for the UI to export GPO-defined Firewall rules.
+	/// </summary>
+	internal async void ExportGPOFirewallRules() => await ExportFirewallRules(true);
+
+	/// <summary>
+	/// Helper to Export Firewall rules from different stores.
+	/// </summary>
+	/// <param name="isGpo">If true, exports GPO-defined rules. If false, exports local Firewall rules.</param>
+	/// <returns></returns>
+	private async Task ExportFirewallRules(bool isGpo)
+	{
+		try
+		{
+			ManagementUIIsEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			string defaultFileName = isGpo ? "GPO_Firewall_Rules.wfw" : "Local_Firewall_Rules.wfw";
+
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
+				"Windows Firewall Policy|*.wfw", defaultFileName);
+
+			if (string.IsNullOrEmpty(saveLocation))
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				return;
+			}
+
+			await Task.Run(() => Firewall.ExportFirewallPolicy(saveLocation, isGpo));
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("FirewallExportSuccess"), isGpo ? "GPO" : "Local", saveLocation));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ManagementUIIsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Imports local firewall rules.
+	/// </summary>
+	internal async void ImportLocalFirewallRules() => await ImportFirewallRules(false);
+
+	/// <summary>
+	/// Imports GPO firewall rules.
+	/// </summary>
+	internal async void ImportGPOFirewallRules() => await ImportFirewallRules(true);
+
+	/// <summary>
+	/// Imports firewall rules to different stores.
+	/// </summary>
+	/// <param name="isGpo"></param>
+	/// <returns></returns>
+	private async Task ImportFirewallRules(bool isGpo)
+	{
+		try
+		{
+			ManagementUIIsEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			string? fileLocation = FileDialogHelper.ShowFilePickerDialog("Windows Firewall Policy|*.wfw");
+
+			if (string.IsNullOrEmpty(fileLocation))
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				return;
+			}
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = isGpo ? GlobalVars.GetStr("ImportGPOFirewallRulesTitle") : GlobalVars.GetStr("ImportLocalFirewallRulesTitle"),
+				Content = string.Format(GlobalVars.GetStr("ImportFirewallRulesWarning"), Path.GetFileName(fileLocation)),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("ImportButtonText"),
+				DefaultButton = ContentDialogButton.Close,
+				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			};
+
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				return;
+			}
+
+			await Task.Run(() => Firewall.ImportFirewallPolicy(fileLocation, isGpo));
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("FirewallImportSuccess"), isGpo ? "GPO" : "Local"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ManagementUIIsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Restores default Firewall rules for the local store.
+	/// </summary>
+	internal async void RestoreDefaultFirewallRules()
+	{
+		try
+		{
+			ManagementUIIsEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = GlobalVars.GetStr("RestoreLocalFirewallRulesTitle"),
+				Content = GlobalVars.GetStr("RestoreLocalFirewallRulesWarning"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("RestoreDefaultsButtonText"),
+				DefaultButton = ContentDialogButton.Close,
+				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			};
+
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				return;
+			}
+
+			await Task.Run(Firewall.RestoreDefaultFirewallPolicy);
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("FirewallRestoreSuccess"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ManagementUIIsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Deletes all Firewall rules from the Local store.
+	/// </summary>
+	internal async void DeleteAllFirewallRules()
+	{
+		try
+		{
+			ManagementUIIsEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = GlobalVars.GetStr("DeleteAllLocalFirewallRulesTitle"),
+				Content = GlobalVars.GetStr("DeleteAllLocalFirewallRulesWarning"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("DeleteAllButtonText"),
+				DefaultButton = ContentDialogButton.Close,
+				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			};
+
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				return;
+			}
+
+			await Task.Run(Firewall.DeleteAllFirewallRules);
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("FirewallDeleteSuccess"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ManagementUIIsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
 
 	#endregion
 }

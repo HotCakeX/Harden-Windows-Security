@@ -1,3 +1,21 @@
 * Added tooltip texts to the Back, Menu and Sidebar buttons on the top bar.
 
 * Updated dependencies to the latest versions.
+
+* In the BitLocker Management page, after successfully creating a backup of recovery codes for your encrypted volumes, there will no longer still be a warning in the Defender's GUI reminding you to backup your recovery codes again.
+
+* In the Firewall Management page, added 6 new features under a new "Extras" button. Except for the 2 export options, the rest display a confirmation dialog before proceeding with the action to prevent accidental clicks/taps. The new features are:
+
+    * Export Local Rules: Back up your current local firewall configuration to a .wfw file for safekeeping or migration.
+    
+    * Export GPO Rules: Export firewall rules enforced by Group Policy Objects to a file for backup.
+    
+    * Import Local Rules: Restore a previously saved configuration to your local firewall policy.
+    
+    * Import GPO Rules: Load a saved configuration into the Group Policy firewall store.
+    
+    * Restore Defaults: Reset the local firewall configuration to the original Windows default state, removing all custom rules.
+    
+    * Delete All Rules: Completely wipe the local firewall policy, removing every rule including the default OS rules.
+
+* Added a new tile to the Home page where you can view the total count of the USB devices that have been ever connected to your device.

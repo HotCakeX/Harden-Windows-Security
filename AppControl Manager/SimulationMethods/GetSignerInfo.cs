@@ -136,7 +136,7 @@ internal static class GetSignerInfo
 		{
 			foreach (EKU Eku in CollectionsMarshal.AsSpan(policyObj.EKUs))
 			{
-				EKUAndValuesCorrelation.Add(Eku.ID, CustomSerialization.ConvertByteArrayToHex(Eku.Value));
+				EKUAndValuesCorrelation.Add(Eku.ID, Convert.ToHexString(Eku.Value.Span));
 			}
 		}
 
@@ -167,7 +167,7 @@ internal static class GetSignerInfo
 				// These are all root certificates, they have no leaf or intermediate certificates in their chains, that's why they're called Trusted Roots
 
 				// Get the CertRoot node of the current Signer
-				string certRootValue = CustomSerialization.ConvertByteArrayToHex(signer.CertRoot.Value);
+				string certRootValue = Convert.ToHexString(signer.CertRoot.Value.Span);
 
 				if (wellKnownIDs.Contains(certRootValue))
 				{

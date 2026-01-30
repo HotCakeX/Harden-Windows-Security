@@ -6593,4 +6593,49 @@
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>إلغاء تحديد الكل</value>
   </data>
+    <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>تشفير مكتبة السياسات الدائمة</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>عند التمكين، يتم تشفير ملفات السياسة المخزنة في ذاكرة التخزين المؤقت المحلية باستخدام واجهة برمجة تطبيقات حماية بيانات Windows بنطاق المستخدم الحالي. يضمن هذا أن الملفات لا يمكن فك تشفيرها وقراءتها إلا بواسطة حساب مستخدم Windows الخاص بك. حتى المسؤولين الآخرين على هذا الجهاز لن يتمكنوا من قراءة محتوى XML الأولي لمكتبتك.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عند التمكين، يتم تشفير ملفات السياسة المخزنة في ذاكرة التخزين المؤقت المحلية باستخدام واجهة برمجة تطبيقات حماية بيانات Windows بنطاق المستخدم الحالي. يضمن هذا أن الملفات لا يمكن فك تشفيرها وقراءتها إلا بواسطة حساب مستخدم Windows الخاص بك. حتى المسؤولين الآخرين على هذا الجهاز لن يتمكنوا من قراءة محتوى XML الأولي لمكتبتك.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عند التمكين، يتم تشفير ملفات السياسة المخزنة في ذاكرة التخزين المؤقت المحلية باستخدام واجهة برمجة تطبيقات حماية بيانات Windows بنطاق المستخدم الحالي. يضمن هذا أن الملفات لا يمكن فك تشفيرها وقراءتها إلا بواسطة حساب مستخدم Windows الخاص بك. حتى المسؤولين الآخرين على هذا الجهاز لن يتمكنوا من قراءة محتوى XML الأولي لمكتبتك.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>سجل أجهزة USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يعرض سجل جميع أجهزة USB التي تم توصيلها بهذا الجهاز.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يعرض سجل جميع أجهزة USB التي تم توصيلها بهذا الجهاز.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>لم يتم العثور على سجل أجهزة USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>إجمالي أجهزة USB المتصلة: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>نطاق المستخدم</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>نطاق الجهاز</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>نطاق التشفير</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>حدّد نطاق التشفير: المستخدم، الذي يتيح فقط لحساب Windows الحالي فك تشفير ملفات السياسة المشفّرة، أو الجهاز، الذي يقيّد فك التشفير على هذا الجهاز بحيث لا يمكن فك تشفير الملفات إذا نُقلت إلى جهاز آخر.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدّد نطاق التشفير: المستخدم، الذي يتيح فقط لحساب Windows الحالي فك تشفير ملفات السياسة المشفّرة، أو الجهاز، الذي يقيّد فك التشفير على هذا الجهاز بحيث لا يمكن فك تشفير الملفات إذا نُقلت إلى جهاز آخر.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدّد نطاق التشفير: المستخدم، الذي يتيح فقط لحساب Windows الحالي فك تشفير ملفات السياسة المشفّرة، أو الجهاز، الذي يقيّد فك التشفير على هذا الجهاز بحيث لا يمكن فك تشفير الملفات إذا نُقلت إلى جهاز آخر.</value>
+  </data>
 </root>

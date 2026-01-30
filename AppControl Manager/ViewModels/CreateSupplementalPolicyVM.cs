@@ -488,9 +488,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					LVController.FullSource.AddRange(LocalFilesResults);
 
-					// If there are more than 100,000 items, enable auto-resizing of columns to improve performance.
+					// If there are more than 80,000 items, enable auto-resizing of columns to improve performance.
 					// Without auto-resize, the column width calculation will run for all items, freezing the UI.
-					if (LVController.FullSource.Count > 100000)
+					if (LVController.FullSource.Count > 80000)
 					{
 						AppSettings.AutoResizeListViewColumns = true;
 					}

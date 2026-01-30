@@ -152,30 +152,47 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	protected void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 #if APP_CONTROL_MANAGER
+
+	/// <summary>
+	/// Helper to build the fallback chain visual data.
+	/// </summary>
+	private static List<FallbackItem> BuildFallbackChain(params string[] items)
+	{
+		List<FallbackItem> chain = new(items.Length);
+		for (int i = 0; i < items.Length; i++)
+		{
+			chain.Add(new FallbackItem(
+				name: items[i],
+				// Show chevron for all except the last item
+				chevronVisibility: (i < items.Length - 1) ? Visibility.Visible : Visibility.Collapsed));
+		}
+		return chain;
+	}
+
 	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
 	[
-		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
-		new("File Publisher", ScanLevels.FilePublisher, 4),
-		new("Publisher", ScanLevels.Publisher, 3),
-		new("Hash", ScanLevels.Hash, 5),
-		new("File Path", ScanLevels.FilePath, 2),
-		new("Wildcard Folder Path", ScanLevels.WildCardFolderPath, 1),
-		new("File Name", ScanLevels.FileName, 2)
+		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash")),
+		new("File Publisher", ScanLevels.FilePublisher, 4, BuildFallbackChain("Publisher", "Hash")),
+		new("Publisher", ScanLevels.Publisher, 3, BuildFallbackChain("Hash")),
+		new("Hash", ScanLevels.Hash, 5, BuildFallbackChain("No Fallback")),
+		new("File Path", ScanLevels.FilePath, 2, BuildFallbackChain("No Fallback")),
+		new("Wildcard Folder Path", ScanLevels.WildCardFolderPath, 1, BuildFallbackChain("No Fallback")),
+		new("File Name", ScanLevels.FileName, 2, BuildFallbackChain("Hash"))
 	];
 
 	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
 	[
-		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
-		new("File Publisher", ScanLevels.FilePublisher, 4),
-		new("Publisher", ScanLevels.Publisher, 3),
-		new("Hash", ScanLevels.Hash, 5),
-		new("File Name", ScanLevels.FileName, 2)
+		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash")),
+		new("File Publisher", ScanLevels.FilePublisher, 4, BuildFallbackChain("Publisher", "Hash")),
+		new("Publisher", ScanLevels.Publisher, 3, BuildFallbackChain("Hash")),
+		new("Hash", ScanLevels.Hash, 5, BuildFallbackChain("No Fallback")),
+		new("File Name", ScanLevels.FileName, 2, BuildFallbackChain("Hash"))
 	];
 
 	/// <summary>
 	/// The default scan level used by the ItemsSources of ComboBoxes.
 	/// </summary>
-	internal static readonly ScanLevelsComboBoxType DefaultScanLevel = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
+	internal static readonly ScanLevelsComboBoxType DefaultScanLevel = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash"));
 
 #endif
 

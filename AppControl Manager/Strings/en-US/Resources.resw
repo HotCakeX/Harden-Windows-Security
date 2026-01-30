@@ -6593,4 +6593,49 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>De-select all</value>
   </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>Encrypt the Persistent Policies Library</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>When enabled, policy files stored in the local cache are encrypted using the Windows Data Protection API with Current User scope. This ensures that the files can only be decrypted and read by your specific Windows user account. Even other administrators on this machine will be unable to read the raw XML content of your library.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>When enabled, policy files stored in the local cache are encrypted using the Windows Data Protection API with Current User scope. This ensures that the files can only be decrypted and read by your specific Windows user account. Even other administrators on this machine will be unable to read the raw XML content of your library.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>When enabled, policy files stored in the local cache are encrypted using the Windows Data Protection API with Current User scope. This ensures that the files can only be decrypted and read by your specific Windows user account. Even other administrators on this machine will be unable to read the raw XML content of your library.</value>
+  </data>
+  <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>USB Device History</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Displays the history of all of the USB devices that have been connected to this device.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Displays the history of all of the USB devices that have been connected to this device.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>No USB device history found.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Total USB Devices Connected: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>User Scope</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Machine Scope</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>Encryption Scope</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>Select an encryption scope: User, which allows only the current Windows account to decrypt the encrypted policy files, or Machine, which restricts decryption to this device so the files cannot be decrypted if moved to another device.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select an encryption scope: User, which allows only the current Windows account to decrypt the encrypted policy files, or Machine, which restricts decryption to this device so the files cannot be decrypted if moved to another device.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select an encryption scope: User, which allows only the current Windows account to decrypt the encrypted policy files, or Machine, which restricts decryption to this device so the files cannot be decrypted if moved to another device.</value>
+  </data>
 </root>

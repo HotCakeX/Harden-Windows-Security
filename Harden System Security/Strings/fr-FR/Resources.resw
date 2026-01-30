@@ -5186,4 +5186,82 @@ Empreinte : {3}</value>
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Cliquez ou appuyez ici pour accéder au menu de navigation principal de l'application.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Exporter les règles de pare-feu locales</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Exporter les règles de pare-feu GPO</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Importer les règles de pare-feu locales</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Importer les règles de pare-feu GPO</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>Restaurer les règles de pare-feu locales</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>Supprimer toutes les règles de pare-feu locales</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>Extras</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Importer les règles de pare-feu locales</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Importer les règles de pare-feu GPO</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>Vous êtes sur le point d’importer des règles de pare-feu depuis « {0} ». AVERTISSEMENT : cette action est IRRÉVERSIBLE. Toutes les règles existantes seront remplacées par le contenu du fichier de sauvegarde.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>Importer</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Restaurer les règles de pare-feu locales</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>AVERTISSEMENT : cette action est IRRÉVERSIBLE. Toutes les règles personnalisées seront supprimées et les règles par défaut du système d’exploitation seront restaurées.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>Restaurer les paramètres par défaut</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Supprimer toutes les règles de pare-feu locales</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>AVERTISSEMENT : cette action supprimera TOUTES les règles de pare-feu existantes, y compris les règles par défaut du système d’exploitation et les règles personnalisées. Il est fortement recommandé d’effectuer une sauvegarde au préalable.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>Tout supprimer</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>Exportation réussie de {0} règles de pare-feu vers {1}</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>Importation réussie de {0} règles de pare-feu.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>Restauration réussie des règles de pare-feu locales par défaut.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>Suppression réussie de toutes les règles de pare-feu locales.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Historique des périphériques USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Affiche l’historique de tous les périphériques USB qui ont été connectés à cet appareil.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Affiche l’historique de tous les périphériques USB qui ont été connectés à cet appareil.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Aucun historique de périphériques USB trouvé.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Nombre total de périphériques USB connectés: {0}</value>
+  </data>
 </root>

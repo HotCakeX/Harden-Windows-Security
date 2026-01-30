@@ -14,7 +14,7 @@ The [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
 ## Policies Library
 
-A place where you can import as many App Control policies as you want and use them in different parts of the app. Policies in the library exist in the app's memory at runtime. You can import XML, CIP and P7B files to the library. The Sidebar button on the app's top bar displays the total count of the App Control policies in the library.
+A place where you can import as many App Control policies as you want and use them in different parts of the app. Policies in the library exist in the app's memory at runtime. You can import XML, CIP, BIN and P7B files to the library. The Sidebar button on the app's top bar displays the total count of the App Control policies in the library.
 
 Any new policy that you create in the app will be automatically added to the library and when it happens a unique animation is displayed to make it clear where the new policy has been transferred to. You have the option to save the policies in the library as XML or CIP files.
 
@@ -43,6 +43,23 @@ Persistent Library feature does not prevent the policies to remain intact when y
 When the library contains any policy, persistence is off and you attempt to close the app, you will encounter a notice reminding you that there are unsaved policies. You can configure this behavior in the app's settings page. At this point you can either enable persistence, save policies manually to files, or simply ignore the warning and confirm app closing dialog.
 
 The Policies Library with all of its capabilities and persistence offers a seamless experience that **just works** out of the box, without adding any additional burden or responsibility to the user.
+
+### Encrypting the Local Cache of the Policies Library
+
+It's an optional per user encryption for the Policies Library cache. When enabled (off by default), cached policy files are encrypted using Windows DPAPI and stored for the current user only. The app automatically enforces the chosen encryption setting at startup and whenever the toggle on the Sidebar changes, keeping the on disk cache in sync with the preference. When you encrypt your policy files with this feature, they are accessible only while you are signed into the same Windows user account. If you switch to a different user account or move the cache files to another machine, they will not be readable. This enhances security by ensuring that sensitive policy data is protected and accessible only to the intended user.
+
+> [!NOTE]\
+> Using the `Backup All` button under the `Actions` menu creates an unencrypted backup of all policies in the library and saves them in the directory that you selected, regardless of the encryption setting. This is to ensure that users can always access their policies when restoring from a backup, even if they switch to a different user account or machine.
+
+#### Encryption Scope
+
+Select an encryption scope: User, which allows only the current Windows account to decrypt the encrypted policy files, or Machine, which restricts decryption to this device so the files cannot be decrypted if moved to another device. 
+
+If using Administrator Protection mode in the OS, it's recommended to switch to Machine scope mode. Policies encrypted with Machine scope can be decrypted by any user on the same device, while policies encrypted with User scope can only be decrypted by the user who encrypted them.
+
+### Restoring Policies From Backup
+
+You can restore policies from a backup directory containing one or more XML/CIP/P7B/BIN App Control policy files by simply dragging all of the files and dropping them on the Sidebar's Policies Library (only works when the app is running unelevated).
 
 ### Assigning Policies From the Library to Different Section of the App
 

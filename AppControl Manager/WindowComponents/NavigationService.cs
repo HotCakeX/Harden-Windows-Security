@@ -317,7 +317,7 @@ internal sealed class NavigationService
 	{
 		try
 		{
-			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLAndCIPAndP7BFilePickerFilter);
+			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
 			await AddPoliciesFromPaths(selectedFilePaths);
 		}
 		catch (Exception ex)

@@ -6593,4 +6593,49 @@
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αποεπιλογή όλων</value>
   </data>
+    <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>Κρυπτογράφηση της βιβλιοθήκης μόνιμων πολιτικών</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, τα αρχεία πολιτικής που είναι αποθηκευμένα στην τοπική κρυφή μνήμη κρυπτογραφούνται χρησιμοποιώντας το API προστασίας δεδομένων των Windows με εύρος Τρέχοντος Χρήστη. Αυτό διασφαλίζει ότι τα αρχεία μπορούν να αποκρυπτογραφηθούν και να διαβαστούν μόνο από τον συγκεκριμένο λογαριασμό χρήστη των Windows. Ακόμα και άλλοι διαχειριστές σε αυτό το μηχάνημα δεν θα μπορούν να διαβάσουν το ακατέργαστο περιεχόμενο XML της βιβλιοθήκης σας.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, τα αρχεία πολιτικής που είναι αποθηκευμένα στην τοπική κρυφή μνήμη κρυπτογραφούνται χρησιμοποιώντας το API προστασίας δεδομένων των Windows με εύρος Τρέχοντος Χρήστη. Αυτό διασφαλίζει ότι τα αρχεία μπορούν να αποκρυπτογραφηθούν και να διαβαστούν μόνο από τον συγκεκριμένο λογαριασμό χρήστη των Windows. Ακόμα και άλλοι διαχειριστές σε αυτό το μηχάνημα δεν θα μπορούν να διαβάσουν το ακατέργαστο περιεχόμενο XML της βιβλιοθήκης σας.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένη, τα αρχεία πολιτικής που είναι αποθηκευμένα στην τοπική κρυφή μνήμη κρυπτογραφούνται χρησιμοποιώντας το API προστασίας δεδομένων των Windows με εύρος Τρέχοντος Χρήστη. Αυτό διασφαλίζει ότι τα αρχεία μπορούν να αποκρυπτογραφηθούν και να διαβαστούν μόνο από τον συγκεκριμένο λογαριασμό χρήστη των Windows. Ακόμα και άλλοι διαχειριστές σε αυτό το μηχάνημα δεν θα μπορούν να διαβάσουν το ακατέργαστο περιεχόμενο XML της βιβλιοθήκης σας.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Ιστορικό συσκευών USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφανίζει το ιστορικό όλων των συσκευών USB που έχουν συνδεθεί σε αυτήν τη συσκευή.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εμφανίζει το ιστορικό όλων των συσκευών USB που έχουν συνδεθεί σε αυτήν τη συσκευή.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Δεν βρέθηκε ιστορικό συσκευών USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Σύνολο συνδεδεμένων συσκευών USB: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Εμβέλεια χρήστη</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Εμβέλεια συσκευής</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>Εμβέλεια κρυπτογράφησης</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε εμβέλεια κρυπτογράφησης: Χρήστης, που επιτρέπει μόνο στον τρέχοντα λογαριασμό Windows να αποκρυπτογραφεί τα κρυπτογραφημένα αρχεία πολιτικής, ή Συσκευή, που περιορίζει την αποκρυπτογράφηση σε αυτή τη συσκευή, ώστε τα αρχεία να μην μπορούν να αποκρυπτογραφηθούν αν μετακινηθούν σε άλλη συσκευή.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε εμβέλεια κρυπτογράφησης: Χρήστης, που επιτρέπει μόνο στον τρέχοντα λογαριασμό Windows να αποκρυπτογραφεί τα κρυπτογραφημένα αρχεία πολιτικής, ή Συσκευή, που περιορίζει την αποκρυπτογράφηση σε αυτή τη συσκευή, ώστε τα αρχεία να μην μπορούν να αποκρυπτογραφηθούν αν μετακινηθούν σε άλλη συσκευή.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε εμβέλεια κρυπτογράφησης: Χρήστης, που επιτρέπει μόνο στον τρέχοντα λογαριασμό Windows να αποκρυπτογραφεί τα κρυπτογραφημένα αρχεία πολιτικής, ή Συσκευή, που περιορίζει την αποκρυπτογράφηση σε αυτή τη συσκευή, ώστε τα αρχεία να μην μπορούν να αποκρυπτογραφηθούν αν μετακινηθούν σε άλλη συσκευή.</value>
+  </data>
 </root>

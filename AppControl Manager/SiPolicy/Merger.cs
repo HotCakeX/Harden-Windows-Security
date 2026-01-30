@@ -716,7 +716,7 @@ internal static class Merger
 		foreach (EKU eku in CollectionsMarshal.AsSpan(policy.EKUs))
 		{
 			// Convert the memory to a hex string for easy comparison/keying
-			string hexValue = CustomSerialization.ConvertByteArrayToHex(eku.Value);
+			string hexValue = Convert.ToHexString(eku.Value.Span);
 
 			if (uniqueValuesMap.TryGetValue(hexValue, out string? masterId))
 			{

@@ -42,7 +42,7 @@ internal static partial class GetFileHashes
 				if (item is Allow allowItem)
 				{
 					// Convert each hash byte array to string
-					_ = outputHashInfoProcessingString.Add(CustomSerialization.ConvertByteArrayToHex(allowItem.Hash));
+					_ = outputHashInfoProcessingString.Add(Convert.ToHexString(allowItem.Hash.Span));
 				}
 			}
 		}

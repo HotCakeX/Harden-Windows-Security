@@ -417,7 +417,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						packageVersion: allowRule.AllowElement.PackageVersion,
 						minimumFileVersion: allowRule.AllowElement.MinimumFileVersion,
 						maximumFileVersion: allowRule.AllowElement.MaximumFileVersion,
-						hash: CustomSerialization.ConvertByteArrayToHex(allowRule.AllowElement.Hash),
+						hash: Convert.ToHexString(allowRule.AllowElement.Hash.Span),
 						appIDs: allowRule.AllowElement.AppIDs,
 						filePath: allowRule.AllowElement.FilePath,
 						type: null,
@@ -451,7 +451,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						packageVersion: denyRule.DenyElement.PackageVersion,
 						minimumFileVersion: denyRule.DenyElement.MinimumFileVersion,
 						maximumFileVersion: denyRule.DenyElement.MaximumFileVersion,
-						hash: CustomSerialization.ConvertByteArrayToHex(denyRule.DenyElement.Hash),
+						hash: Convert.ToHexString(denyRule.DenyElement.Hash.Span),
 						appIDs: denyRule.DenyElement.AppIDs,
 						filePath: denyRule.DenyElement.FilePath,
 						type: null,
@@ -485,7 +485,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						packageVersion: fileRule.FileRuleElement.PackageVersion,
 						minimumFileVersion: fileRule.FileRuleElement.MinimumFileVersion,
 						maximumFileVersion: fileRule.FileRuleElement.MaximumFileVersion,
-						hash: CustomSerialization.ConvertByteArrayToHex(fileRule.FileRuleElement.Hash),
+						hash: Convert.ToHexString(fileRule.FileRuleElement.Hash.Span),
 						appIDs: fileRule.FileRuleElement.AppIDs,
 						filePath: fileRule.FileRuleElement.FilePath,
 						type: fileRule.FileRuleElement.Type.ToString(),
@@ -524,7 +524,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						packageVersion: item.PackageVersion,
 						minimumFileVersion: item.MinimumFileVersion,
 						maximumFileVersion: item.MaximumFileVersion,
-						hash: CustomSerialization.ConvertByteArrayToHex(item.Hash),
+						hash: Convert.ToHexString(item.Hash.Span),
 						appIDs: item.AppIDs,
 						filePath: item.FilePath,
 						type: null,
@@ -577,7 +577,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 						PolicyEditor.SignatureBasedRulesForListView temp6 = new
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
+							certRoot: Convert.ToHexString(sig.SignerElement.CertRoot.Value.Span),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -601,7 +601,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						_WHQLPublisherRulesCount++;
 						PolicyEditor.SignatureBasedRulesForListView temp7 = new
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
+							certRoot: Convert.ToHexString(sig.SignerElement.CertRoot.Value.Span),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -625,7 +625,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						_UpdatePolicySignersCount++;
 						PolicyEditor.SignatureBasedRulesForListView temp8 = new
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
+							certRoot: Convert.ToHexString(sig.SignerElement.CertRoot.Value.Span),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -649,7 +649,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						_SupplementalPolicySignersCount++;
 						SignatureRulesCollection.Add(new PolicyEditor.SignatureBasedRulesForListView
 						(
-							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot.Value),
+							certRoot: Convert.ToHexString(sig.SignerElement.CertRoot.Value.Span),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
 							certPublisher: sig.SignerElement.CertPublisher?.Value,
@@ -770,7 +770,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLAndCIPAndP7BFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -817,6 +817,15 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			return new SiPolicy.PolicyFileRepresent(
 				policyObj: BinaryOpsReverse.ConvertBinaryToXmlFile(filePath),
 				kind: PolicyFileRepresentKind.P7B)
+			{
+				FileName = Path.GetFileNameWithoutExtension(filePath)
+			};
+		}
+		else if (string.Equals(fileExt, ".bin", StringComparison.OrdinalIgnoreCase))
+		{
+			return new SiPolicy.PolicyFileRepresent(
+				policyObj: BinaryOpsReverse.ConvertBinaryToXmlFile(filePath),
+				kind: PolicyFileRepresentKind.BIN)
 			{
 				FileName = Path.GetFileNameWithoutExtension(filePath)
 			};
@@ -1262,8 +1271,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				string? fileToSaveTheChangesTo = null;
 
-				// Save the CIP file in a XML file
-				if (SelectedPolicy.Kind is PolicyFileRepresentKind.CIP or PolicyFileRepresentKind.P7B)
+				// Save the non-XML file in a XML file
+				if (SelectedPolicy.Kind is not PolicyFileRepresentKind.XML)
 				{
 					// Save it to User Config dir when elevated
 					fileToSaveTheChangesTo = App.IsElevated
@@ -1406,7 +1415,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 					MainInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyEditorSuccessfulSaveMessage"));
 
-					if (SelectedPolicy.Kind is PolicyFileRepresentKind.CIP or PolicyFileRepresentKind.P7B)
+					if (SelectedPolicy.Kind is not PolicyFileRepresentKind.XML)
 					{
 						using ContentDialogV2 dialog = new()
 						{

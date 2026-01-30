@@ -9,6 +9,14 @@
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <customUI:ScanLevelResources />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <ScrollView>
 
         <Grid>
@@ -284,17 +292,8 @@
                                   SelectedIndex="0"
                                   x:Uid="ScanLevelComboBox"
                                   Header="Scan level"
-                                  Margin="0,0,0,27">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                        <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-
+                                  Margin="0,0,0,27"  
+                                  ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
                         <Button
                             Click="{x:Bind ViewModel.CreatePolicyButton_Click}"
                             IsEnabled="{x:Bind ViewModel.CreatePolicyButtonIsEnabled, Mode=OneWay}"

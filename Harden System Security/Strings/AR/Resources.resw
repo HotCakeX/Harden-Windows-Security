@@ -5186,4 +5186,82 @@
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>انقر أو اضغط هنا للوصول إلى قائمة التنقل الرئيسية للتطبيق.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>تصدير قواعد جدار الحماية المحلية</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>تصدير قواعد جدار الحماية لـ GPO</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>استيراد قواعد جدار الحماية المحلية</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>استيراد قواعد جدار الحماية لـ GPO</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>استعادة قواعد جدار الحماية المحلية</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>حذف جميع قواعد جدار الحماية المحلية</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>إضافات</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>استيراد قواعد جدار الحماية المحلية</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>استيراد قواعد جدار الحماية لـ GPO</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>أنت على وشك استيراد قواعد جدار الحماية من '{0}'. تحذير: هذا الإجراء غير قابل للتراجع. سيتم استبدال أي قواعد موجودة بمحتوى ملف النسخة الاحتياطية.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>استيراد</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>استعادة قواعد جدار الحماية المحلية</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>تحذير: هذا الإجراء غير قابل للتراجع. سيتم حذف أي قواعد مخصصة، وستتم استعادة قواعد نظام التشغيل الافتراضية.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>استعادة الإعدادات الافتراضية</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>حذف جميع قواعد جدار الحماية المحلية</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>تحذير: سيؤدي هذا الإجراء إلى حذف جميع قواعد جدار الحماية الحالية، بما في ذلك قواعد نظام التشغيل الافتراضية والقواعد المخصصة. يُوصى بشدة بإنشاء نسخة احتياطية أولاً.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>حذف الكل</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>تم تصدير {0} من قواعد جدار الحماية بنجاح إلى {1}</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>تم استيراد {0} من قواعد جدار الحماية بنجاح.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>تمت استعادة قواعد جدار الحماية المحلية الافتراضية بنجاح.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>تم حذف جميع قواعد جدار الحماية المحلية بنجاح.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>سجل أجهزة USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يعرض سجل جميع أجهزة USB التي تم توصيلها بهذا الجهاز.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يعرض سجل جميع أجهزة USB التي تم توصيلها بهذا الجهاز.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>لم يتم العثور على سجل أجهزة USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>إجمالي أجهزة USB المتصلة: {0}</value>
+  </data>
 </root>

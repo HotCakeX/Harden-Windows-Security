@@ -42,7 +42,11 @@ namespace AppControlManager.ViewModels;
 /// <summary>
 /// ViewModel for the MainWindow
 /// </summary>
+#if APP_CONTROL_MANAGER
+internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
+#else
 internal sealed partial class MainWindowVM : ViewModelBase
+#endif
 {
 	internal object? NavViewSelectedItem { get; set => SP(ref field, value); }
 

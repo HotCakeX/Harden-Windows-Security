@@ -5186,4 +5186,82 @@
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ऐप के मुख्य नेविगेशन मेनू तक पहुँचने के लिए यहाँ क्लिक करें या टैप करें।</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>स्थानीय फ़ायरवॉल नियम निर्यात करें</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>GPO फ़ायरवॉल नियम निर्यात करें</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>स्थानीय फ़ायरवॉल नियम आयात करें</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>GPO फ़ायरवॉल नियम आयात करें</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>स्थानीय फ़ायरवॉल नियम पुनर्स्थापित करें</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>सभी स्थानीय फ़ायरवॉल नियम हटाएँ</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>अतिरिक्त</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>स्थानीय फ़ायरवॉल नियम आयात करें</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>GPO फ़ायरवॉल नियम आयात करें</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>आप '{0}' से फ़ायरवॉल नियम आयात करने वाले हैं। चेतावनी: यह कार्रवाई अपरिवर्तनीय है। किसी भी मौजूदा नियम को बैकअप फ़ाइल की सामग्री से बदल दिया जाएगा।</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>आयात करें</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>स्थानीय फ़ायरवॉल नियम पुनर्स्थापित करें</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>चेतावनी: यह कार्रवाई अपरिवर्तनीय है। सभी कस्टम-परिभाषित नियम हटाए जाएंगे और ऑपरेटिंग सिस्टम के डिफ़ॉल्ट नियम पुनर्स्थापित किए जाएंगे।</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>डिफ़ॉल्ट पुनर्स्थापित करें</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>सभी स्थानीय फ़ायरवॉल नियम हटाएँ</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>चेतावनी: यह कार्रवाई सभी मौजूदा फ़ायरवॉल नियमों को हटा देगी, जिनमें डिफ़ॉल्ट OS नियम और कस्टम-परिभाषित नियम शामिल हैं। पहले बैकअप बनाने की दृढ़ता से सलाह दी जाती है।</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>सभी हटाएँ</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>{0} फ़ायरवॉल नियमों को {1} में सफलतापूर्वक निर्यात किया गया</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>{0} फ़ायरवॉल नियम सफलतापूर्वक आयात किए गए।</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>डिफ़ॉल्ट स्थानीय फ़ायरवॉल नियम सफलतापूर्वक पुनर्स्थापित किए गए।</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>सभी स्थानीय फ़ायरवॉल नियम सफलतापूर्वक हटाए गए।</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>USB डिवाइस इतिहास</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इस डिवाइस से कनेक्ट किए गए सभी USB डिवाइस का इतिहास दिखाता है।</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इस डिवाइस से कनेक्ट किए गए सभी USB डिवाइस का इतिहास दिखाता है।</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>USB डिवाइस इतिहास नहीं मिला।</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>कनेक्ट किए गए USB डिवाइस की कुल संख्या: {0}</value>
+  </data>
 </root>

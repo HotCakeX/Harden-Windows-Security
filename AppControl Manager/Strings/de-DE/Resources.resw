@@ -6593,4 +6593,49 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Auswahl aufheben</value>
   </data>
+      <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>Verschlüsseln der Bibliothek für dauerhafte Richtlinien</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>Wenn aktiviert, werden die im lokalen Cache gespeicherten Richtliniendateien mit der Windows Data Protection API im aktuellen Benutzerbereich verschlüsselt. Dies stellt sicher, dass die Dateien nur von Ihrem spezifischen Windows-Benutzerkonto entschlüsselt und gelesen werden können. Selbst andere Administratoren auf diesem Computer können den rohen XML-Inhalt Ihrer Bibliothek nicht lesen.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wenn aktiviert, werden die im lokalen Cache gespeicherten Richtliniendateien mit der Windows Data Protection API im aktuellen Benutzerbereich verschlüsselt. Dies stellt sicher, dass die Dateien nur von Ihrem spezifischen Windows-Benutzerkonto entschlüsselt und gelesen werden können. Selbst andere Administratoren auf diesem Computer können den rohen XML-Inhalt Ihrer Bibliothek nicht lesen.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wenn aktiviert, werden die im lokalen Cache gespeicherten Richtliniendateien mit der Windows Data Protection API im aktuellen Benutzerbereich verschlüsselt. Dies stellt sicher, dass die Dateien nur von Ihrem spezifischen Windows-Benutzerkonto entschlüsselt und gelesen werden können. Selbst andere Administratoren auf diesem Computer können den rohen XML-Inhalt Ihrer Bibliothek nicht lesen.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>USB-Geräteverlauf</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zeigt den Verlauf aller USB-Geräte an, die mit diesem Gerät verbunden wurden.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zeigt den Verlauf aller USB-Geräte an, die mit diesem Gerät verbunden wurden.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Kein USB-Geräteverlauf gefunden.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Insgesamt verbundene USB-Geräte: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Benutzerbereich</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Computerbereich</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>Verschlüsselungsbereich</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>Wählen Sie einen Verschlüsselungsbereich aus: Benutzer, wodurch nur das aktuelle Windows-Konto die verschlüsselten Richtliniendateien entschlüsseln kann, oder Computer, wodurch die Entschlüsselung auf dieses Gerät beschränkt wird, sodass die Dateien nicht entschlüsselt werden können, wenn sie auf ein anderes Gerät verschoben werden.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie einen Verschlüsselungsbereich aus: Benutzer, wodurch nur das aktuelle Windows-Konto die verschlüsselten Richtliniendateien entschlüsseln kann, oder Computer, wodurch die Entschlüsselung auf dieses Gerät beschränkt wird, sodass die Dateien nicht entschlüsselt werden können, wenn sie auf ein anderes Gerät verschoben werden.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie einen Verschlüsselungsbereich aus: Benutzer, wodurch nur das aktuelle Windows-Konto die verschlüsselten Richtliniendateien entschlüsseln kann, oder Computer, wodurch die Entschlüsselung auf dieses Gerät beschränkt wird, sodass die Dateien nicht entschlüsselt werden können, wenn sie auf ein anderes Gerät verschoben werden.</value>
+  </data>
 </root>

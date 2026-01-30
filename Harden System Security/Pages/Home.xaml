@@ -368,6 +368,27 @@
                             </Grid>
                         </Border>
 
+                        <!-- USB HISTORY -->
+                        <Button Style="{StaticResource CardButtonStyle}"
+                                x:Uid="USBHistoryButton"
+                                Click="{x:Bind ViewModel.OnUsbDevicesClick}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE88E;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="USBDeviceHistory"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.UsbDeviceCountText, Mode=OneWay}"/>
+                            </Grid>
+                        </Button>
+
                         <!-- INTERNET SPEED -->
                         <Border Style="{StaticResource OverviewCardBorderStyle}">
                             <Grid Style="{StaticResource CardContentGridStyle}">

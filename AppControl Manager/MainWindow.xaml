@@ -306,6 +306,11 @@
 
                                     <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
+                                    <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                                        Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                                        Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                                        IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
                                     <Border Translation="{x:Bind ViewModel.BorderTranslation, Mode=OneWay}"
                                             BorderThickness="1"
                                             CornerRadius="15"
@@ -599,6 +604,32 @@
                                         <ToggleSwitch x:Uid="ToggleSwitchGeneral"
                                                       x:Name="PersistentPoliciesLibraryToggleSwitch"
                                                       IsOn="{x:Bind AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"/>
+                                    </customUI:SettingsCardV2>
+
+                                    <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
+                                                             x:Name="PersistentPoliciesLibraryEncryptionSettingsCard"
+                                                             x:Uid="PersistentPoliciesLibraryEncryptionSettingsCard"
+                                                             IsEnabled="{x:Bind AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
+                                                             HeaderIcon="{ui:FontIcon Glyph=&#xEC19;}">
+
+                                        <ToggleSwitch x:Uid="ToggleSwitchGeneral"
+                                                      HorizontalAlignment="Center"
+                                                      x:Name="PersistentPoliciesLibraryEncryptionToggleSwitch"
+                                                      IsOn="{x:Bind AppSettings.EncryptPoliciesLibrary, Mode=TwoWay}"/>
+
+                                    </customUI:SettingsCardV2>
+
+                                    <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
+                                                             x:Name="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
+                                                             x:Uid="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
+                                                             IsEnabled="{x:Bind AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
+                                                             HeaderIcon="{ui:FontIcon Glyph=&#xE748;}">
+
+                                        <ToggleSwitch x:Uid="PersistentPoliciesLibraryEncryptionScopeToggleSwitch"
+                                                      HorizontalAlignment="Center"
+                                                      x:Name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch"
+                                                      IsOn="{x:Bind AppSettings.EncryptionScopePoliciesLibrary, Mode=TwoWay}"/>
+
                                     </customUI:SettingsCardV2>
 
                                     <HyperlinkButton x:Name="SidebarGuideHyperlinkButton"

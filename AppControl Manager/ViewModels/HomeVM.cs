@@ -171,6 +171,18 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
+				// Get USB History Count
+				List<UsbDeviceInfo> usbDevices = GetUsbDevices();
+				UsbDeviceCountText = string.Format(GlobalVars.GetStr("TotalUSBDevices"), usbDevices.Count);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				UsbDeviceCountText = "USB Info Unavailable";
+			}
+
+			try
+			{
 				OsInfoText = GetOsDetailsString();
 			}
 			catch (Exception ex)
@@ -285,6 +297,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string? AppRamText { get; private set => SP(ref field, value); }
 	internal string? DiskSizeText { get; private set => SP(ref field, value); }
 	internal string? DiskTemperatureText { get; private set => SP(ref field, value); } = "Storage Temp: Unavailable";
+	internal string? UsbDeviceCountText { get; private set => SP(ref field, value); }
 	internal string? InternetSpeedText { get; private set => SP(ref field, value); }
 	internal string? InternetTotalText { get; private set => SP(ref field, value); } = "Total: 0.0 GB ↓ / 0.0 GB ↑";
 	internal string? CpuTemperatureText { get; private set => SP(ref field, value); } = "CPU Temp: Unavailable";
@@ -1702,6 +1715,136 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		return tb;
 	}
 
+	#region USB History
+
+	private sealed record UsbDeviceInfo(string Name, string HardwareId);
+
+	/// <summary>
+	/// Scans the Registry to find all USB storage devices ever connected to this machine.
+	/// </summary>
+	/// <returns>List of UsbDeviceInfo objects</returns>
+	private static List<UsbDeviceInfo> GetUsbDevices()
+	{
+		List<UsbDeviceInfo> devices = [];
+		const string usbStorPath = @"SYSTEM\CurrentControlSet\Enum\USBSTOR";
+
+		try
+		{
+			using RegistryKey? rootKey = Registry.LocalMachine.OpenSubKey(usbStorPath);
+			if (rootKey == null)
+			{
+				return devices;
+			}
+
+			// First level: Hardware ID
+			string[] hardwareIds = rootKey.GetSubKeyNames();
+
+			foreach (string hwId in hardwareIds)
+			{
+				using RegistryKey? hwKey = rootKey.OpenSubKey(hwId);
+				if (hwKey == null) continue;
+
+				// Second level: Instance ID
+				string[] instanceIds = hwKey.GetSubKeyNames();
+
+				foreach (string instanceId in instanceIds)
+				{
+					using RegistryKey? instanceKey = hwKey.OpenSubKey(instanceId);
+					if (instanceKey == null) continue;
+
+					string friendlyName = instanceKey.GetValue("FriendlyName") as string ?? string.Empty;
+					string deviceDesc = instanceKey.GetValue("DeviceDesc") as string ?? string.Empty;
+
+					// Prioritize FriendlyName, fallback to DeviceDesc, then Hardware ID
+					string displayName = !string.IsNullOrWhiteSpace(friendlyName) ? friendlyName :
+										 (!string.IsNullOrWhiteSpace(deviceDesc) ? deviceDesc : hwId);
+
+					devices.Add(new UsbDeviceInfo(
+						Name: displayName,
+						HardwareId: hwId
+					));
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+
+		return devices;
+	}
+
+	/// <summary>
+	/// Handler for the USB History button click event.
+	/// Opens a dialog to show details of all USB devices ever connected.
+	/// </summary>
+	internal async void OnUsbDevicesClick(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			List<UsbDeviceInfo> devices = await Task.Run(GetUsbDevices);
+
+			StackPanel contentPanel = new()
+			{
+				Spacing = 16,
+				Padding = new Thickness(10, 0, 16, 0)
+			};
+
+			if (devices.Count == 0)
+			{
+				contentPanel.Children.Add(new TextBlock { Text = GlobalVars.GetStr("NoUSBDeviceFound") });
+			}
+			else
+			{
+				foreach (UsbDeviceInfo dev in CollectionsMarshal.AsSpan(devices))
+				{
+					StackPanel devGroup = new() { Spacing = 6 };
+
+					// Title
+					devGroup.Children.Add(new TextBlock
+					{
+						Text = dev.Name,
+						FontSize = 18,
+						FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+						TextWrapping = TextWrapping.Wrap
+					});
+
+					devGroup.Children.Add(CreateGpuDetailRow("Hardware ID", dev.HardwareId));
+
+					contentPanel.Children.Add(devGroup);
+
+					// Separator
+					if (devices.IndexOf(dev) < devices.Count - 1)
+					{
+						contentPanel.Children.Add(new MenuFlyoutSeparator());
+					}
+				}
+			}
+
+			ScrollViewer scrollViewer = new()
+			{
+				Content = contentPanel,
+				VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+				HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+			};
+
+			using ContentDialogV2 usbDialog = new()
+			{
+				Title = GlobalVars.GetStr("USBDeviceHistory/Text"),
+				Content = scrollViewer,
+				CloseButtonText = GlobalVars.GetStr("OK"),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			_ = await usbDialog.ShowAsync();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	#endregion
 
 	/// <summary>
 	/// Formats the WMI date string (yyyyMMdd...) into a user-friendly date format.

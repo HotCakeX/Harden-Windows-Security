@@ -64,7 +64,7 @@
 		<AssemblyName>HardenSystemSecurity</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>1.0.38.0</FileVersion>
+		<FileVersion>1.0.39.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -176,7 +176,6 @@
 		<Compile Include="..\AppControl Manager\CustomUIElements\SettingsCardV3.cs" Link="CustomUIElements\SettingsCardV3.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\StickyHeaderBehaviorV2.cs" Link="CustomUIElements\StickyHeaderBehaviorV2.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\AppWindowBorderCustomization.cs" Link="CustomUIElements\AppWindowBorderCustomization.cs" />
-		<Compile Include="..\AppControl Manager\IncrementalCollection\GenericIncrementalCollection.cs" Link="IncrementalCollection\GenericIncrementalCollection.cs" />
 		<Compile Include="..\AppControl Manager\IncrementalCollection\IncrementalCollection.cs" Link="IncrementalCollection\IncrementalCollection.cs" />
 		<Compile Include="..\AppControl Manager\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Others\AppUpdate.cs" Link="Others\AppUpdate.cs" />

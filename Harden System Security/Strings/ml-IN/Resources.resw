@@ -5186,4 +5186,82 @@
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ആപ്പിന്റെ പ്രധാന നാവിഗേഷൻ മെനു ആക്‌സസ് ചെയ്യുന്നതിന് ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>പ്രാദേശിക ഫയർവാൾ നിയമങ്ങൾ എക്സ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>GPO ഫയർവാൾ നിയമങ്ങൾ എക്സ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>പ്രാദേശിക ഫയർവാൾ നിയമങ്ങൾ ഇമ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>GPO ഫയർവാൾ നിയമങ്ങൾ ഇമ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>പ്രാദേശിക ഫയർവാൾ നിയമങ്ങൾ പുനഃസ്ഥാപിക്കുക</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>എല്ലാ പ്രാദേശിക ഫയർവാൾ നിയമങ്ങളും ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>കൂടുതൽ</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>പ്രാദേശിക ഫയർവാൾ നിയമങ്ങൾ ഇമ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>GPO ഫയർവാൾ നിയമങ്ങൾ ഇമ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>നിങ്ങൾ '{0}'യിൽ നിന്ന് ഫയർവാൾ നിയമങ്ങൾ ഇമ്പോർട്ട് ചെയ്യാനിരിക്കുകയാണ്. മുന്നറിയിപ്പ്: ഈ നടപടി പിൻവലിക്കാൻ കഴിയില്ല. നിലവിലുള്ള ഏതൊരു നിയമവും ബാക്കപ്പ് ഫയലിലെ ഉള്ളടക്കത്തോടെ മാറ്റിസ്ഥാപിക്കും.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>ഇമ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>പ്രാദേശിക ഫയർവാൾ നിയമങ്ങൾ പുനഃസ്ഥാപിക്കുക</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>മുന്നറിയിപ്പ്: ഈ നടപടി പിൻവലിക്കാൻ കഴിയില്ല. ഇഷ്ടാനുസൃതമായി നിർവചിച്ചിരിക്കുന്ന നിയമങ്ങൾ എല്ലാംI രും ഇല്ലാതാക്കുകയും ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിന്റെ ഡിഫോൾട്ട് നിയമങ്ങൾ പുനഃസ്ഥാപിക്കുകയും ചെയ്യും.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>ഡിഫോൾട്ടുകൾ പുനഃസ്ഥാപിക്കുക</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>എല്ലാ പ്രാദേശിക ഫയർവാൾ നിയമങ്ങളും ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>മുന്നറിയിപ്പ്: ഈ നടപടി ഡിഫോൾട്ട് OS നിയമങ്ങളും ഇഷ്ടാനുസൃതമായി നിർവചിച്ചിരിക്കുന്ന നിയമങ്ങളും ഉൾപ്പെടെ നിലവിലുള്ള എല്ലാ ഫയർവാൾ നിയമങ്ങളും ഇല്ലാതാക്കും. ആദ്യം ബാക്കപ്പ് എടുക്കുന്നത് ശക്തമായി ശുപാർശ ചെയ്യുന്നു.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>എല്ലാം ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>{0} ഫയർവാൾ നിയമങ്ങൾ {1}ലേക്ക് വിജയകരമായി എക്സ്പോർട്ട് ചെയ്തു</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>{0} ഫയർവാൾ നിയമങ്ങൾ വിജയകരമായി ഇമ്പോർട്ട് ചെയ്തു.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>ഡിഫോൾട്ട് പ്രാദേശിക ഫയർവാൾ നിയമങ്ങൾ വിജയകരമായി പുനഃസ്ഥാപിച്ചു.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>എല്ലാ പ്രാദേശിക ഫയർവാൾ നിയമങ്ങളും വിജയകരമായി ഇല്ലാതാക്കി.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>USB ഉപകരണ ചരിത്രം</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ ഉപകരണത്തിൽ കണക്റ്റ് ചെയ്തിട്ടുള്ള എല്ലാ USB ഉപകരണങ്ങളുടെയും ചരിത്രം പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ ഉപകരണത്തിൽ കണക്റ്റ് ചെയ്തിട്ടുള്ള എല്ലാ USB ഉപകരണങ്ങളുടെയും ചരിത്രം പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>USB ഉപകരണ ചരിത്രം കണ്ടെത്താനായില്ല.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>കണക്റ്റ് ചെയ്ത USB ഉപകരണങ്ങളുടെ ആകെ എണ്ണം: {0}</value>
+  </data>
 </root>

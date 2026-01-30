@@ -6,6 +6,9 @@ It always stays up to date with the latest security patches and provides constan
 
 **⚡What is App Control? [Check Out This Article ⚡](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)**
 
+> [!TIP]\
+> AppControl Manager [**is mentioned**](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/management-options#appcontrol-manager-free-open-source) in the Microsoft document.
+
 <br>
 
 ## How To Install or Update The App<img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/heart-purple.gif" width="40">
@@ -20,19 +23,6 @@ AppControl Manager is available on [**the Microsoft Store**](https://apps.micros
 
 <br>
 
-### Use GitHub Packages
-
-Use the following PowerShell [command](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) as Admin, it will automatically download the latest MSIXBundle file from this repository's release page and install it for you.
-
-```powershell
-(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
-```
-
-> [!TIP]\
-> [AppControl Manager supports auto-update and has built-in updater.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update)
-
-<br>
-
 ### Use Winget
 
 You can utilize Winget to automate the installation of the AppControl Manager. It will use the Microsoft Store source.
@@ -40,6 +30,8 @@ You can utilize Winget to automate the installation of the AppControl Manager. I
 ```powershell
 winget install --id 9PNG1JDDTGP8 --exact --accept-package-agreements --accept-source-agreements --force --source msstore
 ```
+
+<br>
 
 ### Offline Installation for Air-gapped Systems
 

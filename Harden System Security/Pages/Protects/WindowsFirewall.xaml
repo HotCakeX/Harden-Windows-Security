@@ -233,6 +233,27 @@
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
 
+                                <DropDownButton IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                            <TextBlock x:Uid="FirewallDropDownButtonContent"/>
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="ExportLocalFirewallRules" Click="{x:Bind ViewModel.ExportLocalFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE74E;}"/>
+                                            <MenuFlyoutItem x:Uid="ExportGPOFirewallRules" Click="{x:Bind ViewModel.ExportGPOFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE74E;}"/>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem x:Uid="ImportLocalFirewallRules" Click="{x:Bind ViewModel.ImportLocalFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE896;}"/>
+                                            <MenuFlyoutItem x:Uid="ImportGPOFirewallRules" Click="{x:Bind ViewModel.ImportGPOFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE896;}"/>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem x:Uid="RestoreLocalFirewallRules" Click="{x:Bind ViewModel.RestoreDefaultFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE777;}"/>
+                                            <MenuFlyoutItem x:Uid="DeleteAllLocalFirewallRules" Click="{x:Bind ViewModel.DeleteAllFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE74D;}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
+
                             </controls:WrapPanel>
 
                         </Border>

@@ -2387,4 +2387,87 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial void DeleteProcThreadAttributeList(IntPtr lpAttributeList);
 
+
+	/// <summary>
+	/// Export restores any custom rule created in the Advanced Firewall settings of Windows Defender.
+	/// </summary>
+	/// <param name="wszMachineOrGPO"></param>
+	/// <param name="fGPO"></param>
+	/// <param name="wszFilePath"></param>
+	/// <param name="fSomeInfoLost"></param>
+	/// <returns></returns>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial uint FWExportPolicy(
+		string? wszMachineOrGPO,
+		[MarshalAs(UnmanagedType.Bool)] bool fGPO,
+		string wszFilePath,
+		[MarshalAs(UnmanagedType.Bool)] out bool fSomeInfoLost);
+
+
+	/// <summary>
+	/// Importing overwrites everything in the Advanced Firewall settings of Windows Defender.
+	/// It does not touch or overwrite the Firewall rules defined in the Group Policy.
+	/// </summary>
+	/// <param name="wszMachineOrGPO"></param>
+	/// <param name="fGPO"></param>
+	/// <param name="wszFilePath"></param>
+	/// <param name="fSomeInfoLost"></param>
+	/// <returns></returns>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial uint FWImportPolicy(
+		string? wszMachineOrGPO,
+		[MarshalAs(UnmanagedType.Bool)] bool fGPO,
+		string wszFilePath,
+		[MarshalAs(UnmanagedType.Bool)] out bool fSomeInfoLost);
+
+
+	/// <summary>
+	/// Overwrites everything in the Advanced Firewall settings of Windows Defender with the default rules.
+	/// It does not touch or overwrite the Firewall rules defined in the Group Policy.
+	/// </summary>
+	/// <param name="wszMachineOrGPO"></param>
+	/// <returns></returns>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial uint FWRestoreDefaults(string? wszMachineOrGPO);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fasp/230d1ae7-b42e-4d9c-b997-b1463aaa0ded
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
+	internal static partial uint FWOpenPolicyStore(
+		ushort wBinaryVersion,
+		string? wszMachineOrGPO,
+		FW_STORE_TYPE StoreType,
+		FW_POLICY_ACCESS_RIGHT AccessRight,
+		FW_POLICY_STORE_FLAGS dwFlags,
+		out nint phPolicy);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fasp/2959ec3a-df7c-4da9-b118-385b62312067
+	/// </summary>
+	/// <param name="hPolicy"></param>
+	/// <returns></returns>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("FirewallAPI.dll")]
+	internal static partial uint FWClosePolicyStore(nint hPolicy);
+
+
+	/// <summary>
+	/// It only deletes everything in the Advanced Firewall settings of Windows Defender.
+	/// It does not delete any Firewall rules defined in the Group Policy.
+	/// Deletion is instant.
+	/// </summary>
+	/// <param name="hPolicy"></param>
+	/// <returns></returns>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("FirewallAPI.dll")]
+	internal static partial uint FWDeleteAllFirewallRules(nint hPolicy);
+
+
 }

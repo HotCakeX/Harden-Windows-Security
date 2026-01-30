@@ -1,7 +1,15 @@
-* You can now Show/Hide each column in the list views (aka data grids) in the app, making it easier to customize the view to your needs, hide columns you don't need and show only the ones you care about. By default, the columns related to Hash are hidden, if you want to display them, you simply have to click/tap on their corresponding option. Completes this request: https://github.com/HotCakeX/Harden-Windows-Security/issues/783
+* Added optional per user encryption for Policies Library cache (off by default). Cached policy files are encrypted using Windows DPAPI for the current user only. The app enforces the encryption setting at startup and when the Sidebar toggle changes. Encrypted files are only accessible on the same Windows user account.
 
-* Incremental loading list views found in Supplemental policy and Deny policy creation pages, now automatically enable resizable columns when the amount of the data about to be loaded exceeds 100k. This will instantly show the entire data in the list view and process the rest as you scroll, rather than processing the entire data at once which could cause delays in the UI.
+   * `Backup All` under the `Actions` menu creates unencrypted backups regardless of encryption setting, ensuring policies are accessible when restoring from backup on different accounts or machines.
 
-* All of these improvements are made to make it much easier to scan the entire disk or multiple drives at once to create App Control policies. For instance, you can create an App Control policy for the entire C drive in ~2 minutes, depending on the hardware and the configured scalability setting in the app.
+   * Encryption Scope: User scope allows only the current Windows account to decrypt files. Machine scope restricts decryption to the device, preventing access if files are moved elsewhere.
 
-* Updated dependencies to the latest version.
+   * If using Administrator Protection mode, Machine scope is recommended. Machine scope allows any user on the device to decrypt, while User scope restricts to the encrypting user only.
+
+* Scan Levels now visually show fallback levels and their order, clarifying workflows based on community feedback.
+
+* Improved overall performance during policy creation - less RAM and CPU usage for the same tasks.
+
+* Added Home page tile showing total count of USB devices connected to your device. Click/tap to view detailed list of each device.
+
+* Added support for .BIN App Control policy files. Open in Policy Editor to decode or drag to Policies Library to import.

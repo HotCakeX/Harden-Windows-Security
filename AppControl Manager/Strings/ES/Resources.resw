@@ -6593,4 +6593,49 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Anular selección</value>
   </data>
+      <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>Cifrar la biblioteca de directivas persistentes</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>Cuando está habilitado, los archivos de directivas almacenados en la caché local se cifran utilizando la API de protección de datos de Windows con el alcance del usuario actual. Esto garantiza que los archivos solo puedan ser descifrados y leídos por su cuenta de usuario de Windows específica. Incluso otros administradores en esta máquina no podrán leer el contenido XML sin procesar de su biblioteca.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cuando está habilitado, los archivos de directivas almacenados en la caché local se cifran utilizando la API de protección de datos de Windows con el alcance del usuario actual. Esto garantiza que los archivos solo puedan ser descifrados y leídos por su cuenta de usuario de Windows específica. Incluso otros administradores en esta máquina no podrán leer el contenido XML sin procesar de su biblioteca.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cuando está habilitado, los archivos de directivas almacenados en la caché local se cifran utilizando la API de protección de datos de Windows con el alcance del usuario actual. Esto garantiza que los archivos solo puedan ser descifrados y leídos por su cuenta de usuario de Windows específica. Incluso otros administradores en esta máquina no podrán leer el contenido XML sin procesar de su biblioteca.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Historial de dispositivos USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Muestra el historial de todos los dispositivos USB que se han conectado a este dispositivo.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Muestra el historial de todos los dispositivos USB que se han conectado a este dispositivo.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>No se encontró historial de dispositivos USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Total de dispositivos USB conectados: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Ámbito de usuario</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Ámbito del equipo</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>Ámbito de cifrado</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>Selecciona un ámbito de cifrado: Usuario, que permite que solo la cuenta actual de Windows descifre los archivos de directiva cifrados, o Equipo, que restringe el descifrado a este dispositivo para que los archivos no se puedan descifrar si se mueven a otro dispositivo.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Selecciona un ámbito de cifrado: Usuario, que permite que solo la cuenta actual de Windows descifre los archivos de directiva cifrados, o Equipo, que restringe el descifrado a este dispositivo para que los archivos no se puedan descifrar si se mueven a otro dispositivo.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Selecciona un ámbito de cifrado: Usuario, que permite que solo la cuenta actual de Windows descifre los archivos de directiva cifrados, o Equipo, que restringe el descifrado a este dispositivo para que los archivos no se puedan descifrar si se mueven a otro dispositivo.</value>
+  </data>
 </root>

@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CIManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DISM\Types.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Firewall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Firmware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hardware\GpuInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hardware\GPUInfoManager.cs" />

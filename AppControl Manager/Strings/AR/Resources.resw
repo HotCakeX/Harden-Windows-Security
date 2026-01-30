@@ -6575,4 +6575,22 @@
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>الحد الأقصى لتسلسل Hotpatch</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>الأعمدة</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة ظهور الأعمدة في شبكة البيانات.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة ظهور الأعمدة في شبكة البيانات.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>إلغاء تحديد الكل</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إلغاء تحديد الكل</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إلغاء تحديد الكل</value>
+  </data>
 </root>

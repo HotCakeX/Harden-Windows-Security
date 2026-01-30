@@ -6575,4 +6575,22 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>Maximale Hotpatch-Sequenz</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Spalten</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sichtbarkeit der Spalten im Datenraster verwalten.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sichtbarkeit der Spalten im Datenraster verwalten.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>Auswahl aufheben</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Auswahl aufheben</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Auswahl aufheben</value>
+  </data>
 </root>

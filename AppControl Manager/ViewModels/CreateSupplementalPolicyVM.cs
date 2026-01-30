@@ -127,6 +127,33 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			Dispatcher,
 			() => StrictKernelModeInfoBarTitle, value => StrictKernelModeInfoBarTitle = value);
 
+		// Initialize the column manager with specific definitions for Strict Kernel Mode page
+		StrictKernelModeColumnManager = new ListViewColumnManager<FileIdentity>(
+		[
+			new("FileName", "FileNameHeader/Text", x => x.FileName),
+			new("SignatureStatus", "SignatureStatusHeader/Text", x => x.SignatureStatus_String),
+			new("OriginalFileName", "OriginalFileNameHeader/Text", x => x.OriginalFileName),
+			new("InternalName", "InternalNameHeader/Text", x => x.InternalName),
+			new("FileDescription", "FileDescriptionHeader/Text", x => x.FileDescription),
+			new("ProductName", "ProductNameHeader/Text", x => x.ProductName),
+			new("FileVersion", "FileVersionHeader/Text", x => x.FileVersion_String),
+			new("PackageFamilyName", "PackageFamilyNameHeader/Text", x => x.PackageFamilyName),
+			new("SHA256Hash", "SHA256HashHeader/Text", x => x.SHA256Hash, defaultVisibility: Visibility.Collapsed),
+			new("SHA1Hash", "SHA1HashHeader/Text", x => x.SHA1Hash, defaultVisibility: Visibility.Collapsed),
+			new("SISigningScenario", "SigningScenarioHeader/Text", x => x.SISigningScenario.ToString()),
+			new("FilePath", "FilePathHeader/Text", x => x.FilePath),
+			new("SHA1PageHash", "SHA1PageHashHeader/Text", x => x.SHA1PageHash, defaultVisibility: Visibility.Collapsed),
+			new("SHA256PageHash", "SHA256PageHashHeader/Text", x => x.SHA256PageHash, defaultVisibility: Visibility.Collapsed),
+			new("HasWHQLSigner", "HasWHQLSignerHeader/Text", x => x.HasWHQLSigner.ToString()),
+			new("FilePublishersToDisplay", "FilePublishersHeader/Text", x => x.FilePublishersToDisplay),
+			new("IsECCSigned", "IsECCSignedHeader/Text", x => x.IsECCSigned.ToString()),
+			new("Opus", "OpusDataHeader/Text", x => x.Opus)
+		]);
+
+		// To adjust the initial width of the columns, giving them nice paddings.
+		// Passing the current list (even if empty) initializes defaults.
+		StrictKernelModeColumnManager.CalculateColumnWidths(StrictKernelModeScanResults);
+
 		// InfoBar manager for the PFN section
 		PFNInfoBar = new InfoBarSettings(
 			() => PFNInfoBarIsOpen, value => PFNInfoBarIsOpen = value,
@@ -148,9 +175,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
-
-		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateColumnWidthsStrictKernelMode();
 	}
 
 	internal Visibility FilesAndFoldersBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -464,17 +488,19 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					LVController.FullSource.AddRange(LocalFilesResults);
 
+					// If there are more than 100,000 items, enable auto-resizing of columns to improve performance.
+					// Without auto-resize, the column width calculation will run for all items, freezing the UI.
+					if (LVController.FullSource.Count > 100000)
+					{
+						AppSettings.AutoResizeListViewColumns = true;
+					}
+
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						// Creating collection using a simple delegate to fetch pages from the full source
-						GenericIncrementalCollection<FileIdentity> incrementalCollection = new(
-							async (pageIndex, pageSize, ct) =>
-							{
-								// Simple in-memory paging over the FullSource list
-								return await Task.FromResult(LVController.FullSource.Skip(pageIndex * pageSize).Take(pageSize));
-							});
+						// Creating incremental collection by passing the source List.
+						HighPerfIncrementalCollection<FileIdentity> incrementalCollection = new(LVController.FullSource);
 
 						// Replaces the ItemsSource for the results ListView with the incremental collection.
 						LVController.UpdateCollection(incrementalCollection);
@@ -639,8 +665,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal void FileAndFoldersHeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		string key = (string)((Button)sender).Tag;
-		LVController.SortByHeader(key, FilesAndFoldersScanResultsSearchTextBox);
+		try
+		{
+			FilesAndFoldersElementsAreEnabled = false;
+
+			string key = (string)((Button)sender).Tag;
+			LVController.SortByHeader(key, FilesAndFoldersScanResultsSearchTextBox);
+		}
+		finally
+		{
+			FilesAndFoldersElementsAreEnabled = true;
+		}
 	}
 
 	#endregion
@@ -1139,97 +1174,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	#region LISTVIEW IMPLEMENTATIONS Strict Kernel Mode
 
-	// Properties to hold each columns' width.
-	internal GridLength ColumnWidthStrictKernelMode1 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode2 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode3 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode4 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode5 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode6 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode7 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode8 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode9 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode10 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode11 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode12 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode13 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode14 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode15 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode16 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode17 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidthStrictKernelMode18 { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
-	/// And only after this method, the ItemsSource must be assigned to the ListView.
-	/// </summary>
-	internal void CalculateColumnWidthsStrictKernelMode()
-	{
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignatureStatusHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("OriginalFileNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProductNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileVersionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageFamilyNameHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256HashHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1HashHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("SigningScenarioHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1PageHashHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256PageHashHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("HasWHQLSignerHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePublishersHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsECCSignedHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.GetStr("OpusDataHeader/Text"));
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (FileIdentity item in StrictKernelModeScanResults)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.SignatureStatus_String, maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.InternalName, maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.FileDescription, maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.ProductName, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.FileVersion_String, maxWidth7);
-			maxWidth8 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth8);
-			maxWidth9 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth9);
-			maxWidth10 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth10);
-			maxWidth11 = ListViewHelper.MeasureText(item.SISigningScenario.ToString(), maxWidth11);
-			maxWidth12 = ListViewHelper.MeasureText(item.FilePath, maxWidth12);
-			maxWidth13 = ListViewHelper.MeasureText(item.SHA1PageHash, maxWidth13);
-			maxWidth14 = ListViewHelper.MeasureText(item.SHA256PageHash, maxWidth14);
-			maxWidth15 = ListViewHelper.MeasureText(item.HasWHQLSigner.ToString(), maxWidth15);
-			maxWidth16 = ListViewHelper.MeasureText(item.FilePublishersToDisplay, maxWidth16);
-			maxWidth17 = ListViewHelper.MeasureText(item.IsECCSigned.ToString(), maxWidth17);
-			maxWidth18 = ListViewHelper.MeasureText(item.Opus, maxWidth18);
-		}
-
-		// Set the column width properties.
-		ColumnWidthStrictKernelMode1 = new(maxWidth1);
-		ColumnWidthStrictKernelMode2 = new(maxWidth2);
-		ColumnWidthStrictKernelMode3 = new(maxWidth3);
-		ColumnWidthStrictKernelMode4 = new(maxWidth4);
-		ColumnWidthStrictKernelMode5 = new(maxWidth5);
-		ColumnWidthStrictKernelMode6 = new(maxWidth6);
-		ColumnWidthStrictKernelMode7 = new(maxWidth7);
-		ColumnWidthStrictKernelMode8 = new(maxWidth8);
-		ColumnWidthStrictKernelMode9 = new(maxWidth9);
-		ColumnWidthStrictKernelMode10 = new(maxWidth10);
-		ColumnWidthStrictKernelMode11 = new(maxWidth11);
-		ColumnWidthStrictKernelMode12 = new(maxWidth12);
-		ColumnWidthStrictKernelMode13 = new(maxWidth13);
-		ColumnWidthStrictKernelMode14 = new(maxWidth14);
-		ColumnWidthStrictKernelMode15 = new(maxWidth15);
-		ColumnWidthStrictKernelMode16 = new(maxWidth16);
-		ColumnWidthStrictKernelMode17 = new(maxWidth17);
-		ColumnWidthStrictKernelMode18 = new(maxWidth18);
-	}
+	// The Column Manager Composition
+	internal ListViewColumnManager<FileIdentity> StrictKernelModeColumnManager { get; }
 
 	#endregion
 
@@ -1372,7 +1318,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				StrictKernelModeScanResults.Add(item);
 			}
 
-			CalculateColumnWidthsStrictKernelMode();
+			await Task.Run(() => StrictKernelModeColumnManager.CalculateColumnWidths(StrictKernelModeScanResults));
 		}
 		catch (Exception ex)
 		{
@@ -1604,7 +1550,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			// Add the results to the ObservableCollection
 			StrictKernelModeScanResults = new(LocalFilesResults);
 
-			CalculateColumnWidthsStrictKernelMode();
+			await Task.Run(() => StrictKernelModeColumnManager.CalculateColumnWidths(StrictKernelModeScanResults));
 		}
 		catch (Exception ex)
 		{
@@ -1653,7 +1599,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	{
 		StrictKernelModeScanResults.Clear();
 		StrictKernelModeScanResultsList.Clear();
-		CalculateColumnWidthsStrictKernelMode();
+		StrictKernelModeColumnManager.CalculateColumnWidths(StrictKernelModeScanResults);
 	}
 
 	/// <summary>

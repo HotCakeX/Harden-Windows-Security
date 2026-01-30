@@ -47,8 +47,24 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
 
+		// Initialize the column manager with specific definitions for this page
+		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
+		ColumnManager = new ListViewColumnManager<CiPolicyInfo>(
+		[
+			new("PolicyID", "PolicyIDHeader/Text", x => x.PolicyID),
+			new("BasePolicyID", "BasePolicyIDHeader/Text", x => x.BasePolicyID),
+			new("FriendlyName", "FriendlyNameHeader/Text", x => x.FriendlyName),
+			new("Version", "VersionHeader/Text", x => x.Version?.ToString()),
+			new("IsAuthorized", "IsAuthorizedHeader/Text", x => x.IsAuthorized.ToString()),
+			new("IsEnforced", "IsEnforcedHeader/Text", x => x.IsEnforced.ToString()),
+			new("IsOnDisk", "IsOnDiskHeader/Text", x => x.IsOnDisk.ToString()),
+			new("IsSignedPolicy", "IsSignedPolicyHeader/Text", x => x.IsSignedPolicy.ToString()),
+			new("IsSystemPolicy", "IsSystemPolicyHeader/Text", x => x.IsSystemPolicy.ToString()),
+			new("PolicyOptions", "PolicyOptionsHeader/Text", x => x.PolicyOptionsDisplay)
+		]);
+
 		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateColumnWidths();
+		ColumnManager.CalculateColumnWidths(AllPolicies);
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -64,6 +80,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	// Store all outputs for searching
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];
 
+	// The Column Manager Composition
+	internal ListViewColumnManager<CiPolicyInfo> ColumnManager { get; }
 
 	#region UI-Bound Properties
 
@@ -121,69 +139,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// </summary>
 	internal string? SelectedPolicyLocalFilePath { get; set => SPT(ref field, value); }
 
-	#region Properties to hold each columns' width.
-
-	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth9 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth10 { get; set => SP(ref field, value); }
-
 	#endregion
-
-	#endregion
-
-	/// <summary>
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// </summary>
-	private void CalculateColumnWidths()
-	{
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyIDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("BasePolicyIDHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("VersionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsAuthorizedHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsEnforcedHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsOnDiskHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsSignedPolicyHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsSystemPolicyHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyOptionsHeader/Text"));
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (CiPolicyInfo item in AllPolicies)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.PolicyID, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.BasePolicyID, maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.FriendlyName, maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.Version?.ToString(), maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.IsAuthorized.ToString(), maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.IsEnforced.ToString(), maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.IsOnDisk.ToString(), maxWidth7);
-			maxWidth8 = ListViewHelper.MeasureText(item.IsSignedPolicy.ToString(), maxWidth8);
-			maxWidth9 = ListViewHelper.MeasureText(item.IsSystemPolicy.ToString(), maxWidth9);
-			maxWidth10 = ListViewHelper.MeasureText(item.PolicyOptionsDisplay, maxWidth10);
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new(maxWidth1);
-		ColumnWidth2 = new(maxWidth2);
-		ColumnWidth3 = new(maxWidth3);
-		ColumnWidth4 = new(maxWidth4);
-		ColumnWidth5 = new(maxWidth5);
-		ColumnWidth6 = new(maxWidth6);
-		ColumnWidth7 = new(maxWidth7);
-		ColumnWidth8 = new(maxWidth8);
-		ColumnWidth9 = new(maxWidth9);
-		ColumnWidth10 = new(maxWidth10);
-	}
-
 
 	/// <summary>
 	/// Retrieve the policies from the system
@@ -234,7 +190,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				AllPolicies.Add(policy);
 			}
 
-			CalculateColumnWidths();
+			await Task.Run(() => ColumnManager.CalculateColumnWidths(AllPolicies));
 		}
 		catch (Exception ex)
 		{

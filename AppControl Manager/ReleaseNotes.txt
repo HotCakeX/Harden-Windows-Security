@@ -1,11 +1,7 @@
-* Added tooltip texts to the Back, Menu and Sidebar buttons on the top bar.
+* You can now Show/Hide each column in the list views (aka data grids) in the app, making it easier to customize the view to your needs, hide columns you don't need and show only the ones you care about. By default, the columns related to Hash are hidden, if you want to display them, you simply have to click/tap on their corresponding option. Completes this request: https://github.com/HotCakeX/Harden-Windows-Security/issues/783
 
-* You can now drag policy `.XML`/`.CIP`/`.P7B` files onto the Sidebar's Policies Library and drop them there to import them. It only works when the app is running unelevated.
+* Incremental loading list views found in Supplemental policy and Deny policy creation pages, now automatically enable resizable columns when the amount of the data about to be loaded exceeds 100k. This will instantly show the entire data in the list view and process the rest as you scroll, rather than processing the entire data at once which could cause delays in the UI.
 
-* Added a new option under the Actions button on the Sidebar Policies Library to open the Library's cache location in File Explorer.
+* All of these improvements are made to make it much easier to scan the entire disk or multiple drives at once to create App Control policies. For instance, you can create an App Control policy for the entire C drive in ~2 minutes, depending on the hardware and the configured scalability setting in the app.
 
-* Updated dependencies to the latest versions.
-
-* Improved overall performance.
-
-* Added support for the new App Control policy version 9. AppControl Manager now displays Hot🔥 Patching data available in the policies which are mainly used by the operating system at the moment.
+* Updated dependencies to the latest version.

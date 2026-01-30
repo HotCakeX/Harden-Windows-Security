@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.IncrementalCollection;
 using AppControlManager.IntelGathering;
@@ -43,7 +44,7 @@ internal sealed partial class ListViewIncrementalController(
 	/// <summary>
 	/// Used as the source for the ListView's displayed data.
 	/// </summary>
-	internal GenericIncrementalCollection<FileIdentity>? ObservableSource { get; set => SP(ref field, value); }
+	internal HighPerfIncrementalCollection<FileIdentity>? ObservableSource { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Backing full source for the data.
@@ -81,6 +82,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		if (ObservableSource is null) return;
 
+		await _viewOperationLock.WaitAsync();
 		try
 		{
 			await ObservableSource.ReplaceAllExclusiveAsync([]);
@@ -96,6 +98,10 @@ internal sealed partial class ListViewIncrementalController(
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
+		}
+		finally
+		{
+			_ = _viewOperationLock.Release();
 		}
 	}
 
@@ -139,6 +145,11 @@ internal sealed partial class ListViewIncrementalController(
 	private string? _pendingSearchTerm;
 
 	/// <summary>
+	/// Semaphore to ensure only one heavy view operation (Search, Sort, Clear) runs at a time.
+	/// </summary>
+	private readonly SemaphoreSlim _viewOperationLock = new(1, 1);
+
+	/// <summary>
 	/// Re-run after navigation (ListView Loaded event). Retries hook until ListView + ScrollViewer are registered.
 	/// </summary>
 	internal void ListView_Loaded(object sender, RoutedEventArgs e)
@@ -170,10 +181,10 @@ internal sealed partial class ListViewIncrementalController(
 	/// <summary>
 	/// Update the bound observable collection if the VM replaces it.
 	/// </summary>
-	internal void UpdateCollection(GenericIncrementalCollection<FileIdentity> newCollection)
+	internal void UpdateCollection(HighPerfIncrementalCollection<FileIdentity> newCollection)
 	{
 		// Capture old reference (may be null on first assignment).
-		GenericIncrementalCollection<FileIdentity>? old = ObservableSource;
+		HighPerfIncrementalCollection<FileIdentity>? old = ObservableSource;
 
 		// Detach from the old collection first (if any) so we don't get duplicate handlers.
 		old?.CollectionChanged -= Collection_CollectionChanged;
@@ -234,45 +245,38 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		if (ObservableSource is null) return;
 
-		// If a page is mid-append, wait a tick and retry.
-		if (ObservableSource.IsCurrentlyLoading)
+		await _viewOperationLock.WaitAsync();
+		try
 		{
-			// Re-arm a very short retry; avoids running filter while a page is appending.
-			if (_searchDebounceTimer is null)
+			// If a newer search term has been queued while we were waiting for the lock, skip this stale search.
+			if (!string.Equals(searchText, _pendingSearchTerm, StringComparison.OrdinalIgnoreCase))
+				return;
+
+			// Perform in-place filter over the bound observable.
+			// - Suspends incremental loads while a filter is active.
+			// - Replaces items atomically under the same semaphore (prevents reentrancy and UI thrash).
+			// - Resumes paging + ForceReload when filter clears.
+			await ApplyFilters_NoSnap(
+				allFileIdentities: FullSource,
+				filteredCollection: ObservableSource,
+				searchText: searchText,
+				selectedDate: null);
+
+			// Re-fit columns to current visible slice.
+			ScheduleWidthRecalc();
+
+			// Restore the exact horizontal position saved before.
+			if (ScrollViewerRef is not null)
 			{
-				_searchDebounceTimer = Dispatcher.CreateTimer();
-				_searchDebounceTimer.IsRepeating = false;
-				_searchDebounceTimer.Tick += (s, e2) =>
-				{
-					s.Stop();
-					_ = ApplySearchCoreAsync(_pendingSearchTerm);
-				};
+				double clamped = ScrollViewerRef.HorizontalOffset;
+				if (clamped < 0) clamped = 0;
+				if (clamped > ScrollViewerRef.ScrollableWidth) clamped = ScrollViewerRef.ScrollableWidth;
+				_ = ScrollViewerRef.ChangeView(clamped, null, null, true);
 			}
-			_searchDebounceTimer.Interval = TimeSpan.FromMilliseconds(40);
-			_searchDebounceTimer.Start();
-			return;
 		}
-
-		// Perform in-place filter over the bound observable.
-		// - Suspends incremental loads while a filter is active.
-		// - Replaces items atomically under the same semaphore (prevents reentrancy and UI thrash).
-		// - Resumes paging + ForceReload when filter clears.
-		await ApplyFilters_NoSnap(
-			allFileIdentities: FullSource,
-			filteredCollection: ObservableSource,
-			searchText: searchText,
-			selectedDate: null);
-
-		// Re-fit columns to current visible slice.
-		ScheduleWidthRecalc();
-
-		// Restore the exact horizontal position saved before.
-		if (ScrollViewerRef is not null)
+		finally
 		{
-			double clamped = ScrollViewerRef.HorizontalOffset;
-			if (clamped < 0) clamped = 0;
-			if (clamped > ScrollViewerRef.ScrollableWidth) clamped = ScrollViewerRef.ScrollableWidth;
-			_ = ScrollViewerRef.ChangeView(clamped, null, null, true);
+			_ = _viewOperationLock.Release();
 		}
 	}
 
@@ -284,6 +288,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		if (string.IsNullOrWhiteSpace(key) || ObservableSource is null) return;
 
+		await _viewOperationLock.WaitAsync();
 		try
 		{
 
@@ -333,6 +338,10 @@ internal sealed partial class ListViewIncrementalController(
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
+		}
+		finally
+		{
+			_ = _viewOperationLock.Release();
 		}
 	}
 
@@ -615,6 +624,7 @@ internal sealed partial class ListViewIncrementalController(
 			CleanupBindings();
 
 			ObservableSource?.Dispose();
+			_viewOperationLock.Dispose();
 		}
 		catch { } // Swallow cleanup exceptions
 	}
@@ -694,7 +704,7 @@ internal sealed partial class ListViewIncrementalController(
 
 	private static async Task ApplyFilters_NoSnap(
 		List<FileIdentity> allFileIdentities,
-		GenericIncrementalCollection<FileIdentity> filteredCollection,
+		HighPerfIncrementalCollection<FileIdentity> filteredCollection,
 		string? searchText,
 		DateTimeOffset? selectedDate,
 		ListViewHelper.PropertyFilterItem? selectedPropertyFilter = null,
@@ -792,13 +802,12 @@ internal sealed partial class ListViewIncrementalController(
 		Func<TElement, object?> keySelector,
 		string? searchBoxText,
 		List<TElement> originalList,
-		GenericIncrementalCollection<TElement> observableCollection,
+		HighPerfIncrementalCollection<TElement> observableCollection,
 		ListViewHelper.SortState sortState,
 		string newKey,
 		ScrollViewer? sv,
 		string? propertyFilterValue = null)
 	{
-
 		if (sv is null) return;
 
 		// Determine if a filter is active. In that case, loads are suspended by ApplyFilters_NoSnap.
@@ -825,8 +834,8 @@ internal sealed partial class ListViewIncrementalController(
 		});
 
 		// Replace contents of originalList so any incremental source sharing this list sees new ordering.
-		originalList.Clear();
-		originalList.AddRange(fullySorted);
+		// Using the collection to update the backing list under its internal semaphore.
+		await observableCollection.UpdateSourceCollectionAsync(fullySorted);
 
 		// When a filter is active:
 		// - Do NOT force a reload (that would page the unfiltered source and break the filtered view).
@@ -843,7 +852,7 @@ internal sealed partial class ListViewIncrementalController(
 			});
 
 			// High-performance bulk replace
-			observableCollection.BulkReplace(sortedView);
+			await observableCollection.BulkReplaceAsync(sortedView);
 
 			// After reordering a filtered view, reset the vertical offset to the top.
 			double clampedv2 = sv.HorizontalOffset;

@@ -6575,4 +6575,22 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>Secuencia máxima de Hotpatch</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Columnas</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Administrar la visibilidad de las columnas en la cuadrícula de datos.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Administrar la visibilidad de las columnas en la cuadrícula de datos.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>Anular selección</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Anular selección</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Anular selección</value>
+  </data>
 </root>

@@ -6575,4 +6575,22 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>अधिकतम Hotpatch अनुक्रम</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>कॉलम</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डेटा ग्रिड में कॉलम की दृश्यता प्रबंधित करें।</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डेटा ग्रिड में कॉलम की दृश्यता प्रबंधित करें।</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>सभी चयन हटाएँ</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी चयन हटाएँ</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी चयन हटाएँ</value>
+  </data>
 </root>

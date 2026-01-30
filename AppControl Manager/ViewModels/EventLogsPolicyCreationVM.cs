@@ -46,8 +46,36 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
 
+		// Initialize the column manager with specific definitions for this page
+		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
+		ColumnManager = new ListViewColumnManager<FileIdentity>(
+		[
+			new("FileName", "FileNameHeader/Text", x => x.FileName),
+			new("TimeCreated", "TimeCreatedHeader/Text", x => x.TimeCreated?.ToString()),
+			new("SignatureStatus", "SignatureStatusHeader/Text", x => x.SignatureStatus_String),
+			new("Action", "ActionHeader/Text", x => x.Action_String),
+			new("OriginalFileName", "OriginalFileNameHeader/Text", x => x.OriginalFileName),
+			new("InternalName", "InternalNameHeader/Text", x => x.InternalName),
+			new("FileDescription", "FileDescriptionHeader/Text", x => x.FileDescription),
+			new("ProductName", "ProductNameHeader/Text", x => x.ProductName),
+			new("FileVersion", "FileVersionHeader/Text", x => x.FileVersion_String),
+			new("PackageFamilyName", "PackageFamilyNameHeader/Text", x => x.PackageFamilyName),
+			new("SHA256Hash", "SHA256HashHeader/Text", x => x.SHA256Hash, defaultVisibility: Visibility.Collapsed),
+			new("SHA1Hash", "SHA1HashHeader/Text", x => x.SHA1Hash, defaultVisibility: Visibility.Collapsed),
+			new("SISigningScenario", "SigningScenarioHeader/Text", x => x.SISigningScenario.ToString()),
+			new("FilePath", "FilePathHeader/Text", x => x.FilePath),
+			new("SHA1FlatHash", "SHA1FlatHashHeader/Text", x => x.SHA1FlatHash, defaultVisibility: Visibility.Collapsed),
+			new("SHA256FlatHash", "SHA256FlatHashHeader/Text", x => x.SHA256FlatHash, defaultVisibility: Visibility.Collapsed),
+			new("FilePublishersToDisplay", "FilePublishersHeader/Text", x => x.FilePublishersToDisplay),
+			new("Opus", "OpusDataHeader/Text", x => x.Opus),
+			new("PolicyGUID", "PolicyGUIDHeader/Text", x => x.PolicyGUID),
+			new("PolicyName", "PolicyNameHeader/Text", x => x.PolicyName),
+			new("ComputerName", "ComputerNameHeader/Text", x => x.ComputerName)
+		]);
+
 		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateColumnWidths();
+		// Passing the current list (even if empty) initializes defaults.
+		ColumnManager.CalculateColumnWidths(FileIdentities);
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -67,6 +95,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal readonly List<FileIdentity> AllFileIdentities = [];
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
+
+	// The Column Manager Composition
+	internal ListViewColumnManager<FileIdentity> ColumnManager { get; }
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -130,114 +161,13 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal SiPolicy.PolicyFileRepresent? finalSupplementalPolicyPath;
 
-	#region LISTVIEW IMPLEMENTATIONS
-
-	// Properties to hold each columns' width.
-	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth9 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth10 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth11 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth12 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth13 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth14 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth15 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth16 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth17 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth18 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth19 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth20 { get; set => SP(ref field, value); }
-	internal GridLength ColumnWidth21 { get; set => SP(ref field, value); }
-
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
 	/// and assigns the value (with a little extra padding) to the corresponding property.
 	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
 	/// And only after this method, the ItemsSource must be assigned to the ListView.
 	/// </summary>
-	internal void CalculateColumnWidths()
-	{
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("TimeCreatedHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignatureStatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("ActionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("OriginalFileNameHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProductNameHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileVersionHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageFamilyNameHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256HashHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1HashHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("SigningScenarioHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1FlatHashHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256FlatHashHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePublishersHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.GetStr("OpusDataHeader/Text"));
-		double maxWidth19 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyGUIDHeader/Text"));
-		double maxWidth20 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyNameHeader/Text"));
-		double maxWidth21 = ListViewHelper.MeasureText(GlobalVars.GetStr("ComputerNameHeader/Text"));
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (FileIdentity item in FileIdentities)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.TimeCreated.ToString(), maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.SignatureStatus_String, maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.Action_String, maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.InternalName, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.FileDescription, maxWidth7);
-			maxWidth8 = ListViewHelper.MeasureText(item.ProductName, maxWidth8);
-			maxWidth9 = ListViewHelper.MeasureText(item.FileVersion_String, maxWidth9);
-			maxWidth10 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth10);
-			maxWidth11 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth11);
-			maxWidth12 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth12);
-			maxWidth13 = ListViewHelper.MeasureText(item.SISigningScenario.ToString(), maxWidth13);
-			maxWidth14 = ListViewHelper.MeasureText(item.FilePath, maxWidth14);
-			maxWidth15 = ListViewHelper.MeasureText(item.SHA1FlatHash, maxWidth15);
-			maxWidth16 = ListViewHelper.MeasureText(item.SHA256FlatHash, maxWidth16);
-			maxWidth17 = ListViewHelper.MeasureText(item.FilePublishersToDisplay, maxWidth17);
-			maxWidth18 = ListViewHelper.MeasureText(item.Opus, maxWidth18);
-			maxWidth19 = ListViewHelper.MeasureText(item.PolicyGUID, maxWidth19);
-			maxWidth20 = ListViewHelper.MeasureText(item.PolicyName, maxWidth20);
-			maxWidth21 = ListViewHelper.MeasureText(item.ComputerName, maxWidth21);
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new(maxWidth1);
-		ColumnWidth2 = new(maxWidth2);
-		ColumnWidth3 = new(maxWidth3);
-		ColumnWidth4 = new(maxWidth4);
-		ColumnWidth5 = new(maxWidth5);
-		ColumnWidth6 = new(maxWidth6);
-		ColumnWidth7 = new(maxWidth7);
-		ColumnWidth8 = new(maxWidth8);
-		ColumnWidth9 = new(maxWidth9);
-		ColumnWidth10 = new(maxWidth10);
-		ColumnWidth11 = new(maxWidth11);
-		ColumnWidth12 = new(maxWidth12);
-		ColumnWidth13 = new(maxWidth13);
-		ColumnWidth14 = new(maxWidth14);
-		ColumnWidth15 = new(maxWidth15);
-		ColumnWidth16 = new(maxWidth16);
-		ColumnWidth17 = new(maxWidth17);
-		ColumnWidth18 = new(maxWidth18);
-		ColumnWidth19 = new(maxWidth19);
-		ColumnWidth20 = new(maxWidth20);
-		ColumnWidth21 = new(maxWidth21);
-	}
-
-	#endregion
-
+	internal void CalculateColumnWidths() => ColumnManager.CalculateColumnWidths(FileIdentities);
 
 	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("CreatePolicyForSelectedBase");
 
@@ -502,7 +432,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			// Populates the Observable Collection and applies filters to ensure the UI reflects any currently selected Date or Search Text filters.
 			ApplyFilters();
 
-			CalculateColumnWidths();
+			await Task.Run(CalculateColumnWidths);
 		}
 		catch (Exception ex)
 		{
@@ -585,7 +515,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			if (OnlyIncludeSelectedItemsToggleButton && lv?.SelectedItems.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
-				foreach (var item in lv.SelectedItems)
+				foreach (object? item in lv.SelectedItems)
 				{
 					if (item is FileIdentity item1)
 					{

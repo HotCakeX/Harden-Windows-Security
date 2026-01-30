@@ -6575,4 +6575,22 @@
     <data name="MaximumHotpatchSequenceHeader.Text" xml:space="preserve">
     <value>Μέγιστη ακολουθία Hotpatch</value>
   </data>
+    <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Στήλες</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχείριση της ορατότητας των στηλών στο πλέγμα δεδομένων.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχείριση της ορατότητας των στηλών στο πλέγμα δεδομένων.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>Αποεπιλογή όλων</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποεπιλογή όλων</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποεπιλογή όλων</value>
+  </data>
 </root>

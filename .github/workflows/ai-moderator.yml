@@ -28,4 +28,4 @@ jobs:
           enable-spam-detection: true
           enable-link-spam-detection: true
           enable-ai-detection: true
-          # custom-prompt-path: '.github/prompts/my-custom.prompt.yml'  # Optional
+          custom-prompt-path: '.github/prompts/Custom-Prompt-For-AI-Moderator-Workflow.prompt.yml'

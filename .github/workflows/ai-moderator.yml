@@ -10,7 +10,7 @@ on:
 
 jobs:
   spam-detection:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       issues: write
       pull-requests: write
@@ -28,4 +28,4 @@ jobs:
           enable-spam-detection: true
           enable-link-spam-detection: true
           enable-ai-detection: true
-          custom-prompt-path: '.github/prompts/Custom-Prompt-For-AI-Moderator-Workflow.prompt.yml'
+          # custom-prompt-path: '.github/prompts/Custom-Prompt-For-AI-Moderator-Workflow.prompt.yml'

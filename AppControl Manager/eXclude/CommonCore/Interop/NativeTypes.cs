@@ -1343,3 +1343,45 @@ internal unsafe struct IAppxBundleManifestReaderVtbl
 	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetPackageInfoItems;
 	internal delegate* unmanaged[Stdcall]<void*, IntPtr*, int> GetStream;
 }
+
+/// <summary>
+/// 2.2.1 FW_STORE_TYPE.
+/// MS-FASP PDF.
+/// </summary>
+internal enum FW_STORE_TYPE
+{
+	INVALID = 0,
+	GP_RSOP = 1,
+	LOCAL = 2,
+	NOT_USED_VALUE_3 = 3,
+	NOT_USED_VALUE_4 = 4,
+	DYNAMIC = 5,
+	GPO = 6,
+	DEFAULTS = 7
+}
+
+/// <summary>
+/// 2.2.3 FW_POLICY_ACCESS_RIGHT.
+/// MS-FASP PDF.
+/// </summary>
+internal enum FW_POLICY_ACCESS_RIGHT
+{
+	INVALID = 0,
+	READ = 1,
+	READ_WRITE = 2
+}
+
+/// <summary>
+/// typedef enum _tag_FW_POLICY_STORE_FLAGS
+/// MS-FASP PDF.
+/// </summary>
+internal enum FW_POLICY_STORE_FLAGS : uint
+{
+	NONE = 0x0000,
+	DELETE_DYNAMIC_RULES_AFTER_CLOSE = 0x0001,
+	OPEN_GP_CACHE = 0x0002,
+	USE_GP_CACHE = 0x0004,
+	SAVE_GP_CACHE = 0x0008,
+	NOT_USED_VALUE_16 = 0x0010,
+	MAX = 0x0020
+}

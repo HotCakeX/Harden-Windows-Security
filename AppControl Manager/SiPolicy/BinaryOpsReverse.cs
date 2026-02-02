@@ -130,15 +130,16 @@ internal static class BinaryOpsReverse
 		_ = reader.ReadUInt32(); // skip body length
 
 		// EKU SECTION
-		List<EKU> ekuList = [];
+		List<EKU> ekuList = new((int)ekuCount);
+		string[] ekuIds = new string[ekuCount];
 		for (int i = 0; i < (int)ekuCount; i++)
 		{
 			byte[] value = ReadCountedAlignedBytes(reader);
 			string id = $"ID_EKU_E_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 			ekuList.Add(new EKU(id: id, friendlyName: null, value: value));
+			ekuIds[i] = id;
 		}
 		policy.EKUs = ekuList;
-		string[] ekuIds = ekuList.Select(e => e.ID).ToArray();
 
 		// FILERULES SECTION
 		object[] fileRules = new object[fileRuleCount];
@@ -497,7 +498,7 @@ internal static class BinaryOpsReverse
 
 		// Inherited Scenarios: map indices to real scenario IDs
 		uint inhCount = reader.ReadUInt32();
-		List<string> inheritedIds = [];
+		List<string> inheritedIds = new((int)inhCount);
 		for (uint i = 0; i < inhCount; i++)
 		{
 			uint idx = reader.ReadUInt32();
@@ -697,17 +698,18 @@ internal static class BinaryOpsReverse
 		return data;
 	}
 
+	private static readonly int Idx0 = BitConverter.IsLittleEndian ? 3 : 0;
+	private static readonly int Idx1 = BitConverter.IsLittleEndian ? 2 : 1;
+	private static readonly int Idx2 = BitConverter.IsLittleEndian ? 1 : 2;
+	private static readonly int Idx3 = BitConverter.IsLittleEndian ? 0 : 3;
+
 	/// <summary>
 	/// Converts a 64-bit version number to a 4-part dot-separated version string.
 	/// </summary>
 	private unsafe static string NumberToStringVersionFixed(ulong version)
 	{
 		ushort* p = (ushort*)&version;
-		int idx0 = BitConverter.IsLittleEndian ? 3 : 0;
-		int idx1 = BitConverter.IsLittleEndian ? 2 : 1;
-		int idx2 = BitConverter.IsLittleEndian ? 1 : 2;
-		int idx3 = BitConverter.IsLittleEndian ? 0 : 3;
-		return $"{p[idx0]}.{p[idx1]}.{p[idx2]}.{p[idx3]}";
+		return $"{p[Idx0]}.{p[Idx1]}.{p[Idx2]}.{p[Idx3]}";
 	}
 
 }

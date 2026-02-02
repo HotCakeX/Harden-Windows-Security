@@ -5186,4 +5186,82 @@ Thumbprint: {3}</value>
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Click or tap here to access the main navigation menu of the app.</value>
   </data>
+  <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Export local firewall rules</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Export GPO firewall rules</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Import local firewall rules</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Import GPO firewall rules</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>Restore local firewall rules</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>Delete all local firewall rules</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>Extras</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Import Local Firewall Rules</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Import GPO Firewall Rules</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>You are about to import firewall rules from '{0}'. WARNING: This action is IRREVERSIBLE. Any existing rules will be replaced with the content of the backup file.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Restore Local Firewall Rules</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>WARNING: This action is IRREVERSIBLE. Any custom defined rules will be deleted and the default Operating System rules will be restored.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>Restore Defaults</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Delete All Local Firewall Rules</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>WARNING: This action will delete ALL existing firewall rules, including default OS rules and custom defined rules. It is strongly suggested to make a backup first.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>Successfully exported {0} firewall rules to {1}</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>Successfully imported {0} firewall rules.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>Successfully restored default local firewall rules.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>Successfully deleted all local firewall rules.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>USB Device History</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Displays the history of all of the USB devices that have been connected to this device.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Displays the history of all of the USB devices that have been connected to this device.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>No USB device history found.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Total USB Devices Connected: {0}</value>
+  </data>
 </root>

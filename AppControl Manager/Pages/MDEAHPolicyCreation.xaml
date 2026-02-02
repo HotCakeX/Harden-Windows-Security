@@ -15,6 +15,14 @@
     xmlns:others="using:AppControlManager.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <customUI:ScanLevelResources />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -579,17 +587,10 @@
 
                             <ComboBox SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                                       SelectedIndex="0"
+                                      IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                       ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"
-                                      x:Uid="ScanLevelComboBox">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                            <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                                      x:Uid="ScanLevelComboBox"                                     
+                                      ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 
                             <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
                                           x:Uid="OnlyIncludeSelectedItemsToggleButton">

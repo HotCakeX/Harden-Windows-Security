@@ -1102,7 +1102,7 @@ internal sealed partial class MainWindow : Window
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ex);
+				ViewModel.MainInfoBar.WriteError(ex);
 			}
 		}
 	}
@@ -1117,7 +1117,7 @@ internal sealed partial class MainWindow : Window
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ex);
+				ViewModel.MainInfoBar.WriteError(ex);
 			}
 		}
 	}
@@ -1148,7 +1148,7 @@ internal sealed partial class MainWindow : Window
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ex);
+				ViewModel.MainInfoBar.WriteError(ex);
 			}
 		}
 	}
@@ -1163,7 +1163,7 @@ internal sealed partial class MainWindow : Window
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ex);
+				ViewModel.MainInfoBar.WriteError(ex);
 			}
 		}
 	}
@@ -1194,7 +1194,7 @@ internal sealed partial class MainWindow : Window
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ex);
+				ViewModel.MainInfoBar.WriteError(ex);
 			}
 		}
 	}
@@ -1207,7 +1207,7 @@ internal sealed partial class MainWindow : Window
 			{
 				await Task.Run(() =>
 				{
-					Logger.Write($"Deploying the policy: {policyContext.PolicyIdentifier}");
+					ViewModel.MainInfoBar.WriteInfo($"Deploying the policy: {policyContext.PolicyIdentifier}");
 
 					PreDeploymentChecks.CheckForSignatureConflict(policyContext.PolicyObj);
 
@@ -1217,12 +1217,12 @@ internal sealed partial class MainWindow : Window
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyContext.PolicyObj));
 
-					Logger.Write($"Successfully deployed the policy: {policyContext.PolicyIdentifier}");
+					ViewModel.MainInfoBar.WriteSuccess($"Successfully deployed the policy: {policyContext.PolicyIdentifier}");
 				});
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ex);
+				ViewModel.MainInfoBar.WriteError(ex);
 			}
 		}
 	}
@@ -1285,6 +1285,7 @@ internal sealed partial class MainWindow : Window
 	/// <exception cref="InvalidOperationException"></exception>
 	private async Task ExecuteRemove(PolicyFileRepresent policyContext)
 	{
+		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
 			if (!ViewModel.SidebarPoliciesLibrary.Remove(policyContext))
@@ -1315,7 +1316,11 @@ internal sealed partial class MainWindow : Window
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_ = ViewModel.PoliciesLibraryCacheLock.Release();
 		}
 	}
 
@@ -1343,6 +1348,7 @@ internal sealed partial class MainWindow : Window
 	/// <param name="e"></param>
 	private async void ClearPoliciesLibrary(object sender, RoutedEventArgs e)
 	{
+		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
 			// If library is persistent then remove one by one from the cache first
@@ -1369,7 +1375,11 @@ internal sealed partial class MainWindow : Window
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_ = ViewModel.PoliciesLibraryCacheLock.Release();
 		}
 	}
 
@@ -1380,6 +1390,7 @@ internal sealed partial class MainWindow : Window
 	/// <param name="e"></param>
 	private async void BackupLibrary(object sender, RoutedEventArgs e)
 	{
+		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
 			if (ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Count is 0)
@@ -1407,7 +1418,11 @@ internal sealed partial class MainWindow : Window
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_ = ViewModel.PoliciesLibraryCacheLock.Release();
 		}
 	}
 
@@ -1474,6 +1489,7 @@ internal sealed partial class MainWindow : Window
 						string extension = file.FileType;
 						if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase) ||
 							string.Equals(extension, ".cip", StringComparison.OrdinalIgnoreCase) ||
+							string.Equals(extension, ".bin", StringComparison.OrdinalIgnoreCase) ||
 							string.Equals(extension, ".p7b", StringComparison.OrdinalIgnoreCase))
 						{
 							validFiles.Add(file.Path);
@@ -1486,7 +1502,7 @@ internal sealed partial class MainWindow : Window
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
+			ViewModel.MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -1503,7 +1519,7 @@ internal sealed partial class MainWindow : Window
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
+			ViewModel.MainInfoBar.WriteError(ex);
 		}
 	}
 

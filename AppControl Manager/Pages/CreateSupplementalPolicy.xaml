@@ -14,6 +14,14 @@
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <customUI:ScanLevelResources />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <ScrollView>
 
         <Grid>
@@ -722,16 +730,9 @@
                             <ComboBox IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
                                       SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                                       SelectedIndex="0"
-                                      ItemsSource="{x:Bind ViewModel.ScanLevelsSource}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                            <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                                      ItemsSource="{x:Bind ViewModel.ScanLevelsSource}"
+                                      x:Uid="ScanLevelComboBox"
+                                      ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 
                         </customUI:SettingsCardV2>
 

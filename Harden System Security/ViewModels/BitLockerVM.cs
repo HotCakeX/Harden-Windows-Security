@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using HardenSystemSecurity.BitLocker;
 using HardenSystemSecurity.CustomUIElements;
+using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -992,7 +993,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 	/// <summary>
 	/// Exports all loaded BitLocker volume data (including nested Key Protectors)
-	/// to a user-selected JSON file,
+	/// to a user-selected JSON file.
 	/// </summary>
 	internal async void ExportBitLockerData()
 	{
@@ -1030,6 +1031,24 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			});
 
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("BitLockerSuccessExportMsg"), volumes.Length, saveLocation));
+
+			// it will show/hide warning for bitlocker recovery in the Microsoft Defender.
+			// Setting it to 1 shows it, setting it to 0 hides it.
+			// After user creates a backup successfully via the app, we can safely hide this warning from the Defender's GUI.
+			RegistryManager.Manager.EditRegistry(new(
+				source: Source.Registry,
+				keyName: "Software\\Microsoft\\Windows\\CurrentVersion\\BitLocker\\KeyBackupMonitor",
+				valueName: "ShowRecoveryBackupPrompt",
+				type: RegistryValueType.REG_DWORD,
+				size: 4,
+				data: ReadOnlyMemory<byte>.Empty,
+				hive: Hive.HKCU,
+				id: new("019c1a2a-7270-79bb-8e92-2fdbb8d1958e"))
+			{
+				RegValue = "0",
+				policyAction = PolicyAction.Apply
+			});
+
 		}
 		catch (Exception ex)
 		{

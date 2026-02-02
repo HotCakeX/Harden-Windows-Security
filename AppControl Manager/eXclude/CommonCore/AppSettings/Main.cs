@@ -33,6 +33,11 @@ internal sealed partial class Main : ViewModelBase
 	// Single shared lock for all property setters
 	private readonly Lock SettingsLock = new();
 
+	/// <summary>
+	/// Event triggered when the <see cref="EncryptPoliciesLibrary"/> setting changes.
+	/// </summary>
+	internal event EventHandler<bool>? EncryptPoliciesLibraryChanged;
+
 	private readonly ApplicationDataContainer _localSettings;
 
 	internal Main(ApplicationDataContainer LocalSettings)
@@ -68,6 +73,8 @@ internal sealed partial class Main : ViewModelBase
 		UseV2CIManagement = ReadValue(nameof(UseV2CIManagement), UseV2CIManagement);
 		AppCloseConfirmationBehavior = ReadValue(nameof(AppCloseConfirmationBehavior), AppCloseConfirmationBehavior);
 		PersistentPoliciesLibrary = ReadValue(nameof(PersistentPoliciesLibrary), PersistentPoliciesLibrary);
+		EncryptPoliciesLibrary = ReadValue(nameof(EncryptPoliciesLibrary), EncryptPoliciesLibrary);
+		EncryptionScopePoliciesLibrary = ReadValue(nameof(EncryptionScopePoliciesLibrary), EncryptionScopePoliciesLibrary);
 	}
 
 	/// <summary>
@@ -507,6 +514,41 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(PersistentPoliciesLibrary), field);
+			}
+		}
+	} = true;
+
+	/// <summary>
+	/// Whether the Policies Library cache on disk is encrypted or not.
+	/// </summary>
+	internal bool EncryptPoliciesLibrary
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(EncryptPoliciesLibrary), field);
+				// Notify subscribers about the change
+				// Have to use event instead of direct method call because at startup this Settings class is instantiated
+				// First and then Window is instantiated and loaded. The logic responsible for processing policies automatically
+				// Runs in the MainWindowVM's constructor.
+				EncryptPoliciesLibraryChanged?.Invoke(this, field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the policies in the Sidebar's library are encrypted using user-specific or machine-specific encryption scope.
+	/// True -> User-specific
+	/// False -> Machine-specific
+	/// </summary>
+	internal bool EncryptionScopePoliciesLibrary
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(EncryptionScopePoliciesLibrary), field);
 			}
 		}
 	} = true;

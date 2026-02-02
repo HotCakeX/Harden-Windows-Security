@@ -12,6 +12,14 @@
     xmlns:others="using:AppControlManager.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <customUI:ScanLevelResources />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <!--
     Never use a ScrollViewer in a page that's gonna have a ListView
     It would:
@@ -491,17 +499,8 @@
                               IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                               SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                               SelectedIndex="0"
-                              ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
-                                <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                    <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
+                              ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"                              
+                              ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 
                     <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"

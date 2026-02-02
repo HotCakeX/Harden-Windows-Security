@@ -5186,4 +5186,82 @@ Odcisk Palca: {3}</value>
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Kliknij lub dotknij tutaj, aby uzyskać dostęp do głównego menu nawigacyjnego aplikacji.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Eksportuj lokalne reguły zapory</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Eksportuj reguły zapory z GPO</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Importuj lokalne reguły zapory</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Importuj reguły zapory z GPO</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>Przywróć lokalne reguły zapory</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>Usuń wszystkie lokalne reguły zapory</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>Dodatki</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Importowanie lokalnych reguł zapory</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Importowanie reguł zapory z GPO</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>Za chwilę zaimportujesz reguły zapory z „{0}”. OSTRZEŻENIE: Ta operacja jest NIEODWRACALNA. Wszelkie istniejące reguły zostaną zastąpione zawartością pliku kopii zapasowej.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>Importuj</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Przywracanie lokalnych reguł zapory</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>OSTRZEŻENIE: Ta operacja jest NIEODWRACALNA. Wszystkie reguły zdefiniowane niestandardowo zostaną usunięte, a domyślne reguły systemu operacyjnego zostaną przywrócone.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>Przywróć domyślne</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Usuwanie wszystkich lokalnych reguł zapory</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>OSTRZEŻENIE: Ta operacja usunie WSZYSTKIE istniejące reguły zapory, w tym domyślne reguły systemu operacyjnego oraz reguły niestandardowe. Zdecydowanie zaleca się wcześniejsze wykonanie kopii zapasowej.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>Usuń wszystkie</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>Pomyślnie wyeksportowano {0} reguł zapory do {1}</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>Pomyślnie zaimportowano {0} reguł zapory.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>Pomyślnie przywrócono domyślne lokalne reguły zapory.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>Pomyślnie usunięto wszystkie lokalne reguły zapory.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Historia urządzeń USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetla historię wszystkich urządzeń USB, które zostały podłączone do tego urządzenia.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetla historię wszystkich urządzeń USB, które zostały podłączone do tego urządzenia.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Nie znaleziono historii urządzeń USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Łączna liczba podłączonych urządzeń USB: {0}</value>
+  </data>
 </root>

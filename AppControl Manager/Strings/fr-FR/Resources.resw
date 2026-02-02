@@ -6593,4 +6593,49 @@
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Tout désélectionner</value>
   </data>
+      <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>Chiffrer la bibliothèque de stratégies persistantes</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>Lorsqu'elle est activée, les fichiers de stratégie stockés dans le cache local sont chiffrés à l'aide de l'API de protection des données Windows avec l'étendue Utilisateur actuel. Cela garantit que les fichiers ne peuvent être déchiffrés et lus que par votre compte utilisateur Windows spécifique. Même les autres administrateurs sur cette machine ne pourront pas lire le contenu XML brut de votre bibliothèque.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Lorsqu'elle est activée, les fichiers de stratégie stockés dans le cache local sont chiffrés à l'aide de l'API de protection des données Windows avec l'étendue Utilisateur actuel. Cela garantit que les fichiers ne peuvent être déchiffrés et lus que par votre compte utilisateur Windows spécifique. Même les autres administrateurs sur cette machine ne pourront pas lire le contenu XML brut de votre bibliothèque.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Lorsqu'elle est activée, les fichiers de stratégie stockés dans le cache local sont chiffrés à l'aide de l'API de protection des données Windows avec l'étendue Utilisateur actuel. Cela garantit que les fichiers ne peuvent être déchiffrés et lus que par votre compte utilisateur Windows spécifique. Même les autres administrateurs sur cette machine ne pourront pas lire le contenu XML brut de votre bibliothèque.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Historique des périphériques USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Affiche l’historique de tous les périphériques USB qui ont été connectés à cet appareil.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Affiche l’historique de tous les périphériques USB qui ont été connectés à cet appareil.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Aucun historique de périphériques USB trouvé.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Nombre total de périphériques USB connectés: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Périmètre utilisateur</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Périmètre de la machine</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>Périmètre de chiffrement</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>Sélectionnez un périmètre de chiffrement : Utilisateur, qui permet uniquement au compte Windows actuel de déchiffrer les fichiers de stratégie chiffrés, ou Machine, qui limite le déchiffrement à cet appareil afin que les fichiers ne puissent pas être déchiffrés s’ils sont déplacés vers un autre appareil.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez un périmètre de chiffrement : Utilisateur, qui permet uniquement au compte Windows actuel de déchiffrer les fichiers de stratégie chiffrés, ou Machine, qui limite le déchiffrement à cet appareil afin que les fichiers ne puissent pas être déchiffrés s’ils sont déplacés vers un autre appareil.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionnez un périmètre de chiffrement : Utilisateur, qui permet uniquement au compte Windows actuel de déchiffrer les fichiers de stratégie chiffrés, ou Machine, qui limite le déchiffrement à cet appareil afin que les fichiers ne puissent pas être déchiffrés s’ils sont déplacés vers un autre appareil.</value>
+  </data>
 </root>

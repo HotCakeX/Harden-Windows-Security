@@ -19,8 +19,11 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using AnimatedVisuals;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -34,8 +37,18 @@ namespace AppControlManager.ViewModels;
 /// <summary>
 /// ViewModel for the MainWindow
 /// </summary>
-internal sealed partial class MainWindowVM : ViewModelBase
+internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 {
+	/// <summary>
+	/// Semaphore to synchronize access to the Policies Library cache on disk.
+	/// Used by startup restoration and encryption toggle operations.
+	/// </summary>
+	internal readonly SemaphoreSlim PoliciesLibraryCacheLock = new(1, 1);
+
+	public void Dispose()
+	{
+		PoliciesLibraryCacheLock.Dispose();
+	}
 
 	/// <summary>
 	/// Collection that is the Master List, containing the policies in the Library.
@@ -393,6 +406,16 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
 
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			Dispatcher, null, null);
+
+		// Subscribe to encryption setting changes
+		App.Settings.EncryptPoliciesLibraryChanged += (s, e) => OnEncryptPoliciesLibraryChanged(e);
+
 		// If the App is installed from the Microsoft Store source
 		// Then make the update page available for non-elevated usage.
 		if (App.PackageSource is 1)
@@ -402,8 +425,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// Fire and forget since this runs at startup and we can't let it slow us down
 		if (AppSettings.PersistentPoliciesLibrary)
 		{
-			_ = Task.Run(() =>
+			_ = Task.Run(async () =>
 			{
+				await PoliciesLibraryCacheLock.WaitAsync();
 				try
 				{
 					// Get all of the files in the cache first
@@ -413,9 +437,91 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					{
 						try
 						{
-							ReadOnlySpan<char> uniqueID = Path.GetFileNameWithoutExtension(file);
+							string uniqueID = Path.GetFileNameWithoutExtension(file);
 
-							PolicyFileRepresent policyToAdd = new(Management.Initialize(file, null))
+							byte[] fileBytes = await File.ReadAllBytesAsync(file);
+							bool isFileEncrypted = false;
+							byte[]? decryptedBytes = null;
+							byte[]? plainContentForParsing = null;
+
+							// Try to decrypt the file content to check its state
+							try
+							{
+								decryptedBytes = ProtectedData.Unprotect(fileBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+								isFileEncrypted = true;
+							}
+							catch (CryptographicException)
+							{
+								isFileEncrypted = false;
+							}
+
+							// Ensure the file on disk matches the 'shouldEncrypt' setting.
+
+							// Setting: Encrypt
+							if (AppSettings.EncryptPoliciesLibrary)
+							{
+								if (isFileEncrypted)
+								{
+									// Setting: Encrypt
+									// File: Encrypted.
+									// We use decrypted bytes for parsing.
+									plainContentForParsing = decryptedBytes;
+								}
+								else
+								{
+									// Setting: Encrypt
+									// File: Plain.
+									// We must encrypt the file on disk.
+									// The current file is plain text, so 'fileBytes' is the policy content.
+									try
+									{
+										byte[] encrypted = ProtectedData.Protect(fileBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+										await File.WriteAllBytesAsync(file, encrypted);
+									}
+									catch (Exception ex)
+									{
+										MainInfoBar.WriteError(ex, $"Failed to enforce encryption on startup for {file}");
+									}
+
+									// We use original file bytes for parsing since they were plain text.
+									plainContentForParsing = fileBytes;
+								}
+							}
+							else
+							{
+								// Setting: Decrypt (Plain)
+								if (isFileEncrypted)
+								{
+									// Setting: Plain
+									// File: Encrypted.
+									// We must decrypt the file on disk.
+									try
+									{
+										await File.WriteAllBytesAsync(file, decryptedBytes!);
+									}
+									catch (Exception ex)
+									{
+										MainInfoBar.WriteError(ex, $"Failed to enforce decryption on startup for {file}");
+									}
+
+									// Use decrypted bytes for parsing.
+									plainContentForParsing = decryptedBytes;
+								}
+								else
+								{
+									// Setting: Plain
+									// File: Plain.
+									// Load directly.
+									plainContentForParsing = fileBytes;
+								}
+							}
+
+							// Create XML doc from the file's bytes
+							XmlDocument xmlDocument = new();
+							using MemoryStream stream = new(plainContentForParsing!);
+							xmlDocument.Load(stream);
+
+							PolicyFileRepresent policyToAdd = new(Management.Initialize(null, xmlDocument))
 							{
 								UniqueObjID = Guid.Parse(uniqueID)
 							};
@@ -427,13 +533,17 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						}
 						catch (Exception ex)
 						{
-							Logger.Write(ex);
+							MainInfoBar.WriteError(ex);
 						}
 					}
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ex);
+					MainInfoBar.WriteError(ex);
+				}
+				finally
+				{
+					_ = PoliciesLibraryCacheLock.Release();
 				}
 			});
 		}
@@ -586,11 +696,18 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	#endregion
 
 	/// <summary>
+	/// Additional Entropy used for data encryption/decryption of the Policies Library files.
+	/// Must always remain the same.
+	/// </summary>
+	private static readonly byte[] PoliciesLibraryEntropyBytes = Encoding.UTF8.GetBytes("HotCakeX");
+
+	/// <summary>
 	/// The only method used to add new policies to the Sidebar's Policies Library.
 	/// </summary>
 	/// <param name="policy"></param>
 	internal async void AssignToSidebar(SiPolicy.PolicyFileRepresent policy)
 	{
+		await PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
 			_ = Dispatcher.TryEnqueue(() =>
@@ -605,13 +722,111 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				{
 					string filePath = Path.Combine(SidebarPoliciesLibraryCache, $"{policy.UniqueObjID}.xml");
 
-					Management.SavePolicyToFile(policy.PolicyObj, filePath);
+					XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy.PolicyObj);
+
+					using MemoryStream memoryStream = new();
+
+					XmlWriterSettings settings = new()
+					{
+						Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false),
+						Indent = true
+					};
+
+					using (XmlWriter xmlWriter = XmlWriter.Create(memoryStream, settings))
+					{
+						xmlObj.Save(xmlWriter);
+					}
+
+					if (AppSettings.EncryptPoliciesLibrary)
+					{
+						try
+						{
+							byte[] enc = ProtectedData.Protect(memoryStream.ToArray(), PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							File.WriteAllBytes(filePath, enc);
+						}
+						catch (Exception ex)
+						{
+							MainInfoBar.WriteError(ex, $"Error encrypting policy {policy.UniqueObjID}");
+						}
+					}
+					else
+					{
+						File.WriteAllBytes(filePath, memoryStream.ToArray());
+					}
 				});
 			}
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_ = PoliciesLibraryCacheLock.Release();
+		}
+	}
+
+	/// <summary>
+	/// Handles the change event for the EncryptPoliciesLibrary setting.
+	/// Converts existing cache files between encrypted and plain text formats.
+	/// </summary>
+	/// <param name="shouldEncrypt"></param>
+	private async void OnEncryptPoliciesLibraryChanged(bool shouldEncrypt)
+	{
+		await PoliciesLibraryCacheLock.WaitAsync();
+		try
+		{
+			await Task.Run(() =>
+			{
+				// Enumerate all files in the cache directory
+				IEnumerable<string> files = Directory.EnumerateFiles(SidebarPoliciesLibraryCache);
+				foreach (string file in files)
+				{
+					try
+					{
+						byte[] currentBytes = File.ReadAllBytes(file);
+						byte[] plainBytes;
+						bool isEncrypted = false;
+
+						// Determine if the file is currently encrypted by attempting to decrypt it
+						try
+						{
+							plainBytes = ProtectedData.Unprotect(currentBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							isEncrypted = true;
+						}
+						catch (CryptographicException)
+						{
+							// If decryption fails, assume the file is plain text
+							plainBytes = currentBytes;
+							isEncrypted = false;
+						}
+
+						// Encrypt if requested and currently plain text
+						if (shouldEncrypt && !isEncrypted)
+						{
+							byte[] encrypted = ProtectedData.Protect(plainBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							File.WriteAllBytes(file, encrypted);
+						}
+						// Decrypt if requested (toggle off) and currently encrypted
+						else if (!shouldEncrypt && isEncrypted)
+						{
+							File.WriteAllBytes(file, plainBytes);
+						}
+					}
+					catch (Exception ex)
+					{
+						MainInfoBar.WriteError(ex, $"Error processing file {file} during encryption toggle.");
+					}
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex, "Error enumerating files during encryption toggle.");
+		}
+		finally
+		{
+			_ = PoliciesLibraryCacheLock.Release();
 		}
 	}
 
@@ -944,4 +1159,14 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				}
 		}
 	}
+
+	/// <summary>
+	/// The main InfoBar for the Sidebar.
+	/// </summary>
+	internal readonly InfoBarSettings MainInfoBar;
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
 }

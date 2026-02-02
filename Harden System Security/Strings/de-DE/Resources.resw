@@ -5186,4 +5186,82 @@ Fingerabdruck: {3}</value>
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Klicken oder tippen Sie hier, um das Hauptnavigationsmenü der App aufzurufen.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Lokale Firewallregeln exportieren</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>GPO-Firewallregeln exportieren</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Lokale Firewallregeln importieren</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>GPO-Firewallregeln importieren</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>Lokale Firewallregeln wiederherstellen</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>Alle lokalen Firewallregeln löschen</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>Extras</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Lokale Firewallregeln importieren</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>GPO-Firewallregeln importieren</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>Sie sind dabei, Firewallregeln aus „{0}“ zu importieren. WARNUNG: Diese Aktion ist UNUMKEHRBAR. Vorhandene Regeln werden durch den Inhalt der Sicherungsdatei ersetzt.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>Importieren</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Lokale Firewallregeln wiederherstellen</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>WARNUNG: Diese Aktion ist UNUMKEHRBAR. Alle benutzerdefinierten Regeln werden gelöscht und die Standardregeln des Betriebssystems werden wiederhergestellt.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>Standard wiederherstellen</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Alle lokalen Firewallregeln löschen</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>WARNUNG: Diese Aktion löscht ALLE vorhandenen Firewallregeln, einschließlich Standard-OS-Regeln und benutzerdefinierter Regeln. Es wird dringend empfohlen, zuvor eine Sicherung zu erstellen.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>Alle löschen</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>{0} Firewallregeln wurden erfolgreich nach {1} exportiert</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>{0} Firewallregeln wurden erfolgreich importiert.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>Die lokalen Standard-Firewallregeln wurden erfolgreich wiederhergestellt.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>Alle lokalen Firewallregeln wurden erfolgreich gelöscht.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>USB-Geräteverlauf</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zeigt den Verlauf aller USB-Geräte an, die mit diesem Gerät verbunden wurden.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zeigt den Verlauf aller USB-Geräte an, die mit diesem Gerät verbunden wurden.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Kein USB-Geräteverlauf gefunden.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Insgesamt verbundene USB-Geräte: {0}</value>
+  </data>
 </root>

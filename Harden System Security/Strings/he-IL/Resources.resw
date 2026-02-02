@@ -5186,4 +5186,82 @@
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>לחץ או הקש כאן כדי לגשת לתפריט הניווט הראשי של האפליקציה.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>ייצוא כללי חומת האש המקומיים</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>ייצוא כללי חומת האש של GPO</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>ייבוא כללי חומת האש המקומיים</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>ייבוא כללי חומת האש של GPO</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>שחזור כללי חומת האש המקומיים</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>מחיקת כל כללי חומת האש המקומיים</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>אפשרויות נוספות</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>ייבוא כללי חומת אש מקומיים</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>ייבוא כללי חומת אש של GPO</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>אתה עומד לייבא כללי חומת אש מ-'{0}'. אזהרה: פעולה זו היא בלתי הפיכה. כללים קיימים יוחלפו בתוכן קובץ הגיבוי.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>ייבוא</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>שחזור כללי חומת אש מקומיים</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>אזהרה: פעולה זו היא בלתי הפיכה. כללים מותאמים אישית יימחקו וכללי ברירת המחדל של מערכת ההפעלה ישוחזרו.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>שחזר ברירות מחדל</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>מחיקת כל כללי חומת האש המקומיים</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>אזהרה: פעולה זו תמחק את כל כללי חומת האש הקיימים, כולל כללי ברירת המחדל של מערכת ההפעלה וכללים מותאמים אישית. מומלץ מאוד לבצע גיבוי תחילה.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>מחק הכול</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>בוצע ייצוא של {0} כללי חומת אש בהצלחה אל {1}</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>בוצע ייבוא של {0} כללי חומת אש בהצלחה.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>שוחזרו בהצלחה כללי חומת האש המקומיים המוגדרים כברירת מחדל.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>נמחקו בהצלחה כל כללי חומת האש המקומיים.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>היסטוריית התקני USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציג את ההיסטוריה של כל התקני ה-USB שהתחברו למכשיר זה.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מציג את ההיסטוריה של כל התקני ה-USB שהתחברו למכשיר זה.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>לא נמצאה היסטוריית התקני USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>סך כל התקני ה-USB שהתחברו: {0}</value>
+  </data>
 </root>

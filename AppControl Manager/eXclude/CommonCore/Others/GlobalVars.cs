@@ -64,7 +64,7 @@ internal static partial class GlobalVars
 	internal const string JSONPickerFilter = "JSON Files|*.json";
 	internal const string SecurityINFPickerFilter = "Security INF Files|*.inf";
 	internal const string CIPFilesPickerFilter = "CIP file|*.cip";
-	internal const string XMLAndCIPAndP7BFilePickerFilter = "XML, CIP, P7B files (*.xml;*.cip;*.p7b)|*.xml;*.cip;*.p7b";
+	internal const string MultiAppControlPolicyPickerFilter = "XML, CIP, P7B, BIN files (*.xml;*.cip;*.p7b;*.bin)|*.xml;*.cip;*.p7b;*.bin";
 
 	// Name of the special automatic supplemental policy
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";

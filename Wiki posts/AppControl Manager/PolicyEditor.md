@@ -17,17 +17,17 @@ Eliminate the need for error-prone, manual editing in a text editor. When you mo
 This feature also deduplicates any redundant rules or signers within the policy file.
 
 > [!TIP]\
-> You can use this feature to convert CIP binary files or P7B files back to XML too.
+> You can use this feature to convert CIP binary files, P7B files or BIN files back to XML too.
 
 <br>
 
 ### Configuration Details
 
-* **Browse for Policy**: Click this button to locate an App Control policy XML, CIP or P7B file. You can right-click or tap and hold on this button to preview the selected policy. You can also directly select a policy from the Policies Library on the Sidebar in order to be opened in the Policy Editor.
+* **Browse for Policy**: Click this button to locate an App Control policy XML, CIP, BIN or P7B file. You can right-click or tap and hold on this button to preview the selected policy. You can also directly select a policy from the Policies Library on the Sidebar in order to be opened in the Policy Editor.
 
 * **Load Policy**: Use this button to import the details of the chosen App Control policy into the user interface.
 
-* **Save the Changes**: Click this button to commit any modifications back to the selected App Control policy. If the file you are working with is a `CIP` binary or P7B policy, then using this button will save it as XML file with the same name in the `AppControl Manager` directory in Program Files (if the app is running elevated), or it will save the XML in the same location as the CIP or P7B file (if the app is running with standard privilege).
+* **Save the Changes**: Click this button to commit any modifications back to the selected App Control policy. If the file you are working with is a `CIP` binary, BIN or P7B policy, then using this button will save it as XML file with the same name in the `AppControl Manager` directory in Program Files (if the app is running elevated), or it will save the XML in the same location as the CIP, BIN or P7B file (if the app is running with standard privilege).
 
 * **Clear the Data**: Use this button to reset all data loaded in the interface as a consequence of loading the policy.
 

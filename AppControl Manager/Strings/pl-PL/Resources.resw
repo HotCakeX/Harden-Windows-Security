@@ -6593,4 +6593,49 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Odznacz wszystko</value>
   </data>
+      <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>Szyfruj bibliotekę zasad trwałych</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>Gdy ta opcja jest włączona, pliki zasad przechowywane w lokalnej pamięci podręcznej są szyfrowane przy użyciu interfejsu Windows Data Protection API z zakresem bieżącego użytkownika. Zapewnia to, że pliki mogą być odszyfrowane i odczytane tylko przez Twoje konkretne konto użytkownika systemu Windows. Nawet inni administratorzy na tym komputerze nie będą w stanie odczytać surowej zawartości XML Twojej biblioteki.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gdy ta opcja jest włączona, pliki zasad przechowywane w lokalnej pamięci podręcznej są szyfrowane przy użyciu interfejsu Windows Data Protection API z zakresem bieżącego użytkownika. Zapewnia to, że pliki mogą być odszyfrowane i odczytane tylko przez Twoje konkretne konto użytkownika systemu Windows. Nawet inni administratorzy na tym komputerze nie będą w stanie odczytać surowej zawartości XML Twojej biblioteki.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Gdy ta opcja jest włączona, pliki zasad przechowywane w lokalnej pamięci podręcznej są szyfrowane przy użyciu interfejsu Windows Data Protection API z zakresem bieżącego użytkownika. Zapewnia to, że pliki mogą być odszyfrowane i odczytane tylko przez Twoje konkretne konto użytkownika systemu Windows. Nawet inni administratorzy na tym komputerze nie będą w stanie odczytać surowej zawartości XML Twojej biblioteki.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Historia urządzeń USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetla historię wszystkich urządzeń USB, które zostały podłączone do tego urządzenia.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetla historię wszystkich urządzeń USB, które zostały podłączone do tego urządzenia.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Nie znaleziono historii urządzeń USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Łączna liczba podłączonych urządzeń USB: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Zakres użytkownika</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Zakres komputera</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>Zakres szyfrowania</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz zakres szyfrowania: Użytkownik, który umożliwia odszyfrowanie zaszyfrowanych plików zasad tylko dla bieżącego konta Windows, lub Komputer, który ogranicza odszyfrowywanie do tego urządzenia, dzięki czemu pliki nie będą mogły zostać odszyfrowane po przeniesieniu na inne urządzenie.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz zakres szyfrowania: Użytkownik, który umożliwia odszyfrowanie zaszyfrowanych plików zasad tylko dla bieżącego konta Windows, lub Komputer, który ogranicza odszyfrowywanie do tego urządzenia, dzięki czemu pliki nie będą mogły zostać odszyfrowane po przeniesieniu na inne urządzenie.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz zakres szyfrowania: Użytkownik, który umożliwia odszyfrowanie zaszyfrowanych plików zasad tylko dla bieżącego konta Windows, lub Komputer, który ogranicza odszyfrowywanie do tego urządzenia, dzięki czemu pliki nie będą mogły zostać odszyfrowane po przeniesieniu na inne urządzenie.</value>
+  </data>
 </root>

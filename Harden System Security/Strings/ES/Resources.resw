@@ -5186,4 +5186,82 @@ Huella Digital: {3}</value>
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Haga clic o pulse aquí para acceder al menú de navegación principal de la aplicación.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Exportar reglas locales del firewall</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Exportar reglas del firewall de GPO</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Importar reglas locales del firewall</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Importar reglas del firewall de GPO</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>Restaurar reglas locales del firewall</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>Eliminar todas las reglas locales del firewall</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>Extras</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Importar reglas locales del firewall</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Importar reglas del firewall de GPO</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>Estás a punto de importar reglas del firewall desde '{0}'. ADVERTENCIA: Esta acción es IRREVERSIBLE. Cualquier regla existente se reemplazará con el contenido del archivo de respaldo.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>Importar</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Restaurar reglas locales del firewall</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>ADVERTENCIA: Esta acción es IRREVERSIBLE. Se eliminarán todas las reglas personalizadas y se restaurarán las reglas predeterminadas del sistema operativo.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>Restaurar valores predeterminados</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Eliminar todas las reglas locales del firewall</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>ADVERTENCIA: Esta acción eliminará TODAS las reglas existentes del firewall, incluidas las reglas predeterminadas del sistema operativo y las reglas personalizadas. Se recomienda ampliamente hacer un respaldo primero.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>Eliminar todo</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>Se exportaron correctamente {0} reglas del firewall a {1}</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>Se importaron correctamente {0} reglas del firewall.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>Se restauraron correctamente las reglas locales predeterminadas del firewall.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>Se eliminaron correctamente todas las reglas locales del firewall.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Historial de dispositivos USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Muestra el historial de todos los dispositivos USB que se han conectado a este dispositivo.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Muestra el historial de todos los dispositivos USB que se han conectado a este dispositivo.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>No se encontró historial de dispositivos USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Total de dispositivos USB conectados: {0}</value>
+  </data>
 </root>

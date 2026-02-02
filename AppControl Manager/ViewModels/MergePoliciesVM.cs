@@ -258,7 +258,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	{
 		try
 		{
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLAndCIPAndP7BFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
 
 			foreach (string file in selectedFiles)
 			{
@@ -354,7 +354,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	{
 		try
 		{
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLAndCIPAndP7BFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
 
 			foreach (string file in selectedFiles)
 			{

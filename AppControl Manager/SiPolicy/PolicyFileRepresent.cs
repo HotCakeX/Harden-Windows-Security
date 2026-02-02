@@ -93,5 +93,6 @@ internal enum PolicyFileRepresentKind
 {
 	XML = 0,
 	CIP,
-	P7B
+	P7B,
+	BIN
 }

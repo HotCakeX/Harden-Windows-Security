@@ -6593,4 +6593,49 @@
   <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>בטל בחירה של הכל</value>
   </data>
+      <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Header" xml:space="preserve">
+    <value>הצפן את ספריית הפוליסות הקבועה</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.Description" xml:space="preserve">
+    <value>כאשר האפשרות מופעלת, קבצי הפוליסה המאוחסנים במטמון המקומי מוצפנים באמצעות ה-Windows Data Protection API בטווח המשתמש הנוכחי. פעולה זו מבטיחה כי הקבצים ניתנים לפענוח ולקריאה רק על ידי חשבון המשתמש שלך ב-Windows. אפילו מנהלי מערכת אחרים במחשב זה לא יוכלו לקרוא את תוכן ה-XML הגולמי של הספרייה שלך.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כאשר האפשרות מופעלת, קבצי הפוליסה המאוחסנים במטמון המקומי מוצפנים באמצעות ה-Windows Data Protection API בטווח המשתמש הנוכחי. פעולה זו מבטיחה כי הקבצים ניתנים לפענוח ולקריאה רק על ידי חשבון המשתמש שלך ב-Windows. אפילו מנהלי מערכת אחרים במחשב זה לא יוכלו לקרוא את תוכן ה-XML הגולמי של הספרייה שלך.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כאשר האפשרות מופעלת, קבצי הפוליסה המאוחסנים במטמון המקומי מוצפנים באמצעות ה-Windows Data Protection API בטווח המשתמש הנוכחי. פעולה זו מבטיחה כי הקבצים ניתנים לפענוח ולקריאה רק על ידי חשבון המשתמש שלך ב-Windows. אפילו מנהלי מערכת אחרים במחשב זה לא יוכלו לקרוא את תוכן ה-XML הגולמי של הספרייה שלך.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>היסטוריית התקני USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציג את ההיסטוריה של כל התקני ה-USB שהתחברו למכשיר זה.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מציג את ההיסטוריה של כל התקני ה-USB שהתחברו למכשיר זה.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>לא נמצאה היסטוריית התקני USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>סך כל התקני ה-USB שהתחברו: {0}</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OnContent" xml:space="preserve">
+    <value>היקף משתמש</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch.OffContent" xml:space="preserve">
+    <value>היקף מחשב</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Header" xml:space="preserve">
+    <value>היקף הצפנה</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.Description" xml:space="preserve">
+    <value>בחר היקף הצפנה: משתמש, שמאפשר רק לחשבון Windows הנוכחי לפענח את קובצי המדיניות המוצפנים, או מחשב, שמגביל את הפענוח למכשיר זה כך שלא ניתן יהיה לפענח את הקבצים אם יועברו למכשיר אחר.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר היקף הצפנה: משתמש, שמאפשר רק לחשבון Windows הנוכחי לפענח את קובצי המדיניות המוצפנים, או מחשב, שמגביל את הפענוח למכשיר זה כך שלא ניתן יהיה לפענח את הקבצים אם יועברו למכשיר אחר.</value>
+  </data>
+  <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר היקף הצפנה: משתמש, שמאפשר רק לחשבון Windows הנוכחי לפענח את קובצי המדיניות המוצפנים, או מחשב, שמגביל את הפענוח למכשיר זה כך שלא ניתן יהיה לפענח את הקבצים אם יועברו למכשיר אחר.</value>
+  </data>
 </root>

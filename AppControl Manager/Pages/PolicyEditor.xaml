@@ -248,6 +248,8 @@
 
                         <!-- Columns Selection Button -->
                         <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.FileRulesColumnManager.ColumnSelectionItems, Mode=OneWay}"
+                                                 HorizontalAlignment="Center"
+                                                 Margin="0,4,0,4"
                                                  IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" />
 
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_FileBasedRules"
@@ -416,6 +418,8 @@
 
                         <!-- Columns Selection Button -->
                         <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnSelectionItems, Mode=OneWay}"
+                                                 HorizontalAlignment="Center"
+                                                 Margin="0,4,0,4"
                                                  IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" />
 
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_SignatureBasedRules"

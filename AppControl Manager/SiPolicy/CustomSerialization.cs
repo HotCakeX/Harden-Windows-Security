@@ -95,7 +95,7 @@ internal static class CustomSerialization
 				if (!string.IsNullOrEmpty(eku.FriendlyName))
 					ekuElement.SetAttribute("FriendlyName", eku.FriendlyName);
 
-				ekuElement.SetAttribute("Value", ConvertByteArrayToHex(eku.Value));
+				ekuElement.SetAttribute("Value", Convert.ToHexString(eku.Value.Span));
 				_ = ekusElement.AppendChild(ekuElement);
 			}
 		}
@@ -149,7 +149,7 @@ internal static class CustomSerialization
 				if (signer.CertRoot.Value.IsEmpty) continue;
 				XmlElement certRootElement = xmlDoc.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
 				certRootElement.SetAttribute("Type", signer.CertRoot.Type.ToString());
-				certRootElement.SetAttribute("Value", ConvertByteArrayToHex(signer.CertRoot.Value));
+				certRootElement.SetAttribute("Value", Convert.ToHexString(signer.CertRoot.Value.Span));
 				_ = signerElement.AppendChild(certRootElement);
 
 				// CertEKU(s)
@@ -325,7 +325,7 @@ internal static class CustomSerialization
 				XmlElement valueElement = xmlDoc.CreateElement("Value", GlobalVars.SiPolicyNamespace);
 				if (setting.Value.Item is ReadOnlyMemory<byte> bMem)
 				{
-					if (!AppendTextElement(xmlDoc, valueElement, "Binary", ConvertByteArrayToHex(bMem)))
+					if (!AppendTextElement(xmlDoc, valueElement, "Binary", Convert.ToHexString(bMem.Span)))
 					{
 						continue;
 					}
@@ -489,7 +489,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(allow.PackageVersion)) element.SetAttribute("PackageVersion", allow.PackageVersion);
 		if (!string.IsNullOrEmpty(allow.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", allow.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(allow.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", allow.MaximumFileVersion);
-		if (!allow.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(allow.Hash));
+		if (!allow.Hash.IsEmpty) element.SetAttribute("Hash", Convert.ToHexString(allow.Hash.Span));
 		if (!string.IsNullOrEmpty(allow.AppIDs)) element.SetAttribute("AppIDs", allow.AppIDs);
 		if (!string.IsNullOrEmpty(allow.FilePath)) element.SetAttribute("FilePath", allow.FilePath);
 		if (!string.IsNullOrEmpty(allow.RequireHotpatchID)) element.SetAttribute("RequireHotpatchID", allow.RequireHotpatchID);
@@ -511,7 +511,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(deny.PackageVersion)) element.SetAttribute("PackageVersion", deny.PackageVersion);
 		if (!string.IsNullOrEmpty(deny.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", deny.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(deny.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", deny.MaximumFileVersion);
-		if (!deny.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(deny.Hash));
+		if (!deny.Hash.IsEmpty) element.SetAttribute("Hash", Convert.ToHexString(deny.Hash.Span));
 		if (!string.IsNullOrEmpty(deny.AppIDs)) element.SetAttribute("AppIDs", deny.AppIDs);
 		if (!string.IsNullOrEmpty(deny.FilePath)) element.SetAttribute("FilePath", deny.FilePath);
 		_ = parent.AppendChild(element);
@@ -530,7 +530,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(fileAttrib.PackageVersion)) element.SetAttribute("PackageVersion", fileAttrib.PackageVersion);
 		if (!string.IsNullOrEmpty(fileAttrib.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", fileAttrib.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(fileAttrib.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", fileAttrib.MaximumFileVersion);
-		if (!fileAttrib.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(fileAttrib.Hash));
+		if (!fileAttrib.Hash.IsEmpty) element.SetAttribute("Hash", Convert.ToHexString(fileAttrib.Hash.Span));
 		if (!string.IsNullOrEmpty(fileAttrib.AppIDs)) element.SetAttribute("AppIDs", fileAttrib.AppIDs);
 		if (!string.IsNullOrEmpty(fileAttrib.FilePath)) element.SetAttribute("FilePath", fileAttrib.FilePath);
 		_ = parent.AppendChild(element);
@@ -549,7 +549,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(fileRule.PackageVersion)) element.SetAttribute("PackageVersion", fileRule.PackageVersion);
 		if (!string.IsNullOrEmpty(fileRule.MinimumFileVersion)) element.SetAttribute("MinimumFileVersion", fileRule.MinimumFileVersion);
 		if (!string.IsNullOrEmpty(fileRule.MaximumFileVersion)) element.SetAttribute("MaximumFileVersion", fileRule.MaximumFileVersion);
-		if (!fileRule.Hash.IsEmpty) element.SetAttribute("Hash", ConvertByteArrayToHex(fileRule.Hash));
+		if (!fileRule.Hash.IsEmpty) element.SetAttribute("Hash", Convert.ToHexString(fileRule.Hash.Span));
 		if (!string.IsNullOrEmpty(fileRule.AppIDs)) element.SetAttribute("AppIDs", fileRule.AppIDs);
 		if (!string.IsNullOrEmpty(fileRule.FilePath)) element.SetAttribute("FilePath", fileRule.FilePath);
 		element.SetAttribute("Type", fileRule.Type.ToString());
@@ -830,52 +830,4 @@ internal static class CustomSerialization
 		}
 		return false;
 	}
-
-	/*
-	internal static string ConvertByteArrayToHex(byte[]? data)
-	{
-		return data is not null ? string.Concat(data.Select(x => x.ToString("X2"))) : string.Empty;
-	}
-	*/
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static unsafe string ConvertByteArrayToHex(ReadOnlyMemory<byte> data)
-	{
-		// If the input data is null or empty, return an empty string immediately.
-		if (data.Span.IsEmpty)
-			return string.Empty;
-
-		ReadOnlySpan<byte> byteSpan = data.Span;
-		int length = byteSpan.Length;
-
-		// Pre-allocate a string to hold the hexadecimal representation.
-		// Each byte will be represented by 2 hexadecimal characters.
-		string result = new('\0', length * 2);
-
-		// Use the 'fixed' statement to pin the data span and the result string in memory.
-		// This prevents the garbage collector from relocating them while we work with pointers.
-		fixed (byte* dataPtr = byteSpan)
-		fixed (char* resultPtr = result)
-		{
-			// Create local pointer variables for clarity:
-			byte* pData = dataPtr;
-			char* pResult = resultPtr;
-
-			// Loop through each byte in the input span.
-			for (int i = 0; i < length; i++)
-			{
-				// Retrieve the current byte from the pointer.
-				byte b = pData[i];
-
-				// Process the high nibble (upper 4 bits)
-				pResult[i * 2] = (char)(b >> 4 < 10 ? (b >> 4) + '0' : (b >> 4) - 10 + 'A');
-
-				// Process the low nibble (lower 4 bits)
-				pResult[i * 2 + 1] = (char)((b & 0xF) < 10 ? (b & 0xF) + '0' : (b & 0xF) - 10 + 'A');
-			}
-		}
-		// After processing all bytes, return the constructed hexadecimal string.
-		return result;
-	}
-
 }

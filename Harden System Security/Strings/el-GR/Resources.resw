@@ -5186,4 +5186,82 @@
   <data name="HamburgerMenuButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Κάντε κλικ ή πατήστε εδώ για πρόσβαση στο κύριο μενού πλοήγησης της εφαρμογής.</value>
   </data>
+    <data name="ExportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Εξαγωγή τοπικών κανόνων τείχους προστασίας</value>
+  </data>
+  <data name="ExportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Εξαγωγή κανόνων τείχους προστασίας GPO</value>
+  </data>
+  <data name="ImportLocalFirewallRules.Text" xml:space="preserve">
+    <value>Εισαγωγή τοπικών κανόνων τείχους προστασίας</value>
+  </data>
+  <data name="ImportGPOFirewallRules.Text" xml:space="preserve">
+    <value>Εισαγωγή κανόνων τείχους προστασίας GPO</value>
+  </data>
+  <data name="RestoreLocalFirewallRules.Text" xml:space="preserve">
+    <value>Επαναφορά τοπικών κανόνων τείχους προστασίας</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRules.Text" xml:space="preserve">
+    <value>Διαγραφή όλων των τοπικών κανόνων τείχους προστασίας</value>
+  </data>
+  <data name="FirewallDropDownButtonContent.Text" xml:space="preserve">
+    <value>Πρόσθετα</value>
+  </data>
+  <data name="ImportLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Εισαγωγή τοπικών κανόνων τείχους προστασίας</value>
+  </data>
+  <data name="ImportGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Εισαγωγή κανόνων τείχους προστασίας GPO</value>
+  </data>
+  <data name="ImportFirewallRulesWarning" xml:space="preserve">
+    <value>Πρόκειται να εισαγάγετε κανόνες τείχους προστασίας από το «{0}». ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτή η ενέργεια είναι ΜΗ ΑΝΑΣΤΡΕΨΙΜΗ. Τυχόν υπάρχοντες κανόνες θα αντικατασταθούν με το περιεχόμενο του αρχείου αντιγράφου ασφαλείας.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>Εισαγωγή</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Επαναφορά τοπικών κανόνων τείχους προστασίας</value>
+  </data>
+  <data name="RestoreLocalFirewallRulesWarning" xml:space="preserve">
+    <value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτή η ενέργεια είναι ΜΗ ΑΝΑΣΤΡΕΨΙΜΗ. Όλοι οι κανόνες που έχουν οριστεί προσαρμοσμένα θα διαγραφούν και θα επαναφερθούν οι προεπιλεγμένοι κανόνες του λειτουργικού συστήματος.</value>
+  </data>
+  <data name="RestoreDefaultsButtonText" xml:space="preserve">
+    <value>Επαναφορά προεπιλογών</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesTitle" xml:space="preserve">
+    <value>Διαγραφή όλων των τοπικών κανόνων τείχους προστασίας</value>
+  </data>
+  <data name="DeleteAllLocalFirewallRulesWarning" xml:space="preserve">
+    <value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτή η ενέργεια θα διαγράψει ΟΛΟΥΣ τους υπάρχοντες κανόνες τείχους προστασίας, συμπεριλαμβανομένων των προεπιλεγμένων κανόνων του λειτουργικού συστήματος και των προσαρμοσμένων κανόνων. Συνιστάται έντονα να δημιουργήσετε πρώτα αντίγραφο ασφαλείας.</value>
+  </data>
+  <data name="DeleteAllButtonText" xml:space="preserve">
+    <value>Διαγραφή όλων</value>
+  </data>
+  <data name="FirewallExportSuccess" xml:space="preserve">
+    <value>Έγινε επιτυχής εξαγωγή {0} κανόνων τείχους προστασίας στο {1}</value>
+  </data>
+  <data name="FirewallImportSuccess" xml:space="preserve">
+    <value>Έγινε επιτυχής εισαγωγή {0} κανόνων τείχους προστασίας.</value>
+  </data>
+  <data name="FirewallRestoreSuccess" xml:space="preserve">
+    <value>Έγινε επιτυχής επαναφορά των προεπιλεγμένων τοπικών κανόνων τείχους προστασίας.</value>
+  </data>
+  <data name="FirewallDeleteSuccess" xml:space="preserve">
+    <value>Έγινε επιτυχής διαγραφή όλων των τοπικών κανόνων τείχους προστασίας.</value>
+  </data>
+    <data name="USBDeviceHistory.Text" xml:space="preserve">
+    <value>Ιστορικό συσκευών USB</value>
+  </data>
+  <data name="USBHistoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφανίζει το ιστορικό όλων των συσκευών USB που έχουν συνδεθεί σε αυτήν τη συσκευή.</value>
+  </data>
+  <data name="USBHistoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εμφανίζει το ιστορικό όλων των συσκευών USB που έχουν συνδεθεί σε αυτήν τη συσκευή.</value>
+  </data>
+  <data name="NoUSBDeviceFound" xml:space="preserve">
+    <value>Δεν βρέθηκε ιστορικό συσκευών USB.</value>
+  </data>
+  <data name="TotalUSBDevices" xml:space="preserve">
+    <value>Σύνολο συνδεδεμένων συσκευών USB: {0}</value>
+  </data>
 </root>

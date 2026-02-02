@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:GP="using:HardenSystemSecurity.GroupPolicy"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -239,8 +238,10 @@
                                                    HorizontalTextAlignment="Center"/>
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                       x:Uid="SelectMainPolFilesForMergeSettingsCard"
-                                                       HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}">
+                                                       x:Uid="SelectMainPolFilesForMergeSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xF32A;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                                        x:Uid="GenericBrowseButton"
@@ -271,8 +272,10 @@
 
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                       x:Uid="SelectOtherPolFilesForMergeSettingsCard"
-                                                       HeaderIcon="{ui:FontIcon Glyph=&#xE8DA;}">
+                                                       x:Uid="SelectOtherPolFilesForMergeSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xE8DA;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.PickPOLFiles}">
 
@@ -299,7 +302,16 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                                Click="{x:Bind ViewModel.StartPOLFilesMergeOperation}" />
+                                                Click="{x:Bind ViewModel.StartPOLFilesMergeOperation}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE9F3;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                     </controls:WrapPanel>
 
@@ -331,8 +343,10 @@
 
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                       x:Uid="SelectPOLFilesForJSONConversionSettingsCard"
-                                                       HeaderIcon="{ui:FontIcon Glyph=&#xE8DA;}">
+                                                       x:Uid="SelectPOLFilesForJSONConversionSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xE8DA;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.PickPOLFilesForJSONConversion}">
 
@@ -356,8 +370,10 @@
                                         </customUI:SettingsCardV3>
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                                 x:Uid="OutputDirForJSONConversionSettingsCard"
-                                                                 HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}">
+                                                                 x:Uid="OutputDirForJSONConversionSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xF32A;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                                     x:Uid="GenericBrowseButton"
@@ -391,7 +407,16 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                                Click="{x:Bind ViewModel.ConvertPOLToJSON}" />
+                                                Click="{x:Bind ViewModel.ConvertPOLToJSON}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE8AB;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                     </controls:WrapPanel>
 
@@ -423,8 +448,10 @@
 
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                                 x:Uid="SelectJSONFilesForPOLConversionSettingsCard"
-                                                                 HeaderIcon="{ui:FontIcon Glyph=&#xE8DA;}">
+                                                                 x:Uid="SelectJSONFilesForPOLConversionSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xE8DA;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.PickJSONFilesForPOLConversion}">
 
@@ -448,8 +475,10 @@
                                         </customUI:SettingsCardV3>
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                                 x:Uid="OutputDirForPOLConversionSettingsCard"
-                                                                 HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}">
+                                                                 x:Uid="OutputDirForPOLConversionSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xF32A;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                                     x:Uid="GenericBrowseButton"
@@ -483,7 +512,16 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                                Click="{x:Bind ViewModel.ConvertJSONToPol}" />
+                                                Click="{x:Bind ViewModel.ConvertJSONToPol}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE8AB;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                     </controls:WrapPanel>
 
@@ -514,8 +552,10 @@
                                                    HorizontalTextAlignment="Center"/>
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                                 x:Uid="INFToJSONConversionSectionSettingsCard"
-                                                                 HeaderIcon="{ui:FontIcon Glyph=&#xE8DA;}">
+                                                                 x:Uid="INFToJSONConversionSectionSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xE8DA;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button x:Uid="GenericBrowseButton"
                                                     Click="{x:Bind ViewModel.PickSecurityINFFilesForJSONConversion}">
@@ -540,8 +580,10 @@
                                         </customUI:SettingsCardV3>
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
-                                                                 x:Uid="OutputDirForJSONSettingsCard"
-                                                                 HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}">
+                                                                 x:Uid="OutputDirForJSONSettingsCard">
+                                            <customUI:SettingsCardV3.HeaderIcon>
+                                                <FontIcon Glyph="&#xF32A;"/>
+                                            </customUI:SettingsCardV3.HeaderIcon>
 
                                             <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                                     x:Uid="GenericBrowseButton"
@@ -574,7 +616,16 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                                Click="{x:Bind ViewModel.ConvertSecurityINFToJSON}" />
+                                                Click="{x:Bind ViewModel.ConvertSecurityINFToJSON}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE8AB;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
 
                                     </controls:WrapPanel>
 

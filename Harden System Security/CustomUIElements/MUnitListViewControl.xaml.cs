@@ -22,13 +22,20 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Animations;
 using HardenSystemSecurity;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.Traverse;
+using HardenSystemSecurity.WindowComponents;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using Windows.UI;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -150,6 +157,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		// Ensure status counts are available immediately for the flyout numbers
 		UpdateStatusCounts();
 
+		// Check global pending navigation target
+		CheckForPendingNavigationHighlight();
+
 		// Subscribe to AppSettings property changes when control is loaded
 		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
 		{
@@ -231,6 +241,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			control.RestoreSelectionFromViewModel();
 			// Ensure status counts are computed right away
 			control.UpdateStatusCounts();
+			// Check global pending navigation target when ViewModel is set
+			control.CheckForPendingNavigationHighlight();
 		}
 	}
 
@@ -250,6 +262,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 			// Configure the ItemsStackPanel when items source changes
 			control.ConfigureItemsStackPanel();
+
+			// Check global pending navigation target when Data changes
+			control.CheckForPendingNavigationHighlight();
 
 			// If requested, propagate explicit-disposal configuration to child controls (they may appear now)
 			if (control.ChildButtonsDisposeOnlyOnExplicitCall)
@@ -818,6 +833,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		if (_isDisposed) return;
 		_isDisposed = true;
 
+		// Stop any active highlight animation to clean up timer
+		StopHighlightAnimation();
+
 		// Unsubscribe from AppSettings property changes
 		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
 		{
@@ -915,7 +933,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	}
 
 	#endregion
-
 
 	#region Unified Search and Filteration
 
@@ -1198,6 +1215,139 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			nonAdminCommands: nonAdminCommands,
 			msftSecBaselines_OptionalOverrides: overrides
 		);
+	}
+
+	#endregion
+
+	#region Scrolling and Highlighting Logic
+
+	/// <summary>
+	/// Checks for a pending navigation target in the global NavigationService state.
+	/// If one exists and belongs to the current data set, scrolls to and highlights it.
+	/// </summary>
+	private async void CheckForPendingNavigationHighlight()
+	{
+		if (_isDisposed) return;
+		if (NavigationService.PendingNavigationTargetId == null) return;
+
+		if (ViewModel == null) return;
+		if (ListViewItemsSource == null || ListViewItemsSource.Count == 0) return;
+		if (!IsLoaded) return;
+
+		MUnit? targetMUnit = null;
+		foreach (GroupInfoListForMUnit group in ListViewItemsSource)
+		{
+			targetMUnit = group.FirstOrDefault(m => m.ID == NavigationService.PendingNavigationTargetId.Value);
+			if (targetMUnit != null)
+				break;
+		}
+
+		if (targetMUnit == null) return;
+
+		// Null it after we found the target
+		NavigationService.PendingNavigationTargetId = null;
+
+		try
+		{
+			// Scroll to the item
+			MainListView.ScrollIntoView(targetMUnit, ScrollIntoViewAlignment.Leading);
+
+			MainListView.UpdateLayout(); // Force synchronous layout pass
+
+			ListViewItem? container = MainListView.ContainerFromItem(targetMUnit) as ListViewItem;
+			if (container == null) return;
+
+			Border? targetBorder = FindVisualChild<Border>(container, "ItemRootBorder");
+			if (targetBorder != null)
+			{
+				StartHighlightAnimation(targetBorder);
+			}
+		}
+		catch { }
+	}
+
+	/// <summary>
+	/// Helper to find a child element by name in the visual tree.
+	/// </summary>
+	private static T? FindVisualChild<T>(DependencyObject parent, string childName) where T : FrameworkElement
+	{
+		int childCount = VisualTreeHelper.GetChildrenCount(parent);
+		for (int i = 0; i < childCount; i++)
+		{
+			DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+			if (child is T element && element.Name == childName)
+			{
+				return element;
+			}
+
+			T? result = FindVisualChild<T>(child, childName);
+			if (result != null)
+				return result;
+		}
+		return null;
+	}
+
+	// Animation State
+	private Storyboard? _highlightStoryboard;
+	private Border? _currentHighlightedElement;
+	private Brush? _originalBackgroundBrush;
+
+	// Using HighlightColor for the "Pulse"
+	private static readonly Color HighlightColor = Color.FromArgb(255, 138, 43, 226); // Violet
+
+	private void StartHighlightAnimation(Border target)
+	{
+		StopHighlightAnimation();
+
+		_currentHighlightedElement = target;
+		_originalBackgroundBrush = target.Background; // Capture original brush
+
+		// Extract the color from the current brush
+		Color targetColor = ((SolidColorBrush)_originalBackgroundBrush).Color;
+
+		// Prepare the border for animation by setting a new SolidColorBrush with the Start color.
+		target.Background = new SolidColorBrush(HighlightColor);
+
+		// Animate from Violet -> Original Color.
+		Microsoft.UI.Xaml.Media.Animation.ColorAnimation colorAnimation = new()
+		{
+			From = HighlightColor,
+			To = targetColor,
+			Duration = new Duration(TimeSpan.FromSeconds(2)),
+			EnableDependentAnimation = true
+		};
+
+		Storyboard.SetTarget(colorAnimation, target.Background);
+		Storyboard.SetTargetProperty(colorAnimation, "Color");
+
+		_highlightStoryboard = new();
+		_highlightStoryboard.Children.Add(colorAnimation);
+
+		// When done, restore the original brush object (which might be a ThemeResource).
+		_highlightStoryboard.Completed += (s, e) =>
+		{
+			if (_currentHighlightedElement != null && _originalBackgroundBrush != null)
+			{
+				_currentHighlightedElement.Background = _originalBackgroundBrush;
+			}
+			StopHighlightAnimation();
+		};
+
+		_highlightStoryboard.Begin();
+	}
+
+	private void StopHighlightAnimation()
+	{
+		_highlightStoryboard?.Stop();
+		_highlightStoryboard = null;
+		// If we are stopping prematurely, we should also restore the brush if possible
+		if (_currentHighlightedElement != null && _originalBackgroundBrush != null)
+		{
+			_currentHighlightedElement.Background = _originalBackgroundBrush;
+		}
+
+		_currentHighlightedElement = null;
+		_originalBackgroundBrush = null;
 	}
 
 	#endregion

@@ -18,7 +18,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -107,7 +106,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Main collection assigned to the ListView
 	/// </summary>
-	internal readonly ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
+	internal readonly IncrementalCollection.RangedObservableCollection<FileCertificateInfoCol> FileCertificates = [];
 
 	/// <summary>
 	/// Collection used during search

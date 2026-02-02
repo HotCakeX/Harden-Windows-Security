@@ -35,6 +35,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
 using AppControlManager.Others;
+using Microsoft.UI.Xaml.Input;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -1526,5 +1527,25 @@ internal sealed partial class MainWindow : Window
 	#endregion
 
 #endif
+
+	/// <summary>
+	/// Event handler for the Ctrl+F keyboard accelerator.
+	/// Focuses the search box when the accelerator is invoked.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void SearchAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_ = TitleBarSearchBox.Focus(FocusState.Programmatic);
+		args.Handled = true;
+	}
+
+	/// <summary>
+	/// Helper function for XAML binding to toggle visibility based on text content.
+	/// Used for the "Ctrl+F" overlay in the search box.
+	/// </summary>
+	/// <param name="text">The search query text</param>
+	/// <returns>Visible if text is null/empty, otherwise Collapsed.</returns>
+	internal Visibility IsSearchBoxEmpty(string? text) => string.IsNullOrEmpty(text) ? Visibility.Visible : Visibility.Collapsed;
 
 }

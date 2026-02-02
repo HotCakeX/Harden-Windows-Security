@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -105,21 +104,37 @@
                                     <DropDownButton.Flyout>
                                         <MenuFlyout Placement="Bottom">
                                             <MenuFlyoutItem x:Uid="EncryptMenuFlyoutItem"
-                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"
-                                                            Icon="{ui:FontIcon Glyph=&#xE72E;}"
-                                                            Click="{x:Bind ViewModel.EncryptVolume}" />
+                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"                                                           
+                                                            Click="{x:Bind ViewModel.EncryptVolume}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE72E;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
                                             <MenuFlyoutItem x:Uid="DecryptMenuFlyoutItem"
-                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"
-                                                            Icon="{ui:FontIcon Glyph=&#xE785;}"
-                                                            Click="{x:Bind ViewModel.DecryptVolume}" />
+                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"                                                            
+                                                            Click="{x:Bind ViewModel.DecryptVolume}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE785;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
                                             <MenuFlyoutItem x:Uid="SuspendMenuFlyoutItem"
                                                             IsEnabled="{x:Bind ViewModel.IsSuspendFeatureEnabled, Mode=OneWay}"
-                                                            Icon="{ui:FontIcon Glyph=&#xE769;}"
-                                                            Click="{x:Bind ViewModel.SuspendVolume}" />
+                                                            Click="{x:Bind ViewModel.SuspendVolume}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE769;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
                                             <MenuFlyoutItem x:Uid="ResumeMenuFlyoutItem"
                                                             IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"
-                                                            Icon="{ui:FontIcon Glyph=&#xF71A;}"
-                                                            Click="{x:Bind ViewModel.ResumeVolume}" />
+                                                            Click="{x:Bind ViewModel.ResumeVolume}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xF71A;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
                                         </MenuFlyout>
                                     </DropDownButton.Flyout>
                                 </DropDownButton>

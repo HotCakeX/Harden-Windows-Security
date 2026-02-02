@@ -6638,4 +6638,31 @@
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Επιλέξτε εμβέλεια κρυπτογράφησης: Χρήστης, που επιτρέπει μόνο στον τρέχοντα λογαριασμό Windows να αποκρυπτογραφεί τα κρυπτογραφημένα αρχεία πολιτικής, ή Συσκευή, που περιορίζει την αποκρυπτογράφηση σε αυτή τη συσκευή, ώστε τα αρχεία να μην μπορούν να αποκρυπτογραφηθούν αν μετακινηθούν σε άλλη συσκευή.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>Αναθέσεις</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και διαχείριση αναθέσεων για την επιλεγμένη πολιτική.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή και διαχείριση αναθέσεων για την επιλεγμένη πολιτική.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αναθέσεις</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και διαχείριση αναθέσεων για την επιλεγμένη πολιτική.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή και διαχείριση αναθέσεων για την επιλεγμένη πολιτική.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>Δεν βρέθηκαν αναθέσεις.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση ανάθεσης</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση ανάθεσης</value>
+  </data>
 </root>

@@ -376,29 +376,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			Dispatcher, null, null);
 	}
 
-	/// <summary>
-	/// A collection that maps each page type to its corresponding NavigationViewItem on the main menu.
-	/// </summary>
-	internal static FrozenDictionary<Type, NavigationViewItem>? PageTypeToNavItem;
-
 	#region UI-Bound Properties
-
-	/// <summary>
-	/// Collection of suggestions for the AutoSuggestBox in the Main Window.
-	/// </summary>
-	internal List<UnifiedSearchBarResult> UnifiedSearchBarSuggestionsCollection { get; set => SP(ref field, value); } = [];
-
-	/// <summary>
-	/// The text typed in the AutoSuggestBox on the Main Window.
-	/// </summary>
-	internal string? UnifiedSearchBarText
-	{
-		get; set
-		{
-			if (SPT(ref field, value))
-				UnifiedSearchBarSuggestionsCollection = Traverse.MUnitCatalog.GetPageFromQuery(field);
-		}
-	}
 
 	// Navigation Icon Properties
 

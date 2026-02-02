@@ -6638,4 +6638,31 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz zakres szyfrowania: Użytkownik, który umożliwia odszyfrowanie zaszyfrowanych plików zasad tylko dla bieżącego konta Windows, lub Komputer, który ogranicza odszyfrowywanie do tego urządzenia, dzięki czemu pliki nie będą mogły zostać odszyfrowane po przeniesieniu na inne urządzenie.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>Przypisania</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetlaj przypisania dla wybranej zasady i zarządzaj nimi.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetlaj przypisania dla wybranej zasady i zarządzaj nimi.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Przypisania</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetlaj przypisania dla wybranej zasady i zarządzaj nimi.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetlaj przypisania dla wybranej zasady i zarządzaj nimi.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>Nie znaleziono przypisań.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń przypisanie</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń przypisanie</value>
+  </data>
 </root>

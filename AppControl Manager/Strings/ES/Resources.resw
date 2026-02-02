@@ -6638,4 +6638,31 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Selecciona un ámbito de cifrado: Usuario, que permite que solo la cuenta actual de Windows descifre los archivos de directiva cifrados, o Equipo, que restringe el descifrado a este dispositivo para que los archivos no se puedan descifrar si se mueven a otro dispositivo.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>Asignaciones</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver y administrar las asignaciones de la directiva seleccionada.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver y administrar las asignaciones de la directiva seleccionada.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Asignaciones</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver y administrar las asignaciones de la directiva seleccionada.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver y administrar las asignaciones de la directiva seleccionada.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>No se encontraron asignaciones.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar asignación</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quitar asignación</value>
+  </data>
 </root>

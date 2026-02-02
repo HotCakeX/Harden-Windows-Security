@@ -18,12 +18,11 @@
 using System.Collections;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -303,7 +302,7 @@ internal static partial class ListViewHelper
 		Func<TElement, object?> keySelector,
 		string? searchBoxText,
 		List<TElement> originalList,
-		ObservableCollection<TElement> observableCollection,
+		RangedObservableCollection<TElement> observableCollection,
 		SortState sortState,
 		string newKey,
 		ListViewsRegistry regKey,
@@ -333,20 +332,17 @@ internal static partial class ListViewHelper
 		// Choose the source (filtered vs. original)
 		// If either the property search, regular search box, or date picker has value then use the Obvs Collection because that means the user is currently seeing a filtered data.
 		bool isSearchEmpty = string.IsNullOrEmpty(searchBoxText) && string.IsNullOrEmpty(propertyFilterValue) && selectedDate is null;
-		List<TElement> sourceData = isSearchEmpty
+		IEnumerable<TElement> sourceData = isSearchEmpty
 			? originalList
-			: observableCollection.ToList();
+			: observableCollection;
 
-		List<TElement> sortedData = sortState.IsDescending
-			? sourceData.OrderByDescending(keySelector).ToList()
-			: sourceData.OrderBy(keySelector).ToList();
+		IEnumerable<TElement> sortedData = sortState.IsDescending
+			? sourceData.OrderByDescending(keySelector)
+			: sourceData.OrderBy(keySelector);
 
 		// Re-populate the ObservableCollection
 		observableCollection.Clear();
-		foreach (TElement item in CollectionsMarshal.AsSpan(sortedData))
-		{
-			observableCollection.Add(item);
-		}
+		observableCollection.AddRange(sortedData);
 
 		// Restore horizontal scroll position
 		if (Sv != null && savedHorizontal.HasValue)

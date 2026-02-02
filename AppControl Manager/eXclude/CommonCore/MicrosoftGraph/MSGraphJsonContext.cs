@@ -40,6 +40,9 @@ namespace CommonCore.MicrosoftGraph;
 [JsonSerializable(typeof(DeviceHealthScriptsResponse))]
 [JsonSerializable(typeof(DeviceHealthScriptStringParameter))]
 [JsonSerializable(typeof(List<DeviceHealthScriptStringParameter>))]
+[JsonSerializable(typeof(PolicyAssignmentResponse))]
+[JsonSerializable(typeof(PolicyAssignmentObject))]
+[JsonSerializable(typeof(PolicyAssignmentTarget))]
 internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {
 }

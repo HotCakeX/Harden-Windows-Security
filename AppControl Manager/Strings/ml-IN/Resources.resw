@@ -6638,4 +6638,31 @@
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഒരു എൻക്രിപ്ഷൻ സ്കോപ്പ് തിരഞ്ഞെടുക്കുക: ഉപയോക്താവ്, നിലവിലെ Windows അക്കൗണ്ടിന് മാത്രം എൻക്രിപ്റ്റ് ചെയ്ത നയ ഫയലുകൾ ഡീക്രിപ്റ്റ് ചെയ്യാൻ അനുവദിക്കുന്നു, അല്ലെങ്കിൽ മെഷീൻ, ഈ ഉപകരണത്തിലേക്ക് മാത്രം ഡീക്രിപ്ഷൻ പരിമിതപ്പെടുത്തുന്നു, അതിനാൽ ഫയലുകൾ മറ്റൊരു ഉപകരണത്തിലേക്ക് മാറ്റിയാൽ ഡീക്രിപ്റ്റ് ചെയ്യാൻ കഴിയില്ല.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>ചുമതലപ്പെടുത്തലുകൾ</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത നയത്തിനായുള്ള ചുമതലപ്പെടുത്തലുകൾ കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത നയത്തിനായുള്ള ചുമതലപ്പെടുത്തലുകൾ കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ചുമതലപ്പെടുത്തലുകൾ</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞപ്പെട്ട നയത്തിനായുള്ള ചുമതലപ്പെടുത്തലുകൾ കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞപ്പെട്ട നയത്തിനായുള്ള ചുമതലപ്പെടുത്തലുകൾ കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>ചുമതലപ്പെടുത്തലുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ചുമതലപ്പെടുത്തൽ നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ചുമതലപ്പെടുത്തൽ നീക്കം ചെയ്യുക</value>
+  </data>
 </root>

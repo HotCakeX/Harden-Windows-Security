@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -70,7 +69,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Bound to the UI ListView and holds the Intune group Names/IDs (filtered view).
 	/// </summary>
-	internal readonly ObservableCollection<IntuneGroupItemListView> GroupNamesCollection = [];
+	internal readonly IncrementalCollection.RangedObservableCollection<IntuneGroupItemListView> GroupNamesCollection = [];
 
 	/// <summary>
 	/// Stores all Intune groups retrieved (unfiltered) to support search/sort without losing original data.

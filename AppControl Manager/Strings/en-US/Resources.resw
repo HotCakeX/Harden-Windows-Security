@@ -6638,4 +6638,31 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Select an encryption scope: User, which allows only the current Windows account to decrypt the encrypted policy files, or Machine, which restricts decryption to this device so the files cannot be decrypted if moved to another device.</value>
   </data>
+  <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>Assignments</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View and manage assignments for the selected policy.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View and manage assignments for the selected policy.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Assignments</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View and manage assignments for the selected policy.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View and manage assignments for the selected policy.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>No assignments found.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove assignment</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove assignment</value>
+  </data>
 </root>

@@ -6638,4 +6638,31 @@
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>בחר היקף הצפנה: משתמש, שמאפשר רק לחשבון Windows הנוכחי לפענח את קובצי המדיניות המוצפנים, או מחשב, שמגביל את הפענוח למכשיר זה כך שלא ניתן יהיה לפענח את הקבצים אם יועברו למכשיר אחר.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>הקצאות</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג ונהל הקצאות עבור המדיניות שנבחרה.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצג ונהל הקצאות עבור המדיניות שנבחרה.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הקצאות</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג ונהל הקצאות עבור המדיניות שנבחרה.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצג ונהל הקצאות עבור המדיניות שנבחרה.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>לא נמצאו הקצאות.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר הקצאה</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר הקצאה</value>
+  </data>
 </root>

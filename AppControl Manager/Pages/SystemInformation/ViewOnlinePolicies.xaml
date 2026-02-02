@@ -72,7 +72,32 @@
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.DeployManagedInstallerPolicy_Click}"
                         VerticalAlignment="Center"
-                        x:Uid="CreateManagedInstallerButton"/>
+                        x:Uid="CreateManagedInstallerButton">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE912;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <!-- View Assignments Button -->
+                <Button IsEnabled="{x:Bind ViewModel.IsPolicySelected, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ViewAssignments_Click}"
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"
+                        x:Uid="AssignmentsButton">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE716;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.RemovePolicy_Click}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Remove any non-system policy from the system">
@@ -96,7 +121,7 @@
 
                 <!-- Columns Selection Button -->
                 <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
-                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
+                                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
             </controls:WrapPanel>
 
@@ -150,6 +175,14 @@
 
                         <Grid.ContextFlyout>
                             <MenuFlyout>
+
+                                <MenuFlyoutItem x:Uid="AssignmentsMenuFlyoutItem" Click="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ViewAssignmentsFromContext_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE716;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSeparator />
 
                                 <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>

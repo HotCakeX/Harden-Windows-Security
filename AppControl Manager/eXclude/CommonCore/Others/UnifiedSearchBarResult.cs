@@ -19,10 +19,11 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace CommonCore.Others;
 
-internal sealed class UnifiedSearchBarResult(Type pageType, IconElement? icon, string title, string subtitle)
+internal sealed class UnifiedSearchBarResult(Type pageType, IconElement? icon, string title, string subtitle, Guid? mUnitId)
 {
 	internal Type PageType => pageType;
 	internal IconElement? Icon => icon;
 	internal string Title => title;
 	internal string Subtitle => subtitle;
+	internal Guid? MUnitId => mUnitId;
 }

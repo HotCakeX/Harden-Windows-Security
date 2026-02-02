@@ -3,9 +3,7 @@
     x:Class="HardenSystemSecurity.Pages.Protects.OptionalWindowsFeatures"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:others="using:AppControlManager.Others"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -348,34 +346,37 @@
                                 <MenuFlyoutSeparator/>
 
                                 <MenuFlyoutSubItem x:Uid="NetworkAdapters" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xEDA3;"/>
+                                    </MenuFlyoutSubItem.Icon>
 
                                     <MenuFlyoutSubItem Text="Intel">
-                                        <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Intel"/>
+                                        <MenuFlyoutItem x:Uid="Select" Click="{x:Bind ViewModel.SelectVendor_Click}" Tag="Intel"/>
                                         <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Intel"/>
                                     </MenuFlyoutSubItem>
 
                                     <MenuFlyoutSubItem Text="Broadcom">
-                                        <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Broadcom"/>
+                                        <MenuFlyoutItem x:Uid="Select" Click="{x:Bind ViewModel.SelectVendor_Click}" Tag="Broadcom"/>
                                         <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Broadcom"/>
                                     </MenuFlyoutSubItem>
 
                                     <MenuFlyoutSubItem Text="Marvel">
-                                        <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Marvel"/>
+                                        <MenuFlyoutItem x:Uid="Select" Click="{x:Bind ViewModel.SelectVendor_Click}" Tag="Marvel"/>
                                         <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Marvel"/>
                                     </MenuFlyoutSubItem>
 
                                     <MenuFlyoutSubItem Text="Qualcomm">
-                                        <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Qualcomm"/>
+                                        <MenuFlyoutItem x:Uid="Select" Click="{x:Bind ViewModel.SelectVendor_Click}" Tag="Qualcomm"/>
                                         <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Qualcomm"/>
                                     </MenuFlyoutSubItem>
 
                                     <MenuFlyoutSubItem Text="Ralink">
-                                        <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Ralink"/>
+                                        <MenuFlyoutItem x:Uid="Select" Click="{x:Bind ViewModel.SelectVendor_Click}" Tag="Ralink"/>
                                         <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Ralink"/>
                                     </MenuFlyoutSubItem>
 
                                     <MenuFlyoutSubItem Text="Realtek">
-                                        <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Realtek"/>
+                                        <MenuFlyoutItem x:Uid="Select" Click="{x:Bind ViewModel.SelectVendor_Click}" Tag="Realtek"/>
                                         <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Realtek"/>
                                     </MenuFlyoutSubItem>
                                 </MenuFlyoutSubItem>

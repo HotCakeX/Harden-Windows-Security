@@ -6,8 +6,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    xmlns:ui="using:CommunityToolkit.WinUI">
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI">
 
     <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 

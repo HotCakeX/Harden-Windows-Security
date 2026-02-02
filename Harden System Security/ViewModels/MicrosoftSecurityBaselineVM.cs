@@ -17,10 +17,10 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
@@ -186,7 +186,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Collection of all verification results bound to the ListView.
 	/// </summary>
-	internal ObservableCollection<VerificationResult> VerificationResults = [];
+	internal readonly RangedObservableCollection<VerificationResult> VerificationResults = [];
 
 	/// <summary>
 	/// Backing field of all verification results.
@@ -228,11 +228,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		).ToList();
 
 		VerificationResults.Clear();
-
-		foreach (VerificationResult item in filteredResults)
-		{
-			VerificationResults.Add(item);
-		}
+		VerificationResults.AddRange(filteredResults);
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -506,11 +502,8 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 			VerificationResults.Clear();
 
 			// Add new results
-			foreach (VerificationResult result in results)
-			{
-				AllVerificationResults.Add(result);
-				VerificationResults.Add(result);
-			}
+			AllVerificationResults.AddRange(results);
+			VerificationResults.AddRange(results);
 
 			CalculateColumnWidths();
 

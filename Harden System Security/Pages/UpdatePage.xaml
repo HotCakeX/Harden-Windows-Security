@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -55,8 +54,10 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <customUI:SettingsCardV2 x:Uid="CheckForUpdateSettingsCard"
-                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                         HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}">
+                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                    <customUI:SettingsCardV2.HeaderIcon>
+                        <FontIcon Glyph="&#xF83E;"/>
+                    </customUI:SettingsCardV2.HeaderIcon>
 
                     <controls:WrapPanel Orientation="Horizontal">
 
@@ -87,25 +88,36 @@
 
                 </customUI:SettingsCardV2>
 
-                <customUI:SettingsCardV2 x:Uid="AutoUpdateCheckSettingsCard"
-                                         HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
+                <customUI:SettingsCardV2 x:Uid="AutoUpdateCheckSettingsCard">
+                    <customUI:SettingsCardV2.HeaderIcon>
+                        <FontIcon Glyph="&#xE774;"/>
+                    </customUI:SettingsCardV2.HeaderIcon>
+
                     <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.AutoCheckForUpdateAtStartup, Mode=TwoWay}"
                                   x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 
                 <controls:SettingsCard Click="{x:Bind ViewModel.LaunchRating}"
-                                       Visibility="{x:Bind ViewModel.RatingsSectionVisibility, Mode=OneWay}"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xEC24;}"
+                                       Visibility="{x:Bind ViewModel.RatingsSectionVisibility, Mode=OneWay}"                                      
                                        x:Uid="RateAndReviewSettingsCard"
-                                       IsClickEnabled="True"
-                                       ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
-                                       IsActionIconVisible="True" />
+                                       IsClickEnabled="True"                                      
+                                       IsActionIconVisible="True">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xEC24;"/>
+                    </controls:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard.ActionIcon>
+                        <FontIcon Glyph="&#xE8A7;"/>
+                    </controls:SettingsCard.ActionIcon>
+                </controls:SettingsCard>
 
-                <controls:SettingsCard x:Uid="InstallAppPackagesSettingsCard"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
+                <controls:SettingsCard x:Uid="InstallAppPackagesSettingsCard"              
                                        IsClickEnabled="True"
                                        IsActionIconVisible="True"
-                                       Click="{x:Bind ViewModel.NavigateToAppPackageInstallerPage_Click}"/>
+                                       Click="{x:Bind ViewModel.NavigateToAppPackageInstallerPage_Click}">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE83B;"/>
+                    </controls:SettingsCard.HeaderIcon>
+                </controls:SettingsCard>
 
             </StackPanel>
 

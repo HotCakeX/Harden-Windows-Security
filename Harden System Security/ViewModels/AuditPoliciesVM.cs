@@ -17,13 +17,12 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -126,7 +125,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Collection of all audit policies bound to the ListView.
 	/// </summary>
-	internal ObservableCollection<AuditPolicyInfo> AuditPolicies = [];
+	internal readonly RangedObservableCollection<AuditPolicyInfo> AuditPolicies = [];
 
 	/// <summary>
 	/// Backing field of all audit policies.
@@ -164,11 +163,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		).ToList();
 
 		AuditPolicies.Clear();
-
-		foreach (AuditPolicyInfo item in CollectionsMarshal.AsSpan(filteredResults))
-		{
-			AuditPolicies.Add(item);
-		}
+		AuditPolicies.AddRange(filteredResults);
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -470,14 +465,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 
 			List<AuditPolicyInfo> allAuditPolicies = await Task.Run(AuditPolicyManager.GetAllAuditPolicies);
 
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				foreach (AuditPolicyInfo item in allAuditPolicies)
-				{
-					AuditPolicies.Add(item);
-				}
-			});
-
+			AuditPolicies.AddRange(allAuditPolicies);
 			AllAuditPolicies.AddRange(allAuditPolicies);
 
 			CalculateColumnWidths();

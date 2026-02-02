@@ -1179,7 +1179,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	#endregion
 
-	internal ObservableCollection<FileIdentity> StrictKernelModeScanResults { get; set => SP(ref field, value); } = [];
+	internal RangedObservableCollection<FileIdentity> StrictKernelModeScanResults { get; set => SP(ref field, value); } = [];
 
 	internal readonly List<FileIdentity> StrictKernelModeScanResultsList = [];
 

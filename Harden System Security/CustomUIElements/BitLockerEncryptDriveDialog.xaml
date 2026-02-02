@@ -6,7 +6,6 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     x:Uid="BitLockerEncryptDriveContentDialog"
     DefaultButton="Close"
     IsPrimaryButtonEnabled="True"

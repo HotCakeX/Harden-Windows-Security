@@ -17,13 +17,13 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using HardenSystemSecurity.BitLocker;
 using HardenSystemSecurity.CustomUIElements;
@@ -117,7 +117,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 	#region BITLOCKER Management
 
-	internal readonly ObservableCollection<BitLockerVolume> BitLockerVolumes = [];
+	internal readonly RangedObservableCollection<BitLockerVolume> BitLockerVolumes = [];
 	private readonly List<BitLockerVolume> AllBitLockerVolumes = [];
 
 	internal bool BitLockerUiEnabled
@@ -298,13 +298,9 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			return;
 		}
 
-		foreach (BitLockerVolume v in volumes)
-		{
-			BitLockerVolumes.Add(v);
-		}
-
 		AllBitLockerVolumes.Clear();
 		AllBitLockerVolumes.AddRange(volumes);
+		BitLockerVolumes.AddRange(volumes);
 
 		ComputeColumnWidths();
 	}
@@ -441,10 +437,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			v.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
 
 		BitLockerVolumes.Clear();
-		foreach (BitLockerVolume item in filteredResults)
-		{
-			BitLockerVolumes.Add(item);
-		}
+		BitLockerVolumes.AddRange(filteredResults);
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{

@@ -6638,4 +6638,31 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>एन्क्रिप्शन स्कोप चुनें: उपयोगकर्ता, जो केवल वर्तमान Windows खाते को एन्क्रिप्ट की गई नीति फ़ाइलों को डिक्रिप्ट करने की अनुमति देता है, या मशीन, जो डिक्रिप्शन को इस डिवाइस तक सीमित करता है ताकि फ़ाइलें किसी अन्य डिवाइस पर ले जाने पर डिक्रिप्ट न की जा सकें।</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>असाइनमेंट</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित नीति के लिए असाइनमेंट देखें और प्रबंधित करें।</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित नीति के लिए असाइनमेंट देखें और प्रबंधित करें।</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>असाइनमेंट</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित नीति के लिए असाइनमेंट देखें और प्रबंधित करें।</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित नीति के लिए असाइनमेंट देखें और प्रबंधित करें।</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>कोई असाइनमेंट नहीं मिले।</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>असाइनमेंट हटाएँ</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>असाइनमेंट हटाएँ</value>
+  </data>
 </root>

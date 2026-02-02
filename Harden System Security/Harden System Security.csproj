@@ -64,7 +64,7 @@
 		<AssemblyName>HardenSystemSecurity</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>1.0.39.0</FileVersion>
+		<FileVersion>1.0.40.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -177,6 +177,7 @@
 		<Compile Include="..\AppControl Manager\CustomUIElements\StickyHeaderBehaviorV2.cs" Link="CustomUIElements\StickyHeaderBehaviorV2.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\AppWindowBorderCustomization.cs" Link="CustomUIElements\AppWindowBorderCustomization.cs" />
 		<Compile Include="..\AppControl Manager\IncrementalCollection\IncrementalCollection.cs" Link="IncrementalCollection\IncrementalCollection.cs" />
+		<Compile Include="..\AppControl Manager\IncrementalCollection\RangedObservableCollection.cs" Link="IncrementalCollection\RangedObservableCollection.cs" />
 		<Compile Include="..\AppControl Manager\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Others\AppUpdate.cs" Link="Others\AppUpdate.cs" />
 		<Compile Include="..\AppControl Manager\Others\EventLogUtility.cs" Link="Others\EventLogUtility.cs" />
@@ -224,8 +225,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.251219" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.81.0" />
-		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.81.0" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.82.0" />
+		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.82.0" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260101001" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.2" />

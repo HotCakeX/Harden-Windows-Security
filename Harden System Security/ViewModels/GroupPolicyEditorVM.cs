@@ -17,10 +17,10 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -134,7 +134,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Collection of all policies bound to the ListView.
 	/// </summary>
-	internal ObservableCollection<RegistryPolicyEntry> Policies = [];
+	internal readonly RangedObservableCollection<RegistryPolicyEntry> Policies = [];
 
 	/// <summary>
 	/// Backing field of all policies.
@@ -181,11 +181,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		).ToList();
 
 		Policies.Clear();
-
-		foreach (RegistryPolicyEntry item in filteredResults)
-		{
-			Policies.Add(item);
-		}
+		Policies.AddRange(filteredResults);
 
 		CalculateColumnWidths();
 
@@ -445,11 +441,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						foreach (RegistryPolicyEntry item in policy)
-						{
-							Policies.Add(item);
-							AllPolicies.Add(item);
-						}
+						Policies.AddRange(policy);
+						AllPolicies.AddRange(policy);
 					});
 				}
 				else if (string.Equals(fileExtension, ".pol", StringComparison.OrdinalIgnoreCase))
@@ -461,11 +454,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						foreach (RegistryPolicyEntry item in policy.Entries)
-						{
-							Policies.Add(item);
-							AllPolicies.Add(item);
-						}
+						Policies.AddRange(policy.Entries);
+						AllPolicies.AddRange(policy.Entries);
 					});
 				}
 				else

@@ -3,7 +3,6 @@
     x:Class="AppControlManager.Pages.DeploymentPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
@@ -42,352 +41,475 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsExpander x:Uid="UseIntuneDeploySettingsExpander"
-                                           IsExpanded="True"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
+                <Border BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
+                        BorderThickness="0.8"
+                        CornerRadius="4">
 
-                    <TextBlock Text="{x:Bind ViewModel.LocalOnlineStatusText, Mode=OneWay}"
-                               TextWrapping="Wrap" />
+                    <controls:SettingsExpander x:Uid="UseIntuneDeploySettingsExpander"
+                                               IsExpanded="True">
 
-                    <controls:SettingsExpander.Items>
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="{x:Bind ViewModel.DeploymentModeIcon, Mode=OneWay}"
+                                      Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
+                        </controls:SettingsExpander.HeaderIcon>
 
-                        <customUI:SettingsCardV2 x:Uid="EntraSignInSettingsCard"
-                                                 HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}">
+                        <TextBlock Text="{x:Bind ViewModel.LocalOnlineStatusText, Mode=OneWay}"
+                                   TextWrapping="Wrap" />
 
-                            <customUI:GraphAuthPanel Host="{x:Bind ViewModel}" />
+                        <controls:SettingsExpander.Items>
 
-                        </customUI:SettingsCardV2>
+                            <customUI:SettingsCardV2 x:Uid="EntraSignInSettingsCard">
 
-                        <controls:SettingsCard x:Uid="SelectIntuneGroupsSettingsCard"
-                                               HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
-                                               IsClickEnabled="True" IsActionIconVisible="True"
-                                               Click="{x:Bind ViewModel.SelectGroups_Click}">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xEC27;" />
+                                </customUI:SettingsCardV2.HeaderIcon>
 
-                            <!-- Selected Groups chip -->
-                            <Border CornerRadius="8"
-                                    Padding="10,6"
-                                    BorderThickness="1"
-                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                                <StackPanel Orientation="Horizontal"
-                                            Spacing="6"
-                                            VerticalAlignment="Center">
-                                    <FontIcon Glyph="&#xE8A9;"
-                                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-                                    <TextBlock VerticalAlignment="Center">
-                                                <Run x:Uid="SelectedGroups" />
-                                                <Run Text="{x:Bind ViewModel.SelectedIntuneGroupsCount, Mode=OneWay}"
-                                                     FontWeight="SemiBold" />
-                                    </TextBlock>
-                                </StackPanel>
-                            </Border>
+                                <customUI:GraphAuthPanel Host="{x:Bind ViewModel}" />
 
-                        </controls:SettingsCard>
+                            </customUI:SettingsCardV2>
 
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                            <controls:SettingsCard x:Uid="SelectIntuneGroupsSettingsCard"                                                  
+                                                   IsClickEnabled="True" IsActionIconVisible="True"
+                                                   Click="{x:Bind ViewModel.SelectGroups_Click}">
+
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE83B;" />
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <!-- Selected Groups chip -->
+                                <Border CornerRadius="8"
+                                        Padding="10,6"
+                                        BorderThickness="1"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="6"
+                                                VerticalAlignment="Center">
+                                        <FontIcon Glyph="&#xE8A9;"
+                                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                        <TextBlock VerticalAlignment="Center">
+                                                    <Run x:Uid="SelectedGroups" />
+                                                    <Run Text="{x:Bind ViewModel.SelectedIntuneGroupsCount, Mode=OneWay}"
+                                                         FontWeight="SemiBold" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+
+                            </controls:SettingsCard>
+
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
+                </Border>
 
                 <controls:SettingsCard x:Uid="DeployUnsignedXMLPolicyFilesSettingsCard"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xE82D;}"
                                        IsClickEnabled="False"
-                                       IsActionIconVisible="False">
+                                       IsActionIconVisible="False"
+                                       BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
+                                       BorderThickness="0.8">
 
-                    <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE82D;" Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
+                    </controls:SettingsCard.HeaderIcon>
 
-                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton"
-                                           ObservedData="{x:Bind ViewModel.FilesForUnsignedDeployment.Count, Mode=OneWay}"
-                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                           Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Click}">
-                            <customUI:ButtonV2.Content>
-                                <controls:WrapPanel Orientation="Horizontal">
+                    <controls:SettingsCard.Content>
+                        <StackPanel>
 
-                                    <AnimatedIcon Visibility="{x:Bind ViewModel.UnsignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}"
-                                                  Height="20"
-                                                  Margin="0,0,5,0"
-                                                  Width="20">
-                                        <AnimatedIcon.Source>
-                                            <animatedvisuals:Light/>
-                                        </AnimatedIcon.Source>
-                                    </AnimatedIcon>
+                            <!-- Cloud Mode Indicator -->
+                            <StackPanel Orientation="Horizontal" 
+                                         Spacing="8" 
+                                         Margin="0,0,0,10"
+                                         HorizontalAlignment="Right"
+                                         Visibility="{x:Bind ViewModel.CloudModeIndicatorVisibility, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE753;" FontSize="14" Foreground="DeepSkyBlue"/>
+                                <TextBlock Text="Cloud Deployment" Foreground="DeepSkyBlue" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                                    <TextBlock x:Uid="BrowseTextBlock" />
+                            <!-- Local Mode Indicator -->
+                            <StackPanel Orientation="Horizontal" 
+                                        Spacing="8" 
+                                        Margin="0,0,0,10"
+                                        HorizontalAlignment="Right"
+                                        Visibility="{x:Bind ViewModel.LocalModeIndicatorVisibility, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE770;" FontSize="14" Foreground="Orange"/>
+                                <TextBlock Text="Local Deployment" Foreground="Orange" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                                </controls:WrapPanel>
-                            </customUI:ButtonV2.Content>
+                            <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                            <customUI:ButtonV2.Flyout>
-                                <Flyout x:Name="BrowseForXMLPolicyFilesButton_Flyout">
+                                <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton"
+                                                   ObservedData="{x:Bind ViewModel.FilesForUnsignedDeployment.Count, Mode=OneWay}"
+                                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                   Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Click}">
+                                    <customUI:ButtonV2.Content>
+                                        <controls:WrapPanel Orientation="Horizontal">
 
-                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                            <AnimatedIcon Visibility="{x:Bind ViewModel.UnsignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}"
+                                                          Height="20"
+                                                          Margin="0,0,5,0"
+                                                          Width="20">
+                                                <AnimatedIcon.Source>
+                                                    <animatedvisuals:Light/>
+                                                </AnimatedIcon.Source>
+                                            </AnimatedIcon>
 
-                                        <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Flyout_Clear_Click}">
-                                            <Button.ContentTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
-                                                        <TextBlock Text="{x:Bind}"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </Button.ContentTemplate>
-                                        </Button>
+                                            <TextBlock x:Uid="BrowseTextBlock" />
 
-                                        <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
+                                        </controls:WrapPanel>
+                                    </customUI:ButtonV2.Content>
 
-                                        <customUI:ListBoxV2 MinWidth="400"
-                                                 SelectionMode="Single"
-                                                 ItemsSource="{x:Bind ViewModel.FilesForUnsignedDeployment, Mode=OneWay}" />
+                                    <customUI:ButtonV2.Flyout>
+                                        <Flyout x:Name="BrowseForXMLPolicyFilesButton_Flyout">
 
-                                    </controls:WrapPanel>
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                                                <Button x:Uid="ClearButton"
+                                                        Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Flyout_Clear_Click}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
 
-                        </customUI:ButtonV2>
+                                                <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                        <Button HorizontalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.DeployUnsignedXMLButton_Click}">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <StackPanel Orientation="Horizontal"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Center">
-                                        <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
-                                        <TextBlock x:Uid="DeployTextBlock"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Button.Content>
+                                                <customUI:ListBoxV2 MinWidth="400"
+                                                         SelectionMode="Single"
+                                                         ItemsSource="{x:Bind ViewModel.FilesForUnsignedDeployment, Mode=OneWay}" />
 
-                        </Button>
+                                            </controls:WrapPanel>
 
-                    </controls:WrapPanel>
+                                        </Flyout>
+                                    </customUI:ButtonV2.Flyout>
+
+                                </customUI:ButtonV2>
+
+                                <Button HorizontalAlignment="Center"
+                                        HorizontalContentAlignment="Center"
+                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.DeployUnsignedXMLButton_Click}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center">
+                                                <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
+                                                <TextBlock x:Uid="DeployTextBlock"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Button.Content>
+
+                                </Button>
+
+                            </controls:WrapPanel>
+                        </StackPanel>
+                    </controls:SettingsCard.Content>
 
                 </controls:SettingsCard>
 
+                <Border BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
+                        BorderThickness="0.8"
+                        CornerRadius="4">
 
-                <controls:SettingsExpander x:Uid="DeploySignedXMLPolicyFilesSettingsExpander"
-                                           IsExpanded="True"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}">
+                    <controls:SettingsExpander x:Uid="DeploySignedXMLPolicyFilesSettingsExpander"
+                                               IsExpanded="True">
 
-                    <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xEF3F;" Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
+                        </controls:SettingsExpander.HeaderIcon>
 
-                        <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton"
-                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                           ObservedData="{x:Bind ViewModel.FilesForSignedDeployment.Count, Mode=OneWay}"
-                                           Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Click}">
-                            <customUI:ButtonV2.Content>
-                                <controls:WrapPanel Orientation="Horizontal">
+                        <StackPanel>
+                            <!-- Cloud Mode Indicator -->
+                            <StackPanel Orientation="Horizontal" 
+                                         Spacing="8" 
+                                         Margin="0,0,0,10"
+                                         HorizontalAlignment="Right"
+                                         Visibility="{x:Bind ViewModel.CloudModeIndicatorVisibility, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE753;" FontSize="14" Foreground="DeepSkyBlue"/>
+                                <TextBlock Text="Cloud Deployment" Foreground="DeepSkyBlue" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                                    <AnimatedIcon Visibility="{x:Bind ViewModel.SignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}"
-                                                  Height="20"
-                                                  Margin="0,0,5,0"
-                                                  Width="20">
-                                        <AnimatedIcon.Source>
-                                            <animatedvisuals:Light/>
-                                        </AnimatedIcon.Source>
-                                    </AnimatedIcon>
+                            <!-- Local Mode Indicator -->
+                            <StackPanel Orientation="Horizontal" 
+                                         Spacing="8" 
+                                         Margin="0,0,0,10"
+                                         HorizontalAlignment="Right"
+                                         Visibility="{x:Bind ViewModel.LocalModeIndicatorVisibility, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE770;" FontSize="14" Foreground="Orange"/>
+                                <TextBlock Text="Local Deployment" Foreground="Orange" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                                    <TextBlock x:Uid="BrowseTextBlock" />
+                            <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                                </controls:WrapPanel>
-                            </customUI:ButtonV2.Content>
+                                <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton"
+                                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                   ObservedData="{x:Bind ViewModel.FilesForSignedDeployment.Count, Mode=OneWay}"
+                                                   Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Click}">
+                                    <customUI:ButtonV2.Content>
+                                        <controls:WrapPanel Orientation="Horizontal">
 
-                            <customUI:ButtonV2.Flyout>
-                                <Flyout x:Name="BrowseForSignedXMLPolicyFilesButton_Flyout">
+                                            <AnimatedIcon Visibility="{x:Bind ViewModel.SignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}"
+                                                          Height="20"
+                                                          Margin="0,0,5,0"
+                                                          Width="20">
+                                                <AnimatedIcon.Source>
+                                                    <animatedvisuals:Light/>
+                                                </AnimatedIcon.Source>
+                                            </AnimatedIcon>
 
-                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                            <TextBlock x:Uid="BrowseTextBlock" />
 
-                                        <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click}">
-                                            <Button.ContentTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
-                                                        <TextBlock Text="{x:Bind}"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </Button.ContentTemplate>
-                                        </Button>
+                                        </controls:WrapPanel>
+                                    </customUI:ButtonV2.Content>
 
-                                        <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
+                                    <customUI:ButtonV2.Flyout>
+                                        <Flyout x:Name="BrowseForSignedXMLPolicyFilesButton_Flyout">
 
-                                        <customUI:ListBoxV2 MinWidth="400"
-                                                 SelectionMode="Single"
-                                                 ItemsSource="{x:Bind ViewModel.FilesForSignedDeployment, Mode=OneWay}" />
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                    </controls:WrapPanel>
+                                                <Button x:Uid="ClearButton"
+                                                        Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
 
-                                </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                                                <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                        </customUI:ButtonV2>
+                                                <customUI:ListBoxV2 MinWidth="400"
+                                                         SelectionMode="Single"
+                                                         ItemsSource="{x:Bind ViewModel.FilesForSignedDeployment, Mode=OneWay}" />
 
-                        <Button HorizontalAlignment="Center"
-                                IsEnabled="{x:Bind ViewModel.DeploySignedXMLButtonIsEnabled, Mode=OneWay}"
-                                HorizontalContentAlignment="Center"
-                                Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <FontIcon Glyph="{x:Bind ViewModel.DeploySignedXMLButtonFontIcon, Mode=OneWay}" Margin="0,0,8,0" />
-                                        <TextBlock Text="{x:Bind ViewModel.DeploySignedXMLButtonContentTextBlock, Mode=OneWay}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Button.Content>
+                                            </controls:WrapPanel>
 
-                        </Button>
+                                        </Flyout>
+                                    </customUI:ButtonV2.Flyout>
 
-                    </controls:WrapPanel>
+                                </customUI:ButtonV2>
 
-                    <controls:SettingsExpander.Items>
+                                <Button HorizontalAlignment="Center"
+                                        IsEnabled="{x:Bind ViewModel.DeploySignedXMLButtonIsEnabled, Mode=OneWay}"
+                                        HorizontalContentAlignment="Center"
+                                        Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                <FontIcon Glyph="{x:Bind ViewModel.DeploySignedXMLButtonFontIcon, Mode=OneWay}" Margin="0,0,8,0" />
+                                                <TextBlock Text="{x:Bind ViewModel.DeploySignedXMLButtonContentTextBlock, Mode=OneWay}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Button.Content>
 
-                        <customUI:SettingsCardV2 x:Uid="SignOnlyNoDeploySettingsCard"
-                                                 HeaderIcon="{ui:FontIcon Glyph=&#xF572;}"
-                                                 IsClickEnabled="True"
-                                                 IsActionIconVisible="False">
+                                </Button>
 
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignOnlyNoDeployToggleSwitch, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"/>
+                            </controls:WrapPanel>
+                        </StackPanel>
 
-                        </customUI:SettingsCardV2>
+                        <controls:SettingsExpander.Items>
 
-                    </controls:SettingsExpander.Items>
+                            <customUI:SettingsCardV2 x:Uid="SignOnlyNoDeploySettingsCard"                                                     
+                                                     IsClickEnabled="True"
+                                                     IsActionIconVisible="False">
 
-                </controls:SettingsExpander>
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xF572;" />
+                                </customUI:SettingsCardV2.HeaderIcon>
+
+                                <ToggleSwitch IsOn="{x:Bind ViewModel.SignOnlyNoDeployToggleSwitch, Mode=TwoWay}"
+                                              x:Uid="ToggleSwitchGeneral"
+                                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"/>
+
+                            </customUI:SettingsCardV2>
+
+                        </controls:SettingsExpander.Items>
+
+                    </controls:SettingsExpander>
+                </Border>
 
 
                 <controls:SettingsCard x:Uid="DeployCIPFilesSettingsCard"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xEF3E;}"
                                        IsClickEnabled="False"
-                                       IsActionIconVisible="False" >
+                                       IsActionIconVisible="False" 
+                                       BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
+                                       BorderThickness="0.8">
 
-                    <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xEF3E;" Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
+                    </controls:SettingsCard.HeaderIcon>
 
-                        <customUI:ButtonV2 x:Uid="FileBrowseButton"
-                                           ObservedData="{x:Bind ViewModel.CIPFiles.Count, Mode=OneWay}"
-                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                           Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Click}">
+                    <controls:SettingsCard.Content>
+                        <StackPanel>
+                            <!-- Cloud Mode Indicator -->
+                            <StackPanel Orientation="Horizontal" 
+                                         Spacing="8" 
+                                         Margin="0,0,0,10"
+                                         HorizontalAlignment="Right"
+                                         Visibility="{x:Bind ViewModel.CloudModeIndicatorVisibility, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE753;" FontSize="14" Foreground="DeepSkyBlue"/>
+                                <TextBlock Text="Cloud Deployment" Foreground="DeepSkyBlue" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                            <customUI:ButtonV2.Flyout>
-                                <Flyout>
+                            <!-- Local Mode Indicator -->
+                            <StackPanel Orientation="Horizontal" 
+                                        Spacing="8" 
+                                        Margin="0,0,0,10"
+                                        HorizontalAlignment="Right"
+                                        Visibility="{x:Bind ViewModel.LocalModeIndicatorVisibility, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE770;" FontSize="14" Foreground="Orange"/>
+                                <TextBlock Text="Local Deployment" Foreground="Orange" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                            <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Flyout_Clear_Click}">
-                                            <Button.ContentTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
-                                                        <TextBlock Text="{x:Bind}"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </Button.ContentTemplate>
-                                        </Button>
+                                <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                                   ObservedData="{x:Bind ViewModel.CIPFiles.Count, Mode=OneWay}"
+                                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                   Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Click}">
 
-                                        <TextBlock x:Uid="ViewSelectedCIPFilesTextBlock"
-                                                   TextWrapping="WrapWholeWords" />
+                                    <customUI:ButtonV2.Flyout>
+                                        <Flyout>
 
-                                        <customUI:ListBoxV2 MinWidth="400"
-                                                 SelectionMode="Single"
-                                                 ItemsSource="{x:Bind ViewModel.CIPFiles, Mode=OneWay}" />
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                    </controls:WrapPanel>
+                                                <Button x:Uid="ClearButton"
+                                                        Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Flyout_Clear_Click}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
 
-                                </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                                                <TextBlock x:Uid="ViewSelectedCIPFilesTextBlock"
+                                                           TextWrapping="WrapWholeWords" />
 
-                        </customUI:ButtonV2>
+                                                <customUI:ListBoxV2 MinWidth="400"
+                                                         SelectionMode="Single"
+                                                         ItemsSource="{x:Bind ViewModel.CIPFiles, Mode=OneWay}" />
 
-                        <Button HorizontalAlignment="Center"
-                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                HorizontalContentAlignment="Center"
-                                Click="{x:Bind ViewModel.DeployCIPButton_Click}">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
+                                            </controls:WrapPanel>
 
-                                    <StackPanel Orientation="Horizontal"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Center">
-                                        <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
-                                        <TextBlock x:Uid="DeployTextBlock"/>
-                                    </StackPanel>
+                                        </Flyout>
+                                    </customUI:ButtonV2.Flyout>
 
-                                </StackPanel>
-                            </Button.Content>
+                                </customUI:ButtonV2>
 
-                        </Button>
+                                <Button HorizontalAlignment="Center"
+                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                        HorizontalContentAlignment="Center"
+                                        Click="{x:Bind ViewModel.DeployCIPButton_Click}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
 
-                    </controls:WrapPanel>
+                                            <StackPanel Orientation="Horizontal"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center">
+                                                <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
+                                                <TextBlock x:Uid="DeployTextBlock"/>
+                                            </StackPanel>
+
+                                        </StackPanel>
+                                    </Button.Content>
+
+                                </Button>
+
+                            </controls:WrapPanel>
+                        </StackPanel>
+                    </controls:SettingsCard.Content>
 
                 </controls:SettingsCard>
 
                 <controls:SettingsCard x:Uid="ConvertXMLToBinarySettingsCard"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xF003;}"
                                        IsClickEnabled="False"
-                                       IsActionIconVisible="False" >
+                                       IsActionIconVisible="False" 
+                                       BorderBrush="{x:Bind ViewModel.LocalOnlyBorderBrush, Mode=OneWay}"
+                                       BorderThickness="0.8">
 
-                    <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF003;" Foreground="{x:Bind ViewModel.LocalOnlyHeaderForeground, Mode=OneWay}" />
+                    </controls:SettingsCard.HeaderIcon>
 
-                        <customUI:ButtonV2 x:Uid="FileBrowseButton"
-                                           ObservedData="{x:Bind ViewModel.XMLFilesToConvertToCIP.Count, Mode=OneWay}"
-                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                           Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Click}">
+                    <controls:SettingsCard.Content>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" 
+                                        Spacing="8" 
+                                        Margin="0,0,0,10"
+                                        HorizontalAlignment="Right">
+                                <FontIcon Glyph="&#xE770;" FontSize="14" Foreground="Orange"/>
+                                <TextBlock Text="Local Feature" Foreground="Orange" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                            <customUI:ButtonV2.Flyout>
-                                <Flyout>
+                            <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                                   ObservedData="{x:Bind ViewModel.XMLFilesToConvertToCIP.Count, Mode=OneWay}"
+                                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                   Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Click}">
 
-                                        <Button x:Uid="ClearButton"
-                                                Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Flyout_Clear_Click}">
-                                            <Button.ContentTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <FontIcon Glyph="&#xE894;" FontSize="16"/>
-                                                        <TextBlock Text="{x:Bind}"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </Button.ContentTemplate>
-                                        </Button>
+                                    <customUI:ButtonV2.Flyout>
+                                        <Flyout>
 
-                                        <TextBlock x:Uid="ViewSelectedXMLFilesTextBlock"
-                                                   TextWrapping="WrapWholeWords" />
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <customUI:ListBoxV2 MinWidth="400"
-                                                 SelectionMode="Single"
-                                                 ItemsSource="{x:Bind ViewModel.XMLFilesToConvertToCIP, Mode=OneWay}" />
+                                                <Button x:Uid="ClearButton"
+                                                        Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Flyout_Clear_Click}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
 
-                                    </controls:WrapPanel>
+                                                <TextBlock x:Uid="ViewSelectedXMLFilesTextBlock"
+                                                           TextWrapping="WrapWholeWords" />
 
-                                </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                                                <customUI:ListBoxV2 MinWidth="400"
+                                                         SelectionMode="Single"
+                                                         ItemsSource="{x:Bind ViewModel.XMLFilesToConvertToCIP, Mode=OneWay}" />
 
-                        </customUI:ButtonV2>
+                                            </controls:WrapPanel>
 
-                        <Button HorizontalAlignment="Center"
-                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                HorizontalContentAlignment="Center"
-                                Click="{x:Bind ViewModel.ConvertXMLToCIPButton_Click}">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
+                                        </Flyout>
+                                    </customUI:ButtonV2.Flyout>
 
-                                    <StackPanel Orientation="Horizontal"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Center">
-                                        <FontIcon Glyph="&#xE8B1;" Margin="0,0,8,0" />
-                                        <TextBlock x:Uid="ConvertTextBlock"/>
-                                    </StackPanel>
+                                </customUI:ButtonV2>
 
-                                </StackPanel>
-                            </Button.Content>
+                                <Button HorizontalAlignment="Center"
+                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                        HorizontalContentAlignment="Center"
+                                        Click="{x:Bind ViewModel.ConvertXMLToCIPButton_Click}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
 
-                        </Button>
+                                            <StackPanel Orientation="Horizontal"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center">
+                                                <FontIcon Glyph="&#xE8B1;" Margin="0,0,8,0" />
+                                                <TextBlock x:Uid="ConvertTextBlock"/>
+                                            </StackPanel>
 
-                    </controls:WrapPanel>
+                                        </StackPanel>
+                                    </Button.Content>
+
+                                </Button>
+
+                            </controls:WrapPanel>
+                        </StackPanel>
+                    </controls:SettingsCard.Content>
 
                 </controls:SettingsCard>
 

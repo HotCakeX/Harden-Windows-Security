@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -25,6 +24,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
@@ -212,7 +212,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		FWRuleColWidth3 = new(w3);
 	}
 
-	internal readonly ObservableCollection<FirewallRule> FirewallRules = [];
+	internal readonly RangedObservableCollection<FirewallRule> FirewallRules = [];
 	private readonly List<FirewallRule> AllFirewallRules = [];
 
 	/// <summary>
@@ -490,11 +490,8 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (firewallRules is not null)
 			{
-				foreach (FirewallRule item in CollectionsMarshal.AsSpan(firewallRules))
-				{
-					FirewallRules.Add(item);
-					AllFirewallRules.Add(item);
-				}
+				FirewallRules.AddRange(firewallRules);
+				AllFirewallRules.AddRange(firewallRules);
 
 				ComputeColumnWidths();
 
@@ -552,10 +549,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		}
 
 		FirewallRules.Clear();
-		foreach (FirewallRule rule in CollectionsMarshal.AsSpan(filteredResults))
-		{
-			FirewallRules.Add(rule);
-		}
+		FirewallRules.AddRange(filteredResults);
 
 		ComputeColumnWidths();
 

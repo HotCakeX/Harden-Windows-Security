@@ -6638,4 +6638,31 @@
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>حدّد نطاق التشفير: المستخدم، الذي يتيح فقط لحساب Windows الحالي فك تشفير ملفات السياسة المشفّرة، أو الجهاز، الذي يقيّد فك التشفير على هذا الجهاز بحيث لا يمكن فك تشفير الملفات إذا نُقلت إلى جهاز آخر.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>التعيينات</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض التعيينات وإدارتها للنهج المحدد.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض التعيينات وإدارتها للنهج المحدد.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>التعيينات</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض التعيينات وإدارتها للنهج المحدد.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض التعيينات وإدارتها للنهج المحدد.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>لم يتم العثور على أي تعيينات.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة تعيين</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إزالة تعيين</value>
+  </data>
 </root>

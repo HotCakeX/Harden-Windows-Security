@@ -18,4 +18,4 @@
     
     * Delete All Rules: Completely wipe the local firewall policy, removing every rule including the default OS rules.
 
-* Added a new tile to the Home page where you can view the total count of the USB devices that have been ever connected to your device.
+* Added a new tile to the Home page where you can view the total count of the USB devices that have been ever connected to your device. Useful for forensic purposes.

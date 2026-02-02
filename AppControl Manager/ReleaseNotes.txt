@@ -10,6 +10,6 @@
 
 * Improved overall performance during policy creation - less RAM and CPU usage for the same tasks.
 
-* Added Home page tile showing total count of USB devices connected to your device. Click/tap to view detailed list of each device.
+* Added Home page tile showing total count of USB devices connected to your device. Click/tap to view detailed list of each device. Useful for forensic purposes.
 
 * Added support for .BIN App Control policy files. Open in Policy Editor to decode or drag to Policies Library to import.

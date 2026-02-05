@@ -71,6 +71,12 @@ This section can deploy `.CIP` binary files on the local or cloud system, whethe
 
 * **Deploy**: Use this button to deploy all of the CIP files you selected on the local or cloud system.
 
+<div align="center">
+
+<img alt="local only" src="https://github.com/user-attachments/assets/c2fe67ad-d6c4-479b-9a66-db51ae8ad8bf" />
+
+</div>
+
 <br>
 
 ## Configuration Details for Converting XML to CIP Files
@@ -80,5 +86,11 @@ Use this section to convert all of your XML files to CIP binaries files in bulk.
 * **Browse**: Use this button to browse for App Control XML policy files that you want to convert to `CIP` binary files.
 
 * **Convert**: Use this button to convert all of the selected XML policy files to `CIP` binary files with the same file names.
+
+<div align="center">
+
+<img alt="Cloud only" src="https://github.com/user-attachments/assets/30a66395-fa5e-4c62-912a-c867006709bc" />
+
+</div>
 
 <br>

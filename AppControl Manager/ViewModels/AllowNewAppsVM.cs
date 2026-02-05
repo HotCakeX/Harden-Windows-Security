@@ -16,13 +16,13 @@
 //
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -136,7 +136,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	#region
 
 	// To store the FileIdentities displayed on the Local Files ListView
-	internal ObservableCollection<FileIdentity> LocalFilesFileIdentities { get; set => SP(ref field, value); } = [];
+	internal RangedObservableCollection<FileIdentity> LocalFilesFileIdentities { get; set => SP(ref field, value); } = [];
 
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
@@ -146,7 +146,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	private ListViewHelper.SortState SortStateLocalFiles { get; set; } = new();
 
 	// To store the FileIdentities displayed on the Event Logs ListView
-	internal readonly ObservableCollection<FileIdentity> EventLogsFileIdentities = [];
+	internal readonly RangedObservableCollection<FileIdentity> EventLogsFileIdentities = [];
 
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently

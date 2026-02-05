@@ -18,7 +18,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -72,7 +71,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	internal readonly InfoBarSettings MainInfoBar;
 
-	internal readonly ObservableCollection<SimulationOutput> SimulationOutputs = [];
+	internal readonly IncrementalCollection.RangedObservableCollection<SimulationOutput> SimulationOutputs = [];
 
 	/// <summary>
 	/// Store all outputs for searching

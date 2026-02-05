@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -75,7 +74,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	// To store the policies displayed on the ListView
-	internal readonly ObservableCollection<CiPolicyInfo> AllPolicies = [];
+	internal readonly IncrementalCollection.RangedObservableCollection<CiPolicyInfo> AllPolicies = [];
 
 	// Store all outputs for searching
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];

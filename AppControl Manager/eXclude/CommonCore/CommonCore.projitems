@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes_ExploitMitigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\DeviceHealthScript.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\PolicyAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ComJsonDeserializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\FirewallRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars.cs" />

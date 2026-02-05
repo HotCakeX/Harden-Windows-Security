@@ -1,15 +1,11 @@
-* Added optional per user encryption for Policies Library cache (off by default). Cached policy files are encrypted using Windows DPAPI for the current user only. The app enforces the encryption setting at startup and when the Sidebar toggle changes. Encrypted files are only accessible on the same Windows user account.
+* In the System Information page -> Online Policies section, you can now view assignments for each policy and modify them, such as viewing which groups an App Control policies is assigned to in Intune and remove them if you need to.
 
-   * `Backup All` under the `Actions` menu creates unencrypted backups regardless of encryption setting, ensuring policies are accessible when restoring from backup on different accounts or machines.
+* Improved the performance of sorting and searching through large data sets in list views.
 
-   * Encryption Scope: User scope allows only the current Windows account to decrypt files. Machine scope restricts decryption to the device, preventing access if files are moved elsewhere.
+* Updated dependencies to the latest versions.
 
-   * If using Administrator Protection mode, Machine scope is recommended. Machine scope allows any user on the device to decrypt, while User scope restricts to the encrypting user only.
+* You can now press CTRL + F from anywhere in the app to focus on the search box at top and start typing your query right away.
 
-* Scan Levels now visually show fallback levels and their order, clarifying workflows based on community feedback.
+* The search bar at the top of the UI now displays rich results that contain the title, description and logo for each page.
 
-* Improved overall performance during policy creation - less RAM and CPU usage for the same tasks.
-
-* Added Home page tile showing total count of USB devices connected to your device. Click/tap to view detailed list of each device. Useful for forensic purposes.
-
-* Added support for .BIN App Control policy files. Open in Policy Editor to decode or drag to Policies Library to import.
+* Made it visually much more clearer in the Deployment page whether online deployments are activate or local deployments.

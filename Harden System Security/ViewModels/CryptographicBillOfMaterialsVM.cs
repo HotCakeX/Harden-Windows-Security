@@ -17,11 +17,11 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -68,7 +68,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	// ------------------------------------------------------------
 	#region Crypto Algorithms
 
-	internal ObservableCollection<CryptoAlgorithm> CryptoAlgorithms = [];
+	internal readonly RangedObservableCollection<CryptoAlgorithm> CryptoAlgorithms = [];
 	internal readonly List<CryptoAlgorithm> AllCryptoAlgorithms = [];
 
 	internal string? CryptoAlgorithmsSearchKeyword
@@ -124,11 +124,8 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 				_ = Dispatcher.EnqueueAsync(() =>
 				{
-					foreach (CryptoAlgorithm alg in list)
-					{
-						CryptoAlgorithms.Add(alg);
-						AllCryptoAlgorithms.Add(alg);
-					}
+					CryptoAlgorithms.AddRange(list);
+					AllCryptoAlgorithms.AddRange(list);
 				});
 			});
 
@@ -163,9 +160,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		).ToList();
 
 		CryptoAlgorithms.Clear();
-
-		foreach (CryptoAlgorithm alg in filtered)
-			CryptoAlgorithms.Add(alg);
+		CryptoAlgorithms.AddRange(filtered);
 	}
 
 	internal void CA_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -253,7 +248,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	// ------------------------------------------------------------
 	#region CNG Curves
 
-	internal ObservableCollection<EccCurveCng> CngCurves = [];
+	internal readonly RangedObservableCollection<EccCurveCng> CngCurves = [];
 	internal readonly List<EccCurveCng> AllCngCurves = [];
 
 	internal string? CngCurvesSearchKeyword
@@ -298,11 +293,8 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 				_ = Dispatcher.EnqueueAsync(() =>
 				{
-					foreach (EccCurveCng c in list)
-					{
-						CngCurves.Add(c);
-						AllCngCurves.Add(c);
-					}
+					CngCurves.AddRange(list);
+					AllCngCurves.AddRange(list);
 				});
 			});
 
@@ -333,9 +325,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		).ToList();
 
 		CngCurves.Clear();
-
-		foreach (EccCurveCng c in filtered)
-			CngCurves.Add(c);
+		CngCurves.AddRange(filtered);
 	}
 
 	internal void CNG_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -411,7 +401,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	// ------------------------------------------------------------
 	#region SSL Provider Curves
 
-	internal ObservableCollection<EccCurveSslProvider> SslProviderCurves = [];
+	internal readonly RangedObservableCollection<EccCurveSslProvider> SslProviderCurves = [];
 	internal readonly List<EccCurveSslProvider> AllSslProviderCurves = [];
 
 	internal string? SslProviderCurvesSearchKeyword
@@ -460,11 +450,8 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 				_ = Dispatcher.EnqueueAsync(() =>
 				{
-					foreach (EccCurveSslProvider c in list)
-					{
-						SslProviderCurves.Add(c);
-						AllSslProviderCurves.Add(c);
-					}
+					SslProviderCurves.AddRange(list);
+					AllSslProviderCurves.AddRange(list);
 				});
 			});
 
@@ -497,9 +484,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		).ToList();
 
 		SslProviderCurves.Clear();
-
-		foreach (EccCurveSslProvider c in filtered)
-			SslProviderCurves.Add(c);
+		SslProviderCurves.AddRange(filtered);
 	}
 
 	internal void SSL_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -581,7 +566,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	// ------------------------------------------------------------
 	#region TLS Cipher Suites
 
-	internal ObservableCollection<TlsCipherSuite> TlsCipherSuites = [];
+	internal readonly RangedObservableCollection<TlsCipherSuite> TlsCipherSuites = [];
 	internal readonly List<TlsCipherSuite> AllTlsCipherSuites = [];
 
 	internal string? TlsCipherSuitesSearchKeyword
@@ -652,11 +637,8 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 				_ = Dispatcher.EnqueueAsync(() =>
 				{
-					foreach (TlsCipherSuite s in cipherSuites)
-					{
-						TlsCipherSuites.Add(s);
-						AllTlsCipherSuites.Add(s);
-					}
+					TlsCipherSuites.AddRange(cipherSuites);
+					AllTlsCipherSuites.AddRange(cipherSuites);
 				});
 			});
 
@@ -697,9 +679,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		).ToList();
 
 		TlsCipherSuites.Clear();
-
-		foreach (TlsCipherSuite s in filtered)
-			TlsCipherSuites.Add(s);
+		TlsCipherSuites.AddRange(filtered);
 	}
 
 	internal void TLS_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -805,7 +785,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	// ------------------------------------------------------------
 	#region Registered Providers
 
-	internal ObservableCollection<string> RegisteredProviders = [];
+	internal readonly RangedObservableCollection<string> RegisteredProviders = [];
 	internal readonly List<string> AllRegisteredProviders = [];
 
 	internal string? RegisteredProvidersSearchKeyword
@@ -846,11 +826,8 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 				_ = Dispatcher.EnqueueAsync(() =>
 				{
-					foreach (string name in list)
-					{
-						RegisteredProviders.Add(name);
-						AllRegisteredProviders.Add(name);
-					}
+					RegisteredProviders.AddRange(list);
+					AllRegisteredProviders.AddRange(list);
 				});
 			});
 
@@ -879,9 +856,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		).ToList();
 
 		RegisteredProviders.Clear();
-
-		foreach (string p in filtered)
-			RegisteredProviders.Add(p);
+		RegisteredProviders.AddRange(filtered);
 	}
 
 	internal void REG_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)

@@ -27,14 +27,15 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Graphics;
 using WinRT;
+using System.Collections.Frozen;
 
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.WindowComponents;
 #endif
 #if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity.Traverse;
 using AppControlManager.WindowComponents;
 using HardenSystemSecurity.ViewModels;
-using System.Collections.Frozen;
 namespace HardenSystemSecurity.WindowComponents;
 #endif
 
@@ -42,6 +43,12 @@ internal sealed class NavigationService
 {
 	internal readonly MainWindowVM mainWindowVM;
 	private bool NavItemsHaveBeenCollected;
+
+	/// <summary>
+	/// Stores the ID of the MUnit that needs to be highlighted after navigation.
+	/// Consumed by CustomUIElements.MUnitListViewControl
+	/// </summary>
+	internal static Guid? PendingNavigationTargetId { get; set; }
 
 #if APP_CONTROL_MANAGER
 	private readonly SidebarVM sidebarVM;
@@ -135,11 +142,14 @@ internal sealed class NavigationService
 	/// </summary>
 	/// <param name="navPageType"></param>
 	/// <param name="navItemTag"></param>
-	internal async void Navigate(Type? navPageType, string? navItemTag = null)
+	/// <param name="targetId">Optional ID of an item to scroll to on the target page.</param>
+	internal async void Navigate(Type? navPageType, string? navItemTag = null, Guid? targetId = null)
 	{
-
 		if (_frame is null || MainNavigation is null)
 			throw new InvalidOperationException("NavigationService has not been initialized.");
+
+		// Store the target ID for the destination page to consume
+		PendingNavigationTargetId = targetId;
 
 		// Get the page's type before navigation so we can prevent duplicate entries in the BackStack
 		// This will prevent reloading the same page if we're already on it and works with sub-pages to navigate back to the main page
@@ -366,7 +376,6 @@ internal sealed class NavigationService
 		SetCrumbBar(typeof(Pages.Settings));
 	}
 
-
 	/// <summary>
 	/// Main navigation event of the Nav View
 	/// ItemInvoked event is much better than SelectionChanged because it allows click/tap on the same selected menu on main navigation
@@ -434,8 +443,11 @@ internal sealed class NavigationService
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
-	internal void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args) =>
-		Navigate(((UnifiedSearchBarResult)args.SelectedItem).PageType, null);
+	internal void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+	{
+		UnifiedSearchBarResult result = (UnifiedSearchBarResult)args.SelectedItem;
+		Navigate(result.PageType, null, result.MUnitId);
+	}
 
 	/// <summary>
 	/// Event handler to run at Window launch to restore its size to the one before closing
@@ -476,32 +488,6 @@ internal sealed class NavigationService
 			m_AppWindow.SetPresenter(presenter);
 		}
 	}
-
-#if APP_CONTROL_MANAGER
-
-	/// <summary>
-	/// Event handler for the AutoSuggestBox text change event
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	internal void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-	{
-		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-		{
-			ViewModelBase.EmitTypingSound();
-
-			// Get the text user entered in the search box
-			string query = sender.Text.Trim();
-
-			// Filter menu items based on the search query
-			List<string> suggestions = new(mainWindowVM.NavigationPageToItemContentMapForSearch.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
-
-			// Set the filtered items as suggestions in the AutoSuggestBox
-			sender.ItemsSource = suggestions;
-		}
-	}
-
-#endif
 
 	/// <summary>
 	/// Get all NavigationViewItem items in the MainNavigation, that includes MenuItems + any nested MenuItems + FooterMenuItems.
@@ -547,8 +533,6 @@ internal sealed class NavigationService
 
 		mainWindowVM.allNavigationItems = allItems;
 
-#if HARDEN_SYSTEM_SECURITY
-
 		// Build Type -> NavigationViewItem map using Tag -> Type map we already have.
 		Dictionary<Type, NavigationViewItem> typeToItem = new(capacity: mainWindowVM.allNavigationItems.Count);
 
@@ -564,9 +548,6 @@ internal sealed class NavigationService
 		}
 
 		MainWindowVM.PageTypeToNavItem = typeToItem.ToFrozenDictionary<Type, NavigationViewItem>();
-
-#endif
-
 	}
 
 	/// <summary>
@@ -577,7 +558,6 @@ internal sealed class NavigationService
 	internal void BreadcrumbBar_ItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
 	{
 		Crumb crumb = (Crumb)args.Item;
-
 		Navigate(crumb.Page, null);
 	}
 

@@ -6638,4 +6638,31 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wählen Sie einen Verschlüsselungsbereich aus: Benutzer, wodurch nur das aktuelle Windows-Konto die verschlüsselten Richtliniendateien entschlüsseln kann, oder Computer, wodurch die Entschlüsselung auf dieses Gerät beschränkt wird, sodass die Dateien nicht entschlüsselt werden können, wenn sie auf ein anderes Gerät verschoben werden.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>Zuweisungen</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zuweisungen für die ausgewählte Richtlinie anzeigen und verwalten.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zuweisungen für die ausgewählte Richtlinie anzeigen und verwalten.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zuweisungen</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zuweisungen für die ausgewählte Richtlinie anzeigen und verwalten.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zuweisungen für die ausgewählte Richtlinie anzeigen und verwalten.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>Keine Zuweisungen gefunden.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zuweisung entfernen</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zuweisung entfernen</value>
+  </data>
 </root>

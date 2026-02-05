@@ -17,12 +17,12 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using HardenSystemSecurity.ExploitMitigation;
 using HardenSystemSecurity.Helpers;
@@ -770,7 +770,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		EXColWidth2 = new(w2);
 	}
 
-	internal readonly ObservableCollection<Exclusions> Exclusions = [];
+	internal readonly RangedObservableCollection<Exclusions> Exclusions = [];
 	private readonly List<Exclusions> AllExclusions = [];
 
 	internal Visibility ExclusionProgressVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
@@ -909,10 +909,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			v.SourceFriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
 
 		Exclusions.Clear();
-		foreach (Exclusions item in filteredResults)
-		{
-			Exclusions.Add(item);
-		}
+		Exclusions.AddRange(filteredResults);
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -1007,11 +1004,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 			});
 
-			foreach (Exclusions item in allData)
-			{
-				Exclusions.Add(item);
-				AllExclusions.Add(item);
-			}
+			Exclusions.AddRange(allData);
+			AllExclusions.AddRange(allData);
 
 			ComputeColumnWidths();
 

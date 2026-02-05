@@ -1391,4 +1391,154 @@ DeviceEvents
 		}
 	}
 
+	/// <summary>
+	/// Retrieves assignments for a given policy and resolves Group IDs to Names.
+	/// </summary>
+	internal static async Task<List<PolicyAssignmentDisplay>> GetPolicyAssignments(AuthenticatedAccounts account, string policyId, bool isManagedInstaller)
+	{
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		string assignmentsUrl = isManagedInstaller
+			? $"{DeviceHealthScriptsURL.OriginalString}/{policyId}/assignments"
+			: $"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments";
+
+		List<PolicyAssignmentDisplay> results = [];
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"GetPolicyAssignments",
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Get, new Uri(assignmentsUrl));
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			}
+		);
+
+		if (!response.IsSuccessStatusCode)
+		{
+			string err = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException($"Failed to fetch assignments: {response.StatusCode} - {err}");
+		}
+
+		string content = await response.Content.ReadAsStringAsync();
+		PolicyAssignmentResponse? data = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.PolicyAssignmentResponse);
+
+		if (data?.Value is null) return results;
+
+		List<Task<PolicyAssignmentDisplay?>> tasks = [];
+
+		foreach (PolicyAssignmentObject item in data.Value)
+		{
+			if (item.Target is null) continue;
+
+			// item.Id is the Assignment Object ID required for deletion
+			string? assignmentId = item.Id;
+
+			string? oType = item.Target.ODataType;
+
+			if (string.Equals(oType, "#microsoft.graph.allLicensedUsersAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+			{
+				results.Add(new PolicyAssignmentDisplay("All Users", "Virtual Group", null, assignmentId));
+			}
+			else if (string.Equals(oType, "#microsoft.graph.allDevicesAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+			{
+				results.Add(new PolicyAssignmentDisplay("All Devices", "Virtual Group", null, assignmentId));
+			}
+			else if (string.Equals(oType, "#microsoft.graph.groupAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+			{
+				string? gid = item.Target.GroupId;
+				if (!string.IsNullOrEmpty(gid))
+				{
+					// Resolve group name in parallel
+					tasks.Add(GetGroupDisplayInfo(accessToken, gid, assignmentId));
+				}
+			}
+			else
+			{
+				// Fallback for other types
+				results.Add(new PolicyAssignmentDisplay("Unknown Target", oType ?? "Unknown", null, assignmentId));
+			}
+		}
+
+		// Wait for all group lookups
+		PolicyAssignmentDisplay?[] groupResults = await Task.WhenAll(tasks);
+		foreach (PolicyAssignmentDisplay? res in groupResults)
+		{
+			if (res is not null) results.Add(res);
+		}
+
+		return results;
+	}
+
+	/// <summary>
+	/// Helper to get a group's display name by ID.
+	/// </summary>
+	private static async Task<PolicyAssignmentDisplay?> GetGroupDisplayInfo(string accessToken, string groupId, string? assignmentId)
+	{
+		try
+		{
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"GetGroupDisplayInfo",
+				() =>
+				{
+					HttpRequestMessage request = new(HttpMethod.Get, new Uri($"{GroupsUrl}/{groupId}?$select=displayName,description"));
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					return request;
+				}
+			);
+
+			if (response.IsSuccessStatusCode)
+			{
+				string content = await response.Content.ReadAsStringAsync();
+				using JsonDocument doc = JsonDocument.Parse(content);
+				JsonElement root = doc.RootElement;
+				string displayName = root.TryGetProperty("displayName", out JsonElement dn) ? dn.GetString() ?? "Unknown Group" : "Unknown Group";
+				return new PolicyAssignmentDisplay(displayName, "Group", groupId, assignmentId);
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+		return new PolicyAssignmentDisplay(groupId, "Group (ID Only)", groupId, assignmentId);
+	}
+
+	/// <summary>
+	/// Deletes a specific assignment for a policy.
+	/// </summary>
+	/// <param name="account">Authenticated account.</param>
+	/// <param name="policyId">The ID of the policy (Device Configuration ID or Device Health Script ID).</param>
+	/// <param name="assignmentId">The ID of the assignment to delete.</param>
+	/// <param name="isManagedInstaller">Whether the policy is a Managed Installer (different endpoint).</param>
+	internal static async Task DeletePolicyAssignment(AuthenticatedAccounts account, string policyId, string assignmentId, bool isManagedInstaller)
+	{
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		// Construct URL based on policy type
+		string deleteUrl = isManagedInstaller
+			? $"{DeviceHealthScriptsURL.OriginalString}/{policyId}/assignments/{assignmentId}"
+			: $"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments/{assignmentId}";
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"DeletePolicyAssignment",
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Delete, new Uri(deleteUrl));
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			}
+		);
+
+		if (response.IsSuccessStatusCode)
+		{
+			Logger.Write($"Successfully deleted assignment {assignmentId} from policy {policyId}");
+		}
+		else
+		{
+			string errorContent = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException($"Failed to delete assignment {assignmentId}: {response.StatusCode} - {errorContent}");
+		}
+	}
 }

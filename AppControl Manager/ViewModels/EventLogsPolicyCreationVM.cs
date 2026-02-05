@@ -16,11 +16,11 @@
 //
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -87,7 +87,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
-	internal readonly ObservableCollection<FileIdentity> FileIdentities = [];
+	internal readonly RangedObservableCollection<FileIdentity> FileIdentities = [];
 
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently

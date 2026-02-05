@@ -19,6 +19,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using Microsoft.UI.Xaml.Controls;
 
@@ -95,7 +96,7 @@ internal static partial class ListViewHelper
 	/// </param>
 	internal static void ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,
-		ObservableCollection<FileIdentity> filteredCollection,
+		RangedObservableCollection<FileIdentity> filteredCollection,
 		string? searchText,
 		DateTimeOffset? selectedDate,
 		ListViewsRegistry regKey,
@@ -103,7 +104,6 @@ internal static partial class ListViewHelper
 		string? propertyFilterValue = null
 		)
 	{
-
 		// Get the ListView ScrollViewer info
 		ScrollViewer? Sv = GetScrollViewerFromCache(regKey);
 
@@ -167,10 +167,7 @@ internal static partial class ListViewHelper
 		filteredCollection.Clear();
 
 		// Add the new filtered results to the ObservableCollection
-		foreach (FileIdentity item in filteredResults)
-		{
-			filteredCollection.Add(item);
-		}
+		filteredCollection.AddRange(filteredResults);
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{

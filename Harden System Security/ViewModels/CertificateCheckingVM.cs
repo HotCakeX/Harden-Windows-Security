@@ -17,15 +17,14 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -96,7 +95,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <summary>
 	/// Collection of certificates that don't chain to STL roots
 	/// </summary>
-	internal ObservableCollection<NonStlRootCert> NonStlCertificates = [];
+	internal readonly RangedObservableCollection<NonStlRootCert> NonStlCertificates = [];
 
 	/// <summary>
 	/// Backing field for all certificates
@@ -250,10 +249,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		{
 			// If search is empty, show all certificates
 			NonStlCertificates.Clear();
-			foreach (NonStlRootCert cert in AllNonStlCertificates)
-			{
-				NonStlCertificates.Add(cert);
-			}
+			NonStlCertificates.AddRange(AllNonStlCertificates);
 		}
 		else
 		{
@@ -269,10 +265,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			).ToList();
 
 			NonStlCertificates.Clear();
-			foreach (NonStlRootCert cert in CollectionsMarshal.AsSpan(filteredResults))
-			{
-				NonStlCertificates.Add(cert);
-			}
+			NonStlCertificates.AddRange(filteredResults);
 		}
 
 		CalculateColumnWidths();
@@ -513,11 +506,8 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 					// Store CTL header for UI display - this will trigger UpdateCtlHeaderProperties()
 					CurrentCtlHeader = parseResult.Header;
 
-					foreach (NonStlRootCert cert in nonStlRootCerts)
-					{
-						AllNonStlCertificates.Add(cert);
-						NonStlCertificates.Add(cert);
-					}
+					AllNonStlCertificates.AddRange(nonStlRootCerts);
+					NonStlCertificates.AddRange(nonStlRootCerts);
 
 					CalculateColumnWidths();
 				});
@@ -579,11 +569,8 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				// Update UI on the UI thread
 				await Dispatcher.EnqueueAsync(() =>
 				{
-					foreach (NonStlRootCert cert in allCertificates)
-					{
-						AllNonStlCertificates.Add(cert);
-						NonStlCertificates.Add(cert);
-					}
+					AllNonStlCertificates.AddRange(allCertificates);
+					NonStlCertificates.AddRange(allCertificates);
 
 					CalculateColumnWidths();
 				});

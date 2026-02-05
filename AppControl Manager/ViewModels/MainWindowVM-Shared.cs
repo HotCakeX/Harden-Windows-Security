@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
+using System.Collections.Frozen;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
@@ -391,4 +392,30 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 	// Whether the Crumbar is visible
 	internal Visibility IsCrumbBarVisible { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// A collection that maps each page type to its corresponding NavigationViewItem on the main menu.
+	/// </summary>
+	internal static FrozenDictionary<Type, NavigationViewItem>? PageTypeToNavItem;
+
+	/// <summary>
+	/// Collection of suggestions for the AutoSuggestBox in the Main Window.
+	/// </summary>
+	internal List<UnifiedSearchBarResult> UnifiedSearchBarSuggestionsCollection { get; set => SP(ref field, value); } = [];
+
+	/// <summary>
+	/// The text typed in the AutoSuggestBox on the Main Window.
+	/// </summary>
+	internal string? UnifiedSearchBarText
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+#if APP_CONTROL_MANAGER
+				UnifiedSearchBarSuggestionsCollection = WindowComponents.SearchPageCatalog.GetPageFromQuery(field);
+#else
+				UnifiedSearchBarSuggestionsCollection = Traverse.MUnitCatalog.GetPageFromQuery(field);
+#endif
+		}
+	}
 }

@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCOthers="using:CommonCore.Others"
@@ -224,7 +223,16 @@
 
                                 <Button x:Uid="RetrieveFirewallRulesButton"
                                         IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
-                                        Click="{x:Bind ViewModel.RetrieveFirewallRules}" />
+                                        Click="{x:Bind ViewModel.RetrieveFirewallRules}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
 
                                 <!-- Search box -->
                                 <TextBox IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
@@ -242,14 +250,47 @@
                                     </DropDownButton.Content>
                                     <DropDownButton.Flyout>
                                         <MenuFlyout Placement="Bottom">
-                                            <MenuFlyoutItem x:Uid="ExportLocalFirewallRules" Click="{x:Bind ViewModel.ExportLocalFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE74E;}"/>
-                                            <MenuFlyoutItem x:Uid="ExportGPOFirewallRules" Click="{x:Bind ViewModel.ExportGPOFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE74E;}"/>
+
+                                            <MenuFlyoutItem x:Uid="ExportLocalFirewallRules" Click="{x:Bind ViewModel.ExportLocalFirewallRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74E;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                            <MenuFlyoutItem x:Uid="ExportGPOFirewallRules" Click="{x:Bind ViewModel.ExportGPOFirewallRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74E;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem x:Uid="ImportLocalFirewallRules" Click="{x:Bind ViewModel.ImportLocalFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE896;}"/>
-                                            <MenuFlyoutItem x:Uid="ImportGPOFirewallRules" Click="{x:Bind ViewModel.ImportGPOFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE896;}"/>
+
+                                            <MenuFlyoutItem x:Uid="ImportLocalFirewallRules" Click="{x:Bind ViewModel.ImportLocalFirewallRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE896;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                            <MenuFlyoutItem x:Uid="ImportGPOFirewallRules" Click="{x:Bind ViewModel.ImportGPOFirewallRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE896;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem x:Uid="RestoreLocalFirewallRules" Click="{x:Bind ViewModel.RestoreDefaultFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE777;}"/>
-                                            <MenuFlyoutItem x:Uid="DeleteAllLocalFirewallRules" Click="{x:Bind ViewModel.DeleteAllFirewallRules}" Icon="{ui:FontIcon Glyph=&#xE74D;}"/>
+
+                                            <MenuFlyoutItem x:Uid="RestoreLocalFirewallRules" Click="{x:Bind ViewModel.RestoreDefaultFirewallRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE777;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                            <MenuFlyoutItem x:Uid="DeleteAllLocalFirewallRules" Click="{x:Bind ViewModel.DeleteAllFirewallRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74D;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
                                         </MenuFlyout>
                                     </DropDownButton.Flyout>
                                 </DropDownButton>

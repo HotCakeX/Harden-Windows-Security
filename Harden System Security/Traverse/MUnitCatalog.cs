@@ -65,7 +65,7 @@ internal static class MUnitCatalog
 	/// <summary>
 	/// Preallocated list returned by <see cref="GetPageFromQuery"/> when the query yields results.
 	/// </summary>
-	private static readonly List<UnifiedSearchBarResult> _pagesListFromSearch = new(5);
+	private static readonly List<UnifiedSearchBarResult> _pagesListFromSearch = new(8);
 
 	/// <summary>
 	/// Extra non-MUnit search entries, to be registered once at startup before first query.
@@ -108,11 +108,15 @@ internal static class MUnitCatalog
 		// Normalize the query once
 		ReadOnlySpan<char> needle = query.Trim().ToLowerInvariant();
 
-		for (int i = 0; i < LowerNames.Count; i++)
+		// Benchmarks show converting these Lists to Span first and then using For loop on them is faster than using For loop directly on Lists.
+		ReadOnlySpan<string> lowerNamesSpan = CollectionsMarshal.AsSpan(LowerNames);
+		ReadOnlySpan<Guid> nameIdsSpan = CollectionsMarshal.AsSpan(NameIds);
+
+		for (int i = 0; i < lowerNamesSpan.Length; i++)
 		{
-			if (LowerNames[i].IndexOf(needle) >= 0)
+			if (lowerNamesSpan[i].IndexOf(needle) >= 0)
 			{
-				Type candidatePageType = PageByMUnitId[NameIds[i]];
+				Type candidatePageType = PageByMUnitId[nameIdsSpan[i]];
 
 				IconElement? clonedIcon = null;
 				if (MainWindowVM.PageTypeToNavItem is not null &&
@@ -134,7 +138,8 @@ internal static class MUnitCatalog
 					pageType: candidatePageType,
 					icon: clonedIcon,
 					title: MainWindowVM.NavigationPageToItemContentMapForSearch[candidatePageType],
-					subtitle: LowerNames[i]
+					subtitle: lowerNamesSpan[i],
+					mUnitId: nameIdsSpan[i]
 					);
 
 				_pagesListFromSearch.Add(candidate);
@@ -196,10 +201,8 @@ internal static class MUnitCatalog
 			}
 		}
 
-		for (int i = 0; i < _extraEntries.Count; i++)
+		foreach (ExtraSearchEntry entry in CollectionsMarshal.AsSpan(_extraEntries))
 		{
-			ExtraSearchEntry entry = _extraEntries[i];
-
 			// synthetic ID for search mapping only
 			Guid id = Guid.CreateVersion7();
 

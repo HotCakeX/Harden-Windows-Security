@@ -16,11 +16,11 @@
 //
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
@@ -84,7 +84,18 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	internal CiPolicyInfo? ListViewSelectedPolicy { get; set => SP(ref field, value); }
+	internal CiPolicyInfo? ListViewSelectedPolicy
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				IsPolicySelected = value is not null;
+			}
+		}
+	}
+
+	internal bool IsPolicySelected { get; set => SP(ref field, value); }
 
 	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
@@ -98,7 +109,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	#endregion
 
 	// To store the policies displayed on the ListView
-	internal readonly ObservableCollection<CiPolicyInfo> AllPolicies = [];
+	internal readonly IncrementalCollection.RangedObservableCollection<CiPolicyInfo> AllPolicies = [];
 
 	// Store all outputs for searching
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];
@@ -255,6 +266,59 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 		finally
 		{
 			AreElementsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Fetches the assignments for the selected policy
+	/// </summary>
+	/// <param name="policy"></param>
+	/// <returns></returns>
+	internal async Task<List<PolicyAssignmentDisplay>> GetPolicyAssignments(CiPolicyInfo policy)
+	{
+		try
+		{
+			if (policy.IntunePolicyObjectID is null || AuthCompanionCLS.CurrentActiveAccount is null)
+			{
+				return [];
+			}
+
+			return await CommonCore.MicrosoftGraph.Main.GetPolicyAssignments(
+				AuthCompanionCLS.CurrentActiveAccount,
+				policy.IntunePolicyObjectID,
+				policy.IsManagedInstaller);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+			return [];
+		}
+	}
+
+	/// <summary>
+	/// Deletes a specific assignment
+	/// </summary>
+	internal async Task DeleteAssignmentAsync(string policyId, string assignmentId, bool isManagedInstaller)
+	{
+		try
+		{
+			if (AuthCompanionCLS.CurrentActiveAccount is null)
+			{
+				throw new InvalidOperationException("No active account found.");
+			}
+
+			await CommonCore.MicrosoftGraph.Main.DeletePolicyAssignment(
+				AuthCompanionCLS.CurrentActiveAccount,
+				policyId,
+				assignmentId,
+				isManagedInstaller);
+
+			MainInfoBar.WriteSuccess("Successfully removed assignment.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+			throw;
 		}
 	}
 
@@ -456,6 +520,37 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			// TElement = CiPolicyInfo, copy just that one property
 			ListViewHelper.CopyToClipboard<CiPolicyInfo>(ci => map.Getter(ci)?.ToString(), lv);
 		}
+	}
+
+	/// <summary>
+	/// Opens the assignments dialog for the currently selected policy (via Toolbar button)
+	/// </summary>
+	internal void ViewAssignments_Click(object sender, RoutedEventArgs e)
+	{
+		if (ListViewSelectedPolicy is not null)
+		{
+			_ = ShowAssignmentsDialog(ListViewSelectedPolicy);
+		}
+	}
+
+	/// <summary>
+	/// Opens the assignments dialog for the context-clicked policy
+	/// </summary>
+	internal void ViewAssignmentsFromContext_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is MenuFlyoutItem item && item.DataContext is CiPolicyInfo policy)
+		{
+			_ = ShowAssignmentsDialog(policy);
+		}
+	}
+
+	/// <summary>
+	/// Helper to show the dialog
+	/// </summary>
+	private async Task ShowAssignmentsDialog(CiPolicyInfo policy)
+	{
+		using PolicyAssignmentsDialog dialog = new(policy, this);
+		_ = await dialog.ShowAsync();
 	}
 
 	public void Dispose()

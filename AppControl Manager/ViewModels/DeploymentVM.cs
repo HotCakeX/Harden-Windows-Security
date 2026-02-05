@@ -27,8 +27,11 @@ using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommonCore.MicrosoftGraph;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 
 namespace AppControlManager.ViewModels;
 
@@ -59,6 +62,14 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		{
 			DeploySignedXMLButtonIsEnabled = true;
 		}
+
+		// Initialize Local Only Tool Gradients
+		LinearGradientBrush orangeGradient = CreateGradientBrush(Colors.Orange, Colors.OrangeRed);
+		LocalOnlyBorderBrush = orangeGradient;
+		LocalOnlyHeaderForeground = orangeGradient;
+
+		// Initialize styles for the main deployment features
+		SetLocalVisualState();
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -72,6 +83,22 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = GlobalVars.GetStr("LocalDeploymentActive");
+
+	#region Visual State Properties
+
+	internal Brush? DeploymentHighlightBorderBrush { get; set => SP(ref field, value); }
+	internal Brush? DeploymentHeaderForeground { get; set => SP(ref field, value); }
+
+	internal Visibility CloudModeIndicatorVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility LocalModeIndicatorVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
+
+	internal string DeploymentModeIcon { get; set => SP(ref field, value); } = "\uE770"; // Default Local
+
+	// Properties for "Local Only" features - Always Orange Gradient
+	internal Brush LocalOnlyBorderBrush { get; }
+	internal Brush LocalOnlyHeaderForeground { get; }
+
+	#endregion
 
 	internal readonly UniquePolicyFileRepresentObservableCollection FilesForUnsignedDeployment = [];
 	internal readonly UniquePolicyFileRepresentObservableCollection FilesForSignedDeployment = [];
@@ -223,6 +250,65 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		DeployToIntune = on;
 		AreOnlineFeaturesEnabled = on;
 		LocalOnlineStatusText = on ? GlobalVars.GetStr("CloudDeploymentActive") : GlobalVars.GetStr("LocalDeploymentActive");
+
+		// Update Visuals for obvious distinction
+		if (on)
+		{
+			SetCloudVisualState();
+		}
+		else
+		{
+			SetLocalVisualState();
+		}
+	}
+
+	/// <summary>
+	/// Creates a LinearGradientBrush from startColor to endColor
+	/// </summary>
+	private static LinearGradientBrush CreateGradientBrush(Color startColor, Color endColor)
+	{
+		LinearGradientBrush brush = new()
+		{
+			StartPoint = new Windows.Foundation.Point(0, 0),
+			EndPoint = new Windows.Foundation.Point(1, 1)
+		};
+		brush.GradientStops.Add(new GradientStop { Color = startColor, Offset = 0.0 });
+		brush.GradientStops.Add(new GradientStop { Color = endColor, Offset = 1.0 });
+		return brush;
+	}
+
+	/// <summary>
+	/// Sets the visual properties for Cloud Deployment mode
+	/// </summary>
+	private void SetCloudVisualState()
+	{
+		DeploymentModeIcon = "\uE753"; // Cloud Icon
+
+		// Blue Gradient: DeepSkyBlue -> RoyalBlue
+		LinearGradientBrush blueGradient = CreateGradientBrush(Colors.DeepSkyBlue, Colors.RoyalBlue);
+
+		DeploymentHighlightBorderBrush = blueGradient;
+		DeploymentHeaderForeground = blueGradient;
+
+		CloudModeIndicatorVisibility = Visibility.Visible;
+		LocalModeIndicatorVisibility = Visibility.Collapsed;
+	}
+
+	/// <summary>
+	/// Sets the visual properties for Local Deployment mode
+	/// </summary>
+	private void SetLocalVisualState()
+	{
+		DeploymentModeIcon = "\uE770"; // Local Device/Computer Icon
+
+		// Orange Gradient: Orange -> OrangeRed
+		LinearGradientBrush orangeGradient = CreateGradientBrush(Colors.Orange, Colors.OrangeRed);
+
+		DeploymentHighlightBorderBrush = orangeGradient;
+		DeploymentHeaderForeground = orangeGradient;
+
+		CloudModeIndicatorVisibility = Visibility.Collapsed;
+		LocalModeIndicatorVisibility = Visibility.Visible;
 	}
 
 	/// <summary>

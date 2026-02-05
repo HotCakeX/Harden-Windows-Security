@@ -6638,4 +6638,31 @@
   <data name="PersistentPoliciesLibraryEncryptionScopeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Sélectionnez un périmètre de chiffrement : Utilisateur, qui permet uniquement au compte Windows actuel de déchiffrer les fichiers de stratégie chiffrés, ou Machine, qui limite le déchiffrement à cet appareil afin que les fichiers ne puissent pas être déchiffrés s’ils sont déplacés vers un autre appareil.</value>
   </data>
+    <data name="AssignmentsButton.Content" xml:space="preserve">
+    <value>Affectations</value>
+  </data>
+  <data name="AssignmentsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Afficher et gérer les affectations pour la stratégie sélectionnée.</value>
+  </data>
+  <data name="AssignmentsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Afficher et gérer les affectations pour la stratégie sélectionnée.</value>
+  </data>
+    <data name="AssignmentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Affectations</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Afficher et gérer les affectations pour la stratégie sélectionnée.</value>
+  </data>
+  <data name="AssignmentsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Afficher et gérer les affectations pour la stratégie sélectionnée.</value>
+  </data>
+  <data name="NoAssignmentsFound.Text" xml:space="preserve">
+    <value>Aucune affectation trouvée.</value>
+  </data>
+  <data name="RemoveAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimer l’affectation</value>
+  </data>
+  <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimer l’affectation</value>
+  </data>
 </root>

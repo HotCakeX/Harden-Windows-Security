@@ -31,8 +31,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods_RustInterop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes_ExploitMitigation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\DeviceHealthScript.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\PolicyAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ComJsonDeserializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\FirewallRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars.cs" />
@@ -56,6 +54,8 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\DeviceHealthScript.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\PolicyAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Taskbar\Badge.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Taskbar\JumpListMgr.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Taskbar\TaskBarProgress.cs" />

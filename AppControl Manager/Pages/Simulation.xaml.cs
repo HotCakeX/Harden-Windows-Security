@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AnimatedVisuals;
 using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
@@ -27,8 +26,8 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private SimulationVM ViewModel { get; } = ViewModelProvider.SimulationVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private SimulationVM ViewModel => ViewModelProvider.SimulationVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal Simulation()
 	{

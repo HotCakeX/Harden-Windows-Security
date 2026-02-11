@@ -9,6 +9,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:viewModels="using:HardenSystemSecurity.ViewModels"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:Protect="using:HardenSystemSecurity.Protect"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -241,10 +242,10 @@
                         <Button x:Uid="ExpectedValueColumnHeaderBtn" Tag="ExpectedValue" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" />
-                        <controls:GridSplitter Grid.Column="2" />
-                        <controls:GridSplitter Grid.Column="3" />
-                        <controls:GridSplitter Grid.Column="4" />
+                        <CCToolKit:GridSplitter Grid.Column="1" />
+                        <CCToolKit:GridSplitter Grid.Column="2" />
+                        <CCToolKit:GridSplitter Grid.Column="3" />
+                        <CCToolKit:GridSplitter Grid.Column="4" />
 
                     </Grid>
                 </Border>

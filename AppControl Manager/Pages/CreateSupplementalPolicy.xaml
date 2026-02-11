@@ -9,6 +9,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -496,9 +497,11 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <!-- Files and Folders Scan -->
-                <controls:SettingsExpander x:Uid="SupplementalFilesAndFoldersSettingsCard"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}"
+                <controls:SettingsExpander x:Uid="SupplementalFilesAndFoldersSettingsCard"                                         
                                            IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE71D;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
@@ -757,13 +760,10 @@
                                     </Button.ContentTemplate>
                                     <Button.Flyout>
                                         <Flyout>
-                                            <StackPanel>
-                                                <customUI:ColorRadialGaugeV2
+                                            <CCToolKit:RadialGauge
                                                     StepSize="1"
                                                     TickSpacing="2"
                                                     ScaleWidth="12"
-                                                    NeedleWidth="0"
-                                                    NeedleLength="0"
                                                     TickLength="8"
                                                     TickWidth="0"
                                                     ScalePadding="5"
@@ -774,7 +774,6 @@
                                                     Value="{x:Bind ViewModel.FilesAndFoldersScalabilityRadialGaugeValue, Mode=TwoWay}"
                                                     IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
                                                     ValueStringFormat="N0"/>
-                                            </StackPanel>
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
@@ -784,9 +783,12 @@
                         </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
-                            HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
                             IsClickEnabled="True" IsActionIconVisible="True"
                             Click="{x:Bind ViewModel.FilesAndFoldersViewFileDetailsSettingsCard_Click}">
+
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE83B;" />
+                            </controls:SettingsCard.HeaderIcon>
 
                         </controls:SettingsCard>
 
@@ -796,8 +798,10 @@
 
                 <!-- Certificate -->
                 <controls:SettingsExpander x:Uid="CertificatesSettingsExpander"
-                    IsExpanded="{x:Bind ViewModel.CertificatesBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xEB95;}">
+                    IsExpanded="{x:Bind ViewModel.CertificatesBasedSettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xEB95;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
@@ -985,8 +989,11 @@
                 <controls:SettingsExpander
                     Description="Create a Supplemental policy that only enables the usage of the Intelligent Security Graph to automatically authorize reputable apps and files"
                     Header="ISG"
-                    IsExpanded="{x:Bind ViewModel.ISGSettingsExpanderIsExpanded, Mode=TwoWay}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE734;}">
+                    IsExpanded="{x:Bind ViewModel.ISGSettingsExpanderIsExpanded, Mode=TwoWay}">
+
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE734;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
@@ -1109,8 +1116,11 @@
 
                 <!-- Strict Kernel-Mode -->
                 <controls:SettingsExpander x:Uid="StrictKernelModeSettingsExpander"
-                    IsExpanded="{x:Bind ViewModel.StrictKernelModeSettingsExpanderIsExpanded, Mode=TwoWay}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE945;}">
+                    IsExpanded="{x:Bind ViewModel.StrictKernelModeSettingsExpanderIsExpanded, Mode=TwoWay}">
+
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE945;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
@@ -1274,9 +1284,12 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="ViewStrictKernelModeDetailsSettingsCard"
-                            HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
                             IsClickEnabled="True" IsActionIconVisible="True"
                             Click="{x:Bind ViewModel.DetectedKernelModeFilesDetailsSettingsCard_Click}">
+
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE83B;" />
+                            </controls:SettingsCard.HeaderIcon>
 
                         </controls:SettingsCard>
 
@@ -1286,10 +1299,13 @@
 
                 <!-- Package Family Name (PFN) -->
                 <controls:SettingsExpander x:Uid="PFNSupplementalPolicySettingsExpander"
-                                           IsEnabled="{x:Bind ViewModel.IsElevated}"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}"
+                                           IsEnabled="{x:Bind ViewModel.IsElevated}"                                          
                                            IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
                                            Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}">
+
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8F1;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
@@ -1525,8 +1541,11 @@
                 <!-- Custom File Path Rules -->
                 <controls:SettingsExpander
                         x:Uid="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander"
-                        IsExpanded="{x:Bind ViewModel.CustomFilePathRulesSettingsExpanderIsExpanded, Mode=TwoWay}"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xE8A1;}">
+                        IsExpanded="{x:Bind ViewModel.CustomFilePathRulesSettingsExpanderIsExpanded, Mode=TwoWay}">
+
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8A1;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2

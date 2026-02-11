@@ -29,7 +29,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using CommonCore.GroupPolicy;
-using HardenSystemSecurity.SecurityPolicy;
+using CommonCore.SecurityPolicy;
 
 #pragma warning disable CA1819
 
@@ -1038,11 +1038,11 @@ internal static class MSBaseline
 			string currentValue = "Not Found";
 
 			// Manager returns canonical strings (e.g., Base64 for binary, ";" for multi-sz)
-			string? actual = RegistryManager.Manager.ReadRegistry(policy);
+			string? actual = CommonCore.RegistryManager.Manager.ReadRegistry(policy);
 
 			if (actual is not null && policy.RegValue is not null)
 			{
-				isCompliant = RegistryManager.Manager.CompareRegistryValues(policy.Type, actual, policy.RegValue);
+				isCompliant = CommonCore.RegistryManager.Manager.CompareRegistryValues(policy.Type, actual, policy.RegValue);
 				currentValue = actual;
 			}
 			else
@@ -1582,7 +1582,7 @@ internal static class MSBaseline
 		if (parsedData.RegistryPolicyEntries.Count > 0)
 		{
 			Logger.Write("Applying Registry Policy Entries...");
-			RegistryManager.Manager.AddPoliciesToSystem(parsedData.RegistryPolicyEntries);
+			CommonCore.RegistryManager.Manager.AddPoliciesToSystem(parsedData.RegistryPolicyEntries);
 			Logger.Write("Registry Policy Entries applied successfully");
 		}
 

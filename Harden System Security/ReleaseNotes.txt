@@ -1,13 +1,1 @@
-* In the Firewall Management page, you can now choose which store the firewall rules will be created it: Group Policy store or Persistent Store.
-
-* In the Firewall Management page, you can now bulk delete all firewall rules in the GPO store which are those defined in Group Policy. This is in addition to the previously available option which allows bulk deleting all locally defined firewall rules. Both operations are instant.
-
-* Updated dependencies to the latest versions.
-
-* In the Group Policy Editor page, you can now edit any of the group policy values manually by right-clicking on tap + holding (touch devices) on any row in the list view. This feature was requested by the community members on GitHub. There are rigorous real time checks in place to prevent you from entering invalid values. This allows you to modify the system POL file or any POL file safely, securely and easily.
-
-* In the Group Policy Editor page, you can now remove policies from JSON files. Previously you could only remove policies from POL files.
-
-* In the Microsoft Security Baselines page, you can now right-click or tap + hold on entries with "System Access" types and revert them back to the Operating System default values. This was another request by the community members on GitHub.
-
-* In the Microsoft Security Baselines page, there is now a new button under the expander section that you can use to export the currently effective System Access policies to a JSON file.
+* Dependencies have been updated to their latest versions, 3 dependencies have been removed, improving performance and the overall supply chain security.

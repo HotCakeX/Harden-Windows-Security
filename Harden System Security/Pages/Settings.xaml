@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CC="using:CommonCore.Others"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -34,22 +33,34 @@
 
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
-                <controls:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+                <controls:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE790;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.Items>
 
-                        <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
+                        <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xF0E8;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.NavViewBackground, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
+                        <customUI:SettingsCardV2 x:Uid="BackgroundStyleSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xEF1F;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ComboBox
                             ItemsSource="{x:Bind ViewModelMainWindow.BackDropOptions, Mode=OneTime}"
                             SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
+                        <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE706;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ComboBox SelectedIndex="{x:Bind ViewModel.AppThemeComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>Use System Setting</x:String>
                                 <x:String>Dark</x:String>
@@ -57,7 +68,10 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
+                        <customUI:SettingsCardV2 x:Uid="MainNavigationIconsSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE8D3;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ComboBox SelectedIndex="{x:Bind ViewModel.IconsStylesComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>Animated</x:String>
                                 <x:String>Windows Accent</x:String>
@@ -65,15 +79,20 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
+                        <customUI:SettingsCardV2 x:Uid="MainNavigationLocationSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE90C;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ComboBox SelectedIndex="{x:Bind ViewModel.NavigationMenuLocationComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>Left</x:String>
                                 <x:String>Top</x:String>
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="AppWindowBorderColorSettingsCard"
-                                                 HeaderIcon="{ui:FontIcon Glyph=&#xEF3C;}">
+                        <customUI:SettingsCardV2 x:Uid="AppWindowBorderColorSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xEF3C;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
 
                             <StackPanel HorizontalAlignment="Center">
                                 <ComboBox x:Name="BorderTypeSelection"
@@ -134,34 +153,58 @@
 
                 <!-- Behavior section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Behavior" />
-                <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xE9E9;}">
+                <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE9E9;" />
+                    </controls:SettingsExpander.HeaderIcon>
                     <controls:SettingsExpander.Items>
-                        <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}">
+                        <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE8E3;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.ListViewsVerticalCentering, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}">
+                        <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE7EF;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.PromptForElevationOnStartup, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="ScreenShieldSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEE3F;}">
+                        <customUI:SettingsCardV2 x:Uid="ScreenShieldSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xEE3F;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.ScreenShield, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="PublishUserActivityInTheOSSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC5B;}">
+                        <customUI:SettingsCardV2 x:Uid="PublishUserActivityInTheOSSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xEC5B;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.PublishUserActivityInTheOS, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="ShowLinkPreviewsForSecurityItemsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF6FA;}">
+                        <customUI:SettingsCardV2 x:Uid="ShowLinkPreviewsForSecurityItemsSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xF6FA;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.LinkPreviewsForSecurityMeasure, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="StickyHeadersForListViewsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE879;}">
+                        <customUI:SettingsCardV2 x:Uid="StickyHeadersForListViewsSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE879;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.StickyHeadersForListViews, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="AppCloseConfirmationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7E8;}">
+                        <customUI:SettingsCardV2 x:Uid="AppCloseConfirmationSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE7E8;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ComboBox SelectedIndex="{x:Bind ViewModel.AppSettings.AppCloseConfirmationBehavior, Mode=TwoWay}">
                                 <ComboBoxItem x:Uid="AppCloseConfirmationOptionAlwaysSettingsCard" />
                                 <ComboBoxItem x:Uid="AppCloseConfirmationOptionAutomaticSettingsCard" />
@@ -174,11 +217,16 @@
 
                 <!-- Language section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="LanguageTextBlock" />
-                <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
+                <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xF2B7;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.Items>
-                        <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard"
-                                             HeaderIcon="{ui:FontIcon Glyph=&#xF69E;}">
+                        <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xF69E;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ComboBox ItemsSource="{x:Bind ViewModel.LanguageOptions}" SelectedIndex="{x:Bind ViewModel.LanguageComboBoxSelectedIndex, Mode=TwoWay}">
 
                                 <ComboBox.ItemTemplate>
@@ -196,7 +244,10 @@
 
                             </ComboBox>
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">
+                        <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE9AB;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.UIFlowDirectionToggleSwitch, Mode=TwoWay}"
                                       Toggled="{x:Bind ViewModel.FlowDirectionToggleSwitch_Toggled}"
                                       x:Uid="UIFlowDirectionToggleSwitch" />
@@ -206,18 +257,24 @@
 
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
-                <customUI:SettingsCardV2 x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
+                <customUI:SettingsCardV2 x:Uid="AppSoundSettingSettingsCard">
+                    <customUI:SettingsCardV2.HeaderIcon>
+                        <FontIcon Glyph="&#xEC4F;" />
+                    </customUI:SettingsCardV2.HeaderIcon>
                     <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.SoundSetting, Mode=TwoWay}"
                               x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 
                 <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
-                       x:Uid="About" />
+                           x:Uid="About" />
                 <controls:SettingsExpander Header="Harden System Security"
                                        IsExpanded="True"
-                                       Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}"
-                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
+                                       Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <BitmapIcon UriSource="ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png"
+                                    ShowAsMonochrome="False"/>
+                    </controls:SettingsExpander.HeaderIcon>
                     <TextBlock Text="{x:Bind ViewModel.VersionTextBlockText, Mode=OneTime}" win:IsTextSelectionEnabled="True"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     <controls:SettingsExpander.Items>

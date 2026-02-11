@@ -3,7 +3,6 @@
     x:Class="AppControlManager.Pages.MergePolicies"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -22,8 +21,11 @@
 
             <controls:SettingsExpander
                            x:Uid="MergePoliciesSettingsExpander"
-                           IsExpanded="True"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEA3C;}">
+                           IsExpanded="True">
+
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEA3C;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -165,8 +167,11 @@
                        x:Uid="Advanced" />
 
             <controls:SettingsExpander x:Uid="AdvancedFeaturesSettingsExpander"
-                                       IsExpanded="True"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xE712;}">
+                                       IsExpanded="True">
+
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE712;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"

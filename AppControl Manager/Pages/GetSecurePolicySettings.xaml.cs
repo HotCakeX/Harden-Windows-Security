@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class GetSecurePolicySettings : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private GetSecurePolicySettingsVM ViewModel { get; } = ViewModelProvider.GetSecurePolicySettingsVM;
+	private GetSecurePolicySettingsVM ViewModel => ViewModelProvider.GetSecurePolicySettingsVM;
 
 	internal GetSecurePolicySettings()
 	{

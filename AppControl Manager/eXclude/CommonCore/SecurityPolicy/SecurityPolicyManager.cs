@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace HardenSystemSecurity.SecurityPolicy;
+namespace CommonCore.SecurityPolicy;
 
 internal static partial class SecurityPolicyManager
 {

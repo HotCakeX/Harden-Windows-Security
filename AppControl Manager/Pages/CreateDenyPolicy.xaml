@@ -7,6 +7,7 @@
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:CC="using:CommonCore.Others"
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -694,23 +695,19 @@
                                     </Button.ContentTemplate>
                                     <Button.Flyout>
                                         <Flyout>
-                                            <StackPanel>
-                                                <customUI:ColorRadialGaugeV2
-                                                                      StepSize="1"
-                                                                      TickSpacing="2"
-                                                                      ScaleWidth="12"
-                                                                      NeedleWidth="0"
-                                                                      NeedleLength="0"
-                                                                      TickLength="8"
-                                                                      TickWidth="0"
-                                                                      ScalePadding="5"
-                                                                      TickPadding="24"
-                                                                      Width="200"
-                                                                      Maximum="120"
-                                                                      Minimum="2"
-                                                                      Value="{x:Bind ViewModel.FilesAndFoldersScalabilityRadialGaugeValue, Mode=TwoWay}"
-                                                                      ValueStringFormat="N0"/>
-                                            </StackPanel>
+                                            <CCToolKit:RadialGauge
+                                                   StepSize="1"
+                                                   TickSpacing="2"
+                                                   ScaleWidth="12"                                                                     
+                                                   TickLength="8"
+                                                   TickWidth="0"
+                                                   ScalePadding="5"
+                                                   TickPadding="24"
+                                                   Width="200"
+                                                   Maximum="120"
+                                                   Minimum="2"
+                                                   Value="{x:Bind ViewModel.FilesAndFoldersScalabilityRadialGaugeValue, Mode=TwoWay}"
+                                                   ValueStringFormat="N0"/>
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>

@@ -19,7 +19,7 @@
 /*
 
 The code in this file is MODIFIED version of the MIT licensed code in the following repository: https://github.com/CommunityToolkit/Windows
-Taken from this URL: https://github.com/CommunityToolkit/Windows/tree/321f5ddc8f3bf07865c8f51d992febb25fd7859a/components/Behaviors/src/Headers
+Taken from this URL: https://github.com/CommunityToolkit/Windows/blob/main/components/Behaviors/src/Headers/StickyHeaderBehavior.cs
 
 It's removed the "ScrollViewer_GotFocus" from the base class to prevent scroll positions from changing when clicking on the header which is an unwanted behavior.
 
@@ -43,7 +43,6 @@ THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 
 using System.Numerics;
 using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.Animations.Expressions;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -277,9 +276,9 @@ public static class StickyHeaderBehaviorV2
 			_animationProperties.InsertScalar("OffsetY", 0.0f);
 
 			// Build expression: max(OffsetY - Scroll.Translation.Y, 0)
-			ScalarNode propSetOffset = _animationProperties.GetReference().GetScalarProperty("OffsetY");
-			ManipulationPropertySetReferenceNode scrollPropSet = _scrollProperties.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
-			ScalarNode expressionAnimation = ExpressionFunctions.Max(propSetOffset - scrollPropSet.Translation.Y, 0);
+			ExpressionAnimation expressionAnimation = compositor.CreateExpressionAnimation("Max(Internal.OffsetY - Scroll.Translation.Y, 0)");
+			expressionAnimation.SetReferenceParameter("Internal", _animationProperties);
+			expressionAnimation.SetReferenceParameter("Scroll", _scrollProperties);
 
 			_headerVisual.StartAnimation("Offset.Y", expressionAnimation);
 		}

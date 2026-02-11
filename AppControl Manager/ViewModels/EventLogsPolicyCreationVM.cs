@@ -20,12 +20,12 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
+using CommonCore.IncrementalCollection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -34,9 +34,6 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 {
-
-	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
-
 	internal EventLogsPolicyCreationVM()
 	{
 		MainInfoBar = new InfoBarSettings(
@@ -286,7 +283,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(finalSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
 
@@ -404,8 +401,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal async void ScanLogs_Click()
 	{
-		bool error = false;
-
 		try
 		{
 			AreElementsEnabled = false;
@@ -433,31 +428,23 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			ApplyFilters();
 
 			await Task.Run(CalculateColumnWidths);
+
+			MainInfoBar.WriteSuccess(string.Format(
+					GlobalVars.GetStr("ScanCompleteLogsFoundMessage"),
+					AllFileIdentities.Count
+				));
 		}
 		catch (Exception ex)
 		{
-			error = true;
 			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringLogsScanMessage"));
 		}
 		finally
 		{
 			AreElementsEnabled = true;
 
-			// Clear the selected file paths
-			CodeIntegrityEVTX = null;
-			AppLockerEVTX = null;
-
 			// Stop displaying the Progress Ring
 			ScanLogsProgressRingIsActive = false;
 			ScanLogsProgressRingVisibility = Visibility.Collapsed;
-
-			if (!error)
-			{
-				MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.GetStr("ScanCompleteLogsFoundMessage"),
-					AllFileIdentities.Count
-				));
-			}
 
 			MainInfoBar.IsClosable = true;
 		}
@@ -478,8 +465,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal async void CreatePolicyButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
 	{
-		bool error = false;
-
 		try
 		{
 			AreElementsEnabled = false;
@@ -683,10 +668,13 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 						}
 				}
 			});
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessProcessedLogsMessage"));
+
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 		}
 		catch (Exception ex)
 		{
-			error = true;
 			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorProcessingLogsMessage"));
 		}
 		finally
@@ -698,13 +686,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			ScanLogsProgressRingVisibility = Visibility.Collapsed;
 
 			MainInfoBar.IsClosable = true;
-
-			if (!error)
-			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessProcessedLogsMessage"));
-
-				OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
-			}
 		}
 	}
 

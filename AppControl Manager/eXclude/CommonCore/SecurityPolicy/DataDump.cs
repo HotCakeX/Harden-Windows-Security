@@ -25,7 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
-namespace HardenSystemSecurity.SecurityPolicy;
+namespace CommonCore.SecurityPolicy;
 
 internal static class DataDump
 {

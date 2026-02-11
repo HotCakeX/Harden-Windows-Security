@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
+	private CreateDenyPolicyVM ViewModel => ViewModelProvider.CreateDenyPolicyVM;
 
 	internal CreateDenyPolicyFilesAndFoldersScanResults()
 	{

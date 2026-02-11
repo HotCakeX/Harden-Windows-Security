@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -182,23 +183,23 @@
                         <Button IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}" x:Uid="OpusDataColumnHeaderBtn" Tag="Opus" Grid.Column="17" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.FileAndFoldersHeaderColumnSortingButton_Click}"/>
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" />
-                        <controls:GridSplitter Grid.Column="2" />
-                        <controls:GridSplitter Grid.Column="3" />
-                        <controls:GridSplitter Grid.Column="4" />
-                        <controls:GridSplitter Grid.Column="5" />
-                        <controls:GridSplitter Grid.Column="6" />
-                        <controls:GridSplitter Grid.Column="7" />
-                        <controls:GridSplitter Grid.Column="8" />
-                        <controls:GridSplitter Grid.Column="9" />
-                        <controls:GridSplitter Grid.Column="10" />
-                        <controls:GridSplitter Grid.Column="11" />
-                        <controls:GridSplitter Grid.Column="12" />
-                        <controls:GridSplitter Grid.Column="13" />
-                        <controls:GridSplitter Grid.Column="14" />
-                        <controls:GridSplitter Grid.Column="15" />
-                        <controls:GridSplitter Grid.Column="16" />
-                        <controls:GridSplitter Grid.Column="17" />
+                        <CCToolKit:GridSplitter Grid.Column="1" />
+                        <CCToolKit:GridSplitter Grid.Column="2" />
+                        <CCToolKit:GridSplitter Grid.Column="3" />
+                        <CCToolKit:GridSplitter Grid.Column="4" />
+                        <CCToolKit:GridSplitter Grid.Column="5" />
+                        <CCToolKit:GridSplitter Grid.Column="6" />
+                        <CCToolKit:GridSplitter Grid.Column="7" />
+                        <CCToolKit:GridSplitter Grid.Column="8" />
+                        <CCToolKit:GridSplitter Grid.Column="9" />
+                        <CCToolKit:GridSplitter Grid.Column="10" />
+                        <CCToolKit:GridSplitter Grid.Column="11" />
+                        <CCToolKit:GridSplitter Grid.Column="12" />
+                        <CCToolKit:GridSplitter Grid.Column="13" />
+                        <CCToolKit:GridSplitter Grid.Column="14" />
+                        <CCToolKit:GridSplitter Grid.Column="15" />
+                        <CCToolKit:GridSplitter Grid.Column="16" />
+                        <CCToolKit:GridSplitter Grid.Column="17" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

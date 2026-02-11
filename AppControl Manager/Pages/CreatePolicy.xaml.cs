@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class CreatePolicy : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private CreatePolicyVM ViewModel { get; } = ViewModelProvider.CreatePolicyVM;
+	private CreatePolicyVM ViewModel => ViewModelProvider.CreatePolicyVM;
 
 	internal CreatePolicy()
 	{

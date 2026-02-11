@@ -106,8 +106,7 @@ Function Get-BlockedPackets {
                 # If the protocol number is not in the hashtable, keep it as it is, otherwise replace it with the protocol name
                 $_.Protocol = if (-not $ProtocolName) { $_.Protocol } else { $ProtocolName }
 
-                # If the direction is equal to '%%14592', set it to 'Outbound', otherwise set it to 'Inbound'
-                $_.Direction = $_.Direction -eq '%%14592' ? 'Outbound' : 'Inbound'
+                $_.Direction = $_.Direction -eq '%%14592' ? 'Inbound' : 'Outbound'
 
                 # If the application matches the pattern, replace the device path with the drive letter
                 if ($_.Application -match $Pattern) {

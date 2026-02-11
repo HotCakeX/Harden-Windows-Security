@@ -7,6 +7,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:others="using:AppControlManager.Others"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -147,23 +148,23 @@
                         <Button x:Uid="OpusDataColumnHeaderBtn" Tag="Opus" Grid.Column="17" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_LocalFiles}" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[17], Mode=OneWay}"/>
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[34], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="17" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[35], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[34], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="17" Visibility="{x:Bind ViewModel.LocalFilesColumnManager.ColumnVisibilities[35], Mode=OneWay}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

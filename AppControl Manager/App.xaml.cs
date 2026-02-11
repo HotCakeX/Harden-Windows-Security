@@ -15,15 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI;
+using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
 using Microsoft.Windows.Globalization;
-using Windows.ApplicationModel;
 using Windows.Graphics;
 using Microsoft.UI.Dispatching;
 

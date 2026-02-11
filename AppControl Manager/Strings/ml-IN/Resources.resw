@@ -6662,4 +6662,280 @@
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ചുമതലപ്പെടുത്തൽ നീക്കം ചെയ്യുക</value>
   </data>
+  <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
+    <value>സിമുലേഷനായി തിരഞ്ഞെടുത്ത പോളിസിയിൽ എല്ലാ ഫയലുകളും അനുവദിക്കുന്ന ഒരു നിയമം അടങ്ങിയിരിക്കുന്നു.</value>
+  </data>
+  <data name="FirewallSentinelPageTitle" xml:space="preserve">
+    <value>വിൻഡോസ് ഫയർവാൾ നിയന്ത്രിക്കുകയും ലേയേർഡ് നെറ്റ്‌വർക്ക് ആക്‌സസ് പരിരക്ഷയ്ക്കായി അലോലിസ്റ്റിംഗ് (allowlisting) തന്ത്രം ഉപയോഗിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
+    <value>ഫയർവാൾ സെന്റിനൽ</value>
+  </data>
+  <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വിൻഡോസ് ഫയർവാൾ നിയന്ത്രിക്കുകയും ലേയേർഡ് നെറ്റ്‌വർക്ക് ആക്‌സസ് പരിരക്ഷയ്ക്കായി അലോലിസ്റ്റിംഗ് തന്ത്രം ഉപയോഗിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>വിൻഡോസ് ഫയർവാൾ നിയന്ത്രിക്കുകയും ലേയേർഡ് നെറ്റ്‌വർക്ക് ആക്‌സസ് പരിരക്ഷയ്ക്കായി അലോലിസ്റ്റിംഗ് തന്ത്രം ഉപയോഗിക്കുകയും ചെയ്യുക</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+  <value>ഫയൽ കണ്ടെത്തിയില്ല: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>സാധുവായ ഒരു ഹെഡർ അടങ്ങുന്നതിന് ഫയൽ വളരെ ചെറുതാണ്</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>അസാധുവായ ഒപ്പ്: 0x{0:X8}. പ്രതീക്ഷിച്ചത്: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>{0} സ്ഥാനത്ത് എൻട്രി വായിക്കുന്നതിൽ പിശക്: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>എൻട്രിയുടെ തുടക്കത്തിൽ ഓപ്പണിംഗ് ബ്രാക്കറ്റ് പ്രതീക്ഷിച്ചു, ലഭിച്ചത്: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>കീ (Key) പേരിന് ശേഷം സെമിക്കോളൺ ഡിലിമിറ്റർ പ്രതീക്ഷിച്ചു, ലഭിച്ചത്: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>മൂല്യ (Value) പേരിന് ശേഷം സെമിക്കോളൺ ഡിലിമിറ്റർ പ്രതീക്ഷിച്ചു, ലഭിച്ചത്: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>തരത്തിന് (Type) ശേഷം സെമിക്കോളൺ ഡിലിമിറ്റർ പ്രതീക്ഷിച്ചു, ലഭിച്ചത്: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>വലിപ്പത്തിന് (Size) ശേഷം സെമിക്കോളൺ ഡിലിമിറ്റർ പ്രതീക്ഷിച്ചു, ലഭിച്ചത്: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>ഡാറ്റയുടെ {0} ബൈറ്റുകൾ വായിക്കാനായില്ല, {1} ബൈറ്റുകൾ മാത്രമേ ലഭിച്ചുള്ളൂ</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>ഡാറ്റയ്ക്ക് ശേഷം ക്ലോസിംഗ് ബ്രാക്കറ്റ് പ്രതീക്ഷിച്ചു, ലഭിച്ചത്: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>യൂണിക്കോഡ് സ്ട്രിംഗ് വായിക്കുമ്പോൾ സ്ട്രീമിന്റെ അപ്രതീക്ഷിത അവസാനം</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>മറ്റൊരു പോളിസി ഫയലെങ്കിലും നൽകേണ്ടതുണ്ട്</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>പ്രധാന പോളിസി ഫയൽ പാത്ത് ശൂന്യമാകാൻ (null or empty) പാടില്ല</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>മറ്റൊരു പോളിസി ഫയൽ പാത്തെങ്കിലും നൽകേണ്ടതുണ്ട്</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>ഇൻഡെക്സ് {0}-ലെ പോളിസി ഫയൽ പാത്ത് ശൂന്യമാകാൻ (null or empty) പാടില്ല</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>{0} എൻട്രികളുള്ള നിലവിലുള്ള പോളിസി ഫയൽ ലോഡുചെയ്‌തു</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>ആകെ പ്രവർത്തനങ്ങൾ: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>ചേർത്ത എൻട്രികൾ: {0}</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>മാറ്റിസ്ഥാപിച്ച എൻട്രികൾ: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>പോളിസി ഫയൽ നിലവിലില്ല, എല്ലാ പോളിസികളും പരിശോധിച്ചുറപ്പിക്കാത്തതായി (not verified) അടയാളപ്പെടുത്തുന്നു</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>പരിശോധിച്ചുറപ്പിക്കൽ പൂർത്തിയായി: {0} പോളിസികളിൽ 0 എണ്ണം പൊരുത്തപ്പെടുന്നു (പോളിസി ഫയൽ നിലവിലില്ല)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>പരിശോധിച്ചുറപ്പിക്കുക: {0}\{1} = പൊരുത്തം</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>പരിശോധിച്ചുറപ്പിക്കുക: {0}\{1} = പൊരുത്തക്കേട്</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>പരിശോധിച്ചുറപ്പിക്കുക: {0}\{1} = കണ്ടെത്തിയില്ല</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>പരിശോധിച്ചുറപ്പിക്കൽ പൂർത്തിയായി: {1} പോളിസികളിൽ {0} എണ്ണം പൊരുത്തപ്പെടുന്നു</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>പോളിസി ഫയൽ നിലവിലില്ല, നീക്കം ചെയ്യാൻ ഒന്നുമില്ല</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>നീക്കം ചെയ്തു: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>പോളിസി നീക്കംചെയ്യൽ പൂർത്തിയായി: {0} പോളിസികൾ നീക്കം ചെയ്തു</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>STA-യിൽ GroupPolicyObject സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>STA ത്രെഡിൽ COM സമാരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>GroupPolicyObject സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു - STA ത്രെഡിൽ നിന്ന് നൾ (null) പോയിന്റർ ലഭിച്ചു</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>COM സമാരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>ലോക്കൽ മെഷീൻ GPO തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>COM ഒഴിവാക്കൽ (Exception): {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} രജിസ്റ്റർ ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} രജിസ്റ്റർ ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>പിൻ ചെയ്ത പോളിസി വികസിപ്പിക്കുക</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിൻ ചെയ്ത ഫയർവാൾ പോളിസിയിൽ പുതിയ നിയമങ്ങൾ ചേർത്ത് അത് വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പിൻ ചെയ്ത ഫയർവാൾ പോളിസിയിൽ പുതിയ നിയമങ്ങൾ ചേർത്ത് അത് വികസിപ്പിക്കുക.</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>ഫയലുകളും ഫോൾഡറുകളും</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>ഫയലുകളും ഫോൾഡറുകളും സ്കാൻ ചെയ്ത് പിൻ ചെയ്ത ഫയർവാൾ പോളിസി വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയലുകളും ഫോൾഡറുകളും സ്കാൻ ചെയ്ത് പിൻ ചെയ്ത ഫയർവാൾ പോളിസി വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയലുകളും ഫോൾഡറുകളും സ്കാൻ ചെയ്ത് പിൻ ചെയ്ത ഫയർവാൾ പോളിസി വികസിപ്പിക്കുക.</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകൾ</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകൾ ചേർത്ത് പിൻ ചെയ്ത ഫയർവാൾ പോളിസി വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകൾ ചേർത്ത് പിൻ ചെയ്ത ഫയർവാൾ പോളിസി വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകൾ ചേർത്ത് പിൻ ചെയ്ത ഫയർവാൾ പോളിസി വികസിപ്പിക്കുക.</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>പിൻ ചെയ്ത ഫയർവാൾ പോളിസിയിൽ കസ്റ്റം പാറ്റേൺ അധിഷ്ഠിത ഫയൽ നിയമം ചേർത്ത് അത് വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിൻ ചെയ്ത ഫയർവാൾ പോളിസിയിൽ കസ്റ്റം പാറ്റേൺ അധിഷ്ഠിത ഫയൽ നിയമം ചേർത്ത് അത് വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പിൻ ചെയ്ത ഫയർവാൾ പോളിസിയിൽ കസ്റ്റം പാറ്റേൺ അധിഷ്ഠിത ഫയൽ നിയമം ചേർത്ത് അത് വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>പാറ്റേൺ അധിഷ്ഠിത ഫയൽ നിയമം</value>
+  </data>
+    <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>മാറ്റങ്ങള്‍ പഴയപടിയാക്കുക</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലും Windows ഫയര്‍വോളിലും വരുത്തിയ മാറ്റങ്ങള്‍ പഴയപടിയാക്കുക.</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലും Windows ഫയര്‍വോളിലും വരുത്തിയ മാറ്റങ്ങള്‍ പഴയപടിയാക്കുക.</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ബാക്കപ്പ് സ്ഥാനം തുറക്കുക</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയര്‍വോള്‍ നിയമങ്ങളുടെ ബാക്കപ്പുകള്‍ സംഭരിച്ചിരിക്കുന്ന സ്ഥാനം തുറക്കുക.</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയര്‍വോള്‍ നിയമങ്ങളുടെ ബാക്കപ്പുകള്‍ സംഭരിച്ചിരിക്കുന്ന സ്ഥാനം തുറക്കുക.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ബാക്കപ്പുകള്‍ ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയര്‍വോള്‍ നിയമങ്ങളുടെ എല്ലാ ബാക്കപ്പുകളും ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയര്‍വോള്‍ നിയമങ്ങളുടെ എല്ലാ ബാക്കപ്പുകളും ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Windows ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിനൊപ്പം സ്ഥിരമായി ലഭിക്കുന്ന പ്രോഗ്രാമുകള്‍ക്കും ആപ്പുകള്‍ക്കും മാത്രം ഇന്റര്‍നെറ്റ് ആക്‌സസ് അനുവദിക്കുന്നു. സൈന്‍ ചെയ്തതും സ്ഥിരമായതുമായ എല്ലാ Windows പ്രോസസ്സുകള്‍ക്കും ഇന്റര്‍നെറ്റ് ആക്‌സസ് ലഭിക്കും, അതേസമയം മൂന്നാം കക്ഷി പ്രോഗ്രാമുകള്‍ തടയപ്പെടും.</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Microsoft-ന്റെ കോഡ്-സൈനിംഗ് സര്‍ട്ടിഫിക്കറ്റുകള്‍ ഉപയോഗിച്ച് സൈന്‍ ചെയ്ത ആപ്ലിക്കേഷനുകള്‍ക്ക് നെറ്റ്‌വര്‍ക്ക് കണക്ടിവിറ്റി അനുവദിക്കുന്നതിനായി ഡീഫോള്‍ട്ട് Windows പ്രൊഫൈല്‍ വിപുലീകരിക്കുന്നു. ഈ പ്രൊഫൈല്‍ ബില്‍ട്ട്-ഇന്‍ Windows ഘടകങ്ങള്‍ക്കും Microsoft സൈന്‍ ചെയ്ത സോഫ്റ്റ്‌വെയറിനും ആക്‌സസ് നല്‍കുന്നു, അതേസമയം സൈന്‍ ചെയ്യാത്തതോ Microsoft ഇതര മൂന്നാം കക്ഷി ആപ്ലിക്കേഷനുകളെയോ ഇന്റര്‍നെറ്റ് ആക്‌സസില്‍ നിന്ന് ഒഴിവാക്കുന്നു.</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Allow Microsoft പ്രൊഫൈല്‍ അനുവദിക്കുന്നതെല്ലാം അനുവദിച്ചുകൊണ്ട് അത് വിപുലീകരിക്കുന്നു, കൂടാതെ ഇന്റലിജന്റ് സെക്യൂരിറ്റി ക്ലൗഡ് വിലയിരുത്തലുകള്‍ അടിസ്ഥാനമാക്കി എല്ലാ വിശ്വസനീയവും സൈന്‍ ചെയ്തതുമായ ആപ്ലിക്കേഷനുകളെ അധികമായി അനുവദിക്കുന്നു. ഇത് ഏറ്റവും വിശാലമായ ഫയര്‍വോള്‍ പരിരക്ഷ നല്‍കുന്നു.</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>പ്രയോഗിക്കാന്‍ താഴെയുള്ള ഐഡന്റിറ്റി അടിസ്ഥാനമാക്കിയുള്ള പ്രൊഫൈലുകളില്‍ ഒന്ന് തിരഞ്ഞെടുക്കുക. ഈ പ്രൊഫൈലുകള്‍ നിലവില്‍ ഔട്ട്‌ബൗണ്ട് ട്രാഫിക്കിനെ മാത്രമേ ബാധിക്കൂ; ഇന്‍ബൗണ്ട് ക്രമീകരണങ്ങള്‍ മാറ്റമില്ലാതെ തുടരും. ഒരു പ്രൊഫൈല്‍ പ്രയോഗിച്ചതിനു ശേഷം, ഇന്റര്‍നെറ്റ് ആക്‌സസ് ആവശ്യമുള്ള ഏതെങ്കിലും മൂന്നാം കക്ഷി ആപ്ലിക്കേഷനുകള്‍ അനുവദിക്കുന്നതിന് അതിന്റെ നിയമങ്ങള്‍ വിപുലീകരിക്കാവുന്നതാണ്. ഓരോ പ്രൊഫൈലും എല്ലാ ഫയര്‍വോള്‍ പ്രൊഫൈലുകളിലുമുള്ള സ്ഥിരസ്ഥിതി ഔട്ട്‌ബൗണ്ട് പ്രവര്‍ത്തനം അനുവദിക്കുക എന്നതില്‍ നിന്ന് തടയുക എന്നതിലേക്ക് മാറ്റി നിങ്ങളുടെ അടിസ്ഥാന സുരക്ഷ ശക്തിപ്പെടുത്തുന്നു. തന്മൂലം, മൂന്നാം കക്ഷി ആപ്ലിക്കേഷനുകള്‍ ഇന്റര്‍നെറ്റിലേക്ക് കണക്ട് ചെയ്യുന്നതിനു മുമ്പ് നിങ്ങളുടെ വിശ്വാസം നേടിയെടുക്കേണ്ടതുണ്ട്.</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>പ്രൊഫൈല്‍ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>ഫയര്‍വോള്‍ പോളിസി വിന്യാസം ഇഷ്ടാനുസൃതമാക്കാന്‍ ഈ വിഭാഗം ഉപയോഗിക്കാവുന്നതാണ്.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗ്</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗിനായി ഉപയോഗിക്കുന്ന ടാഗ് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗിനായി ഉപയോഗിക്കുന്ന ടാഗ് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗിനായി ഉപയോഗിക്കുന്ന ടാഗ് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>ഫയര്‍വോള്‍ നിയമത്തിന്റെ പേര്</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് അംഗീകാരത്തിന് ഉത്തരവാദിയായ ഔട്ട്‌ബൗണ്ട് ഫയര്‍വോള്‍ നിയമത്തിന്റെ പേര് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് അംഗീകാരത്തിന് ഉത്തരവാദിയായ ഔട്ട്‌ബൗണ്ട് ഫയര്‍വോള്‍ നിയമത്തിന്റെ പേര് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് അംഗീകാരത്തിന് ഉത്തരവാദിയായ ഔട്ട്‌ബൗണ്ട് ഫയര്‍വോള്‍ നിയമത്തിന്റെ പേര് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>ഫയര്‍വോള്‍ നിയമ വിവരണം</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് അംഗീകാരത്തിന് ഉത്തരവാദിയായ ഔട്ട്‌ബൗണ്ട് ഫയര്‍വോള്‍ നിയമത്തിന്റെ വിവരണം ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് അംഗീകാരത്തിന് ഉത്തരവാദിയായ ഔട്ട്‌ബൗണ്ട് ഫയര്‍വോള്‍ നിയമത്തിന്റെ വിവരണം ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് അംഗീകാരത്തിന് ഉത്തരവാദിയായ ഔട്ട്‌ബൗണ്ട് ഫയര്‍വോള്‍ നിയമത്തിന്റെ വിവരണം ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗ് പോളിസിയുടെ പേര്</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗിന് ഉത്തരവാദിയായ App Control പോളിസിയുടെ പേര് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗിന് ഉത്തരവാദിയായ App Control പോളിസിയുടെ പേര് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഐഡി ടാഗിംഗിന് ഉത്തരവാദിയായ App Control പോളിസിയുടെ പേര് ഇഷ്ടാനുസൃതമാക്കുക.</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>പിന്‍ ചെയ്ത ഫയര്‍വോള്‍ പോളിസി</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>നിലവില്‍ സജീവമായ ഫയര്‍വോള്‍ പോളിസി തിരഞ്ഞെടുത്ത് ഈ പേജില്‍ എളുപ്പത്തില്‍ ഉപയോഗിക്കുന്നതിനായി പിന്‍ ചെയ്യുക.</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>പോളിസി പിന്‍ ചെയ്തിട്ടില്ല</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>ദ്രുത ആക്‌സസിനായി ഇവിടെ പിന്‍ ചെയ്യുന്നതിന് മുകളില്‍ ഒരു പോളിസി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
 </root>

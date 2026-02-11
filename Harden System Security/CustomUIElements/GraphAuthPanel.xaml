@@ -6,7 +6,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI">
+    xmlns:CCToolKit="using:CommonCore.ToolKits">
 
     <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 
@@ -267,19 +267,19 @@
                                          Spacing="12">
 
                                     <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                        <labs:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                        <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
 
                                     <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                        <labs:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                        <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
 
                                     <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                        <labs:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                        <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
 
                                     <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                        <labs:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                        <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
 
                                 </StackPanel>

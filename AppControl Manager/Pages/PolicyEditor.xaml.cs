@@ -24,7 +24,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class PolicyEditor : Page, CommonCore.UI.IPageHeaderProvider
 {
 
-	private PolicyEditorVM ViewModel { get; } = ViewModelProvider.PolicyEditorVM;
+	private PolicyEditorVM ViewModel => ViewModelProvider.PolicyEditorVM;
 
 	internal static Flyout? _DiamondButtonFlyout { get; private set; }
 	internal static Button? _DiamondButton { get; private set; }

@@ -73,12 +73,12 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 
 			applyStrategy: new DefaultApply(() =>
 			{
-				SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(5);
+				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(5);
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				SecurityPolicy.SystemAccessInfo states = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
+				CommonCore.SecurityPolicy.SystemAccessInfo states = CommonCore.SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
 
 				// Consider anything less than 5 as valid.
 				return states.LockoutBadCount <= 5;
@@ -86,7 +86,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(10);
+				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(10);
 			}),
 
 			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold",
@@ -109,20 +109,20 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 			applyStrategy: new DefaultApply(() =>
 			{
 				// Requires SetLockoutDuration to be applied first otherwise throws error: 87
-				SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
-				SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(1440);
+				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
+				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(1440);
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				SecurityPolicy.SystemAccessInfo states = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
+				CommonCore.SecurityPolicy.SystemAccessInfo states = CommonCore.SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
 
 				return states.ResetLockoutCount == 1440;
 			}),
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(10);
+				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(10);
 			}),
 
 			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/reset-account-lockout-counter-after",
@@ -143,19 +143,19 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 
 			applyStrategy: new DefaultApply(() =>
 			{
-				SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
+				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				SecurityPolicy.SystemAccessInfo states = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
+				CommonCore.SecurityPolicy.SystemAccessInfo states = CommonCore.SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
 
 				return states.LockoutDuration == 1440;
 			}),
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(10);
+				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(10);
 			}),
 
 			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration",

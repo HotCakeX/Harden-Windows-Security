@@ -159,7 +159,7 @@ internal static class FileTrustChecker
 
 	internal static TrustSource GetTrustSource()
 	{
-		string? result = RegistryManager.Manager.ReadRegistry(
+		string? result = CommonCore.RegistryManager.Manager.ReadRegistry(
 			new(
 				source: Source.Registry,
 				keyName: @"SYSTEM\CurrentControlSet\Control\CI\Policy",

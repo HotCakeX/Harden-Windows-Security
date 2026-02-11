@@ -16,7 +16,6 @@
 //
 
 using System.Threading.Tasks;
-using HardenSystemSecurity;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.System;

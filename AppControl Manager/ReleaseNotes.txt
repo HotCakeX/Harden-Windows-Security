@@ -1,3 +1,11 @@
+* Introducing Firewall Sentinel: it is an advanced security feature designed to harden the Windows Firewall by leveraging App ID Tagging, a feature of Windows Defender Application Control. Unlike traditional firewall rules that rely on file paths which can be easily spoofed, Firewall Sentinel links network permissions directly to cryptographic signatures and trusted policies. This ensures that only verified, signed, and reputable applications can access the network, significantly reducing the attack surface for malware and unauthorized data exfiltration. Please visit the GitHub repository for more information: https://github.com/HotCakeX/Harden-Windows-Security/wiki/FirewallSentinel
+
 * You can now assign policies from the Sidebar's Policies Library to the Simulation page.
 
-* Updated dependencies to the latest versions.
+* Dependencies have been updated to their latest versions, 3 dependencies have been removed, improving performance and the overall supply chain security.
+
+* In the Event Logs policy creation page, if you've selected file paths for EVTX files, they will no longer be cleared after the scan has been completed.
+
+* Fixed an issue with App Locker logs not being parsed correctly: https://github.com/HotCakeX/Harden-Windows-Security/issues/1041
+
+* The design of the Policies Library on the Sidebar has been improved to make it easier to use in very narrow widths. As a reminder, it is resizable and you can drag its edge to resize it.

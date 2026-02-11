@@ -26,7 +26,6 @@ using Windows.Graphics;
 using AnimatedVisuals;
 using Microsoft.UI.Xaml.Automation;
 using CommonCore.AppSettings;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Hosting;
 using System.Numerics;
 using Windows.Foundation;
@@ -36,6 +35,7 @@ using System.IO;
 using System.Collections.Generic;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml.Input;
+using CommonCore.ToolKits;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;

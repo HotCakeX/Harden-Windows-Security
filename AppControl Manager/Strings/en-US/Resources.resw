@@ -6662,21 +6662,20 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Remove assignment</value>
   </data>
-  <!--NEW-->
   <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
     <value>The selected policy for simulation contains a rule that allows all files.</value>
   </data>
   <data name="FirewallSentinelPageTitle" xml:space="preserve">
-    <value>Manage Windows Firewall based on file and app identity and whitelisting.</value>
+    <value>Manage the Windows Firewall and utilize allowlisting strategy for layered network access protection.</value>
   </data>
   <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
     <value>Firewall Sentinel</value>
   </data>
   <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Firewall Sentinel</value>
+    <value>Manage the Windows Firewall and utilize allowlisting strategy for layered network access protection.</value>
   </data>
   <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Manage Windows Firewall</value>
+    <value>Manage the Windows Firewall and utilize allowlisting strategy for layered network access protection</value>
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
   <value>File not found: {0}</value>
@@ -6789,4 +6788,154 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
   <value>Failed to register {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
 </data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>Expand Pinned Policy</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding new rules to it.</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding new rules to it.</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>Files and Folders</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by scanning files and folders.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by scanning files and folders.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by scanning files and folders.</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>Certificates</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding certificates to it.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding certificates to it.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding certificates to it.</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding a custom pattern-based file rule to it.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding a custom pattern-based file rule to it.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Expand the pinned Firewall policy by adding a custom pattern-based file rule to it.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>Pattern based File Rule</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Revert Changes</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Revert the changes made to the system and Windows Firewall.</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Revert the changes made to the system and Windows Firewall.</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Open Backup Location</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the location where Firewall rules backups are stored.</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the location where Firewall rules backups are stored.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Delete Backups</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete all Firewall rules backups.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete all Firewall rules backups.</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Only allows the programs and apps that come by default with the Windows operating system to be able to access the Internet. All signed and default Windows processes can access the Internet while third-party programs will be blocked.</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Extends the Default Windows profile to permit network connectivity for applications signed with Microsoft's code‑signing certificates. This profile grants access to built‑in Windows components and Microsoft‑signed software while excluding unsigned or non‑Microsoft third‑party applications from Internet access.</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Extends the Allow Microsoft profile by permitting everything it allows, and additionally allowing all reputable, signed applications based on Intelligent Security Cloud verdicts. This provides the broadest firewall coverage.</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>Choose one of the identity-based profiles below to apply. These profiles currently affect outbound traffic only; inbound settings remain unchanged. After you apply a profile, you can expand its rules to allow any third-party applications that require Internet access. Each profile also strengthens your baseline security by changing the default outbound action across all firewall profiles from Allow to Block. As a result, third-party applications must earn your trust before they can connect to the Internet.</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>Select Profile</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>You can use this section to customize the Firewall policy deployment.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>App ID Tag</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>Customize the Tag that will be used for App ID Tagging.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Customize the Tag that will be used for App ID Tagging.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Customize the Tag that will be used for App ID Tagging.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>Firewall Rule Name</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>Customize the name of the Outbound Firewall rule responsible for App ID Tagging authorization.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Customize the name of the Outbound Firewall rule responsible for App ID Tagging authorization.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Customize the name of the Outbound Firewall rule responsible for App ID Tagging authorization.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>Firewall Rule Description</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>Customize the description of the Outbound Firewall rule responsible for App ID Tagging authorization.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Customize the description of the Outbound Firewall rule responsible for App ID Tagging authorization.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Customize the description of the Outbound Firewall rule responsible for App ID Tagging authorization.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>App ID Tagging Policy Name</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>Customize the App Control policy's name responsible for App ID Tagging.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Customize the App Control policy's name responsible for App ID Tagging.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Customize the App Control policy's name responsible for App ID Tagging.</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>Pinned Firewall Policy</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>Select the currently active Firewall policy and Pin it so you can easily use it in this page.</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>No Policy Pinned</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>Search and select a policy above to pin it here for quick access.</value>
+  </data>
 </root>

@@ -22,7 +22,7 @@ using System.Threading;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
-using HardenSystemSecurity.SecurityPolicy;
+using CommonCore.SecurityPolicy;
 
 namespace HardenSystemSecurity.ViewModels;
 

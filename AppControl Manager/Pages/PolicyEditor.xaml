@@ -7,8 +7,8 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:PolicyEditor="using:AppControlManager.PolicyEditor"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:others="using:AppControlManager.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -307,22 +307,22 @@
                                         <TextBlock x:Uid="MaximumHotpatchSequenceHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[16], Mode=OneWay}"/>
 
                                         <!-- GridSplitters between columns -->
-                                        <controls:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[18], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[18], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.FileRulesColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
                                     </Grid>
                                 </Border>
                             </customUI:ListViewV2.Header>
@@ -457,12 +457,12 @@
                                         <TextBlock Text="Cert Issuer" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[6], Mode=OneWay}"/>
 
                                         <!-- GridSplitters between columns -->
-                                        <controls:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[8], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[9], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[10], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[11], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[12], Mode=OneWay}" />
-                                        <controls:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[13], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[8], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[9], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[10], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[11], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[12], Mode=OneWay}" />
+                                        <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.SignatureRulesColumnManager.ColumnVisibilities[13], Mode=OneWay}" />
                                     </Grid>
                                 </Border>
                             </customUI:ListViewV2.Header>
@@ -534,8 +534,11 @@
                                 </win:StackPanel.ChildrenTransitions>
 
                                 <controls:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"
-                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/Name.png}"
                                                        IsClickEnabled="False">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/External/Name.png"
+                                                    ShowAsMonochrome="False"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyName"
@@ -543,9 +546,12 @@
 
                                 </controls:SettingsCard>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"
-                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/ID.png}"
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"                                                       
                                                        IsClickEnabled="False">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/External/ID.png"
+                                                    ShowAsMonochrome="False"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyID"
@@ -553,9 +559,12 @@
 
                                 </controls:SettingsCard>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"
-                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/BasePolicyID.png}"
+                                <controls:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"                                                      
                                                        IsClickEnabled="False">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/External/BasePolicyID.png"
+                                                    ShowAsMonochrome="False"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorBasePolicyID"
@@ -564,8 +573,11 @@
                                 </controls:SettingsCard>
 
                                 <controls:SettingsCard x:Uid="PolicyEditorPolicyVersionSettingsCard"
-                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/Version.png}"
                                                        IsClickEnabled="False">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/External/Version.png"
+                                                    ShowAsMonochrome="False"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyVersion"
@@ -574,8 +586,11 @@
                                 </controls:SettingsCard>
 
                                 <customUI:SettingsCardV2 x:Uid="PolicyEditorPolicyTypeSettingsCard"
-                                                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                                         HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyType.png}">
+                                                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/External/PolicyType.png"
+                                                    ShowAsMonochrome="False"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                               x:Uid="PolicyEditorPolicyType"
@@ -585,8 +600,11 @@
                                 </customUI:SettingsCardV2>
 
                                 <controls:SettingsCard x:Uid="PolicyEditorPolicyInfoIDSettingsCard"
-                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyIDInfo.png}"
                                                        IsClickEnabled="False">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/External/PolicyIDInfo.png"
+                                                    ShowAsMonochrome="False"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyInfoID"
@@ -595,8 +613,11 @@
                                 </controls:SettingsCard>
 
                                 <customUI:SettingsCardV2 x:Uid="PolicyEditorHVCILevelSettingsCard"
-                                                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                                         HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/HVCIOption.png}">
+                                                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <BitmapIcon UriSource="ms-appx:///Assets/External/HVCIOption.png"
+                                                    ShowAsMonochrome="False"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                               x:Uid="PolicyEditorHVCILevel"
@@ -612,9 +633,11 @@
 
                                 </customUI:SettingsCardV2>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"
-                                                       HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}"
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"                                                    
                                                        IsClickEnabled="False">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xE8AC;" />
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyName"
@@ -685,8 +708,8 @@
                                                         <TextBlock x:Uid="ContextHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
 
                                                         <!-- GridSplitters between columns -->
-                                                        <controls:GridSplitter Grid.Column="1" />
-                                                        <controls:GridSplitter Grid.Column="2" />
+                                                        <CCToolKit:GridSplitter Grid.Column="1" />
+                                                        <CCToolKit:GridSplitter Grid.Column="2" />
                                                     </Grid>
                                                 </Border>
                                             </ListView.Header>

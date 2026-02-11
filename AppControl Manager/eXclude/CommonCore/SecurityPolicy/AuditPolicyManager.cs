@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -24,9 +25,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
-using AppControlManager.ViewModels;
 
-namespace HardenSystemSecurity.SecurityPolicy;
+namespace CommonCore.SecurityPolicy;
 
 /// <summary>
 /// Represents a single audit policy entry with subcategory information
@@ -41,7 +41,7 @@ internal sealed partial class AuditPolicyInfo(
 	string subcategoryName,
 	Guid categoryGuid,
 	string categoryName,
-	uint auditingInformation) : ViewModelBase
+	uint auditingInformation) : INotifyPropertyChanged
 {
 	[JsonInclude]
 	[JsonPropertyOrder(4)]
@@ -70,7 +70,7 @@ internal sealed partial class AuditPolicyInfo(
 			{
 				field = value;
 
-				_ = Dispatcher.TryEnqueue(() =>
+				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 				{
 					OnPropertyChanged(nameof(AuditSettingDescription));
 					OnPropertyChanged(nameof(SelectedAuditSettingIndex));
@@ -96,7 +96,7 @@ internal sealed partial class AuditPolicyInfo(
 	internal void CommitChanges()
 	{
 		OriginalAuditingInformation = AuditingInformation;
-		_ = Dispatcher.TryEnqueue(() =>
+		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 		{
 			OnPropertyChanged(nameof(HasPendingChanges));
 		});
@@ -144,6 +144,14 @@ internal sealed partial class AuditPolicyInfo(
 			_ => GlobalVars.GetStr("UnknownState")
 		};
 	}
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+
+	/// <summary>
+	/// Raises the PropertyChanged event.
+	/// </summary>
+	/// <param name="propertyName">The name of the property that changed.</param>
+	private void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
 [JsonSerializable(typeof(AuditPolicyInfo))]

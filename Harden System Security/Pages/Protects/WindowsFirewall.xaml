@@ -6,6 +6,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:CCOthers="using:CommonCore.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -377,8 +378,8 @@
                                                 Style="{StaticResource ListViewHeaderButton}"
                                                 Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
 
-                                        <controls:GridSplitter Grid.Column="1"/>
-                                        <controls:GridSplitter Grid.Column="2"/>
+                                        <CCToolKit:GridSplitter Grid.Column="1"/>
+                                        <CCToolKit:GridSplitter Grid.Column="2"/>
                                     </Grid>
                                 </Border>
                             </customUI:ListViewV2.Header>

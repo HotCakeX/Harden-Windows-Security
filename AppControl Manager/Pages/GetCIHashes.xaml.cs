@@ -42,7 +42,7 @@ internal sealed partial class HashCardItem : ViewModelBase
 
 internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private GetCIHashesVM ViewModel { get; } = ViewModelProvider.GetCIHashesVM;
+	private GetCIHashesVM ViewModel => ViewModelProvider.GetCIHashesVM;
 
 	internal GetCIHashes()
 	{

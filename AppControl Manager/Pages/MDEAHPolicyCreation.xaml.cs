@@ -30,8 +30,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 
-	private MDEAHPolicyCreationVM ViewModel { get; } = ViewModelProvider.MDEAHPolicyCreationVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private MDEAHPolicyCreationVM ViewModel => ViewModelProvider.MDEAHPolicyCreationVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal MDEAHPolicyCreation()
 	{

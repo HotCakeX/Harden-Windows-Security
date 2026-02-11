@@ -75,6 +75,7 @@ internal sealed partial class Main : ViewModelBase
 		PersistentPoliciesLibrary = ReadValue(nameof(PersistentPoliciesLibrary), PersistentPoliciesLibrary);
 		EncryptPoliciesLibrary = ReadValue(nameof(EncryptPoliciesLibrary), EncryptPoliciesLibrary);
 		EncryptionScopePoliciesLibrary = ReadValue(nameof(EncryptionScopePoliciesLibrary), EncryptionScopePoliciesLibrary);
+		FirewallSentinelPinnedPolicyID = ReadValue(nameof(FirewallSentinelPinnedPolicyID), FirewallSentinelPinnedPolicyID);
 	}
 
 	/// <summary>
@@ -552,4 +553,18 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = true;
+
+	/// <summary>
+	/// The ID of the policy that user pinned in the Firewall Sentinel page.
+	/// </summary>
+	internal string FirewallSentinelPinnedPolicyID
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(FirewallSentinelPinnedPolicyID), field);
+			}
+		}
+	} = string.Empty;
 }

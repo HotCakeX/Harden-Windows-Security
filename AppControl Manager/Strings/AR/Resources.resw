@@ -6662,4 +6662,280 @@
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>إزالة تعيين</value>
   </data>
+  <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
+    <value>تحتوي السياسة المحددة للمحاكاة على قاعدة تسمح بجميع الملفات.</value>
+  </data>
+  <data name="FirewallSentinelPageTitle" xml:space="preserve">
+    <value>إدارة جدار حماية Windows واستخدام استراتيجية قائمة السماح لحماية الوصول إلى الشبكة بأسلوب متعدد الطبقات.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
+    <value>حارس جدار الحماية</value>
+  </data>
+  <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة جدار حماية Windows واستخدام استراتيجية قائمة السماح لحماية الوصول إلى الشبكة بأسلوب متعدد الطبقات.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة جدار حماية Windows واستخدام استراتيجية قائمة السماح لحماية الوصول إلى الشبكة بأسلوب متعدد الطبقات</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+  <value>لم يتم العثور على الملف: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>الملف صغير جدا بحيث لا يمكن أن يحتوي على رأس صالح</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>توقيع غير صالح: 0x{0:X8}. المتوقع: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>خطأ في قراءة الإدخال في الموضع {0}: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>من المتوقع وجود قوس افتتاحي في بداية الإدخال، تم الحصول على: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>من المتوقع وجود فاصلة منقوطة بعد اسم المفتاح، تم الحصول على: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>من المتوقع وجود فاصلة منقوطة بعد اسم القيمة، تم الحصول على: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>من المتوقع وجود فاصلة منقوطة بعد النوع، تم الحصول على: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>من المتوقع وجود فاصلة منقوطة بعد الحجم، تم الحصول على: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>لم تتم قراءة {0} بايت من البيانات، تم الحصول على {1} بايت فقط</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>من المتوقع وجود قوس إغلاق بعد البيانات، تم الحصول على: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>نهاية غير متوقعة للتدفق أثناء قراءة سلسلة Unicode</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>يجب توفير ملف سياسة آخر واحد على الأقل</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>لا يمكن أن يكون مسار ملف السياسة الرئيسي فارغا أو خاليا</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>يجب توفير مسار ملف سياسة آخر واحد على الأقل</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>لا يمكن أن يكون مسار ملف السياسة في الفهرس {0} فارغا أو خاليا</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>تم تحميل ملف السياسة الحالي مع {0} إدخالات</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>إجمالي العمليات: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>الإدخالات المضافة: {0}</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>الإدخالات المستبدلة: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>ملف السياسة غير موجود، يتم وضع علامة على جميع السياسات على أنها غير مؤكدة</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>اكتمل التحقق: 0 من {0} سياسات متطابقة (ملف السياسة غير موجود)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>تحقق: {0}\{1} = تطابق</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>تحقق: {0}\{1} = عدم تطابق</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>تحقق: {0}\{1} = غير موجود</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>اكتمل التحقق: {0} من {1} سياسات متطابقة</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>ملف السياسة غير موجود، لا يوجد شيء لإزالته</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>تمت الإزالة: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>اكتملت إزالة السياسة: تمت إزالة {0} سياسات</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>فشل إنشاء GroupPolicyObject في STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>فشل تهيئة COM في مؤشر ترابط STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>فشل إنشاء GroupPolicyObject - تم إرجاع مؤشر فارغ من مؤشر ترابط STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>فشل تهيئة COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>فشل فتح GPO للجهاز المحلي. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>استثناء COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>فشل تسجيل {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>فشل تسجيل {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>توسيع السياسة المثبتة</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة قواعد جديدة إليها.</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة قواعد جديدة إليها.</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>الملفات والمجلدات</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق مسح الملفات والمجلدات.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق مسح الملفات والمجلدات.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق مسح الملفات والمجلدات.</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>الشهادات</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة شهادات إليها.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة شهادات إليها.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة شهادات إليها.</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة قاعدة ملف مخصصة تعتمد على نمط إليها.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة قاعدة ملف مخصصة تعتمد على نمط إليها.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتوسيع سياسة جدار الحماية المثبتة عن طريق إضافة قاعدة ملف مخصصة تعتمد على نمط إليها.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>قاعدة ملف تعتمد على نمط</value>
+  </data>
+    <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>التراجع عن التغييرات</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>التراجع عن التغييرات التي تم إجراؤها على النظام وجدار حماية Windows.</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>التراجع عن التغييرات التي تم إجراؤها على النظام وجدار حماية Windows.</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>فتح موقع النسخ الاحتياطية</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح الموقع الذي يتم فيه تخزين النسخ الاحتياطية لقواعد جدار الحماية.</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح الموقع الذي يتم فيه تخزين النسخ الاحتياطية لقواعد جدار الحماية.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حذف النسخ الاحتياطية</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف جميع النسخ الاحتياطية لقواعد جدار الحماية.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حذف جميع النسخ الاحتياطية لقواعد جدار الحماية.</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>يسمح فقط للبرامج والتطبيقات المضمنة افتراضيا مع نظام التشغيل Windows بالوصول إلى الإنترنت. جميع عمليات Windows الموقعة والافتراضية يمكنها الوصول إلى الإنترنت، بينما سيتم حظر برامج الجهات الخارجية.</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>يوسع ملف تعريف Windows الافتراضي للسماح بالاتصال الشبكي للتطبيقات الموقعة بشهادات توقيع التعليمات البرمجية من Microsoft. يمنح ملف التعريف هذا حق الوصول لمكونات Windows المضمنة والبرامج الموقعة من Microsoft، مع استبعاد تطبيقات الجهات الخارجية غير الموقعة أو غير التابعة لـ Microsoft من الوصول إلى الإنترنت.</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>يوسع ملف تعريف السماح لـ Microsoft بالسماح بكل ما يسمح به، بالإضافة إلى السماح لجميع التطبيقات الموقعة وذات السمعة الجيدة استنادا إلى تقييمات Intelligent Security Cloud. يوفر ملف التعريف هذا أوسع تغطية لجدار الحماية.</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>اختر أحد ملفات التعريف المستندة إلى الهوية أدناه لتطبيقه. تؤثر ملفات التعريف هذه حاليا على حركة المرور الصادرة فقط؛ وتبقى إعدادات حركة المرور الواردة دون تغيير. بعد تطبيق ملف تعريف، يمكنك توسيع قواعده للسماح لأي تطبيقات من جهات خارجية تحتاج إلى الوصول إلى الإنترنت. يعزز كل ملف تعريف أيضا مستوى الأمان الأساسي لديك عن طريق تغيير الإجراء الافتراضي لحركة المرور الصادرة في جميع ملفات تعريف جدار الحماية من سماح إلى حظر. ونتيجة لذلك، يجب أن تكتسب تطبيقات الجهات الخارجية ثقتك قبل أن تتمكن من الاتصال بالإنترنت.</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>تحديد ملف التعريف</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>يمكنك استخدام هذا القسم لتخصيص نشر نهج جدار الحماية.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>علامة معرف التطبيق</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>تخصيص العلامة التي سيتم استخدامها لوسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تخصيص العلامة التي سيتم استخدامها لوسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تخصيص العلامة التي سيتم استخدامها لوسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>اسم قاعدة جدار الحماية</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>تخصيص اسم قاعدة جدار الحماية لحركة المرور الصادرة المسؤولة عن تفويض وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تخصيص اسم قاعدة جدار الحماية لحركة المرور الصادرة المسؤولة عن تفويض وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تخصيص اسم قاعدة جدار الحماية لحركة المرور الصادرة المسؤولة عن تفويض وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>وصف قاعدة جدار الحماية</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>تخصيص وصف قاعدة جدار الحماية لحركة المرور الصادرة المسؤولة عن تفويض وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تخصيص وصف قاعدة جدار الحماية لحركة المرور الصادرة المسؤولة عن تفويض وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تخصيص وصف قاعدة جدار الحماية لحركة المرور الصادرة المسؤولة عن تفويض وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>اسم نهج وسم معرف التطبيق</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>تخصيص اسم نهج التحكم في التطبيقات المسؤول عن وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تخصيص اسم نهج التحكم في التطبيقات المسؤول عن وسم معرف التطبيق.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تخصيص اسم نهج التحكم في التطبيقات المسؤول عن وسم معرف التطبيق.</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>نهج جدار الحماية المثبت</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>حدد نهج جدار الحماية النشط حاليا وقم بتثبيته حتى تتمكن من استخدامه بسهولة في هذه الصفحة.</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>لا يوجد نهج مثبت</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>ابحث وحدد نهجا أعلاه لتثبيته هنا للوصول السريع.</value>
+  </data>
 </root>

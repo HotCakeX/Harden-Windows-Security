@@ -8,6 +8,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:others="using:AppControlManager.Others"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -241,14 +242,11 @@
                         </Button.ContentTemplate>
                         <Button.Flyout>
                             <Flyout>
-                                <StackPanel>
-                                    <customUI:ColorRadialGaugeV2
+                                <CCToolKit:RadialGauge
                                       StepSize="1"
                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                       TickSpacing="2"
-                                      ScaleWidth="12"
-                                      NeedleWidth="0"
-                                      NeedleLength="0"
+                                      ScaleWidth="12"                                      
                                       TickLength="8"
                                       TickWidth="0"
                                       ScalePadding="5"
@@ -258,7 +256,6 @@
                                       Minimum="2"
                                       Value="{x:Bind ViewModel.ScalabilityRadialGaugeValue, Mode=TwoWay}"
                                       ValueStringFormat="N0"/>
-                                </StackPanel>
                             </Flyout>
                         </Button.Flyout>
                     </Button>
@@ -367,20 +364,20 @@
                         <Button x:Uid="FilePathColumnHeaderBtn" Grid.Column="14" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Tag="FilePath" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[14], Mode=OneWay}"/>
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[16], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[17], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[18], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[16], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[17], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[18], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

@@ -28,8 +28,8 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class EventLogsPolicyCreation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private EventLogsPolicyCreationVM ViewModel { get; } = ViewModelProvider.EventLogsPolicyCreationVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private EventLogsPolicyCreationVM ViewModel => ViewModelProvider.EventLogsPolicyCreationVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal EventLogsPolicyCreation()
 	{

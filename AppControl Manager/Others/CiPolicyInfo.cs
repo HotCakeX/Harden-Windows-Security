@@ -44,70 +44,70 @@ internal sealed class CiPolicyInfo(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("policyID")]
-	internal string PolicyID { get; } = policyID;
+	internal string PolicyID => policyID;
 
 	/// <summary>
 	/// Identifier for the base policy.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("basePolicyID")]
-	internal string? BasePolicyID { get; } = basePolicyID;
+	internal string? BasePolicyID => basePolicyID;
 
 	/// <summary>
 	/// Human-readable name of the policy.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("friendlyName")]
-	internal string? FriendlyName { get; } = friendlyName;
+	internal string? FriendlyName => friendlyName;
 
 	/// <summary>
 	/// Version object representing the policy version.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("version")]
-	internal Version? Version { get; } = version;
+	internal Version? Version => version;
 
 	/// <summary>
 	/// Original version string from the policy data.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("versionString")]
-	internal string? VersionString { get; } = versionString;
+	internal string? VersionString => versionString;
 
 	/// <summary>
 	/// Indicates if it's a system policy.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("isSystemPolicy")]
-	internal bool IsSystemPolicy { get; } = isSystemPolicy;
+	internal bool IsSystemPolicy => isSystemPolicy;
 
 	/// <summary>
 	/// Indicates if the policy is signed.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("isSignedPolicy")]
-	internal bool IsSignedPolicy { get; } = isSignedPolicy;
+	internal bool IsSignedPolicy => isSignedPolicy;
 
 	/// <summary>
 	/// Indicates if the policy is present on disk.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("isOnDisk")]
-	internal bool IsOnDisk { get; } = isOnDisk;
+	internal bool IsOnDisk => isOnDisk;
 
 	/// <summary>
 	/// Indicates if the policy is enforced.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("isEnforced")]
-	internal bool IsEnforced { get; } = isEnforced;
+	internal bool IsEnforced => isEnforced;
 
 	/// <summary>
 	/// Indicates if the policy is authorized.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("isAuthorized")]
-	internal bool IsAuthorized { get; } = isAuthorized;
+	internal bool IsAuthorized => isAuthorized;
 
 	/// <summary>
 	/// List of options or settings related to the policy.
@@ -139,10 +139,8 @@ internal sealed class CiPolicyInfo(
 	/// </summary>
 	/// <param name="policy">The policy instance to serialize.</param>
 	/// <returns>A JSON string representation of the policy.</returns>
-	internal static string ToJson(CiPolicyInfo policy)
-	{
-		return JsonSerializer.Serialize(policy, CiPolicyInfoJsonContext.Default.CiPolicyInfo);
-	}
+	internal static string ToJson(CiPolicyInfo policy) =>
+		 JsonSerializer.Serialize(policy, CiPolicyInfoJsonContext.Default.CiPolicyInfo);
 
 	/// <summary>
 	/// Deserializes a JSON string into a <see cref="CiPolicyInfo"/> instance using source-generated JSON.
@@ -270,7 +268,7 @@ internal sealed class CiPolicyInfo(
 /// Json serialization context for <see cref="CiPolicyInfo"/> type.
 /// </summary>
 [JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
-[JsonSerializable(typeof(Others.CiPolicyInfo))]
+[JsonSerializable(typeof(CiPolicyInfo))]
 internal sealed partial class CiPolicyInfoJsonContext : JsonSerializerContext
 {
 }

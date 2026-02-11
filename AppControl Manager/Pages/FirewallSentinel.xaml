@@ -8,18 +8,34 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:others="using:AppControlManager.Others"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:siPolicy="using:AppControlManager.SiPolicy"
+    xmlns:intelgathering="using:AppControlManager.IntelGathering"
+    Unloaded="{x:Bind FirewallSentinel_Unloaded}"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <customUI:ScanLevelResources />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <ScrollViewer>
 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <customUI:InfoBarV2 Grid.Row="0"
-                                Margin="0,0,0,10"
+                                Margin="0,0,0,5"
                                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
@@ -40,33 +56,66 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <controls:WrapPanel Grid.Row="0" Margin="0,0,0,20"
+                        <controls:WrapPanel Grid.Row="0"
+                                            Margin="0,0,0,20"
+                                            Padding="6"
                                             Orientation="Horizontal"
                                             HorizontalAlignment="Center"
                                             HorizontalSpacing="12"
                                             VerticalSpacing="8">
 
                             <!-- Main Header Title and Description -->
-                            <StackPanel Spacing="4" HorizontalAlignment="Center">
-                                <TextBlock Text="Firewall Configuration" 
+                            <StackPanel Spacing="4" HorizontalAlignment="Center" Orientation="Vertical">
+                                <TextBlock x:Uid="SelectProfile"
                                            Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                <TextBlock Text="Select a protection profile to apply to the Windows Firewall." 
+                                <TextBlock x:Uid="FirewallSentinelMainTopDescription"
+                                           TextWrapping="Wrap"
                                            Style="{ThemeResource BodyTextBlockStyle}" 
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
-                            <DropDownButton Content="Actions"
+                            <DropDownButton x:Uid="ExtraActionsDropDownButton"
                                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                             Grid.Row="0"
                                             HorizontalAlignment="Center">
+                                <DropDownButton.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DropDownButton.ContentTemplate>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem Text="Revert Changes" Click="{x:Bind ViewModel.RestoreFirewall}" />
-                                        <MenuFlyoutItem Text="Open Backup Location" Click="{x:Bind ViewModel.OpenBackupDirectory}" />
-                                        <MenuFlyoutItem Text="Delete backups" Click="{x:Bind ViewModel.ClearBackups}" />
+                                        <MenuFlyoutItem x:Uid="RevertChangesMenuFlyoutItem"
+                                                        Click="{x:Bind ViewModel.RestoreFirewall}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE7A7;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem x:Uid="OpenBackupLocationMenuFlyoutItem"
+                                                        Click="{x:Bind ViewModel.OpenBackupDirectory}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8DA;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem x:Uid="DeleteBackupsMenuFlyoutItem"
+                                                        Click="{x:Bind ViewModel.ClearBackups}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74D;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                     </MenuFlyout>
                                 </DropDownButton.Flyout>
                             </DropDownButton>
+
+                            <ProgressRing Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}"
+                                          Margin="5,5,5,5"
+                                          Value="0"
+                                          IsIndeterminate="True"
+                                          Minimum="0"
+                                          Maximum="100"/>
 
                         </controls:WrapPanel>
 
@@ -74,95 +123,126 @@
                         <controls:WrapPanel Grid.Row="1" HorizontalSpacing="16" VerticalSpacing="16" HorizontalAlignment="Center">
 
                             <!-- Default Windows Card -->
-                            <Grid Width="260"
-                                  Height="220" 
-                                  Padding="16" 
+                            <Grid x:Name="DefaultWindowsCard"
+                                  Width="280"
+                                  Height="250" 
+                                  Padding="12" 
                                   CornerRadius="8" 
                                   BorderThickness="1" 
                                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                  PointerEntered="{x:Bind Card_PointerEntered}"
+                                  PointerExited="{x:Bind Card_PointerExited}"
+                                  PointerPressed="{x:Bind Card_PointerPressed}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Text="Default Windows" Style="{ThemeResource BodyStrongTextBlockStyle}" Grid.Row="0"/>
+                                <TextBlock Text="Default Windows"
+                                           HorizontalAlignment="Center"
+                                           Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                           Grid.Row="0"/>
 
-                                <TextBlock Text="Restores the standard Windows Firewall rules and settings. This will revert any custom security policies applied by this tool."
-                                       Style="{ThemeResource CaptionTextBlockStyle}"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,8,0,12"
-                                       Grid.Row="1"/>
+                                <TextBlock x:Uid="DefaultWindowsFirewallSentinelProfileDescription"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,8,0,12"
+                                           Grid.Row="1"/>
 
-                                <Button Content="Default Windows"
+                                <Button Content="Apply Default Windows profile"
                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.ConfigureFirewallForDefaultWindows}" 
                                         Style="{StaticResource AccentButtonStyle}" 
                                         HorizontalAlignment="Stretch" 
                                         Grid.Row="2"/>
+
+                                <!-- Overlay container for Neon Border with negative margin to ignore padding -->
+                                <Grid x:Name="DefaultWindowsBorder" Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
                             </Grid>
 
                             <!-- Allow Microsoft Card -->
-                            <Grid Width="260" Height="220" 
-                                  Padding="16" 
+                            <Grid x:Name="AllowMicrosoftCard"
+                                  Width="280"
+                                  Height="250" 
+                                  Padding="12" 
                                   CornerRadius="8" 
                                   BorderThickness="1" 
                                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                  PointerEntered="{x:Bind Card_PointerEntered}"
+                                  PointerExited="{x:Bind Card_PointerExited}"
+                                  PointerPressed="{x:Bind Card_PointerPressed}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Text="Allow Microsoft" Style="{ThemeResource BodyStrongTextBlockStyle}" Grid.Row="0"/>
+                                <TextBlock Text="Allow Microsoft"
+                                           HorizontalAlignment="Center"
+                                           Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                           Grid.Row="0"/>
 
-                                <TextBlock Text="Permits all network traffic for binaries signed by Microsoft. Ensures Windows Update and Microsoft services function correctly."
-                                       Style="{ThemeResource CaptionTextBlockStyle}"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,8,0,12"
-                                       Grid.Row="1"/>
+                                <TextBlock x:Uid="AllowMicrosoftFirewallSentinelProfileDescription"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,8,0,12"
+                                           Grid.Row="1"/>
 
-                                <Button Content="Allow Microsoft"
+                                <Button Content="Apply Allow Microsoft profile"
                                         Click="{x:Bind ViewModel.ConfigureFirewallForAllowMicrosoft}"
                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                         Style="{StaticResource AccentButtonStyle}" 
                                         HorizontalAlignment="Stretch" 
                                         Grid.Row="2"/>
+
+                                <!-- Overlay container for Neon Border with negative margin to ignore padding -->
+                                <Grid x:Name="AllowMicrosoftBorder" Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
                             </Grid>
 
                             <!-- Signed and Reputable Card -->
-                            <Grid Width="260"
-                                  Height="220" 
-                                  Padding="16" 
+                            <Grid x:Name="SignedReputableCard"
+                                  Width="280"
+                                  Height="250" 
+                                  Padding="12" 
                                   CornerRadius="8" 
                                   BorderThickness="1" 
                                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                  PointerEntered="{x:Bind Card_PointerEntered}"
+                                  PointerExited="{x:Bind Card_PointerExited}"
+                                  PointerPressed="{x:Bind Card_PointerPressed}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Text="Signed &amp; Reputable" Style="{ThemeResource BodyStrongTextBlockStyle}" Grid.Row="0"/>
+                                <TextBlock Text="Signed &amp; Reputable"
+                                           HorizontalAlignment="Center"
+                                           Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                           Grid.Row="0"/>
 
-                                <TextBlock Text="Restricts network traffic to software with valid signatures and known good reputation. Provides the highest level of security."
-                                       Style="{ThemeResource CaptionTextBlockStyle}"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,8,0,12"
-                                       Grid.Row="1"/>
+                                <TextBlock x:Uid="SignedAndReputableFirewallSentinelProfileDescription"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,8,0,12"
+                                           Grid.Row="1"/>
 
-                                <Button Content="Signed and Reputable"
+                                <Button Content="Apply Signed and Reputable profile"
                                         Click="{x:Bind ViewModel.ConfigureFirewallForSignedAndReputable}"
                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                         Style="{StaticResource AccentButtonStyle}" 
                                         HorizontalAlignment="Stretch" 
                                         Grid.Row="2"/>
+
+                                <!-- Overlay container for Neon Border with negative margin to ignore padding -->
+                                <Grid x:Name="SignedReputableBorder" Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
                             </Grid>
 
                         </controls:WrapPanel>
@@ -178,16 +258,16 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel Spacing="4" Grid.Row="0" HorizontalAlignment="Center">
-                                <TextBlock Text="Advanced" 
+                                <TextBlock x:Uid="Advanced"
                                            Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                <TextBlock Text="You can use this section to customize the Firewall policy deployment." 
+                                <TextBlock x:Uid="FirewallSentinelAdvancedSectionDescription"
                                            Style="{ThemeResource BodyTextBlockStyle}" 
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
                             <StackPanel Spacing="4" Margin="0,10,0,0" Grid.Row="1">
-                                <controls:SettingsCard Description="Customize the Tag that will be attached for App ID Tagging."
-                                                       Header="App ID Tag">
+
+                                <controls:SettingsCard x:Uid="FirewallSentinelAdvancedSectionAppIDTag">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xEC5A;"/>
                                     </controls:SettingsCard.HeaderIcon>
@@ -195,8 +275,7 @@
                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
                                 </controls:SettingsCard>
 
-                                <controls:SettingsCard Description="Customize the name of the firewall rule responsible for App ID Tagging."
-                                                       Header="Firewall rule name">
+                                <controls:SettingsCard x:Uid="FirewallSentinelAdvancedSectionFWRuleName">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE932;"/>
                                     </controls:SettingsCard.HeaderIcon>
@@ -204,9 +283,7 @@
                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
                                 </controls:SettingsCard>
 
-
-                                <controls:SettingsCard Description="Customize the description of the firewall rule responsible for App ID Tagging."
-                                                       Header="Firewall rule description">
+                                <controls:SettingsCard x:Uid="FirewallSentinelAdvancedSectionFWRuleDescription">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE70B;"/>
                                     </controls:SettingsCard.HeaderIcon>
@@ -214,8 +291,7 @@
                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
                                 </controls:SettingsCard>
 
-                                <controls:SettingsCard Description="Customize the App Control policy's name responsible for App ID Tagging."
-                                                       Header="App ID Tagging Policy Name">
+                                <controls:SettingsCard x:Uid="FirewallSentinelAdvancedSectionAppIDTagPolName">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE8AC;"/>
                                     </controls:SettingsCard.HeaderIcon>
@@ -227,6 +303,923 @@
 
                         </Grid>
                     </ScrollViewer>
+                </Expander.Content>
+            </Expander>
+
+            <!-- Policy Pinning Section -->
+
+            <Border Background="{ThemeResource LayerFillColorAltBrush}"
+                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8"
+                  Padding="16"
+                  Margin="0,5,0,0"
+                  Grid.Row="2">
+
+                <Grid HorizontalAlignment="Center">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,16" HorizontalAlignment="Center">
+                        <TextBlock x:Uid="PinnedFirewallPolicy"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="PinnedFirewallPolicyDescription"
+                                   Style="{ThemeResource BodyTextBlockStyle}" 
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+
+                    <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+
+                        <Button Content="Pin"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            IsEnabled="{x:Bind ViewModel.IsPinButtonEnabled, Mode=OneWay}"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Click="{x:Bind ViewModel.PinSelectedPolicy}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE718;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+
+                        <!-- Selection Controls -->
+                        <StackPanel Orientation="Vertical" Spacing="12" HorizontalAlignment="Center">
+
+                            <TextBox x:Uid="SearchBoxTextBox"
+                                 HorizontalAlignment="Center"
+                                 Width="350"
+                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                 Text="{x:Bind ViewModel.PolicySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <ComboBox ItemsSource="{x:Bind ViewModel.FilteredPolicies, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.SelectedComboBoxPolicy, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                      HorizontalAlignment="Center"
+                                      PlaceholderText="Select an App ID Tagging policy to Pin"
+                                      Width="350">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="siPolicy:PolicyFileRepresent">
+                                        <StackPanel Padding="0,8" Spacing="8">
+
+                                            <!-- Friendly Name -->
+                                            <TextBlock Text="{x:Bind PolicyIdentifier}" 
+                                                       Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                                       TextWrapping="Wrap"/>
+
+                                            <!-- Policy ID -->
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <FontIcon Grid.Column="0" Glyph="&#xE946;"
+                                                      FontSize="14"
+                                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                      VerticalAlignment="Center"/>
+                                                <StackPanel Grid.Column="1" Spacing="0">
+                                                    <TextBlock x:Uid="PolicyIDHeader"
+                                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                                               Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                                               FontSize="10"/>
+                                                    <TextBlock Text="{x:Bind PolicyID}" 
+                                                               Style="{ThemeResource CaptionTextBlockStyle}" 
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
+                                                               FontFamily="Consolas"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <!-- Version -->
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <FontIcon Grid.Column="0"
+                                                          Glyph="&#xE95F;"
+                                                          FontSize="14"
+                                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                          VerticalAlignment="Center"/>
+                                                <StackPanel Grid.Column="1" Spacing="0">
+                                                    <TextBlock x:Uid="VersionHeader"
+                                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                                               Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                                               FontSize="10"/>
+                                                    <TextBlock Text="{x:Bind PolicyObj.VersionEx}" 
+                                                               Style="{ThemeResource CaptionTextBlockStyle}" 
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                        </StackPanel>
+
+                        <!-- Pinned Policy Display Card -->
+
+                        <!-- Pinned State -->
+                        <Grid CornerRadius="8"
+                              HorizontalAlignment="Center"
+                              Padding="14"
+                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                              BorderThickness="1"
+                              Visibility="{x:Bind ViewModel.PinnedPolicyVisibility, Mode=OneWay}">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Header Area with Unpin Button -->
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Spacing="2">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE840;"
+                                              FontSize="14"
+                                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                        <TextBlock Text="PINNED POLICY" 
+                                               Style="{ThemeResource CaptionTextBlockStyle}" 
+                                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                               FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyIdentifier, Mode=OneWay}" 
+                                               Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                               TextWrapping="Wrap"
+                                               IsTextSelectionEnabled="True"/>
+                                </StackPanel>
+
+                                <Button Grid.Column="1"
+                                        Margin="5,0,0,5"
+                                        Content="Unpin" 
+                                        VerticalAlignment="Top"
+                                        IsEnabled="{x:Bind ViewModel.IsPolicyPinned, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.ClearPinnedPolicy}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE77A;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                            </Grid>
+
+                            <StackPanel Grid.Row="1" Margin="0,10,0,0" Spacing="12">
+
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Grid.Column="0"
+                                              Glyph="&#xE946;"
+                                              FontSize="16"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Column="1" Spacing="2">
+                                        <TextBlock x:Uid="PolicyIDHeader"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyID, Mode=OneWay}" 
+                                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                                   FontFamily="Consolas"
+                                                   IsTextSelectionEnabled="True"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Grid.Column="0"
+                                          Glyph="&#xE95F;"
+                                          FontSize="16"
+                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                          VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Column="1" Spacing="2">
+                                        <TextBlock x:Uid="VersionHeader"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyObj.VersionEx, Mode=OneWay}" 
+                                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                                   IsTextSelectionEnabled="True"/>
+                                    </StackPanel>
+                                </Grid>
+
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Empty Placeholder State -->
+                        <Grid CornerRadius="8"
+                              HorizontalAlignment="Center"
+                              Padding="24"
+                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                              BorderThickness="1"
+                              Visibility="{x:Bind ViewModel.PinnedPolicyPlaceholderVisibility, Mode=OneWay}">
+
+                            <Grid.Resources>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                </Style>
+                            </Grid.Resources>
+
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+                                <FontIcon Glyph="&#xE710;" FontSize="32" Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                                <TextBlock x:Uid="NoPolicyPinned"
+                                           Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock x:Uid="NoPolicyPinnedDescription"
+                                           Style="{ThemeResource CaptionTextBlockStyle}" 
+                                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </controls:WrapPanel>
+
+                </Grid>
+
+            </Border>
+
+            <!-- Rule Creation Secton -->
+            <StackPanel HorizontalAlignment="Stretch"
+                        Margin="0,5,0,0"
+                        Grid.Row="3"
+                        Spacing="{StaticResource SettingsCardSpacing}">
+
+                <win:StackPanel.ChildrenTransitions>
+                    <win:EntranceThemeTransition FromVerticalOffset="50" />
+                    <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                </win:StackPanel.ChildrenTransitions>
+
+                <!-- Files and Folders Scan -->
+                <controls:SettingsExpander x:Uid="AppIDTaggingFilesAndFoldersSettingsCard"                                         
+                                           IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE71D;" />
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <customUI:InfoBarV2
+                            x:Uid="CurrentStatusInfoBar"
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            Title="{x:Bind ViewModel.FilesAndFoldersInfoBarTitle, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.FilesAndFoldersInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.FilesAndFoldersInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.FilesAndFoldersInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.FilesAndFoldersInfoBarSeverity, Mode=OneWay}">
+                            <customUI:InfoBarV2.ActionButton>
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_FilesAndFolders}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_FilesAndFolders}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
+                            </customUI:InfoBarV2.ActionButton>
+                        </customUI:InfoBarV2>
+                    </controls:SettingsExpander.ItemsHeader>
+
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <customUI:AnimatedCancellableButton x:Uid="ExpandPinnedPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0"
+                                Click="{x:Bind ViewModel.CreateFilesAndFoldersSupplementalPolicyButton_Click}"
+                                CancelMethod="{x:Bind ViewModel.FilesAndFoldersCancellableButton.Cancel}"
+                                ExternalOperationInProgress="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                ExternalIsCancelState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsCancelState, Mode=OneWay}"
+                                ExternalIsCancellingState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsCancellingState, Mode=OneWay}"
+                                ExternalIsAnimating="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsAnimating, Mode=OneWay}"
+                                ExternalButtonContent="{x:Bind ViewModel.FilesAndFoldersCancellableButton.ButtonContent, Mode=OneWay}"
+                                ExternalOriginalText="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OriginalText, Mode=OneWay}"
+                                ExternalInternalIsCancelState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                ExternalInternalIsCancellingState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                ExternalInternalIsAnimating="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                ExternalInternalIsOperationInProgress="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                ExternalInternalSuppressExternalClick="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                ExternalShadowAnimationRunning="{x:Bind ViewModel.FilesAndFoldersCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                ExternalOperationStarted="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OperationStarted, Mode=OneWay}" />
+
+                        <ToggleButton IsChecked="{x:Bind ViewModel.FilesAndFoldersDeployButton, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      x:Uid="DeployAfterCreationButton"
+                                      Margin="0,0,15,0" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesSettingsCardVisibility, Mode=OneWay}"
+                                                 x:Uid="BrowseForFilesPolicyCreationSettingsCard">
+
+                            <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="FileBrowseButton"
+                                    ObservedData="{x:Bind ViewModel.filesAndFoldersFilePaths.Count, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Click}">
+
+                                <customUI:ButtonV2.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </customUI:ButtonV2.ContentTemplate>
+
+                                <customUI:ButtonV2.Flyout>
+                                    <Flyout>
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFilePaths, Mode=OneWay}" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </customUI:ButtonV2.Flyout>
+
+                            </customUI:ButtonV2>
+
+                        </customUI:SettingsCardV3>
+
+                        <customUI:SettingsCardV3 x:Uid="BrowseForFoldersPolicyCreationSettingsCard">
+
+                            <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="FolderBrowseButton"
+                                    ObservedData="{x:Bind ViewModel.filesAndFoldersFolderPaths.Count, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Click}">
+
+                                <customUI:ButtonV2.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </customUI:ButtonV2.ContentTemplate>
+
+                                <customUI:ButtonV2.Flyout>
+                                    <Flyout>
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFolderPaths, Mode=OneWay}" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </customUI:ButtonV2.Flyout>
+
+                            </customUI:ButtonV2>
+
+                        </customUI:SettingsCardV3>
+
+                        <customUI:SettingsCardV2 x:Uid="SelectScanLevelSettingsCard">
+
+                            <ComboBox IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                                      SelectedIndex="0"
+                                      ItemsSource="{x:Bind ViewModel.ScanLevelsSource}"
+                                      x:Uid="ScanLevelComboBox"
+                                      ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
+
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 x:Uid="ScalabilitySettingsCard">
+
+                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+
+                                <ProgressRing IsIndeterminate="False"
+                                              Value="{x:Bind ViewModel.FilesAndFoldersProgressRingValue, Mode=OneWay}" />
+
+                                <!-- Scalability Button with RadialGauge Flyout -->
+                                <Button IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                        x:Uid="ScalabilityButton"
+                                        Content="{x:Bind ViewModel.FilesAndFoldersScalabilityButtonContent, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE9CA;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <CCToolKit:RadialGauge
+                                                    StepSize="1"
+                                                    TickSpacing="2"
+                                                    ScaleWidth="12"
+                                                    TickLength="8"
+                                                    TickWidth="0"
+                                                    ScalePadding="5"
+                                                    TickPadding="24"
+                                                    Width="200"
+                                                    Maximum="120"
+                                                    Minimum="2"
+                                                    Value="{x:Bind ViewModel.FilesAndFoldersScalabilityRadialGaugeValue, Mode=TwoWay}"
+                                                    IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                                    ValueStringFormat="N0"/>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+
+                            </controls:WrapPanel>
+
+                        </customUI:SettingsCardV2>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
+                <!-- Certificate -->
+                <controls:SettingsExpander x:Uid="AppIDTaggingCertificatesSettingsExpander"
+                                               IsExpanded="{x:Bind ViewModel.CertificatesBasedSettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xEB95;" />
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <customUI:InfoBarV2
+                            x:Uid="CurrentStatusInfoBar"
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            Title="{x:Bind ViewModel.CertificatesBasedInfoBarTitle, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.CertificatesBasedInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CertificatesBasedInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.CertificatesBasedInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CertificatesBasedInfoBarSeverity, Mode=OneWay}">
+                            <customUI:InfoBarV2.ActionButton>
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.CertificatesInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_Certificates}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_Certificates}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
+                            </customUI:InfoBarV2.ActionButton>
+                        </customUI:InfoBarV2>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button Click="{x:Bind ViewModel.CreateCertificatesSupplementalPolicyButton_Click}"
+                                    IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="ExpandPinnedPolicyButton"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Margin="0,0,15,0" />
+
+                        <ToggleButton x:Uid="DeployAfterCreationButton"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsChecked="{x:Bind ViewModel.CertificatesBasedDeployButton, Mode=TwoWay}"
+                                      Margin="0,0,15,0" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <customUI:SettingsCardV3 x:Uid="BrowseForCertificatesSettingsCard"
+                                                     IsClickEnabled="True"
+                                                     IsActionIconVisible="False">
+
+                            <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                                   IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                                   Click="{x:Bind ViewModel.CertificatesBrowseForCertsButton_Click}"
+                                                   ObservedData="{x:Bind ViewModel.CertificatesBasedCertFilePaths.Count, Mode=OneWay}">
+
+                                <customUI:ButtonV2.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </customUI:ButtonV2.ContentTemplate>
+
+                                <customUI:ButtonV2.Flyout>
+                                    <Flyout>
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CertificatesBasedCertFilePaths_Flyout_Clear_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <customUI:ListBoxV2 MinWidth="400"
+                                                                SelectionMode="Single"
+                                                                ItemsSource="{x:Bind ViewModel.CertificatesBasedCertFilePaths, Mode=OneWay}" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </customUI:ButtonV2.Flyout>
+
+                            </customUI:ButtonV2>
+
+                        </customUI:SettingsCardV3>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
+                <!-- Custom File Path Rules -->
+                <controls:SettingsExpander
+                        x:Uid="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander"
+                        IsExpanded="{x:Bind ViewModel.CustomFilePathRulesSettingsExpanderIsExpanded, Mode=TwoWay}">
+
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8A1;" />
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <customUI:InfoBarV2
+                            x:Uid="CurrentStatusInfoBar"
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            Title="{x:Bind ViewModel.CustomFilePathRulesInfoBarTitle, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.CustomFilePathRulesInfoBarMessage, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CustomFilePathRulesInfoBarSeverity, Mode=OneWay}">
+                            <customUI:InfoBarV2.ActionButton>
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_CustomPatternBasedFileRule}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_CustomPatternBasedFileRule}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
+                            </customUI:InfoBarV2.ActionButton>
+                        </customUI:InfoBarV2>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <customUI:AnimatedCancellableButton x:Uid="ExpandPinnedPolicyButton"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Margin="0,0,15,0"
+                                    Click="{x:Bind ViewModel.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click}"
+                                    CancelMethod="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.Cancel}"
+                                    ExternalOperationInProgress="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                    ExternalIsCancelState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsCancelState, Mode=OneWay}"
+                                    ExternalIsCancellingState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsCancellingState, Mode=OneWay}"
+                                    ExternalIsAnimating="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsAnimating, Mode=OneWay}"
+                                    ExternalButtonContent="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.ButtonContent, Mode=OneWay}"
+                                    ExternalOriginalText="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OriginalText, Mode=OneWay}"
+                                    ExternalInternalIsCancelState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                    ExternalInternalIsCancellingState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                    ExternalInternalIsAnimating="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                    ExternalInternalIsOperationInProgress="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                    ExternalInternalSuppressExternalClick="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                    ExternalShadowAnimationRunning="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                    ExternalOperationStarted="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OperationStarted, Mode=OneWay}" />
+
+                        <ToggleButton IsChecked="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDeployButton, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      x:Uid="DeployAfterCreationButton"
+                                      Margin="0,0,15,0" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard x:Uid="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox Text="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedCustomPatternTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                     x:Uid="SupplementalPolicyCustomPatternBasedCustomPatternTextBox"
+                                     TextWrapping="Wrap"
+                                     MaxWidth="400"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard"
+                                               IsClickEnabled="True"
+                                               Click="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click}"
+                                               IsActionIconVisible="True"/>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
+            </StackPanel>
+
+            <!-- Blocked Packets Logs -->
+            <Expander Grid.Row="4" Margin="0,5,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsExpanded="True">
+                <Expander.Header>
+                    <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+
+                        <ProgressRing Visibility="{x:Bind ViewModel.BlockedPacketsScanProgressRingVisibility, Mode=OneWay}"
+                                      IsActive="{x:Bind ViewModel.BlockedPacketsScanProgressRingIsActive, Mode=OneWay}" />
+
+                        <!-- Live Monitor Button -->
+                        <ToggleButton IsChecked="{x:Bind ViewModel.IsRealTimeMonitoring, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.FirewallEventsSectionElementsAreEnabled, Mode=OneWay}"
+                                      Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="{x:Bind ViewModel.RealTimeMonitoringButtonIcon, Mode=OneWay}" />
+                                <TextBlock Text="{x:Bind ViewModel.RealTimeMonitoringButtonText, Mode=OneWay}"/>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <!-- Scan button -->
+                        <Button Content="Scan Logs"
+                                Style="{StaticResource AccentButtonStyle}"
+                                IsEnabled="{x:Bind ViewModel.FirewallEventsSectionElementsAreEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.GetBlockedPacketsLogs_Click}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEE6F;" />
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+
+                        <DropDownButton Content="Actions"
+                                        IsEnabled="{x:Bind ViewModel.FirewallEventsSectionElementsAreEnabled, Mode=OneWay}">
+                            <DropDownButton.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DropDownButton.ContentTemplate>
+                            <DropDownButton.Flyout>
+
+                                <MenuFlyout Placement="Bottom">
+
+                                    <MenuFlyoutItem Text="Select All" Click="{x:Bind ViewModel.BlockedPacketsListView_SelectAll_Click}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE762;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutItem Text="Deselect All" Click="{x:Bind ViewModel.BlockedPacketsListView_DeSelectAll_Click}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8E6;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutSeparator />
+
+                                    <MenuFlyoutItem Text="Enable Packet Drop Auditing" Click="{x:Bind ViewModel.EnablePacketDropAuditing_Click}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xEC11;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutItem Text="Disable Packet Drop Auditing" Click="{x:Bind ViewModel.DisablePacketDropAuditing_Click}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xEC12;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutSeparator />
+
+                                    <MenuFlyoutItem Click="{x:Bind ViewModel.ClearBlockedPacketsLogs_Click}" Text="Clear Data">
+                                        <MenuFlyoutItem.Icon>
+                                            <SymbolIcon Symbol="Delete" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                </MenuFlyout>
+
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
+
+                        <!-- Total chip -->
+                        <Border CornerRadius="8"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Padding="10,6"
+                                BorderThickness="1"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                <TextBlock VerticalAlignment="Center">
+                                    <Run Text="Total: " />
+                                    <Run Text="{x:Bind ViewModel.BlockedPackets.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBox IsEnabled="{x:Bind ViewModel.FirewallEventsSectionElementsAreEnabled, Mode=OneWay}"
+                                 x:Uid="SearchBoxTextBox"
+                                 Text="{x:Bind ViewModel.BlockedPacketsSearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 VerticalAlignment="Center"
+                                 VerticalContentAlignment="Center" />
+
+                        <!-- Columns Selection Button -->
+                        <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.FirewallColumnManager.ColumnSelectionItems, Mode=OneWay}"
+                                                 IsEnabled="{x:Bind ViewModel.FirewallEventsSectionElementsAreEnabled, Mode=OneWay}" />
+
+                    </controls:WrapPanel>
+                </Expander.Header>
+
+                <Expander.Content>
+                    <customUI:ListViewV2 x:Name="BlockedPacketsListView"
+                                         RegistryKey="FirewallBlockedLogs"
+                                         Height="400"
+                                         SelectionMode="Extended"
+                                         ItemsSource="{x:Bind ViewModel.BlockedPackets, Mode=OneWay}">
+
+                        <customUI:ListViewV2.Header>
+                            <Border CornerRadius="5"
+                                    Background="Black"
+                                    customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <!-- Binding Mode must be TwoWay for resizing to work from UI back to ViewModel. Binding to .Width property prevents CollectionChanged re-entrancy. -->
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[0].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[1].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[2].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[3].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[4].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[5].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[6].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[7].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[8].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[9].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[10].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[11].Width, Mode=TwoWay}" />
+                                        <ColumnDefinition Width="{x:Bind ViewModel.FirewallColumnManager.ColumnWidths[12].Width, Mode=TwoWay}" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Header Buttons -->
+                                    <Button Content="Time Created" Tag="TimeCreated" Grid.Column="0" Margin="10,0,0,0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[0], Mode=OneWay}"/>
+                                    <Button Content="Application" Tag="Application" Grid.Column="1" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[1], Mode=OneWay}"/>
+                                    <Button Content="Direction" Tag="Direction" Grid.Column="2" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[2], Mode=OneWay}"/>
+                                    <Button Content="Protocol" Tag="Protocol" Grid.Column="3" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[3], Mode=OneWay}"/>
+                                    <Button Content="Source Address" Tag="SourceAddress" Grid.Column="4" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[4], Mode=OneWay}"/>
+                                    <Button Content="Source Port" Tag="SourcePort" Grid.Column="5" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[5], Mode=OneWay}"/>
+                                    <Button Content="Destination Address" Tag="DestAddress" Grid.Column="6" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[6], Mode=OneWay}"/>
+                                    <Button Content="Destination Port" Tag="DestPort" Grid.Column="7" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[7], Mode=OneWay}"/>
+                                    <Button Content="Process ID" Tag="ProcessId" Grid.Column="8" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[8], Mode=OneWay}"/>
+                                    <Button Content="Filter Origin" Tag="FilterOrigin" Grid.Column="9" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[9], Mode=OneWay}"/>
+                                    <Button Content="User ID" Tag="UserID" Grid.Column="10" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[10], Mode=OneWay}"/>
+                                    <Button Content="Layer Name" Tag="LayerName" Grid.Column="11" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[11], Mode=OneWay}"/>
+                                    <Button Content="Interface" Tag="Interface" Grid.Column="12" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[12], Mode=OneWay}"/>
+
+                                    <!-- GridSplitters -->
+                                    <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[14], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[15], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[16], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[17], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[18], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[19], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[21], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
+                                    <CCToolKit:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.FirewallColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
+
+                                </Grid>
+                            </Border>
+                        </customUI:ListViewV2.Header>
+
+                        <customUI:ListViewV2.ItemTemplate>
+                            <DataTemplate x:DataType="intelgathering:FirewallEvent" xmlns:VMs="using:AppControlManager.ViewModels">
+                                <Grid Background="Transparent">
+                                    <Grid.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Copy Row" Icon="Copy" Click="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.BlockedPacketsListViewFlyoutMenuCopy_Click}"/>
+                                        </MenuFlyout>
+                                    </Grid.ContextFlyout>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[0].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[1].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[2].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[3].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[4].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[5].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[6].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[7].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[8].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[9].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[10].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[11].Width, Mode=OneWay}" />
+                                        <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnWidths[12].Width, Mode=OneWay}" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{x:Bind TimeCreated}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[0], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind Application}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[1], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind Direction}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[2], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind Protocol}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[3], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind SourceAddress}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[4], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind SourcePort}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[5], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind DestAddress}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[6], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind DestPort}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[7], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind ProcessId}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[8], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind FilterOrigin}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[9], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind UserID}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[10], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind LayerName}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[11], Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind Interface}" FontFamily="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12" Visibility="{x:Bind VMs:ViewModelProvider.FirewallSentinelVM.FirewallColumnManager.ColumnVisibilities[12], Mode=OneWay}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </customUI:ListViewV2.ItemTemplate>
+
+                    </customUI:ListViewV2>
                 </Expander.Content>
             </Expander>
 

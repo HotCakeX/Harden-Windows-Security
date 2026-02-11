@@ -6662,4 +6662,280 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Usuń przypisanie</value>
   </data>
+  <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
+    <value>Wybrana do symulacji zasada zawiera regułę, która zezwala na wszystkie pliki.</value>
+  </data>
+  <data name="FirewallSentinelPageTitle" xml:space="preserve">
+    <value>Zarządzaj zaporą systemu Windows i wykorzystaj strategię białej listy dla wielowarstwowej ochrony dostępu do sieci.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
+    <value>Strażnik Zapory</value>
+  </data>
+  <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj zaporą systemu Windows i wykorzystaj strategię białej listy dla wielowarstwowej ochrony dostępu do sieci.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj zaporą systemu Windows i wykorzystaj strategię białej listy dla wielowarstwowej ochrony dostępu do sieci</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+  <value>Nie znaleziono pliku: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>Plik jest zbyt mały, aby zawierać prawidłowy nagłówek</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>Nieprawidłowy podpis: 0x{0:X8}. Oczekiwano: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>Błąd odczytu wpisu na pozycji {0}: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>Oczekiwano nawiasu otwierającego na początku wpisu, otrzymano: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>Oczekiwano średnika po nazwie klucza, otrzymano: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>Oczekiwano średnika po nazwie wartości, otrzymano: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>Oczekiwano średnika po typie, otrzymano: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>Oczekiwano średnika po rozmiarze, otrzymano: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>Nie udało się odczytać {0} bajtów danych, otrzymano tylko {1} bajtów</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>Oczekiwano nawiasu zamykającego po danych, otrzymano: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>Nieoczekiwany koniec strumienia podczas odczytu ciągu Unicode</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>Należy podać co najmniej jeden inny plik zasad</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Ścieżka głównego pliku zasad nie może być pusta ani mieć wartości null</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>Należy podać co najmniej jedną inną ścieżkę pliku zasad</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Ścieżka pliku zasad pod indeksem {0} nie może być pusta ani mieć wartości null</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>Załadowano istniejący plik zasad z {0} wpisami</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>Łączna liczba operacji: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>Dodane wpisy: {0}</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>Zastąpione wpisy: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>Plik zasad nie istnieje, oznaczanie wszystkich zasad jako niezweryfikowanych</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>Weryfikacja zakończona: 0 z {0} zasad pasuje (plik zasad nie istnieje)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>WERYFIKACJA: {0}\{1} = ZGODNOŚĆ</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>WERYFIKACJA: {0}\{1} = BRAK ZGODNOŚCI</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>WERYFIKACJA: {0}\{1} = NIE ZNALEZIONO</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>Weryfikacja zakończona: {0} z {1} zasad pasuje</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>Plik zasad nie istnieje, nic do usunięcia</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>USUNIĘTO: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>Usuwanie zasad zakończone: usunięto {0} zasad</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>Nie udało się utworzyć GroupPolicyObject w STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>Nie udało się zainicjować COM w wątku STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>Nie udało się utworzyć GroupPolicyObject - zwrócono wskaźnik null z wątku STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>Nie udało się zainicjować COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>Nie udało się otworzyć obiektu GPO komputera lokalnego. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>Wyjątek COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>Nie udało się zarejestrować {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>Nie udało się zarejestrować {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej nowe reguły.</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej nowe reguły.</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>Pliki i foldery</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, skanując pliki i foldery.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, skanując pliki i foldery.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, skanując pliki i foldery.</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>Certyfikaty</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej certyfikaty.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej certyfikaty.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej certyfikaty.</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej niestandardową regułę pliku opartą na wzorcu.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej niestandardową regułę pliku opartą na wzorcu.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozwiń przypiętą zasadę zapory, dodając do niej niestandardową regułę pliku opartą na wzorcu.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>Reguła pliku oparta na wzorcu</value>
+  </data>
+    <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Cofnij zmiany</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cofnij zmiany wprowadzone w systemie i Zaporze systemu Windows.</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cofnij zmiany wprowadzone w systemie i Zaporze systemu Windows.</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Otwórz lokalizację kopii zapasowych</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz lokalizację, w której przechowywane są kopie zapasowe reguł zapory.</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz lokalizację, w której przechowywane są kopie zapasowe reguł zapory.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń kopie zapasowe</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wszystkie kopie zapasowe reguł zapory.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wszystkie kopie zapasowe reguł zapory.</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Zezwala na dostęp do Internetu wyłącznie programom i aplikacjom dostarczanym domyślnie z systemem operacyjnym Windows. Wszystkie podpisane i domyślne procesy systemu Windows mogą uzyskać dostęp do Internetu, podczas gdy programy innych firm zostaną zablokowane.</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Rozszerza domyślny profil systemu Windows, umożliwiając łączność sieciową aplikacjom podpisanym certyfikatami podpisywania kodu firmy Microsoft. Ten profil zapewnia dostęp wbudowanym składnikom systemu Windows oraz oprogramowaniu podpisanemu przez firmę Microsoft, jednocześnie wykluczając z dostępu do Internetu niepodpisane lub niebędące produktami firmy Microsoft aplikacje innych firm.</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Rozszerza profil zezwalający na aplikacje firmy Microsoft, zezwalając na wszystko, co ten profil dopuszcza, a dodatkowo zezwalając na wszystkie renomowane, podpisane aplikacje na podstawie ocen Intelligent Security Cloud. Ten profil zapewnia najszersze pokrycie zapory.</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>Wybierz jeden z poniższych profili opartych na tożsamości do zastosowania. Profile te wpływają obecnie wyłącznie na ruch wychodzący; ustawienia ruchu przychodzącego pozostają bez zmian. Po zastosowaniu profilu możesz rozszerzyć jego reguły, aby zezwolić na dostęp do Internetu aplikacjom innych firm, które go wymagają. Każdy profil wzmacnia również podstawowy poziom bezpieczeństwa, zmieniając domyślną akcję dla ruchu wychodzącego we wszystkich profilach zapory z Zezwalaj na Blokuj. W rezultacie aplikacje innych firm muszą najpierw zdobyć Twoje zaufanie, zanim będą mogły łączyć się z Internetem.</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>Wybierz profil</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>Ta sekcja umożliwia dostosowanie wdrażania zasad zapory.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>Tag identyfikatora aplikacji</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>Dostosuj tag, który będzie używany do tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj tag, który będzie używany do tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj tag, który będzie używany do tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>Nazwa reguły zapory</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>Dostosuj nazwę reguły zapory dla ruchu wychodzącego odpowiedzialnej za autoryzację tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj nazwę reguły zapory dla ruchu wychodzącego odpowiedzialnej za autoryzację tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj nazwę reguły zapory dla ruchu wychodzącego odpowiedzialnej za autoryzację tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>Opis reguły zapory</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>Dostosuj opis reguły zapory dla ruchu wychodzącego odpowiedzialnej za autoryzację tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj opis reguły zapory dla ruchu wychodzącego odpowiedzialnej za autoryzację tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj opis reguły zapory dla ruchu wychodzącego odpowiedzialnej za autoryzację tagowania identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>Nazwa zasad tagowania identyfikatorów aplikacji</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>Dostosuj nazwę zasad kontroli aplikacji odpowiedzialnych za tagowanie identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj nazwę zasad kontroli aplikacji odpowiedzialnych za tagowanie identyfikatorów aplikacji.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj nazwę zasad kontroli aplikacji odpowiedzialnych za tagowanie identyfikatorów aplikacji.</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>Przypięte zasady zapory</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>Wybierz aktualnie aktywne zasady zapory i przypnij je, aby móc z nich wygodnie korzystać na tej stronie.</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>Brak przypiętych zasad</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>Wyszukaj i wybierz zasady powyżej, aby przypiąć je tutaj w celu szybkiego dostępu.</value>
+  </data>
 </root>

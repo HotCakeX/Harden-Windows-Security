@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:audit="using:HardenSystemSecurity.SecurityPolicy"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:audit="using:CommonCore.SecurityPolicy"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -139,10 +140,10 @@
                         <Button x:Uid="SubcategoryGUIDColumnHeaderBtn" Tag="SubcategoryGuid" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" />
-                        <controls:GridSplitter Grid.Column="2" />
-                        <controls:GridSplitter Grid.Column="3" />
-                        <controls:GridSplitter Grid.Column="4" />
+                        <CCToolKit:GridSplitter Grid.Column="1" />
+                        <CCToolKit:GridSplitter Grid.Column="2" />
+                        <CCToolKit:GridSplitter Grid.Column="3" />
+                        <CCToolKit:GridSplitter Grid.Column="4" />
 
                     </Grid>
                 </Border>

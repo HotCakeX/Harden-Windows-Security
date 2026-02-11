@@ -20,16 +20,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.GroupPolicy;
+using CommonCore.IncrementalCollection;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
+using CommonCore.SecurityPolicy;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using CommonCore.GroupPolicy;
-using HardenSystemSecurity.SecurityPolicy;
 
 namespace HardenSystemSecurity.ViewModels;
 

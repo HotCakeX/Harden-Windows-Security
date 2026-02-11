@@ -24,7 +24,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class ViewFileCertificates : Page, CommonCore.UI.IPageHeaderProvider
 {
 
-	private ViewFileCertificatesVM ViewModel { get; } = ViewModelProvider.ViewFileCertificatesVM;
+	private ViewFileCertificatesVM ViewModel => ViewModelProvider.ViewFileCertificatesVM;
 
 	internal ViewFileCertificates()
 	{

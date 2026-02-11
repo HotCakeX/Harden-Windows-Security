@@ -27,8 +27,8 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private CreateSupplementalPolicyVM ViewModel => ViewModelProvider.CreateSupplementalPolicyVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal CreateSupplementalPolicy()
 	{

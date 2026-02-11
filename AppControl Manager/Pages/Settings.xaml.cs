@@ -30,7 +30,7 @@ namespace HardenSystemSecurity.Pages;
 internal sealed partial class Settings : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private SettingsVM ViewModel => ViewModelProvider.SettingsVM;
-	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
+	private MainWindowVM ViewModelMainWindow => ViewModelProvider.MainWindowVM;
 
 	internal Settings()
 	{

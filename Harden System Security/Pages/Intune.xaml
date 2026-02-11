@@ -6,6 +6,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCGraph="using:CommonCore.MicrosoftGraph"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -183,13 +184,13 @@
                         <Button x:Uid="ModifiedColumnHeaderBtn" Tag="LastModifiedDateTime" Grid.Column="6" Style="{StaticResource ListViewHeaderButton}" />
                         <Button x:Uid="IdColumnHeaderBtn" Tag="Id" Grid.Column="7" Style="{StaticResource ListViewHeaderButton}" />
 
-                        <controls:GridSplitter Grid.Column="1" />
-                        <controls:GridSplitter Grid.Column="2" />
-                        <controls:GridSplitter Grid.Column="3" />
-                        <controls:GridSplitter Grid.Column="4" />
-                        <controls:GridSplitter Grid.Column="5" />
-                        <controls:GridSplitter Grid.Column="6" />
-                        <controls:GridSplitter Grid.Column="7" />
+                        <CCToolKit:GridSplitter Grid.Column="1" />
+                        <CCToolKit:GridSplitter Grid.Column="2" />
+                        <CCToolKit:GridSplitter Grid.Column="3" />
+                        <CCToolKit:GridSplitter Grid.Column="4" />
+                        <CCToolKit:GridSplitter Grid.Column="5" />
+                        <CCToolKit:GridSplitter Grid.Column="6" />
+                        <CCToolKit:GridSplitter Grid.Column="7" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

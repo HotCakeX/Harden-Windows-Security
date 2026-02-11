@@ -27,7 +27,7 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class ViewCurrentPolicies : Page
 {
-	private ViewCurrentPoliciesVM ViewModel { get; } = ViewModelProvider.ViewCurrentPoliciesVM;
+	private ViewCurrentPoliciesVM ViewModel => ViewModelProvider.ViewCurrentPoliciesVM;
 
 	internal ViewCurrentPolicies()
 	{

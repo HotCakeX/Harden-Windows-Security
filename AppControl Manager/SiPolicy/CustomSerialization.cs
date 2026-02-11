@@ -465,14 +465,19 @@ internal static class CustomSerialization
 		_ => throw new InvalidOperationException("Policy Rule Option is not valid")
 	};
 
+	/// <summary>
+	/// Labels for <see cref="PolicyType"/>.
+	/// This is more efficient than using a switch for retrieving the strings
+	/// but only for cases where the enum values are contiguous and start from 0, which is the case for <see cref="PolicyType"/>.
+	/// </summary>
+	private static readonly string[] s_policyTypeLabels = [
+		"Base Policy",
+		"Supplemental Policy",
+		"AppID Tagging Policy",
+	];
+
 	// Helper for PolicyType conversion
-	private static string ConvertPolicyType(PolicyType pt) => pt switch
-	{
-		PolicyType.BasePolicy => "Base Policy",
-		PolicyType.SupplementalPolicy => "Supplemental Policy",
-		PolicyType.AppIDTaggingPolicy => "AppID Tagging Policy",
-		_ => throw new InvalidOperationException("Unknown PolicyType")
-	};
+	private static string ConvertPolicyType(PolicyType pt) => s_policyTypeLabels[(int)pt];
 
 	// FileRules Helpers
 	private static void AppendAllow(XmlDocument doc, XmlElement parent, Allow allow)

@@ -142,7 +142,7 @@ internal static class ConfigureISGServices
 					(valueKind is RegistryValueKind.DWord && value is int num2 && num2 != 0)
 					)
 				{
-					await App.AppDispatcher.EnqueueAsync(async () =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(async () =>
 					{
 						using ContentDialogV2 sacDialog = new()
 						{

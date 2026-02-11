@@ -17,17 +17,23 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.GroupPolicy;
+using CommonCore.IncrementalCollection;
 using CommunityToolkit.WinUI;
-using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.SecurityPolicy;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -98,7 +104,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		{
 			maxWidth1 = ListViewHelper.MeasureText(item.KeyName, maxWidth1);
 			maxWidth2 = ListViewHelper.MeasureText(item.ValueName.ToString(), maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.ParsedValue?.ToString(), maxWidth3);
+			maxWidth3 = ListViewHelper.MeasureText(item.ValueDisplay, maxWidth3);
 			maxWidth4 = ListViewHelper.MeasureText(item.Category.ToString(), maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.SubCategory.ToString(), maxWidth5);
 			maxWidth6 = ListViewHelper.MeasureText(item.policyAction.ToString(), maxWidth6);
@@ -170,15 +176,15 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		}
 
 		// Perform a case-insensitive search in all relevant fields
-		List<RegistryPolicyEntry> filteredResults = AllPolicies.Where(policy =>
+		IEnumerable<RegistryPolicyEntry> filteredResults = AllPolicies.Where(policy =>
 			(policy.KeyName is not null && policy.KeyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(policy.ValueName is not null && policy.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.ParsedValue is not null && policy.ParsedValue.ToString()!.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			policy.ValueDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			(policy.Category is not null && (policy.Category?.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
 			(policy.SubCategory is not null && (policy.SubCategory?.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
 			(policy.FriendlyName is not null && policy.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			policy.policyAction.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		).ToList();
+		);
 
 		Policies.Clear();
 		Policies.AddRange(filteredResults);
@@ -204,7 +210,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		{
 			{ "KeyName",        (GlobalVars.GetStr("KeynameHeader/Text") + ": ",        rpe => rpe.KeyName) },
 			{ "ValueName",      (GlobalVars.GetStr("ValueNameHeader/Text") + ": ",      rpe => rpe.ValueName) },
-			{ "Value",          (GlobalVars.GetStr("ValueHeader/Text") + ": ",          rpe => rpe.ParsedValue) },
+			{ "Value",          (GlobalVars.GetStr("ValueHeader/Text") + ": ",          rpe => rpe.ValueDisplay) },
 			{ "Category",       (GlobalVars.GetStr("CategoryHeader/Text") + ": ",       rpe => rpe.Category) },
 			{ "SubCategory",    (GlobalVars.GetStr("SubCategoryHeader/Text") + ": ",    rpe => rpe.SubCategory) },
 			{ "PolicyAction",   (GlobalVars.GetStr("PolicyActionHeader/Text") + ": ",   rpe => rpe.policyAction) },
@@ -265,7 +271,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 		if (lv is null) return;
 
-		if (RegistryPolicyEntryPropertyMappings.TryGetValue(key, out var map))
+		if (RegistryPolicyEntryPropertyMappings.TryGetValue(key, out (string Label, Func<RegistryPolicyEntry, object?> Getter) map))
 		{
 			// TElement = RegistryPolicyEntry, copy just that one property
 			ListViewHelper.CopyToClipboard<RegistryPolicyEntry>(ci => map.Getter(ci)?.ToString(), lv);
@@ -273,10 +279,417 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	}
 	#endregion
 
+	#region Edit
+
+	private static readonly string[] Separators = [Environment.NewLine, "\n", "\r"];
+
+	/// <summary>
+	/// Opens a dialog to edit the selected policy's value with rigorous validation.
+	/// </summary>
+	internal async void EditPolicy_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is not FrameworkElement { DataContext: RegistryPolicyEntry policy } element)
+			return;
+
+		if (string.IsNullOrEmpty(SelectedFile))
+		{
+			MainInfoBar.WriteWarning("No policy file loaded to save changes to.");
+			return;
+		}
+
+		try
+		{
+			StackPanel contentPanel = new() { Spacing = 10 };
+
+			contentPanel.Children.Add(new TextBlock { Text = $"Key: {policy.KeyName}", TextWrapping = TextWrapping.Wrap });
+			contentPanel.Children.Add(new TextBlock { Text = $"Value Name: {policy.ValueName}", TextWrapping = TextWrapping.Wrap });
+			contentPanel.Children.Add(new TextBlock { Text = $"Type: {policy.Type}" });
+
+			TextBox inputTextBox = new()
+			{
+				Header = "New Value",
+				AcceptsReturn = policy.Type == RegistryValueType.REG_MULTI_SZ,
+				TextWrapping = policy.Type == RegistryValueType.REG_MULTI_SZ ? TextWrapping.Wrap : TextWrapping.NoWrap,
+				MinWidth = 350,
+				MaxHeight = 300,
+			};
+
+			// Set attached property
+			ScrollViewer.SetVerticalScrollBarVisibility(inputTextBox, ScrollBarVisibility.Auto);
+
+			// Status area: Icon + Text
+			StackPanel statusPanel = new() { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 5, 0, 0) };
+			FontIcon statusIcon = new() { Glyph = "\uE73E", FontSize = 16 }; // Default to Checkmark
+			TextBlock statusText = new() { Text = "Valid", FontSize = 12 };
+			ProgressRing statusRing = new() { IsIndeterminate = true, Width = 16, Height = 16, Visibility = Visibility.Collapsed };
+
+			statusPanel.Children.Add(statusRing);
+			statusPanel.Children.Add(statusIcon);
+			statusPanel.Children.Add(statusText);
+			contentPanel.Children.Add(inputTextBox);
+			contentPanel.Children.Add(statusPanel);
+
+			// Pre-fill current value
+			if (policy.ParsedValue != null)
+			{
+				inputTextBox.Text = policy.Type == RegistryValueType.REG_MULTI_SZ && policy.ParsedValue is string[] strings
+					? string.Join(Environment.NewLine, strings)
+					: (policy.Type == RegistryValueType.REG_BINARY || policy.Type == RegistryValueType.REG_NONE) && policy.ParsedValue is ReadOnlyMemory<byte> bytes
+						? Convert.ToHexString(bytes.Span)
+						: policy.ParsedValue.ToString();
+			}
+
+			using ContentDialogV2 dialog = new()
+			{
+				Title = "Edit Policy Value",
+				PrimaryButtonText = "Save",
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Primary,
+				Content = contentPanel,
+				IsPrimaryButtonEnabled = true // Initially true, updated by validation logic immediately
+			};
+
+			// Validation Logic
+			void ValidateInput(string text)
+			{
+				statusRing.Visibility = Visibility.Visible;
+				statusIcon.Visibility = Visibility.Collapsed;
+				statusText.Text = "Validating...";
+				dialog.IsPrimaryButtonEnabled = false;
+
+				bool isValid = false;
+				string message = "";
+
+				try
+				{
+					switch (policy.Type)
+					{
+						case RegistryValueType.REG_DWORD:
+							if (string.IsNullOrWhiteSpace(text))
+							{
+								message = "Value cannot be empty.";
+							}
+							else if (uint.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out _))
+							{
+								isValid = true;
+								message = "Valid 32-bit unsigned integer.";
+							}
+							else
+							{
+								message = "Must be a valid 32-bit integer number.";
+							}
+							break;
+
+						case RegistryValueType.REG_QWORD:
+							if (string.IsNullOrWhiteSpace(text))
+							{
+								message = "Value cannot be empty.";
+							}
+							else if (ulong.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out _))
+							{
+								isValid = true;
+								message = "Valid 64-bit unsigned integer.";
+							}
+							else
+							{
+								message = "Must be a valid 64-bit integer.";
+							}
+							break;
+
+						case RegistryValueType.REG_BINARY:
+						case RegistryValueType.REG_NONE:
+							if (string.IsNullOrWhiteSpace(text))
+							{
+								// Empty binary is valid (0 bytes)
+								isValid = true;
+								message = "Empty binary data.";
+							}
+							else
+							{
+								string cleanHex = text.Replace(" ", string.Empty).Replace("-", string.Empty);
+								// Check for hex characters
+								if (HexCharactersRegex().IsMatch(cleanHex))
+								{
+									if (cleanHex.Length % 2 == 0)
+									{
+										isValid = true;
+										message = $"Valid binary data ({cleanHex.Length / 2} bytes).";
+									}
+									else
+									{
+										message = "Hex string must have an even number of characters.";
+									}
+								}
+								else
+								{
+									message = "Contains invalid characters. Only 0-9 and A-F allowed.";
+								}
+							}
+							break;
+						case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+							break;
+						case RegistryValueType.REG_LINK:
+							break;
+						case RegistryValueType.REG_RESOURCE_LIST:
+							break;
+						case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+							break;
+						case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+							break;
+						case RegistryValueType.REG_SZ:
+						case RegistryValueType.REG_EXPAND_SZ:
+						case RegistryValueType.REG_MULTI_SZ:
+						default:
+							// Strings are generally always valid unless there are specific constraints
+							isValid = true;
+							message = "Valid string.";
+							break;
+					}
+				}
+				catch
+				{
+					isValid = false;
+					message = "Validation error.";
+				}
+
+				// Update UI
+				statusRing.Visibility = Visibility.Collapsed;
+				statusIcon.Visibility = Visibility.Visible;
+				dialog.IsPrimaryButtonEnabled = isValid;
+
+				if (isValid)
+				{
+					statusIcon.Glyph = "\uE73E"; // Checkmark
+					statusIcon.Foreground = new SolidColorBrush(Colors.Green);
+					statusText.Foreground = new SolidColorBrush(Colors.Green);
+					statusText.Text = message;
+				}
+				else
+				{
+					statusIcon.Glyph = "\uE783"; // Error badge
+					statusIcon.Foreground = new SolidColorBrush(Colors.Red);
+					statusText.Foreground = new SolidColorBrush(Colors.Red);
+					statusText.Text = message;
+				}
+			}
+
+			// Event handler for textchanged
+			void TextChangedHandler(object sender, TextChangedEventArgs args) =>
+				ValidateInput(inputTextBox.Text ?? string.Empty);
+
+			// Hook up event
+			inputTextBox.TextChanged += TextChangedHandler;
+
+			// Trigger initial validation
+			ValidateInput(inputTextBox.Text ?? string.Empty);
+
+			try
+			{
+				// Show the dialog and await its result
+				ContentDialogResult result = await dialog.ShowAsync();
+
+				// Ensure primary button was selected
+				if (result is ContentDialogResult.Primary)
+				{
+					// Handle potentially null input
+					string input = inputTextBox.Text ?? string.Empty;
+
+					// Capture old policy object index in AllPolicies
+					int allPoliciesIndex = AllPolicies.IndexOf(policy);
+					int policiesIndex = Policies.IndexOf(policy);
+
+					try
+					{
+						byte[] newData = [];
+
+						switch (policy.Type)
+						{
+							case RegistryValueType.REG_SZ:
+							case RegistryValueType.REG_EXPAND_SZ:
+								// Append null terminator
+								newData = Encoding.Unicode.GetBytes(input + "\0");
+								break;
+
+							case RegistryValueType.REG_DWORD:
+								newData = uint.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint dwordVal)
+									? BitConverter.GetBytes(dwordVal)
+									: throw new InvalidDataException("Invalid DWORD (32-bit) value.");
+								break;
+
+							case RegistryValueType.REG_QWORD:
+								newData = ulong.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong qwordVal)
+									? BitConverter.GetBytes(qwordVal)
+									: throw new InvalidDataException("Invalid QWORD (64-bit) value.");
+								break;
+
+							case RegistryValueType.REG_MULTI_SZ:
+								string[] lines = input.Split(Separators, StringSplitOptions.RemoveEmptyEntries);
+								// Join with null separators and double null at end
+								string multiString = string.Join("\0", lines) + "\0\0";
+								newData = Encoding.Unicode.GetBytes(multiString);
+								break;
+
+							case RegistryValueType.REG_BINARY:
+							case RegistryValueType.REG_NONE:
+								try
+								{
+									string cleanHex = input.Replace(" ", string.Empty).Replace("-", string.Empty);
+									newData = Convert.FromHexString(cleanHex);
+								}
+								catch
+								{
+									MainInfoBar.WriteWarning("Invalid Hex string.");
+									return;
+								}
+								break;
+							case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+								break;
+							case RegistryValueType.REG_LINK:
+								break;
+							case RegistryValueType.REG_RESOURCE_LIST:
+								break;
+							case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+								break;
+							case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+								break;
+							default:
+								newData = Encoding.Unicode.GetBytes(input + "\0");
+								break;
+						}
+
+						// Creating a new RegistryPolicyEntry with the correct size and updated data.						
+						RegistryPolicyEntry newEntry = new(
+							policy.Source,
+							policy.KeyName,
+							policy.ValueName,
+							policy.Type,
+							(uint)newData.Length, // Updated
+							newData, // Updated
+							policy.Hive,
+							policy.ID
+						)
+						{
+							FriendlyName = policy.FriendlyName,
+							Category = policy.Category,
+							SubCategory = policy.SubCategory,
+							policyAction = policy.policyAction,
+							URL = policy.URL,
+							DefaultRegValue = policy.DefaultRegValue,
+							DeviceIntents = policy.DeviceIntents
+						};
+
+						// Recompute RegValue from the new data so it reflects the edited value
+						newEntry.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(newEntry);
+
+						// Update the collections with the new object
+						if (allPoliciesIndex >= 0) AllPolicies[allPoliciesIndex] = newEntry;
+						if (policiesIndex >= 0) Policies[policiesIndex] = newEntry;
+
+						// Save changes to disk
+						await Task.Run(SavePoliciesToFile);
+
+						// Refresh the search filter to update the ListView display based on the potentially changed properties of the edited entry
+						SearchBox_TextChanged();
+
+						// Recalculate columns to fit new data width
+						CalculateColumnWidths();
+					}
+					catch
+					{
+						// Revert changes in memory if save failed
+						// Put the old policy object back into the lists
+						if (allPoliciesIndex >= 0) AllPolicies[allPoliciesIndex] = policy;
+						if (policiesIndex >= 0) Policies[policiesIndex] = policy;
+						throw;
+					}
+				}
+			}
+			finally
+			{
+				// Unsubscribe from event handler
+				inputTextBox.TextChanged -= TextChangedHandler;
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Saves the current list of policies to the selected file and refreshes system policies if applicable.
+	/// </summary>
+	private void SavePoliciesToFile()
+	{
+		if (SelectedFile is null) return;
+
+		ElementsAreEnabled = false;
+		MainInfoBarIsClosable = false;
+
+		// Make a copy of the original file first
+		ReadOnlySpan<byte> originalFileContent = File.ReadAllBytes(SelectedFile);
+
+		try
+		{
+			string extension = Path.GetExtension(SelectedFile);
+
+			if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
+			{
+				// Ensure RegValue is updated for JSON
+				foreach (RegistryPolicyEntry item in AllPolicies)
+				{
+					if (item.Source == Source.GroupPolicy)
+					{
+						item.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(item);
+					}
+				}
+				RegistryPolicyEntry.Save(SelectedFile, AllPolicies);
+			}
+			else if (string.Equals(extension, ".pol", StringComparison.OrdinalIgnoreCase))
+			{
+				RegistryPolicyFile newPolFile = new(
+					signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
+					version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
+					entries: AllPolicies);
+
+				RegistryPolicyParser.WriteFile(SelectedFile, newPolFile);
+			}
+
+			// Check if we need to refresh system policies
+			if (string.Equals(SelectedFile, RegistryPolicyParser.LocalPolicyMachineFilePath, StringComparison.OrdinalIgnoreCase) ||
+				string.Equals(SelectedFile, RegistryPolicyParser.LocalPolicyUserFilePath, StringComparison.OrdinalIgnoreCase))
+			{
+				CSEMgr.RegisterCSEGuids();
+				MainInfoBar.WriteSuccess("Policy updated and system policies refreshed.");
+			}
+			else
+			{
+				MainInfoBar.WriteSuccess("Policy updated and file saved.");
+			}
+		}
+		catch
+		{
+			// Restore the file's original content if there was an error
+			File.WriteAllBytes(SelectedFile, originalFileContent);
+			throw;
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	#endregion
+
 	#region Delete
 
 	/// <summary>
-	/// Deletes the selected policies from the currently loaded POL file and refreshes the UI.
+	/// Deletes the selected policies from the currently loaded POL or JSON file and refreshes the UI.
 	/// </summary>
 	internal async void DeleteSelectedPolicies_Click()
 	{
@@ -288,10 +701,22 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			return;
 		}
 
-		// Check if we have a valid POL file loaded
-		if (string.IsNullOrEmpty(SelectedFile) || !IsValidPOLFile(SelectedFile))
+		if (string.IsNullOrEmpty(SelectedFile) || !File.Exists(SelectedFile))
 		{
-			MainInfoBar.WriteWarning("No valid POL file is currently loaded. Please load a POL file first.");
+			MainInfoBar.WriteWarning("No policy file is selected.");
+			return;
+		}
+
+		string fileExtension = Path.GetExtension(SelectedFile);
+
+		// Determine the file type
+		bool isPOLFile = string.Equals(fileExtension, ".pol", StringComparison.OrdinalIgnoreCase);
+		bool isJSONFile = string.Equals(fileExtension, ".json", StringComparison.OrdinalIgnoreCase);
+
+		// Check if we have a valid POL or JSON file loaded
+		if (!isPOLFile && !isJSONFile)
+		{
+			MainInfoBar.WriteWarning("No valid POL or JSON file is currently loaded.");
 			return;
 		}
 
@@ -316,23 +741,56 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				return;
 			}
 
-			await Task.Run(() =>
+			if (isPOLFile)
 			{
-				// Remove policies directly from the loaded POL file
-				RegistryPolicyParser.RemovePoliciesFromPOLFile(SelectedFile, policiesToDelete);
-			});
+				await Task.Run(() =>
+				{
+					// Remove policies directly from the loaded POL file
+					RegistryPolicyParser.RemovePoliciesFromPOLFile(SelectedFile, policiesToDelete);
+				});
+			}
+			else
+			{
+				// JSON file workflow - remove from backing list and save
+				foreach (RegistryPolicyEntry policy in policiesToDelete)
+				{
+					_ = AllPolicies.Remove(policy);
+				}
+
+				await Task.Run(() =>
+				{
+					// Ensure RegValue is up to date for Group Policy entries before saving
+					foreach (RegistryPolicyEntry item in AllPolicies)
+					{
+						if (item.Source == Source.GroupPolicy)
+						{
+							item.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(item);
+						}
+					}
+
+					RegistryPolicyEntry.Save(SelectedFile, AllPolicies);
+				});
+			}
 
 			// Remove policies from UI collections
 			foreach (RegistryPolicyEntry policy in policiesToDelete)
 			{
+				// Remove from the observable collection
 				_ = Policies.Remove(policy);
-				_ = AllPolicies.Remove(policy);
+
+				// For POL files, AllPolicies removal happens here.
+				// For JSON files, AllPolicies was already modified above before saving.
+				if (isPOLFile)
+				{
+					_ = AllPolicies.Remove(policy);
+				}
 			}
 
 			// Update UI
 			CalculateColumnWidths();
 
-			MainInfoBar.WriteSuccess($"Successfully deleted {policiesToDelete.Count} policies from the POL file.");
+			string fileType = isPOLFile ? "POL" : "JSON";
+			MainInfoBar.WriteSuccess($"Successfully deleted {policiesToDelete.Count} policies from the {fileType} file.");
 		}
 		catch (Exception ex)
 		{
@@ -343,21 +801,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			ElementsAreEnabled = true;
 			MainInfoBarIsClosable = true;
 		}
-	}
-
-	/// <summary>
-	/// Checks if the specified file is a valid POL file that exists on disk.
-	/// </summary>
-	/// <param name="filePath">The file path to check</param>
-	/// <returns>True if it's a valid POL file that exists, false otherwise</returns>
-	private static bool IsValidPOLFile(string filePath)
-	{
-		if (string.IsNullOrEmpty(filePath))
-			return false;
-
-		// Check if it's a POL file and exists
-		return string.Equals(Path.GetExtension(filePath), ".pol", StringComparison.OrdinalIgnoreCase) &&
-			   File.Exists(filePath);
 	}
 
 	#endregion
@@ -651,7 +1094,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBarIsClosable = false;
 
-			await Task.Run(async () =>
+			await Task.Run(() =>
 			{
 				foreach (string item in SelectedPOLFilesForConversionToJSON)
 				{
@@ -740,7 +1183,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBarIsClosable = false;
 
-			await Task.Run(async () =>
+			await Task.Run(() =>
 			{
 				foreach (string item in SelectedJSONFilesForConversionToPol)
 				{
@@ -821,7 +1264,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBarIsClosable = false;
 
-			await Task.Run(async () =>
+			await Task.Run(() =>
 			{
 				foreach (string item in SelectedSecurityINFFilesForConversionToJSON)
 				{
@@ -908,4 +1351,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			MainInfoBar.WriteError(ex);
 		}
 	}
+
+	[GeneratedRegex("^[0-9A-Fa-f]*$")]
+	private static partial Regex HexCharactersRegex();
 }

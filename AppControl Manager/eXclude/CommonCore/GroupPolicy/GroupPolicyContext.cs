@@ -15,25 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.Protect;
+namespace CommonCore.GroupPolicy;
 
-internal enum SubCategories : uint
+/// <summary>
+/// Determines whether policies belong to the Machine POL file or User POL file.
+/// </summary>
+internal enum GroupPolicyContext : uint
 {
-	MSDefender_SmartAppControl = 0,
-	MSDefender_BetaUpdateChannelsForDefender = 1,
-	MSDefender_OptionalDiagnosticData = 2,
-	DeviceGuard_MandatoryModeForVBS = 3,
-	TLS_ForBattleNet = 4,
-	LockScreen_RequireCTRLAltDel = 5,
-	LockScreen_NoLastSignedIn = 6,
-	UAC_NoFastUserSwitching = 7,
-	UAC_OnlyElevateSigned = 8,
-	WindowsNetworking_BlockNTLM = 9,
-	MiscellaneousConfigurations_EnableWindowsProtectedPrint = 10,
-	MiscellaneousConfigurations_EnableLongPathSupport = 11,
-	MiscellaneousConfigurations_ForceStrongKeyProtection = 12,
-	MiscellaneousConfigurations_ReducedTelemetry = 13,
-	CountryIPBlocking_BlockOFACSanctionedCountries = 14,
-	OptionalWindowsFeatures_IncludeEnablements = 15,
-	MiscellaneousConfigurations_DriverLoadPolicyGoodOnly = 16
+	Machine = 0,
+	User = 1
 }

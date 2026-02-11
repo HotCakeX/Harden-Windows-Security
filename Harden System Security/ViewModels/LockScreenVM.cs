@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 
@@ -91,10 +92,10 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold",
 
 			deviceIntents: [
-				DeviceIntents.Intent.Business,
-				DeviceIntents.Intent.SpecializedAccessWorkstation,
-				DeviceIntents.Intent.PrivilegedAccessWorkstation,
-				DeviceIntents.Intent.School
+				Intent.Business,
+				Intent.SpecializedAccessWorkstation,
+				Intent.PrivilegedAccessWorkstation,
+				Intent.School
 			],
 
 			id: new("019a9053-c2ad-784a-a5f3-98833b9561ef")
@@ -127,10 +128,10 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/reset-account-lockout-counter-after",
 
 			deviceIntents: [
-				DeviceIntents.Intent.Business,
-				DeviceIntents.Intent.SpecializedAccessWorkstation,
-				DeviceIntents.Intent.PrivilegedAccessWorkstation,
-				DeviceIntents.Intent.School
+				Intent.Business,
+				Intent.SpecializedAccessWorkstation,
+				Intent.PrivilegedAccessWorkstation,
+				Intent.School
 			],
 
 			id: new("019a9054-432d-78e3-84dd-643d9c6f32e5")
@@ -160,10 +161,10 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration",
 
 			deviceIntents: [
-				DeviceIntents.Intent.Business,
-				DeviceIntents.Intent.SpecializedAccessWorkstation,
-				DeviceIntents.Intent.PrivilegedAccessWorkstation,
-				DeviceIntents.Intent.School
+				Intent.Business,
+				Intent.SpecializedAccessWorkstation,
+				Intent.PrivilegedAccessWorkstation,
+				Intent.School
 			],
 
 			id: new("019a9054-7174-7921-a470-8056254a15cf")

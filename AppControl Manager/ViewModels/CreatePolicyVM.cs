@@ -177,19 +177,10 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				TestMode: AllowMicrosoftTestMode,
 				deployAppControlSupplementalPolicy: AllowMicrosoftCreateAndDeploy,
 				PolicyIDToUse: null,
-				DeployMicrosoftRecommendedBlockRules: !AllowMicrosoftNoBlockRules
+				DeployMicrosoftRecommendedBlockRules: !AllowMicrosoftNoBlockRules,
+				IsAppIDTagging: AllowMicrosoftAppIDTaggingToggle
 				);
 			});
-
-			// Convert it to AppIDTagging policy if the toggle was enabled
-			if (AllowMicrosoftAppIDTaggingToggle)
-			{
-				Dictionary<string, string> tags = [];
-				tags["AllowMSFTTagKey"] = "True";
-
-				_policyPathAllowMicrosoft.PolicyObj = AppIDTagging.Convert(_policyPathAllowMicrosoft.PolicyObj);
-				_policyPathAllowMicrosoft.PolicyObj = AppIDTagging.AddTags(_policyPathAllowMicrosoft.PolicyObj, tags);
-			}
 
 			// Assign the created policy to the Sidebar
 			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathAllowMicrosoft);
@@ -302,19 +293,10 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				TestMode: DefaultWindowsTestMode,
 				deployAppControlSupplementalPolicy: DefaultWindowsCreateAndDeploy,
 				PolicyIDToUse: null,
-				DeployMicrosoftRecommendedBlockRules: !DefaultWindowsNoBlockRules
+				DeployMicrosoftRecommendedBlockRules: !DefaultWindowsNoBlockRules,
+				IsAppIDTagging: DefaultWindowsAppIDTaggingToggle
 				);
 			});
-
-			// Convert it to AppIDTagging policy if the toggle was enabled
-			if (DefaultWindowsAppIDTaggingToggle)
-			{
-				Dictionary<string, string> tags = [];
-				tags["DefaultWindowsTagKey"] = "True";
-
-				_policyPathDefaultWindows.PolicyObj = AppIDTagging.Convert(_policyPathDefaultWindows.PolicyObj);
-				_policyPathDefaultWindows.PolicyObj = AppIDTagging.AddTags(_policyPathDefaultWindows.PolicyObj, tags);
-			}
 
 			// Assign the created policy to the Sidebar
 			ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathDefaultWindows);

@@ -325,23 +325,25 @@ int wmain(int argc, wchar_t* argv[])
 	// Primary: FIREWALLPROGRAM
 	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewallprogram"))
 	{
-		// Minimum 7 args: firewallprogram, Name, Path, Direction, Action, Description
-		if (argc < 7)
+		// Minimum 6 args: firewallprogram, Name, Direction, Action, Description
+		if (argc < 6)
 		{
 			return 2;
 		}
 
 		const wchar_t* displayName = argv[2];
-		const wchar_t* programPath = argv[3];
-		const wchar_t* dirToken = argv[4];
-		const wchar_t* actionToken = argv[5];
-		const wchar_t* desc = argv[6];
+		const wchar_t* dirToken = argv[3];
+		const wchar_t* actionToken = argv[4];
+		const wchar_t* desc = argv[5];
 
+		const wchar_t* programPath = nullptr;
 		const wchar_t* policyAppId = nullptr;
 		const wchar_t* packageFamilyName = nullptr;
+		const wchar_t* edgeTraversal = nullptr;
+		const wchar_t* policyStore = nullptr;
 
 		// Parse optional arguments
-		for (int i = 7; i < argc; ++i)
+		for (int i = 6; i < argc; ++i)
 		{
 			wstring arg = argv[i];
 			if (IsEq(arg.c_str(), L"--appid") || IsEq(arg.c_str(), L"-PolicyAppId"))
@@ -353,6 +355,21 @@ int wmain(int argc, wchar_t* argv[])
 			{
 				if (i + 1 >= argc) return 2;
 				packageFamilyName = argv[++i];
+			}
+			else if (IsEq(arg.c_str(), L"--program") || IsEq(arg.c_str(), L"-ProgramPath"))
+			{
+				if (i + 1 >= argc) return 2;
+				programPath = argv[++i];
+			}
+			else if (IsEq(arg.c_str(), L"--edge") || IsEq(arg.c_str(), L"-EdgeTraversal"))
+			{
+				if (i + 1 >= argc) return 2;
+				edgeTraversal = argv[++i];
+			}
+			else if (IsEq(arg.c_str(), L"--store") || IsEq(arg.c_str(), L"-PolicyStore"))
+			{
+				if (i + 1 >= argc) return 2;
+				policyStore = argv[++i];
 			}
 			else
 			{
@@ -368,12 +385,14 @@ int wmain(int argc, wchar_t* argv[])
 
 		bool ok = FW_AddProgramFirewallRule(
 			displayName,
-			programPath,
+			fixOptional(programPath),
 			dirToken,
 			actionToken,
 			desc,
 			fixOptional(policyAppId),
-			fixOptional(packageFamilyName)
+			fixOptional(packageFamilyName),
+			fixOptional(edgeTraversal),
+			fixOptional(policyStore)
 		);
 
 		if (!ok)

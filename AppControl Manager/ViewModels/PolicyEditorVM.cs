@@ -244,29 +244,25 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	#endregion
 
 
-	private static uint GetHVCIOptionValue(string key) =>
-		key switch
-		{
-			"Enabled - Strict" => 2,
-			"Enabled" => 1,
-			"Debug Mode" => 4,
-			"Disable is Allowed" => 8,
-			"None" => 0,
-			_ => throw new ArgumentException($"Invalid HVCI option key: {key}", nameof(key))
-		};
+	private static uint GetHVCIOptionValue(string key) => key switch
+	{
+		"Enabled - Strict" => 2,
+		"Enabled" => 1,
+		"Debug Mode" => 4,
+		"Disable is Allowed" => 8,
+		"None" => 0,
+		_ => throw new ArgumentException($"Invalid HVCI option key: {key}", nameof(key))
+	};
 
-
-	private static string GetHVCIOptionKey(uint? value) =>
-		value switch
-		{
-			2 => "Enabled - Strict",
-			1 => "Enabled",
-			4 => "Debug Mode",
-			8 => "Disable is Allowed",
-			0 or null => "None",
-			_ => throw new ArgumentException($"Invalid HVCI option value: {value}", nameof(value))
-		};
-
+	private static string GetHVCIOptionKey(uint? value) => value switch
+	{
+		2 => "Enabled - Strict",
+		1 => "Enabled",
+		4 => "Debug Mode",
+		8 => "Disable is Allowed",
+		0 or null => "None",
+		_ => throw new ArgumentException($"Invalid HVCI option value: {value}", nameof(value))
+	};
 
 	// All of these must be nullified/emptied during policy load
 
@@ -1275,7 +1271,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				if (SelectedPolicy.Kind is not PolicyFileRepresentKind.XML)
 				{
 					// Save it to User Config dir when elevated
-					fileToSaveTheChangesTo = App.IsElevated
+					fileToSaveTheChangesTo = GlobalVars.IsElevated
 						? Path.Combine(GlobalVars.UserConfigDir, $"{SelectedPolicy.FileName}.xml")
 						// Save it to the same location file is being read from if non-elevated since we already check if we have write permission in that location
 						: Path.Combine(Path.GetDirectoryName(SelectedPolicy.FilePath)!, $"{SelectedPolicy.FileName}.xml");

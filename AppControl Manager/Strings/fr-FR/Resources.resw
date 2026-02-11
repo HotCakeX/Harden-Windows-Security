@@ -3628,9 +3628,6 @@
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>Parcours de chaque fichier pris en charge</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>Le fichier XML fourni '{0}' contient une règle qui autorise tous les fichiers.</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>Création d'une tâche planifiée pour la mise à jour hebdomadaire rapide de la liste de blocage des pilotes recommandée par Microsoft</value>
   </data>

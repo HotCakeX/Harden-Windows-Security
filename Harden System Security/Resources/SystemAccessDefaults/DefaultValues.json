@@ -1,0 +1,19 @@
+{
+    "MinimumPasswordAge": 0,
+    "MaximumPasswordAge": 42,
+    "MinimumPasswordLength": 0,
+    "PasswordComplexity": 0,
+    "PasswordHistorySize": 0,
+    "LockoutBadCount": 10,
+    "ResetLockoutCount": 10,
+    "LockoutDuration": 10,
+    "AllowAdministratorLockout": 1,
+    "RequireLogonToChangePassword": 0,
+    "ForceLogoffWhenHourExpire": 0,
+    "NewAdministratorName": "Administrator",
+    "NewGuestName": "Guest",
+    "ClearTextPassword": 0,
+    "LSAAnonymousNameLookup": 0,
+    "EnableAdminAccount": 0,
+    "EnableGuestAccount": 0
+}

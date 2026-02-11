@@ -210,7 +210,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
-				UserKindText = Environment.IsPrivilegedProcess ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
+				UserKindText = GlobalVars.IsElevated ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
 			}
 			catch (Exception ex)
 			{

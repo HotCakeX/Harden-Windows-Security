@@ -2380,7 +2380,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{ "Qualcomm",  "Microsoft.Windows.Wifi.Client.Qualcomm*" },
 		{ "Ralink",    "Microsoft.Windows.Wifi.Client.Ralink*"   },
 		{ "Realtek",   "Microsoft.Windows.*.Client.Realtek*"     }
-	}.ToFrozenDictionary<string, string>();
+	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Simple wildcard matcher supporting '*' anywhere in the pattern (case-insensitive).

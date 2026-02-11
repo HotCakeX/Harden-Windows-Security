@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.DeviceIntents;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -631,7 +631,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// All of the Device intents with their details for the UI GridView.
 	/// </summary>
-	internal readonly List<DeviceIntents.IntentItem> DeviceIntents = [
+	internal readonly List<IntentItem> DeviceIntents = [
 			new(
 				intent: Intent.Development,
 				title: GlobalVars.GetStr("DeviceUsageIntent-Development-Title"),
@@ -1447,7 +1447,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// category processor pipeline as the UI.
 	/// </summary>
 	/// <param name="selectedIntent">Device usage intent to apply.</param>
-	internal async Task RunIntentFromCliAsync(HardenSystemSecurity.DeviceIntents.Intent selectedIntent)
+	internal async Task RunIntentFromCliAsync(Intent selectedIntent)
 	{
 		// Set the selected intent; this triggers RecomputeDeviceIntentsPreview() via the property setter.
 		SelectedDeviceIntent = DeviceIntents.First(i => i.Intent == selectedIntent);

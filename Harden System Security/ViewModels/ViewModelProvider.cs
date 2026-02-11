@@ -28,14 +28,6 @@ namespace HardenSystemSecurity.ViewModels;
 /// </summary>
 internal static class ViewModelProvider
 {
-	// Core dependencies \\
-
-	/// <summary>
-	/// Initialized early during App startup by a single thread, doesn't need thread safety.
-	/// </summary>
-	private static readonly Lazy<CommonCore.AppSettings.Main> _appSettings = new(() =>
-		new CommonCore.AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.None);
-
 	// View Models \\
 	private static readonly Lazy<ProtectVM> _protectVM = new(() =>
 		new ProtectVM(), false);
@@ -135,9 +127,6 @@ internal static class ViewModelProvider
 		new IntuneDeploymentDetailsVM(), false);
 
 	private static readonly Lazy<CSPVM> _cspVM = new(() => new CSPVM(), false);
-
-	// Internal Properties - Core Dependencies \\
-	internal static CommonCore.AppSettings.Main AppSettings => _appSettings.Value;
 
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;

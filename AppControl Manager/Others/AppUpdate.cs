@@ -56,7 +56,7 @@ internal static class AppUpdate
 		string versionsResponse = SecHttpClient.Instance.GetStringAsync(GlobalVars.AppVersionLinkURL).GetAwaiter().GetResult().Trim();
 
 		Version onlineAvailableVersion = new(versionsResponse);
-		bool isUpdateAvailable = onlineAvailableVersion > App.currentAppVersion;
+		bool isUpdateAvailable = onlineAvailableVersion > GlobalVars.currentAppVersion;
 
 		// Raise the UpdateAvailable event if there are subscribers
 		UpdateAvailable?.Invoke(
@@ -135,9 +135,9 @@ internal static class AppUpdate
 		{
 			try
 			{
-				if (App.Settings.AutoCheckForUpdateAtStartup)
+				if (GlobalVars.Settings.AutoCheckForUpdateAtStartup)
 				{
-					_ = App.PackageSource is 0 ? CheckGitHub() : await CheckStore();
+					_ = GlobalVars.PackageSource is 0 ? CheckGitHub() : await CheckStore();
 				}
 			}
 			catch (Exception ex)

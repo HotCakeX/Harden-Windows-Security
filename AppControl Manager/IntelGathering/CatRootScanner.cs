@@ -36,7 +36,7 @@ internal static class CatRootScanner
 	internal static ConcurrentDictionary<string, string> Scan(List<string>? paths, ushort scalability)
 	{
 		// If caching is enabled
-		if (App.Settings.CacheSecurityCatalogsScanResults)
+		if (GlobalVars.Settings.CacheSecurityCatalogsScanResults)
 		{
 			// Check if the cached result is still valid (within 5 minutes) and return it if so
 			if ((DateTime.Now - _lastScanTime) < TimeSpan.FromMinutes(5))
@@ -84,7 +84,7 @@ internal static class CatRootScanner
 		});
 
 		// If caching is enabled
-		if (App.Settings.CacheSecurityCatalogsScanResults)
+		if (GlobalVars.Settings.CacheSecurityCatalogsScanResults)
 		{
 			// Update the cache with the new results and set the cache timestamp
 			_cachedResult = output;

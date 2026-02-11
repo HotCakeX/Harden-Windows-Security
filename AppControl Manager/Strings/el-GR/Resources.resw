@@ -3628,9 +3628,6 @@
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>Επανάληψη σε κάθε υποστηριζόμενο αρχείο</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>Το παρεχόμενο αρχείο XML '{0}' περιέχει κανόνα που επιτρέπει όλα τα αρχεία.</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>Δημιουργία προγραμματισμένης εργασίας για γρήγορη εβδομαδιαία ενημέρωση της συνιστώμενης λίστας αποκλεισμού προγραμμάτων οδήγησης της Microsoft</value>
   </data>

@@ -306,6 +306,12 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			titles: [GlobalVars.GetStr("HomeNavItem/Content")],
 			pages: [typeof(Pages.Home)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.FirewallSentinel)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("FirewallSentinelNavItem/Content")],
+			pages: [typeof(Pages.FirewallSentinel)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -340,7 +346,8 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		{ "ViewFileCertificates", typeof(Pages.ViewFileCertificates) },
 		{ "PolicyEditor", typeof(Pages.PolicyEditor) },
 		{ "Update", typeof(Pages.UpdatePage) },
-		{ "Home", typeof(Pages.Home) }
+		{ "Home", typeof(Pages.Home) },
+		{ "FirewallSentinel", typeof(Pages.FirewallSentinel) }
 	}.ToFrozenDictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -380,6 +387,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("HomeNavItem/Content")] = typeof(Pages.Home);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("FirewallSentinelNavItem/Content")] = typeof(Pages.FirewallSentinel);
 	}
 
 	/// <summary>
@@ -414,11 +422,11 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			Dispatcher, null, null);
 
 		// Subscribe to encryption setting changes
-		App.Settings.EncryptPoliciesLibraryChanged += (s, e) => OnEncryptPoliciesLibraryChanged(e);
+		GlobalVars.Settings.EncryptPoliciesLibraryChanged += (s, e) => OnEncryptPoliciesLibraryChanged(e);
 
 		// If the App is installed from the Microsoft Store source
 		// Then make the update page available for non-elevated usage.
-		if (App.PackageSource is 1)
+		if (GlobalVars.PackageSource is 1)
 			UnelevatedPages.Add(typeof(Pages.UpdatePage));
 
 		// If Persistent library is enabled, populate the policies library on the Sidebar with the local cache content
@@ -692,6 +700,11 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// Icon for the Home navigation item.
 	/// </summary>
 	internal IconElement? HomeIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Firewall Sentinel navigation item.
+	/// </summary>
+	internal IconElement? FirewallSentinelIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -989,6 +1002,12 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						Source = new Home()
 					};
 
+					FirewallSentinelIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -12, -12, -12),
+						Source = new AnimatedVisuals.Launch()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -1128,6 +1147,12 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						Foreground = accentBrush
 					};
 
+					FirewallSentinelIcon = new FontIcon
+					{
+						Glyph = "\uECAD",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -1155,6 +1180,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 					ViewFileCertificatesIcon = new FontIcon { Glyph = "\uEBD2" };
 					PolicyEditorIcon = new FontIcon { Glyph = "\uE70F" };
 					HomeIcon = new FontIcon { Glyph = "\uE80F" };
+					FirewallSentinelIcon = new FontIcon { Glyph = "\uECAD" };
 					break;
 				}
 		}

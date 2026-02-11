@@ -102,7 +102,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 	internal bool WhatsNewInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal Visibility RatingsSectionVisibility { get; set => SP(ref field, value); } = App.PackageSource is 1 ? Visibility.Visible : Visibility.Collapsed;
+	internal Visibility RatingsSectionVisibility { get; set => SP(ref field, value); } = GlobalVars.PackageSource is 1 ? Visibility.Visible : Visibility.Collapsed;
 
 	#endregion
 
@@ -115,7 +115,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 
-			if (App.PackageSource is 1)
+			if (GlobalVars.PackageSource is 1)
 			{
 				MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdateStore"));
 
@@ -156,7 +156,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 					// If a new version is available
 					if (updateCheckResult.IsNewVersionAvailable)
 					{
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("VersionComparison") + App.currentAppVersion + GlobalVars.GetStr("WhileOnlineVersion") + updateCheckResult.OnlineVersion + GlobalVars.GetStr("UpdatingApplication"));
+						MainInfoBar.WriteInfo(GlobalVars.GetStr("VersionComparison") + GlobalVars.currentAppVersion + GlobalVars.GetStr("WhileOnlineVersion") + updateCheckResult.OnlineVersion + GlobalVars.GetStr("UpdatingApplication"));
 
 						WhatsNewInfoBarIsOpen = true;
 

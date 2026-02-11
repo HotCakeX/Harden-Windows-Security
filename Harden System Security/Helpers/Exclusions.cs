@@ -21,9 +21,7 @@ internal sealed class Exclusions(string target, ExclusionSource source)
 {
 	internal string Target => target;
 	internal ExclusionSource Source => source;
-	internal string SourceFriendlyName => ExclusionSourceToString(source);
-
-	private static string ExclusionSourceToString(ExclusionSource s) => s switch
+	internal string SourceFriendlyName => source switch
 	{
 		ExclusionSource.Antivirus_Path => "Antivirus - Path",
 		ExclusionSource.Antivirus_Extension => "Antivirus - Extension",

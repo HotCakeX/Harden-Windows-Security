@@ -298,20 +298,17 @@ internal static class CipherSuiteManager
 		return result;
 	}
 
-	private static string GetProtocolName(uint protocol)
+	private static string GetProtocolName(uint protocol) => protocol switch
 	{
-		return protocol switch
-		{
-			0x0300 => "SSL 3.0",
-			0x0301 => "TLS 1.0",
-			0x0302 => "TLS 1.1",
-			0x0303 => "TLS 1.2",
-			0x0304 => "TLS 1.3",
-			0xFEFD => "DTLS 1.2",
-			0xFEFF => "DTLS 1.0",
-			_ => $"Unknown (0x{protocol:X4})",
-		};
-	}
+		0x0300 => "SSL 3.0",
+		0x0301 => "TLS 1.0",
+		0x0302 => "TLS 1.1",
+		0x0303 => "TLS 1.2",
+		0x0304 => "TLS 1.3",
+		0xFEFD => "DTLS 1.2",
+		0xFEFF => "DTLS 1.0",
+		_ => $"Unknown (0x{protocol:X4})",
+	};
 
 	private static void PopulateSuiteFromStruct(IntPtr cipherSuitePtr, TlsCipherSuite suite)
 	{

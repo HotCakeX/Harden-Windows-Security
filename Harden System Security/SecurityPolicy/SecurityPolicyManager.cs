@@ -34,7 +34,7 @@ internal static partial class SecurityPolicyManager
 	/// <returns>Dictionary of System Access settings</returns>
 	private static Dictionary<string, string> ExtractSystemAccessSettingsCore(IEnumerable<string> lines)
 	{
-		Dictionary<string, string> settings = new(StringComparer.Ordinal);
+		Dictionary<string, string> settings = new(StringComparer.OrdinalIgnoreCase);
 		bool inSystemAccessSection = false;
 
 		foreach (string line in lines)

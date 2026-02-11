@@ -211,8 +211,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
 	/// <param name="PolicyIDToUse">Allows the use of a specific ID if provided, overriding the generated one for both PolicyID and BasePolicyID.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
+	/// <param name="IsAppIDTagging">Whether the created policy is an App ID Tagging type.</param>
 	/// <returns>Returns the created policy</returns>
-	internal static PolicyFileRepresent BuildAllowMSFT(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	internal static PolicyFileRepresent BuildAllowMSFT(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules, bool IsAppIDTagging)
 	{
 		string policyName;
 
@@ -225,6 +226,11 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		else
 		{
 			policyName = "AllowMicrosoft";
+		}
+
+		if (IsAppIDTagging)
+		{
+			policyName = $"{policyName}_AppIDTagging";
 		}
 
 		// Get/Deploy the block rules if this base policy is not being swapped
@@ -269,6 +275,16 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
 
+		// Convert it to AppIDTagging policy if it was requested
+		if (IsAppIDTagging)
+		{
+			Dictionary<string, string> tags = [];
+			tags["AllowMSFTTagKey"] = "True";
+
+			policyObj = AppIDTagging.Convert(policyObj);
+			policyObj = AppIDTagging.AddTags(policyObj, tags);
+		}
+
 		if (deploy)
 		{
 			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
@@ -293,8 +309,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="deployAppControlSupplementalPolicy">Specifies if a supplemental policy should be deployed alongside the main policy.</param>
 	/// <param name="PolicyIDToUse">Allows the use of a specific ID if provided, overriding the generated one for both PolicyID and BasePolicyID.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Indicates whether to retrieve and deploy Microsoft recommended block rules.</param>
+	/// <param name="IsAppIDTagging">Whether the created policy is an App ID Tagging type.</param>
 	/// <returns>Returns the created Default Windows base policy</returns>
-	internal static PolicyFileRepresent BuildDefaultWindows(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	internal static PolicyFileRepresent BuildDefaultWindows(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules, bool IsAppIDTagging)
 	{
 		string policyName;
 
@@ -306,6 +323,11 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		else
 		{
 			policyName = "DefaultWindows";
+		}
+
+		if (IsAppIDTagging)
+		{
+			policyName = $"{policyName}_AppIDTagging";
 		}
 
 		// Get/Deploy the block rules if this base policy is not being swapped
@@ -349,6 +371,16 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			RequireEVSigners: RequireEVSigners,
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
+
+		// Convert it to AppIDTagging policy if it was requested
+		if (IsAppIDTagging)
+		{
+			Dictionary<string, string> tags = [];
+			tags["DefaultWindowsTagKey"] = "True";
+
+			policyObj = AppIDTagging.Convert(policyObj);
+			policyObj = AppIDTagging.AddTags(policyObj, tags);
+		}
 
 		if (deploy)
 		{

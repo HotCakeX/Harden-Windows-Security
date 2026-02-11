@@ -23,11 +23,11 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using HardenSystemSecurity.BitLocker;
 using HardenSystemSecurity.CustomUIElements;
-using HardenSystemSecurity.GroupPolicy;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -424,7 +424,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		}
 
 		// Perform a case-insensitive search in all relevant fields
-		List<BitLockerVolume> filteredResults = AllBitLockerVolumes.Where(v =>
+		IEnumerable<BitLockerVolume> filteredResults = AllBitLockerVolumes.Where(v =>
 			v.MountPoint.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			v.ProtectionStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			v.ConversionStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -434,7 +434,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			v.VolumeType.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			v.CapacityGB.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			v.FileSystemType.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-			v.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+			v.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 
 		BitLockerVolumes.Clear();
 		BitLockerVolumes.AddRange(filteredResults);

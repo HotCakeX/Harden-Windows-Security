@@ -20,7 +20,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using HardenSystemSecurity.DeviceIntents;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Protect;
 
 namespace HardenSystemSecurity.Helpers;

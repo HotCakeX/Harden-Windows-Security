@@ -82,14 +82,14 @@ internal static class AppWindowBorderCustomization
 
 		IsStarted = true;
 
-		App.Settings.IsAnimatedRainbowEnabled = true;
+		GlobalVars.Settings.IsAnimatedRainbowEnabled = true;
 
 		// Initialize timing and hue state.
 		LastTimestamp = Stopwatch.GetTimestamp();
 		Hue = 0f;
 
 		// Create a fresh timer (previous one, if any, would have been cleaned in Stop).
-		Timer = App.AppDispatcher.CreateTimer();
+		Timer = GlobalVars.AppDispatcher.CreateTimer();
 		Timer.IsRepeating = true;
 
 		// Attach the single stored handler.
@@ -163,7 +163,7 @@ internal static class AppWindowBorderCustomization
 
 		IsStarted = false;
 
-		App.Settings.IsAnimatedRainbowEnabled = false;
+		GlobalVars.Settings.IsAnimatedRainbowEnabled = false;
 	}
 
 	/// <summary>
@@ -280,7 +280,7 @@ internal static class AppWindowBorderCustomization
 				Logger.Write($"Failed to set static window border color. DwmSetWindowAttribute returned: {result}", LogTypeIntel.Error);
 
 			// Save the color as hex in the App settings.
-			App.Settings.CustomAppWindowsBorder = RGBHEX.ToHex(r, g, b);
+			GlobalVars.Settings.CustomAppWindowsBorder = RGBHEX.ToHex(r, g, b);
 		}
 		catch (Exception ex)
 		{
@@ -301,7 +301,7 @@ internal static class AppWindowBorderCustomization
 				Logger.Write($"Failed to reset window border color. DwmSetWindowAttribute returned: {result}", LogTypeIntel.Error);
 
 			// Clear any saved color for app window's border in the App settings.
-			App.Settings.CustomAppWindowsBorder = string.Empty;
+			GlobalVars.Settings.CustomAppWindowsBorder = string.Empty;
 		}
 		catch (Exception ex)
 		{

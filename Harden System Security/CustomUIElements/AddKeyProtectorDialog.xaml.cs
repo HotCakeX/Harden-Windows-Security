@@ -30,7 +30,7 @@ namespace HardenSystemSecurity.CustomUIElements;
 
 internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImplant
 {
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	/// <summary>
 	/// Volume selected to add a key protector to.

@@ -169,6 +169,22 @@
                 <Setter Property="Orientation" Value="Horizontal"/>
             </Style>
 
+
+            <!-- Used as a custom style to write headers in MenuFlyouts such as after a <MenuFlyoutSeparator/> -->
+            <Style x:Key="MenuFlyoutSectionHeaderStyle" TargetType="MenuFlyoutItem">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="MenuFlyoutItem">
+                            <TextBlock Text="{TemplateBinding Text}"
+                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                   Margin="16,12,16,4" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -54,7 +54,7 @@
        <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
        <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
-       <DebuggerSupport>false</DebuggerSupport>
+        <DebuggerSupport>false</DebuggerSupport>
        <!-- Disabled by default in the default ILC.exe config -->
        <EventSourceSupport>false</EventSourceSupport>
        <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -82,7 +82,7 @@
         https://github.com/dotnet/runtime/blob/main/src/coreclr/nativeaot/BuildIntegration/Microsoft.NETCore.Native.targets
 
         We can pass the parameters displayed by the - -help switch of the ilc.exe using the syntax below
-        "C:\Users\HotCakeX\.nuget\packages\runtime.win-x64.microsoft.dotnet.ilcompiler\9.0.2\tools\ilc.exe"
+        "C:\Users\HotCakeX\.nuget\packages\runtime.win-x64.microsoft.dotnet.ilcompiler\10.0.3\tools\ilc.exe"
 
         We can see what parameters were used by the NAOT code generator, ILC, by inspecting the response file located at:
         "Harden-Windows-Security\AppControl Manager\obj\x64\Release\net9.0-windows10.0.26100.0\win-x64\native\AppControlManager.ilc.rsp"
@@ -93,7 +93,8 @@
 		<IlcArg Include="--debug" />
 		<IlcArg Include="--verbose" />
 
-		<!--  <IlcArg Include="- -methodbodyfolding" /> -->
+	    <!--<IlcArg Include="- -methodbodyfolding:all" /> -->
+        <!-- <IlcArg Include="- -reflectiondata:none" /> -->
 
 		<!--
             https://learn.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw

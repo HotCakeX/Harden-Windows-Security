@@ -15,11 +15,23 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.GroupPolicy;
+using Microsoft.UI.Xaml.Navigation;
+using AppControlManager.ViewModels;
+using Microsoft.UI.Xaml.Controls;
 
-internal enum Hive : uint
+namespace AppControlManager.Pages;
+
+internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeaderProvider
 {
-	HKLM = 0,
-	HKCU = 1,
-	HKCR = 2
+	private FirewallSentinelVM ViewModel { get; } = ViewModelProvider.FirewallSentinelVM;
+
+	internal FirewallSentinel()
+	{
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
+	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("FirewallSentinelPageTitle");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/FirewallSentinel");
 }

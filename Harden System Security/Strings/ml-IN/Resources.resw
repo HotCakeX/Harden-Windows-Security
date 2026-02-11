@@ -5264,4 +5264,55 @@
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>കണക്റ്റ് ചെയ്ത USB ഉപകരണങ്ങളുടെ ആകെ എണ്ണം: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി സ്റ്റോർ</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമങ്ങൾ ഗ്രൂപ്പ് പോളിസി സ്റ്റോറിൽ സൃഷ്ടിക്കപ്പെടും.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയർവാൾ നിയമങ്ങൾ ഗ്രൂപ്പ് പോളിസി സ്റ്റോറിൽ സൃഷ്ടിക്കപ്പെടും.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സ്ഥിരമായ സ്റ്റോർ</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലോക്കൽ കമ്പ്യൂട്ടറിനായുള്ള സ്ഥിരമായ പോളിസി ഈ സ്റ്റോറിൽ അടങ്ങിയിരിക്കുന്നു. ഈ സ്റ്റോറിലെ നിയമങ്ങൾ GPO-കളിൽ നിന്നുള്ളതല്ല, അവ കമ്പ്യൂട്ടറിൽ (ആപ്ലിക്കേഷൻ ഇൻസ്റ്റാളേഷൻ സമയത്ത്) നേരിട്ടോ അല്ലാതെയോ സൃഷ്ടിക്കപ്പെട്ടവയാണ്. ഈ സ്റ്റോറിൽ സൃഷ്ടിച്ച നിയമങ്ങൾ ActiveStore-ലേക്ക് ഘടിപ്പിക്കുകയും കമ്പ്യൂട്ടറിൽ ഉടനടി സജീവമാവുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലോക്കൽ കമ്പ്യൂട്ടറിനായുള്ള സ്ഥിരമായ പോളിസി ഈ സ്റ്റോറിൽ അടങ്ങിയിരിക്കുന്നു. ഈ സ്റ്റോറിലെ നിയമങ്ങൾ GPO-കളിൽ നിന്നുള്ളതല്ല, അവ കമ്പ്യൂട്ടറിൽ (ആപ്ലിക്കേഷൻ ഇൻസ്റ്റാളേഷൻ സമയത്ത്) നേരിട്ടോ അല്ലാതെയോ സൃഷ്ടിക്കപ്പെട്ടവയാണ്. ഈ സ്റ്റോറിൽ സൃഷ്ടിച്ച നിയമങ്ങൾ ActiveStore-ലേക്ക് ഘടിപ്പിക്കുകയും കമ്പ്യൂട്ടറിൽ ഉടനടി സജീവമാവുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>എല്ലാ ഗ്രൂപ്പ് പോളിസി റൂളുകളും നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി സ്റ്റോറിൽ നിന്ന് എല്ലാ ഫയർവാൾ റൂളുകളും നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി സ്റ്റോറിൽ നിന്ന് എല്ലാ ഫയർവാൾ റൂളുകളും നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>എല്ലാ GPO റൂളുകളും നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി സ്റ്റോറിൽ നിന്ന് എല്ലാ ഫയർവാൾ റൂളുകളും നീക്കം ചെയ്യണമെന്ന് നിങ്ങൾക്ക് ഉറപ്പാണോ? ഈ പ്രവർത്തി പഴയപടിയാക്കാൻ കഴിയില്ല.</value>
+  </data>
+    <data name="EditRow.Text" xml:space="preserve">
+    <value>തിരുത്തുക</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡാറ്റ തിരുത്തുക.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡാറ്റ തിരുത്തുക.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>സിസ്റ്റം ആക്സസ് പോളിസികൾ എക്സ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റം ആക്സസ് പോളിസികൾ ഒരു JSON ഫയലിലേക്ക് എക്സ്പോർട്ട് ചെയ്യുന്നു.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റം ആക്സസ് പോളിസികൾ ഒരു JSON ഫയലിലേക്ക് എക്സ്പോർട്ട് ചെയ്യുന്നു.</value>
+  </data>
 </root>

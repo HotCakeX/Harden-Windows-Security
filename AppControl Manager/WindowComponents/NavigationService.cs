@@ -181,7 +181,7 @@ internal sealed class NavigationService
 		}
 
 		// If not running as Admin
-		if (!App.IsElevated)
+		if (!GlobalVars.IsElevated)
 		{
 			// If the requested page requires elevation
 			if (!mainWindowVM.UnelevatedPages.Contains(nextNavPageType))
@@ -212,7 +212,7 @@ internal sealed class NavigationService
 					Content = panel,
 					CloseButtonText = GlobalVars.GetStr("Cancel"),
 					SecondaryButtonText = GlobalVars.GetStr("AppElevationNoticeRelaunch"),
-					FlowDirection = Enum.Parse<FlowDirection>(App.Settings.ApplicationGlobalFlowDirection),
+					FlowDirection = Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection),
 					DefaultButton = ContentDialogButton.Secondary
 				};
 
@@ -226,7 +226,7 @@ internal sealed class NavigationService
 
 					if (isChecked)
 					{
-						App.Settings.PromptForElevationOnStartup = true;
+						GlobalVars.Settings.PromptForElevationOnStartup = true;
 					}
 
 					// Build navigation argument to restore this page after elevation.
@@ -239,7 +239,7 @@ internal sealed class NavigationService
 					navArg = $"--navtag={taggedEntry.Key}";
 
 					// Relaunch elevated with the navigation argument
-					if (Relaunch.RelaunchAppElevated(App.AUMID, navArg))
+					if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, navArg))
 					{
 						Application.Current.Exit();
 					}
@@ -460,7 +460,7 @@ internal sealed class NavigationService
 		try
 		{
 			// If the window was last maximized then restore it to maximized
-			if (App.Settings.MainWindowIsMaximized)
+			if (GlobalVars.Settings.MainWindowIsMaximized)
 			{
 				Logger.Write(GlobalVars.GetStr("WindowMaximizedMsg"));
 
@@ -472,12 +472,12 @@ internal sealed class NavigationService
 
 			// If the previous window size was bigger than 700 pixels width/height use it.
 			// Otherwise let the OS decide.
-			if (App.Settings.MainWindowWidth > 700 && App.Settings.MainWindowHeight > 700)
+			if (GlobalVars.Settings.MainWindowWidth > 700 && GlobalVars.Settings.MainWindowHeight > 700)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("SettingWindowSizeMessage"), App.Settings.MainWindowHeight, App.Settings.MainWindowWidth));
+				Logger.Write(string.Format(GlobalVars.GetStr("SettingWindowSizeMessage"), GlobalVars.Settings.MainWindowHeight, GlobalVars.Settings.MainWindowWidth));
 
 				// Apply to the current AppWindow
-				m_AppWindow.Resize(new SizeInt32(App.Settings.MainWindowWidth, App.Settings.MainWindowHeight));
+				m_AppWindow.Resize(new SizeInt32(GlobalVars.Settings.MainWindowWidth, GlobalVars.Settings.MainWindowHeight));
 			}
 		}
 		finally
@@ -547,7 +547,7 @@ internal sealed class NavigationService
 			}
 		}
 
-		MainWindowVM.PageTypeToNavItem = typeToItem.ToFrozenDictionary<Type, NavigationViewItem>();
+		MainWindowVM.PageTypeToNavItem = typeToItem.ToFrozenDictionary();
 	}
 
 	/// <summary>
@@ -566,7 +566,7 @@ internal sealed class NavigationService
 	/// </summary>
 	private void UpdateHeaderFromCurrentPage(object sender, NavigationEventArgs e)
 	{
-		_ = App.AppDispatcher.TryEnqueue(() =>
+		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 		{
 			// Determine provider presence and update header content
 			if (_frame?.Content is CommonCore.UI.IPageHeaderProvider provider)

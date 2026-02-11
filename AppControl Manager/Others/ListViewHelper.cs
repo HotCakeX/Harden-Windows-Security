@@ -19,7 +19,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using Microsoft.UI.Xaml.Controls;
 

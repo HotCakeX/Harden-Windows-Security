@@ -20,10 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
@@ -214,12 +213,12 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		}
 
 		// Perform a case-insensitive search in all relevant fields
-		List<VerificationResult> filteredResults = AllVerificationResults.Where(result =>
+		IEnumerable<VerificationResult> filteredResults = AllVerificationResults.Where(result =>
 			(result.FriendlyName is not null && result.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(result.SourceDisplay is not null && result.SourceDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(result.CurrentValue is not null && result.CurrentValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(result.ExpectedValue is not null && result.ExpectedValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-		).ToList();
+		);
 
 		VerificationResults.Clear();
 		VerificationResults.AddRange(filteredResults);
@@ -329,7 +328,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// <param name="importedItems">List of imported verification results</param>
 	/// <param name="synchronizeExact">If true, removes non-compliant settings (Group Policy only)</param>
 	/// <param name="cancellationToken">Cancellation token</param>
-	internal async Task ApplyImportedStates(List<HardenSystemSecurity.GroupPolicy.VerificationResult> importedItems, bool synchronizeExact, CancellationToken cancellationToken)
+	internal async Task ApplyImportedStates(List<VerificationResult> importedItems, bool synchronizeExact, CancellationToken cancellationToken)
 	{
 		// Use the IDs from the verification results to selectively apply settings from the baseline ZIP
 		HashSet<string> applyIds = importedItems.Where(x => x.IsCompliant).Select(x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -528,7 +527,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	private static readonly FrozenDictionary<string, string> DownloadURLs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 	{
 		{"Microsoft 365 Apps for Enterprise 2512", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Microsoft%20365%20Apps%20for%20Enterprise%202512.zip"}
-	}.ToFrozenDictionary<string, string>();
+	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal List<string> SecurityBaselinesComboBoxItemsSource => DownloadURLs.Keys.ToList();
 

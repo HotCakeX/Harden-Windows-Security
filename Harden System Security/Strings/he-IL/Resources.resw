@@ -5264,4 +5264,55 @@
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>סך כל התקני ה-USB שהתחברו: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מאגר מדיניות קבוצתית</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כללי חומת האש ייווצרו במאגר המדיניות הקבוצתית.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כללי חומת האש ייווצרו במאגר המדיניות הקבוצתית.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מאגר מתמיד (Persistent Store)</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מאגר זה מכיל את המדיניות המתמידה עבור המחשב המקומי. כללים במאגר זה אינם מגיעים מ-GPOs, אלא נוצרו באופן ידני או תכנותי (במהלך התקנת יישום) במחשב. כללים שנוצרו במאגר זה משויכים ל-ActiveStore ומופעלים במחשב באופן מיידי.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מאגר זה מכיל את המדיניות המתמידה עבור המחשב המקומי. כללים במאגר זה אינם מגיעים מ-GPOs, אלא נוצרו באופן ידני או תכנותי (במהלך התקנת יישום) במחשב. כללים שנוצרו במאגר זה משויכים ל-ActiveStore ומופעלים במחשב באופן מיידי.</value>
+  </data>
+    <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>מחק את כל כללי המדיניות הקבוצתית</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את כל כללי חומת האש ממאגר המדיניות הקבוצתית.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את כל כללי חומת האש ממאגר המדיניות הקבוצתית.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>מחק את כל כללי ה-GPO</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>האם אתה בטוח שברצונך למחוק את כל כללי חומת האש ממאגר המדיניות הקבוצתית? פעולה זו היא בלתי הפיכה.</value>
+  </data>
+  <data name="EditRow.Text" xml:space="preserve">
+    <value>עריכה</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עריכת הנתונים הנבחרים.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עריכת הנתונים הנבחרים.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>ייצא מדיניות גישה למערכת</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מייצא את מדיניות הגישה למערכת לקובץ JSON.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מייצא את מדיניות הגישה למערכת לקובץ JSON.</value>
+  </data>
 </root>

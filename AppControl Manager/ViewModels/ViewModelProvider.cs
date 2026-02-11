@@ -30,12 +30,6 @@ internal static class ViewModelProvider
 {
 	// Core dependencies \\
 
-	/// <summary>
-	/// Initialized early during App startup by a single thread, doesn't need thread safety.
-	/// </summary>
-	private static readonly Lazy<CommonCore.AppSettings.Main> _appSettings = new(() =>
-		new CommonCore.AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.None);
-
 	private static readonly Lazy<EventLogUtility> _eventLogUtility = new(() =>
 		new EventLogUtility(), LazyThreadSafetyMode.PublicationOnly);
 
@@ -122,8 +116,10 @@ internal static class ViewModelProvider
 	private static readonly Lazy<ViewOnlinePoliciesVM> _viewOnlinePoliciesVM = new(() =>
 		new ViewOnlinePoliciesVM(), false);
 
+	private static readonly Lazy<FirewallSentinelVM> _firewallSentinelVM = new(() =>
+		new FirewallSentinelVM(), false);
+
 	// Core Dependencies \\
-	internal static CommonCore.AppSettings.Main AppSettings => _appSettings.Value;
 	internal static EventLogUtility EventLogUtility => _eventLogUtility.Value;
 
 	// View Models \\
@@ -154,6 +150,7 @@ internal static class ViewModelProvider
 	internal static LogsVM LogsVM => _logsVM.Value;
 	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
 	internal static HomeVM HomeVM => _homeVM.Value;
+	internal static FirewallSentinelVM FirewallSentinelVM => _firewallSentinelVM.Value;
 
 
 	/// <summary>

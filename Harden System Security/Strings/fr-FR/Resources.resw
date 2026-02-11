@@ -5264,4 +5264,55 @@ Empreinte : {3}</value>
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>Nombre total de périphériques USB connectés: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Magasin de stratégie de groupe</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Les règles de pare-feu seront créées dans le magasin de stratégie de groupe.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Les règles de pare-feu seront créées dans le magasin de stratégie de groupe.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Magasin persistant</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ce magasin contient la stratégie persistante pour l'ordinateur local. Les règles de ce magasin ne proviennent pas des objets de stratégie de groupe (GPO) et ont été créées manuellement ou par programmation (lors de l'installation de l'application) sur l'ordinateur. Les règles créées dans ce magasin sont rattachées à l'ActiveStore et activées immédiatement sur l'ordinateur.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ce magasin contient la stratégie persistante pour l'ordinateur local. Les règles de ce magasin ne proviennent pas des objets de stratégie de groupe (GPO) et ont été créées manuellement ou par programmation (lors de l'installation de l'application) sur l'ordinateur. Les règles créées dans ce magasin sont rattachées à l'ActiveStore et activées immédiatement sur l'ordinateur.</value>
+  </data>
+    <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>Supprimer toutes les règles de stratégie de groupe</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimez toutes les règles de pare-feu du magasin de stratégies de groupe.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimez toutes les règles de pare-feu du magasin de stratégies de groupe.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Supprimer toutes les règles GPO</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer toutes les règles de pare-feu du magasin de stratégies de groupe ? Cette action est irréversible.</value>
+  </data>
+    <data name="EditRow.Text" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modifier les données sélectionnées.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Modifier les données sélectionnées.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>Exporter les stratégies d'accès au système</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exporte les stratégies d'accès au système vers un fichier JSON.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exporte les stratégies d'accès au système vers un fichier JSON.</value>
+  </data>
 </root>

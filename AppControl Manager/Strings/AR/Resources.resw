@@ -3628,9 +3628,6 @@
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>التكرار عبر كل ملف مدعوم</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>يحتوي ملف XML المقدم "{0}" على قاعدة تسمح بجميع الملفات.</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>إنشاء مهمة مجدولة لتحديث قائمة حظر برامج التشغيل الموصى بها من Microsoft أسبوعيًا بسرعة</value>
   </data>

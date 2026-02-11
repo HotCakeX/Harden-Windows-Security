@@ -94,10 +94,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				App.Settings.ApplicationGlobalFlowDirection = field ? "LeftToRight" : "RightToLeft";
+				GlobalVars.Settings.ApplicationGlobalFlowDirection = field ? "LeftToRight" : "RightToLeft";
 			}
 		}
-	} = string.Equals(App.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase);
+	} = string.Equals(GlobalVars.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase);
 
 	private enum NavViewLocation
 	{
@@ -116,7 +116,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				// Raise the global OnNavigationViewLocationChanged event
 				NavigationViewLocationManager.OnNavigationViewLocationChanged(x);
 
-				App.Settings.NavViewPaneDisplayMode = x;
+				GlobalVars.Settings.NavViewPaneDisplayMode = x;
 			}
 		}
 	}
@@ -157,7 +157,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				string x = SupportedLanguagesReverse[field];
 
 				ApplicationLanguages.PrimaryLanguageOverride = x;
-				App.Settings.ApplicationGlobalLanguage = x;
+				GlobalVars.Settings.ApplicationGlobalLanguage = x;
 
 				// Get reference to the MainWindow and refresh the localized content
 				if (App.MainWindow is MainWindow mainWindow)
@@ -169,7 +169,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				Nav.RefreshSettingsPage();
 			}
 		}
-	} = SupportedLanguages.TryGetValue(App.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;
+	} = SupportedLanguages.TryGetValue(GlobalVars.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;
 
 	/// <summary>
 	/// Language Selection ComboBox ItemsSource
@@ -197,10 +197,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 				// Raise the global BackgroundChanged event
 				AppThemeManager.OnAppThemeChanged(AppThemesReverse[field]);
 
-				App.Settings.AppTheme = AppThemesReverse[field];
+				GlobalVars.Settings.AppTheme = AppThemesReverse[field];
 			}
 		}
-	} = AppThemes.TryGetValue(App.Settings.AppTheme, out int x) ? x : 0;
+	} = AppThemes.TryGetValue(GlobalVars.Settings.AppTheme, out int x) ? x : 0;
 
 	private static readonly Dictionary<string, int> IconsStyles = new(StringComparer.OrdinalIgnoreCase)
 	{
@@ -225,7 +225,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				{
 					ViewModelMainWindow.OnIconsStylesChanged(x);
 
-					App.Settings.IconsStyle = x;
+					GlobalVars.Settings.IconsStyle = x;
 				}
 				else
 				{
@@ -233,12 +233,12 @@ internal sealed partial class SettingsVM : ViewModelBase
 				}
 			}
 		}
-	} = IconsStyles.TryGetValue(App.Settings.IconsStyle, out int x) ? x : 2;
+	} = IconsStyles.TryGetValue(GlobalVars.Settings.IconsStyle, out int x) ? x : 2;
 
 	/// <summary>
 	/// Set the version in the settings card to the current app version
 	/// </summary>
-	internal readonly string VersionTextBlockText = $"Version {App.currentAppVersion}";
+	internal readonly string VersionTextBlockText = $"Version {GlobalVars.currentAppVersion}";
 
 	/// <summary>
 	/// Set the year for the copyright section
@@ -280,7 +280,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		string? path = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XSDFilePickerFilter);
 
 		if (path is not null)
-			App.Settings.CiPolicySchemaPath = path;
+			GlobalVars.Settings.CiPolicySchemaPath = path;
 	}
 
 	internal string? CertificatePathTextBox { get; set => SP(ref field, value); }

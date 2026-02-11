@@ -15,13 +15,17 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.GroupPolicy;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-/// <summary>
-/// The source of the policy in the JSON file.
-/// </summary>
-internal enum Source : uint
+namespace CommonCore.GroupPolicy;
+
+[JsonSourceGenerationOptions(
+	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+	PropertyNameCaseInsensitive = true,
+	WriteIndented = true)]
+[JsonSerializable(typeof(RegistryPolicyEntry))]
+[JsonSerializable(typeof(List<RegistryPolicyEntry>))]
+internal sealed partial class PolicyInputJsonContext : JsonSerializerContext
 {
-	GroupPolicy = 0,
-	Registry = 1 // Security group policies from INF files' registry sections + regular registry-based security measures.
 }

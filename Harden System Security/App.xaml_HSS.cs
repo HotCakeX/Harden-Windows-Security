@@ -21,7 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CommonCore.Taskbar;
-using HardenSystemSecurity.DeviceIntents;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Others;
 using HardenSystemSecurity.ViewModels;
@@ -141,10 +141,10 @@ public partial class App : Application
 
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
-		if (!IsElevated && (Settings.PromptForElevationOnStartup || requireAdminPrivilege))
+		if (!GlobalVars.IsElevated && (GlobalVars.Settings.PromptForElevationOnStartup || requireAdminPrivilege))
 		{
 			// Build passthrough arguments so the elevated instance can reconstruct intent.
-			if (Relaunch.RelaunchAppElevated(AUMID, BuildRelaunchArguments()))
+			if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, BuildRelaunchArguments()))
 			{
 				// Exit the process
 				Environment.Exit(0);
@@ -271,10 +271,10 @@ public partial class App : Application
 
 		MainWindow = new MainWindow();
 
-		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
+		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(GlobalVars.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
 		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
-		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
+		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(GlobalVars.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
 		MainWindow.Closed += Window_Closed;  // Assign event handler for the window closed
 		MainWindow.Activate();
 
@@ -347,14 +347,14 @@ public partial class App : Application
 		#endregion
 
 		// If the user has enabled animated rainbow border for the app window, start it
-		if (Settings.IsAnimatedRainbowEnabled)
+		if (GlobalVars.Settings.IsAnimatedRainbowEnabled)
 		{
 			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
 		}
 		// If the user has set a custom color for the app window border, apply it
-		else if (!string.IsNullOrEmpty(Settings.CustomAppWindowsBorder))
+		else if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomAppWindowsBorder))
 		{
-			if (RGBHEX.ToRGB(Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
+			if (RGBHEX.ToRGB(GlobalVars.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
 				CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
 		}
 

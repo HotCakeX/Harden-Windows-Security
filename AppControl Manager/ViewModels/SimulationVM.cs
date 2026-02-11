@@ -25,6 +25,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -71,7 +72,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	internal readonly InfoBarSettings MainInfoBar;
 
-	internal readonly IncrementalCollection.RangedObservableCollection<SimulationOutput> SimulationOutputs = [];
+	internal Visibility SelectedPolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal readonly CommonCore.IncrementalCollection.RangedObservableCollection<SimulationOutput> SimulationOutputs = [];
 
 	/// <summary>
 	/// Store all outputs for searching
@@ -94,9 +97,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	internal readonly UniqueStringObservableCollection FolderPaths = [];
 
 	/// <summary>
-	/// For selected XML file path
+	/// For the selected App Control policy.
 	/// </summary>
-	internal string? XmlFilePath { get; set => SP(ref field, value); }
+	internal PolicyFileRepresent? SelectedPolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// For selected Cat Root paths
@@ -294,7 +297,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal async void BeginSimulationButton_Click()
 	{
-		if (XmlFilePath is null || !File.Exists(XmlFilePath))
+		if (SelectedPolicy is null)
 		{
 			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectExistingXmlPolicyFileMessage"));
 			return;
@@ -316,7 +319,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 				return AppControlSimulation.Invoke(
 					FilePaths.UniqueItems,
 					FolderPaths.UniqueItems,
-					XmlFilePath,
+					SelectedPolicy.PolicyObj,
 					ScanSecurityCatalogs,
 					CatRootPaths,
 					(ushort)ScalabilityRadialGaugeValue,
@@ -363,16 +366,24 @@ internal sealed partial class SimulationVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Event handler for the Select XML File button
+	/// Event handler for the Select policy button
 	/// </summary>
-	internal void SelectXmlFileButton_Click()
+	internal async void SelectXmlFileButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
+		try
 		{
-			// Store the selected XML file path
-			XmlFilePath = selectedFile;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+			if (!string.IsNullOrEmpty(selectedFile))
+			{
+				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(selectedFile, null));
+
+				SelectedPolicy = new(policyObj);
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -426,7 +437,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		CalculateColumnWidths();
 	}
 
-	internal void SelectXmlFileButton_Flyout_Clear_Click() => XmlFilePath = null;
+	internal void SelectXmlFileButton_Flyout_Clear_Click() => SelectedPolicy = null;
 
 	internal void SelectFilesButton_Flyout_Clear_Click() => FilePaths.Clear();
 

@@ -26,7 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.GroupPolicy;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml;
@@ -626,7 +626,7 @@ internal static class SpecializedStrategiesRegistry
 internal sealed partial class MUnit(
 	Categories category,
 	string? name,
-	List<DeviceIntents.Intent> deviceIntents,
+	List<Intent> deviceIntents,
 	Guid id,
 	IApplyStrategy applyStrategy,
 	IVerifyStrategy? verifyStrategy = null,
@@ -713,7 +713,7 @@ internal sealed partial class MUnit(
 	[JsonInclude]
 	[JsonPropertyOrder(6)]
 	[JsonPropertyName("DeviceIntents")]
-	internal List<DeviceIntents.Intent> DeviceIntents => deviceIntents;
+	internal List<Intent> DeviceIntents => deviceIntents;
 
 	/// <summary>
 	/// Reference to the user control that contains this MUnit. Set by the user control when the ViewModel is assigned.
@@ -1117,7 +1117,7 @@ internal sealed partial class MUnit(
 					// Execute main bulk remove operation
 					// For Remove operation:
 					// Policies with Action=Apply should be Removed
-					// Policies with Action=Remove should be Skipped
+					// Policies with Action=Remove should be Skipped - Running a removal on a JSON policy with Action=Remove would mean restoring the key that was deleted to secure the system.
 					List<RegistryPolicyEntry> toUndo = allPolicies.Where(p => p.policyAction == PolicyAction.Apply).ToList();
 
 					if (toUndo.Count > 0)
@@ -1588,7 +1588,7 @@ internal sealed partial class MUnit(
 	internal MUnit(
 		Categories category,
 		string? name,
-		List<DeviceIntents.Intent> deviceIntents,
+		List<Intent> deviceIntents,
 		Guid id,
 		SubCategories? subCategory,
 		string? url,

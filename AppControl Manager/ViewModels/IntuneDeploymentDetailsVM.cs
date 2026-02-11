@@ -69,7 +69,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Bound to the UI ListView and holds the Intune group Names/IDs (filtered view).
 	/// </summary>
-	internal readonly IncrementalCollection.RangedObservableCollection<IntuneGroupItemListView> GroupNamesCollection = [];
+	internal readonly CommonCore.IncrementalCollection.RangedObservableCollection<IntuneGroupItemListView> GroupNamesCollection = [];
 
 	/// <summary>
 	/// Stores all Intune groups retrieved (unfiltered) to support search/sort without losing original data.

@@ -106,7 +106,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Main collection assigned to the ListView
 	/// </summary>
-	internal readonly IncrementalCollection.RangedObservableCollection<FileCertificateInfoCol> FileCertificates = [];
+	internal readonly CommonCore.IncrementalCollection.RangedObservableCollection<FileCertificateInfoCol> FileCertificates = [];
 
 	/// <summary>
 	/// Collection used during search

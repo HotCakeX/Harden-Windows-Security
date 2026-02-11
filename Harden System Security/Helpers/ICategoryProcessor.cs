@@ -18,8 +18,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using HardenSystemSecurity.DeviceIntents;
-using HardenSystemSecurity.Protect;
+using CommonCore.GroupPolicy;
 
 namespace HardenSystemSecurity.Helpers;
 

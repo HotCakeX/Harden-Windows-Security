@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
 /// <summary>
 /// GroupPolicyObject wrapper.

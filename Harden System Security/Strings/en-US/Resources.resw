@@ -5264,4 +5264,55 @@ Thumbprint: {3}</value>
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>Total USB Devices Connected: {0}</value>
   </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Group Policy Store</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Firewall rules will be created in the Group Policy store.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Firewall rules will be created in the Group Policy store.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Persistent Store</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This store contains the persistent policy for the local computer. Rules in this store are not from GPOs, and have been created manually or programmatically (during application installation) on the computer. Rules created in this store are attached to the ActiveStore and activated on the computer immediately.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This store contains the persistent policy for the local computer. Rules in this store are not from GPOs, and have been created manually or programmatically (during application installation) on the computer. Rules created in this store are attached to the ActiveStore and activated on the computer immediately.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>Delete all Group Policy Rules</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete all Firewall rules from the Group Policy store.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete all Firewall rules from the Group Policy store.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Delete All GPO Rules</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>Are you sure you want to delete all Firewall rules from the Group Policy store? This action cannot be undone.</value>
+  </data>
+  <data name="EditRow.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Edit the selected data.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Edit the selected data.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>Export System Access Policies</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exports the System Access policies to a JSON file.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exports the System Access policies to a JSON file.</value>
+  </data>
 </root>

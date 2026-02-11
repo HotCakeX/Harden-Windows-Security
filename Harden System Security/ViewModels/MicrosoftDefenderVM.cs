@@ -22,13 +22,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using HardenSystemSecurity.ExploitMitigation;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using CommonCore.GroupPolicy;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -171,10 +172,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			}),
 
 			deviceIntents: [
-				DeviceIntents.Intent.Business,
-				DeviceIntents.Intent.SpecializedAccessWorkstation,
-				DeviceIntents.Intent.PrivilegedAccessWorkstation,
-				DeviceIntents.Intent.School
+				Intent.Business,
+				Intent.SpecializedAccessWorkstation,
+				Intent.PrivilegedAccessWorkstation,
+				Intent.School
 			],
 			id: new("019a9060-c319-742a-8ee6-f31481846eaa")
 			));
@@ -222,7 +223,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			}),
 
 			deviceIntents: [
-				DeviceIntents.Intent.All
+				Intent.All
 			],
 			id: new("019a9060-e172-7876-885d-633d2dbd65eb")
 			));
@@ -270,10 +271,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			}),
 
 			deviceIntents: [
-				DeviceIntents.Intent.Business,
-				DeviceIntents.Intent.SpecializedAccessWorkstation,
-				DeviceIntents.Intent.PrivilegedAccessWorkstation,
-				DeviceIntents.Intent.School
+				Intent.Business,
+				Intent.SpecializedAccessWorkstation,
+				Intent.PrivilegedAccessWorkstation,
+				Intent.School
 			],
 			id: new("019a9061-41b0-7baa-afc8-b253b43025fd")
 			));
@@ -321,10 +322,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			}),
 
 			deviceIntents: [
-				DeviceIntents.Intent.Business,
-				DeviceIntents.Intent.SpecializedAccessWorkstation,
-				DeviceIntents.Intent.PrivilegedAccessWorkstation,
-				DeviceIntents.Intent.School
+				Intent.Business,
+				Intent.SpecializedAccessWorkstation,
+				Intent.PrivilegedAccessWorkstation,
+				Intent.School
 			],
 			id: new("019a9061-8aba-789f-9291-fa4fd6464fda")
 			));
@@ -352,7 +353,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 			}),
 			deviceIntents: [
-				DeviceIntents.Intent.All
+				Intent.All
 			],
 			id: new("019a9061-ff1a-7c33-9152-2395ed108dfe")
 			));
@@ -409,10 +410,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			url: "https://support.microsoft.com/office/how-onedrive-safeguards-your-data-in-the-cloud-23c6ea94-3608-48d7-8bf0-80e142edd1e1",
 
 			deviceIntents: [
-				DeviceIntents.Intent.Business,
-				DeviceIntents.Intent.SpecializedAccessWorkstation,
-				DeviceIntents.Intent.PrivilegedAccessWorkstation,
-				DeviceIntents.Intent.School
+				Intent.Business,
+				Intent.SpecializedAccessWorkstation,
+				Intent.PrivilegedAccessWorkstation,
+				Intent.School
 			],
 			id: new("019a9062-247e-7b49-a029-e2e3917b7ba9")
 
@@ -461,7 +462,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 			}),
 			deviceIntents: [
-				DeviceIntents.Intent.All
+				Intent.All
 			],
 			id: new("019a9062-6faa-7196-9f28-0b3e8b67abad")
 			));
@@ -501,7 +502,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			}),
 
 			deviceIntents: [
-				DeviceIntents.Intent.Development
+				Intent.Development
 			],
 			id: new("019a9062-e303-7f26-85db-29b45813cfa3")
 			));
@@ -566,7 +567,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			subCategory: SubCategories.MSDefender_BetaUpdateChannelsForDefender,
 
 			deviceIntents: [
-				DeviceIntents.Intent.SpecializedAccessWorkstation
+				Intent.SpecializedAccessWorkstation
 			],
 			id: new("019a9063-39db-7eb4-b5c3-99394df239c4")
 			));
@@ -599,11 +600,11 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				url: "https://learn.microsoft.com/defender-endpoint/sandbox-mdav",
 
 				deviceIntents: [
-					DeviceIntents.Intent.Development,
-					DeviceIntents.Intent.School,
-					DeviceIntents.Intent.Business,
-					DeviceIntents.Intent.SpecializedAccessWorkstation,
-					DeviceIntents.Intent.PrivilegedAccessWorkstation
+					Intent.Development,
+					Intent.School,
+					Intent.Business,
+					Intent.SpecializedAccessWorkstation,
+					Intent.PrivilegedAccessWorkstation
 				],
 				id: new("019a9063-824a-71a0-9564-1618d602830c")
 				));

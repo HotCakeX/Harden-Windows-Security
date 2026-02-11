@@ -20,15 +20,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using CommonCore.GroupPolicy;
+using HardenSystemSecurity.SecurityPolicy;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -220,12 +221,12 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		}
 
 		// Perform a case-insensitive search in all relevant fields
-		List<VerificationResult> filteredResults = AllVerificationResults.Where(result =>
+		IEnumerable<VerificationResult> filteredResults = AllVerificationResults.Where(result =>
 			(result.FriendlyName is not null && result.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(result.SourceDisplay is not null && result.SourceDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(result.CurrentValue is not null && result.CurrentValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(result.ExpectedValue is not null && result.ExpectedValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-		).ToList();
+		);
 
 		VerificationResults.Clear();
 		VerificationResults.AddRange(filteredResults);
@@ -381,7 +382,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <param name="importedItems">List of imported verification results</param>
 	/// <param name="synchronizeExact">If true, removes non-compliant settings (Group Policy only)</param>
 	/// <param name="cancellationToken">Cancellation token</param>
-	internal async Task ApplyImportedStates(List<HardenSystemSecurity.GroupPolicy.VerificationResult> importedItems, bool synchronizeExact, CancellationToken cancellationToken)
+	internal async Task ApplyImportedStates(List<VerificationResult> importedItems, bool synchronizeExact, CancellationToken cancellationToken)
 	{
 		// Use the IDs from the verification results to selectively apply settings from the baseline ZIP
 		HashSet<string> applyIds = importedItems.Where(x => x.IsCompliant).Select(x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -550,7 +551,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		{"Windows 11 version 24H2", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Windows%2011%20v24H2%20Security%20Baseline.zip"},
 		{"Windows 11 version 25H2", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Windows%2011%20v25H2%20Security%20Baseline.zip"},
 		{"Windows Server 2025 - 2506", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Windows%20Server%202025%20Security%20Baseline.zip"}
-	}.ToFrozenDictionary<string, string>();
+	}.ToFrozenDictionary();
 
 	internal List<string> SecurityBaselinesComboBoxItemsSource => DownloadURLs.Keys.ToList();
 
@@ -723,5 +724,32 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	}
 
 	#endregion
+
+	/// <summary>
+	/// Event handler for the UI button to export System Access policies.
+	/// </summary>
+	internal async void ExportSystemAccessData()
+	{
+		try
+		{
+			string? filePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, "DefaultValues.json");
+
+			if (string.IsNullOrEmpty(filePath))
+				return;
+
+			await Task.Run(() => SystemAccessDefaults.BackupSystemAccessPolicies(filePath));
+
+			MainInfoBar.WriteSuccess($"System Access policies backed up to: {filePath}");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
 
 }

@@ -30,6 +30,8 @@ using Microsoft.UI.Dispatching;
 // To learn more about WinUI and the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/windows/apps/windows-app-sdk/applifecycle/applifecycle
 
+#pragma warning restore CA1515
+
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.ViewModels;
 namespace HardenSystemSecurity;
@@ -46,88 +48,16 @@ namespace AppControlManager;
 /// </summary>
 public partial class App : Application
 {
-#pragma warning restore CA1515
-
-#if HARDEN_SYSTEM_SECURITY
-	internal const string AppName = "HardenSystemSecurity";
-#endif
-#if APP_CONTROL_MANAGER
-	internal const string AppName = "AppControlManager";
-#endif
-
-	/// <summary>
-	/// Package Family Name of the application
-	/// </summary>
-	internal static readonly string PFN = Package.Current.Id.FamilyName;
-
-	/// <summary>
-	/// The App User Model ID which is in the format of PackageFamilyName!App
-	/// The "App" is what's defined in the Package.appxmanifest file for ID in Application Id="App"
-	/// </summary>
-	internal static readonly string AUMID = AppInfo.Current.AppUserModelId;
-
-	/// <summary>
-	/// To determine whether the app has Administrator privileges
-	/// </summary>
-	internal static readonly bool IsElevated = Environment.IsPrivilegedProcess;
-
-	/// <summary>
-	/// Detects the source of the application.
-	/// GitHub => 0
-	/// Microsoft Store => 1
-	/// Unknown => 2
-	/// </summary>
-	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ?
-		0 :
-		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "VioletHansen.HardenSystemSecurity_ea7andspwdn10", StringComparison.OrdinalIgnoreCase)
-		? 1 : 2);
-
 	/// <summary>
 	/// Tracks whether the cleanup logics have been run.
 	/// </summary>
 	private static int CleanUpHappened;
 
 	/// <summary>
-	/// The application settings for AppControl Manager. Retrieved early in a Non-ThreadSafe manner.
-	/// Any references (instance or static) throughout the app to App settings use this property.
-	/// </summary>
-	internal static CommonCore.AppSettings.Main Settings => ViewModelProvider.AppSettings;
-
-	/// <summary>
-	/// Global dispatcher queue for the application that can be accessed from anywhere.
-	/// </summary>
-	internal static DispatcherQueue AppDispatcher { get; private set; } = null!;
-
-	/// <summary>
 	/// Semaphore to ensure only one error dialog is shown at a time.
 	/// Exceptions will stack up and wait in line to be shown to the user.
 	/// </summary>
 	private static readonly SemaphoreSlim _dialogSemaphore = new(1, 1);
-
-	/// <summary>
-	/// Convert it to a normal Version object
-	/// </summary>
-	internal static readonly Version currentAppVersion = new(Package.Current.Id.Version.Major, Package.Current.Id.Version.Minor, Package.Current.Id.Version.Build, Package.Current.Id.Version.Revision);
-
-#if APP_CONTROL_MANAGER
-	/// <summary>
-	/// The directory where the logs will be stored
-	/// </summary>
-	internal static readonly string LogsDirectory = IsElevated ?
-		Path.Combine(GlobalVars.UserConfigDir, "Logs") :
-		Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
-#endif
-
-#if HARDEN_SYSTEM_SECURITY
-	/// <summary>
-	/// The directory where the logs will be stored
-	/// </summary>
-	internal static readonly string LogsDirectory = Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
-#endif
-
-	// To track the currently open Content Dialog across the app. Every piece of code that tries to display a content dialog, whether custom or generic, must assign it first
-	// to this variable before using ShowAsync() method to display it.
-	internal static ContentDialog? CurrentlyOpenContentDialog;
 
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
@@ -138,13 +68,13 @@ public partial class App : Application
 		InitializeComponent();
 
 		// Capture the dispatcher queue as early as possible.
-		AppDispatcher = DispatcherQueue.GetForCurrentThread();
+		GlobalVars.AppDispatcher = DispatcherQueue.GetForCurrentThread();
 
 		// Set the language of the application to the user's preferred language
-		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
+		ApplicationLanguages.PrimaryLanguageOverride = GlobalVars.Settings.ApplicationGlobalLanguage;
 
 		// Initialize logging system
-		Logger.Configure(logsDirectory: LogsDirectory, appName: AppName);
+		Logger.Configure(logsDirectory: GlobalVars.LogsDirectory, appName: GlobalVars.AppName);
 
 		// to handle unhandled exceptions
 		UnhandledException += App_UnhandledException;
@@ -176,8 +106,8 @@ public partial class App : Application
 		try
 		{
 			// Check for the SoundSetting in the local settings
-			ElementSoundPlayer.State = Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
-			ElementSoundPlayer.SpatialAudioMode = Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
+			ElementSoundPlayer.State = GlobalVars.Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
+			ElementSoundPlayer.SpatialAudioMode = GlobalVars.Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
 		}
 		catch (Exception ex)
 		{
@@ -287,8 +217,8 @@ public partial class App : Application
 				SizeInt32 size = MainWindow.AppWindow.Size;
 
 				// Save to window width and height to the app settings
-				Settings.MainWindowWidth = size.Width;
-				Settings.MainWindowHeight = size.Height;
+				GlobalVars.Settings.MainWindowWidth = size.Width;
+				GlobalVars.Settings.MainWindowHeight = size.Height;
 
 				WINDOWPLACEMENT windowPlacement = new();
 
@@ -296,7 +226,7 @@ public partial class App : Application
 				_ = NativeMethods.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
 
 				// Save the maximized status of the window before closing to the app settings
-				Settings.MainWindowIsMaximized = windowPlacement.showCmd is ShowWindowCommands.SW_SHOWMAXIMIZED;
+				GlobalVars.Settings.MainWindowIsMaximized = windowPlacement.showCmd is ShowWindowCommands.SW_SHOWMAXIMIZED;
 			}
 			catch (Exception ex)
 			{
@@ -327,12 +257,12 @@ public partial class App : Application
 				await MainWindow.DispatcherQueue.EnqueueAsync(async () =>
 				{
 					// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error
-					if (CurrentlyOpenContentDialog is ContentDialog dialog)
+					if (GlobalVars.CurrentlyOpenContentDialog is ContentDialog dialog)
 					{
 						dialog.Hide();
 
 						// Remove it after hiding it
-						CurrentlyOpenContentDialog = null;
+						GlobalVars.CurrentlyOpenContentDialog = null;
 					}
 					using AppControlManager.CustomUIElements.ContentDialogV2 errorDialog = new()
 					{

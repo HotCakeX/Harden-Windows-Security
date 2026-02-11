@@ -1093,7 +1093,9 @@ namespace Firewall {
 		const wchar_t* action,
 		const wchar_t* description,
 		const wchar_t* policyAppId,
-		const wchar_t* packageFamilyName
+		const wchar_t* packageFamilyName,
+		const wchar_t* edgeTraversal,
+		const wchar_t* policyStore
 	)
 	{
 		ClearLastErrorMsg();
@@ -1102,10 +1104,7 @@ namespace Firewall {
 			SetLastErrorMsg(L"DisplayName is required.");
 			return false;
 		}
-		if (!programPath || *programPath == L'\0') {
-			SetLastErrorMsg(L"ProgramPath is required.");
-			return false;
-		}
+
 		if (!direction || *direction == L'\0') {
 			SetLastErrorMsg(L"Direction is required.");
 			return false;
@@ -1141,6 +1140,25 @@ namespace Firewall {
 			return false;
 		}
 
+		// Parse Edge Traversal - default to Block if unspecified
+		NetSecurityEdgeTraversal edgeEnum = NetSecurityEdgeTraversal::Block;
+		if (edgeTraversal && *edgeTraversal != L'\0')
+		{
+			if (EqualsOrdinalIgnoreCase(edgeTraversal, L"Block") || EqualsOrdinalIgnoreCase(edgeTraversal, L"0"))
+				edgeEnum = NetSecurityEdgeTraversal::Block;
+			else if (EqualsOrdinalIgnoreCase(edgeTraversal, L"Allow") || EqualsOrdinalIgnoreCase(edgeTraversal, L"1"))
+				edgeEnum = NetSecurityEdgeTraversal::Allow;
+			else if (EqualsOrdinalIgnoreCase(edgeTraversal, L"DeferToUser") || EqualsOrdinalIgnoreCase(edgeTraversal, L"2"))
+				edgeEnum = NetSecurityEdgeTraversal::DeferToUser;
+			else if (EqualsOrdinalIgnoreCase(edgeTraversal, L"DeferToApp") || EqualsOrdinalIgnoreCase(edgeTraversal, L"3"))
+				edgeEnum = NetSecurityEdgeTraversal::DeferToApp;
+			else
+			{
+				SetLastErrorMsg(L"Invalid EdgeTraversalPolicy (Block/Allow/DeferToUser/DeferToApp).");
+				return false;
+			}
+		}
+
 		// Connect to WMI
 		IWbemLocator* pLoc = nullptr;
 		IWbemServices* pSvc = nullptr;
@@ -1150,9 +1168,13 @@ namespace Firewall {
 			return false;
 		}
 
-		// Create Context for PolicyStore=localhost (Group Policy)
+		// Create Context for PolicyStore
+		// Default to "localhost" if not specified.
+		// Common values: "localhost" (GPO/Local hybrid), "PersistentStore" (Registry), "ActiveStore" (RAM)
+		const wchar_t* targetStore = (policyStore && *policyStore != L'\0') ? policyStore : L"localhost";
+
 		IWbemContext* pCtx = nullptr;
-		HRESULT hr = CreateContextAndSetString(&pCtx, L"PolicyStore", L"localhost");
+		HRESULT hr = CreateContextAndSetString(&pCtx, L"PolicyStore", targetStore);
 		if (FAILED(hr) || !pCtx)
 		{
 			SetLastErrorMsg(L"Failed to create IWbemContext for PolicyStore.");
@@ -1164,7 +1186,7 @@ namespace Firewall {
 
 		const wchar_t* targetGroup = L"HardenSystemSecurity";
 
-		// Deduplication: delete existing rule(s) with same DisplayName, Direction and Group.
+		// Deduplication: delete existing rule(s) with same DisplayName, Direction and Group in the selected store.
 		if (!DeleteProgramRulesInGroup(pSvc, pCtx, displayName, targetGroup, dirEnum))
 		{
 			SetLastErrorMsg(L"Failed to remove existing rules during deduplication.");
@@ -1235,7 +1257,7 @@ namespace Firewall {
 			!setInt(L"Action", static_cast<int>(actionEnum)) ||
 			!setInt(L"Enabled", static_cast<int>(NetSecurityEnabled::True)) ||
 			!setInt(L"Profiles", static_cast<int>(NetSecurityProfile::Any)) ||
-			!setInt(L"EdgeTraversalPolicy", static_cast<int>(NetSecurityEdgeTraversal::Block)))
+			!setInt(L"EdgeTraversalPolicy", static_cast<int>(edgeEnum)))
 		{
 			SetLastErrorMsg(L"Failed to set one or more mandatory properties.");
 			pInst->Release();
@@ -1247,27 +1269,16 @@ namespace Firewall {
 			return false;
 		}
 
-		// Fields set via Context (Filters)
-		// Program (Application Filter) is Mandatory for this function logic
-		if (FAILED(ContextSetString(pCtx, L"Program", programPath)))
-		{
-			SetLastErrorMsg(L"Failed to set Program in context.");
-			pInst->Release();
-			pClass->Release();
-			pCtx->Release();
-			pSvc->Release();
-			pLoc->Release();
-			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
-			return false;
-		}
+		// Handle PolicyAppId and PackageFamilyName as direct properties of the rule instance.
+		// These properties are not marked as ReadOnly in the CIM class definition (unlike InstanceID),
+		// so they should be set directly on the instance rather than via Context.
+		// The Program path is different; it is part of the application filter and must be set via Context.
 
-		// Optional fields (Filters)
 		if (policyAppId && *policyAppId)
 		{
-			if (FAILED(ContextSetString(pCtx, L"PolicyAppId", policyAppId)))
+			if (!setStr(L"PolicyAppId", policyAppId))
 			{
-				// Fail strict to be safe.
-				SetLastErrorMsg(L"Failed to set PolicyAppId in context.");
+				SetLastErrorMsg(L"Failed to set PolicyAppId property.");
 				pInst->Release();
 				pClass->Release();
 				pCtx->Release();
@@ -1277,11 +1288,32 @@ namespace Firewall {
 				return false;
 			}
 		}
+
 		if (packageFamilyName && *packageFamilyName)
 		{
-			if (FAILED(ContextSetString(pCtx, L"PackageFamilyName", packageFamilyName)))
+			if (!setStr(L"PackageFamilyName", packageFamilyName))
 			{
-				SetLastErrorMsg(L"Failed to set PackageFamilyName in context.");
+				SetLastErrorMsg(L"Failed to set PackageFamilyName property.");
+				pInst->Release();
+				pClass->Release();
+				pCtx->Release();
+				pSvc->Release();
+				pLoc->Release();
+				if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+				return false;
+			}
+		}
+
+		// Fields set via Context (Filters)
+		// Program (Application Filter)
+		// If programPath is explicitly provided and not "Any", use it.
+		// If programPath is not provided (nullptr/empty) or it's "Any", we dont set the "Program" context.
+
+		if (programPath && *programPath != L'\0' && !EqualsOrdinalIgnoreCase(programPath, L"Any"))
+		{
+			if (FAILED(ContextSetString(pCtx, L"Program", programPath)))
+			{
+				SetLastErrorMsg(L"Failed to set Program in context.");
 				pInst->Release();
 				pClass->Release();
 				pCtx->Release();

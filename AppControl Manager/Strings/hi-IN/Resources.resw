@@ -3628,9 +3628,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>प्रत्येक समर्थित फ़ाइल के माध्यम से लूप कर रहे हैं</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>आपूर्ति किया गया XML फ़ाइल '{0}' सभी फ़ाइलों की अनुमति देने वाला नियम Contains करता है।</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>तेज़ साप्ताहिक Microsoft अनुशंसित ड्राइवर ब्लॉक सूची अपडेट के लिए शेड्यूल्ड टास्क बना रहे हैं</value>
   </data>

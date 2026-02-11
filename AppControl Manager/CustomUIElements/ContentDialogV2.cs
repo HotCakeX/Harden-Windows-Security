@@ -134,7 +134,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	{
 		try
 		{
-			return App.Settings.AppTheme switch
+			return GlobalVars.Settings.AppTheme switch
 			{
 				string theme when string.Equals(theme, "Light", StringComparison.OrdinalIgnoreCase) => ElementTheme.Light,
 				string theme when string.Equals(theme, "Dark", StringComparison.OrdinalIgnoreCase) => ElementTheme.Dark,
@@ -370,9 +370,9 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			_shadowApplied = false;
 
 			// Clear static reference to allow this dialog to be garbage collected
-			if (ReferenceEquals(App.CurrentlyOpenContentDialog, this))
+			if (ReferenceEquals(GlobalVars.CurrentlyOpenContentDialog, this))
 			{
-				App.CurrentlyOpenContentDialog = null;
+				GlobalVars.CurrentlyOpenContentDialog = null;
 			}
 
 			// Clean up event handlers to prevent memory leaks
@@ -1742,7 +1742,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	{
 		try
 		{
-			App.CurrentlyOpenContentDialog = this;
+			GlobalVars.CurrentlyOpenContentDialog = this;
 			return base.ShowAsync();
 		}
 		catch (Exception ex)
@@ -1856,9 +1856,9 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 
 				// Clear static reference if still pointing to this instance
-				if (ReferenceEquals(App.CurrentlyOpenContentDialog, this))
+				if (ReferenceEquals(GlobalVars.CurrentlyOpenContentDialog, this))
 				{
-					App.CurrentlyOpenContentDialog = null;
+					GlobalVars.CurrentlyOpenContentDialog = null;
 				}
 
 				try

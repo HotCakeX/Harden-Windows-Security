@@ -25,7 +25,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class LinkPreview : Page
 {
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	internal string PreviewUrl
 	{
@@ -34,7 +34,7 @@ internal sealed partial class LinkPreview : Page
 			if (!string.Equals(field, value, StringComparison.OrdinalIgnoreCase))
 			{
 				field = value;
-				_ = App.AppDispatcher.TryEnqueue(() => { LinkPreviewWebView2.Source = new(value); });
+				_ = GlobalVars.AppDispatcher.TryEnqueue(() => { LinkPreviewWebView2.Source = new(value); });
 			}
 		}
 	} = "https://bing.com";

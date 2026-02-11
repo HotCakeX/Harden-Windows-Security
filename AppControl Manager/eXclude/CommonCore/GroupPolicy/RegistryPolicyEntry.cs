@@ -21,9 +21,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using HardenSystemSecurity.Protect;
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
 internal sealed class RegistryPolicyEntry(
 	Source source,
@@ -117,7 +116,7 @@ internal sealed class RegistryPolicyEntry(
 	[JsonInclude]
 	[JsonPropertyOrder(14)]
 	[JsonPropertyName("DeviceIntents")]
-	internal List<DeviceIntents.Intent>? DeviceIntents { get; init; }
+	internal List<Intent>? DeviceIntents { get; init; }
 
 	/// <summary>
 	/// This property is only used to retrieve the ID from the JSON file and relay it to <see cref="MUnit"/> instances that are created based on it.
@@ -129,10 +128,37 @@ internal sealed class RegistryPolicyEntry(
 	internal Guid ID => id;
 
 	/// <summary>
-	/// Calculated once, returns the parsed value based on the type and data.
+	/// Calculated dynamically based on the current Data and Type.
 	/// </summary>
 	[JsonIgnore]
-	internal object? ParsedValue { get; } = GetValue(data, type);
+	internal object? ParsedValue => GetValue(Data, Type);
+
+	/// <summary>
+	/// Gets a string representation of the parsed value suitable for UI display.
+	/// </summary>
+	[JsonIgnore]
+	internal string ValueDisplay
+	{
+		get
+		{
+			object? val = ParsedValue;
+			if (val is null) return string.Empty;
+
+			if (val is string[] arr)
+			{
+				// Display multi-string array as comma-separated
+				return string.Join("; ", arr);
+			}
+
+			if (val is ReadOnlyMemory<byte> mem)
+			{
+				// Display binary data as Hex string
+				return Convert.ToHexString(mem.Span);
+			}
+
+			return val.ToString() ?? string.Empty;
+		}
+	}
 
 	private static object? GetValue(ReadOnlyMemory<byte> data, RegistryValueType type)
 	{
@@ -197,6 +223,8 @@ internal sealed class RegistryPolicyEntry(
 		return JsonSerializer.Deserialize(json, PolicyInputJsonContext.Default.ListRegistryPolicyEntry) ?? throw new InvalidOperationException($"Could not load the JSON file: {path}");
 	}
 
+#if HARDEN_SYSTEM_SECURITY
+
 	/// <summary>
 	/// Reads a JSON file containing the RegistryPolicyEntry data and resolves the resource keys from the JSON.
 	/// </summary>
@@ -223,4 +251,7 @@ internal sealed class RegistryPolicyEntry(
 
 		return result;
 	}
+
+#endif
+
 }

@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
 internal static class RegistryPolicyParser
 {

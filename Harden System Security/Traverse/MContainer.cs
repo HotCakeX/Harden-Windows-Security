@@ -22,7 +22,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AppControlManager.CustomUIElements;
-using HardenSystemSecurity.GroupPolicy;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.ViewModels;
 
@@ -120,7 +120,7 @@ internal sealed class MContainer(
 
 	[JsonPropertyName("AppVersion")]
 	[JsonPropertyOrder(3)]
-	public string AppVersion => App.currentAppVersion.ToString();
+	public string AppVersion => GlobalVars.currentAppVersion.ToString();
 
 	[JsonInclude]
 	[JsonPropertyName("Total")]
@@ -239,7 +239,7 @@ internal sealed class MContainer(
 	Converters = [
 		typeof(JsonStringEnumConverter<Categories>),
 		typeof(JsonStringEnumConverter<SubCategories>),
-		typeof(JsonStringEnumConverter<DeviceIntents.Intent>),
+		typeof(JsonStringEnumConverter<Intent>),
 		typeof(JsonStringEnumConverter<StatusState>),
 		typeof(JsonStringEnumConverter<SecurityMeasureSource>),
 		typeof(JsonStringEnumConverter<ASRRuleState>)

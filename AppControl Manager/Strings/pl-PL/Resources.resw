@@ -3628,9 +3628,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>Przechodzenie przez każdy obsługiwany plik</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>Dostarczony plik XML „{0}” zawiera regułę zezwalającą na wszystkie pliki.</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>Tworzenie zaplanowanego zadania szybkiej cotygodniowej aktualizacji listy zablokowanych sterowników zalecanej przez Microsoft</value>
   </data>

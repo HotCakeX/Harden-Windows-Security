@@ -21,7 +21,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -170,7 +170,7 @@ internal sealed partial class ListViewIncrementalController(
 		// If AutoResize is ON, reset the off-mode check and schedule a layout update.
 		// If AutoResize is OFF, the schedule will trigger the one-time full scan if needed.
 		// Using ScheduleWidthRecalc ensures the ItemsStackPanel has time to layout before we probe indices.
-		if (App.Settings.AutoResizeListViewColumns)
+		if (GlobalVars.Settings.AutoResizeListViewColumns)
 		{
 			_offModeFullCalcDone = false;
 		}
@@ -313,7 +313,7 @@ internal sealed partial class ListViewIncrementalController(
 			}
 
 			// After the sort the leading items changed; recompute widths on debounce if auto-resize is enabled.
-			if (App.Settings.AutoResizeListViewColumns)
+			if (GlobalVars.Settings.AutoResizeListViewColumns)
 			{
 				ScheduleWidthRecalc();
 			}
@@ -434,7 +434,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		// While the user is scrolling (intermediate), debounce recomputations to avoid excessive layout passes.
 		// When auto-resize is disabled, never recompute on scroll.
-		if (!App.Settings.AutoResizeListViewColumns)
+		if (!GlobalVars.Settings.AutoResizeListViewColumns)
 		{
 			return;
 		}
@@ -454,7 +454,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		// Virtualization/realization changed (new rows realized). Debounce column width recalculation.
 		// When auto-resize is disabled, never recompute on realization.
-		if (!App.Settings.AutoResizeListViewColumns)
+		if (!GlobalVars.Settings.AutoResizeListViewColumns)
 			return;
 
 		ScheduleWidthRecalc();
@@ -506,7 +506,7 @@ internal sealed partial class ListViewIncrementalController(
 		// 1. If AutoResize is Disabled:
 		// Check if we have already performed the "one-time full dataset" measurement for this specific instance activation.
 		// If we haven't, do it now (and mark it done). If we have, exit immediately.
-		if (!App.Settings.AutoResizeListViewColumns)
+		if (!GlobalVars.Settings.AutoResizeListViewColumns)
 		{
 			if (!_offModeFullCalcDone && FullSource.Count > 0)
 			{

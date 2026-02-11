@@ -15,30 +15,25 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.Protect;
+namespace CommonCore.GroupPolicy;
 
-/// <summary>
-/// The main categories for protection. The JSON files for each category must match this enum member names.
-/// </summary>
-internal enum Categories : uint
+internal enum SubCategories : uint
 {
-	MicrosoftSecurityBaseline = 0,
-	Microsoft365AppsSecurityBaseline = 1,
-	MicrosoftDefender = 2,
-	AttackSurfaceReductionRules = 3,
-	BitLockerSettings = 4,
-	TLSSecurity = 5,
-	LockScreen = 6,
-	UserAccountControl = 7,
-	DeviceGuard = 8,
-	WindowsFirewall = 9,
-	OptionalWindowsFeatures = 10,
-	WindowsNetworking = 11,
-	MiscellaneousConfigurations = 12,
-	WindowsUpdateConfigurations = 13,
-	EdgeBrowserConfigurations = 14,
-	CertificateChecking = 15,
-	CountryIPBlocking = 16,
-	NonAdminCommands = 17,
-	MSFTSecBaselines_OptionalOverrides = 18
+	MSDefender_SmartAppControl = 0,
+	MSDefender_BetaUpdateChannelsForDefender = 1,
+	MSDefender_OptionalDiagnosticData = 2,
+	DeviceGuard_MandatoryModeForVBS = 3,
+	TLS_ForBattleNet = 4,
+	LockScreen_RequireCTRLAltDel = 5,
+	LockScreen_NoLastSignedIn = 6,
+	UAC_NoFastUserSwitching = 7,
+	UAC_OnlyElevateSigned = 8,
+	WindowsNetworking_BlockNTLM = 9,
+	MiscellaneousConfigurations_EnableWindowsProtectedPrint = 10,
+	MiscellaneousConfigurations_EnableLongPathSupport = 11,
+	MiscellaneousConfigurations_ForceStrongKeyProtection = 12,
+	MiscellaneousConfigurations_ReducedTelemetry = 13,
+	CountryIPBlocking_BlockOFACSanctionedCountries = 14,
+	OptionalWindowsFeatures_IncludeEnablements = 15,
+	MiscellaneousConfigurations_DriverLoadPolicyGoodOnly = 16
 }

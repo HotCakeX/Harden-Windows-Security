@@ -22,7 +22,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -30,10 +30,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
-
-#if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity;
-#endif
 
 namespace AppControlManager.Others;
 
@@ -455,7 +451,7 @@ internal static partial class ListViewHelper
 	{
 
 		// Only perform the scroll if the setting is enabled
-		if (!App.Settings.ListViewsVerticalCentering)
+		if (!GlobalVars.Settings.ListViewsVerticalCentering)
 		{
 			return;
 		}

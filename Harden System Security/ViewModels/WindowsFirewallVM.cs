@@ -24,9 +24,10 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
-using HardenSystemSecurity.GroupPolicy;
+using CommonCore.GroupPolicy;
+using CommonCore.Interop;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -97,9 +98,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				url: "https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777",
 
 				deviceIntents: [
-					DeviceIntents.Intent.Business,
-					DeviceIntents.Intent.SpecializedAccessWorkstation,
-					DeviceIntents.Intent.PrivilegedAccessWorkstation
+					Intent.Business,
+					Intent.SpecializedAccessWorkstation,
+					Intent.PrivilegedAccessWorkstation
 				],
 
 				id: new("019abc74-7e26-7825-b763-6a7577ee5d87")
@@ -134,9 +135,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				url: "https://support.microsoft.com/en-us/windows/make-a-wi-fi-network-public-or-private-in-windows-0460117d-8d3e-a7ac-f003-7a0da607448d",
 
 				deviceIntents: [
-					DeviceIntents.Intent.Business,
-					DeviceIntents.Intent.SpecializedAccessWorkstation,
-					DeviceIntents.Intent.PrivilegedAccessWorkstation
+					Intent.Business,
+					Intent.SpecializedAccessWorkstation,
+					Intent.PrivilegedAccessWorkstation
 				],
 
 				id: new("019abec8-2702-7fa7-9db2-404dd3647126")
@@ -166,6 +167,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 	internal bool FirewallActionAllow { get; set => SP(ref field, value); }
 	internal bool FirewallActionBlock { get; set => SP(ref field, value); } = true;
+
+	internal bool FirewallStoreGPO { get; set => SP(ref field, value); } = true;
+	internal bool FirewallStorePersistentStore { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// The list of executable files selected by the user for firewall rule management.
@@ -309,6 +313,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		finally
 		{
 			ManagementUIIsEnabled = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -340,21 +345,22 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 					string ruleNameOutbound = $"{(FirewallActionBlock ? "Blocking" : "Allowing")}-{file}-Outbound";
 
 					string action = FirewallActionBlock ? "block" : "allow";
+					string store = FirewallStoreGPO ? "localhost" : "PersistentStore";
 
 					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("WindowsFirewallCreateRuleForMessage"), file));
 
 					if (FirewallDirectionInbound)
 					{
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" "{file}" inbound {action} "{ruleNameInbound}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound {action} "{ruleNameInbound}" --program "{file}" --store "{store}" """));
 					}
 					else if (FirewallDirectionOutbound)
 					{
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" "{file}" outbound {action} "{ruleNameOutbound}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound {action} "{ruleNameOutbound}" --program "{file}" --store "{store}" """));
 					}
 					else if (FirewallDirectionBoth)
 					{
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" "{file}" inbound {action} "{ruleNameInbound}" """));
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" "{file}" outbound {action} "{ruleNameOutbound}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound {action} "{ruleNameInbound}" --program "{file}" --store "{store}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound {action} "{ruleNameOutbound}" --program "{file}" --store "{store}" """));
 					}
 				}
 
@@ -440,8 +446,8 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("WindowsFirewallCreateRuleForMessage"), file));
 
-					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" "{file}" inbound block "{ruleNameInbound}" """));
-					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" "{file}" outbound block "{ruleNameOutbound}" """));
+					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound block "{ruleNameInbound}" --program "{file}" """));
+					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound block "{ruleNameOutbound}" --program "{file}" """));
 				}
 
 				// Update policies to take effect immediately
@@ -869,7 +875,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Deletes all Firewall rules from the Local store.
 	/// </summary>
-	internal async void DeleteAllFirewallRules()
+	internal async void DeleteAllLocalFirewallRules()
 	{
 		try
 		{
@@ -895,7 +901,51 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				return;
 			}
 
-			await Task.Run(Firewall.DeleteAllFirewallRules);
+			await Task.Run(() => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.LOCAL));
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("FirewallDeleteSuccess"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ManagementUIIsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Deletes all Firewall rules from the GPO store.
+	/// </summary>
+	internal async void DeleteAllGPOFirewallRules()
+	{
+		try
+		{
+			ManagementUIIsEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = GlobalVars.GetStr("DeleteAllGPOFirewallRulesTitle"),
+				Content = GlobalVars.GetStr("DeleteAllGPOFirewallRulesWarning"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("DeleteAllButtonText"),
+				DefaultButton = ContentDialogButton.Close,
+				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			};
+
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				return;
+			}
+
+			await Task.Run(() => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.GPO));
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("FirewallDeleteSuccess"));
 		}

@@ -336,7 +336,8 @@
                 <NavigationViewItem x:Name="AllowNewAppsNavItem" x:Uid="AllowNewAppsNavItem" Icon="{x:Bind ViewModel.AllowNewAppsIcon, Mode=OneWay}" Tag="AllowNewApps" />
                 <NavigationViewItem x:Name="PolicyEditorNavItem" x:Uid="PolicyEditorNavItem" Icon="{x:Bind ViewModel.PolicyEditorIcon, Mode=OneWay}" Tag="PolicyEditor" />
                 <NavigationViewItem x:Name="SimulationNavItem" x:Uid="SimulationNavItem" Icon="{x:Bind ViewModel.SimulationIcon, Mode=OneWay}" Tag="Simulation" />
-
+                <NavigationViewItem x:Name="FirewallSentinelNavItem" x:Uid="FirewallSentinelNavItem" Icon="{x:Bind ViewModel.FirewallSentinelIcon, Mode=OneWay}" Tag="FirewallSentinel" />
+                
                 <!-- Info Gathering Group -->
                 <NavigationViewItemHeader x:Name="InfoGatheringNavigationViewItemHeader" x:Uid="InfoGatheringNavigationViewItemHeader"/>
                 <NavigationViewItem x:Name="SystemInformationNavItem" x:Uid="SystemInformationNavItem" Icon="{x:Bind ViewModel.SystemInformationIcon, Mode=OneWay}" Tag="SystemInformation" />
@@ -698,32 +699,32 @@
                                                              HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}">
                                         <ToggleSwitch x:Uid="ToggleSwitchGeneral"
                                                       x:Name="PersistentPoliciesLibraryToggleSwitch"
-                                                      IsOn="{x:Bind AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"/>
+                                                      IsOn="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"/>
                                     </customUI:SettingsCardV2>
 
                                     <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
                                                              x:Name="PersistentPoliciesLibraryEncryptionSettingsCard"
                                                              x:Uid="PersistentPoliciesLibraryEncryptionSettingsCard"
-                                                             IsEnabled="{x:Bind AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
+                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
                                                              HeaderIcon="{ui:FontIcon Glyph=&#xEC19;}">
 
                                         <ToggleSwitch x:Uid="ToggleSwitchGeneral"
                                                       HorizontalAlignment="Center"
                                                       x:Name="PersistentPoliciesLibraryEncryptionToggleSwitch"
-                                                      IsOn="{x:Bind AppSettings.EncryptPoliciesLibrary, Mode=TwoWay}"/>
+                                                      IsOn="{x:Bind ViewModel.AppSettings.EncryptPoliciesLibrary, Mode=TwoWay}"/>
 
                                     </customUI:SettingsCardV2>
 
                                     <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
                                                              x:Name="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
                                                              x:Uid="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
-                                                             IsEnabled="{x:Bind AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
+                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
                                                              HeaderIcon="{ui:FontIcon Glyph=&#xE748;}">
 
                                         <ToggleSwitch x:Uid="PersistentPoliciesLibraryEncryptionScopeToggleSwitch"
                                                       HorizontalAlignment="Center"
                                                       x:Name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch"
-                                                      IsOn="{x:Bind AppSettings.EncryptionScopePoliciesLibrary, Mode=TwoWay}"/>
+                                                      IsOn="{x:Bind ViewModel.AppSettings.EncryptionScopePoliciesLibrary, Mode=TwoWay}"/>
 
                                     </customUI:SettingsCardV2>
 

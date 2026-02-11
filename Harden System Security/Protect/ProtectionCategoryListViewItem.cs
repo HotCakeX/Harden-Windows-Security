@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using CommonCore.GroupPolicy;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace HardenSystemSecurity.Protect;

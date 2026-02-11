@@ -43,7 +43,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Others\RgbHex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\SecHttpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\WindowDisplayAffinity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Others\LogLine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\LanguageOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\NoValidFilesSelectedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Power\PowerPlan.cs" />
@@ -54,6 +53,27 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\AdmxAdmlParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\Categories.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\CSEMgr.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\GroupPolicyContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\Hive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\Intent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\MergeOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\MergeResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\OperationType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\PolicyAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\PolicyInputJsonContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\RefreshPolicies.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\RegistryPolicyEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\RegistryPolicyFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\RegistryPolicyParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\RegistryValueType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\Source.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\SubCategories.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IncrementalCollection\HighPerfIncrementalCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IncrementalCollection\IncrementalCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IncrementalCollection\RangedObservableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\DeviceHealthScript.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\PolicyAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Taskbar\Badge.cs" />
@@ -139,5 +159,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\Validate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\View.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\ViewAllCertificates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\Launch.cs" />
   </ItemGroup>
 </Project>

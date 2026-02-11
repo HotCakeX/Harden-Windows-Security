@@ -24,7 +24,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.GroupPolicy;
+using CommonCore.GroupPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 

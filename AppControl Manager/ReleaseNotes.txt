@@ -1,11 +1,3 @@
-* In the System Information page -> Online Policies section, you can now view assignments for each policy and modify them, such as viewing which groups an App Control policies is assigned to in Intune and remove them if you need to.
-
-* Improved the performance of sorting and searching through large data sets in list views.
+* You can now assign policies from the Sidebar's Policies Library to the Simulation page.
 
 * Updated dependencies to the latest versions.
-
-* You can now press CTRL + F from anywhere in the app to focus on the search box at top and start typing your query right away.
-
-* The search bar at the top of the UI now displays rich results that contain the title, description and logo for each page.
-
-* Made it visually much more clearer in the Deployment page whether online deployments are activate or local deployments.

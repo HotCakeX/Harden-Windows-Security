@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:GP="using:HardenSystemSecurity.GroupPolicy"
+    xmlns:GP="using:CommonCore.GroupPolicy"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -689,6 +689,12 @@
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
 
+                                    <MenuFlyoutItem x:Uid="EditRow" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.EditPolicy_Click}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE70F;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
                                     <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.DeleteSelectedPolicies_Click}">
                                         <MenuFlyoutItem.KeyboardAccelerators>
                                             <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.DeleteSelectedPolicies_Click}"/>
@@ -783,7 +789,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{x:Bind KeyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                             <TextBlock Text="{x:Bind ValueName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                            <TextBlock Text="{x:Bind ParsedValue.ToString()}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                            <TextBlock Text="{x:Bind ValueDisplay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
                             <TextBlock Text="{x:Bind Category}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
                             <TextBlock Text="{x:Bind SubCategory}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
                             <TextBlock Text="{x:Bind policyAction}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>

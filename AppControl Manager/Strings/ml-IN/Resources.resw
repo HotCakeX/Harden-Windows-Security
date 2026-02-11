@@ -3628,9 +3628,6 @@
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>ഓരോ പിന്തുണയ്ക്കുന്ന ഫയലിലൂടെയും ലൂപ്പ് ചെയ്യുന്നു</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>നൽകിയിട്ടുള്ള XML ഫയൽ '{0}' എല്ലാ ഫയലുകളെയും അനുവദിക്കുന്ന ഒരു നിയമം ഉൾക്കൊള്ളുന്നു.</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>വേഗത്തിലുള്ള പ്രതിവാര മൈക്രോസോഫ്റ്റ് ശുപാർശിത ഡ്രൈവർ ബ്ലോക്ക് ലിസ്റ്റ് അപ്‌ഡേറ്റിനായി ഷെഡ്യൂൾ ചെയ്‌ത ടാസ്‌ക് സൃഷ്‌ടിക്കുന്നു</value>
   </data>

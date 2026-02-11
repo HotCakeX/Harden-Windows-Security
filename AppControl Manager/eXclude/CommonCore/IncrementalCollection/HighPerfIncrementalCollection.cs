@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
 
-namespace AppControlManager.IncrementalCollection;
+namespace CommonCore.IncrementalCollection;
 
 /// <summary>
 /// High Performance, UI-bindable incremental-loading collection.

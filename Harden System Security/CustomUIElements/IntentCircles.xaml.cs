@@ -17,7 +17,7 @@
 
 using System.Collections.Generic;
 using System.Numerics;
-using HardenSystemSecurity.DeviceIntents;
+using CommonCore.GroupPolicy;
 using Microsoft.UI;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
@@ -344,33 +344,27 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		return ellipse;
 	}
 
-	private static Uri GetImageUriForIntent(Intent intent)
+	private static Uri GetImageUriForIntent(Intent intent) => intent switch
 	{
-		return intent switch
-		{
-			Intent.Development => new("ms-appx:///Assets/DeviceIntents/Development.png"),
-			Intent.Gaming => new("ms-appx:///Assets/DeviceIntents/Gaming.png"),
-			Intent.School => new("ms-appx:///Assets/DeviceIntents/School.png"),
-			Intent.Business => new("ms-appx:///Assets/DeviceIntents/Business.png"),
-			Intent.SpecializedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Specialized.png"),
-			Intent.PrivilegedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Privileged.png"),
-			_ => new("ms-appx:///Assets/DeviceIntents/Development.png")
-		};
-	}
+		Intent.Development => new("ms-appx:///Assets/DeviceIntents/Development.png"),
+		Intent.Gaming => new("ms-appx:///Assets/DeviceIntents/Gaming.png"),
+		Intent.School => new("ms-appx:///Assets/DeviceIntents/School.png"),
+		Intent.Business => new("ms-appx:///Assets/DeviceIntents/Business.png"),
+		Intent.SpecializedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Specialized.png"),
+		Intent.PrivilegedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Privileged.png"),
+		_ => new("ms-appx:///Assets/DeviceIntents/Development.png")
+	};
 
-	private static string GetTitleForIntent(Intent intent)
+	private static string GetTitleForIntent(Intent intent) => intent switch
 	{
-		return intent switch
-		{
-			Intent.Development => GlobalVars.GetStr("DeviceUsageIntent-Development-Title"),
-			Intent.Gaming => GlobalVars.GetStr("DeviceUsageIntent-Gaming-Title"),
-			Intent.School => GlobalVars.GetStr("DeviceUsageIntent-School-Title"),
-			Intent.Business => GlobalVars.GetStr("DeviceUsageIntent-Business-Title"),
-			Intent.SpecializedAccessWorkstation => GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"),
-			Intent.PrivilegedAccessWorkstation => GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title"),
-			_ => "N/A"
-		};
-	}
+		Intent.Development => GlobalVars.GetStr("DeviceUsageIntent-Development-Title"),
+		Intent.Gaming => GlobalVars.GetStr("DeviceUsageIntent-Gaming-Title"),
+		Intent.School => GlobalVars.GetStr("DeviceUsageIntent-School-Title"),
+		Intent.Business => GlobalVars.GetStr("DeviceUsageIntent-Business-Title"),
+		Intent.SpecializedAccessWorkstation => GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"),
+		Intent.PrivilegedAccessWorkstation => GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title"),
+		_ => "N/A"
+	};
 
 	// Per-item hover/touch scaling (Composition)
 

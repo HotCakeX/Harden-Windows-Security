@@ -17,7 +17,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
 internal static class RefreshPolicies
 {

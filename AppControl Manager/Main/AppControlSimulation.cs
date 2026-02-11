@@ -44,13 +44,13 @@ internal static class AppControlSimulation
 	/// An Aux method that calls the main method then checks the result to make sure all files are allowed, if they are then returns true, otherwise returns false
 	/// </summary>
 	/// <param name="filePaths"></param>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="policyObj"></param>
 	/// <param name="noCatalogScanning"></param>
 	/// <returns></returns>
-	internal static bool Invoke(List<string>? filePaths, string xmlFilePath, bool noCatalogScanning)
+	internal static bool Invoke(List<string>? filePaths, SiPolicy.SiPolicy policyObj, bool noCatalogScanning)
 	{
 		// Call the main method to get the verdicts
-		ConcurrentDictionary<string, SimulationOutput> Results = Invoke(filePaths, null, xmlFilePath, noCatalogScanning, null, 2);
+		ConcurrentDictionary<string, SimulationOutput> Results = Invoke(filePaths, null, policyObj, noCatalogScanning, null, 2);
 
 		// See if there are any unauthorized files
 		IEnumerable<SimulationOutput> ResultsAfterFilter = Results.Values.Where(R => !R.IsAuthorized);
@@ -65,7 +65,7 @@ internal static class AppControlSimulation
 	/// </summary>
 	/// <param name="filePaths"></param>
 	/// <param name="folderPaths"></param>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="policyObj"></param>
 	/// <param name="scanSecurityCatalogs"></param>
 	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
@@ -77,7 +77,7 @@ internal static class AppControlSimulation
 	internal static ConcurrentDictionary<string, SimulationOutput> Invoke(
 		IReadOnlyCollection<string>? filePaths,
 		IReadOnlyCollection<string>? folderPaths,
-		string xmlFilePath,
+		SiPolicy.SiPolicy policyObj,
 		bool scanSecurityCatalogs,
 		List<string>? catRootPath,
 		ushort threadsCount = 2,
@@ -90,9 +90,6 @@ internal static class AppControlSimulation
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("RunningAppControlSimulationMessage"),
 			threadsCount));
-
-		// Initialize the user-selected policy file
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(xmlFilePath, null);
 
 		// Get the signer information from the policy
 		List<SignerX> SignerInfo = GetSignerInfo.Get(policyObj);
@@ -156,11 +153,9 @@ internal static class AppControlSimulation
 
 		if (PreDeploymentChecks.CheckForAllowAll(policyObj))
 		{
-			Logger.Write(string.Format(
-			  GlobalVars.GetStr("XmlFileAllowsAllFilesMessage"),
-			  xmlFilePath));
+			Logger.Write(GlobalVars.GetStr("PolicyAllowsAllFilesMessage"));
 
-			_ = FinalSimulationResults.TryAdd(xmlFilePath, new SimulationOutput(
+			_ = FinalSimulationResults.TryAdd("HasAllowAllRule", new SimulationOutput(
 				null,
 				SimulationOutputSource.AllowAllRule,
 				true,

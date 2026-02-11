@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class MicrosoftDocumentation : Page
 {
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	internal MicrosoftDocumentation()
 	{
@@ -70,7 +70,6 @@ internal sealed partial class MicrosoftDocumentation : Page
 				ForwardButton.IsEnabled = MicrosoftDocumentationWebView2.CanGoForward;
 			}
 		}
-
 		catch (ObjectDisposedException ex)
 		{
 			// Log the exception, but avoid crashing the app

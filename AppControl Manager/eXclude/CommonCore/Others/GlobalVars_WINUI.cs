@@ -16,7 +16,13 @@
 //
 
 using System.IO;
+using System.Threading;
+using AppControlManager.ViewModels;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel;
+using Windows.Storage;
 
 namespace CommonCore.Others;
 
@@ -71,6 +77,7 @@ internal static partial class GlobalVars
 
 #if HARDEN_SYSTEM_SECURITY
 	// Storing the path to the app's folder in the Program Files
+	// Not actually used by the Harden System Security app. Only here to satisfy the BuildAppControlCertificate's method requirement.
 	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Harden System Security");
 #endif
 #if APP_CONTROL_MANAGER
@@ -80,4 +87,80 @@ internal static partial class GlobalVars
 
 	// Storing the path to User Config JSON file in the app's folder in the Program Files
 	internal static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
+
+#if HARDEN_SYSTEM_SECURITY
+	internal const string AppName = "HardenSystemSecurity";
+#endif
+#if APP_CONTROL_MANAGER
+	internal const string AppName = "AppControlManager";
+#endif
+
+	/// <summary>
+	/// Package Family Name of the application
+	/// </summary>
+	internal static readonly string PFN = Package.Current.Id.FamilyName;
+
+	/// <summary>
+	/// The App User Model ID which is in the format of PackageFamilyName!App
+	/// The "App" is what's defined in the Package.appxmanifest file for ID in Application Id="App"
+	/// </summary>
+	internal static readonly string AUMID = AppInfo.Current.AppUserModelId;
+
+	/// <summary>
+	/// To determine whether the app has Administrator privileges
+	/// </summary>
+	internal static readonly bool IsElevated = Environment.IsPrivilegedProcess;
+
+	/// <summary>
+	/// Detects the source of the application.
+	/// GitHub => 0
+	/// Microsoft Store => 1
+	/// Unknown => 2
+	/// </summary>
+	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ?
+		0 :
+		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "VioletHansen.HardenSystemSecurity_ea7andspwdn10", StringComparison.OrdinalIgnoreCase)
+		? 1 : 2);
+
+	/// <summary>
+	/// Initializes the app settings class.
+	/// </summary>
+	private static readonly Lazy<AppSettings.Main> _appSettings = new(() =>
+		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.PublicationOnly);
+
+	/// <summary>
+	/// The application settings. Any references (instance or static) throughout the app to App settings use this property.
+	/// </summary>
+	internal static AppSettings.Main Settings => _appSettings.Value;
+
+	/// <summary>
+	/// Global dispatcher queue for the application that can be accessed from anywhere.
+	/// </summary>
+	internal static DispatcherQueue AppDispatcher { get; set; } = null!;
+
+	/// <summary>
+	/// Convert it to a normal Version object
+	/// </summary>
+	internal static readonly Version currentAppVersion = new(Package.Current.Id.Version.Major, Package.Current.Id.Version.Minor, Package.Current.Id.Version.Build, Package.Current.Id.Version.Revision);
+
+#if APP_CONTROL_MANAGER
+	/// <summary>
+	/// The directory where the logs will be stored
+	/// </summary>
+	internal static readonly string LogsDirectory = IsElevated ?
+		Path.Combine(UserConfigDir, "Logs") :
+		Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
+#endif
+
+#if HARDEN_SYSTEM_SECURITY
+	/// <summary>
+	/// The directory where the logs will be stored
+	/// </summary>
+	internal static readonly string LogsDirectory = Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
+#endif
+
+	// To track the currently open Content Dialog across the app. Every piece of code that tries to display a content dialog, whether custom or generic, must assign it first
+	// to this variable before using ShowAsync() method to display it.
+	internal static ContentDialog? CurrentlyOpenContentDialog;
+
 }

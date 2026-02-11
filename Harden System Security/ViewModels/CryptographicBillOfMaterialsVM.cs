@@ -21,7 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -149,7 +149,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-		List<CryptoAlgorithm> filtered = AllCryptoAlgorithms.Where(a =>
+		IEnumerable<CryptoAlgorithm> filtered = AllCryptoAlgorithms.Where(a =>
 			(!string.IsNullOrEmpty(a.Name) && a.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(!string.IsNullOrEmpty(a.AlgorithmType) && a.AlgorithmType.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			a.Flags.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -157,7 +157,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			a.IsPostQuantum.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			a.SupportsKeyGeneration.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			(a.SupportedParameterSets.Count > 0 && string.Join(", ", a.SupportedParameterSets).Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-		).ToList();
+		);
 
 		CryptoAlgorithms.Clear();
 		CryptoAlgorithms.AddRange(filtered);
@@ -318,11 +318,11 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-		List<EccCurveCng> filtered = AllCngCurves.Where(c =>
+		IEnumerable<EccCurveCng> filtered = AllCngCurves.Where(c =>
 			(!string.IsNullOrEmpty(c.Name) && c.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(!string.IsNullOrEmpty(c.Oid) && c.Oid.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			c.PublicKeyLengthBits.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		).ToList();
+		);
 
 		CngCurves.Clear();
 		CngCurves.AddRange(filtered);
@@ -475,13 +475,13 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-		List<EccCurveSslProvider> filtered = AllSslProviderCurves.Where(c =>
+		IEnumerable<EccCurveSslProvider> filtered = AllSslProviderCurves.Where(c =>
 			(!string.IsNullOrEmpty(c.Name) && c.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(!string.IsNullOrEmpty(c.Oid) && c.Oid.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			c.PublicKeyLengthBits.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			c.CurveType.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			c.Flags.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		).ToList();
+		);
 
 		SslProviderCurves.Clear();
 		SslProviderCurves.AddRange(filtered);
@@ -662,7 +662,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-		List<TlsCipherSuite> filtered = AllTlsCipherSuites.Where(s =>
+		IEnumerable<TlsCipherSuite> filtered = AllTlsCipherSuites.Where(s =>
 			(!string.IsNullOrEmpty(s.Name) && s.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(!string.IsNullOrEmpty(s.Cipher) && s.Cipher.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			s.CipherSuiteHex.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -676,7 +676,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			s.MinimumExchangeLength.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			s.MaximumExchangeLength.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			s.KeyType.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		).ToList();
+		);
 
 		TlsCipherSuites.Clear();
 		TlsCipherSuites.AddRange(filtered);
@@ -851,9 +851,9 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-		List<string> filtered = AllRegisteredProviders.Where(p =>
+		IEnumerable<string> filtered = AllRegisteredProviders.Where(p =>
 			!string.IsNullOrEmpty(p) && p.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		).ToList();
+		);
 
 		RegisteredProviders.Clear();
 		RegisteredProviders.AddRange(filtered);

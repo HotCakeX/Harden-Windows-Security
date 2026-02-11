@@ -3628,9 +3628,6 @@
 <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>עושה לולאה על כל קובץ נתמך</value>
 </data>
-<data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>בקובץ ה-XML שסיפקת '{0}' יש כלל שמאפשר את כל הקבצים.</value>
-</data>
 <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>יוצר משימה מתוזמנת לעדכון מהיר שבועי של רשימת חסימת דרייברים מומלצת על-ידי Microsoft</value>
 </data>

@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using HardenSystemSecurity.GroupPolicy;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.RegistryManager;
 
 namespace HardenSystemSecurity.SecurityPolicy;

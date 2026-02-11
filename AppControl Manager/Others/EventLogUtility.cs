@@ -203,7 +203,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// <param name="logSize">Size of the Code Integrity Operational Event Log (in MB)</param>
 	internal static void SetLogSize(double logSize = 0)
 	{
-		if (!Environment.IsPrivilegedProcess) return;
+		if (!GlobalVars.IsElevated) return;
 
 		Logger.Write(GlobalVars.GetStr("SettingCodeIntegrityLogSizeMessageOnly"));
 

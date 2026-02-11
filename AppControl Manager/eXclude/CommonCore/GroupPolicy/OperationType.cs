@@ -15,13 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
-/// <summary>
-/// Determines whether policies belong to the Machine POL file or User POL file.
-/// </summary>
-internal enum GroupPolicyContext : uint
+internal enum OperationType
 {
-	Machine = 0,
-	User = 1
+	Added,
+	Replaced
 }

@@ -5264,4 +5264,55 @@ Fingerabdruck: {3}</value>
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>Insgesamt verbundene USB-Geräte: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Gruppenrichtlinienspeicher</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Firewall-Regeln werden im Gruppenrichtlinienspeicher erstellt.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Firewall-Regeln werden im Gruppenrichtlinienspeicher erstellt.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Persistenter Speicher</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dieser Speicher enthält die beständige Richtlinie für den lokalen Computer. Regeln in diesem Speicher stammen nicht aus GPOs und wurden manuell oder programmgesteuert (während der Anwendungsinstallation) auf dem Computer erstellt. In diesem Speicher erstellte Regeln werden an den ActiveStore angehängt und sofort auf dem Computer aktiviert.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dieser Speicher enthält die beständige Richtlinie für den lokalen Computer. Regeln in diesem Speicher stammen nicht aus GPOs und wurden manuell oder programmgesteuert (während der Anwendungsinstallation) auf dem Computer erstellt. In diesem Speicher erstellte Regeln werden an den ActiveStore angehängt und sofort auf dem Computer aktiviert.</value>
+  </data>
+    <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>Alle Gruppenrichtlinienregeln löschen</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Firewallregeln aus dem Gruppenrichtlinienspeicher löschen.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Firewallregeln aus dem Gruppenrichtlinienspeicher löschen.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Alle GPO-Regeln löschen</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie alle Firewallregeln aus dem Gruppenrichtlinienspeicher löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.</value>
+  </data>
+    <data name="EditRow.Text" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die ausgewählten Daten bearbeiten.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die ausgewählten Daten bearbeiten.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>Systemzugriffsrichtlinien exportieren</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exportiert die Systemzugriffsrichtlinien in eine JSON-Datei.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exportiert die Systemzugriffsrichtlinien in eine JSON-Datei.</value>
+  </data>
 </root>

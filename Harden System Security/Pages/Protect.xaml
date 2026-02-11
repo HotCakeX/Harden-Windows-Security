@@ -7,7 +7,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:Protect="using:HardenSystemSecurity.Protect"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
-    xmlns:DI="using:HardenSystemSecurity.DeviceIntents"
+    xmlns:GP="using:CommonCore.GroupPolicy"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -204,7 +204,7 @@
             </DataTemplate>
 
             <!-- ItemTemplateForIntentItems for DI:IntentItem (no fixed size so GridView can wrap/stretch) -->
-            <DataTemplate x:Key="ItemTemplateForIntentItems" x:DataType="DI:IntentItem">
+            <DataTemplate x:Key="ItemTemplateForIntentItems" x:DataType="GP:IntentItem">
                 <Grid Padding="8"
                       HorizontalAlignment="Stretch"
                       Background="{ThemeResource ControlFillColorDefaultBrush}"

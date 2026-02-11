@@ -114,7 +114,7 @@ internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
 			string headerText = def.UseRawHeader ? def.HeaderResourceKeyOrText : GlobalVars.GetStr(def.HeaderResourceKeyOrText);
 
 			int capturedIndex = i;
-			_ = App.AppDispatcher.TryEnqueue(() =>
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 			{
 				_calculatedMaxWidths[capturedIndex] = ListViewHelper.MeasureText(headerText);
 			});
@@ -127,7 +127,7 @@ internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
 
 		if (itemsSpan.Length == 0)
 		{
-			_ = App.AppDispatcher.TryEnqueue(UpdateVisualState);
+			_ = GlobalVars.AppDispatcher.TryEnqueue(UpdateVisualState);
 			return;
 		}
 
@@ -205,7 +205,7 @@ internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
 					string? textToMeasure = getter(itemsSpan[bestIndices[k]]);
 
 					int capturedIndex = i;
-					_ = App.AppDispatcher.TryEnqueue(() =>
+					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 					{
 						_calculatedMaxWidths[capturedIndex] = ListViewHelper.MeasureText(textToMeasure, _calculatedMaxWidths[capturedIndex]);
 					});
@@ -214,7 +214,7 @@ internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
 		}
 
 		// 3. Apply calculated widths (respecting visibility)
-		_ = App.AppDispatcher.TryEnqueue(UpdateVisualState);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(UpdateVisualState);
 	}
 
 	private void OnColumnSelectionChanged(string key, bool isChecked)

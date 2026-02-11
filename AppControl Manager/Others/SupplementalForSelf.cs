@@ -163,7 +163,7 @@ internal static class SupplementalForSelf
 		throw new InvalidOperationException("Required allow directive absent. Supplemental binding withheld.");
 
 		// Replace the placeholder value in the policy file with the app's real PFN.
-		appControlAllowRule.PackageFamilyName = App.PFN;
+		appControlAllowRule.PackageFamilyName = GlobalVars.PFN;
 
 		#endregion
 

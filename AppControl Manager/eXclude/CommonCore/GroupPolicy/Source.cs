@@ -15,19 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
 /// <summary>
-/// A class representing the result of a merge operation on registry policy files.
+/// The source of the policy in the JSON file.
 /// </summary>
-/// <param name="mergedFile">The main object that is the result of the merge operation.</param>
-/// <param name="operations">Details of the merge operation.</param>
-internal sealed class MergeResult(
-	RegistryPolicyFile mergedFile,
-	List<MergeOperation> operations)
+internal enum Source : uint
 {
-	internal RegistryPolicyFile MergedFile => mergedFile;
-	internal List<MergeOperation> Operations => operations;
+	GroupPolicy = 0,
+	Registry = 1 // Security group policies from INF files' registry sections + regular registry-based security measures.
 }

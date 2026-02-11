@@ -15,10 +15,24 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.GroupPolicy;
+using System.Collections.Generic;
 
-internal enum PolicyAction : uint
+namespace CommonCore.GroupPolicy;
+
+internal sealed class RegistryPolicyFile(
+	uint signature,
+	uint version,
+	List<RegistryPolicyEntry> entries)
 {
-	Apply = 0,
-	Remove = 1
+	/// <summary>
+	/// It's the first 4 bytes of every valid .pol file: "PReg"
+	/// </summary>
+	internal const uint REGISTRY_FILE_SIGNATURE = 0x67655250;
+	internal const uint REGISTRY_FILE_VERSION = 1;
+
+	internal uint Signature => signature;
+	internal uint Version => version;
+	internal List<RegistryPolicyEntry> Entries => entries;
+
+	internal bool IsValidFile => Signature == REGISTRY_FILE_SIGNATURE;
 }

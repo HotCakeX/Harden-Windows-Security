@@ -16,6 +16,7 @@
 //
 
 using AppControlManager.ViewModels;
+using CommonCore.GroupPolicy;
 using Microsoft.UI.Xaml;
 
 namespace HardenSystemSecurity.Protect;

@@ -21,7 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -1176,7 +1176,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			// Instantiate the Content Dialog
 			CustomUIElements.CustomPatternBasedFilePath customDialog = new();
 
-			App.CurrentlyOpenContentDialog = customDialog;
+			GlobalVars.CurrentlyOpenContentDialog = customDialog;
 
 			// Show the dialog
 			_ = await customDialog.ShowAsync();

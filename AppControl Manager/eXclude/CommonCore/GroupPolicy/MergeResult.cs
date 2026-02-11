@@ -16,16 +16,18 @@
 //
 
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
-[JsonSourceGenerationOptions(
-	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-	PropertyNameCaseInsensitive = true,
-	WriteIndented = true)]
-[JsonSerializable(typeof(RegistryPolicyEntry))]
-[JsonSerializable(typeof(List<RegistryPolicyEntry>))]
-internal sealed partial class PolicyInputJsonContext : JsonSerializerContext
+/// <summary>
+/// A class representing the result of a merge operation on registry policy files.
+/// </summary>
+/// <param name="mergedFile">The main object that is the result of the merge operation.</param>
+/// <param name="operations">Details of the merge operation.</param>
+internal sealed class MergeResult(
+	RegistryPolicyFile mergedFile,
+	List<MergeOperation> operations)
 {
+	internal RegistryPolicyFile MergedFile => mergedFile;
+	internal List<MergeOperation> Operations => operations;
 }

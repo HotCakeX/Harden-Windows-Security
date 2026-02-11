@@ -1352,11 +1352,11 @@ internal enum FW_STORE_TYPE
 {
 	INVALID = 0,
 	GP_RSOP = 1,
-	LOCAL = 2,
+	LOCAL = 2, // Persistent Store.
 	NOT_USED_VALUE_3 = 3,
 	NOT_USED_VALUE_4 = 4,
 	DYNAMIC = 5,
-	GPO = 6,
+	GPO = 6, // Group Policies Store.
 	DEFAULTS = 7
 }
 

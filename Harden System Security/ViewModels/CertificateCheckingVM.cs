@@ -24,7 +24,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -254,7 +254,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		else
 		{
 			// Filter certificates based on search term
-			List<NonStlRootCert> filteredResults = AllNonStlCertificates.Where(cert =>
+			IEnumerable<NonStlRootCert> filteredResults = AllNonStlCertificates.Where(cert =>
 				cert.StoreLocationString.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				cert.StoreNameString.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				cert.Subject.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -262,7 +262,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				cert.LeafThumbprintSha1.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				cert.RootSubject.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				cert.RootSha256Hex.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-			).ToList();
+			);
 
 			NonStlCertificates.Clear();
 			NonStlCertificates.AddRange(filteredResults);

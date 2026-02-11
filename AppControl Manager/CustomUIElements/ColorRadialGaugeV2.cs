@@ -283,7 +283,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 		// border wraps the inner grid
 		_centerBorder = new Border
 		{
-			BorderBrush = string.Equals(App.Settings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White),
+			BorderBrush = string.Equals(GlobalVars.Settings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White),
 			BorderThickness = new Thickness(2),
 			CornerRadius = new CornerRadius(4),
 			Padding = new Thickness(3),

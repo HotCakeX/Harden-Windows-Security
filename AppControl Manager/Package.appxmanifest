@@ -36,7 +36,7 @@
   <Identity
     Name="VioletHansen.AppControlManager"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="2.0.65.0" />
+    Version="2.0.66.0" />
 
   <mp:PhoneIdentity PhoneProductId="4157a676-f4c2-4a8c-a511-b7fb2255c6f5" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
@@ -49,6 +49,10 @@
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
     <uap17:UpdateWhileInUse>defer</uap17:UpdateWhileInUse>
+
+    <!-- This is required to execute the FWImportPolicy function from the "FirewallAPI.dll" in order to import policies to the GPO store.
+         Otherwise we get error code: 1 (0x00000001) -->
+    <desktop6:RegistryWriteVirtualization>disabled</desktop6:RegistryWriteVirtualization>
 
     <!-- https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md#34-per-machine-data-store -->
     <appdata:ApplicationData>
@@ -164,5 +168,6 @@
     <rescap:Capability Name="runFullTrust" />
     <rescap:Capability Name="allowElevation" />
     <rescap:Capability Name="packageQuery" />
+    <rescap:Capability Name="unvirtualizedResources" />
   </Capabilities>
 </Package>

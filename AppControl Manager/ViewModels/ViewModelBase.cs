@@ -58,31 +58,22 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	//protected readonly Microsoft.UI.Dispatching.DispatcherQueue Dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
 
 	// Get it from the App class.
-	protected Microsoft.UI.Dispatching.DispatcherQueue Dispatcher => App.AppDispatcher;
+	protected Microsoft.UI.Dispatching.DispatcherQueue Dispatcher => GlobalVars.AppDispatcher;
 
-#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// An instance property reference to the App settings that pages can x:Bind to.
 	/// </summary>
-	internal CommonCore.AppSettings.Main AppSettings => App.Settings;
-#endif
-
-#if HARDEN_SYSTEM_SECURITY
-	/// <summary>
-	/// An instance property reference to the App settings that pages can x:Bind to.
-	/// </summary>
-	internal Main AppSettings => App.Settings;
-#endif
+	internal CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	/// <summary>
 	/// An instance property so pages can bind to.
 	/// </summary>
-	internal bool IsElevated => App.IsElevated;
+	internal bool IsElevated => GlobalVars.IsElevated;
 
 	/// <summary>
 	/// Same as IsElevated but in reverse.
 	/// </summary>
-	internal bool IsNotElevated => !App.IsElevated;
+	internal bool IsNotElevated => !GlobalVars.IsElevated;
 
 	/// <summary>
 	/// Sets the field to <paramref name="newValue"/> if it differs from its current contents,
@@ -100,13 +91,13 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		field = newValue;
 
-		if (App.AppDispatcher.HasThreadAccess)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			OnPropertyChanged(propertyName);
 		}
 		else
 		{
-			_ = App.AppDispatcher.TryEnqueue(() => OnPropertyChanged(propertyName));
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() => OnPropertyChanged(propertyName));
 		}
 
 		return true;
@@ -127,16 +118,16 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		field = newValue;
 
-		if (App.AppDispatcher.HasThreadAccess)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			OnPropertyChanged(propertyName);
 		}
 		else
 		{
-			_ = App.AppDispatcher.TryEnqueue(() => OnPropertyChanged(propertyName));
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() => OnPropertyChanged(propertyName));
 		}
 
-		if (App.Settings.SoundSetting && !string.IsNullOrEmpty(field))
+		if (GlobalVars.Settings.SoundSetting && !string.IsNullOrEmpty(field))
 		{
 			TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
 			TypeWriterMediaPlayer.Play();
@@ -211,7 +202,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	internal async Task PublishUserActivityAsync(LaunchProtocolActions action, string filePath, string displayText)
 	{
 		// Only publish if allowed
-		if (!App.Settings.PublishUserActivityInTheOS)
+		if (!GlobalVars.Settings.PublishUserActivityInTheOS)
 			return;
 
 		try
@@ -234,7 +225,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 			TaskCompletionSource<UserActivitySession> tcs = new();
 
-			bool enqueued = Dispatcher.TryEnqueue(() =>
+			await Dispatcher.EnqueueAsync(() =>
 			{
 				try
 				{
@@ -246,11 +237,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 					tcs.SetException(ex);
 				}
 			});
-
-			if (!enqueued)
-			{
-				throw new InvalidOperationException("Failed to enqueue CreateSession operation on UI thread");
-			}
 
 			// Wait for the UI thread operation to complete and store the result
 			_previousSession = await tcs.Task;
@@ -488,7 +474,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	internal static void EmitTypingSound()
 	{
-		if (!App.Settings.SoundSetting) return;
+		if (!GlobalVars.Settings.SoundSetting) return;
 
 		TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
 		TypeWriterMediaPlayer.Play();
@@ -583,13 +569,13 @@ internal static class PropertyChangeExtensions
 
 		field = newValue;
 
-		if (App.AppDispatcher.HasThreadAccess)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			host.RaisePropertyChanged(propertyName);
 		}
 		else
 		{
-			_ = App.AppDispatcher.TryEnqueue(() => host.RaisePropertyChanged(propertyName));
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() => host.RaisePropertyChanged(propertyName));
 		}
 
 		return true;

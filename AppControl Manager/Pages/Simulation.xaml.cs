@@ -15,15 +15,20 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AnimatedVisuals;
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class Simulation : Page, CommonCore.UI.IPageHeaderProvider
+internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private SimulationVM ViewModel { get; } = ViewModelProvider.SimulationVM;
+	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal Simulation()
 	{
@@ -31,6 +36,33 @@ internal sealed partial class Simulation : Page, CommonCore.UI.IPageHeaderProvid
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	#region Augmentation Interface
+
+	public void SetVisibility(Visibility visibility)
+	{
+		// Light up the local page's button icons
+		ViewModel.SelectedPolicyLightAnimatedIconVisibility = visibility;
+
+		sideBarVM.AssignActionPacks(
+			actionPack1: (LightUp1, GlobalVars.GetStr("SimulationNavItem/Content"))
+			);
+	}
+
+	/// <summary>
+	/// Local event handlers that are assigned to the sidebar button
+	/// </summary>
+	private void LightUp1(object? param)
+	{
+		if (param is PolicyFileRepresent policy)
+		{
+			ViewModel.SelectedPolicy = policy;
+		}
+
+		BrowseForPolicyButton_Flyout.ShowAt(BrowseForPolicyButton);
+	}
+
+	#endregion
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SimulationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation");

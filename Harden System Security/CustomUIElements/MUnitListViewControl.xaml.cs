@@ -26,6 +26,7 @@ using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
 using HardenSystemSecurity;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.Traverse;
@@ -44,7 +45,7 @@ namespace AppControlManager.CustomUIElements;
 /// </summary>
 internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	internal MUnitListViewControl() => InitializeComponent();
 

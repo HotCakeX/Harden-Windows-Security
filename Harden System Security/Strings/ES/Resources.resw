@@ -5264,4 +5264,55 @@ Huella Digital: {3}</value>
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>Total de dispositivos USB conectados: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Almacén de directivas de grupo</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Las reglas del Firewall se crearán en el almacén de directivas de grupo.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Las reglas del Firewall se crearán en el almacén de directivas de grupo.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Almacén persistente</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Este almacén contiene la directiva persistente para el equipo local. Las reglas de este almacén no provienen de GPO y se han creado manual o programáticamente (durante la instalación de la aplicación) en el equipo. Las reglas creadas en este almacén se adjuntan al ActiveStore y se activan en el equipo inmediatamente.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Este almacén contiene la directiva persistente para el equipo local. Las reglas de este almacén no provienen de GPO y se han creado manual o programáticamente (durante la instalación de la aplicación) en el equipo. Las reglas creadas en este almacén se adjuntan al ActiveStore y se activan en el equipo inmediatamente.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>Eliminar todas las reglas de directiva de grupo</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar todas las reglas de firewall del almacén de directivas de grupo.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar todas las reglas de firewall del almacén de directivas de grupo.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Eliminar todas las reglas GPO</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>¿Está seguro de que desea eliminar todas las reglas de firewall del almacén de directivas de grupo? Esta acción no se puede deshacer.</value>
+  </data>
+    <data name="EditRow.Text" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Editar los datos seleccionados.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Editar los datos seleccionados.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>Exportar directivas de acceso al sistema</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exporta las directivas de acceso al sistema a un archivo JSON.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exporta las directivas de acceso al sistema a un archivo JSON.</value>
+  </data>
 </root>

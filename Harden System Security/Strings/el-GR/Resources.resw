@@ -5264,4 +5264,55 @@
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>Σύνολο συνδεδεμένων συσκευών USB: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αποθήκη Πολιτικής Ομάδας</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Οι κανόνες τείχους προστασίας θα δημιουργηθούν στην Αποθήκη Πολιτικής Ομάδας.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Οι κανόνες τείχους προστασίας θα δημιουργηθούν στην Αποθήκη Πολιτικής Ομάδας.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Μόνιμη Αποθήκη</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αυτή η αποθήκη περιέχει τη μόνιμη πολιτική για τον τοπικό υπολογιστή. Οι κανόνες σε αυτήν την αποθήκη δεν προέρχονται από GPO και έχουν δημιουργηθεί χειροκίνητα ή προγραμματιστικά (κατά την εγκατάσταση εφαρμογής) στον υπολογιστή. Οι κανόνες που δημιουργούνται σε αυτήν την αποθήκη επισυνάπτονται στο ActiveStore και ενεργοποιούνται στον υπολογιστή αμέσως.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αυτή η αποθήκη περιέχει τη μόνιμη πολιτική για τον τοπικό υπολογιστή. Οι κανόνες σε αυτήν την αποθήκη δεν προέρχονται από GPO και έχουν δημιουργηθεί χειροκίνητα ή προγραμματιστικά (κατά την εγκατάσταση εφαρμογής) στον υπολογιστή. Οι κανόνες που δημιουργούνται σε αυτήν την αποθήκη επισυνάπτονται στο ActiveStore και ενεργοποιούνται στον υπολογιστή αμέσως.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>Διαγραφή όλων των κανόνων πολιτικής ομάδας</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή όλων των κανόνων τείχους προστασίας από τον χώρο αποθήκευσης πολιτικής ομάδας.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγραφή όλων των κανόνων τείχους προστασίας από τον χώρο αποθήκευσης πολιτικής ομάδας.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Διαγραφή όλων των κανόνων GPO</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>Είστε βέβαιοι ότι θέλετε να διαγράψετε όλους τους κανόνες τείχους προστασίας από τον χώρο αποθήκευσης πολιτικής ομάδας; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</value>
+  </data>
+    <data name="EditRow.Text" xml:space="preserve">
+    <value>Επεξεργασία</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επεξεργασία των επιλεγμένων δεδομένων.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επεξεργασία των επιλεγμένων δεδομένων.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>Εξαγωγή πολιτικών πρόσβασης συστήματος</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εξάγει τις πολιτικές πρόσβασης συστήματος σε αρχείο JSON.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εξάγει τις πολιτικές πρόσβασης συστήματος σε αρχείο JSON.</value>
+  </data>
 </root>

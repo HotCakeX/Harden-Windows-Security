@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	internal SystemInformation()
 	{

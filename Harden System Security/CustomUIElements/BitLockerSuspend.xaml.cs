@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.CustomUIElements;
 
 internal sealed partial class BitLockerSuspend : ContentDialogV2, INPCImplant
 {
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	internal BitLockerSuspend() => InitializeComponent();
 

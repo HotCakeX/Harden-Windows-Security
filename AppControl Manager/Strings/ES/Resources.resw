@@ -3628,9 +3628,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>Recorriendo cada archivo compatible</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>El archivo XML proporcionado '{0}' contiene una regla que permite todos los archivos.</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>Creando tarea programada para la actualización semanal rápida de la lista de bloqueo de controladores recomendada por Microsoft</value>
   </data>

@@ -180,7 +180,7 @@ internal static class CiToolHelper
 		// They will be added automatically later by the method
 		policyId = policyId.Trim('"', '{', '}');
 
-		if (App.Settings.UseV2CIManagement)
+		if (GlobalVars.Settings.UseV2CIManagement)
 		{
 			Logger.Write("Using alternative method for removing policy");
 			CIManager.RemovePolicyByID(policyId);
@@ -237,7 +237,7 @@ internal static class CiToolHelper
 			// They will be added automatically later by the method
 			string ID = policyId.Trim('"', '{', '}');
 
-			if (App.Settings.UseV2CIManagement)
+			if (GlobalVars.Settings.UseV2CIManagement)
 			{
 				Logger.Write("Using alternative method for removing policy");
 				CIManager.RemovePolicyByID(policyId);
@@ -291,7 +291,7 @@ internal static class CiToolHelper
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void UpdatePolicy(ReadOnlySpan<byte> policyBytes)
 	{
-		if (App.Settings.UseV2CIManagement)
+		if (GlobalVars.Settings.UseV2CIManagement)
 		{
 			Logger.Write("Using alternative method for deploying policy");
 			CIManager.Add(policyBytes);

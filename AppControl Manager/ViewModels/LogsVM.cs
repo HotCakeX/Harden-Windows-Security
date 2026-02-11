@@ -36,7 +36,7 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class LogsVM : ViewModelBase, IDisposable
 {
-	private const string LogFilePattern = $"{App.AppName}_Logs_*.txt";
+	private const string LogFilePattern = $"{GlobalVars.AppName}_Logs_*.txt";
 	internal static readonly char[] LineSeparators = ['\r', '\n'];
 	private const int PageSize = 50;
 
@@ -76,7 +76,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Item factory for log lines.
 	/// </summary>
-	private static readonly Func<string, LogLine> ItemFactory = static line => new(line);
+	private static readonly Func<string, string> ItemFactory = static line => line;
 
 	/// <summary>
 	/// List of log file paths for the ComboBox.
@@ -86,7 +86,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Incremental collection for the ListView.
 	/// </summary>
-	internal readonly IncrementalCollection<LogLine> LogCollection;
+	internal readonly IncrementalCollection<string> LogCollection;
 
 	/// <summary>
 	/// The currently selected log file path.
@@ -137,7 +137,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	internal LogsVM()
 	{
 		// Create the incremental collection once with a dummy data provider factory
-		LogCollection = new IncrementalCollection<LogLine>(
+		LogCollection = new IncrementalCollection<string>(
 			() => Task.FromResult<IFileDataProvider>(new EmptyFileDataProvider()),
 			FilterPredicate,
 			ItemFactory,
@@ -156,7 +156,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		try
 		{
 			// Get files matching the pattern
-			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(App.LogsDirectory, LogFilePattern)
+			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(GlobalVars.LogsDirectory, LogFilePattern)
 				.Select(static f => new FileInfo(f))
 				.OrderByDescending(static f => f.CreationTime);
 
@@ -341,9 +341,9 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 			// Iterate through selected items and build the text to copy
 			for (int i = 0; i < LogListView.SelectedItems.Count; i++)
 			{
-				if (LogListView.SelectedItems[i] is LogLine logLine)
+				if (LogListView.SelectedItems[i] is string logLine)
 				{
-					_ = stringBuilder.AppendLine(logLine.Text);
+					_ = stringBuilder.AppendLine(logLine);
 				}
 			}
 
@@ -430,7 +430,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			await OpenFileInDefaultFileHandler(App.LogsDirectory);
+			await OpenFileInDefaultFileHandler(GlobalVars.LogsDirectory);
 		}
 		catch (Exception ex)
 		{

@@ -3,11 +3,12 @@
     x:Class="AppControlManager.Pages.Simulation"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:localbase="using:AppControlManager"
     xmlns:AppControlManager="using:AppControlManager"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:others="using:AppControlManager.Others"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid TabFocusNavigation="Cycle">
@@ -41,15 +42,21 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- Select XML File Button -->
+                    <!-- Select policy Button -->
                     <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectXmlFileButton_Click}"
-                                       ObservedData="{x:Bind ViewModel.XmlFilePath, Mode=OneWay}"
+                                       ObservedData="{x:Bind ViewModel.SelectedPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                       x:Name="BrowseForPolicyButton"
                                        x:Uid="SelectAppControlPolicyFileButton">
 
                         <Button.ContentTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <AnimatedIcon Visibility="{x:Bind vm:ViewModelProvider.SimulationVM.SelectedPolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
+                                        <AnimatedIcon.Source>
+                                            <animatedvisuals:Light/>
+                                        </AnimatedIcon.Source>
+                                    </AnimatedIcon>
                                     <FontIcon Glyph="&#xEC50;" FontSize="16"/>
                                     <TextBlock Text="{x:Bind}"/>
                                 </StackPanel>
@@ -57,7 +64,7 @@
                         </Button.ContentTemplate>
 
                         <customUI:ButtonV2.Flyout>
-                            <Flyout>
+                            <Flyout x:Name="BrowseForPolicyButton_Flyout">
 
                                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -74,7 +81,7 @@
 
                                     <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                                    <TextBox Text="{x:Bind ViewModel.XmlFilePath, Mode=OneWay}"
+                                    <TextBox Text="{x:Bind ViewModel.SelectedPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                              TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                              MinWidth="400" IsReadOnly="True" />
 

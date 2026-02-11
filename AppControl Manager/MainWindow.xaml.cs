@@ -58,7 +58,6 @@ namespace HardenSystemSecurity;
 internal sealed partial class MainWindow : Window
 {
 	private MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 
 #if APP_CONTROL_MANAGER
 
@@ -106,7 +105,7 @@ internal sealed partial class MainWindow : Window
 		GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
 		// Set the window display affinity upon window creation to exclude it from capture if ScreenShield is enabled, otherwise set it to
-		WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, AppSettings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
+		WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, ViewModel.AppSettings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
 
 		// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
 		// Make title bar Mica
@@ -141,10 +140,10 @@ internal sealed partial class MainWindow : Window
 		AppWindow.Closing += AppWindow_Closing;
 
 		// Set the initial background setting based on the user's settings
-		OnNavigationBackgroundChanged(null, new(App.Settings.NavViewBackground));
+		OnNavigationBackgroundChanged(null, new(GlobalVars.Settings.NavViewBackground));
 
 		// Set the initial App Theme based on the user's settings
-		OnAppThemeChanged(null, new(App.Settings.AppTheme));
+		OnAppThemeChanged(null, new(GlobalVars.Settings.AppTheme));
 
 #if APP_CONTROL_MANAGER
 
@@ -177,7 +176,7 @@ internal sealed partial class MainWindow : Window
 	/// <param name="sourceElement">The UIElement that starts the animation.</param>
 	internal static void TriggerTransferIconAnimationStatic(UIElement sourceElement)
 	{
-		_ = App.AppDispatcher.TryEnqueue(() =>
+		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 		{
 			((MainWindow)App.MainWindow!).TriggerTransferIconAnimation(sourceElement);
 		});
@@ -366,7 +365,7 @@ internal sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Light;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 #if APP_CONTROL_MANAGER
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -390,7 +389,7 @@ internal sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Dark;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 #if APP_CONTROL_MANAGER
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -418,7 +417,7 @@ internal sealed partial class MainWindow : Window
 					if (currentColorMode is ElementTheme.Dark)
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 #if APP_CONTROL_MANAGER
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -438,7 +437,7 @@ internal sealed partial class MainWindow : Window
 					else
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 #if APP_CONTROL_MANAGER
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -470,12 +469,12 @@ internal sealed partial class MainWindow : Window
 	private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
 	{
 		// If we should always ask for confirmation
-		if (AppSettings.AppCloseConfirmationBehavior == 0)
+		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0)
 		{
 			// Do nothing and let the flow continue
 		}
 		// If we should automatically/conditionally ask for confirmation
-		else if (AppSettings.AppCloseConfirmationBehavior == 1)
+		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 1)
 		{
 			if (!TaskTracking.AppNeedsCloseConfirmation)
 			{
@@ -483,7 +482,7 @@ internal sealed partial class MainWindow : Window
 			}
 		}
 		// If we should never ask for confirmation
-		else if (AppSettings.AppCloseConfirmationBehavior == 2)
+		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2)
 		{
 			return;
 		}
@@ -494,10 +493,10 @@ internal sealed partial class MainWindow : Window
 		await DispatcherQueue.EnqueueAsync(async () =>
 		{
 			// If there is an existing content dialog open, close it
-			if (App.CurrentlyOpenContentDialog is ContentDialog existingDialog)
+			if (GlobalVars.CurrentlyOpenContentDialog is ContentDialog existingDialog)
 			{
 				existingDialog.Hide();
-				App.CurrentlyOpenContentDialog = null;
+				GlobalVars.CurrentlyOpenContentDialog = null;
 			}
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 confirmCloseDialog = new()
@@ -505,7 +504,7 @@ internal sealed partial class MainWindow : Window
 				Title = GlobalVars.GetStr("ConfirmExitTitle"),
 #if APP_CONTROL_MANAGER
 				// if there is no policy in the Policies library in the Sidebar or if there is but Persistence is enabled
-				Content = (ViewModel.SidebarPoliciesLibrary.Count == 0 || AppControlManager.App.Settings.PersistentPoliciesLibrary) ? GlobalVars.GetStr("ConfirmExitMsg") : GlobalVars.GetStr("ConfirmExitForUnsavedPoliciesMsg"),
+				Content = (ViewModel.SidebarPoliciesLibrary.Count == 0 || GlobalVars.Settings.PersistentPoliciesLibrary) ? GlobalVars.GetStr("ConfirmExitMsg") : GlobalVars.GetStr("ConfirmExitForUnsavedPoliciesMsg"),
 #else
 				Content = GlobalVars.GetStr("ConfirmExitMsg"),
 #endif
@@ -1232,7 +1231,7 @@ internal sealed partial class MainWindow : Window
 	{
 		string fileName = $"{policyContext.PolicyIdentifier}.xml";
 
-		string? savePath = await App.AppDispatcher.EnqueueAsync(() =>
+		string? savePath = await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			 FileDialogHelper.ShowSaveFileDialog(GlobalVars.XMLFilePickerFilter, fileName)
 		);
 
@@ -1254,7 +1253,7 @@ internal sealed partial class MainWindow : Window
 	{
 		string fileName = $"{policyContext.PolicyIdentifier}.cip";
 
-		string? savePath = await App.AppDispatcher.EnqueueAsync(() =>
+		string? savePath = await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			FileDialogHelper.ShowSaveFileDialog(GlobalVars.CIPFilesPickerFilter, fileName)
 		);
 
@@ -1303,7 +1302,7 @@ internal sealed partial class MainWindow : Window
 			}
 
 			// If the library should be persistent
-			if (AppSettings.PersistentPoliciesLibrary)
+			if (ViewModel.AppSettings.PersistentPoliciesLibrary)
 			{
 				await Task.Run(() =>
 				{
@@ -1353,7 +1352,7 @@ internal sealed partial class MainWindow : Window
 		try
 		{
 			// If library is persistent then remove one by one from the cache first
-			if (AppSettings.PersistentPoliciesLibrary)
+			if (ViewModel.AppSettings.PersistentPoliciesLibrary)
 			{
 				// Get all of the files in the cache first
 				IEnumerable<string> currentFiles = Directory.EnumerateFiles(MainWindowVM.SidebarPoliciesLibraryCache);
@@ -1373,6 +1372,11 @@ internal sealed partial class MainWindow : Window
 
 			// Bulk remove from the in-memory library
 			ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Clear();
+
+			// Hide the animated icons on the currently visible page
+			Nav.AffectPagesAnimatedIconsVisibilitiesEx(false);
+
+			sidebarVM.Nullify();
 		}
 		catch (Exception ex)
 		{

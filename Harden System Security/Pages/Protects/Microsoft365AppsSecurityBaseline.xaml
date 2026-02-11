@@ -9,7 +9,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:viewModels="using:HardenSystemSecurity.ViewModels"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    xmlns:GroupPolicy="using:HardenSystemSecurity.GroupPolicy"
+    xmlns:Protect="using:HardenSystemSecurity.Protect"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -223,7 +223,7 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="GroupPolicy:VerificationResult" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                <DataTemplate x:DataType="Protect:VerificationResult" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>

@@ -301,7 +301,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) },
 		{ "Intune", typeof(Pages.Intune) },
 		{ "CSP", typeof(Pages.CSP) }
-	}.ToFrozenDictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Dictionary of all the pages in the app, used for the search bar.
@@ -630,7 +630,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Whether the button for configuring nested virtualizations on Sidebar is enabled.
 	/// </summary>
-	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = App.IsElevated;
+	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = GlobalVars.IsElevated;
 
 	internal async void EnableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(true);
 	internal async void DisableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(false);
@@ -719,7 +719,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 	}
 
-	internal bool IsCheckForAllAppUpdatesButtonEnabled { get; set => SP(ref field, value); } = App.IsElevated;
+	internal bool IsCheckForAllAppUpdatesButtonEnabled { get; set => SP(ref field, value); } = GlobalVars.IsElevated;
 
 	/// <summary>
 	/// Event handler for the UI button.

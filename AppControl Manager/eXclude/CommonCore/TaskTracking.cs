@@ -36,7 +36,7 @@ internal static class TaskTracking
 	{
 #if APP_CONTROL_MANAGER
 		// If there are any active operations or there are policies in the Sidebar library and Persistent library option is not enabled meaning app restart will cause all in-memory policies in the library to be lost.
-		return Volatile.Read(ref _activeOperationsCount) > 0 || (ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Count > 0 && !AppControlManager.App.Settings.PersistentPoliciesLibrary);
+		return Volatile.Read(ref _activeOperationsCount) > 0 || (ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Count > 0 && !GlobalVars.Settings.PersistentPoliciesLibrary);
 #else
 		return Volatile.Read(ref _activeOperationsCount) > 0;
 #endif

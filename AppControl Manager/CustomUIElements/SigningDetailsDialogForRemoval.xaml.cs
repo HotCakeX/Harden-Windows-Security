@@ -33,7 +33,7 @@ namespace AppControlManager.CustomUIElements;
 internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 {
 
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	// Properties to access the input value
 	internal string? CertificatePath { get; private set; }

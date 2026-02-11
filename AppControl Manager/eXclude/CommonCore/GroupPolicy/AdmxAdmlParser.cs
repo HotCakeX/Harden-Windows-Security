@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
 internal static class AdmxAdmlParser
 {

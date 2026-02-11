@@ -95,12 +95,14 @@ namespace Firewall {
 	// Performs deduplication based on DisplayName + Direction + Group before creation.
 	extern "C" __declspec(dllexport) bool __stdcall FW_AddProgramFirewallRule(
 		const wchar_t* displayName,
-		const wchar_t* programPath,
+		const wchar_t* programPath,       // Optional: can be null or empty
 		const wchar_t* direction,
 		const wchar_t* action,
 		const wchar_t* description,
 		const wchar_t* policyAppId,       // Optional: can be null or empty
-		const wchar_t* packageFamilyName  // Optional: can be null or empty
+		const wchar_t* packageFamilyName, // Optional: can be null or empty
+		const wchar_t* edgeTraversal,     // Optional: default is "Block" (0). Can pass "Allow", "DeferToUser", etc.
+		const wchar_t* policyStore        // Optional: default is "localhost". Can pass "PersistentStore", "ActiveStore", etc.
 	);
 
 	// Deletes firewall rules from PolicyStore=localhost by ElementName, with a DisplayName fallback.

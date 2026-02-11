@@ -5264,4 +5264,55 @@
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>إجمالي أجهزة USB المتصلة: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>مخزن نهج المجموعة</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>سيتم إنشاء قواعد جدار الحماية في مخزن نهج المجموعة.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>سيتم إنشاء قواعد جدار الحماية في مخزن نهج المجموعة.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>المخزن الدائم</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يحتوي هذا المخزن على النهج الدائم للكمبيوتر المحلي. القواعد الموجودة في هذا المخزن ليست من كائنات نهج المجموعة (GPOs)، وقد تم إنشاؤها يدوياً أو برمجياً (أثناء تثبيت التطبيق) على الكمبيوتر. يتم إرفاق القواعد التي تم إنشاؤها في هذا المخزن بـ ActiveStore وتنشيطها على الكمبيوتر فوراً.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يحتوي هذا المخزن على النهج الدائم للكمبيوتر المحلي. القواعد الموجودة في هذا المخزن ليست من كائنات نهج المجموعة (GPOs)، وقد تم إنشاؤها يدوياً أو برمجياً (أثناء تثبيت التطبيق) على الكمبيوتر. يتم إرفاق القواعد التي تم إنشاؤها في هذا المخزن بـ ActiveStore وتنشيطها على الكمبيوتر فوراً.</value>
+  </data>
+    <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>حذف كافة قواعد نهج المجموعة</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف كافة قواعد جدار الحماية من مخزن نهج المجموعة.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حذف كافة قواعد جدار الحماية من مخزن نهج المجموعة.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>حذف كافة قواعد GPO</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>هل أنت متأكد من رغبتك في حذف كافة قواعد جدار الحماية من مخزن نهج المجموعة؟ لا يمكن التراجع عن هذا الإجراء.</value>
+  </data>
+    <data name="EditRow.Text" xml:space="preserve">
+    <value>تحرير</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحرير البيانات المحددة.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحرير البيانات المحددة.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>تصدير سياسات الوصول إلى النظام</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يقوم بتصدير سياسات الوصول إلى النظام إلى ملف JSON.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يقوم بتصدير سياسات الوصول إلى النظام إلى ملف JSON.</value>
+  </data>
 </root>

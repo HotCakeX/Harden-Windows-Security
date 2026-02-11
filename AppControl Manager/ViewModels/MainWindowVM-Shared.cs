@@ -95,7 +95,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				UpdateSystemBackDrop();
 			}
 		}
-	} = (int)Enum.Parse<BackDropComboBoxItems>(App.Settings.BackDropBackground);
+	} = (int)Enum.Parse<BackDropComboBoxItems>(GlobalVars.Settings.BackDropBackground);
 
 	/// <summary>
 	/// Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind BaseAlt.
@@ -108,7 +108,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// The state of the OpenConfigDirectoryButton button which is on the Sidebar
 	/// </summary>
-	internal bool OpenConfigDirectoryButtonState { get; set => SP(ref field, value); } = App.IsElevated;
+	internal bool OpenConfigDirectoryButtonState { get; set => SP(ref field, value); } = GlobalVars.IsElevated;
 
 	/// <summary>
 	/// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
@@ -201,7 +201,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 
 		// Save the selected option (using the enum's name)
-		App.Settings.BackDropBackground = selection.ToString();
+		GlobalVars.Settings.BackDropBackground = selection.ToString();
 	}
 
 	/// <summary>

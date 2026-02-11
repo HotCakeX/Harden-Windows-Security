@@ -15,20 +15,30 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
-internal enum RegistryValueType : uint
+/// <summary>
+/// The main categories for protection. The JSON files for each category must match this enum member names.
+/// </summary>
+internal enum Categories : uint
 {
-	REG_NONE = 0,
-	REG_SZ = 1,
-	REG_EXPAND_SZ = 2,
-	REG_BINARY = 3,
-	REG_DWORD = 4,
-	REG_DWORD_BIG_ENDIAN = 5,
-	REG_LINK = 6,
-	REG_MULTI_SZ = 7,
-	REG_RESOURCE_LIST = 8,
-	REG_FULL_RESOURCE_DESCRIPTOR = 9,
-	REG_RESOURCE_REQUIREMENTS_LIST = 10,
-	REG_QWORD = 11
+	MicrosoftSecurityBaseline = 0,
+	Microsoft365AppsSecurityBaseline = 1,
+	MicrosoftDefender = 2,
+	AttackSurfaceReductionRules = 3,
+	BitLockerSettings = 4,
+	TLSSecurity = 5,
+	LockScreen = 6,
+	UserAccountControl = 7,
+	DeviceGuard = 8,
+	WindowsFirewall = 9,
+	OptionalWindowsFeatures = 10,
+	WindowsNetworking = 11,
+	MiscellaneousConfigurations = 12,
+	WindowsUpdateConfigurations = 13,
+	EdgeBrowserConfigurations = 14,
+	CertificateChecking = 15,
+	CountryIPBlocking = 16,
+	NonAdminCommands = 17,
+	MSFTSecBaselines_OptionalOverrides = 18
 }

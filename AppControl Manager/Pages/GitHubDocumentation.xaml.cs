@@ -28,7 +28,7 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class GitHubDocumentation : Page
 {
-	private CommonCore.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	internal GitHubDocumentation()
 	{

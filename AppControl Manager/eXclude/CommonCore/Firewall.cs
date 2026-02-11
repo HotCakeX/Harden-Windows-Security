@@ -105,15 +105,20 @@ internal static class Firewall
 		}
 	}
 
-	internal static void DeleteAllFirewallRules()
+	/// <summary>
+	/// Deletes all firewall rules from the specified store.
+	/// </summary>
+	/// <param name="store">The Firewall store to delete rules from.</param>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static void DeleteAllFirewallRules(FW_STORE_TYPE store)
 	{
-		Logger.Write("Deleting all firewall rules...");
+		Logger.Write($"Deleting all firewall rules from {store} store...");
 
 		// wszMachineOrGPO = null for local machine
 		uint result = NativeMethods.FWOpenPolicyStore(
 			wBinaryVersion: FW_BINARY_VERSION,
 			wszMachineOrGPO: null,
-			StoreType: FW_STORE_TYPE.LOCAL,
+			StoreType: store,
 			AccessRight: FW_POLICY_ACCESS_RIGHT.READ_WRITE,
 			dwFlags: FW_POLICY_STORE_FLAGS.NONE,
 			phPolicy: out nint policyHandle);
@@ -125,7 +130,7 @@ internal static class Firewall
 
 		try
 		{
-			// Delete all firewall rules from the Local policy store
+			// Delete all firewall rules from the selected policy store
 			result = NativeMethods.FWDeleteAllFirewallRules(policyHandle);
 
 			if (result == 0)

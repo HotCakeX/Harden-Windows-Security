@@ -5264,4 +5264,55 @@ Odcisk Palca: {3}</value>
   <data name="TotalUSBDevices" xml:space="preserve">
     <value>Łączna liczba podłączonych urządzeń USB: {0}</value>
   </data>
+    <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Magazyn zasad grupy</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reguły zapory zostaną utworzone w magazynie zasad grupy.</value>
+  </data>
+  <data name="FirewallGroupPolicyStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reguły zapory zostaną utworzone w magazynie zasad grupy.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Magazyn trwały</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ten magazyn zawiera trwałe zasady dla komputera lokalnego. Reguły w tym magazynie nie pochodzą z obiektów GPO i zostały utworzone ręcznie lub programowo (podczas instalacji aplikacji) na komputerze. Reguły utworzone w tym magazynie są dołączane do ActiveStore i natychmiast aktywowane na komputerze.</value>
+  </data>
+  <data name="FirewallPersistentStoreStoreRadioMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ten magazyn zawiera trwałe zasady dla komputera lokalnego. Reguły w tym magazynie nie pochodzą z obiektów GPO i zostały utworzone ręcznie lub programowo (podczas instalacji aplikacji) na komputerze. Reguły utworzone w tym magazynie są dołączane do ActiveStore i natychmiast aktywowane na komputerze.</value>
+  </data>
+    <data name="DeleteAllGPOFirewallRules.Text" xml:space="preserve">
+    <value>Usuń wszystkie reguły zasad grupy</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wszystkie reguły zapory z magazynu zasad grupy.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wszystkie reguły zapory z magazynu zasad grupy.</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesTitle" xml:space="preserve">
+    <value>Usuń wszystkie reguły GPO</value>
+  </data>
+  <data name="DeleteAllGPOFirewallRulesWarning" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć wszystkie reguły zapory z magazynu zasad grupy? Tej operacji nie można cofnąć.</value>
+  </data>
+    <data name="EditRow.Text" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="EditRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Edytuj wybrane dane.</value>
+  </data>
+  <data name="EditRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Edytuj wybrane dane.</value>
+  </data>
+    <data name="ExportSystemAccessPoliciesButton.Content" xml:space="preserve">
+    <value>Eksportuj zasady dostępu do systemu</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eksportuje zasady dostępu do systemu do pliku JSON.</value>
+  </data>
+  <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eksportuje zasady dostępu do systemu do pliku JSON.</value>
+  </data>
 </root>

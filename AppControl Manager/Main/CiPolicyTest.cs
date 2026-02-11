@@ -37,9 +37,9 @@ internal static class CiPolicyTest
 		// Make sure the schema file exists
 		if (!File.Exists(schemaPath))
 		{
-			schemaPath = string.IsNullOrEmpty(App.Settings.CiPolicySchemaPath) || !File.Exists(App.Settings.CiPolicySchemaPath)
+			schemaPath = string.IsNullOrEmpty(GlobalVars.Settings.CiPolicySchemaPath) || !File.Exists(GlobalVars.Settings.CiPolicySchemaPath)
 				? throw new FileNotFoundException(GlobalVars.GetStr("CISchemaNotFound"), schemaPath)
-				: App.Settings.CiPolicySchemaPath;
+				: GlobalVars.Settings.CiPolicySchemaPath;
 		}
 
 		// Make sure the input XML file exists

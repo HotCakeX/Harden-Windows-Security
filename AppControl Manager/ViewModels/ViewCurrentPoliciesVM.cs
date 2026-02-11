@@ -74,7 +74,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	// To store the policies displayed on the ListView
-	internal readonly IncrementalCollection.RangedObservableCollection<CiPolicyInfo> AllPolicies = [];
+	internal readonly CommonCore.IncrementalCollection.RangedObservableCollection<CiPolicyInfo> AllPolicies = [];
 
 	// Store all outputs for searching
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];
@@ -294,7 +294,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							TestMode: false,
 							deployAppControlSupplementalPolicy: false,
 							PolicyIDToUse: policyID,
-							DeployMicrosoftRecommendedBlockRules: false
+							DeployMicrosoftRecommendedBlockRules: false,
+							IsAppIDTagging: false
 							);
 
 							break;
@@ -310,7 +311,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							TestMode: false,
 							deployAppControlSupplementalPolicy: false,
 							PolicyIDToUse: policyID,
-							DeployMicrosoftRecommendedBlockRules: false
+							DeployMicrosoftRecommendedBlockRules: false,
+							IsAppIDTagging: false
 							);
 
 							break;

@@ -28,11 +28,12 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.SecurityPolicy;
 
 #pragma warning disable CA1819
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace HardenSystemSecurity.Protect;
 
 /// <summary>
 /// Enum representing the source type of a security measure
@@ -1179,20 +1180,20 @@ internal static class MSBaseline
 			// Find machine registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "Machine", machinePolicyFiles);
 
+			cancellationToken?.ThrowIfCancellationRequested();
+
 			// Find user registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "User", userPolicyFiles);
+
+			cancellationToken?.ThrowIfCancellationRequested();
 
 			// Find audit.csv files
 			FindAuditCsvFiles(extractedFiles, guidDir, auditCsvFiles);
 
-			// Don't process security INF files during removal.
-			if (action == PolicyAction.Apply)
-			{
-				cancellationToken?.ThrowIfCancellationRequested();
+			cancellationToken?.ThrowIfCancellationRequested();
 
-				// Find GptTmpl.inf files
-				FindSecurityInfFiles(extractedFiles, guidDir, securityInfFiles);
-			}
+			// Find GptTmpl.inf files
+			FindSecurityInfFiles(extractedFiles, guidDir, securityInfFiles);
 		}
 
 		cancellationToken?.ThrowIfCancellationRequested();
@@ -1334,15 +1335,7 @@ internal static class MSBaseline
 		Logger.Write($"Machine POL files: {machinePolicyFiles.Count}");
 		Logger.Write($"User POL files: {userPolicyFiles.Count}");
 		Logger.Write($"Audit CSV files: {auditCsvFiles.Count}");
-
-		if (action == PolicyAction.Apply)
-		{
-			Logger.Write($"Security INF files: {securityInfFiles.Count}");
-		}
-		else
-		{
-			Logger.Write($"Security INF files: {securityInfFiles.Count} (skipped during removal)");
-		}
+		Logger.Write($"Security INF files: {securityInfFiles.Count}");
 
 		cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1378,7 +1371,7 @@ internal static class MSBaseline
 			}
 		}
 
-		// Only process security INF files when applying (not when removing)
+		// Process the entire security INF files when applying
 		if (action == PolicyAction.Apply)
 		{
 			// Apply security INF files
@@ -1388,6 +1381,19 @@ internal static class MSBaseline
 
 				Logger.Write("Applying security INF files...");
 				ParseAndApplyInfFilesFromMemory(securityInfFiles, filterIds);
+			}
+		}
+		// When removing, only revert System Access policies from the INF files since only logic for removing those have been implemented for now.
+		else if (action == PolicyAction.Remove)
+		{
+			// If we have INF files, can scan them to find which System Access keys correspond to the baseline.
+			if (securityInfFiles.Count > 0)
+			{
+				cancellationToken?.ThrowIfCancellationRequested();
+
+				Logger.Write("Reverting System Access policies to defaults...");
+
+				RevertSystemAccessPoliciesUsingDefaults(securityInfFiles, filterIds);
 			}
 		}
 
@@ -1955,6 +1961,88 @@ internal static class MSBaseline
 			{
 				SecurityPolicyWriter.SetLockoutDuration(lockoutDuration);
 			}
+		}
+	}
+
+	/// <summary>
+	/// Reverts System Access policies to their default/backed-up values.
+	/// Reads from "SystemAccessBackup.json" in the app's directory.
+	/// Only reverts settings that are present in the provided INF files (if any), or all if filterIds are used.
+	/// </summary>
+	/// <param name="infFiles">List of INF files to identify which settings to revert</param>
+	/// <param name="filterIds">Optional filter IDs</param>
+	private static void RevertSystemAccessPoliciesUsingDefaults(List<InMemoryFile> infFiles, HashSet<string>? filterIds)
+	{
+		try
+		{
+			// Get the default System Access values
+			SystemAccessInfo defaultSettings = SystemAccessDefaults.LoadSystemDefaults();
+
+			// Determine which settings need to be reverted
+			HashSet<string> settingsToRevert = new(StringComparer.OrdinalIgnoreCase);
+
+			if (filterIds != null)
+			{
+				// If filterIds are present, check which ones correspond to System Access
+				foreach (string id in filterIds)
+				{
+					if (id.StartsWith("SystemAccess|", StringComparison.OrdinalIgnoreCase))
+					{
+						string key = id["SystemAccess|".Length..];
+						_ = settingsToRevert.Add(key);
+					}
+				}
+			}
+			else if (infFiles.Count > 0)
+			{
+				// Scan INF files to find which System Access settings were applied by this baseline
+				foreach (InMemoryFile infFile in CollectionsMarshal.AsSpan(infFiles))
+				{
+					using MemoryStream stream = new(infFile.Content);
+					using StreamReader reader = new(stream, Encoding.UTF8);
+					Dictionary<string, string> settingsInFile = SecurityPolicyManager.ExtractSystemAccessSettingsFromReader(reader);
+					foreach (string key in settingsInFile.Keys)
+					{
+						_ = settingsToRevert.Add(key);
+					}
+				}
+			}
+
+			if (settingsToRevert.Count == 0)
+			{
+				Logger.Write("No System Access policies identified for reversion.");
+				return;
+			}
+
+			// Build a dictionary of settings to apply based on the backup values
+			Dictionary<string, string> settingsToApply = new(StringComparer.OrdinalIgnoreCase);
+
+			if (settingsToRevert.Contains("MinimumPasswordAge")) settingsToApply["MinimumPasswordAge"] = defaultSettings.MinimumPasswordAge.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("MaximumPasswordAge")) settingsToApply["MaximumPasswordAge"] = defaultSettings.MaximumPasswordAge.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("MinimumPasswordLength")) settingsToApply["MinimumPasswordLength"] = defaultSettings.MinimumPasswordLength.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("PasswordComplexity")) settingsToApply["PasswordComplexity"] = defaultSettings.PasswordComplexity.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("PasswordHistorySize")) settingsToApply["PasswordHistorySize"] = defaultSettings.PasswordHistorySize.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("LockoutBadCount")) settingsToApply["LockoutBadCount"] = defaultSettings.LockoutBadCount.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("ResetLockoutCount")) settingsToApply["ResetLockoutCount"] = defaultSettings.ResetLockoutCount.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("LockoutDuration")) settingsToApply["LockoutDuration"] = defaultSettings.LockoutDuration.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("AllowAdministratorLockout")) settingsToApply["AllowAdministratorLockout"] = defaultSettings.AllowAdministratorLockout.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("RequireLogonToChangePassword")) settingsToApply["RequireLogonToChangePassword"] = defaultSettings.RequireLogonToChangePassword.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("ForceLogoffWhenHourExpire")) settingsToApply["ForceLogoffWhenHourExpire"] = defaultSettings.ForceLogoffWhenHourExpire.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("NewAdministratorName")) settingsToApply["NewAdministratorName"] = $"\"{defaultSettings.NewAdministratorName}\""; // Quote strings for ApplySystemAccessSettings
+			if (settingsToRevert.Contains("NewGuestName")) settingsToApply["NewGuestName"] = $"\"{defaultSettings.NewGuestName}\"";
+			if (settingsToRevert.Contains("ClearTextPassword")) settingsToApply["ClearTextPassword"] = defaultSettings.ClearTextPassword.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("EnableAdminAccount")) settingsToApply["EnableAdminAccount"] = defaultSettings.EnableAdminAccount.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("EnableGuestAccount")) settingsToApply["EnableGuestAccount"] = defaultSettings.EnableGuestAccount.ToString(CultureInfo.InvariantCulture);
+			if (settingsToRevert.Contains("LSAAnonymousNameLookup")) settingsToApply["LSAAnonymousNameLookup"] = defaultSettings.LSAAnonymousNameLookup.ToString(CultureInfo.InvariantCulture);
+
+			// Apply the reverted settings
+			ApplySystemAccessSettings(settingsToApply);
+			Logger.Write($"Reverted {settingsToApply.Count} System Access policies to defaults.");
+
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Error reverting System Access policies: {ex.Message}");
 		}
 	}
 }

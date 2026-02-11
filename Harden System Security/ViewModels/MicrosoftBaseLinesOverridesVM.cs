@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.SecurityPolicy;
@@ -101,9 +102,9 @@ internal sealed partial class MicrosoftBaseLinesOverridesVM : MUnitListViewModel
 				url: "https://learn.microsoft.com/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/deny-log-on-through-remote-desktop-services",
 
 				deviceIntents: [
-					DeviceIntents.Intent.Development,
-					DeviceIntents.Intent.Gaming,
-					DeviceIntents.Intent.School
+					Intent.Development,
+					Intent.Gaming,
+					Intent.School
 				],
 
 				id: new("019b2afa-abd8-7b8f-8136-de0baf0d50fc")

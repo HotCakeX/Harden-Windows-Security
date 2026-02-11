@@ -109,7 +109,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	#endregion
 
 	// To store the policies displayed on the ListView
-	internal readonly IncrementalCollection.RangedObservableCollection<CiPolicyInfo> AllPolicies = [];
+	internal readonly CommonCore.IncrementalCollection.RangedObservableCollection<CiPolicyInfo> AllPolicies = [];
 
 	// Store all outputs for searching
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];

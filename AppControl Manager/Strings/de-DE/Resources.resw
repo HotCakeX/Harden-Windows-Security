@@ -3628,9 +3628,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>Durchlauf aller unterstützten Dateien</value>
   </data>
-  <data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
-    <value>Die angegebene XML-Datei '{0}' enthält eine Regel, die alle Dateien zulässt.</value>
-  </data>
   <data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
     <value>Erstellen einer geplanten Aufgabe für die schnelle wöchentliche Aktualisierung der von Microsoft empfohlenen Treibersperrliste</value>
   </data>

@@ -15,12 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace CommonCore.Others;
+namespace CommonCore.GroupPolicy;
 
-/// <summary>
-/// Represents one log line.
-/// </summary>
-internal sealed class LogLine(string text)
+internal enum PolicyAction : uint
 {
-	internal string Text => text;
+	Apply = 0,
+	Remove = 1
 }

@@ -133,7 +133,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	private void CreateFlyout()
 	{
 		// Only create flyout if link previews are enabled in settings
-		if (!App.Settings.LinkPreviewsForSecurityMeasure)
+		if (!GlobalVars.Settings.LinkPreviewsForSecurityMeasure)
 		{
 			return;
 		}
@@ -217,7 +217,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	private void ShowPreviewFlyout()
 	{
 		// Check if link previews are enabled in settings before showing flyout, or if already open
-		if (_isDisposed || _previewFlyout == null || !App.Settings.LinkPreviewsForSecurityMeasure || s_isFlyoutOpen)
+		if (_isDisposed || _previewFlyout == null || !GlobalVars.Settings.LinkPreviewsForSecurityMeasure || s_isFlyoutOpen)
 			return;
 
 		try
@@ -469,7 +469,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			_hoverInStoryboard?.Begin();
 
 			// Start hover timer for Flyout only if enabled in settings and flyout not already open
-			if (!string.IsNullOrWhiteSpace(LinkUrl) && !s_isFlyoutOpen && App.Settings.LinkPreviewsForSecurityMeasure)
+			if (!string.IsNullOrWhiteSpace(LinkUrl) && !s_isFlyoutOpen && GlobalVars.Settings.LinkPreviewsForSecurityMeasure)
 			{
 				_hoverTimer?.Start();
 			}

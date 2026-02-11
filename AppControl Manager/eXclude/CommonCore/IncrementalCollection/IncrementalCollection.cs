@@ -29,11 +29,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
 
-#if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity;
-#endif
-
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
 /// Generic incremental collection for loading items in pages with filtering support.
@@ -234,13 +230,13 @@ internal sealed partial class IncrementalCollection<T>(
 		}
 
 		// Clear UI items immediately on the UI thread
-		if (App.MainWindow?.DispatcherQueue.HasThreadAccess == true)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			Clear();
 		}
 		else
 		{
-			_ = (App.MainWindow?.DispatcherQueue.TryEnqueue(Clear));
+			_ = GlobalVars.AppDispatcher.TryEnqueue(Clear);
 		}
 
 		// Clear all internal data structures with aggressive memory management

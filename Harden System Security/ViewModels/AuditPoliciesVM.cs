@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.IncrementalCollection;
+using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -154,13 +154,13 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		}
 
 		// Perform a case-insensitive search in all relevant fields
-		List<AuditPolicyInfo> filteredResults = AllAuditPolicies.Where(policy =>
+		IEnumerable<AuditPolicyInfo> filteredResults = AllAuditPolicies.Where(policy =>
 			policy.CategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			policy.SubcategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			policy.CategoryGuid.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			policy.SubcategoryGuid.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			policy.AuditSettingDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		).ToList();
+		);
 
 		AuditPolicies.Clear();
 		AuditPolicies.AddRange(filteredResults);

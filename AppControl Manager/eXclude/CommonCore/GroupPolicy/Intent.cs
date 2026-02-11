@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.DeviceIntents;
+namespace CommonCore.GroupPolicy;
 
 /// <summary>
 /// Specifies the intent or purpose of the device.

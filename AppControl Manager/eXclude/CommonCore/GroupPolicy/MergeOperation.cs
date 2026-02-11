@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace HardenSystemSecurity.GroupPolicy;
+namespace CommonCore.GroupPolicy;
 
 /// <summary>
 /// A class representing a single merge operation on registry policy entries.
@@ -48,14 +48,12 @@ internal sealed class MergeOperation(
 		};
 	}
 
-	private static string FormatValue(object? value)
+	private static string FormatValue(object? value) => value switch
 	{
-		return value switch
-		{
-			null => "<null>",
-			byte[] bytes => $"<binary data, {bytes.Length} bytes>",
-			string[] strings => $"[{string.Join(", ", strings)}]",
-			_ => value.ToString() ?? "<null>"
-		};
-	}
+		null => "<null>",
+		byte[] bytes => $"<binary data, {bytes.Length} bytes>",
+		string[] strings => $"[{string.Join(", ", strings)}]",
+		_ => value.ToString() ?? "<null>"
+	};
+
 }

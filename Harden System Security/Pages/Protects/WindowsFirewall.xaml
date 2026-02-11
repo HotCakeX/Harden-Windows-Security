@@ -102,6 +102,10 @@
                                                 <MicaBackdrop Kind="BaseAlt"/>
                                             </MenuFlyout.SystemBackdrop>
 
+                                            <!-- Direction Section Header -->
+                                            <MenuFlyoutItem Text="Direction" 
+                                                            Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
+
                                             <RadioMenuFlyoutItem x:Uid="FirewallInboundDirectionRadioMenuFlyoutItem"
                                                                  GroupName="Direction"
                                                                  IsChecked="{x:Bind ViewModel.FirewallDirectionInbound, Mode=TwoWay}"
@@ -131,6 +135,10 @@
 
                                             <MenuFlyoutSeparator/>
 
+                                            <!-- Action Section Header -->
+                                            <MenuFlyoutItem Text="Action" 
+                                                            Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
+
                                             <RadioMenuFlyoutItem x:Uid="FirewallAllowActionRadioMenuFlyoutItem"
                                                                  GroupName="Action"
                                                                  IsChecked="{x:Bind ViewModel.FirewallActionAllow, Mode=TwoWay}"
@@ -150,6 +158,34 @@
                                             </RadioMenuFlyoutItem>
 
                                             <MenuFlyoutSeparator/>
+
+                                            <!-- Store Location Section Header -->
+                                            <MenuFlyoutItem Text="Store Location" 
+                                                            Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
+
+                                            <RadioMenuFlyoutItem x:Uid="FirewallGroupPolicyStoreRadioMenuFlyoutItem"
+                                                                 GroupName="Store"
+                                                                 IsChecked="{x:Bind ViewModel.FirewallStoreGPO, Mode=TwoWay}"
+                                                                 IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE930;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+
+                                            <RadioMenuFlyoutItem x:Uid="FirewallPersistentStoreStoreRadioMenuFlyoutItem"
+                                                                 GroupName="Store"
+                                                                 IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
+                                                                 IsChecked="{x:Bind ViewModel.FirewallStorePersistentStore, Mode=TwoWay}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE733;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+
+                                            <MenuFlyoutSeparator/>
+
+                                            <!-- Selection Section Header -->
+                                            <MenuFlyoutItem Text="Selection" 
+                                                            Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
 
                                             <MenuFlyoutItem x:Uid="FirewallSelectProgramsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.SelectFiles}"
@@ -279,15 +315,23 @@
 
                                             <MenuFlyoutSeparator/>
 
-                                            <MenuFlyoutItem x:Uid="RestoreLocalFirewallRules" Click="{x:Bind ViewModel.RestoreDefaultFirewallRules}">
+                                            <MenuFlyoutItem x:Uid="DeleteAllLocalFirewallRules" Click="{x:Bind ViewModel.DeleteAllLocalFirewallRules}">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE777;"/>
+                                                    <FontIcon Glyph="&#xE74D;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="DeleteAllLocalFirewallRules" Click="{x:Bind ViewModel.DeleteAllFirewallRules}">
+                                            <MenuFlyoutItem x:Uid="DeleteAllGPOFirewallRules" Click="{x:Bind ViewModel.DeleteAllGPOFirewallRules}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE74D;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                            <MenuFlyoutSeparator/>
+
+                                            <MenuFlyoutItem x:Uid="RestoreLocalFirewallRules" Click="{x:Bind ViewModel.RestoreDefaultFirewallRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE777;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 

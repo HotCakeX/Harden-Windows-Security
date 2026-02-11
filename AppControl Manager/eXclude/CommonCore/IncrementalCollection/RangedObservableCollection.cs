@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace AppControlManager.IncrementalCollection;
+namespace CommonCore.IncrementalCollection;
 
 internal sealed class RangedObservableCollection<T> : ObservableCollection<T>
 {

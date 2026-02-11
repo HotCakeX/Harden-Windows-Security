@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
-using HardenSystemSecurity.GroupPolicy;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.SecurityPolicy;
@@ -135,7 +135,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				}),
 
 				deviceIntents: [
-					DeviceIntents.Intent.All
+					Intent.All
 				],
 
 				id: new("019a905d-98d7-78ab-9064-4c5059f0b364")
@@ -151,10 +151,10 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				removeStrategy: new DefaultRemove(SSHConfigurations.RemoveSecureMACs),
 				url: @"https://learn.microsoft.com/windows-server/administration/OpenSSH/openssh-server-configuration#openssh-configuration-files",
 				deviceIntents: [
-					DeviceIntents.Intent.SpecializedAccessWorkstation,
-					DeviceIntents.Intent.PrivilegedAccessWorkstation,
-					DeviceIntents.Intent.School,
-					DeviceIntents.Intent.Business
+					Intent.SpecializedAccessWorkstation,
+					Intent.PrivilegedAccessWorkstation,
+					Intent.School,
+					Intent.Business
 				],
 				id: new("019a905d-f082-7fae-853e-ad55a6c74f9a")
 			));
@@ -217,10 +217,10 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				}),
 
 				deviceIntents: [
-					DeviceIntents.Intent.SpecializedAccessWorkstation,
-					DeviceIntents.Intent.PrivilegedAccessWorkstation,
-					DeviceIntents.Intent.School,
-					DeviceIntents.Intent.Business
+					Intent.SpecializedAccessWorkstation,
+					Intent.PrivilegedAccessWorkstation,
+					Intent.School,
+					Intent.Business
 				],
 				id: new("019a905e-7470-7be4-94d6-4cef2cd243df")
 			));
@@ -253,7 +253,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				}),
 
 				deviceIntents: [
-					DeviceIntents.Intent.All
+					Intent.All
 				],
 				id: new("019b2d4b-8bdc-78cc-afd2-02f21007f008"),
 				url: "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2016-3353"
@@ -283,7 +283,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				}),
 
 				deviceIntents: [
-					DeviceIntents.Intent.All
+					Intent.All
 				],
 				id: new("019b2d4b-57e2-79e4-9a23-6515027b353c"),
 
@@ -314,7 +314,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				}),
 
 				deviceIntents: [
-					DeviceIntents.Intent.All
+					Intent.All
 				],
 				id: new("019b2d62-724c-7a01-a037-050d83b74faf")
 			));

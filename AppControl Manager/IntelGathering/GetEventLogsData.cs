@@ -547,8 +547,8 @@ internal static class GetEventLogsData
 					}
 					#endregion
 
-					// Make sure the file has SHA256 Hash
-					string? SHA256Hash = GetStringValue(xmlSpan, "SHA256 Hash");
+					// Make sure the file has Sha256Hash
+					string? SHA256Hash = GetStringValue(xmlSpan, "Sha256Hash");
 
 					if (SHA256Hash is null)
 						continue;
@@ -656,8 +656,8 @@ internal static class GetEventLogsData
 					}
 					#endregion
 
-					// Make sure the file has SHA256 Hash
-					string? SHA256Hash = GetStringValue(xmlSpan, "SHA256 Hash");
+					// Make sure the file has Sha256Hash
+					string? SHA256Hash = GetStringValue(xmlSpan, "Sha256Hash");
 
 					if (SHA256Hash is null)
 						continue;

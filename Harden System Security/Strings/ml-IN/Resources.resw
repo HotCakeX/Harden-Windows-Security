@@ -1115,7 +1115,7 @@
     <value>Boot Configuration Data (BCD) No-eXecute (NX) മൂല്യം സെറ്റ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു.</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>സിസ്റ്റം-വൈഡ് നിർബന്ധിത ASLR-ൽ നിന്ന് പൊരുത്തമില്ലാത്ത GitHub Desktop, Git എക്സിക്യൂട്ടബിളുകൾ ഒഴിവാക്കുന്നു.</value>
+    <value>സിസ്റ്റം-വൈഡ് നിർബന്ധിത ASLR-ൽ നിന്ന് പൊരുത്തമില്ലാത്ത GitHub Desktop, Git, MSYS2/MinGW എക്സിക്യൂട്ടബിളുകൾ ഒഴിവാക്കുന്നു.</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>Microsoft Defender എഞ്ചിൻ, പ്ലാറ്റ്‌ഫോം അപ്ഡേറ്റ് ചാനലുകൾ ബീറ്റയിലേക്ക് കോൺഫിഗർ ചെയ്യുന്നു.</value>

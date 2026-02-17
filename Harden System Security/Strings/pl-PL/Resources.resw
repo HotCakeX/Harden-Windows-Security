@@ -1115,7 +1115,7 @@
     <value>Nie udało się ustawić wartości Boot Configuration Data (BCD) No-eXecute (NX).</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>Wykluczanie niezgodnych plików wykonywalnych GitHub Desktop, Git z obowiązkowego ASLR w całym systemie.</value>
+    <value>Wykluczanie niezgodnych plików wykonywalnych GitHub Desktop, Git i MSYS2/MinGW z obowiązkowego ASLR w całym systemie.</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>Konfigurowanie kanałów aktualizacji silnika i platformy Microsoft Defender na beta.</value>

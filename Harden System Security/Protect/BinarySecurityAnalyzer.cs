@@ -191,12 +191,57 @@ internal static class BinarySecurityAnalyzer
 		return fileList;
 	}
 
+	/// <summary>
+	/// Searches for executables in MSYS2/MinGW installation directories and returns paths of files not compatible with the ASLR Exploit Protection.
+	/// MSYS2 ships its own Git and many other executables (compilers, shells, utilities) that may not have ASLR support in their PE headers.
+	/// </summary>
+	/// <returns></returns>
+	private static List<string> FindIncompatibleMSYS2Exes()
+	{
+		// Default MSYS2 installation paths
+		string[] msys2Paths =
+		[
+			Path.Combine(GlobalVars.SystemDrive, "msys64"),
+			Path.Combine(GlobalVars.SystemDrive, "msys32")
+		];
+
+		List<string> fileList = [];
+
+		foreach (string basePath in msys2Paths)
+		{
+			if (!Directory.Exists(basePath))
+			{
+				continue;
+			}
+
+			// Get all directories under the base path
+			string[] directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories);
+
+			foreach (string dir in directories)
+			{
+				BinarySecurityProfile[] scanResult = ScanDirectory(dir);
+
+				foreach (BinarySecurityProfile item in scanResult)
+				{
+					// Find PEs that are not compatible with ASLR
+					if (item.AddressRandomization is SecurityFeatureStatus.Disabled or SecurityFeatureStatus.Unavailable)
+					{
+						fileList.Add(item.BinaryPath);
+					}
+				}
+			}
+		}
+
+		return fileList;
+	}
+
 	internal static HashSet<string> GetASLRIncompatibleGitHubExes()
 	{
 		List<string> results = FindIncompatibleGitHubDesktopExes();
 		results.AddRange(FindIncompatibleGitExes());
+		results.AddRange(FindIncompatibleMSYS2Exes());
 
-		Logger.Write($"Found {results.Count} Git related files incompatible with ASLR Exploit Mitigation feature:");
+		Logger.Write($"Found {results.Count} Git, GitHub Desktop, and MSYS2/MinGW related files incompatible with ASLR Exploit Mitigation feature:");
 
 		foreach (string item in results)
 			Logger.Write(item);

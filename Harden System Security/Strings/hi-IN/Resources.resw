@@ -1115,7 +1115,7 @@
     <value>Boot Configuration Data (BCD) No-eXecute (NX) मान सेट करने में विफल।</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>सिस्टम-वाइड अनिवार्य ASLR से असंगत GitHub Desktop और Git एक्जीक्यूटेबल को बाहर कर रहे हैं।</value>
+    <value>सिस्टम-वाइड अनिवार्य ASLR से असंगत GitHub Desktop, Git और MSYS2/MinGW एक्जीक्यूटेबल को बाहर कर रहे हैं।</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>Microsoft Defender इंजन और प्लेटफॉर्म अपडेट चैनल को बीटा पर कॉन्फ़िगर कर रहे हैं।</value>

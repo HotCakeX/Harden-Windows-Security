@@ -488,7 +488,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 						   [MitigationOptions.ForceRelocateImages],
 						   null,
 						   null,
-						   null,
+						   "on",
 						   false,
 						   false);
 

@@ -128,6 +128,9 @@ internal static class ViewModelProvider
 
 	private static readonly Lazy<CSPVM> _cspVM = new(() => new CSPVM(), false);
 
+	private static readonly Lazy<DuplicatePhotoFinderVM> _duplicateImageFinderVM = new(() =>
+	new DuplicatePhotoFinderVM(), false);
+
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
 	internal static MainWindowVM MainWindowVM => _mainWindowVM.Value;
@@ -163,6 +166,7 @@ internal static class ViewModelProvider
 	internal static IntuneVM IntuneVM => _intuneVM.Value;
 	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
 	internal static CSPVM CSPVM => _cspVM.Value;
+	internal static DuplicatePhotoFinderVM DuplicatePhotoFinderVM => _duplicateImageFinderVM.Value;
 
 
 	/// <summary>

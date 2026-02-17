@@ -5315,4 +5315,136 @@
   <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Εξάγει τις πολιτικές πρόσβασης συστήματος σε αρχείο JSON.</value>
   </data>
+    <data name="ExtraFeaturesNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Πρόσθετες δυνατότητες</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.Content" xml:space="preserve">
+    <value>Πρόσθετα</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποκτήστε πρόσβαση σε επιπλέον χρήσιμες δυνατότητες που προσφέρει η εφαρμογή.</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποκτήστε πρόσβαση σε επιπλέον χρήσιμες δυνατότητες που προσφέρει η εφαρμογή.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.Content" xml:space="preserve">
+    <value>Εύρεση διπλότυπων φωτογραφιών</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Βρείτε και καταργήστε διπλότυπες φωτογραφίες στον υπολογιστή σας. Γρήγορα και με δυνατότητα πλήρους ελέγχου πριν τη διαγραφή.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Βρείτε και καταργήστε διπλότυπες φωτογραφίες στον υπολογιστή σας. Γρήγορα και με δυνατότητα πλήρους ελέγχου πριν τη διαγραφή.</value>
+  </data>
+  <data name="DuplicatePhotosFinderPageTitle" xml:space="preserve">
+    <value>Βρείτε και καταργήστε διπλότυπες φωτογραφίες στον υπολογιστή σας. Γρήγορα και με δυνατότητα πλήρους ελέγχου πριν τη διαγραφή.</value>
+  </data>
+  <data name="BrowseForPhotosButton.Content" xml:space="preserve">
+    <value>Αναζήτηση φωτογραφιών</value>
+  </data>
+  <data name="BrowseForPhotosButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε φωτογραφίες για επιλογή.</value>
+  </data>
+  <data name="BrowseForPhotosButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε φωτογραφίες για επιλογή.</value>
+  </data>
+  <data name="BrowseForFoldersButton.Content" xml:space="preserve">
+    <value>Αναζήτηση φακέλων</value>
+  </data>
+  <data name="BrowseForFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε φακέλους για επιλογή.</value>
+  </data>
+  <data name="BrowseForFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε φακέλους για επιλογή.</value>
+  </data>
+  <data name="StartScanButton.Content" xml:space="preserve">
+    <value>Έναρξη σάρωσης</value>
+  </data>
+  <data name="StartScanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ξεκινήστε τη σάρωση για διπλότυπες φωτογραφίες στα επιλεγμένα αρχεία και φακέλους.</value>
+  </data>
+  <data name="StartScanButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Ξεκινήστε τη σάρωση για διπλότυπες φωτογραφίες στα επιλεγμένα αρχεία και φακέλους.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αναίρεση τελευταίας διαγραφής</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναιρέστε την τελευταία διαγραφή διπλότυπων φωτογραφιών. Μπορεί να χρησιμοποιηθεί πολλές φορές για την επαναφορά πολλαπλών διαγραφών.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Αναιρέστε την τελευταία διαγραφή διπλότυπων φωτογραφιών. Μπορεί να χρησιμοποιηθεί πολλές φορές για την επαναφορά πολλαπλών διαγραφών.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αυτόματη διαγραφή όλων των διπλότυπων</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε αυτόματα όλες τις διπλότυπες φωτογραφίες που βρέθηκαν στη δεξιά πλευρά. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Διαγράψτε αυτόματα όλες τις διπλότυπες φωτογραφίες που βρέθηκαν στη δεξιά πλευρά. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</value>
+  </data>
+  <data name="StatisticsButton.Content" xml:space="preserve">
+    <value>Στατιστικά στοιχεία</value>
+  </data>
+  <data name="StatisticsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δείτε στατιστικά στοιχεία σχετικά με τις διπλότυπες φωτογραφίες που βρέθηκαν.</value>
+  </data>
+  <data name="StatisticsButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Δείτε στατιστικά στοιχεία σχετικά με τις διπλότυπες φωτογραφίες που βρέθηκαν.</value>
+  </data>
+  <data name="SimilarityButton.Content" xml:space="preserve">
+    <value>Ομοιότητα</value>
+  </data>
+  <data name="SimilarityButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε το όριο ομοιότητας για τον εντοπισμό διπλότυπων φωτογραφιών.</value>
+  </data>
+  <data name="SimilarityButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Προσαρμόστε το όριο ομοιότητας για τον εντοπισμό διπλότυπων φωτογραφιών.</value>
+  </data>
+  <data name="SimilarityDuplicateDescription.Text" xml:space="preserve">
+     <value>Οι χαμηλότερες τιμές βρίσκουν περισσότερες αντιστοιχίσεις, αλλά ενδέχεται να περιλαμβάνουν μη διπλότυπα και ψευδώς θετικά.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionTitle.Text" xml:space="preserve">
+     <value>Επιλέξτε αρχεία ή φακέλους χρησιμοποιώντας τα παραπάνω κουμπιά</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescTwo.Text" xml:space="preserve">
+     <value>Προσαρμόστε το όριο ομοιότητας και τη στρατηγική διατήρησης εάν χρειάζεται</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescThree.Text" xml:space="preserve">
+     <value>Πατήστε Έναρξη σάρωσης για να βρείτε διπλότυπες φωτογραφίες.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFour.Text" xml:space="preserve">
+     <value>Οι ομάδες διπλότυπων θα εμφανιστούν εδώ μόλις ολοκληρωθεί η σάρωση.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFive.Text" xml:space="preserve">
+     <value>Μπορείτε επίσης να σύρετε και να αποθέσετε αρχεία και φακέλους εδώ (λειτουργεί μόνο όταν δεν εκτελείται ως διαχειριστής).</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.Content" xml:space="preserve">
+    <value>Διαγραφή όλων των διπλότυπων</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε όλες τις διπλότυπες φωτογραφίες στην τρέχουσα ομάδα.</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Διαγράψτε όλες τις διπλότυπες φωτογραφίες στην τρέχουσα ομάδα.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.Content" xml:space="preserve">
+    <value>Διαγραφή</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή αυτής της φωτογραφίας.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Διαγραφή αυτής της φωτογραφίας.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Διαγραφή αρχικής φωτογραφίας</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε την αρχική φωτογραφία που έχει επιλεγεί για διατήρηση.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Διαγράψτε την αρχική φωτογραφία που έχει επιλεγεί για διατήρηση.</value>
+  </data>
 </root>

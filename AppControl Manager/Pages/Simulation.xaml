@@ -261,7 +261,7 @@
                     </Button>
 
                     <ProgressRing IsIndeterminate="False"
-                                  Background="LightGray"
+                                  Background="Gray"
                                   Value="{x:Bind ViewModel.ProgressRingValue, Mode=OneWay}" />
 
                     <!-- Total chip -->

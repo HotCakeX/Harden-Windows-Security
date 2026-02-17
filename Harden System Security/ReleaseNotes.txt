@@ -1,15 +1,11 @@
-✅ Dependency Optimization & Supply Chain Security
+✅ Added a new entry to the menu called "Extras". It's going to offer additional useful features that are natively built in the Harden System Security app.
 
-* All dependencies have been updated to their latest versions. Furthermore, four 1st party dependencies have been removed entirely. This reduction streamlines the codebase, offering several key benefits:
+🖼️ The first feature under the "Extras" menu is called "Duplicate Photos Finder" and it's been added in this update. It offers all of the tools and controls needed to find duplicate photos among files and folders, review them and delete the duplicates safely. You can undo the deletion too if you accidentally delete something within the app. Helping with organizing your photos and reclaiming storage space. It eliminates the need to install any additional software for this task.
 
-* Enhanced Performance: Targeted fixes associated with the removal result in improved runtime efficiency.
+It offers similarity threshold to adjust the detection algorithm's sensitivity and has multiple different criteria that are adjustable for selecting original photos among duplicates.
 
-* Supply Chain Security: Reducing the dependency footprint minimizes the attack surface and limits indirect access to the project code.
+It doesn't use any 3rd party library or file, works fully offline, and it's very high performance.
 
-* Development Autonomy: UI-related features can now be improved independently of external release cycles.
+Supported Image Formats: jpg, jpeg, png, bmp, gif, tiff, ico, jxr, webp.
 
-* Future Roadmap: I remain committed to eliminating unnecessary dependencies while balancing project complexity, with the ultimate goal of exceeding SLSA Level 4 standards.
-
-✅Enhanced ASLR Compatibility for MSYS2/MinGW
-
-* The Microsoft Defender category now includes automated scanning for MSYS2 and MinGW installation directories. This ensures that Git and other incompatible executables within these environments are automatically excluded from mandatory ASLR mitigation. Additionally, all ASLR exclusions now utilize the Force/Override policy, ensuring that system-wide security settings do not interfere with these specific per-process configurations.
+The full documentation for this feature is available on the GitHub wiki: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Duplicate-Photo-Finder

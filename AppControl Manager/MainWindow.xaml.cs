@@ -683,6 +683,16 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(CSPNavItem, GlobalVars.GetStr("CSPNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(CSPNavItem, GlobalVars.GetStr("CSPNavItem/ToolTipService/ToolTip"));
 
+			ExtraFeaturesNavigationViewItemHeader.Content = GlobalVars.GetStr("ExtraFeaturesNavigationViewItemHeader/Content");
+
+			ExtrasNavigationViewItem.Content = GlobalVars.GetStr("ExtrasNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(ExtrasNavigationViewItem, GlobalVars.GetStr("ExtrasNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ExtrasNavigationViewItem, GlobalVars.GetStr("ExtrasNavigationViewItem/ToolTipService/ToolTip"));
+
+			DuplicatePhotosFinderNavigationViewItem.Content = GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(DuplicatePhotosFinderNavigationViewItem, GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(DuplicatePhotosFinderNavigationViewItem, GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

@@ -5315,4 +5315,136 @@ Odcisk Palca: {3}</value>
   <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Eksportuje zasady dostępu do systemu do pliku JSON.</value>
   </data>
+    <data name="ExtraFeaturesNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Dodatkowe funkcje</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.Content" xml:space="preserve">
+    <value>Dodatki</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uzyskaj dostęp do dodatkowych, przydatnych funkcji oferowanych przez aplikację.</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Uzyskaj dostęp do dodatkowych, przydatnych funkcji oferowanych przez aplikację.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.Content" xml:space="preserve">
+    <value>Wyszukiwarka zduplikowanych zdjęć</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Znajdź i usuń zduplikowane zdjęcia na komputerze. Szybko i z możliwością pełnego przeglądu przed usunięciem.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Znajdź i usuń zduplikowane zdjęcia na komputerze. Szybko i z możliwością pełnego przeglądu przed usunięciem.</value>
+  </data>
+  <data name="DuplicatePhotosFinderPageTitle" xml:space="preserve">
+    <value>Znajdź i usuń zduplikowane zdjęcia na komputerze. Szybko i z możliwością pełnego przeglądu przed usunięciem.</value>
+  </data>
+  <data name="BrowseForPhotosButton.Content" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu zdjęć</value>
+  </data>
+  <data name="BrowseForPhotosButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj, aby wybrać zdjęcia.</value>
+  </data>
+  <data name="BrowseForPhotosButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj, aby wybrać zdjęcia.</value>
+  </data>
+  <data name="BrowseForFoldersButton.Content" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu folderów</value>
+  </data>
+  <data name="BrowseForFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj, aby wybrać foldery.</value>
+  </data>
+  <data name="BrowseForFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj, aby wybrać foldery.</value>
+  </data>
+  <data name="StartScanButton.Content" xml:space="preserve">
+    <value>Rozpocznij skanowanie</value>
+  </data>
+  <data name="StartScanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozpocznij skanowanie w poszukiwaniu zduplikowanych zdjęć wśród wybranych plików i folderów.</value>
+  </data>
+  <data name="StartScanButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Rozpocznij skanowanie w poszukiwaniu zduplikowanych zdjęć wśród wybranych plików i folderów.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Cofnij ostatnie usunięcie</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cofnij ostatnie usunięcie zduplikowanych zdjęć. Może być używane wielokrotnie, aby cofnąć wiele usunięć.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Cofnij ostatnie usunięcie zduplikowanych zdjęć. Może być używane wielokrotnie, aby cofnąć wiele usunięć.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Automatycznie usuń wszystkie duplikaty</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatycznie usuń wszystkie zduplikowane zdjęcia znalezione po prawej stronie. Tej operacji nie można cofnąć.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Automatycznie usuń wszystkie zduplikowane zdjęcia znalezione po prawej stronie. Tej operacji nie można cofnąć.</value>
+  </data>
+  <data name="StatisticsButton.Content" xml:space="preserve">
+    <value>Statystyki</value>
+  </data>
+  <data name="StatisticsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetl statystyki dotyczące znalezionych zduplikowanych zdjęć.</value>
+  </data>
+  <data name="StatisticsButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Wyświetl statystyki dotyczące znalezionych zduplikowanych zdjęć.</value>
+  </data>
+  <data name="SimilarityButton.Content" xml:space="preserve">
+    <value>Podobieństwo</value>
+  </data>
+  <data name="SimilarityButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj próg podobieństwa do wykrywania zduplikowanych zdjęć.</value>
+  </data>
+  <data name="SimilarityButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Dostosuj próg podobieństwa do wykrywania zduplikowanych zdjęć.</value>
+  </data>
+  <data name="SimilarityDuplicateDescription.Text" xml:space="preserve">
+     <value>Niższe wartości znajdują więcej dopasowań, ale mogą obejmować zdjęcia, które nie są duplikatami oraz fałszywie dodatnie wyniki.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionTitle.Text" xml:space="preserve">
+     <value>Wybierz pliki lub foldery za pomocą powyższych przycisków</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescTwo.Text" xml:space="preserve">
+     <value>W razie potrzeby dostosuj próg podobieństwa i strategię zachowywania</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescThree.Text" xml:space="preserve">
+     <value>Naciśnij Rozpocznij skanowanie, aby znaleźć zduplikowane zdjęcia.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFour.Text" xml:space="preserve">
+     <value>Grupy duplikatów pojawią się w tym miejscu po zakończeniu skanowania.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFive.Text" xml:space="preserve">
+     <value>Możesz również przeciągnąć i upuścić pliki oraz foldery tutaj (działa tylko wtedy, gdy aplikacja nie jest uruchomiona jako administrator).</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.Content" xml:space="preserve">
+    <value>Usuń wszystkie duplikaty</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wszystkie zduplikowane zdjęcia w bieżącej grupie.</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Usuń wszystkie zduplikowane zdjęcia w bieżącej grupie.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.Content" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń to zdjęcie.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Usuń to zdjęcie.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń oryginalne zdjęcie</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń oryginalne zdjęcie, które zostało wybrane do zachowania.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Usuń oryginalne zdjęcie, które zostało wybrane do zachowania.</value>
+  </data>
 </root>

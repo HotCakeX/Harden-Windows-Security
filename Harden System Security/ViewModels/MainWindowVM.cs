@@ -46,7 +46,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.FileReputation),
 		typeof(AppControlManager.Pages.Home),
 		typeof(Pages.Intune),
-		typeof(AppControlManager.Pages.IntuneDeploymentDetails)
+		typeof(AppControlManager.Pages.IntuneDeploymentDetails),
+		typeof(Pages.Extras.DuplicatePhotoFinder)
 		];
 
 
@@ -257,6 +258,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("CSPNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.CSP)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -300,7 +307,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "Home", typeof(AppControlManager.Pages.Home) },
 		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) },
 		{ "Intune", typeof(Pages.Intune) },
-		{ "CSP", typeof(Pages.CSP) }
+		{ "CSP", typeof(Pages.CSP) },
+		{ "DuplicatePhotosFinder", typeof(Pages.Extras.DuplicatePhotoFinder) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -346,6 +354,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Intune)] = GlobalVars.GetStr("IntuneNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.CSP)] = GlobalVars.GetStr("CSPNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePageCustomMSIXPath)] = GlobalVars.GetStr("UpdatePageCustomMSIXPath");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DuplicatePhotoFinder)] = GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
 	}
 
 	/// <summary>
@@ -435,6 +444,16 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal IconElement? IntuneIcon { get; set => SP(ref field, value); }
 
+	/// <summary>
+	/// Icon for the Duplicate Photos Finder navigation item.
+	/// </summary>
+	internal IconElement? DuplicatePhotosFinderIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Extras section.
+	/// </summary>
+	internal IconElement? ExtrasIcon { get; set => SP(ref field, value); }
+
 	#endregion
 
 	/// <summary>
@@ -514,7 +533,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 					CBOMIcon = new AnimatedIcon
 					{
-						Margin = new Thickness(0, -13, -13, -13),
+						Margin = new Thickness(0, 20, -20, -20),
 						Source = new CBOM()
 					};
 
@@ -522,6 +541,18 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					{
 						Margin = new Thickness(0, -25, -25, -25),
 						Source = new Intune()
+					};
+
+					DuplicatePhotosFinderIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -6, -6, -6),
+						Source = new Picture()
+					};
+
+					ExtrasIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -6, -6, -6),
+						Source = new Gift()
 					};
 
 					break;
@@ -597,6 +628,18 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					DuplicatePhotosFinderIcon = new FontIcon
+					{
+						Glyph = "\uF584",
+						Foreground = accentBrush
+					};
+
+					ExtrasIcon = new FontIcon
+					{
+						Glyph = "\uF6BA",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -613,6 +656,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					HomeIcon = new FontIcon { Glyph = "\uE80F" };
 					CBOMIcon = new FontIcon { Glyph = "\uE705" };
 					IntuneIcon = new FontIcon { Glyph = "\uE753" };
+					DuplicatePhotosFinderIcon = new FontIcon { Glyph = "\uF584" };
+					ExtrasIcon = new FontIcon { Glyph = "\uF6BA" };
 					break;
 				}
 		}

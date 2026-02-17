@@ -53,6 +53,7 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)RedundantAssetDetection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolKits\Segmented.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\AuditPolicyManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\DataDump.cs" />

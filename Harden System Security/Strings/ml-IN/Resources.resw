@@ -5315,4 +5315,136 @@
   <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>സിസ്റ്റം ആക്സസ് പോളിസികൾ ഒരു JSON ഫയലിലേക്ക് എക്സ്പോർട്ട് ചെയ്യുന്നു.</value>
   </data>
+    <data name="ExtraFeaturesNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>അധിക സവിശേഷതകൾ</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.Content" xml:space="preserve">
+    <value>അധികമായവ</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് നൽകുന്ന കൂടുതൽ ഉപയോഗപ്രദമായ സവിശേഷതകൾ ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് നൽകുന്ന കൂടുതൽ ഉപയോഗപ്രദമായ സവിശേഷതകൾ ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.Content" xml:space="preserve">
+    <value>ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോസ് ഫൈൻഡർ</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ കമ്പ്യൂട്ടറിലെ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ കണ്ടെത്തി നീക്കം ചെയ്യുക. വേഗത്തിലുള്ളതും ഡിലീറ്റ് ചെയ്യുന്നതിന് മുൻപ് പൂർണ്ണമായി പരിശോധിക്കാൻ കഴിയുന്നതുമാണ്.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ കമ്പ്യൂട്ടറിലെ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ കണ്ടെത്തി നീക്കം ചെയ്യുക. വേഗത്തിലുള്ളതും ഡിലീറ്റ് ചെയ്യുന്നതിന് മുൻപ് പൂർണ്ണമായി പരിശോധിക്കാൻ കഴിയുന്നതുമാണ്.</value>
+  </data>
+  <data name="DuplicatePhotosFinderPageTitle" xml:space="preserve">
+    <value>നിങ്ങളുടെ കമ്പ്യൂട്ടറിലെ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ കണ്ടെത്തി നീക്കം ചെയ്യുക. വേഗത്തിലുള്ളതും ഡിലീറ്റ് ചെയ്യുന്നതിന് മുൻപ് പൂർണ്ണമായി പരിശോധിക്കാൻ കഴിയുന്നതുമാണ്.</value>
+  </data>
+  <data name="BrowseForPhotosButton.Content" xml:space="preserve">
+    <value>ഫോട്ടോകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="BrowseForPhotosButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കാൻ ഫോട്ടോകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="BrowseForPhotosButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കാൻ ഫോട്ടോകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="BrowseForFoldersButton.Content" xml:space="preserve">
+    <value>ഫോൾഡറുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="BrowseForFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കാൻ ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="BrowseForFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കാൻ ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="StartScanButton.Content" xml:space="preserve">
+    <value>സ്കാൻ ആരംഭിക്കുക</value>
+  </data>
+  <data name="StartScanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഫയലുകളിലും ഫോൾഡറുകളിലും ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾക്കായി സ്കാൻ ചെയ്യാൻ തുടങ്ങുക.</value>
+  </data>
+  <data name="StartScanButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>തിരഞ്ഞെടുത്ത ഫയലുകളിലും ഫോൾഡറുകളിലും ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾക്കായി സ്കാൻ ചെയ്യാൻ തുടങ്ങുക.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>അവസാനം ഡിലീറ്റ് ചെയ്തത് അൺഡൂ ചെയ്യുക</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അവസാനം ഡിലീറ്റ് ചെയ്ത ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ അൺഡൂ ചെയ്യുക. ഒന്നിലധികം ഡിലീഷനുകൾ പഴയപടിയാക്കാൻ ഒന്നിലധികം തവണ ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>അവസാനം ഡിലീറ്റ് ചെയ്ത ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ അൺഡൂ ചെയ്യുക. ഒന്നിലധികം ഡിലീഷനുകൾ പഴയപടിയാക്കാൻ ഒന്നിലധികം തവണ ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാ ഡ്യൂപ്ലിക്കേറ്റുകളും ഓട്ടോ ഡിലീറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വലതുവശത്ത് കണ്ടെത്തിയ എല്ലാ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകളും സ്വയമേവ ഡിലീറ്റ് ചെയ്യുക. ഈ പ്രവർത്തനം അൺഡൂ ചെയ്യാൻ കഴിയില്ല.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>വലതുവശത്ത് കണ്ടെത്തിയ എല്ലാ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകളും സ്വയമേവ ഡിലീറ്റ് ചെയ്യുക. ഈ പ്രവർത്തനം അൺഡൂ ചെയ്യാൻ കഴിയില്ല.</value>
+  </data>
+  <data name="StatisticsButton.Content" xml:space="preserve">
+    <value>സ്ഥിതിവിവരക്കണക്കുകൾ</value>
+  </data>
+  <data name="StatisticsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കണ്ടെത്തിയ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകളെക്കുറിച്ചുള്ള സ്ഥിതിവിവരക്കണക്കുകൾ കാണുക.</value>
+  </data>
+  <data name="StatisticsButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>കണ്ടെത്തിയ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകളെക്കുറിച്ചുള്ള സ്ഥിതിവിവരക്കണക്കുകൾ കാണുക.</value>
+  </data>
+  <data name="SimilarityButton.Content" xml:space="preserve">
+    <value>സാമ്യം</value>
+  </data>
+  <data name="SimilarityButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ കണ്ടെത്തുന്നതിന് സാമ്യതാ പരിധി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="SimilarityButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ കണ്ടെത്തുന്നതിന് സാമ്യതാ പരിധി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="SimilarityDuplicateDescription.Text" xml:space="preserve">
+     <value>കുറഞ്ഞ മൂല്യങ്ങൾ കൂടുതൽ സാമ്യതകൾ കണ്ടെത്തും, എന്നാൽ അവയിൽ ഡ്യൂപ്ലിക്കേറ്റ് അല്ലാത്തവയും ഉൾപ്പെട്ടേക്കാം.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionTitle.Text" xml:space="preserve">
+     <value>മുകളിലെ ബട്ടണുകൾ ഉപയോഗിച്ച് ഫയലുകളോ ഫോൾഡറുകളോ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescTwo.Text" xml:space="preserve">
+     <value>ആവശ്യമെങ്കിൽ സാമ്യതാ പരിധിയും നിലനിർത്താനുള്ള തന്ത്രവും ക്രമീകരിക്കുക</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescThree.Text" xml:space="preserve">
+     <value>ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകൾ കണ്ടെത്താൻ സ്കാൻ ആരംഭിക്കുക അമർത്തുക.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFour.Text" xml:space="preserve">
+     <value>സ്കാൻ പൂർത്തിയായിക്കഴിഞ്ഞാൽ ഡ്യൂപ്ലിക്കേറ്റ് ഗ്രൂപ്പുകൾ ഇവിടെ ദൃശ്യമാകും.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFive.Text" xml:space="preserve">
+     <value>നിങ്ങൾക്ക് ഇവിടെ ഫയലുകളും ഫോൾഡറുകളും ഡ്രാഗ് ചെയ്ത് ഡ്രോപ്പ് ചെയ്യാനും കഴിയും (അഡ്മിനിസ്ട്രേറ്ററായി പ്രവർത്തിക്കാത്തപ്പോൾ മാത്രമേ ഇത് സാധ്യമാകൂ).</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.Content" xml:space="preserve">
+    <value>എല്ലാ ഡ്യൂപ്ലിക്കേറ്റുകളും ഡിലീറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ ഗ്രൂപ്പിലെ എല്ലാ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകളും ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>നിലവിലെ ഗ്രൂപ്പിലെ എല്ലാ ഡ്യൂപ്ലിക്കേറ്റ് ഫോട്ടോകളും ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.Content" xml:space="preserve">
+    <value>ഡിലീറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ ഫോട്ടോ ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>ഈ ഫോട്ടോ ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഒറിജിനൽ ഫോട്ടോ ഡിലീറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലനിർത്താൻ തിരഞ്ഞെടുത്ത ഒറിജിനൽ ഫോട്ടോ ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>നിലനിർത്താൻ തിരഞ്ഞെടുത്ത ഒറിജിനൽ ഫോട്ടോ ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
 </root>

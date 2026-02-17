@@ -446,6 +446,17 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+                <!-- Extras -->
+
+                <NavigationViewItemHeader x:Name="ExtraFeaturesNavigationViewItemHeader" x:Uid="ExtraFeaturesNavigationViewItemHeader" />
+
+                <NavigationViewItem x:Name="ExtrasNavigationViewItem" x:Uid="ExtrasNavigationViewItem" Icon="{x:Bind ViewModel.ExtrasIcon, Mode=OneWay}" Tag="Extras" IsExpanded="False">
+
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem x:Name="DuplicatePhotosFinderNavigationViewItem" Icon="{x:Bind ViewModel.DuplicatePhotosFinderIcon, Mode=OneWay}" x:Uid="DuplicatePhotosFinderNavigationViewItem" Tag="DuplicatePhotosFinder" />
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Name="DocumentationNavigationViewItemHeader" x:Uid="DocumentationNavigationViewItemHeader"/>
                 <NavigationViewItem x:Name="GitHubDocsNavItem" x:Uid="GitHubDocsNavItem" Icon="{x:Bind ViewModel.GitHubDocsIcon, Mode=OneWay}" Tag="GitHubDocs" />

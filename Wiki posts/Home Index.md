@@ -63,6 +63,10 @@
 - <img src="https://github.com/HotCakeX/.github/blob/a38f44e66f5eac033c255cbafa5d629ece92bd4d/Pictures/Gifs/Harden%20System%20Security%20Menu/Intune%20Cloud.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [Intune](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security)
 - <img src="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/Assets/ProtectionCategoriesIcons/CSP.png?raw=true" alt="Harden System Security Menu Item" width="30"> [Configuration Service Provider (CSP)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configuration-Service-Provider-%7C-Harden-System-Security)
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/d73489091644d3366bf2e876c108174aefbd6c48/Pictures/Gifs/Harden%20System%20Security%20Menu/Extras.gif" alt="Harden System Security Menu Item" width="30"> Extras
+
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/d73489091644d3366bf2e876c108174aefbd6c48/Pictures/Gifs/Harden%20System%20Security%20Menu/Duplicate%20Photos%20Finder.gif" alt="Harden System Security Menu Item" width="30"> [Duplicate Photos Finder](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Duplicate-Photo-Finder)
+
 <br>
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [App Control for Business](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)

@@ -5315,4 +5315,136 @@
   <data name="ExportSystemAccessPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>מייצא את מדיניות הגישה למערכת לקובץ JSON.</value>
   </data>
+    <data name="ExtraFeaturesNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>תכונות נוספות</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.Content" xml:space="preserve">
+    <value>תוספות</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>גישה לתכונות שימושיות נוספות המוצעות על ידי האפליקציה.</value>
+  </data>
+  <data name="ExtrasNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>גישה לתכונות שימושיות נוספות המוצעות על ידי האפליקציה.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.Content" xml:space="preserve">
+    <value>מאתר תמונות כפולות</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מצא והסר תמונות כפולות במחשב שלך. מהיר וניתן לבדיקה מלאה לפני המחיקה.</value>
+  </data>
+  <data name="DuplicatePhotosFinderNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מצא והסר תמונות כפולות במחשב שלך. מהיר וניתן לבדיקה מלאה לפני המחיקה.</value>
+  </data>
+  <data name="DuplicatePhotosFinderPageTitle" xml:space="preserve">
+    <value>מצא והסר תמונות כפולות במחשב שלך. מהיר וניתן לבדיקה מלאה לפני המחיקה.</value>
+  </data>
+  <data name="BrowseForPhotosButton.Content" xml:space="preserve">
+    <value>דפדף כדי לחפש תמונות</value>
+  </data>
+  <data name="BrowseForPhotosButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>דפדף כדי לבחור תמונות.</value>
+  </data>
+  <data name="BrowseForPhotosButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>דפדף כדי לבחור תמונות.</value>
+  </data>
+  <data name="BrowseForFoldersButton.Content" xml:space="preserve">
+    <value>דפדף כדי לחפש תיקיות</value>
+  </data>
+  <data name="BrowseForFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>דפדף כדי לבחור תיקיות.</value>
+  </data>
+  <data name="BrowseForFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>דפדף כדי לבחור תיקיות.</value>
+  </data>
+  <data name="StartScanButton.Content" xml:space="preserve">
+    <value>התחל סריקה</value>
+  </data>
+  <data name="StartScanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל בסריקת תמונות כפולות בין הקבצים והתיקיות שנבחרו.</value>
+  </data>
+  <data name="StartScanButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>התחל בסריקת תמונות כפולות בין הקבצים והתיקיות שנבחרו.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>בטל מחיקה אחרונה</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל את המחיקה האחרונה של תמונות כפולות. ניתן לשימוש מספר פעמים כדי לבטל מספר מחיקות.</value>
+  </data>
+  <data name="UndoLastDeletionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>בטל את המחיקה האחרונה של תמונות כפולות. ניתן לשימוש מספר פעמים כדי לבטל מספר מחיקות.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מחיקה אוטומטית של כל הכפילויות</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק אוטומטית את כל התמונות הכפולות שנמצאו בצד ימין. לא ניתן לבטל פעולה זו.</value>
+  </data>
+  <data name="AutoDeleteAllDuplicatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>מחק אוטומטית את כל התמונות הכפולות שנמצאו בצד ימין. לא ניתן לבטל פעולה זו.</value>
+  </data>
+  <data name="StatisticsButton.Content" xml:space="preserve">
+    <value>סטטיסטיקה</value>
+  </data>
+  <data name="StatisticsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג סטטיסטיקה אודות התמונות הכפולות שנמצאו.</value>
+  </data>
+  <data name="StatisticsButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>הצג סטטיסטיקה אודות התמונות הכפולות שנמצאו.</value>
+  </data>
+  <data name="SimilarityButton.Content" xml:space="preserve">
+    <value>דמיון</value>
+  </data>
+  <data name="SimilarityButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את סף הדמיון לאיתור תמונות כפולות.</value>
+  </data>
+  <data name="SimilarityButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>התאם את סף הדמיון לאיתור תמונות כפולות.</value>
+  </data>
+  <data name="SimilarityDuplicateDescription.Text" xml:space="preserve">
+     <value>ערכים נמוכים יותר ימצאו יותר התאמות אך עשויים לכלול תמונות שאינן כפולות וזיהויים שגויים.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionTitle.Text" xml:space="preserve">
+     <value>בחר קבצים או תיקיות באמצעות הלחצנים שלמעלה</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescTwo.Text" xml:space="preserve">
+     <value>התאם את סף הדמיון ואת אסטרטגיית השמירה במידת הצורך</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescThree.Text" xml:space="preserve">
+     <value>לחץ על התחל סריקה כדי למצוא תמונות כפולות.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFour.Text" xml:space="preserve">
+     <value>קבוצות כפולות יופיעו כאן לאחר שהסריקה תושלם.</value>
+  </data>
+  <data name="DuplicatePhotosFinderEmptySectionDescFive.Text" xml:space="preserve">
+     <value>תוכל גם לגרור ולשחרר קבצים ותיקיות לכאן (פועל רק כאשר אינו מופעל כמנהל מערכת).</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.Content" xml:space="preserve">
+    <value>מחק את כל הכפילויות</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את כל התמונות הכפולות בקבוצה הנוכחית.</value>
+  </data>
+  <data name="DeleteAllDuplicatesButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>מחק את כל התמונות הכפולות בקבוצה הנוכחית.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.Content" xml:space="preserve">
+    <value>מחק</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק תמונה זו.</value>
+  </data>
+  <data name="DeleteSingleDuplicateButton.AutomationProperties.HelpText" xml:space="preserve">
+     <value>מחק תמונה זו.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מחק תמונה מקורית</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את התמונה המקורית שנבחרה להישמר.</value>
+  </data>
+  <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>מחק את התמונה המקורית שנבחרה להישמר.</value>
+  </data>
 </root>

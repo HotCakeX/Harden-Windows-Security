@@ -30,7 +30,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 {
 
-	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
+	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
 
 	internal AllowNewAppsLocalFilesDataGrid()
 	{

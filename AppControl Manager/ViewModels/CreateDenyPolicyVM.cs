@@ -21,14 +21,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
-using CommunityToolkit.WinUI;
+using CommonCore.IncrementalCollection;
+using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -39,8 +39,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 {
 	// Dispose the controller
 	public void Dispose() => LVController.Dispose();
-
-	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
 
 	internal CreateDenyPolicyVM()
 	{
@@ -507,7 +505,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_FilesAndFolders() => await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersDenyPolicyPath);
+	internal async void OpenInPolicyEditor_FilesAndFolders() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FilesAndFoldersDenyPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersDenyPolicyPath);
 
@@ -874,7 +872,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNDenyPolicyPath);
+	internal async void OpenInPolicyEditor_PFN() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_PFNDenyPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNDenyPolicyPath);
 
@@ -1195,7 +1193,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleDenyPolicyPath);
+	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_CustomPatternBasedFileRuleDenyPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleDenyPolicyPath);
 

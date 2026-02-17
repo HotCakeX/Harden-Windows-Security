@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -27,7 +28,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Graphics;
 using WinRT;
-using System.Collections.Frozen;
 
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.WindowComponents;

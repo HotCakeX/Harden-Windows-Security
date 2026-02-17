@@ -6662,4 +6662,280 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Zuweisung entfernen</value>
   </data>
+  <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
+    <value>Die für die Simulation ausgewählte Richtlinie enthält eine Regel, die alle Dateien zulässt.</value>
+  </data>
+  <data name="FirewallSentinelPageTitle" xml:space="preserve">
+    <value>Verwalten Sie die Windows-Firewall und nutzen Sie eine Zulassungslisten-Strategie für einen mehrschichtigen Netzwerkzugriffsschutz.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
+    <value>Firewall-Wächter</value>
+  </data>
+  <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verwalten Sie die Windows-Firewall und nutzen Sie eine Zulassungslisten-Strategie für einen mehrschichtigen Netzwerkzugriffsschutz.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verwalten Sie die Windows-Firewall und nutzen Sie eine Zulassungslisten-Strategie für einen mehrschichtigen Netzwerkzugriffsschutz</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+  <value>Datei nicht gefunden: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>Datei ist zu klein, um einen gültigen Header zu enthalten</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>Ungültige Signatur: 0x{0:X8}. Erwartet: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>Fehler beim Lesen des Eintrags an Position {0}: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>Öffnende Klammer am Anfang des Eintrags erwartet, erhalten: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>Semikolon-Trennzeichen nach dem Schlüsselnamen erwartet, erhalten: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>Semikolon-Trennzeichen nach dem Wertnamen erwartet, erhalten: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>Semikolon-Trennzeichen nach dem Typ erwartet, erhalten: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>Semikolon-Trennzeichen nach der Größe erwartet, erhalten: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>Konnte {0} Bytes an Daten nicht lesen, nur {1} Bytes erhalten</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>Schließende Klammer nach den Daten erwartet, erhalten: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>Unerwartetes Ende des Datenstroms beim Lesen der Unicode-Zeichenfolge</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>Es muss mindestens eine weitere Richtliniendatei bereitgestellt werden</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Der Pfad der Hauptrichtliniendatei darf nicht null oder leer sein</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>Es muss mindestens ein weiterer Pfad zu einer Richtliniendatei bereitgestellt werden</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Der Pfad der Richtliniendatei an Index {0} darf nicht null oder leer sein</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>Vorhandene Richtliniendatei mit {0} Einträgen geladen</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>Gesamtoperationen: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>Hinzugefügte Einträge: {0}</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>Ersetzte Einträge: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>Richtliniendatei existiert nicht, markiere alle Richtlinien als nicht verifiziert</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>Verifizierung abgeschlossen: 0 von {0} Richtlinien stimmen überein (Richtliniendatei existiert nicht)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>VERIFIZIEREN: {0}\{1} = ÜBEREINSTIMMUNG</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>VERIFIZIEREN: {0}\{1} = KEINE ÜBEREINSTIMMUNG</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>VERIFIZIEREN: {0}\{1} = NICHT GEFUNDEN</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>Verifizierung abgeschlossen: {0} von {1} Richtlinien stimmen überein</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>Richtliniendatei existiert nicht, nichts zu entfernen</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>ENTFERNT: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>Entfernung der Richtlinie abgeschlossen: {0} Richtlinien entfernt</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>Fehler beim Erstellen des GroupPolicyObject im STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>Fehler bei der Initialisierung von COM im STA-Thread. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>Fehler beim Erstellen des GroupPolicyObject - Nullzeiger vom STA-Thread zurückgegeben</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>Fehler bei der Initialisierung von COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>Fehler beim Öffnen des GPO der lokalen Maschine. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>COM-Ausnahme: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>Fehler beim Registrieren von {0} CSE-GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>Fehler beim Registrieren von {0} CSE-GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>Angeheftete Richtlinie erweitern</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr neue Regeln hinzufügen.</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr neue Regeln hinzufügen.</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>Dateien und Ordner</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie durch Scannen von Dateien und Ordnern.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie durch Scannen von Dateien und Ordnern.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie durch Scannen von Dateien und Ordnern.</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>Zertifikate</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr Zertifikate hinzufügen.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr Zertifikate hinzufügen.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr Zertifikate hinzufügen.</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr eine benutzerdefinierte musterbasierte Dateiregel hinzufügen.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr eine benutzerdefinierte musterbasierte Dateiregel hinzufügen.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erweitern Sie die angeheftete Firewall-Richtlinie, indem Sie ihr eine benutzerdefinierte musterbasierte Dateiregel hinzufügen.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>Musterbasierte Dateiregel</value>
+  </data>
+    <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Änderungen rückgängig machen</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die am System und an der Windows-Firewall vorgenommenen Änderungen rückgängig machen.</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die am System und an der Windows-Firewall vorgenommenen Änderungen rückgängig machen.</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Sicherungsspeicherort öffnen</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Den Speicherort öffnen, an dem die Sicherungen der Firewallregeln gespeichert sind.</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Den Speicherort öffnen, an dem die Sicherungen der Firewallregeln gespeichert sind.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Sicherungen löschen</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Sicherungen der Firewallregeln löschen.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Sicherungen der Firewallregeln löschen.</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Erlaubt nur Programmen und Apps, die standardmäßig mit dem Windows-Betriebssystem geliefert werden, den Zugang zum Internet. Alle signierten und standardmäßigen Windows-Prozesse können auf das Internet zugreifen, während Drittanbieterprogramme blockiert werden.</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Erweitert das Standardprofil von Windows, um Netzwerkkonnektivität für Anwendungen zuzulassen, die mit den Codesignaturzertifikaten von Microsoft signiert sind. Dieses Profil gewährt Zugriff auf integrierte Windows-Komponenten und von Microsoft signierte Software, während unsignierte oder nicht von Microsoft stammende Drittanbieteranwendungen vom Internetzugang ausgeschlossen werden.</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Erweitert das Microsoft-Zulassungsprofil, indem alles erlaubt wird, was dieses zulässt, und zusätzlich alle vertrauenswürdigen, signierten Anwendungen basierend auf den Bewertungen der Intelligent Security Cloud zugelassen werden. Dieses Profil bietet die umfassendste Firewallabdeckung.</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>Wählen Sie eines der unten aufgeführten identitätsbasierten Profile zur Anwendung aus. Diese Profile wirken sich derzeit nur auf ausgehenden Datenverkehr aus; Einstellungen für eingehenden Datenverkehr bleiben unverändert. Nach der Anwendung eines Profils können Sie dessen Regeln erweitern, um Drittanbieteranwendungen zuzulassen, die Internetzugang benötigen. Jedes Profil stärkt außerdem Ihre grundlegende Sicherheit, indem die Standardaktion für ausgehenden Datenverkehr in allen Firewallprofilen von „Zulassen" auf „Blockieren" geändert wird. Infolgedessen müssen Drittanbieteranwendungen zunächst Ihr Vertrauen gewinnen, bevor sie eine Verbindung zum Internet herstellen können.</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>Profil auswählen</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>In diesem Abschnitt können Sie die Bereitstellung der Firewallrichtlinie anpassen.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>App-ID-Tag</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>Das Tag anpassen, das für die App-ID-Markierung verwendet wird.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Das Tag anpassen, das für die App-ID-Markierung verwendet wird.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Das Tag anpassen, das für die App-ID-Markierung verwendet wird.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>Name der Firewallregel</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>Den Namen der ausgehenden Firewallregel anpassen, die für die Autorisierung der App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Den Namen der ausgehenden Firewallregel anpassen, die für die Autorisierung der App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Den Namen der ausgehenden Firewallregel anpassen, die für die Autorisierung der App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>Beschreibung der Firewallregel</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>Die Beschreibung der ausgehenden Firewallregel anpassen, die für die Autorisierung der App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Beschreibung der ausgehenden Firewallregel anpassen, die für die Autorisierung der App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Beschreibung der ausgehenden Firewallregel anpassen, die für die Autorisierung der App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>Name der App-ID-Markierungsrichtlinie</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>Den Namen der App-Steuerungsrichtlinie anpassen, die für die App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Den Namen der App-Steuerungsrichtlinie anpassen, die für die App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Den Namen der App-Steuerungsrichtlinie anpassen, die für die App-ID-Markierung zuständig ist.</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>Angeheftete Firewallrichtlinie</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>Wählen Sie die aktuell aktive Firewallrichtlinie aus und heften Sie sie an, damit Sie sie auf dieser Seite bequem verwenden können.</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>Keine Richtlinie angeheftet</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>Suchen und wählen Sie oben eine Richtlinie aus, um sie hier für den Schnellzugriff anzuheften.</value>
+  </data>
 </root>

@@ -28,8 +28,8 @@ using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
-using CommunityToolkit.WinUI;
-using HardenSystemSecurity.SecurityPolicy;
+using CommonCore.ToolKits;
+using CommonCore.SecurityPolicy;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -579,7 +579,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 						};
 
 						// Recompute RegValue from the new data so it reflects the edited value
-						newEntry.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(newEntry);
+						newEntry.RegValue = CommonCore.RegistryManager.Manager.BuildRegValueFromParsedValue(newEntry);
 
 						// Update the collections with the new object
 						if (allPoliciesIndex >= 0) AllPolicies[allPoliciesIndex] = newEntry;
@@ -644,7 +644,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				{
 					if (item.Source == Source.GroupPolicy)
 					{
-						item.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(item);
+						item.RegValue = CommonCore.RegistryManager.Manager.BuildRegValueFromParsedValue(item);
 					}
 				}
 				RegistryPolicyEntry.Save(SelectedFile, AllPolicies);
@@ -764,7 +764,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					{
 						if (item.Source == Source.GroupPolicy)
 						{
-							item.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(item);
+							item.RegValue = CommonCore.RegistryManager.Manager.BuildRegValueFromParsedValue(item);
 						}
 					}
 
@@ -869,7 +869,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					{
 						if (item.Source == Source.GroupPolicy)
 						{
-							item.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(item);
+							item.RegValue = CommonCore.RegistryManager.Manager.BuildRegValueFromParsedValue(item);
 						}
 					}
 
@@ -1116,7 +1116,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					{
 						if (entry.Source == Source.GroupPolicy)
 						{
-							entry.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(entry);
+							entry.RegValue = CommonCore.RegistryManager.Manager.BuildRegValueFromParsedValue(entry);
 						}
 					}
 

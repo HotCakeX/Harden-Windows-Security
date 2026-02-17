@@ -26,8 +26,8 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private DeploymentVM ViewModel { get; } = ViewModelProvider.DeploymentVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private DeploymentVM ViewModel => ViewModelProvider.DeploymentVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal DeploymentPage()
 	{

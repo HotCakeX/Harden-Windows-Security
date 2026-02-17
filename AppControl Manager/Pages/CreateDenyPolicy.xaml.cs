@@ -27,8 +27,8 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private CreateDenyPolicyVM ViewModel => ViewModelProvider.CreateDenyPolicyVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal CreateDenyPolicy()
 	{

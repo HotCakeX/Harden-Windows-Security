@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
@@ -116,13 +117,12 @@
             <!-- Ensure the custom button maintains the regular button styles -->
             <Style TargetType="customUI:ButtonV2" BasedOn="{StaticResource DefaultButtonStyle}" />
 
-            <Style TargetType="controls:GridSplitter">
+            <Style TargetType="CCToolKit:GridSplitter">
                 <Setter Property="Foreground" Value="DarkGray" />
                 <Setter Property="Opacity" Value="0.5" />
                 <Setter Property="Width" Value="6" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="ResizeDirection" Value="Auto" />
-                <Setter Property="ResizeBehavior" Value="BasedOnAlignment" />
                 <Setter Property="RenderTransform">
                     <Setter.Value>
                         <TranslateTransform X="-3" />

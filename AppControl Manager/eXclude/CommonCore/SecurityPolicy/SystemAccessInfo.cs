@@ -19,7 +19,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace HardenSystemSecurity.SecurityPolicy;
+namespace CommonCore.SecurityPolicy;
 
 /// <summary>
 /// Represents the policies defined in the [System Access].

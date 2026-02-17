@@ -22,7 +22,6 @@ using Windows.Services.Store;
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.Others;
 using HardenSystemSecurity.ViewModels;
-using UpdateVM = HardenSystemSecurity.ViewModels.UpdateVM;
 namespace HardenSystemSecurity.Others;
 #endif
 
@@ -41,8 +40,6 @@ internal static class AppUpdate
 	/// Includes details about the availability status and the version.
 	/// </summary>
 	internal static event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
-
-	private static UpdateVM UpdateVM { get; } = ViewModelProvider.UpdateVM;
 
 	internal static StoreContext? _StoreContext;
 
@@ -68,7 +65,7 @@ internal static class AppUpdate
 		if (isUpdateAvailable)
 		{
 			// Set the text for the button in the update page
-			UpdateVM.UpdateButtonContent = string.Format(
+			ViewModelProvider.UpdateVM.UpdateButtonContent = string.Format(
 				GlobalVars.GetStr("InstallVersionMessage"),
 				onlineAvailableVersion);
 		}
@@ -117,7 +114,7 @@ internal static class AppUpdate
 			);
 
 			// Set the text for the button in the update page
-			UpdateVM.UpdateButtonContent = GlobalVars.GetStr("InstallLatestVer");
+			ViewModelProvider.UpdateVM.UpdateButtonContent = GlobalVars.GetStr("InstallLatestVer");
 		}
 
 		return new UpdateCheckResponse(

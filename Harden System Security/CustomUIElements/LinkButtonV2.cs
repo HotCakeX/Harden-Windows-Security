@@ -17,7 +17,6 @@
 
 using System.Threading.Tasks;
 using AppControlManager.Pages;
-using HardenSystemSecurity;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;

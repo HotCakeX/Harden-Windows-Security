@@ -26,8 +26,8 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = ViewModelProvider.ConfigurePolicyRuleOptionsVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private ConfigurePolicyRuleOptionsVM ViewModel => ViewModelProvider.ConfigurePolicyRuleOptionsVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal ConfigurePolicyRuleOptions()
 	{

@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using AppControlManager.ViewModels;
-using CommonCore.Others;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.WindowComponents;

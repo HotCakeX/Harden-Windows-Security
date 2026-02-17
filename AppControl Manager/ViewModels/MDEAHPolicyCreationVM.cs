@@ -20,13 +20,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
-using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
+using CommonCore.IncrementalCollection;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,7 +37,7 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthHost, IDisposable
 {
 
-	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
+	private PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
 
 	internal MDEAHPolicyCreationVM()
 	{

@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class ViewOnlinePolicies : Page
 {
-	private ViewOnlinePoliciesVM ViewModel { get; } = ViewModelProvider.ViewOnlinePoliciesVM;
+	private ViewOnlinePoliciesVM ViewModel => ViewModelProvider.ViewOnlinePoliciesVM;
 
 	internal ViewOnlinePolicies()
 	{

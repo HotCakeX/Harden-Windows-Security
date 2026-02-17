@@ -24,9 +24,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class IntuneDeploymentDetails : Page, CommonCore.UI.IPageHeaderProvider
 {
 #if HARDEN_SYSTEM_SECURITY
-	private IntuneDeploymentDetailsVM ViewModel { get; } = HardenSystemSecurity.ViewModels.ViewModelProvider.IntuneDeploymentDetailsVM;
+	private IntuneDeploymentDetailsVM ViewModel => HardenSystemSecurity.ViewModels.ViewModelProvider.IntuneDeploymentDetailsVM;
 #else
-	private IntuneDeploymentDetailsVM ViewModel { get; } = ViewModelProvider.IntuneDeploymentDetailsVM;
+	private IntuneDeploymentDetailsVM ViewModel => ViewModelProvider.IntuneDeploymentDetailsVM;
 #endif
 
 	internal IntuneDeploymentDetails()

@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
+	private CreateSupplementalPolicyVM ViewModel => ViewModelProvider.CreateSupplementalPolicyVM;
 
 	internal CreateSupplementalPolicyFilesAndFoldersScanResults()
 	{

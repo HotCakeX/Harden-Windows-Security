@@ -23,11 +23,11 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using CommonCore.IncrementalCollection;
 using AppControlManager.Others;
+using CommonCore.GroupPolicy;
+using CommonCore.IncrementalCollection;
 using HardenSystemSecurity.BitLocker;
 using HardenSystemSecurity.CustomUIElements;
-using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -1028,7 +1028,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			// it will show/hide warning for bitlocker recovery in the Microsoft Defender.
 			// Setting it to 1 shows it, setting it to 0 hides it.
 			// After user creates a backup successfully via the app, we can safely hide this warning from the Defender's GUI.
-			RegistryManager.Manager.EditRegistry(new(
+			CommonCore.RegistryManager.Manager.EditRegistry(new(
 				source: Source.Registry,
 				keyName: "Software\\Microsoft\\Windows\\CurrentVersion\\BitLocker\\KeyBackupMonitor",
 				valueName: "ShowRecoveryBackupPrompt",

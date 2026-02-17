@@ -779,13 +779,13 @@ internal static class GetEventLogsData
 	{
 		// Try single quote first
 		// "Name='AttributeName'"
-		int index = xml.IndexOf(string.Concat("Name='", attributeName, "'"), StringComparison.Ordinal);
+		int index = xml.IndexOf(string.Concat("Name='", attributeName, "'"), StringComparison.OrdinalIgnoreCase);
 
 		if (index < 0)
 		{
 			// Try double quote
 			// "Name="AttributeName""
-			index = xml.IndexOf(string.Concat("Name=\"", attributeName, "\""), StringComparison.Ordinal);
+			index = xml.IndexOf(string.Concat("Name=\"", attributeName, "\""), StringComparison.OrdinalIgnoreCase);
 		}
 
 		if (index < 0)
@@ -816,7 +816,7 @@ internal static class GetEventLogsData
 		int valueStartIndex = absoluteClosingTagIndex + 1;
 
 		// Find the start of the closing tag "</"
-		int valueEndIndex = xml[valueStartIndex..].IndexOf("</", StringComparison.Ordinal);
+		int valueEndIndex = xml[valueStartIndex..].IndexOf("</", StringComparison.OrdinalIgnoreCase);
 
 		if (valueEndIndex < 0)
 		{
@@ -851,7 +851,7 @@ internal static class GetEventLogsData
 	/// Performs XML decoding to ensure 100% compatibility with XmlDocument.
 	/// </summary>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static string? GetStringValue(ReadOnlySpan<char> xml, string attributeName)
+	internal static string? GetStringValue(ReadOnlySpan<char> xml, string attributeName)
 	{
 		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
 
@@ -895,7 +895,7 @@ internal static class GetEventLogsData
 	/// </summary>
 	/// <param name="path"></param>
 	/// <returns></returns>
-	private static string ResolvePath(string path)
+	internal static string ResolvePath(string path)
 	{
 		// Find the matching DriveMapping for the device path prefix
 		foreach (ref readonly DriveLetterMapper.DriveMapping mapping in CollectionsMarshal.AsSpan(DriveLettersGlobalRootFix))

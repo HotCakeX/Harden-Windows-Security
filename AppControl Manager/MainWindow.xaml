@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
@@ -12,7 +11,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:siPolicy="using:AppControlManager.SiPolicy"
     xmlns:vm="using:AppControlManager.ViewModels"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:CC="using:CommonCore.Others"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
     Title="AppControl Manager">
@@ -337,7 +336,7 @@
                 <NavigationViewItem x:Name="PolicyEditorNavItem" x:Uid="PolicyEditorNavItem" Icon="{x:Bind ViewModel.PolicyEditorIcon, Mode=OneWay}" Tag="PolicyEditor" />
                 <NavigationViewItem x:Name="SimulationNavItem" x:Uid="SimulationNavItem" Icon="{x:Bind ViewModel.SimulationIcon, Mode=OneWay}" Tag="Simulation" />
                 <NavigationViewItem x:Name="FirewallSentinelNavItem" x:Uid="FirewallSentinelNavItem" Icon="{x:Bind ViewModel.FirewallSentinelIcon, Mode=OneWay}" Tag="FirewallSentinel" />
-                
+
                 <!-- Info Gathering Group -->
                 <NavigationViewItemHeader x:Name="InfoGatheringNavigationViewItemHeader" x:Uid="InfoGatheringNavigationViewItemHeader"/>
                 <NavigationViewItem x:Name="SystemInformationNavItem" x:Uid="SystemInformationNavItem" Icon="{x:Bind ViewModel.SystemInformationIcon, Mode=OneWay}" Tag="SystemInformation" />
@@ -395,7 +394,7 @@
 
                             <ScrollViewer>
 
-                                <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
+                                <StackPanel Spacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Stretch">
 
                                     <!-- Sidebar TextBlocks and Buttons -->
                                     <TextBlock x:Name="SidebarPoliciesLibraryTextBlock" x:Uid="SidebarPoliciesLibraryTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
@@ -422,7 +421,7 @@
                                             </LinearGradientBrush>
                                         </Border.BorderBrush>
 
-                                        <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="15" Orientation="Vertical" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel Spacing="10" Orientation="Vertical" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center">
 
                                             <TextBox x:Uid="SearchBoxTextBox"                                                     
                                                      Margin="10,15,10,0"
@@ -580,37 +579,76 @@
                                                                             </MenuFlyout>
                                                                         </Button.Flyout>
 
-                                                                        <StackPanel Orientation="Vertical" Spacing="2">
-                                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                                                <FontIcon Glyph="&#xEB51;" Margin="0,0,5,0" FontSize="14" />
-                                                                                <TextBlock Text="{x:Bind PolicyIdentifier}"
-                                                                                           TextWrapping="Wrap"
+                                                                        <StackPanel Orientation="Vertical" Spacing="2" HorizontalAlignment="Center">
+                                                                            <Grid ColumnSpacing="5" HorizontalAlignment="Center">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <FontIcon Glyph="&#xEB51;" FontSize="14" VerticalAlignment="Center" />
+                                                                                <TextBlock Grid.Column="1"
+                                                                                           Text="{x:Bind PolicyIdentifier}"
+                                                                                           TextTrimming="CharacterEllipsis"
+                                                                                           TextWrapping="NoWrap"
+                                                                                           VerticalAlignment="Center"
                                                                                            Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                                                                            </StackPanel>
-                                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                                                <FontIcon Glyph="&#xE97C;" Margin="0,0,5,0" FontSize="12" />
-                                                                                <TextBlock Text="{x:Bind PolicyObj.PolicyType}"
-                                                                                           TextWrapping="Wrap"
+                                                                            </Grid>
+
+                                                                            <Grid ColumnSpacing="5" HorizontalAlignment="Center">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <FontIcon Glyph="&#xE97C;" FontSize="12" VerticalAlignment="Center" />
+                                                                                <TextBlock Grid.Column="1" 
+                                                                                           Text="{x:Bind PolicyObj.PolicyType}"
+                                                                                           TextTrimming="CharacterEllipsis"
+                                                                                           TextWrapping="NoWrap"
+                                                                                           VerticalAlignment="Center"
                                                                                            Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                                                            </StackPanel>
-                                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                                                <FontIcon Glyph="&#xEF3F;" Margin="0,0,5,0" FontSize="12" />
-                                                                                <TextBlock Text="{x:Bind SigningStatus}"
-                                                                                           TextWrapping="Wrap"
+                                                                            </Grid>
+
+                                                                            <Grid ColumnSpacing="5" HorizontalAlignment="Center">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <FontIcon Glyph="&#xEF3F;" FontSize="12" VerticalAlignment="Center" />
+                                                                                <TextBlock Grid.Column="1" 
+                                                                                           Text="{x:Bind SigningStatus}"
+                                                                                           TextTrimming="CharacterEllipsis"
+                                                                                           TextWrapping="NoWrap"
+                                                                                           VerticalAlignment="Center"
                                                                                            Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                                                            </StackPanel>
-                                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                                                <FontIcon Glyph="&#xE765;" Margin="0,0,5,0" FontSize="12" />
-                                                                                <TextBlock Text="{x:Bind PolicyObj.VersionEx}"
-                                                                                           TextWrapping="Wrap"
+                                                                            </Grid>
+
+                                                                            <Grid ColumnSpacing="5" HorizontalAlignment="Center">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <FontIcon Glyph="&#xE765;" FontSize="12" VerticalAlignment="Center" />
+                                                                                <TextBlock Grid.Column="1" 
+                                                                                           Text="{x:Bind PolicyObj.VersionEx}"
+                                                                                           TextTrimming="CharacterEllipsis"
+                                                                                           TextWrapping="NoWrap"
+                                                                                           VerticalAlignment="Center"
                                                                                            Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                                                            </StackPanel>
-                                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                                                <FontIcon Glyph="&#xE932;" Margin="0,0,5,0" FontSize="12" />
-                                                                                <TextBlock Text="{x:Bind PolicyID}"
-                                                                                           TextWrapping="Wrap"
+                                                                            </Grid>
+
+                                                                            <Grid ColumnSpacing="5" HorizontalAlignment="Center">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <FontIcon Glyph="&#xE932;" FontSize="12" VerticalAlignment="Center" />
+                                                                                <TextBlock Grid.Column="1" 
+                                                                                           Text="{x:Bind PolicyID}"
+                                                                                           TextTrimming="CharacterEllipsis"
+                                                                                           TextWrapping="NoWrap"
+                                                                                           VerticalAlignment="Center"
                                                                                            Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                                                            </StackPanel>
+                                                                            </Grid>
                                                                         </StackPanel>
                                                                     </Button>
 
@@ -631,17 +669,18 @@
                                                         Shimmer placeholder for when the list is empty.
                                                     -->
                                                     <StackPanel VerticalAlignment="Center"
+                                                                Margin="20,0,20,0"
                                                                 Spacing="8"
                                                                 Visibility="{x:Bind ViewModel.SidebarShimmerVisibility, Mode=OneWay}">
 
                                                         <Grid Height="110" CornerRadius="8">
-                                                            <labs:Shimmer />
+                                                            <CCToolKit:Shimmer />
                                                         </Grid>
                                                         <Grid Height="110" CornerRadius="8">
-                                                            <labs:Shimmer />
+                                                            <CCToolKit:Shimmer />
                                                         </Grid>
                                                         <Grid Height="110" CornerRadius="8">
-                                                            <labs:Shimmer />
+                                                            <CCToolKit:Shimmer />
                                                         </Grid>
                                                     </StackPanel>
 
@@ -689,14 +728,16 @@
                                                 </Button.Flyout>
                                             </Button>
 
-                                        </controls:WrapPanel>
+                                        </StackPanel>
 
                                     </Border>
 
                                     <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
                                                              x:Name="PersistentPoliciesLibrarySettingsCard"
-                                                             x:Uid="PersistentPoliciesLibrarySettingsCard"
-                                                             HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}">
+                                                             x:Uid="PersistentPoliciesLibrarySettingsCard">
+                                        <customUI:SettingsCardV2.HeaderIcon>
+                                            <FontIcon Glyph="&#xF32A;"/>
+                                        </customUI:SettingsCardV2.HeaderIcon>
                                         <ToggleSwitch x:Uid="ToggleSwitchGeneral"
                                                       x:Name="PersistentPoliciesLibraryToggleSwitch"
                                                       IsOn="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"/>
@@ -705,8 +746,10 @@
                                     <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
                                                              x:Name="PersistentPoliciesLibraryEncryptionSettingsCard"
                                                              x:Uid="PersistentPoliciesLibraryEncryptionSettingsCard"
-                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
-                                                             HeaderIcon="{ui:FontIcon Glyph=&#xEC19;}">
+                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}">
+                                        <customUI:SettingsCardV2.HeaderIcon>
+                                            <FontIcon Glyph="&#xEC19;"/>
+                                        </customUI:SettingsCardV2.HeaderIcon>
 
                                         <ToggleSwitch x:Uid="ToggleSwitchGeneral"
                                                       HorizontalAlignment="Center"
@@ -718,8 +761,10 @@
                                     <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
                                                              x:Name="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
                                                              x:Uid="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
-                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"
-                                                             HeaderIcon="{ui:FontIcon Glyph=&#xE748;}">
+                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}">
+                                        <customUI:SettingsCardV2.HeaderIcon>
+                                            <FontIcon Glyph="&#xE748;"/>
+                                        </customUI:SettingsCardV2.HeaderIcon>
 
                                         <ToggleSwitch x:Uid="PersistentPoliciesLibraryEncryptionScopeToggleSwitch"
                                                       HorizontalAlignment="Center"
@@ -790,22 +835,20 @@
                                         </Button.ContentTemplate>
                                     </Button>
 
-                                </controls:WrapPanel>
+                                </StackPanel>
 
                             </ScrollViewer>
 
                         </Border>
 
                         <!-- Invisible sizer along the left edge of the right-hand pane -->
-                        <controls:PropertySizer Width="8"
+                        <CCToolKit:PropertySizer Width="8"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Stretch"
                                     Binding="{x:Bind SidebarSplitView.OpenPaneLength, Mode=TwoWay}"
                                     Orientation="Vertical"
                                     IsDragInverted="True"
-                                    IsThumbVisible="False"
                                     Background="Transparent"
-                                    Cursor="SizeWestEast"
                                     Minimum="200"
                                     Maximum="1200"
                                     IsTabStop="False"
@@ -927,7 +970,7 @@
                     </controls:WrapPanel>
 
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
-                    <controls:PropertySizer HorizontalAlignment="Left"
+                    <CCToolKit:PropertySizer HorizontalAlignment="Left"
                                 Grid.Row="2"
                                 Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
                                 Maximum="640"

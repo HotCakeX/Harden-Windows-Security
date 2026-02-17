@@ -6662,4 +6662,280 @@
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Supprimer l’affectation</value>
   </data>
+  <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
+    <value>La stratégie sélectionnée pour la simulation contient une règle qui autorise tous les fichiers.</value>
+  </data>
+  <data name="FirewallSentinelPageTitle" xml:space="preserve">
+    <value>Gérez le Pare-feu Windows et utilisez une stratégie de liste d'autorisations pour une protection d'accès réseau multicouche.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
+    <value>Sentinelle du Pare-feu</value>
+  </data>
+  <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gérez le Pare-feu Windows et utilisez une stratégie de liste d'autorisations pour une protection d'accès réseau multicouche.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Gérez le Pare-feu Windows et utilisez une stratégie de liste d'autorisations pour une protection d'accès réseau multicouche</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+  <value>Fichier introuvable : {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>Le fichier est trop petit pour contenir un en-tête valide</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>Signature non valide : 0x{0:X8}. Attendue : 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>Erreur lors de la lecture de l'entrée à la position {0} : {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>Crochet ouvrant attendu au début de l'entrée, obtenu : 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>Point-virgule de séparation attendu après le nom de la clé, obtenu : 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>Point-virgule de séparation attendu après le nom de la valeur, obtenu : 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>Point-virgule de séparation attendu après le type, obtenu : 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>Point-virgule de séparation attendu après la taille, obtenu : 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>Impossible de lire {0} octets de données, seulement {1} octets obtenus</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>Crochet fermant attendu après les données, obtenu : 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>Fin de flux inattendue lors de la lecture de la chaîne Unicode</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>Au moins un autre fichier de stratégie doit être fourni</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Le chemin du fichier de stratégie principal ne peut pas être null ou vide</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>Au moins un autre chemin de fichier de stratégie doit être fourni</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Le chemin du fichier de stratégie à l'index {0} ne peut pas être null ou vide</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>Fichier de stratégie existant chargé avec {0} entrées</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>Total des opérations : {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>Entrées ajoutées : {0}</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>Entrées remplacées : {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>Le fichier de stratégie n'existe pas, marquage de toutes les stratégies comme non vérifiées</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>Vérification terminée : 0 stratégies sur {0} correspondent (le fichier de stratégie n'existe pas)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>VÉRIFIER : {0}\{1} = CORRESPONDANCE</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>VÉRIFIER : {0}\{1} = NON-CORRESPONDANCE</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>VÉRIFIER : {0}\{1} = NON TROUVÉ</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>Vérification terminée : {0} stratégies sur {1} correspondent</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>Le fichier de stratégie n'existe pas, rien à supprimer</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>SUPPRIMÉ : {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>Suppression de la stratégie terminée : {0} stratégies supprimées</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>Échec de la création de GroupPolicyObject dans le STA. HRESULT : 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>Échec de l'initialisation de COM dans le thread STA. HRESULT : 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>Échec de la création de GroupPolicyObject - pointeur null renvoyé par le thread STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>Échec de l'initialisation de COM. HRESULT : 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>Échec de l'ouverture de l'objet de stratégie de groupe (GPO) de l'ordinateur local. HRESULT : 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>Exception COM : {0} (HRESULT : 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>Échec de l'inscription du GUID CSE {0} {1:B}. HRESULT : 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>Échec de l'inscription du GUID CSE {0} {1:B} : {2} (HRESULT : 0x{3:X8})</value>
+</data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>Développer la stratégie épinglée</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant de nouvelles règles.</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant de nouvelles règles.</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>Fichiers et dossiers</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en analysant des fichiers et des dossiers.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en analysant des fichiers et des dossiers.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en analysant des fichiers et des dossiers.</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>Certificats</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant des certificats.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant des certificats.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant des certificats.</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant une règle de fichier personnalisée basée sur un modèle.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant une règle de fichier personnalisée basée sur un modèle.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Développez la stratégie de Pare-feu épinglée en y ajoutant une règle de fichier personnalisée basée sur un modèle.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>Règle de fichier basée sur un modèle</value>
+  </data>
+    <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Annuler les modifications</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Annuler les modifications apportees au systeme et au Pare-feu Windows.</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Annuler les modifications apportees au systeme et au Pare-feu Windows.</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ouvrir l'emplacement des sauvegardes</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ouvrir l'emplacement ou sont stockees les sauvegardes des regles du Pare-feu.</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ouvrir l'emplacement ou sont stockees les sauvegardes des regles du Pare-feu.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Supprimer les sauvegardes</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimer toutes les sauvegardes des regles du Pare-feu.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimer toutes les sauvegardes des regles du Pare-feu.</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Autorise uniquement les programmes et applications fournis par defaut avec le systeme d'exploitation Windows a acceder a Internet. Tous les processus Windows signes et par defaut peuvent acceder a Internet, tandis que les programmes tiers seront bloques.</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Etend le profil Windows par defaut pour permettre la connectivite reseau aux applications signees avec les certificats de signature de code de Microsoft. Ce profil accorde l'acces aux composants Windows integres et aux logiciels signes par Microsoft, tout en excluant de l'acces a Internet les applications tierces non signees ou non Microsoft.</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Etend le profil d'autorisation Microsoft en permettant tout ce que celui-ci autorise, et en autorisant en plus toutes les applications signees et reputees fiables selon les evaluations d'Intelligent Security Cloud. Ce profil offre la couverture de Pare-feu la plus etendue.</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>Choisissez l'un des profils bases sur l'identite ci-dessous pour l'appliquer. Ces profils n'affectent actuellement que le trafic sortant ; les parametres du trafic entrant restent inchanges. Apres avoir applique un profil, vous pouvez etendre ses regles pour autoriser toute application tierce necessitant un acces a Internet. Chaque profil renforce egalement votre securite de base en modifiant l'action par defaut du trafic sortant dans tous les profils du Pare-feu d'Autoriser a Bloquer. Par consequent, les applications tierces doivent gagner votre confiance avant de pouvoir se connecter a Internet.</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>Selectionner un profil</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>Vous pouvez utiliser cette section pour personnaliser le deploiement de la strategie de Pare-feu.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>Balise d'identification d'application</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>Personnaliser la balise qui sera utilisee pour le balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Personnaliser la balise qui sera utilisee pour le balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Personnaliser la balise qui sera utilisee pour le balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>Nom de la regle de Pare-feu</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>Personnaliser le nom de la regle de Pare-feu sortante responsable de l'autorisation du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Personnaliser le nom de la regle de Pare-feu sortante responsable de l'autorisation du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Personnaliser le nom de la regle de Pare-feu sortante responsable de l'autorisation du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>Description de la regle de Pare-feu</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>Personnaliser la description de la regle de Pare-feu sortante responsable de l'autorisation du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Personnaliser la description de la regle de Pare-feu sortante responsable de l'autorisation du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Personnaliser la description de la regle de Pare-feu sortante responsable de l'autorisation du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>Nom de la strategie de balisage d'identification d'application</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>Personnaliser le nom de la strategie de controle des applications responsable du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Personnaliser le nom de la strategie de controle des applications responsable du balisage d'identification d'application.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Personnaliser le nom de la strategie de controle des applications responsable du balisage d'identification d'application.</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>Strategie de Pare-feu epinglee</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>Selectionnez la strategie de Pare-feu actuellement active et epinglez-la afin de pouvoir l'utiliser facilement sur cette page.</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>Aucune strategie epinglee</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>Recherchez et selectionnez une strategie ci-dessus pour l'epingler ici pour un acces rapide.</value>
+  </data>
 </root>

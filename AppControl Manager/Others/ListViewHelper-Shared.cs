@@ -60,6 +60,7 @@ internal static partial class ListViewHelper
 		SupplementalPolicy_PFNBasedRules = 13,
 		DenyPolicy_PFNBasedRules = 14,
 		Deployment_IntuneGroupsListView = 15,
+		FirewallBlockedLogs = 16,
 
 		// For Harden System Security App
 		GroupPolicyEditor = 10000,

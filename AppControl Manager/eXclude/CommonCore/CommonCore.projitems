@@ -53,6 +53,19 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\AuditPolicyManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\DataDump.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\SecurityINFParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\SecurityPolicyManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\SecurityPolicyReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\SecurityPolicyWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecurityPolicy\SystemAccessInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RegistryManager\Manager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolKits\RadialGauge.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolKits\GridSplitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolKits\PropertySizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolKits\Shimmer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolKits\DispatcherQueueExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\AdmxAdmlParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\Categories.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GroupPolicy\CSEMgr.cs" />

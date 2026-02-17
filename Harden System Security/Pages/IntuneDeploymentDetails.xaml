@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -237,10 +238,10 @@
                                 Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
 
                         <!-- GridSplitters -->
-                        <controls:GridSplitter Grid.Column="1" />
-                        <controls:GridSplitter Grid.Column="2" />
-                        <controls:GridSplitter Grid.Column="3" />
-                        <controls:GridSplitter Grid.Column="4" />
+                        <CCToolKit:GridSplitter Grid.Column="1" />
+                        <CCToolKit:GridSplitter Grid.Column="2" />
+                        <CCToolKit:GridSplitter Grid.Column="3" />
+                        <CCToolKit:GridSplitter Grid.Column="4" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

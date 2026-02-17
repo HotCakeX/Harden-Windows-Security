@@ -22,7 +22,7 @@ using System.Threading;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
-using HardenSystemSecurity.SecurityPolicy;
+using CommonCore.SecurityPolicy;
 using Microsoft.Win32;
 
 namespace HardenSystemSecurity.ViewModels;
@@ -375,7 +375,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 
 		public void Remove()
 		{
-			RegistryManager.Manager.EditRegistry(new(
+			CommonCore.RegistryManager.Manager.EditRegistry(new(
 				source: Source.Registry,
 				keyName: "System\\CurrentControlSet\\Control\\SCMConfig",
 				valueName: "EnableSvchostMitigationPolicy",
@@ -402,7 +402,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 
 		public void Remove()
 		{
-			RegistryManager.Manager.EditRegistry(new(
+			CommonCore.RegistryManager.Manager.EditRegistry(new(
 				source: Source.Registry,
 				keyName: "System\\CurrentControlSet\\Control\\FileSystem",
 				valueName: "LongPathsEnabled",

@@ -20,9 +20,9 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using CommonCore.GroupPolicy;
-using HardenSystemSecurity.RegistryManager;
+using CommonCore.RegistryManager;
 
-namespace HardenSystemSecurity.SecurityPolicy;
+namespace CommonCore.SecurityPolicy;
 
 internal static class SecurityINFParser
 {

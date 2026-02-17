@@ -1084,10 +1084,10 @@ internal sealed partial class MUnit(
 					else
 					{
 						if (toAdd.Count > 0)
-							RegistryManager.Manager.AddPoliciesToSystem(toAdd);
+							CommonCore.RegistryManager.Manager.AddPoliciesToSystem(toAdd);
 
 						if (toRemove.Count > 0)
-							RegistryManager.Manager.RemovePoliciesFromSystem(toRemove);
+							CommonCore.RegistryManager.Manager.RemovePoliciesFromSystem(toRemove);
 					}
 
 					// Execute-After specialized apply strategies
@@ -1128,7 +1128,7 @@ internal sealed partial class MUnit(
 						}
 						else
 						{
-							RegistryManager.Manager.RemovePoliciesFromSystem(toUndo);
+							CommonCore.RegistryManager.Manager.RemovePoliciesFromSystem(toUndo);
 						}
 					}
 
@@ -1205,10 +1205,10 @@ internal sealed partial class MUnit(
 									id: policy.ID)
 								{
 									// Ensure we have the string form expected by Registry verification if it's missing
-									RegValue = policy.RegValue ?? RegistryManager.Manager.BuildRegValueFromParsedValue(policy)
+									RegValue = policy.RegValue ?? CommonCore.RegistryManager.Manager.BuildRegValueFromParsedValue(policy)
 								};
 
-								Dictionary<RegistryPolicyEntry, bool> fallbackResults = RegistryManager.Manager.VerifyPoliciesInSystem([fallbackEntry]);
+								Dictionary<RegistryPolicyEntry, bool> fallbackResults = CommonCore.RegistryManager.Manager.VerifyPoliciesInSystem([fallbackEntry]);
 
 #if DEBUG
 								// Log policies that failed POL verification but passed Registry fallback
@@ -1241,7 +1241,7 @@ internal sealed partial class MUnit(
 					{
 						cancellationToken?.ThrowIfCancellationRequested();
 
-						Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryManager.Manager.VerifyPoliciesInSystem(allPolicies);
+						Dictionary<RegistryPolicyEntry, bool> verificationResults = CommonCore.RegistryManager.Manager.VerifyPoliciesInSystem(allPolicies);
 
 						// Update status based on verification results, with fallback support
 						foreach (MUnit mUnit in CollectionsMarshal.AsSpan(mUnits))

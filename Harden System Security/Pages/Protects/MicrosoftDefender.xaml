@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:helpers="using:HardenSystemSecurity.Helpers"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -181,7 +182,7 @@
                                         </Grid.ColumnDefinitions>
                                         <Button x:Uid="TargetColumnHeaderBtn" Tag="Target" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                                         <Button x:Uid="SourceColumnHeaderBtn" Tag="Source" Grid.Column="1" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                                        <controls:GridSplitter Grid.Column="1"/>
+                                        <CCToolKit:GridSplitter Grid.Column="1"/>
                                     </Grid>
                                 </Border>
                             </customUI:ListViewV2.Header>

@@ -6,6 +6,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:Arcane="using:HardenSystemSecurity.Arcane"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -130,12 +131,12 @@
                                             <Button x:Uid="CA_KeyGenColumnHeaderBtn" Tag="SupportsKeyGeneration" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
                                             <Button x:Uid="CA_ParamSetsColumnHeaderBtn" Tag="SupportedParameterSets" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
 
-                                            <controls:GridSplitter Grid.Column="1" />
-                                            <controls:GridSplitter Grid.Column="2" />
-                                            <controls:GridSplitter Grid.Column="3" />
-                                            <controls:GridSplitter Grid.Column="4" />
-                                            <controls:GridSplitter Grid.Column="5" />
-                                            <controls:GridSplitter Grid.Column="6" />
+                                            <CCToolKit:GridSplitter Grid.Column="1" />
+                                            <CCToolKit:GridSplitter Grid.Column="2" />
+                                            <CCToolKit:GridSplitter Grid.Column="3" />
+                                            <CCToolKit:GridSplitter Grid.Column="4" />
+                                            <CCToolKit:GridSplitter Grid.Column="5" />
+                                            <CCToolKit:GridSplitter Grid.Column="6" />
                                         </Grid>
                                     </Border>
                                 </customUI:ListViewV2.Header>
@@ -307,8 +308,8 @@
                                             <Button x:Uid="CNG_OidColumnHeaderBtn" Tag="Oid" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CNG_HeaderColumnSortingButton_Click}" />
                                             <Button x:Uid="CNG_LengthColumnHeaderBtn" Tag="PublicKeyLengthBits" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CNG_HeaderColumnSortingButton_Click}" />
 
-                                            <controls:GridSplitter Grid.Column="1" />
-                                            <controls:GridSplitter Grid.Column="2" />
+                                            <CCToolKit:GridSplitter Grid.Column="1" />
+                                            <CCToolKit:GridSplitter Grid.Column="2" />
                                         </Grid>
                                     </Border>
                                 </customUI:ListViewV2.Header>
@@ -457,10 +458,10 @@
                                             <Button x:Uid="SSL_TypeColumnHeaderBtn" Tag="CurveType" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SSL_HeaderColumnSortingButton_Click}" />
                                             <Button x:Uid="SSL_FlagsColumnHeaderBtn" Tag="Flags" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SSL_HeaderColumnSortingButton_Click}" />
 
-                                            <controls:GridSplitter Grid.Column="1" />
-                                            <controls:GridSplitter Grid.Column="2" />
-                                            <controls:GridSplitter Grid.Column="3" />
-                                            <controls:GridSplitter Grid.Column="4" />
+                                            <CCToolKit:GridSplitter Grid.Column="1" />
+                                            <CCToolKit:GridSplitter Grid.Column="2" />
+                                            <CCToolKit:GridSplitter Grid.Column="3" />
+                                            <CCToolKit:GridSplitter Grid.Column="4" />
                                         </Grid>
                                     </Border>
                                 </customUI:ListViewV2.Header>
@@ -644,18 +645,18 @@
                                             <Button x:Uid="TLS_MaxExColumnHeaderBtn" Tag="MaximumExchangeLength" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
                                             <Button x:Uid="TLS_KeyTypeColumnHeaderBtn" Tag="KeyType" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
 
-                                            <controls:GridSplitter Grid.Column="1" />
-                                            <controls:GridSplitter Grid.Column="2" />
-                                            <controls:GridSplitter Grid.Column="3" />
-                                            <controls:GridSplitter Grid.Column="4" />
-                                            <controls:GridSplitter Grid.Column="5" />
-                                            <controls:GridSplitter Grid.Column="6" />
-                                            <controls:GridSplitter Grid.Column="7" />
-                                            <controls:GridSplitter Grid.Column="8" />
-                                            <controls:GridSplitter Grid.Column="9" />
-                                            <controls:GridSplitter Grid.Column="10" />
-                                            <controls:GridSplitter Grid.Column="11" />
-                                            <controls:GridSplitter Grid.Column="12" />
+                                            <CCToolKit:GridSplitter Grid.Column="1" />
+                                            <CCToolKit:GridSplitter Grid.Column="2" />
+                                            <CCToolKit:GridSplitter Grid.Column="3" />
+                                            <CCToolKit:GridSplitter Grid.Column="4" />
+                                            <CCToolKit:GridSplitter Grid.Column="5" />
+                                            <CCToolKit:GridSplitter Grid.Column="6" />
+                                            <CCToolKit:GridSplitter Grid.Column="7" />
+                                            <CCToolKit:GridSplitter Grid.Column="8" />
+                                            <CCToolKit:GridSplitter Grid.Column="9" />
+                                            <CCToolKit:GridSplitter Grid.Column="10" />
+                                            <CCToolKit:GridSplitter Grid.Column="11" />
+                                            <CCToolKit:GridSplitter Grid.Column="12" />
                                         </Grid>
                                     </Border>
                                 </customUI:ListViewV2.Header>

@@ -6662,4 +6662,280 @@
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>הסר הקצאה</value>
   </data>
+  <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
+    <value>המדיניות שנבחרה להדמיה מכילה כלל המתיר את כל הקבצים.</value>
+  </data>
+  <data name="FirewallSentinelPageTitle" xml:space="preserve">
+    <value>נהל את חומת האש של Windows והשתמש באסטרטגיית רשימת היתרים להגנה רב-שכבתית על הגישה לרשת.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
+    <value>שומר חומת האש</value>
+  </data>
+  <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל את חומת האש של Windows והשתמש באסטרטגיית רשימת היתרים להגנה רב-שכבתית על הגישה לרשת.</value>
+  </data>
+  <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל את חומת האש של Windows והשתמש באסטרטגיית רשימת היתרים להגנה רב-שכבתית על הגישה לרשת</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+  <value>הקובץ לא נמצא: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>הקובץ קטן מכדי להכיל כותרת חוקית</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>חתימה לא חוקית: 0x{0:X8}. צפוי: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>שגיאה בקריאת הרשומה במיקום {0}: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>צפוי סוגר פותח בתחילת הרשומה, התקבל: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>צפוי מפריד נקודה-פסיק לאחר שם המפתח, התקבל: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>צפוי מפריד נקודה-פסיק לאחר שם הערך, התקבל: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>צפוי מפריד נקודה-פסיק לאחר הסוג, התקבל: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>צפוי מפריד נקודה-פסיק לאחר הגודל, התקבל: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>לא ניתן היה לקרוא {0} בתים של נתונים, התקבלו רק {1} בתים</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>צפוי סוגר סוגר לאחר הנתונים, התקבל: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>סוף בלתי צפוי של הזרם בעת קריאת מחרוזת Unicode</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>יש לספק לפחות קובץ מדיניות אחד נוסף</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>נתיב קובץ המדיניות הראשי אינו יכול להיות ריק (null) או חסר ערך</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>יש לספק לפחות נתיב אחד נוסף של קובץ מדיניות</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>נתיב קובץ המדיניות באינדקס {0} אינו יכול להיות ריק (null) או חסר ערך</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>נטען קובץ מדיניות קיים עם {0} רשומות</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>סה"כ פעולות: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>רשומות שנוספו: {0}</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>רשומות שהוחלפו: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>קובץ המדיניות אינו קיים, מסמן את כל המדיניויות כלא מאומתות</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>האימות הושלם: 0 מתוך {0} מדיניויות תואמות (קובץ המדיניות אינו קיים)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>אימות: {0}\{1} = תואם</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>אימות: {0}\{1} = אי-התאמה</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>אימות: {0}\{1} = לא נמצא</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>האימות הושלם: {0} מתוך {1} מדיניויות תואמות</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>קובץ המדיניות אינו קיים, אין מה להסיר</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>הוסר: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>הסרת המדיניות הושלמה: {0} מדיניויות הוסרו</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>נכשל ביצירת GroupPolicyObject ב-STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>נכשל באתחול COM ב-thread של STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>נכשל ביצירת GroupPolicyObject - התקבל מצביע ריק (null) מ-thread של STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>נכשל באתחול COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>נכשל בפתיחת GPO של המחשב המקומי. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>חריגת COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>נכשל ברישום {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>נכשל ברישום {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>הרחב מדיניות מוצמדת</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת כללים חדשים אליה.</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת כללים חדשים אליה.</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>קבצים ותיקיות</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי סריקת קבצים ותיקיות.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי סריקת קבצים ותיקיות.</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי סריקת קבצים ותיקיות.</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>אישורים</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת אישורים אליה.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת אישורים אליה.</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת אישורים אליה.</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת כלל קובץ מבוסס תבנית מותאמת אישית.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת כלל קובץ מבוסס תבנית מותאמת אישית.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הרחב את מדיניות חומת האש המוצמדת על ידי הוספת כלל קובץ מבוסס תבנית מותאמת אישית.</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>כלל קובץ מבוסס תבנית</value>
+  </data>
+    <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ביטול שינויים</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ביטול השינויים שבוצעו במערכת ובחומת האש של Windows.</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ביטול השינויים שבוצעו במערכת ובחומת האש של Windows.</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פתיחת מיקום הגיבוי</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתיחת המיקום שבו מאוחסנים גיבויי כללי חומת האש.</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתיחת המיקום שבו מאוחסנים גיבויי כללי חומת האש.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מחיקת גיבויים</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחיקת כל גיבויי כללי חומת האש.</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחיקת כל גיבויי כללי חומת האש.</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>מאפשר רק לתוכניות ולאפליקציות המגיעות כברירת מחדל עם מערכת ההפעלה Windows לגשת לאינטרנט. כל התהליכים החתומים והמוגדרים כברירת מחדל של Windows יכולים לגשת לאינטרנט, בעוד תוכניות צד שלישי ייחסמו.</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>מרחיב את פרופיל ברירת המחדל של Windows ומאפשר קישוריות רשת לאפליקציות החתומות באמצעות אישורי חתימת הקוד של Microsoft. פרופיל זה מעניק גישה לרכיבי Windows מובנים ולתוכנות חתומות על ידי Microsoft, תוך חסימת גישה לאינטרנט מאפליקציות צד שלישי שאינן חתומות או שאינן של Microsoft.</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>מרחיב את פרופיל האישור של Microsoft על ידי התרת כל מה שהוא מאפשר, ובנוסף מתיר את כל האפליקציות החתומות והמהימנות על בסיס הערכות ענן האבטחה החכם. פרופיל זה מספק את כיסוי חומת האש הרחב ביותר.</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>בחר אחד מהפרופילים מבוססי הזהות להלן להחלה. פרופילים אלה משפיעים כעת על תעבורה יוצאת בלבד; הגדרות תעבורה נכנסת נותרות ללא שינוי. לאחר החלת פרופיל, ניתן להרחיב את הכללים שלו כדי לאפשר לאפליקציות צד שלישי שזקוקות לגישה לאינטרנט. כל פרופיל גם מחזק את רמת האבטחה הבסיסית שלך על ידי שינוי פעולת ברירת המחדל לתעבורה יוצאת בכל פרופילי חומת האש מ"אפשר" ל"חסום". כתוצאה מכך, אפליקציות צד שלישי חייבות לזכות באמונך לפני שיוכלו להתחבר לאינטרנט.</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>בחירת פרופיל</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>ניתן להשתמש בסעיף זה כדי להתאים אישית את פריסת מדיניות חומת האש.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>תגית זיהוי אפליקציה</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>התאמה אישית של התגית שתשמש לתיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאמה אישית של התגית שתשמש לתיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאמה אישית של התגית שתשמש לתיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>שם כלל חומת אש</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>התאמה אישית של שם כלל חומת האש לתעבורה יוצאת האחראי על הרשאת תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאמה אישית של שם כלל חומת האש לתעבורה יוצאת האחראי על הרשאת תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאמה אישית של שם כלל חומת האש לתעבורה יוצאת האחראי על הרשאת תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>תיאור כלל חומת אש</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>התאמה אישית של תיאור כלל חומת האש לתעבורה יוצאת האחראי על הרשאת תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאמה אישית של תיאור כלל חומת האש לתעבורה יוצאת האחראי על הרשאת תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאמה אישית של תיאור כלל חומת האש לתעבורה יוצאת האחראי על הרשאת תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>שם מדיניות תיוג זיהוי אפליקציה</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>התאמה אישית של שם מדיניות בקרת האפליקציות האחראית על תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאמה אישית של שם מדיניות בקרת האפליקציות האחראית על תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאמה אישית של שם מדיניות בקרת האפליקציות האחראית על תיוג זיהוי אפליקציה.</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>מדיניות חומת אש מוצמדת</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>בחר את מדיניות חומת האש הפעילה כעת והצמד אותה כדי שתוכל להשתמש בה בקלות בדף זה.</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>לא הוצמדה מדיניות</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>חפש ובחר מדיניות למעלה כדי להצמיד אותה כאן לגישה מהירה.</value>
+  </data>
 </root>

@@ -22,14 +22,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
-using CommunityToolkit.WinUI;
+using CommonCore.IncrementalCollection;
+using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -40,8 +40,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 {
 	// Dispose the controller
 	public void Dispose() => LVController.Dispose();
-
-	internal PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
 
 	internal CreateSupplementalPolicyVM()
 	{
@@ -385,7 +383,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_FilesAndFolders() => await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_FilesAndFolders() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersSupplementalPolicyPath);
 
@@ -964,7 +962,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for Certificates using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_Certificates() => await PolicyEditorViewModel.OpenInPolicyEditor(_CertificatesSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_Certificates() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_CertificatesSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_Certificates() => await OpenInDefaultFileHandler(_CertificatesSupplementalPolicyPath);
 
@@ -1155,7 +1153,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for ISG using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_ISG() => await PolicyEditorViewModel.OpenInPolicyEditor(_ISGSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_ISG() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_ISGSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_ISG() => await OpenInDefaultFileHandler(_ISGSupplementalPolicyPath);
 
@@ -1573,7 +1571,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for StrictKernelMode using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_StrictKernelMode() => await PolicyEditorViewModel.OpenInPolicyEditor(_StrictKernelModeSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_StrictKernelMode() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_StrictKernelModeSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await OpenInDefaultFileHandler(_StrictKernelModeSupplementalPolicyPath);
 
@@ -2082,7 +2080,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_PFN() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNSupplementalPolicyPath);
 
@@ -2447,7 +2445,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleSupplementalPolicyPath);
 

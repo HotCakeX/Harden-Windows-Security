@@ -30,8 +30,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 {
 
-	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
+	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal AllowNewAppsStart()
 	{

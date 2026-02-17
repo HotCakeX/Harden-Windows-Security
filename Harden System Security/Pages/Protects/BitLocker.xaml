@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -257,17 +258,17 @@
                                                 <Button x:Uid="FileSystemTypeColumnHeaderBtn" Tag="FileSystemType" Grid.Column="10" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
                                                 <Button x:Uid="FriendlyNameColumnHeaderBtn" Tag="FriendlyName" Grid.Column="11" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
 
-                                                <controls:GridSplitter Grid.Column="1"/>
-                                                <controls:GridSplitter Grid.Column="2"/>
-                                                <controls:GridSplitter Grid.Column="3"/>
-                                                <controls:GridSplitter Grid.Column="4"/>
-                                                <controls:GridSplitter Grid.Column="5"/>
-                                                <controls:GridSplitter Grid.Column="6"/>
-                                                <controls:GridSplitter Grid.Column="7"/>
-                                                <controls:GridSplitter Grid.Column="8"/>
-                                                <controls:GridSplitter Grid.Column="9"/>
-                                                <controls:GridSplitter Grid.Column="10"/>
-                                                <controls:GridSplitter Grid.Column="11"/>
+                                                <CCToolKit:GridSplitter Grid.Column="1"/>
+                                                <CCToolKit:GridSplitter Grid.Column="2"/>
+                                                <CCToolKit:GridSplitter Grid.Column="3"/>
+                                                <CCToolKit:GridSplitter Grid.Column="4"/>
+                                                <CCToolKit:GridSplitter Grid.Column="5"/>
+                                                <CCToolKit:GridSplitter Grid.Column="6"/>
+                                                <CCToolKit:GridSplitter Grid.Column="7"/>
+                                                <CCToolKit:GridSplitter Grid.Column="8"/>
+                                                <CCToolKit:GridSplitter Grid.Column="9"/>
+                                                <CCToolKit:GridSplitter Grid.Column="10"/>
+                                                <CCToolKit:GridSplitter Grid.Column="11"/>
                                             </Grid>
                                         </Border>
                                     </customUI:ListViewV2.Header>
@@ -568,16 +569,14 @@
                                     </Grid>
 
                                     <!-- Overlay PropertySizer (invisible) to provide drag behavior without a visible color strip -->
-                                    <controls:PropertySizer
+                                    <CCToolKit:PropertySizer
                                         Width="8"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Stretch"
                                         Binding="{x:Bind BitLockerSplitView.OpenPaneLength, Mode=TwoWay}"
                                         Orientation="Vertical"
-                                        IsDragInverted="True"
-                                        IsThumbVisible="False"
-                                        Background="Transparent"
-                                        Cursor="SizeWestEast"
+                                        IsDragInverted="True"                                       
+                                        Background="Transparent"                                        
                                         Minimum="400"
                                         Maximum="1200"
                                         IsTabStop="False"

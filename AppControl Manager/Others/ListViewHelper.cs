@@ -19,8 +19,8 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using CommonCore.IncrementalCollection;
 using AppControlManager.IntelGathering;
+using CommonCore.IncrementalCollection;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.Others;

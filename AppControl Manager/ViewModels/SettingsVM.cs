@@ -41,7 +41,7 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
-	private NavigationService Nav { get; } = ViewModelProvider.NavigationService;
+	private NavigationService Nav => ViewModelProvider.NavigationService;
 
 	internal SettingsVM()
 	{
@@ -86,7 +86,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
+	private MainWindowVM ViewModelMainWindow => ViewModelProvider.MainWindowVM;
 
 	internal bool UIFlowDirectionToggleSwitch
 	{

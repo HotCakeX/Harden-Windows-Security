@@ -6662,4 +6662,280 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="RemoveAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>असाइनमेंट हटाएँ</value>
   </data>
+  <data name="PolicyAllowsAllFilesMessage" xml:space="preserve">
+    <value>सिमुलेशन के लिए चयनित नीति में एक नियम शामिल है जो सभी फ़ाइलों को अनुमति देता है।</value>
+  </data>
+  <data name="FirewallSentinelPageTitle" xml:space="preserve">
+    <value>Windows फ़ायरवॉल का प्रबंधन करें और स्तरित नेटवर्क एक्सेस सुरक्षा के लिए अनुमति सूची रणनीति का उपयोग करें।</value>
+  </data>
+  <data name="FirewallSentinelNavItem.Content" xml:space="preserve">
+    <value>फ़ायरवॉल प्रहरी</value>
+  </data>
+  <data name="FirewallSentinelNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows फ़ायरवॉल का प्रबंधन करें और स्तरित नेटवर्क एक्सेस सुरक्षा के लिए अनुमति सूची रणनीति का उपयोग करें।</value>
+  </data>
+  <data name="FirewallSentinelNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows फ़ायरवॉल का प्रबंधन करें और स्तरित नेटवर्क एक्सेस सुरक्षा के लिए अनुमति सूची रणनीति का उपयोग करें</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+  <value>फ़ाइल नहीं मिली: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>फ़ाइल इतनी छोटी है कि उसमें मान्य हेडर नहीं हो सकता</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>अमान्य हस्ताक्षर: 0x{0:X8}. अपेक्षित: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>स्थिति {0} पर प्रविष्टि पढ़ने में त्रुटि: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>प्रविष्टि की शुरुआत में ओपनिंग ब्रैकेट अपेक्षित था, मिला: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>कुंजी नाम के बाद सेमीकोलन सीमांकक अपेक्षित था, मिला: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>मान नाम के बाद सेमीकोलन सीमांकक अपेक्षित था, मिला: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>प्रकार के बाद सेमीकोलन सीमांकक अपेक्षित था, मिला: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>आकार के बाद सेमीकोलन सीमांकक अपेक्षित था, मिला: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>डेटा के {0} बाइट्स नहीं पढ़ सका, केवल {1} बाइट्स मिले</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>डेटा के बाद क्लोज़िंग ब्रैकेट अपेक्षित था, मिला: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>यूनिकोड स्ट्रिंग पढ़ते समय स्ट्रीम का अप्रत्याशित अंत</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>कम से कम एक अन्य नीति फ़ाइल प्रदान की जानी चाहिए</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>मुख्य नीति फ़ाइल पथ रिक्त या खाली नहीं हो सकता</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>कम से कम एक अन्य नीति फ़ाइल पथ प्रदान किया जाना चाहिए</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>इंडेक्स {0} पर नीति फ़ाइल पथ रिक्त या खाली नहीं हो सकता</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>{0} प्रविष्टियों के साथ मौजूदा नीति फ़ाइल लोड की गई</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>कुल परिचालन: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>जोड़ी गई प्रविष्टियाँ: {0}</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>प्रतिस्थापित प्रविष्टियाँ: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>नीति फ़ाइल मौजूद नहीं है, सभी नीतियों को अप्रमाणित के रूप में चिह्नित किया जा रहा है</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>सत्यापन पूर्ण: {0} में से 0 नीतियाँ मेल खाती हैं (नीति फ़ाइल मौजूद नहीं है)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>सत्यापित करें: {0}\{1} = मेल</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>सत्यापित करें: {0}\{1} = बेमेल</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>सत्यापित करें: {0}\{1} = नहीं मिला</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>सत्यापन पूर्ण: {0} में से {1} नीतियाँ मेल खाती हैं</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>नीति फ़ाइल मौजूद नहीं है, हटाने के लिए कुछ भी नहीं है</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>हटाया गया: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>नीति हटाना पूर्ण: {0} नीतियाँ हटाई गईं</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>STA में GroupPolicyObject बनाने में विफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>STA थ्रेड में COM को प्रारंभ करने में विफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>GroupPolicyObject बनाने में विफल - STA थ्रेड से नल पॉइंटर लौटा</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>COM को प्रारंभ करने में विफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>लोकल मशीन GPO खोलने में विफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>COM अपवाद: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} पंजीकृत करने में विफल। HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} पंजीकृत करने में विफल: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="ExpandPinnedPolicyButton.Content" xml:space="preserve">
+    <value>पिन की गई नीति का विस्तार करें</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पिन की गई फ़ायरवॉल नीति में नए नियम जोड़कर उसका विस्तार करें।</value>
+  </data>
+  <data name="ExpandPinnedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पिन की गई फ़ायरवॉल नीति में नए नियम जोड़कर उसका विस्तार करें।</value>
+  </data>
+    <data name="AppIDTaggingFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>फ़ाइलें और फ़ोल्डर</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>फ़ाइलों और फ़ोल्डरों को स्कैन करके पिन की गई फ़ायरवॉल नीति का विस्तार करें।</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ाइलों और फ़ोल्डरों को स्कैन करके पिन की गई फ़ायरवॉल नीति का विस्तार करें।</value>
+  </data>
+  <data name="AppIDTaggingFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ाइलों और फ़ोल्डरों को स्कैन करके पिन की गई फ़ायरवॉल नीति का विस्तार करें।</value>
+  </data>
+    <data name="AppIDTaggingCertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>प्रमाणपत्र</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>प्रमाणपत्र जोड़कर पिन की गई फ़ायरवॉल नीति का विस्तार करें।</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रमाणपत्र जोड़कर पिन की गई फ़ायरवॉल नीति का विस्तार करें।</value>
+  </data>
+  <data name="AppIDTaggingCertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>प्रमाणपत्र जोड़कर पिन की गई फ़ायरवॉल नीति का विस्तार करें।</value>
+  </data>
+    <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>पिन की गई फ़ायरवॉल नीति में कस्टम पैटर्न आधारित फ़ाइल नियम जोड़कर उसका विस्तार करें।</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पिन की गई फ़ायरवॉल नीति में कस्टम पैटर्न आधारित फ़ाइल नियम जोड़कर उसका विस्तार करें।</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पिन की गई फ़ायरवॉल नीति में कस्टम पैटर्न आधारित फ़ाइल नियम जोड़कर उसका विस्तार करें।</value>
+  </data>
+  <data name="AppIDTaggingPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>पैटर्न आधारित फ़ाइल नियम</value>
+  </data>
+    <data name="RevertChangesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>परिवर्तन पूर्ववत करें</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम और Windows फ़ायरवॉल में किए गए परिवर्तन पूर्ववत करें।</value>
+  </data>
+  <data name="RevertChangesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम और Windows फ़ायरवॉल में किए गए परिवर्तन पूर्ववत करें।</value>
+  </data>
+    <data name="OpenBackupLocationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>बैकअप स्थान खोलें</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वह स्थान खोलें जहां फ़ायरवॉल नियमों के बैकअप संग्रहीत हैं।</value>
+  </data>
+  <data name="OpenBackupLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वह स्थान खोलें जहां फ़ायरवॉल नियमों के बैकअप संग्रहीत हैं।</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>बैकअप हटाएं</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ायरवॉल नियमों के सभी बैकअप हटाएं।</value>
+  </data>
+  <data name="DeleteBackupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ायरवॉल नियमों के सभी बैकअप हटाएं।</value>
+  </data>
+  <data name="DefaultWindowsFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>केवल उन प्रोग्राम और ऐप्स को इंटरनेट तक पहुंचने की अनुमति देता है जो Windows ऑपरेटिंग सिस्टम के साथ डिफ़ॉल्ट रूप से आते हैं। सभी हस्ताक्षरित और डिफ़ॉल्ट Windows प्रक्रियाएं इंटरनेट तक पहुंच सकती हैं जबकि तृतीय-पक्ष प्रोग्राम अवरुद्ध कर दिए जाएंगे।</value>
+  </data>
+  <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Microsoft के कोड-साइनिंग प्रमाणपत्रों से हस्ताक्षरित अनुप्रयोगों के लिए नेटवर्क कनेक्टिविटी की अनुमति देने हेतु डिफ़ॉल्ट Windows प्रोफ़ाइल का विस्तार करता है। यह प्रोफ़ाइल अंतर्निहित Windows घटकों और Microsoft द्वारा हस्ताक्षरित सॉफ़्टवेयर को पहुंच प्रदान करती है, जबकि अहस्ताक्षरित या गैर-Microsoft तृतीय-पक्ष अनुप्रयोगों को इंटरनेट पहुंच से बाहर रखती है।</value>
+  </data>
+  <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
+    <value>Microsoft अनुमति प्रोफ़ाइल का विस्तार करता है और जो कुछ वह अनुमति देती है उसे अनुमति देने के साथ-साथ Intelligent Security Cloud के मूल्यांकन के आधार पर सभी प्रतिष्ठित, हस्ताक्षरित अनुप्रयोगों को भी अतिरिक्त रूप से अनुमति देता है। यह प्रोफ़ाइल सबसे व्यापक फ़ायरवॉल कवरेज प्रदान करती है।</value>
+  </data>
+  <data name="FirewallSentinelMainTopDescription.Text" xml:space="preserve">
+    <value>लागू करने के लिए नीचे दी गई पहचान-आधारित प्रोफ़ाइल में से एक चुनें। ये प्रोफ़ाइल वर्तमान में केवल आउटबाउंड ट्रैफ़िक को प्रभावित करती हैं; इनबाउंड सेटिंग्स अपरिवर्तित रहती हैं। प्रोफ़ाइल लागू करने के बाद, आप इसके नियमों का विस्तार करके किसी भी तृतीय-पक्ष अनुप्रयोग को इंटरनेट पहुंच की अनुमति दे सकते हैं जिसे इसकी आवश्यकता है। प्रत्येक प्रोफ़ाइल सभी फ़ायरवॉल प्रोफ़ाइल में डिफ़ॉल्ट आउटबाउंड क्रिया को अनुमति दें से अवरुद्ध करें में बदलकर आपकी आधारभूत सुरक्षा को भी मजबूत करती है। परिणामस्वरूप, तृतीय-पक्ष अनुप्रयोगों को इंटरनेट से कनेक्ट करने से पहले आपका विश्वास अर्जित करना होगा।</value>
+  </data>
+  <data name="SelectProfile.Text" xml:space="preserve">
+    <value>प्रोफ़ाइल चुनें</value>
+  </data>
+    <data name="FirewallSentinelAdvancedSectionDescription.Text" xml:space="preserve">
+    <value>आप इस अनुभाग का उपयोग फ़ायरवॉल नीति परिनियोजन को अनुकूलित करने के लिए कर सकते हैं।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Header" xml:space="preserve">
+    <value>ऐप ID टैग</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.Description" xml:space="preserve">
+    <value>ऐप ID टैगिंग के लिए उपयोग किए जाने वाले टैग को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप ID टैगिंग के लिए उपयोग किए जाने वाले टैग को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTag.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप ID टैगिंग के लिए उपयोग किए जाने वाले टैग को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Header" xml:space="preserve">
+    <value>फ़ायरवॉल नियम का नाम</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.Description" xml:space="preserve">
+    <value>ऐप ID टैगिंग प्राधिकरण के लिए जिम्मेदार आउटबाउंड फ़ायरवॉल नियम के नाम को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप ID टैगिंग प्राधिकरण के लिए जिम्मेदार आउटबाउंड फ़ायरवॉल नियम के नाम को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप ID टैगिंग प्राधिकरण के लिए जिम्मेदार आउटबाउंड फ़ायरवॉल नियम के नाम को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Header" xml:space="preserve">
+    <value>फ़ायरवॉल नियम का विवरण</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.Description" xml:space="preserve">
+    <value>ऐप ID टैगिंग प्राधिकरण के लिए जिम्मेदार आउटबाउंड फ़ायरवॉल नियम के विवरण को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप ID टैगिंग प्राधिकरण के लिए जिम्मेदार आउटबाउंड फ़ायरवॉल नियम के विवरण को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionFWRuleDescription.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप ID टैगिंग प्राधिकरण के लिए जिम्मेदार आउटबाउंड फ़ायरवॉल नियम के विवरण को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Header" xml:space="preserve">
+    <value>ऐप ID टैगिंग नीति का नाम</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.Description" xml:space="preserve">
+    <value>ऐप ID टैगिंग के लिए जिम्मेदार ऐप नियंत्रण नीति के नाम को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप ID टैगिंग के लिए जिम्मेदार ऐप नियंत्रण नीति के नाम को अनुकूलित करें।</value>
+  </data>
+  <data name="FirewallSentinelAdvancedSectionAppIDTagPolName.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप ID टैगिंग के लिए जिम्मेदार ऐप नियंत्रण नीति के नाम को अनुकूलित करें।</value>
+  </data>
+  <data name="PinnedFirewallPolicy.Text" xml:space="preserve">
+    <value>पिन की गई फ़ायरवॉल नीति</value>
+  </data>
+  <data name="PinnedFirewallPolicyDescription.Text" xml:space="preserve">
+    <value>वर्तमान में सक्रिय फ़ायरवॉल नीति चुनें और इसे पिन करें ताकि आप इस पृष्ठ पर इसका आसानी से उपयोग कर सकें।</value>
+  </data>
+  <data name="NoPolicyPinned.Text" xml:space="preserve">
+    <value>कोई नीति पिन नहीं की गई</value>
+  </data>
+  <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
+    <value>त्वरित पहुंच के लिए ऊपर एक नीति खोजें और चुनें और उसे यहां पिन करें।</value>
+  </data>
 </root>

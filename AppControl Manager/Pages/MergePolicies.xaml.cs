@@ -26,7 +26,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class MergePolicies : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private MergePoliciesVM ViewModel { get; } = ViewModelProvider.MergePoliciesVM;
+	private MergePoliciesVM ViewModel => ViewModelProvider.MergePoliciesVM;
 
 	internal MergePolicies()
 	{

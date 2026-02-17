@@ -8,6 +8,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:CC="using:CommonCore.Others"
@@ -675,15 +676,13 @@
                         </Border>
 
                         <!-- Invisible sizer along the left edge of the right-hand pane -->
-                        <controls:PropertySizer Width="8"
+                        <CCToolKit:PropertySizer Width="8"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Stretch"
                                                 Binding="{x:Bind SidebarSplitView.OpenPaneLength, Mode=TwoWay}"
                                                 Orientation="Vertical"
-                                                IsDragInverted="True"
-                                                IsThumbVisible="False"
-                                                Background="Transparent"
-                                                Cursor="SizeWestEast"
+                                                IsDragInverted="True"                                               
+                                                Background="Transparent"                                                
                                                 Minimum="200"
                                                 Maximum="1200"
                                                 IsTabStop="False"
@@ -798,12 +797,12 @@
                     </controls:WrapPanel>
 
                     <!-- Note the use of a TwoWay binding here, this is required for this control to work.  -->
-                    <controls:PropertySizer HorizontalAlignment="Left"
-                                            Grid.Row="2"
-                                            Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
-                                            Maximum="640"
-                                            Minimum="60"
-                                            Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
+                    <CCToolKit:PropertySizer HorizontalAlignment="Left"
+                                             Grid.Row="2"
+                                             Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
+                                             Maximum="640"
+                                             Minimum="60"
+                                             Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
 
                     <!-- Global margin settings for every page's content -->
                     <Frame x:Name="ContentFrame"

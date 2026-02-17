@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using CommonCore.GroupPolicy;
 using Microsoft.Win32;
 
-namespace HardenSystemSecurity.RegistryManager;
+namespace CommonCore.RegistryManager;
 
 internal static class Manager
 {

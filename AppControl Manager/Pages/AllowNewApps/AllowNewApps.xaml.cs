@@ -30,9 +30,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
-	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
-	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
-	private NavigationService nav { get; } = ViewModelProvider.NavigationService;
+	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
+	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
+	private NavigationService nav => ViewModelProvider.NavigationService;
 
 	internal AllowNewApps()
 	{

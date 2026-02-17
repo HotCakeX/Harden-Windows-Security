@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -93,9 +92,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			Dispatcher, null, null);
 	}
 
-	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
-	private ConfigurePolicyRuleOptionsVM ConfigurePolicyRuleOptionsViewModel { get; } = ViewModelProvider.ConfigurePolicyRuleOptionsVM;
-	internal EventLogUtility EventLogsUtil { get; } = ViewModelProvider.EventLogUtility;
+	private ConfigurePolicyRuleOptionsVM ConfigurePolicyRuleOptionsViewModel => ViewModelProvider.ConfigurePolicyRuleOptionsVM;
+	internal EventLogUtility EventLogsUtil => ViewModelProvider.EventLogUtility;
 
 	#region Allow Microsoft
 
@@ -205,7 +203,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Allow Microsoft policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_AllowMicrosoft() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathAllowMicrosoft);
+	internal async void OpenInPolicyEditor_AllowMicrosoft() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathAllowMicrosoft);
 
 	internal async void OpenInDefaultFileHandler_AllowMicrosoft() => await OpenInDefaultFileHandler(_policyPathAllowMicrosoft);
 
@@ -321,7 +319,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Default Windows policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_DefaultWindows() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathDefaultWindows);
+	internal async void OpenInPolicyEditor_DefaultWindows() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathDefaultWindows);
 
 	internal async void OpenInDefaultFileHandler_DefaultWindows() => await OpenInDefaultFileHandler(_policyPathDefaultWindows);
 
@@ -433,7 +431,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Signed and Reputable policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_SignedAndReputable() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathSignedAndReputable);
+	internal async void OpenInPolicyEditor_SignedAndReputable() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathSignedAndReputable);
 
 	internal async void OpenInDefaultFileHandler_SignedAndReputable() => await OpenInDefaultFileHandler(_policyPathSignedAndReputable);
 
@@ -547,7 +545,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Microsoft Recommended driver block rules policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_RecommendedDriverBlockRules() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathMSFTRecommendedDriverBlockRules);
+	internal async void OpenInPolicyEditor_RecommendedDriverBlockRules() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathMSFTRecommendedDriverBlockRules);
 
 	internal async void OpenInDefaultFileHandler_RecommendedDriverBlockRules() => await OpenInDefaultFileHandler(_policyPathMSFTRecommendedDriverBlockRules);
 
@@ -622,7 +620,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Microsoft Recommended User Mode block rules policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_RecommendedUserModeBlockRules() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathRecommendedUserModeBlockRules);
+	internal async void OpenInPolicyEditor_RecommendedUserModeBlockRules() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathRecommendedUserModeBlockRules);
 
 	internal async void OpenInDefaultFileHandler_RecommendedUserModeBlockRules() => await OpenInDefaultFileHandler(_policyPathRecommendedUserModeBlockRules);
 
@@ -695,7 +693,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Strict Kernel-mode policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_StrictKernelModePolicy() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathStrictKernelMode);
+	internal async void OpenInPolicyEditor_StrictKernelModePolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathStrictKernelMode);
 
 	internal async void OpenInDefaultFileHandler_StrictKernelModePolicy() => await OpenInDefaultFileHandler(_policyPathStrictKernelMode);
 
@@ -771,7 +769,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created RMM Blocking policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_RMMBlockingPolicy() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathRMMBlocking);
+	internal async void OpenInPolicyEditor_RMMBlockingPolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathRMMBlocking);
 
 	internal async void OpenInDefaultFileHandler_RMMBlockingPolicy() => await OpenInDefaultFileHandler(_policyPathRMMBlocking);
 
@@ -887,7 +885,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Downloads Defense Measures policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_DownloadsDefenseMeasurePolicy() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathDownloadsDefenseMeasure);
+	internal async void OpenInPolicyEditor_DownloadsDefenseMeasurePolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathDownloadsDefenseMeasure);
 
 	internal async void OpenInDefaultFileHandler_DownloadsDefenseMeasurePolicy() => await OpenInDefaultFileHandler(_policyPathDownloadsDefenseMeasure);
 
@@ -963,7 +961,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the created Dangerous Script Hosts Blocking policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor_DangerousScriptHostsBlockingPolicy() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathDangerousScriptHostsBlocking);
+	internal async void OpenInPolicyEditor_DangerousScriptHostsBlockingPolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathDangerousScriptHostsBlocking);
 
 	internal async void OpenInDefaultFileHandler_DangerousScriptHostsBlockingPolicy() => await OpenInDefaultFileHandler(_policyPathDangerousScriptHostsBlocking);
 

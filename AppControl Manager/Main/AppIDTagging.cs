@@ -18,8 +18,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.XMLOps;
 
 namespace AppControlManager.Main;
 
@@ -40,6 +42,30 @@ internal static class AppIDTagging
 	];
 
 	/// <summary>
+	/// App ID Tagging only applies to user mode Exe files.
+	/// Creationg explicit Allow rules for them improves system performance.
+	/// </summary>
+	private static readonly List<FileIdentity> AppIDTaggingFileTypeExceptions = [
+		new(){FilePath = "*.sys", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.com", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.dll", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.ocx", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.rll", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.mst", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.msi", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.js", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.vbs", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.ps1", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.appx", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.bin", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.bat", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.hxs", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.mui", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.lex", SISigningScenario = SiPolicyIntel.SSType.UserMode},
+		new(){FilePath = "*.mof", SISigningScenario = SiPolicyIntel.SSType.UserMode}
+		];
+
+	/// <summary>
 	/// Converts any App Control policy to AppIDTagging policy.
 	/// </summary>
 	/// <param name="siPolicy"></param>
@@ -50,7 +76,7 @@ internal static class AppIDTagging
 		siPolicy = RemoveSigningScenarios.RemoveKernelMode(siPolicy);
 
 		// Change policy type
-		siPolicy.PolicyType = SiPolicy.PolicyType.AppIDTaggingPolicy;
+		siPolicy.PolicyType = PolicyType.AppIDTaggingPolicy;
 
 		// Ensure the IDs are the same
 		if (!string.Equals(siPolicy.PolicyID, siPolicy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
@@ -58,47 +84,17 @@ internal static class AppIDTagging
 			throw new InvalidOperationException("The PolicyID and BasePolicyID of an AppIDTagging policy must be the same");
 		}
 
-		#region Create Allow-All DLL rule
+		#region Exception rules creation
 
-		siPolicy.FileRules ??= [];
+		FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: AppIDTaggingFileTypeExceptions, level: ScanLevels.FilePath, folderPaths: null);
 
-		string allDLLAllowRuleID = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
+		// Create a new SiPolicy object with the data package.
+		SiPolicy.SiPolicy newPolicyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
 
-		Allow allDLLAllowRule = new(allDLLAllowRuleID)
-		{
-			FriendlyName = "Allow all DLLs for performance reasons",
-			FilePath = "*.dll",
-			MinimumFileVersion = new("0.0.0.0")
-		};
-
-		siPolicy.FileRules.Add(allDLLAllowRule);
-
-		// Ensure UMCI Scenario exists
-		SigningScenario? umciScenario = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umciScenario is null)
-		{
-			umciScenario = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners()
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(umciScenario);
-			siPolicy.SigningScenarios = scenarios;
-		}
-
-		// Ensure FileRulesRef exists
-		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-
-		umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allDLLAllowRuleID));
+		// Merge the new supplemental policy with the Pinned App ID Tagging Policy
+		siPolicy = Merger.Merge(siPolicy, [newPolicyObj]);
 
 		#endregion
-
-		// Make sure everything is unique and no duplicates exist
-		siPolicy = Merger.Merge(siPolicy, null);
 
 		// Make sure the policy only has valid rule options
 		_ = siPolicy.Rules.RemoveAll(r => !AppIDTaggingRules.Contains(r.Item));

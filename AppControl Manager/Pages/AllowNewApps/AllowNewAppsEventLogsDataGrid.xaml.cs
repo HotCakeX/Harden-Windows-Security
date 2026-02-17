@@ -31,7 +31,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 {
 
-	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
+	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
 
 	internal AllowNewAppsEventLogsDataGrid()
 	{

@@ -7,6 +7,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:others="using:AppControlManager.Others"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -151,26 +152,26 @@
                         <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" Grid.Column="20" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_EventLogs}" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[20], Mode=OneWay}" />
 
                         <!-- GridSplitters between columns -->
-                        <controls:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[34], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[35], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[36], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[37], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="17" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[38], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="18" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[39], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="19" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[40], Mode=OneWay}" />
-                        <controls:GridSplitter Grid.Column="20" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[41], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[34], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[35], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[36], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[37], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="17" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[38], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="18" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[39], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="19" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[40], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="20" Visibility="{x:Bind ViewModel.EventLogsColumnManager.ColumnVisibilities[41], Mode=OneWay}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

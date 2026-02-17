@@ -246,7 +246,7 @@
                                       StepSize="1"
                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                       TickSpacing="2"
-                                      ScaleWidth="12"                                      
+                                      ScaleWidth="12"
                                       TickLength="8"
                                       TickWidth="0"
                                       ScalePadding="5"

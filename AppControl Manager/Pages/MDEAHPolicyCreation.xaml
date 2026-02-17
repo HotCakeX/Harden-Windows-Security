@@ -321,23 +321,23 @@
                                                 VerticalAlignment="Top"
                                                 Orientation="Vertical"
                                                 Spacing="8">
-                                            <controls:Segmented x:Name="segmentedControl"
+                                            <CCToolKit:Segmented x:Name="segmentedControl"
                                                     HorizontalAlignment="Stretch"
                                                     SelectedIndex="{x:Bind ViewModel.SelectedCreationMethod, Mode=TwoWay}">
-                                                <controls:SegmentedItem x:Uid="AddToPolicySegmentedItem"
+                                                <CCToolKit:SegmentedItem x:Uid="AddToPolicySegmentedItem"
                                                             Tag="AddToPolicy"
                                                             Width="160"
                                                             Icon="{ui:FontIcon Glyph=&#xEB49;}" />
-                                                <controls:SegmentedItem x:Uid="BasePolicyFileSegmentedItem"
+                                                <CCToolKit:SegmentedItem x:Uid="BasePolicyFileSegmentedItem"
                                                             Tag="BasePolicyFile"
                                                             Width="160"
                                                             Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
-                                                <controls:SegmentedItem x:Uid="BasePolicyGUIDSegmentedItem"
+                                                <CCToolKit:SegmentedItem x:Uid="BasePolicyGUIDSegmentedItem"
                                                             Tag="BaseGUID"
                                                             Width="160"
                                                             Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
-                                            </controls:Segmented>
-                                            <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
+                                            </CCToolKit:Segmented>
+                                            <controls:SwitchPresenter Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
 
                                                 <controls:Case Value="AddToPolicy">
                                                     <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
@@ -589,7 +589,7 @@
                                       SelectedIndex="0"
                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                       ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"
-                                      x:Uid="ScanLevelComboBox"                                     
+                                      x:Uid="ScanLevelComboBox"
                                       ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 
                             <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"

@@ -70,7 +70,7 @@
                                            Style="{ThemeResource SubtitleTextBlockStyle}"/>
                                 <TextBlock x:Uid="FirewallSentinelMainTopDescription"
                                            TextWrapping="Wrap"
-                                           Style="{ThemeResource BodyTextBlockStyle}" 
+                                           Style="{ThemeResource BodyTextBlockStyle}"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
@@ -125,11 +125,11 @@
                             <!-- Default Windows Card -->
                             <Grid x:Name="DefaultWindowsCard"
                                   Width="280"
-                                  Height="250" 
-                                  Padding="12" 
-                                  CornerRadius="8" 
-                                  BorderThickness="1" 
-                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                                  Height="250"
+                                  Padding="12"
+                                  CornerRadius="8"
+                                  BorderThickness="1"
+                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                   Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                   PointerEntered="{x:Bind Card_PointerEntered}"
                                   PointerExited="{x:Bind Card_PointerExited}"
@@ -154,9 +154,9 @@
 
                                 <Button Content="Apply Default Windows profile"
                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                        Click="{x:Bind ViewModel.ConfigureFirewallForDefaultWindows}" 
-                                        Style="{StaticResource AccentButtonStyle}" 
-                                        HorizontalAlignment="Stretch" 
+                                        Click="{x:Bind ViewModel.ConfigureFirewallForDefaultWindows}"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        HorizontalAlignment="Stretch"
                                         Grid.Row="2"/>
 
                                 <!-- Overlay container for Neon Border with negative margin to ignore padding -->
@@ -166,11 +166,11 @@
                             <!-- Allow Microsoft Card -->
                             <Grid x:Name="AllowMicrosoftCard"
                                   Width="280"
-                                  Height="250" 
-                                  Padding="12" 
-                                  CornerRadius="8" 
-                                  BorderThickness="1" 
-                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                                  Height="250"
+                                  Padding="12"
+                                  CornerRadius="8"
+                                  BorderThickness="1"
+                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                   Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                   PointerEntered="{x:Bind Card_PointerEntered}"
                                   PointerExited="{x:Bind Card_PointerExited}"
@@ -196,8 +196,8 @@
                                 <Button Content="Apply Allow Microsoft profile"
                                         Click="{x:Bind ViewModel.ConfigureFirewallForAllowMicrosoft}"
                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                        Style="{StaticResource AccentButtonStyle}" 
-                                        HorizontalAlignment="Stretch" 
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        HorizontalAlignment="Stretch"
                                         Grid.Row="2"/>
 
                                 <!-- Overlay container for Neon Border with negative margin to ignore padding -->
@@ -207,11 +207,11 @@
                             <!-- Signed and Reputable Card -->
                             <Grid x:Name="SignedReputableCard"
                                   Width="280"
-                                  Height="250" 
-                                  Padding="12" 
-                                  CornerRadius="8" 
-                                  BorderThickness="1" 
-                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                                  Height="250"
+                                  Padding="12"
+                                  CornerRadius="8"
+                                  BorderThickness="1"
+                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                   Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                   PointerEntered="{x:Bind Card_PointerEntered}"
                                   PointerExited="{x:Bind Card_PointerExited}"
@@ -237,8 +237,8 @@
                                 <Button Content="Apply Signed and Reputable profile"
                                         Click="{x:Bind ViewModel.ConfigureFirewallForSignedAndReputable}"
                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                        Style="{StaticResource AccentButtonStyle}" 
-                                        HorizontalAlignment="Stretch" 
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        HorizontalAlignment="Stretch"
                                         Grid.Row="2"/>
 
                                 <!-- Overlay container for Neon Border with negative margin to ignore padding -->
@@ -261,7 +261,7 @@
                                 <TextBlock x:Uid="Advanced"
                                            Style="{ThemeResource SubtitleTextBlockStyle}"/>
                                 <TextBlock x:Uid="FirewallSentinelAdvancedSectionDescription"
-                                           Style="{ThemeResource BodyTextBlockStyle}" 
+                                           Style="{ThemeResource BodyTextBlockStyle}"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
@@ -327,7 +327,7 @@
                         <TextBlock x:Uid="PinnedFirewallPolicy"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="PinnedFirewallPolicyDescription"
-                                   Style="{ThemeResource BodyTextBlockStyle}" 
+                                   Style="{ThemeResource BodyTextBlockStyle}"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
 
@@ -369,7 +369,7 @@
                                         <StackPanel Padding="0,8" Spacing="8">
 
                                             <!-- Friendly Name -->
-                                            <TextBlock Text="{x:Bind PolicyIdentifier}" 
+                                            <TextBlock Text="{x:Bind PolicyIdentifier}"
                                                        Style="{ThemeResource BodyStrongTextBlockStyle}"
                                                        TextWrapping="Wrap"/>
 
@@ -388,9 +388,9 @@
                                                                Style="{ThemeResource CaptionTextBlockStyle}"
                                                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                                                FontSize="10"/>
-                                                    <TextBlock Text="{x:Bind PolicyID}" 
-                                                               Style="{ThemeResource CaptionTextBlockStyle}" 
-                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
+                                                    <TextBlock Text="{x:Bind PolicyID}"
+                                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                                FontFamily="Consolas"/>
                                                 </StackPanel>
                                             </Grid>
@@ -411,8 +411,8 @@
                                                                Style="{ThemeResource CaptionTextBlockStyle}"
                                                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                                                FontSize="10"/>
-                                                    <TextBlock Text="{x:Bind PolicyObj.VersionEx}" 
-                                                               Style="{ThemeResource CaptionTextBlockStyle}" 
+                                                    <TextBlock Text="{x:Bind PolicyObj.VersionEx}"
+                                                               Style="{ThemeResource CaptionTextBlockStyle}"
                                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                 </StackPanel>
                                             </Grid>
@@ -451,12 +451,12 @@
                                         <FontIcon Glyph="&#xE840;"
                                               FontSize="14"
                                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                                        <TextBlock Text="PINNED POLICY" 
-                                               Style="{ThemeResource CaptionTextBlockStyle}" 
+                                        <TextBlock Text="PINNED POLICY"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
                                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                                FontWeight="SemiBold"/>
                                     </StackPanel>
-                                    <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyIdentifier, Mode=OneWay}" 
+                                    <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyIdentifier, Mode=OneWay}"
                                                Style="{ThemeResource BodyStrongTextBlockStyle}"
                                                TextWrapping="Wrap"
                                                IsTextSelectionEnabled="True"/>
@@ -464,7 +464,7 @@
 
                                 <Button Grid.Column="1"
                                         Margin="5,0,0,5"
-                                        Content="Unpin" 
+                                        Content="Unpin"
                                         VerticalAlignment="Top"
                                         IsEnabled="{x:Bind ViewModel.IsPolicyPinned, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.ClearPinnedPolicy}">
@@ -495,7 +495,7 @@
                                         <TextBlock x:Uid="PolicyIDHeader"
                                                    Style="{ThemeResource CaptionTextBlockStyle}"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                        <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyID, Mode=OneWay}" 
+                                        <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyID, Mode=OneWay}"
                                                    Style="{ThemeResource BodyTextBlockStyle}"
                                                    FontFamily="Consolas"
                                                    IsTextSelectionEnabled="True"/>
@@ -516,7 +516,7 @@
                                         <TextBlock x:Uid="VersionHeader"
                                                    Style="{ThemeResource CaptionTextBlockStyle}"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                        <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyObj.VersionEx, Mode=OneWay}" 
+                                        <TextBlock Text="{x:Bind ViewModel.PinnedPolicy.PolicyObj.VersionEx, Mode=OneWay}"
                                                    Style="{ThemeResource BodyTextBlockStyle}"
                                                    IsTextSelectionEnabled="True"/>
                                     </StackPanel>
@@ -543,11 +543,11 @@
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
                                 <FontIcon Glyph="&#xE710;" FontSize="32" Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                                 <TextBlock x:Uid="NoPolicyPinned"
-                                           Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                                           Style="{ThemeResource BodyStrongTextBlockStyle}"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                            HorizontalAlignment="Center"/>
                                 <TextBlock x:Uid="NoPolicyPinnedDescription"
-                                           Style="{ThemeResource CaptionTextBlockStyle}" 
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
                                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                            HorizontalAlignment="Center"
                                            TextAlignment="Center"
@@ -573,7 +573,7 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <!-- Files and Folders Scan -->
-                <controls:SettingsExpander x:Uid="AppIDTaggingFilesAndFoldersSettingsCard"                                         
+                <controls:SettingsExpander x:Uid="AppIDTaggingFilesAndFoldersSettingsCard"
                                            IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE71D;" />

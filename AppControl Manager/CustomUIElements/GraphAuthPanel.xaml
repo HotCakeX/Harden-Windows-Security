@@ -72,39 +72,39 @@
                             Orientation="Vertical"
                             Spacing="8">
 
-                    <controls:Segmented x:Name="segmentedControl1"
+                    <CCToolKit:Segmented x:Name="segmentedControl1"
                          SelectedIndex="0"
                          HorizontalAlignment="Stretch">
-                        <controls:SegmentedItem x:Uid="ActiveAccountSegmentedItem"
+                        <CCToolKit:SegmentedItem x:Uid="ActiveAccountSegmentedItem"
                                  Tag="Active">
-                            <controls:SegmentedItem.Icon>
+                            <CCToolKit:SegmentedItem.Icon>
                                 <IconSourceElement>
                                     <BitmapIconSource UriSource="ms-appx:///Assets/External/Bottle.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
-                            </controls:SegmentedItem.Icon>
+                            </CCToolKit:SegmentedItem.Icon>
 
-                        </controls:SegmentedItem>
+                        </CCToolKit:SegmentedItem>
 
-                        <controls:SegmentedItem x:Uid="SignInSegmentedItem"
+                        <CCToolKit:SegmentedItem x:Uid="SignInSegmentedItem"
                                                 Tag="Authentication" >
-                            <controls:SegmentedItem.Icon>
+                            <CCToolKit:SegmentedItem.Icon>
                                 <IconSourceElement>
                                     <BitmapIconSource UriSource="ms-appx:///Assets/External/Authentication.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
-                            </controls:SegmentedItem.Icon>
-                        </controls:SegmentedItem>
+                            </CCToolKit:SegmentedItem.Icon>
+                        </CCToolKit:SegmentedItem>
 
-                        <controls:SegmentedItem x:Uid="SignedInAccountsSegmentedItem"
+                        <CCToolKit:SegmentedItem x:Uid="SignedInAccountsSegmentedItem"
                                                 Tag="SignedIn">
-                            <controls:SegmentedItem.Icon>
+                            <CCToolKit:SegmentedItem.Icon>
                                 <IconSourceElement>
                                     <BitmapIconSource UriSource="ms-appx:///Assets/External/Vault.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
-                            </controls:SegmentedItem.Icon>
-                        </controls:SegmentedItem>
-                    </controls:Segmented>
+                            </CCToolKit:SegmentedItem.Icon>
+                        </CCToolKit:SegmentedItem>
+                    </CCToolKit:Segmented>
 
-                    <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <controls:SwitchPresenter Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                         <controls:Case Value="Active">
                             <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"

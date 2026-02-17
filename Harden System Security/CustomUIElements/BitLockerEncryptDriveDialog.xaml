@@ -6,6 +6,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     x:Uid="BitLockerEncryptDriveContentDialog"
     DefaultButton="Close"
     IsPrimaryButtonEnabled="True"
@@ -15,11 +16,6 @@
 
     <customUI:ContentDialogV2.Resources>
         <ResourceDictionary>
-            <!-- To use the PivotSegmentedStyle for the Segmented element -->
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.Segmented/Segmented/Segmented.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <x:Double x:Key="ContentDialogMaxWidth">1200</x:Double>
         </ResourceDictionary>
     </customUI:ContentDialogV2.Resources>
@@ -52,7 +48,7 @@
                       HorizontalAlignment="Center"
                       VerticalAlignment="Top">
             <controls:SwitchPresenter
-                    Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
+                    Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
 
                 <controls:Case Value="OSDrive">
 
@@ -181,7 +177,7 @@
         </ScrollViewer>
 
         <!-- Segmented control -->
-        <controls:Segmented Grid.Row="2"
+        <CCToolKit:Segmented Grid.Row="2"
                          x:Name="segmentedControl"
                          HorizontalAlignment="Center"
                          Style="{StaticResource PivotSegmentedStyle}"
@@ -189,18 +185,18 @@
 
             <!-- Replacing the default StackPanel with our WrapPanel so that
               Instead of a single horizontal line, the items go to the next rows when width gets too small -->
-            <controls:Segmented.ItemsPanel>
+            <CCToolKit:Segmented.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:WrapPanel Orientation="Horizontal"
                                         HorizontalSpacing="{ThemeResource SegmentedItemSpacing}"
                                         VerticalSpacing="{ThemeResource SegmentedItemSpacing}" />
                 </ItemsPanelTemplate>
-            </controls:Segmented.ItemsPanel>
+            </CCToolKit:Segmented.ItemsPanel>
 
-            <controls:SegmentedItem x:Uid="OSDriveSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="OSDriveSegmentedItem"
                                     IsEnabled="{x:Bind IsOSDriveSectionEnabled}"
                                     Tag="OSDrive">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                  HorizontalAlignment="Center"
@@ -214,13 +210,13 @@
                                     TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="FixedDriveSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="FixedDriveSegmentedItem"
                                     IsEnabled="{x:Bind IsFixedDriveSectionEnabled}"
                                     Tag="FixedDrive">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                  HorizontalAlignment="Center"
@@ -234,13 +230,13 @@
                                     TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="RemovableDriveSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="RemovableDriveSegmentedItem"
                                     IsEnabled="{x:Bind IsRemovableDriveSectionEnabled}"
                                     Tag="RemovableDrive">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                  HorizontalAlignment="Center"
@@ -254,9 +250,9 @@
                                     TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-        </controls:Segmented>
+        </CCToolKit:Segmented>
     </Grid>
 </customUI:ContentDialogV2>

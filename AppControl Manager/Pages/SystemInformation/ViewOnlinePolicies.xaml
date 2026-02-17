@@ -85,7 +85,7 @@
                 <!-- View Assignments Button -->
                 <Button IsEnabled="{x:Bind ViewModel.IsPolicySelected, Mode=OneWay}"
                         Click="{x:Bind ViewModel.ViewAssignments_Click}"
-                        HorizontalAlignment="Center" 
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         x:Uid="AssignmentsButton">
                     <Button.ContentTemplate>

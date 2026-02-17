@@ -706,17 +706,17 @@ jobs:
           # Local Test - ARM64 + X64
           # Build_ACM -IsNonStore $true -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Upload $false
 
-#      - name: Configure Microsoft Store CLI 
+#      - name: Configure Microsoft Store CLI
 #        uses: microsoft/microsoft-store-apppublisher@v1.3
 #
-#      - name: Reconfigure store credentials 
-#        run: msstore reconfigure ` 
-#              --tenantId ${{ secrets.PARTNERCENTER_TENANTID }} ` 
-#              --sellerId ${{ secrets.PARTNERCENTER_SELLERID }} ` 
-#              --clientId ${{ secrets.PARTNERCENTER_CLIENTID }} ` 
-#              --clientSecret ${{ secrets.PARTNERCENTER_CLIENTSECRET }} 
+#      - name: Reconfigure store credentials
+#        run: msstore reconfigure `
+#              --tenantId ${{ secrets.PARTNERCENTER_TENANTID }} `
+#              --sellerId ${{ secrets.PARTNERCENTER_SELLERID }} `
+#              --clientId ${{ secrets.PARTNERCENTER_CLIENTID }} `
+#              --clientSecret ${{ secrets.PARTNERCENTER_CLIENTSECRET }}
 #
-#      - name: Publish App package 
+#      - name: Publish App package
 #        shell: pwsh
 #        run: msstore publish "${{ env.MSIXBundle_PATH }}" -id "9PNG1JDDTGP8"
 #

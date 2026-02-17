@@ -28,8 +28,8 @@ using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
-using CommonCore.ToolKits;
 using CommonCore.SecurityPolicy;
+using CommonCore.ToolKits;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -557,7 +557,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 								break;
 						}
 
-						// Creating a new RegistryPolicyEntry with the correct size and updated data.						
+						// Creating a new RegistryPolicyEntry with the correct size and updated data.
 						RegistryPolicyEntry newEntry = new(
 							policy.Source,
 							policy.KeyName,

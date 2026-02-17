@@ -698,7 +698,7 @@
                                             <CCToolKit:RadialGauge
                                                    StepSize="1"
                                                    TickSpacing="2"
-                                                   ScaleWidth="12"                                                                     
+                                                   ScaleWidth="12"
                                                    TickLength="8"
                                                    TickWidth="0"
                                                    ScalePadding="5"

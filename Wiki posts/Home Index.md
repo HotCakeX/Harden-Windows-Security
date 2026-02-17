@@ -28,6 +28,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/View%20File%20Certificates.gif" alt="AppControl Manager Menu Item" width="30"> [Validate Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Validate-Policies)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Validate%20Policies.gif" alt="AppControl Manager Menu Item" width="30"> [View File Certificates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="30"> [Microsoft Graph](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/b7bce8f390bcfe8d9882d3b716a1b9d5e89928d3/Pictures/Gifs/AppControl%20Manager%20Menu/Firewall%20Sentinel.gif" alt="AppControl Manager Menu Item" width="30"> [Firewall Sentinel](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Firewall-Sentinel)
 
 <br>
 

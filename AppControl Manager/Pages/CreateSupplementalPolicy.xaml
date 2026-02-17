@@ -497,7 +497,7 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <!-- Files and Folders Scan -->
-                <controls:SettingsExpander x:Uid="SupplementalFilesAndFoldersSettingsCard"                                         
+                <controls:SettingsExpander x:Uid="SupplementalFilesAndFoldersSettingsCard"
                                            IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE71D;" />
@@ -1299,7 +1299,7 @@
 
                 <!-- Package Family Name (PFN) -->
                 <controls:SettingsExpander x:Uid="PFNSupplementalPolicySettingsExpander"
-                                           IsEnabled="{x:Bind ViewModel.IsElevated}"                                          
+                                           IsEnabled="{x:Bind ViewModel.IsElevated}"
                                            IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
                                            Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}">
 

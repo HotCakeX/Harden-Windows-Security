@@ -235,7 +235,7 @@ internal static class BinarySecurityAnalyzer
 		return fileList;
 	}
 
-	internal static HashSet<string> GetASLRIncompatibleGitHubExes()
+	internal static HashSet<string> GetASLRIncompatibleExes()
 	{
 		List<string> results = FindIncompatibleGitHubDesktopExes();
 		results.AddRange(FindIncompatibleGitExes());
@@ -243,7 +243,7 @@ internal static class BinarySecurityAnalyzer
 
 		Logger.Write($"Found {results.Count} Git, GitHub Desktop, and MSYS2/MinGW related files incompatible with ASLR Exploit Mitigation feature:");
 
-		foreach (string item in results)
+		foreach (string item in CollectionsMarshal.AsSpan(results))
 			Logger.Write(item);
 
 		return results.ToHashSet();

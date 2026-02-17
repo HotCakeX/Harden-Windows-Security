@@ -53,7 +53,7 @@ It's an optional per user encryption for the Policies Library cache. When enable
 
 #### Encryption Scope
 
-Select an encryption scope: User, which allows only the current Windows account to decrypt the encrypted policy files, or Machine, which restricts decryption to this device so the files cannot be decrypted if moved to another device. 
+Select an encryption scope: User, which allows only the current Windows account to decrypt the encrypted policy files, or Machine, which restricts decryption to this device so the files cannot be decrypted if moved to another device.
 
 If using Administrator Protection mode in the OS, it's recommended to switch to Machine scope mode. Policies encrypted with Machine scope can be decrypted by any user on the same device, while policies encrypted with User scope can only be decrypted by the user who encrypted them.
 

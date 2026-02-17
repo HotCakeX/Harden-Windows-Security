@@ -20,9 +20,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using CommonCore.GroupPolicy;
+using CommonCore.SecurityPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
-using CommonCore.SecurityPolicy;
 
 namespace HardenSystemSecurity.ViewModels;
 

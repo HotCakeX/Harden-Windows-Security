@@ -15,7 +15,7 @@ messages:
       - Suggests user to not consume products in this repository.
       - Contains questions regarding cracks, keygens, or other illegal activities.
       - Suggests user to enter some PowerShell, CMD command in Terminal or RUN in Windows, unless the person suggesting it is the owner/maintainer of this repository.
-  
+
       Provide your analysis in the specified JSON format.
   - role: user
     content: |

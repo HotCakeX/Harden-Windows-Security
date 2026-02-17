@@ -104,7 +104,7 @@
                                             </MenuFlyout.SystemBackdrop>
 
                                             <!-- Direction Section Header -->
-                                            <MenuFlyoutItem Text="Direction" 
+                                            <MenuFlyoutItem Text="Direction"
                                                             Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
 
                                             <RadioMenuFlyoutItem x:Uid="FirewallInboundDirectionRadioMenuFlyoutItem"
@@ -137,7 +137,7 @@
                                             <MenuFlyoutSeparator/>
 
                                             <!-- Action Section Header -->
-                                            <MenuFlyoutItem Text="Action" 
+                                            <MenuFlyoutItem Text="Action"
                                                             Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
 
                                             <RadioMenuFlyoutItem x:Uid="FirewallAllowActionRadioMenuFlyoutItem"
@@ -161,7 +161,7 @@
                                             <MenuFlyoutSeparator/>
 
                                             <!-- Store Location Section Header -->
-                                            <MenuFlyoutItem Text="Store Location" 
+                                            <MenuFlyoutItem Text="Store Location"
                                                             Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
 
                                             <RadioMenuFlyoutItem x:Uid="FirewallGroupPolicyStoreRadioMenuFlyoutItem"
@@ -185,7 +185,7 @@
                                             <MenuFlyoutSeparator/>
 
                                             <!-- Selection Section Header -->
-                                            <MenuFlyoutItem Text="Selection" 
+                                            <MenuFlyoutItem Text="Selection"
                                                             Style="{StaticResource MenuFlyoutSectionHeaderStyle}" />
 
                                             <MenuFlyoutItem x:Uid="FirewallSelectProgramsMenuFlyoutItem"

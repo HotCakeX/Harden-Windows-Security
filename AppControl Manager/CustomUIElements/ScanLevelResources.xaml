@@ -30,14 +30,14 @@
                                         BorderThickness="1"
                                         CornerRadius="4"
                                         Padding="6,2">
-                                    <TextBlock Text="{x:Bind Name}" 
-                                               Style="{ThemeResource CaptionTextBlockStyle}" 
+                                    <TextBlock Text="{x:Bind Name}"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                 </Border>
 
-                                <FontIcon Glyph="&#xE76C;" 
-                                          FontSize="8" 
-                                          Visibility="{x:Bind ChevronVisibility}" 
+                                <FontIcon Glyph="&#xE76C;"
+                                          FontSize="8"
+                                          Visibility="{x:Bind ChevronVisibility}"
                                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                           VerticalAlignment="Center"/>
                             </StackPanel>

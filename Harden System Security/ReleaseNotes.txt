@@ -1,1 +1,15 @@
-* Dependencies have been updated to their latest versions, 3 dependencies have been removed, improving performance and the overall supply chain security.
+✅ Dependency Optimization & Supply Chain Security
+
+* All dependencies have been updated to their latest versions. Furthermore, four 1st party dependencies have been removed entirely. This reduction streamlines the codebase, offering several key benefits:
+
+* Enhanced Performance: Targeted fixes associated with the removal result in improved runtime efficiency.
+
+* Supply Chain Security: Reducing the dependency footprint minimizes the attack surface and limits indirect access to the project code.
+
+* Development Autonomy: UI-related features can now be improved independently of external release cycles.
+
+* Future Roadmap: I remain committed to eliminating unnecessary dependencies while balancing project complexity, with the ultimate goal of exceeding SLSA Level 4 standards.
+
+✅Enhanced ASLR Compatibility for MSYS2/MinGW
+
+* The Microsoft Defender category now includes automated scanning for MSYS2 and MinGW installation directories. This ensures that Git and other incompatible executables within these environments are automatically excluded from mandatory ASLR mitigation. Additionally, all ASLR exclusions now utilize the Force/Override policy, ensuring that system-wide security settings do not interfere with these specific per-process configurations.

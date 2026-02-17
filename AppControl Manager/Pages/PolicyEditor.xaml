@@ -546,7 +546,7 @@
 
                                 </controls:SettingsCard>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"                                                       
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"
                                                        IsClickEnabled="False">
                                     <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/ID.png"
@@ -559,7 +559,7 @@
 
                                 </controls:SettingsCard>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"                                                      
+                                <controls:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"
                                                        IsClickEnabled="False">
                                     <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/BasePolicyID.png"
@@ -633,7 +633,7 @@
 
                                 </customUI:SettingsCardV2>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"                                                    
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"
                                                        IsClickEnabled="False">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE8AC;" />

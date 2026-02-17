@@ -2967,6 +2967,6 @@
         {"tm": 20, "cm": "PressedToNormal_Start", "dr": 0},
         {"tm": 29, "cm": "PressedToNormal_End", "dr": 0},
         {"tm": 29, "cm": "PressedToPointerOver_Start", "dr": 0},
-        {"tm": 30, "cm": "PressedToPointerOver_End", "dr": 0}  
+        {"tm": 30, "cm": "PressedToPointerOver_End", "dr": 0}
       ]
 }

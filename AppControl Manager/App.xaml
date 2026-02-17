@@ -16,6 +16,7 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="ms-appx:///CustomUIElements/HomePageCarousel/OpacityMask.xaml" />
                 <ResourceDictionary Source="ms-appx:///CustomUIElements/HomePageCarousel/HeaderTile.xaml" />
+                <ResourceDictionary Source="ms-appx:///CustomUIElements/SegmentedStyles.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->

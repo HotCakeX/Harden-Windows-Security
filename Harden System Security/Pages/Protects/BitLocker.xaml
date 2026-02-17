@@ -105,7 +105,7 @@
                                     <DropDownButton.Flyout>
                                         <MenuFlyout Placement="Bottom">
                                             <MenuFlyoutItem x:Uid="EncryptMenuFlyoutItem"
-                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"                                                           
+                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"
                                                             Click="{x:Bind ViewModel.EncryptVolume}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE72E;"/>
@@ -113,7 +113,7 @@
                                             </MenuFlyoutItem>
 
                                             <MenuFlyoutItem x:Uid="DecryptMenuFlyoutItem"
-                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"                                                            
+                                                            IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"
                                                             Click="{x:Bind ViewModel.DecryptVolume}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE785;"/>
@@ -575,8 +575,8 @@
                                         VerticalAlignment="Stretch"
                                         Binding="{x:Bind BitLockerSplitView.OpenPaneLength, Mode=TwoWay}"
                                         Orientation="Vertical"
-                                        IsDragInverted="True"                                       
-                                        Background="Transparent"                                        
+                                        IsDragInverted="True"
+                                        Background="Transparent"
                                         Minimum="400"
                                         Maximum="1200"
                                         IsTabStop="False"

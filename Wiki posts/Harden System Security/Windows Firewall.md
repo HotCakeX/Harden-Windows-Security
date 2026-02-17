@@ -122,15 +122,15 @@ Click or tap on this button to load the current state of rules managed by this a
 * This button offers additional features you could use. Except for the 2 export options, the rest display a confirmation dialog before proceeding with the action to prevent accidental clicks/taps:
 
     * Export Local Rules: Back up your current local firewall configuration to a `.wfw` file for safekeeping or migration.
-    
+
     * Export GPO Rules: Export firewall rules enforced by Group Policy Objects to a `.wfw` file for backup.
-    
+
     * Import Local Rules: Restore a previously saved configuration to your local firewall policy (replaces existing rules) by selecting a `.wfw` file.
-    
+
     * Import GPO Rules: Load a saved configuration into the Group Policy firewall store (replaces existing rules) by selecting a `.wfw` file.
-    
+
     * Restore Defaults: Reset the local firewall configuration to the original Windows default state, removing all custom rules.
-    
+
     * Delete All Rules: Completely wipe the local firewall policy, removing every rule including the default OS rules.
 
 <br>

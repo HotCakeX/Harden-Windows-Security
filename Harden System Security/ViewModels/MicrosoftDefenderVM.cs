@@ -476,7 +476,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			applyStrategy: new DefaultApply(() =>
 			{
 				// Collect all of the ASLR-Incompatible files.
-				HashSet<string> results = BinarySecurityAnalyzer.GetASLRIncompatibleGitHubExes();
+				HashSet<string> results = BinarySecurityAnalyzer.GetASLRIncompatibleExes();
 
 				if (results.Count > 0)
 				{

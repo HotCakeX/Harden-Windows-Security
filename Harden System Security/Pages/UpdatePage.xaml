@@ -98,9 +98,9 @@
                 </customUI:SettingsCardV2>
 
                 <controls:SettingsCard Click="{x:Bind ViewModel.LaunchRating}"
-                                       Visibility="{x:Bind ViewModel.RatingsSectionVisibility, Mode=OneWay}"                                      
+                                       Visibility="{x:Bind ViewModel.RatingsSectionVisibility, Mode=OneWay}"
                                        x:Uid="RateAndReviewSettingsCard"
-                                       IsClickEnabled="True"                                      
+                                       IsClickEnabled="True"
                                        IsActionIconVisible="True">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEC24;"/>
@@ -110,7 +110,7 @@
                     </controls:SettingsCard.ActionIcon>
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Uid="InstallAppPackagesSettingsCard"              
+                <controls:SettingsCard x:Uid="InstallAppPackagesSettingsCard"
                                        IsClickEnabled="True"
                                        IsActionIconVisible="True"
                                        Click="{x:Bind ViewModel.NavigateToAppPackageInstallerPage_Click}">

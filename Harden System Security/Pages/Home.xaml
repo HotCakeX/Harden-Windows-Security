@@ -449,7 +449,7 @@
                                 <StackPanel Style="{StaticResource CardHeaderStackStyle}">
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xEC5C;"/>
-                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"                                               
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
                                                Text="GPU"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1"

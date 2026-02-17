@@ -481,7 +481,7 @@ internal sealed partial class RadialGauge : UserControl
 			CompositionSpriteShape tickShape = _compositor.CreateSpriteShape(roundedTickGeometry);
 			tickShape.FillBrush = tickBrush;
 
-			// Position: 
+			// Position:
 			// 1. Center at top center of shape
 			// 2. Offset to top middle of gauge (relative to rotation center 100,100)
 			// 3. Rotate

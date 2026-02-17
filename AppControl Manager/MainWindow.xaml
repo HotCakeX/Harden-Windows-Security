@@ -423,7 +423,7 @@
 
                                         <StackPanel Spacing="10" Orientation="Vertical" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center">
 
-                                            <TextBox x:Uid="SearchBoxTextBox"                                                     
+                                            <TextBox x:Uid="SearchBoxTextBox"
                                                      Margin="10,15,10,0"
                                                      Text="{x:Bind ViewModel.SidebarSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                 <TextBox.Header>
@@ -600,7 +600,7 @@
                                                                                     <ColumnDefinition Width="*"/>
                                                                                 </Grid.ColumnDefinitions>
                                                                                 <FontIcon Glyph="&#xE97C;" FontSize="12" VerticalAlignment="Center" />
-                                                                                <TextBlock Grid.Column="1" 
+                                                                                <TextBlock Grid.Column="1"
                                                                                            Text="{x:Bind PolicyObj.PolicyType}"
                                                                                            TextTrimming="CharacterEllipsis"
                                                                                            TextWrapping="NoWrap"
@@ -614,7 +614,7 @@
                                                                                     <ColumnDefinition Width="*"/>
                                                                                 </Grid.ColumnDefinitions>
                                                                                 <FontIcon Glyph="&#xEF3F;" FontSize="12" VerticalAlignment="Center" />
-                                                                                <TextBlock Grid.Column="1" 
+                                                                                <TextBlock Grid.Column="1"
                                                                                            Text="{x:Bind SigningStatus}"
                                                                                            TextTrimming="CharacterEllipsis"
                                                                                            TextWrapping="NoWrap"
@@ -628,7 +628,7 @@
                                                                                     <ColumnDefinition Width="*"/>
                                                                                 </Grid.ColumnDefinitions>
                                                                                 <FontIcon Glyph="&#xE765;" FontSize="12" VerticalAlignment="Center" />
-                                                                                <TextBlock Grid.Column="1" 
+                                                                                <TextBlock Grid.Column="1"
                                                                                            Text="{x:Bind PolicyObj.VersionEx}"
                                                                                            TextTrimming="CharacterEllipsis"
                                                                                            TextWrapping="NoWrap"
@@ -642,7 +642,7 @@
                                                                                     <ColumnDefinition Width="*"/>
                                                                                 </Grid.ColumnDefinitions>
                                                                                 <FontIcon Glyph="&#xE932;" FontSize="12" VerticalAlignment="Center" />
-                                                                                <TextBlock Grid.Column="1" 
+                                                                                <TextBlock Grid.Column="1"
                                                                                            Text="{x:Bind PolicyID}"
                                                                                            TextTrimming="CharacterEllipsis"
                                                                                            TextWrapping="NoWrap"

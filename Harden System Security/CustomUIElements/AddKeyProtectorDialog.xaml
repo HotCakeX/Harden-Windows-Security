@@ -6,6 +6,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     x:Uid="AddKeyProtectorContentDialog"
     DefaultButton="Close"
     IsPrimaryButtonEnabled="True"
@@ -15,11 +16,6 @@
 
     <customUI:ContentDialogV2.Resources>
         <ResourceDictionary>
-            <!-- To use the PivotSegmentedStyle for the Segmented element -->
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.Segmented/Segmented/Segmented.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <x:Double x:Key="ContentDialogMaxWidth">1200</x:Double>
         </ResourceDictionary>
     </customUI:ContentDialogV2.Resources>
@@ -45,7 +41,7 @@
                       HorizontalAlignment="Center"
                       VerticalAlignment="Top">
             <controls:SwitchPresenter
-                Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
+                Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
 
                 <controls:Case Value="TPM">
 
@@ -327,7 +323,7 @@
         </ScrollViewer>
 
         <!-- Segmented control -->
-        <controls:Segmented Grid.Row="2"
+        <CCToolKit:Segmented Grid.Row="2"
                             x:Name="segmentedControl"
                             HorizontalAlignment="Center"
                             Style="{StaticResource PivotSegmentedStyle}"
@@ -335,18 +331,18 @@
 
             <!-- Replacing the default StackPanel with our WrapPanel so that
                  Instead of a single horizontal line, the items go to the next rows when width gets too small -->
-            <controls:Segmented.ItemsPanel>
+            <CCToolKit:Segmented.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:WrapPanel Orientation="Horizontal"
                                         HorizontalSpacing="{ThemeResource SegmentedItemSpacing}"
                                         VerticalSpacing="{ThemeResource SegmentedItemSpacing}" />
                 </ItemsPanelTemplate>
-            </controls:Segmented.ItemsPanel>
+            </CCToolKit:Segmented.ItemsPanel>
 
-            <controls:SegmentedItem x:Uid="TPMKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="TPMKeyProtectorSegmentedItem"
                                     IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
                                     Tag="TPM">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -360,13 +356,13 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="TPMPINKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="TPMPINKeyProtectorSegmentedItem"
                                     IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
                                     Tag="TPMPIN">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -380,13 +376,13 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="TPMStartupKeyKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="TPMStartupKeyKeyProtectorSegmentedItem"
                                     IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
                                     Tag="TPMStartupKey">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -400,13 +396,13 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="TPMPINStartupKeyKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="TPMPINStartupKeyKeyProtectorSegmentedItem"
                                     IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
                                     Tag="TPMPINStartupKey">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -420,13 +416,13 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="StartupKeyKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="StartupKeyKeyProtectorSegmentedItem"
                                     IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
                                     Tag="StartupKey">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -440,13 +436,13 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="AutoUnlockKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="AutoUnlockKeyProtectorSegmentedItem"
                         IsEnabled="{x:Bind NON_OSOnlyKeyProtectorsAreEnabled}"
                         Tag="AutoUnlock">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -460,12 +456,12 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="PasswordKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="PasswordKeyProtectorSegmentedItem"
                         Tag="Password">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -479,12 +475,12 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-            <controls:SegmentedItem x:Uid="RecoveryPasswordKeyProtectorSegmentedItem"
+            <CCToolKit:SegmentedItem x:Uid="RecoveryPasswordKeyProtectorSegmentedItem"
                                     Tag="RecoveryPassword">
-                <controls:SegmentedItem.ContentTemplate>
+                <CCToolKit:SegmentedItem.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Vertical"
                                     HorizontalAlignment="Center"
@@ -498,9 +494,9 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
-                </controls:SegmentedItem.ContentTemplate>
-            </controls:SegmentedItem>
+                </CCToolKit:SegmentedItem.ContentTemplate>
+            </CCToolKit:SegmentedItem>
 
-        </controls:Segmented>
+        </CCToolKit:Segmented>
     </Grid>
 </customUI:ContentDialogV2>

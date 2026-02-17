@@ -292,7 +292,7 @@
                                   SelectedIndex="0"
                                   x:Uid="ScanLevelComboBox"
                                   Header="Scan level"
-                                  Margin="0,0,0,27"  
+                                  Margin="0,0,0,27"
                                   ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
                         <Button
                             Click="{x:Bind ViewModel.CreatePolicyButton_Click}"

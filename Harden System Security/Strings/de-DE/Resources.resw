@@ -1115,7 +1115,7 @@
     <value>Festlegen des No-eXecute-(NX)-Werts in den Bootkonfigurationsdaten (BCD) fehlgeschlagen.</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>Inkompatible ausführbare Dateien von GitHub Desktop, Git und MSYS2/MinGW vom systemweiten verpflichtenden ASLR ausnehmen.</value>
+    <value>Inkompatible ausführbare Dateien von GitHub Desktop, Git und MSYS2 vom systemweiten verpflichtenden ASLR ausnehmen.</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>Aktualisierungskanäle für Engine und Plattform von Microsoft Defender auf Beta konfigurieren.</value>

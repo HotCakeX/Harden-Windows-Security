@@ -1115,7 +1115,7 @@
     <value>Αποτυχία ρύθμισης της τιμής Boot Configuration Data (BCD) No-eXecute (NX).</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>Εξαίρεση των μη συμβατών εκτελέσιμων αρχείων GitHub Desktop, Git και MSYS2/MinGW από το υποχρεωτικό ASLR σε επίπεδο συστήματος.</value>
+    <value>Εξαίρεση των μη συμβατών εκτελέσιμων αρχείων GitHub Desktop, Git και MSYS2 από το υποχρεωτικό ASLR σε επίπεδο συστήματος.</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>Διαμόρφωση των καναλιών ενημέρωσης μηχανής και πλατφόρμας του Microsoft Defender σε beta.</value>

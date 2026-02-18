@@ -498,7 +498,61 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 						}
 					}
 				}
+			}),
 
+			verifyStrategy: new DefaultVerify(() =>
+			{
+				// Collect all of the ASLR-Incompatible files.
+				HashSet<string> results = BinarySecurityAnalyzer.GetASLRIncompatibleExes();
+
+				// No incompatible files found means nothing has been applied
+				if (results.Count is 0)
+				{
+					return false;
+				}
+
+				foreach (string item in results)
+				{
+					// Use the filename to query registry, then match by full path.
+					// RetrieveSecurityConfigurationFromRegistryByName has a matching issue with full paths,
+					// so we use RetrieveSecurityConfigurationListFromRegistry and filter manually.
+					string fileName = Path.GetFileName(item);
+
+					Result<List<AppMitigations>> registryResult = SecurityPolicyRepository.RetrieveSecurityConfigurationListFromRegistry(fileName);
+
+					// If no registry entry exists for this filename, the exclusion is not applied
+					if (registryResult.IsFailure || registryResult.Value.Count is 0)
+					{
+						return false;
+					}
+
+					// Find the entry matching our specific file path
+					AppMitigations? matchingPolicy = null;
+					foreach (AppMitigations policy in registryResult.Value)
+					{
+						if (string.Equals(policy.ProcessName, item, StringComparison.OrdinalIgnoreCase))
+						{
+							matchingPolicy = policy;
+							break;
+						}
+					}
+
+					if (matchingPolicy is null)
+					{
+						return false;
+					}
+
+					// Verify that Mandatory ASLR is disabled (excluded) for this PE
+					// and that the Force override is set so the per-process exclusion
+					// takes precedence over the system-wide Mandatory ASLR policy
+					if (matchingPolicy.Aslr.ForceRelocateImages != OPTIONVALUE.OFF ||
+						!matchingPolicy.Aslr.OverrideForceRelocateImages)
+					{
+						return false;
+					}
+				}
+
+				return true;
 			}),
 
 			deviceIntents: [

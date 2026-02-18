@@ -1115,7 +1115,7 @@
     <value>נכשל בהגדרת ערך No-eXecute (NX) ב-Boot Configuration Data (BCD).</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>החרגת קובצי ההפעלה הבלתי תואמים של GitHub Desktop, Git ו-MSYS2/MinGW מ-Mandatory ASLR בכל המערכת.</value>
+    <value>החרגת קובצי ההפעלה הבלתי תואמים של GitHub Desktop, Git ו-MSYS2 מ-Mandatory ASLR בכל המערכת.</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>הגדרת ערוצי העדכון של Engine ו-Platform של Microsoft Defender ל-beta.</value>

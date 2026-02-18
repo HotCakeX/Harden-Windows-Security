@@ -1115,7 +1115,7 @@
     <value>فشل في تعيين قيمة Boot Configuration Data (BCD) No-eXecute (NX).</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>استبعاد ملفات GitHub Desktop و Git و MSYS2/MinGW التنفيذية غير المتوافقة من ASLR الإلزامي على مستوى النظام.</value>
+    <value>استبعاد ملفات GitHub Desktop و Git و MSYS2 التنفيذية غير المتوافقة من ASLR الإلزامي على مستوى النظام.</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>تكوين قنوات تحديث محرك ومنصة Microsoft Defender إلى بيتا.</value>

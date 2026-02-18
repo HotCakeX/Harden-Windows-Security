@@ -1115,7 +1115,7 @@
     <value>Échec de la définition de la valeur No-eXecute (NX) des données de configuration de démarrage (BCD).</value>
   </data>
   <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
-    <value>Exclure les exécutables GitHub Desktop, Git et MSYS2/MinGW incompatibles de l'ASLR obligatoire à l'échelle du système.</value>
+    <value>Exclure les exécutables GitHub Desktop, Git et MSYS2 incompatibles de l'ASLR obligatoire à l'échelle du système.</value>
   </data>
   <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
     <value>Configurer les canaux de mise à jour du moteur et de la plateforme Microsoft Defender en version bêta.</value>

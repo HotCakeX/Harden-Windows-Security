@@ -4551,7 +4551,7 @@
     <value>സൈൻ-ഇൻ</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>സജീവമായി ക്രമീകരിക്കുക</value>
+    <value>സൈൻ ഇൻ റദ്ദാക്കുക</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>നയ ഫയലിലെ മാറ്റങ്ങൾ വിജയകരമായി സംരക്ഷിച്ചു.</value>

@@ -55,7 +55,8 @@ internal static class GetEventLogsData
 		// 3076 - Audit
 		// 3077 - Block
 		// 3089 - Correlated
-		const string query = "*[System[(EventID=3076 or EventID=3077 or EventID=3089)]]";
+		// 3114 - Standalone Block for Dynamic Code Security
+		const string query = "*[System[(EventID=3076 or EventID=3077 or EventID=3089 or EventID=3114)]]";
 
 		EventLogQuery eventQuery;
 
@@ -110,6 +111,70 @@ internal static class GetEventLogsData
 
 				foreach (EventRecord rec in group)
 				{
+					// Process 3114 events independently as they are standalone and don't have Correlation IDs
+					if (rec.Id == 3114)
+					{
+						// Get the XML string directly
+						string xmlString = rec.ToXml();
+						ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
+
+						string? FilePath = GetStringValue(xmlSpan, "FileName");
+						string? FileName = null;
+
+						if (FilePath is not null)
+						{
+							// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
+							if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+							{
+								FilePath = string.Concat(FullSystem32Path, FilePath.AsSpan(8));
+							}
+							else
+							{
+								// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
+								if (EvtxFilePath is null)
+								{
+									FilePath = ResolvePath(FilePath);
+								}
+							}
+
+							// Doesn't matter if the file exists or not
+							FileName = Path.GetFileName(FilePath);
+						}
+
+						// Make sure the file has SHA256 Hash
+						string? SHA256Hash = GetStringValue(xmlSpan, "SHA256Hash");
+
+						if (SHA256Hash is null)
+							continue;
+
+						// Extract values
+						FileIdentity eventData = new()
+						{
+							// These don't require to be retrieved from XML, they are part of the <System> node/section
+							Origin = FileIdentityOrigin.EventLog,
+							Action = EventAction.Block, // Event ID 3114 is always for Block action: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-id-explanations#appendix
+							EventID = rec.Id,
+							TimeCreated = rec.TimeCreated,
+							ComputerName = rec.MachineName,
+							UserID = rec.UserId?.ToString(),
+
+							// Need to be retrieved from the XML because they are part of the <EventData> node of the Event
+							FilePath = FilePath,
+							FileName = FileName,
+							ProcessName = GetStringValue(xmlSpan, "ProcessName"),
+							Status = GetStringValue(xmlSpan, "Status"),
+							SHA1Hash = GetStringValue(xmlSpan, "SHA1Hash"),
+							SHA256Hash = SHA256Hash,
+							SHA256FlatHash = GetStringValue(xmlSpan, "SHA256FlatHash"),
+							SISigningScenario = SiPolicyIntel.SSType.UserMode, // Since event 3114 is only for Dynamic Code Security and .NET, it's always for User-Mode files.
+							SignatureStatus = SignatureStatus.IsUnsigned // The event 3114 doesn't have signing information and has no correlation ID and it always gives us hash only so consider files mentioned in it as Unsigned.
+						};
+
+						_ = fileIdentities.Add(eventData);
+
+						continue;
+					}
+
 					// Get the possible audit event in the group
 					if (rec.Id == 3076)
 					{

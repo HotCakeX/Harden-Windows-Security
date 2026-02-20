@@ -4967,7 +4967,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Anmelden</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Als aktiv festlegen</value>
+    <value>Anmeldung abbrechen</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Details des derzeit verwendeten Kontos</value>
@@ -6937,5 +6937,26 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Suchen und wählen Sie oben eine Richtlinie aus, um sie hier für den Schnellzugriff anzuheften.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Cloud-Umgebung</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Cloud-Umgebung des Kontos, das aktuell für die Ausführung der Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Cloud-Umgebung des Kontos, das aktuell für die Ausführung der Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>Die Cloud-Umgebung des ausgewählten Kontos wird hier angezeigt</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Cloud-Umgebung</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie die Cloud-Umgebung aus, die für den Anmeldevorgang verwendet werden soll.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie die Cloud-Umgebung aus, die für den Anmeldevorgang verwendet werden soll.</value>
   </data>
 </root>

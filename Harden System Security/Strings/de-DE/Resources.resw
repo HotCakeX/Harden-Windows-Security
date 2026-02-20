@@ -4551,7 +4551,7 @@ Fingerabdruck: {3}</value>
     <value>Anmelden</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Als aktiv festlegen</value>
+    <value>Anmeldung abbrechen</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>Änderungen an der Richtliniendatei wurden erfolgreich gespeichert.</value>

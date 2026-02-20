@@ -789,6 +789,11 @@ internal sealed partial class MainWindow : Window
 
 			PersistentPoliciesLibraryToggleSwitch.OnContent = GlobalVars.GetStr("ToggleSwitchGeneral/OnContent");
 			PersistentPoliciesLibraryToggleSwitch.OffContent = GlobalVars.GetStr("ToggleSwitchGeneral/OffContent");
+
+			FirewallSentinelNavItem.Content = GlobalVars.GetStr("FirewallSentinelNavItem/Content");
+			AutomationProperties.SetHelpText(FirewallSentinelNavItem, GlobalVars.GetStr("FirewallSentinelNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(FirewallSentinelNavItem, GlobalVars.GetStr("FirewallSentinelNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 			Logger.Write("MainWindow localized text refreshed successfully");

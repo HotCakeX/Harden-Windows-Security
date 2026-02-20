@@ -61,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.661.0</FileVersion>
+		<FileVersion>2.0.67.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>

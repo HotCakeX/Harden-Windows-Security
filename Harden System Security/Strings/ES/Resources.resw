@@ -4551,7 +4551,7 @@ Huella Digital: {3}</value>
     <value>Iniciar sesión</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Establecer como activa</value>
+    <value>Cancelar inicio de sesión</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>Se guardaron correctamente los cambios en el archivo de la directiva.</value>

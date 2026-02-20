@@ -27,7 +27,8 @@ internal sealed class AuthenticatedAccounts(
 	AuthenticationContext authContext,
 	AuthenticationResult authResult,
 	IAccount account,
-	SignInMethods methodUsed)
+	SignInMethods methodUsed,
+	AzureCloudInstance environment)
 {
 	internal string AccountIdentifier => accountIdentifier;
 	internal string Username => userName;
@@ -37,6 +38,7 @@ internal sealed class AuthenticatedAccounts(
 	internal AuthenticationResult AuthResult { get; set; } = authResult;
 	internal IAccount Account => account;
 	internal SignInMethods MethodUsed => methodUsed;
+	internal AzureCloudInstance Environment => environment;
 
 	public override bool Equals(object? obj)
 	{
@@ -48,7 +50,8 @@ internal sealed class AuthenticatedAccounts(
 		return StringComparer.OrdinalIgnoreCase.Equals(AccountIdentifier, other.AccountIdentifier)
 			&& StringComparer.OrdinalIgnoreCase.Equals(Username, other.Username)
 			&& StringComparer.OrdinalIgnoreCase.Equals(TenantID, other.TenantID)
-			&& StringComparer.OrdinalIgnoreCase.Equals(Permissions, other.Permissions);
+			&& StringComparer.OrdinalIgnoreCase.Equals(Permissions, other.Permissions)
+			&& Environment == other.Environment;
 	}
 
 	public override int GetHashCode()
@@ -59,7 +62,8 @@ internal sealed class AuthenticatedAccounts(
 				StringComparer.OrdinalIgnoreCase.GetHashCode(AccountIdentifier),
 				StringComparer.OrdinalIgnoreCase.GetHashCode(Username),
 				StringComparer.OrdinalIgnoreCase.GetHashCode(TenantID),
-				StringComparer.OrdinalIgnoreCase.GetHashCode(Permissions));
+				StringComparer.OrdinalIgnoreCase.GetHashCode(Permissions),
+				Environment);
 		}
 	}
 

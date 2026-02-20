@@ -4967,7 +4967,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Sign In</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Set as Active</value>
+    <value>Cancel Signing In</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Details of the account that's currently in use</value>
@@ -6937,5 +6937,26 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Search and select a policy above to pin it here for quick access.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Cloud Environment</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Cloud Environment of the account that is currently selected to perform the tasks on this page.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Cloud Environment of the account that is currently selected to perform the tasks on this page.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>The selected account's Cloud Environment will appear here</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Cloud Environment</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select the Cloud Environment to use for the Sign in operation.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select the Cloud Environment to use for the Sign in operation.</value>
   </data>
 </root>

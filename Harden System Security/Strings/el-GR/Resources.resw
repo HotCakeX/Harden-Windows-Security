@@ -4551,7 +4551,7 @@
     <value>Σύνδεση</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Ορισμός ως ενεργό</value>
+    <value>Ακύρωση εισόδου</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>Οι αλλαγές στο αρχείο πολιτικής αποθηκεύτηκαν με επιτυχία.</value>

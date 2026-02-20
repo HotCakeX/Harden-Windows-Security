@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Threading;
 using AppControlManager.ViewModels;
 using Microsoft.Identity.Client;
@@ -135,7 +136,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		{
 			if (SP(ref field, value))
 			{
-				// When the current account changes, update the 4 dependent properties.
+				// When the current account changes, update the dependent properties.
 				UpdateAccountDetails();
 
 				_UpdateButtons(value is not null);
@@ -154,6 +155,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			CurrentActiveAccountTenantID = CurrentActiveAccount.TenantID;
 			CurrentActiveAccountAccountIdentifier = CurrentActiveAccount.AccountIdentifier;
 			CurrentActiveAccountPermissions = CurrentActiveAccount.Permissions;
+			CurrentActiveAccountEnvironment = CurrentActiveAccount.Environment.ToString();
 		}
 		else
 		{
@@ -162,6 +164,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			CurrentActiveAccountTenantID = null;
 			CurrentActiveAccountAccountIdentifier = null;
 			CurrentActiveAccountPermissions = null;
+			CurrentActiveAccountEnvironment = null;
 		}
 	}
 
@@ -184,6 +187,11 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// Computed property for Permissions.
 	/// </summary>
 	internal string? CurrentActiveAccountPermissions { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Computed property for Environment.
+	/// </summary>
+	internal string? CurrentActiveAccountEnvironment { get; set => SP(ref field, value); }
 
 	internal bool SignInButtonState { get; set => SP(ref field, value); } = true;
 
@@ -318,6 +326,20 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	internal AuthenticationContext AuthenticationContextComboBoxSelectedItem { get; set => SP(ref field, value); }
 
 	/// <summary>
+	/// Azure Cloud environment source items.
+	/// </summary>
+	private static readonly List<AzureCloudEnvironmentComboBoxItem> _AzureCloudEnvironmentComboBoxSource =
+	[
+		new AzureCloudEnvironmentComboBoxItem("Public", AzureCloudInstance.AzurePublic),
+		new AzureCloudEnvironmentComboBoxItem("US Government (GCC High)", AzureCloudInstance.AzureUsGovernment)
+	];
+
+	internal List<AzureCloudEnvironmentComboBoxItem> AzureCloudEnvironmentComboBoxSource => _AzureCloudEnvironmentComboBoxSource;
+
+	internal AzureCloudEnvironmentComboBoxItem AzureCloudEnvironmentComboBoxSelectedItem { get; set => SP(ref field, value); } = _AzureCloudEnvironmentComboBoxSource[0];
+
+
+	/// <summary>
 	/// Signs into the Microsoft tenant
 	/// </summary>
 	internal async void SignIn()
@@ -334,6 +356,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			(bool, AuthenticatedAccounts?) signInResult = await Main.SignIn(
 				AuthenticationContextComboBoxSelectedItem,
 				SignInMethodsComboBoxSelectedItem.AuthContext,
+				AzureCloudEnvironmentComboBoxSelectedItem.Environment,
 				cancellationTokenSource.Token);
 
 			if (signInResult.Item1)

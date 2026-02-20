@@ -4551,7 +4551,7 @@ Odcisk Palca: {3}</value>
     <value>Zaloguj się</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Ustaw jako aktywne</value>
+    <value>Anuluj logowanie</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>Pomyślnie zapisano zmiany w pliku zasad.</value>

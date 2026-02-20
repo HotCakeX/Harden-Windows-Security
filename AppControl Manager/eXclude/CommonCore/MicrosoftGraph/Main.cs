@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,34 +43,30 @@ internal static class Main
 	private const string ClientId = "14d82eec-204b-4c2f-b7e8-296a70dab67e";
 
 	/// <summary>
+	/// Returns the base Graph URL for the specific Azure environment.
+	/// </summary>
+	private static string GetGraphBaseUrl(AzureCloudInstance environment) =>
+		 environment == AzureCloudInstance.AzureUsGovernment ? "https://graph.microsoft.us" : "https://graph.microsoft.com";
+
+	/// <summary>
 	/// URL for Intune related operations
 	/// </summary>
-	private static readonly Uri DeviceConfigurationsURL = new("https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations");
+	private static Uri GetDeviceConfigurationsURL(AzureCloudInstance environment) => new($"{GetGraphBaseUrl(environment)}/v1.0/deviceManagement/deviceConfigurations");
 
 	/// <summary>
 	/// URL for Device Health Scripts
 	/// </summary>
-	private static readonly Uri DeviceHealthScriptsURL = new("https://graph.microsoft.com/beta/deviceManagement/deviceHealthScripts");
+	private static Uri GetDeviceHealthScriptsURL(AzureCloudInstance environment) => new($"{GetGraphBaseUrl(environment)}/beta/deviceManagement/deviceHealthScripts");
 
 	/// <summary>
 	/// URL for M365 Groups
 	/// </summary>
-	private static readonly Uri GroupsUrl = new("https://graph.microsoft.com/v1.0/groups");
+	private static Uri GetGroupsUrl(AzureCloudInstance environment) => new($"{GetGraphBaseUrl(environment)}/v1.0/groups");
 
 	/// <summary>
 	/// URL for Microsoft Defender for Endpoint Advanced Hunting queries
 	/// </summary>
-	private static readonly Uri MDEAH = new("https://graph.microsoft.com/v1.0/security/runHuntingQuery");
-
-	/// <summary>
-	/// Initialize the Public Client Application
-	/// </summary>
-	private static readonly IPublicClientApplication PublicApp = PublicClientApplicationBuilder.Create(ClientId)
-			.WithAuthority(AzureCloudInstance.AzurePublic, "common")
-			.WithRedirectUri("http://localhost")
-			.WithLegacyCacheCompatibility(false)
-			.Build();
-
+	private static Uri GetMDEAHUrl(AzureCloudInstance environment) => new($"{GetGraphBaseUrl(environment)}/v1.0/security/runHuntingQuery");
 
 	#region For WAM based application
 
@@ -84,15 +81,45 @@ internal static class Main
 	/// <returns></returns>
 	private static nint GetWindowHandle() => GlobalVars.hWnd;
 
-	private readonly static IPublicClientApplication AppWAMBased = PublicClientApplicationBuilder.Create(ClientId)
-		.WithDefaultRedirectUri()
-		.WithParentActivityOrWindow(GetWindowHandle)
-		.WithLegacyCacheCompatibility(false)
-		.WithBroker(OptionsForBroker)
-		.Build();
-
 	#endregion
 
+	/// <summary>
+	/// Provides a thread-safe cache for storing instances of public client applications, keyed by sign-in method and Azure
+	/// cloud environment.
+	/// </summary>
+	private static readonly ConcurrentDictionary<(SignInMethods, AzureCloudInstance), IPublicClientApplication> AppCache = new();
+
+	/// <summary>
+	/// Lazily creates or gets an IPublicClientApplication configured for the specific Sign In Method and Azure Cloud Environment.
+	/// </summary>
+	private static IPublicClientApplication GetApp(SignInMethods method, AzureCloudInstance environment)
+	{
+		(SignInMethods, AzureCloudInstance) key = (method, environment);
+
+		return AppCache.GetOrAdd(key, k =>
+		{
+			string authorityAudience = k.Item2 == AzureCloudInstance.AzureUsGovernment ? "organizations" : "common";
+
+			if (k.Item1 == SignInMethods.WebAccountManager)
+			{
+				return PublicClientApplicationBuilder.Create(ClientId)
+					.WithDefaultRedirectUri()
+					.WithParentActivityOrWindow(GetWindowHandle)
+					.WithLegacyCacheCompatibility(false)
+					.WithBroker(OptionsForBroker)
+					.WithAuthority(k.Item2, authorityAudience)
+					.Build();
+			}
+			else
+			{
+				return PublicClientApplicationBuilder.Create(ClientId)
+					.WithAuthority(k.Item2, authorityAudience)
+					.WithRedirectUri("http://localhost")
+					.WithLegacyCacheCompatibility(false)
+					.Build();
+			}
+		});
+	}
 
 	/// <summary>
 	/// The correlation between scopes and required permissions
@@ -137,8 +164,8 @@ internal static class Main
 			return currentResult.AccessToken;
 		}
 
-		// Select correct application based on original sign-in method
-		IPublicClientApplication selectedApp = account.MethodUsed == SignInMethods.WebAccountManager ? AppWAMBased : PublicApp;
+		// Select correct application based on original sign-in method and environment
+		IPublicClientApplication selectedApp = GetApp(account.MethodUsed, account.Environment);
 
 		// Perform silent acquisition using the original scopes for this authentication context
 		AuthenticationResult refreshedResult = await selectedApp
@@ -208,7 +235,7 @@ DeviceEvents
 			"RunMDEAdvancedHuntingQuery",
 			() =>
 			{
-				HttpRequestMessage request = new(HttpMethod.Post, MDEAH);
+				HttpRequestMessage request = new(HttpMethod.Post, GetMDEAHUrl(account.Environment));
 				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
@@ -252,7 +279,7 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		// Start with initial endpoint
-		string? nextLink = GroupsUrl.ToString();
+		string? nextLink = GetGroupsUrl(account.Environment).ToString();
 
 		while (!string.IsNullOrEmpty(nextLink))
 		{
@@ -331,6 +358,7 @@ DeviceEvents
 	internal static async Task<(bool, AuthenticatedAccounts?)> SignIn(
 	AuthenticationContext context,
 	SignInMethods signInMethod,
+	AzureCloudInstance environment,
 	CancellationToken cancellationToken)
 	{
 		AuthenticationResult? authResult = null;
@@ -340,12 +368,14 @@ DeviceEvents
 
 		try
 		{
+			IPublicClientApplication app = GetApp(signInMethod, environment);
+
 			switch (signInMethod)
 			{
 				case SignInMethods.WebBrowser:
 					{
 						// Perform the interactive token acquisition with the cancellation token
-						authResult = await PublicApp.AcquireTokenInteractive(Scopes[context])
+						authResult = await app.AcquireTokenInteractive(Scopes[context])
 							.WithPrompt(Prompt.SelectAccount)
 							.WithUseEmbeddedWebView(false)
 							.ExecuteAsync(cancellationToken);
@@ -354,7 +384,7 @@ DeviceEvents
 					}
 				case SignInMethods.WebAccountManager:
 					{
-						authResult = await AppWAMBased.AcquireTokenInteractive(Scopes[context])
+						authResult = await app.AcquireTokenInteractive(Scopes[context])
 							.ExecuteAsync(cancellationToken);
 
 						break;
@@ -384,7 +414,8 @@ DeviceEvents
 					authContext: context,
 					authResult: authResult,
 					account: authResult.Account,
-					methodUsed: signInMethod // Record the method used for future silent refresh
+					methodUsed: signInMethod, // Record the method used for future silent refresh
+					environment: environment
 				);
 
 				AuthenticatedAccounts? possibleDuplicate =
@@ -393,7 +424,8 @@ DeviceEvents
 							string.Equals(authResult.Account.HomeAccountId.Identifier, x.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
 							string.Equals(authResult.Account.Username, x.Username, StringComparison.OrdinalIgnoreCase) &&
 							string.Equals(authResult.TenantId, x.TenantID, StringComparison.OrdinalIgnoreCase) &&
-							string.Equals(newAccount.Permissions, x.Permissions, StringComparison.OrdinalIgnoreCase)
+							string.Equals(newAccount.Permissions, x.Permissions, StringComparison.OrdinalIgnoreCase) &&
+							newAccount.Environment == x.Environment
 						);
 
 				// Check if the account is already authenticated
@@ -420,7 +452,8 @@ DeviceEvents
 	/// <returns></returns>
 	internal static async Task SignOut(AuthenticatedAccounts account)
 	{
-		await PublicApp.RemoveAsync(account.Account);
+		IPublicClientApplication app = GetApp(account.MethodUsed, account.Environment);
+		await app.RemoveAsync(account.Account);
 		_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(account);
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("SignedOutAccountMessage"),
@@ -461,7 +494,7 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		// Call Microsoft Graph API to create the custom policy
-		string? intunePolicyId = await CreateCustomIntunePolicy(accessToken, base64String, policyName, policyObj.PolicyID, descriptionText);
+		string? intunePolicyId = await CreateCustomIntunePolicy(accessToken, base64String, policyName, policyObj.PolicyID, descriptionText, account.Environment);
 
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("PolicyCreatedMessage"),
@@ -469,7 +502,7 @@ DeviceEvents
 
 		if (groupIds.Count > 0 && intunePolicyId is not null)
 		{
-			await AssignIntunePolicyToGroup(intunePolicyId, accessToken, groupIds);
+			await AssignIntunePolicyToGroup(intunePolicyId, accessToken, groupIds, account.Environment);
 		}
 	}
 #endif
@@ -482,7 +515,7 @@ DeviceEvents
 	/// <param name="groupIds">An enumerable collection of group IDs to which the policy will be assigned.</param>
 	/// <returns>A task that represents the asynchronous assignment operation.</returns>
 	/// <exception cref="InvalidOperationException">Thrown when the assignment fails for any of the groups.</exception>
-	private static async Task AssignIntunePolicyToGroup(string policyId, string accessToken, IEnumerable<string> groupIds)
+	private static async Task AssignIntunePolicyToGroup(string policyId, string accessToken, IEnumerable<string> groupIds, AzureCloudInstance environment)
 	{
 		foreach (string groupId in groupIds)
 		{
@@ -505,7 +538,7 @@ DeviceEvents
 				{
 					HttpRequestMessage request = new(
 						HttpMethod.Post,
-						new Uri($"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments"));
+						new Uri($"{GetDeviceConfigurationsURL(environment).OriginalString}/{policyId}/assignments"));
 
 					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -550,7 +583,7 @@ DeviceEvents
 	/// <param name="policyName"></param>
 	/// <param name="descriptionText"></param>
 	/// <returns></returns>
-	private static async Task<string?> CreateCustomIntunePolicy(string accessToken, string policyData, string? policyName, string policyID, string descriptionText)
+	private static async Task<string?> CreateCustomIntunePolicy(string accessToken, string policyData, string? policyName, string policyID, string descriptionText, AzureCloudInstance environment)
 	{
 
 		string displayNameText = !string.IsNullOrWhiteSpace(policyName) ? $"{policyName} App Control Policy" : "App Control Policy";
@@ -593,7 +626,7 @@ DeviceEvents
 			"CreateCustomIntunePolicy",
 			() =>
 			{
-				HttpRequestMessage request = new(HttpMethod.Post, DeviceConfigurationsURL);
+				HttpRequestMessage request = new(HttpMethod.Post, GetDeviceConfigurationsURL(environment));
 				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
@@ -715,7 +748,7 @@ DeviceEvents
 
 		// Initial request URL.
 		// Applying a filter to retrieve only the policies for Windows custom configurations
-		string nextLink = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')";
+		string nextLink = $"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')";
 
 		// Accumulators for all pages.
 		List<Windows10CustomConfiguration> allPolicies = [];
@@ -823,7 +856,7 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		// Construct the DELETE URL using the base DeviceConfigurationsURL.
-		string deleteUrl = $"{DeviceConfigurationsURL.OriginalString}/{policyId}";
+		string deleteUrl = $"{GetDeviceConfigurationsURL(account.Environment).OriginalString}/{policyId}";
 
 		// Send the DELETE request.
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
@@ -912,7 +945,7 @@ DeviceEvents
 			"CreateGroup",
 			() =>
 			{
-				HttpRequestMessage request = new(HttpMethod.Post, GroupsUrl);
+				HttpRequestMessage request = new(HttpMethod.Post, GetGroupsUrl(account.Environment));
 				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
@@ -976,7 +1009,7 @@ DeviceEvents
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
-		Uri deleteUri = new($"{GroupsUrl}/{groupId}");
+		Uri deleteUri = new($"{GetGroupsUrl(account.Environment)}/{groupId}");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeleteGroup",
@@ -1016,7 +1049,7 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		// Beta endpoint for configuration policies (standard, non-custom).
-		string nextLink = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies";
+		string nextLink = $"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies";
 
 		while (!string.IsNullOrEmpty(nextLink))
 		{
@@ -1092,7 +1125,7 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		// Beta endpoint for creating configuration policies.
-		Uri createUri = new("https://graph.microsoft.com/beta/deviceManagement/configurationPolicies");
+		Uri createUri = new($"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateConfigurationPolicyFromJson",
@@ -1167,7 +1200,7 @@ DeviceEvents
 			envelope,
 			MSGraphJsonContext.Default.ConfigurationPolicyAssignmentsEnvelope);
 
-		Uri assignUri = new($"https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/{policyId}/assign");
+		Uri assignUri = new($"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies/{policyId}/assign");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"AssignConfigurationPolicyToGroups",
@@ -1208,7 +1241,7 @@ DeviceEvents
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
-		Uri deleteUri = new($"https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/{policyId}");
+		Uri deleteUri = new($"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies/{policyId}");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeleteConfigurationPolicy",
@@ -1248,7 +1281,7 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		// Filter for Managed Installer scripts
-		string nextLink = $"{DeviceHealthScriptsURL.OriginalString}?$filter=deviceHealthScriptType eq 'managedInstallerScript'";
+		string nextLink = $"{GetDeviceHealthScriptsURL(account.Environment).OriginalString}?$filter=deviceHealthScriptType eq 'managedInstallerScript'";
 
 		while (!string.IsNullOrEmpty(nextLink))
 		{
@@ -1333,7 +1366,7 @@ DeviceEvents
 			"CreateManagedInstallerPolicy",
 			() =>
 			{
-				HttpRequestMessage request = new(HttpMethod.Post, DeviceHealthScriptsURL);
+				HttpRequestMessage request = new(HttpMethod.Post, GetDeviceHealthScriptsURL(account.Environment));
 				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
@@ -1367,7 +1400,7 @@ DeviceEvents
 
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
-		Uri deleteUri = new($"{DeviceHealthScriptsURL.OriginalString}/{policyId}");
+		Uri deleteUri = new($"{GetDeviceHealthScriptsURL(account.Environment).OriginalString}/{policyId}");
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeleteManagedInstallerPolicy",
@@ -1398,8 +1431,8 @@ DeviceEvents
 	{
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 		string assignmentsUrl = isManagedInstaller
-			? $"{DeviceHealthScriptsURL.OriginalString}/{policyId}/assignments"
-			: $"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments";
+			? $"{GetDeviceHealthScriptsURL(account.Environment).OriginalString}/{policyId}/assignments"
+			: $"{GetDeviceConfigurationsURL(account.Environment).OriginalString}/{policyId}/assignments";
 
 		List<PolicyAssignmentDisplay> results = [];
 
@@ -1450,7 +1483,7 @@ DeviceEvents
 				if (!string.IsNullOrEmpty(gid))
 				{
 					// Resolve group name in parallel
-					tasks.Add(GetGroupDisplayInfo(accessToken, gid, assignmentId));
+					tasks.Add(GetGroupDisplayInfo(accessToken, gid, assignmentId, account.Environment));
 				}
 			}
 			else
@@ -1473,7 +1506,7 @@ DeviceEvents
 	/// <summary>
 	/// Helper to get a group's display name by ID.
 	/// </summary>
-	private static async Task<PolicyAssignmentDisplay?> GetGroupDisplayInfo(string accessToken, string groupId, string? assignmentId)
+	private static async Task<PolicyAssignmentDisplay?> GetGroupDisplayInfo(string accessToken, string groupId, string? assignmentId, AzureCloudInstance environment)
 	{
 		try
 		{
@@ -1481,7 +1514,7 @@ DeviceEvents
 				"GetGroupDisplayInfo",
 				() =>
 				{
-					HttpRequestMessage request = new(HttpMethod.Get, new Uri($"{GroupsUrl}/{groupId}?$select=displayName,description"));
+					HttpRequestMessage request = new(HttpMethod.Get, new Uri($"{GetGroupsUrl(environment)}/{groupId}?$select=displayName,description"));
 					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					return request;
@@ -1517,8 +1550,8 @@ DeviceEvents
 
 		// Construct URL based on policy type
 		string deleteUrl = isManagedInstaller
-			? $"{DeviceHealthScriptsURL.OriginalString}/{policyId}/assignments/{assignmentId}"
-			: $"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments/{assignmentId}";
+			? $"{GetDeviceHealthScriptsURL(account.Environment).OriginalString}/{policyId}/assignments/{assignmentId}"
+			: $"{GetDeviceConfigurationsURL(account.Environment).OriginalString}/{policyId}/assignments/{assignmentId}";
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"DeletePolicyAssignment",

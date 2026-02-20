@@ -4967,7 +4967,7 @@
     <value>സൈൻ ഇൻ ചെയ്യുക</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>സജീവമായി സജ്ജീകരിക്കുക</value>
+    <value>സൈൻ ഇൻ റദ്ദാക്കുക</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>നിലവിൽ ഉപയോഗത്തിലുള്ള അക്കൗണ്ടിന്റെ വിശദാംശങ്ങൾ</value>
@@ -6937,5 +6937,26 @@
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>ദ്രുത ആക്‌സസിനായി ഇവിടെ പിന്‍ ചെയ്യുന്നതിന് മുകളില്‍ ഒരു പോളിസി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി ഇവിടെ ദൃശ്യമാകും</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൈൻ ഇൻ പ്രവർത്തനത്തിനായി ഉപയോഗിക്കുന്നതിന് ക്ലൗഡ് പരിസ്ഥിതി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൈൻ ഇൻ പ്രവർത്തനത്തിനായി ഉപയോഗിക്കുന്നതിന് ക്ലൗഡ് പരിസ്ഥിതി തിരഞ്ഞെടുക്കുക.</value>
   </data>
 </root>

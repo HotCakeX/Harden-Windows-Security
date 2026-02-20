@@ -4967,7 +4967,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Zaloguj się</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Ustaw jako Aktywne</value>
+    <value>Anuluj logowanie</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Szczegóły konta aktualnie używanego</value>
@@ -6937,5 +6937,26 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Wyszukaj i wybierz zasady powyżej, aby przypiąć je tutaj w celu szybkiego dostępu.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Środowisko chmury</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Środowisko chmury konta, które jest obecnie wybrane do wykonywania zadań na tej stronie.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Środowisko chmury konta, które jest obecnie wybrane do wykonywania zadań na tej stronie.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>Środowisko chmury wybranego konta pojawi się tutaj</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Środowisko chmury</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz środowisko chmury do użycia podczas operacji logowania.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz środowisko chmury do użycia podczas operacji logowania.</value>
   </data>
 </root>

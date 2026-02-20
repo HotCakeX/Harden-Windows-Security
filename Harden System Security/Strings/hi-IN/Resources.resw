@@ -4551,7 +4551,7 @@
     <value>साइन-इन</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>सक्रिय के रूप में सेट करें</value>
+    <value>साइन इन रद्द करें</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>नीति फ़ाइल में किए गए परिवर्तन सफलतापूर्वक सहेजे गए.</value>

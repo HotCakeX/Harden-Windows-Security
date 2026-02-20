@@ -4551,7 +4551,7 @@
     <value>تسجيل الدخول</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>تعيين كنشط</value>
+    <value>إلغاء تسجيل الدخول</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>تم حفظ التغييرات على ملف السياسة بنجاح.</value>

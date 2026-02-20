@@ -4967,7 +4967,7 @@
     <value>تسجيل الدخول</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>تعيين كنشط</value>
+    <value>إلغاء تسجيل الدخول</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>تفاصيل الحساب المستخدم حالياً</value>
@@ -6937,5 +6937,26 @@
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>ابحث وحدد نهجا أعلاه لتثبيته هنا للوصول السريع.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>البيئة السحابية</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>البيئة السحابية للحساب المحدد حالياً لتنفيذ المهام في هذه الصفحة.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>البيئة السحابية للحساب المحدد حالياً لتنفيذ المهام في هذه الصفحة.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>ستظهر البيئة السحابية للحساب المحدد هنا</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>البيئة السحابية</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد البيئة السحابية لاستخدامها في عملية تسجيل الدخول.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد البيئة السحابية لاستخدامها في عملية تسجيل الدخول.</value>
   </data>
 </root>

@@ -4967,7 +4967,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>साइन इन करें</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>सक्रिय के रूप में सेट करें</value>
+    <value>साइन इन रद्द करें</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>वर्तमान में उपयोग में आने वाले खाते का विवरण</value>
@@ -6937,5 +6937,26 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>त्वरित पहुंच के लिए ऊपर एक नीति खोजें और चुनें और उसे यहां पिन करें।</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>क्लाउड परिवेश</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उस खाते का क्लाउड परिवेश जो वर्तमान में इस पृष्ठ पर कार्य करने के लिए चयनित है.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उस खाते का क्लाउड परिवेश जो वर्तमान में इस पृष्ठ पर कार्य करने के लिए चयनित है.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>चयनित खाते का क्लाउड परिवेश यहाँ दिखाई देगा</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>क्लाउड परिवेश</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>साइन इन कार्रवाई के लिए उपयोग करने हेतु क्लाउड परिवेश का चयन करें.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>साइन इन कार्रवाई के लिए उपयोग करने हेतु क्लाउड परिवेश का चयन करें.</value>
   </data>
 </root>

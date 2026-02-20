@@ -4551,7 +4551,7 @@ Empreinte : {3}</value>
     <value>Sign In</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Set as Active</value>
+    <value>Annuler la connexion</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>Successfully saved the changes to the policy file.</value>

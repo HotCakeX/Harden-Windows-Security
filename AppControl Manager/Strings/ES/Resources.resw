@@ -4967,7 +4967,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Iniciar Sesión</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Establecer como Activo</value>
+    <value>Cancelar inicio de sesión</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Detalles de la cuenta que está actualmente en uso</value>
@@ -6937,5 +6937,26 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Busque y seleccione una directiva en la parte superior para anclarla aquí y acceder rápidamente.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Entorno en la nube</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>El entorno en la nube de la cuenta seleccionada aparecerá aquí</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Entorno en la nube</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione el entorno en la nube que se usará para la operación de inicio de sesión.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione el entorno en la nube que se usará para la operación de inicio de sesión.</value>
   </data>
 </root>

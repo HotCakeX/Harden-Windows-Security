@@ -4551,7 +4551,7 @@
     <value>התחבר</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>הגדר כפעיל</value>
+    <value>ביטול כניסה</value>
   </data>
   <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
     <value>השינויים בקובץ המדיניות נשמרו בהצלחה.</value>

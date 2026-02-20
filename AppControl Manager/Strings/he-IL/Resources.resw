@@ -4967,7 +4967,7 @@
     <value>התחבר</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>הגדר כפעיל</value>
+    <value>ביטול כניסה</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>פרטי החשבון שנמצא כרגע בשימוש</value>
@@ -6937,5 +6937,26 @@
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>חפש ובחר מדיניות למעלה כדי להצמיד אותה כאן לגישה מהירה.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>סביבת ענן</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סביבת הענן של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סביבת הענן של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>סביבת הענן של החשבון הנבחר תופיע כאן</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>סביבת ענן</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את סביבת הענן לשימוש עבור פעולת הכניסה.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את סביבת הענן לשימוש עבור פעולת הכניסה.</value>
   </data>
 </root>

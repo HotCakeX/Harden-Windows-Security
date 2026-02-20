@@ -4967,7 +4967,7 @@
     <value>Σύνδεση</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Ορισμός ως Ενεργό</value>
+    <value>Ακύρωση εισόδου</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Λεπτομέρειες του λογαριασμού που χρησιμοποιείται επί του παρόντος</value>
@@ -6937,5 +6937,26 @@
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Αναζητήστε και επιλέξτε μια πολιτική παραπάνω για να την καρφιτσώσετε εδώ για γρήγορη πρόσβαση.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Περιβάλλον Cloud</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>Το Περιβάλλον Cloud του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Περιβάλλον Cloud</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε το Περιβάλλον Cloud που θα χρησιμοποιηθεί για τη λειτουργία εισόδου.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε το Περιβάλλον Cloud που θα χρησιμοποιηθεί για τη λειτουργία εισόδου.</value>
   </data>
 </root>

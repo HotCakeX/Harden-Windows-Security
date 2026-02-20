@@ -4967,7 +4967,7 @@
     <value>Se Connecter</value>
   </data>
   <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
-    <value>Définir comme Actif</value>
+    <value>Annuler la connexion</value>
   </data>
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Détails du compte actuellement utilisé</value>
@@ -6937,5 +6937,26 @@
   </data>
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Recherchez et selectionnez une strategie ci-dessus pour l'epingler ici pour un acces rapide.</value>
+  </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Environnement cloud</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>L'environnement cloud du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>L'environnement cloud du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>L'environnement cloud du compte sélectionné s'affichera ici</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Environnement cloud</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez l'environnement cloud à utiliser pour l'opération de connexion.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionnez l'environnement cloud à utiliser pour l'opération de connexion.</value>
   </data>
 </root>

@@ -508,7 +508,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				// No incompatible files found means nothing has been applied
 				if (results.Count is 0)
 				{
-					return false;
+					return true;
 				}
 
 				foreach (string item in results)

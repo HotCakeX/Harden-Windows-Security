@@ -5447,4 +5447,73 @@
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>നിലനിർത്താൻ തിരഞ്ഞെടുത്ത ഒറിജിനൽ ഫോട്ടോ ഡിലീറ്റ് ചെയ്യുക.</value>
   </data>
+      <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി ഇവിടെ ദൃശ്യമാകും</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൈൻ ഇൻ പ്രവർത്തനത്തിനായി ഉപയോഗിക്കുന്നതിന് ക്ലൗഡ് പരിസ്ഥിതി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൈൻ ഇൻ പ്രവർത്തനത്തിനായി ഉപയോഗിക്കുന്നതിന് ക്ലൗഡ് പരിസ്ഥിതി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+    <data name="EXIFManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>EXIF മാനേജർ</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മീഡിയ ഫയലുകളിൽ നിന്ന് ട്രാക്ക് ചെയ്യാവുന്ന EXIF മെറ്റാഡാറ്റ കാണുകയും നീക്കം ചെയ്യുകയും ചെയ്തുകൊണ്ട് നിങ്ങളുടെ സ്വകാര്യത സംരക്ഷിക്കുക.</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മീഡിയ ഫയലുകളിൽ നിന്ന് ട്രാക്ക് ചെയ്യാവുന്ന EXIF മെറ്റാഡാറ്റ കാണുകയും നീക്കം ചെയ്യുകയും ചെയ്തുകൊണ്ട് നിങ്ങളുടെ സ്വകാര്യത സംരക്ഷിക്കുക.</value>
+  </data>
+  <data name="EXIFManagerPageTitle" xml:space="preserve">
+    <value>മീഡിയ ഫയലുകളിൽ നിന്ന് ട്രാക്ക് ചെയ്യാവുന്ന EXIF മെറ്റാഡാറ്റ കാണുകയും നീക്കം ചെയ്യുകയും ചെയ്തുകൊണ്ട് നിങ്ങളുടെ സ്വകാര്യത സംരക്ഷിക്കുക.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാം പകർത്തുക</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് എല്ലാ ഡാറ്റയും പകർത്തുക.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് എല്ലാ ഡാറ്റയും പകർത്തുക.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാ ഡാറ്റയും നീക്കംചെയ്യുക</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സുരക്ഷിതമായി നീക്കംചെയ്യാൻ കഴിയുന്ന എല്ലാ ഡാറ്റയും നീക്കംചെയ്യുക.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സുരക്ഷിതമായി നീക്കംചെയ്യാൻ കഴിയുന്ന എല്ലാ ഡാറ്റയും നീക്കംചെയ്യുക.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാ വിഭാഗങ്ങളും വികസിപ്പിക്കുക</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ വിഭാഗങ്ങളുടെയും ഉള്ളടക്കം കാണുന്നതിന് അവ വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ വിഭാഗങ്ങളുടെയും ഉള്ളടക്കം കാണുന്നതിന് അവ വികസിപ്പിക്കുക.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാ വിഭാഗങ്ങളും ചുരുക്കുക</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ വിഭാഗങ്ങളുടെയും ഉള്ളടക്കം മറയ്‌ക്കുന്നതിന് അവ ചുരുക്കുക.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ വിഭാഗങ്ങളുടെയും ഉള്ളടക്കം മറയ്‌ക്കുന്നതിന് അവ ചുരുക്കുക.</value>
+  </data>
 </root>

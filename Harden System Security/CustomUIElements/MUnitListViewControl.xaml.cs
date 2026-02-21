@@ -29,6 +29,7 @@ using HardenSystemSecurity.Traverse;
 using HardenSystemSecurity.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI;
@@ -573,6 +574,36 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	#endregion
 
 	#region Bulk Operations
+
+	/// <summary>
+	/// Handles the F5 keyboard accelerator to verify all MUnits or cancel an ongoing verification.
+	/// </summary>
+	private void VerifyAllAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		args.Handled = true;
+
+		if (_isDisposed || ViewModel is null) return;
+
+		// If the verification is currently running, pressing F5 should cancel it
+		if (ViewModel.VerifyAllCancellableButton.IsOperationInProgress)
+		{
+			_ = ViewModel.VerifyAllCancellableButton.Cancel();
+			return;
+		}
+
+		// Check if we are allowed to verify by checking the states of all overlapping button rules
+		bool isEnabled = ComputeVerifyAllEnabled(
+			ViewModel.VerifyAllCancellableButton.IsOperationInProgress,
+			ViewModel.ApplyAllCancellableButton.IsOperationInProgress,
+			ViewModel.RemoveAllCancellableButton.IsOperationInProgress,
+			AnyItemOperationInProgress);
+
+		// Proceed only if no other blocking operation is actively running
+		if (isEnabled && ViewModel.ElementsAreEnabled)
+		{
+			VerifyAllMUnits();
+		}
+	}
 
 	/// <summary>
 	/// Apply all MUnits.

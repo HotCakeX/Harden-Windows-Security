@@ -15,15 +15,23 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.Identity.Client;
+using HardenSystemSecurity.ViewModels;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
-namespace CommonCore.MicrosoftGraph;
+namespace HardenSystemSecurity.Pages.Extras;
 
-/// <summary>
-/// Provides a view model for binding the Azure Cloud environment to a ComboBox.
-/// </summary>
-internal sealed class AzureCloudEnvironmentComboBoxItem(string name, AzureCloudInstance environment)
+internal sealed partial class EXIFManager : Page, CommonCore.UI.IPageHeaderProvider
 {
-	internal string Name => name;
-	internal AzureCloudInstance Environment => environment;
+	private EXIFManagerVM ViewModel => ViewModelProvider.EXIFManagerVM;
+
+	internal EXIFManager()
+	{
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
+	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("EXIFManagerPageTitle");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/EXIF-Manager");
 }

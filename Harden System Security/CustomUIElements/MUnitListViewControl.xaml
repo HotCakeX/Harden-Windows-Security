@@ -9,7 +9,12 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     Loaded="{x:Bind MUnitListViewControl_Loaded}"
     Unloaded="{x:Bind MUnitListViewControl_Unloaded}"
-    xmlns:animatedvisuals="using:AnimatedVisuals">
+    xmlns:animatedvisuals="using:AnimatedVisuals"
+    KeyboardAcceleratorPlacementMode="Hidden">
+
+    <UserControl.KeyboardAccelerators>
+        <KeyboardAccelerator Key="F5" Invoked="{x:Bind VerifyAllAccelerator_Invoked}" />
+    </UserControl.KeyboardAccelerators>
 
     <Grid>
         <Grid.RowDefinitions>

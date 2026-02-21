@@ -85,7 +85,7 @@ You have full control over how you want to clean up the duplicates.
 
 ### Undo Last Deletion
 
-Made a mistake? The app features an **Undo** capability. When you delete individual duplicates or a single group of duplicates, the app temporarily holds the deleted file bytes securely in RAM. 
+Made a mistake? The app features an **Undo** capability. When you delete individual duplicates or a single group of duplicates, the app temporarily holds the deleted file bytes securely in RAM.
 
 * You can click **Undo Last Deletion** in the Actions menu or simply press `Ctrl + Z` on your keyboard to instantly restore the deleted files back to your hard drive and the app's UI.
 * *Note: The Undo feature does not apply to the "Auto Delete All Duplicates" mass action due to possible memory constraints.*

@@ -67,6 +67,8 @@
 
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/d73489091644d3366bf2e876c108174aefbd6c48/Pictures/Gifs/Harden%20System%20Security%20Menu/Duplicate%20Photos%20Finder.gif" alt="Harden System Security Menu Item" width="30"> [Duplicate Photos Finder](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Duplicate-Photo-Finder)
 
+    - <img src="https://github.com/HotCakeX/.github/blob/fd092d5c17c12767ca88b5cb1861735078b81458/Pictures/Gifs/Harden%20System%20Security%20Menu/EXIF%20Manager.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [EXIF Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/EXIF-Manager)
+
 <br>
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [App Control for Business](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)

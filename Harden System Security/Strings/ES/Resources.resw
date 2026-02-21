@@ -5447,4 +5447,73 @@ Huella Digital: {3}</value>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>Elimine la foto original que se seleccionó para conservar.</value>
   </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Entorno en la nube</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>El entorno en la nube de la cuenta seleccionada aparecerá aquí</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Entorno en la nube</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione el entorno en la nube que se usará para la operación de inicio de sesión.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione el entorno en la nube que se usará para la operación de inicio de sesión.</value>
+  </data>
+    <data name="EXIFManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>Administrador de EXIF</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Proteja su privacidad al ver y eliminar metadatos EXIF rastreables de archivos multimedia.</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Proteja su privacidad al ver y eliminar metadatos EXIF rastreables de archivos multimedia.</value>
+  </data>
+  <data name="EXIFManagerPageTitle" xml:space="preserve">
+    <value>Proteja su privacidad al ver y eliminar metadatos EXIF rastreables de archivos multimedia.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Copiar todo</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar todos los datos al portapapeles.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copiar todos los datos al portapapeles.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Eliminar todos los datos</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar todos los datos que se pueden eliminar de forma segura.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar todos los datos que se pueden eliminar de forma segura.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Expandir todas las secciones</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Expandir todas las secciones para ver su contenido.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Expandir todas las secciones para ver su contenido.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Contraer todas las secciones</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Contraer todas las secciones para ocultar su contenido.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Contraer todas las secciones para ocultar su contenido.</value>
+  </data>
 </root>

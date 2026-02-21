@@ -5447,4 +5447,73 @@
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>बनाए रखने के लिए चुनी गई मूल फोटो को हटाएं.</value>
   </data>
+      <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>क्लाउड परिवेश</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उस खाते का क्लाउड परिवेश जो वर्तमान में इस पृष्ठ पर कार्य करने के लिए चयनित है.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उस खाते का क्लाउड परिवेश जो वर्तमान में इस पृष्ठ पर कार्य करने के लिए चयनित है.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>चयनित खाते का क्लाउड परिवेश यहाँ दिखाई देगा</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>क्लाउड परिवेश</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>साइन इन कार्रवाई के लिए उपयोग करने हेतु क्लाउड परिवेश का चयन करें.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>साइन इन कार्रवाई के लिए उपयोग करने हेतु क्लाउड परिवेश का चयन करें.</value>
+  </data>
+    <data name="EXIFManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>EXIF प्रबंधक</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>मीडिया फ़ाइलों से ट्रैक करने योग्य EXIF मेटाडेटा को देखकर और हटाकर अपनी गोपनीयता की रक्षा करें।</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>मीडिया फ़ाइलों से ट्रैक करने योग्य EXIF मेटाडेटा को देखकर और हटाकर अपनी गोपनीयता की रक्षा करें।</value>
+  </data>
+  <data name="EXIFManagerPageTitle" xml:space="preserve">
+    <value>मीडिया फ़ाइलों से ट्रैक करने योग्य EXIF मेटाडेटा को देखकर और हटाकर अपनी गोपनीयता की रक्षा करें।</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सभी कॉपी करें</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी डेटा क्लिपबोर्ड पर कॉपी करें।</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी डेटा क्लिपबोर्ड पर कॉपी करें।</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सभी डेटा हटाएँ</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वह सभी डेटा हटाएँ जिसे सुरक्षित रूप से हटाया जा सकता है।</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वह सभी डेटा हटाएँ जिसे सुरक्षित रूप से हटाया जा सकता है।</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सभी अनुभागों का विस्तार करें</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी अनुभागों की सामग्री देखने के लिए उनका विस्तार करें।</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी अनुभागों की सामग्री देखने के लिए उनका विस्तार करें।</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सभी अनुभागों को संक्षिप्त करें</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी अनुभागों की सामग्री छिपाने के लिए उन्हें संक्षिप्त करें।</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी अनुभागों की सामग्री छिपाने के लिए उन्हें संक्षिप्त करें।</value>
+  </data>
 </root>

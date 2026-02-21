@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.Extras.EXIFManager"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:HardenSystemSecurity.ViewModels"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    KeyboardAcceleratorPlacementMode="Hidden">
+
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ViewModel.CopyAllInvoked}"/>
+        <KeyboardAccelerator Key="Delete" Invoked="{x:Bind ViewModel.RemoveAllInvoked}"/>
+    </Page.KeyboardAccelerators>
+
+    <Grid Background="Transparent"
+          AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+          DragOver="{x:Bind ViewModel.Grid_DragOver}"
+          Drop="{x:Bind ViewModel.Grid_Drop}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- InfoBar -->
+        <customUI:InfoBarV2 x:Name="MainInfoBar"
+                            Grid.Row="0"
+                            Margin="0,0,0,12"
+                            Title="EXIF Manager"
+                            Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+
+        <!-- Toolbar Area -->
+        <Border Grid.Row="1"
+                CornerRadius="10"
+                Padding="8,6"
+                Margin="0,0,0,12"
+                BorderThickness="1"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                VerticalAlignment="Center">
+
+            <controls:WrapPanel Orientation="Horizontal"
+                                HorizontalSpacing="6"
+                                VerticalSpacing="6"
+                                VerticalAlignment="Center">
+
+                <!-- Browse Image -->
+                <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                   ObservedData="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
+                                   x:Uid="GenericBrowseButton"
+                                   VerticalAlignment="Center"
+                                   Click="{x:Bind ViewModel.BrowseForImage_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE8B9;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+
+                    <customUI:ButtonV2.Flyout>
+                        <Flyout>
+                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedImagePath}" />
+                                <TextBlock x:Uid="ViewSelectedGroupPolicyFileTextBlock" TextWrapping="WrapWholeWords" />
+                                <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
+                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                         MinWidth="400" IsReadOnly="True" />
+                            </controls:WrapPanel>
+                        </Flyout>
+                    </customUI:ButtonV2.Flyout>
+                </customUI:ButtonV2>
+
+                <!-- Actions DropDownButton -->
+                <DropDownButton x:Uid="ExtraActionsDropDownButton"
+                                VerticalAlignment="Center"
+                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+
+                    <DropDownButton.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DropDownButton.ContentTemplate>
+
+                    <DropDownButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+
+                            <!-- Copy All -->
+                            <MenuFlyoutItem x:Uid="CopyAllMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.CopyAllToClipboard_Click}"
+                                            KeyboardAcceleratorTextOverride="Ctrl + C">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE8C8;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutSeparator />
+
+                            <!-- Remove All -->
+                            <MenuFlyoutItem x:Uid="RemoveAllExifDataMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.RemoveAll_Click}"
+                                            KeyboardAcceleratorTextOverride="Del">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE74D;" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutSeparator />
+
+                            <!-- Expand All -->
+                            <MenuFlyoutItem x:Uid="ExpandAllSectionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.ExpandAll_Click}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE70D;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <!-- Collapse All -->
+                            <MenuFlyoutItem x:Uid="CollapseAllSectionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.CollapseAll_Click}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE70E;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+
+            </controls:WrapPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Dynamic Content List -->
+            <ListView Grid.Column="0"
+                      ItemsSource="{x:Bind ViewModel.Categories}"
+                      SelectionMode="None">
+
+                <ListView.ItemContainerStyle>
+                    <!-- Forces the ListView items to stretch across the whole width so the Expanders look correct -->
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <!-- Removes standard padding so Expanders align nicely -->
+                        <Setter Property="Padding" Value="0,0,0,12" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MetadataCategory">
+                        <Expander IsExpanded="{x:Bind IsExpanded, Mode=TwoWay}" HorizontalAlignment="Stretch">
+
+                            <Expander.Header>
+                                <Grid HorizontalAlignment="Stretch" Padding="4,0" MinHeight="40">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                        <TextBlock Text="{x:Bind DisplayName}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <Border CornerRadius="8" Background="{ThemeResource SystemFillColorNeutralBrush}" Padding="6,2">
+                                            <TextBlock Text="{x:Bind Tags.Count}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1"
+                                            Visibility="{x:Bind RemoveButtonVisibility}"
+                                            Tag="{x:Bind}"
+                                            Click="{x:Bind vm:ViewModelProvider.EXIFManagerVM.RemoveCategory_Click}"
+                                            Style="{StaticResource DefaultButtonStyle}"
+                                            Foreground="{ThemeResource SystemFillColorCriticalBrush}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                            <TextBlock Text="Remove" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Expander.Header>
+
+                            <Expander.Content>
+                                <!-- MaxHeight restores internal virtualization inside the Expander -->
+                                <ListView ItemsSource="{x:Bind Tags}"
+                                          SelectionMode="None"
+                                          MaxHeight="400"
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          ScrollViewer.VerticalScrollMode="Auto">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:MetadataTag">
+                                            <Grid Margin="0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Text="{x:Bind Name}"
+                                                           IsTextSelectionEnabled="True"
+                                                           FontWeight="Medium"
+                                                           Margin="2,0,5,0"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                           TextWrapping="Wrap" />
+
+                                                <TextBlock Grid.Column="1"
+                                                           IsTextSelectionEnabled="True"
+                                                           Text="{x:Bind Value}"
+                                                           Margin="0,0,2,0"
+                                                           TextWrapping="Wrap" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Expander.Content>
+
+                        </Expander>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Image Preview Area -->
+            <Border Grid.Column="1"
+                    Visibility="{x:Bind ViewModel.ImagePreviewVisibility, Mode=OneWay}"
+                    Margin="16,0,0,0"
+                    VerticalAlignment="Top"
+                    CornerRadius="10"
+                    Padding="16"
+                    BorderThickness="1"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Image Preview"
+                               Style="{StaticResource BodyStrongTextBlockStyle}"
+                               HorizontalAlignment="Center"/>
+                    <Image Stretch="Uniform"
+                           MaxHeight="500"
+                           MaxWidth="350">
+                        <Image.Source>
+                            <BitmapImage UriSource="{x:Bind ViewModel.SelectedFileUri, Mode=OneWay}" />
+                        </Image.Source>
+                    </Image>
+                </StackPanel>
+            </Border>
+
+            <!-- Empty-state placeholder -->
+            <Border Grid.ColumnSpan="2"
+                    Visibility="{x:Bind ViewModel.EmptyStatePlaceholderVisibility, Mode=OneWay}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    CornerRadius="16"
+                    Padding="40,32"
+                    BorderThickness="1"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel Spacing="16" HorizontalAlignment="Center">
+
+                    <!-- Large illustrative icon -->
+                    <FontIcon Glyph="&#xE8B9;"
+                              FontSize="52"
+                              HorizontalAlignment="Center"
+                              Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+
+                    <!-- Primary message -->
+                    <TextBlock Text="No photo loaded"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               HorizontalAlignment="Center"/>
+
+                    <!-- Instruction -->
+                    <TextBlock Text="Drag and drop a JPG or PNG image here (works only when runing unelevated), or use the Browse button to select one."
+                               Style="{StaticResource BodyTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Center"
+                               TextWrapping="Wrap"
+                               MaxWidth="380"
+                               TextAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+    </Grid>
+</Page>

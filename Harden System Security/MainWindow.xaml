@@ -454,6 +454,7 @@
 
                     <NavigationViewItem.MenuItems>
                         <NavigationViewItem x:Name="DuplicatePhotosFinderNavigationViewItem" Icon="{x:Bind ViewModel.DuplicatePhotosFinderIcon, Mode=OneWay}" x:Uid="DuplicatePhotosFinderNavigationViewItem" Tag="DuplicatePhotosFinder" />
+                        <NavigationViewItem x:Name="EXIFManagerNavigationViewItem" Icon="{x:Bind ViewModel.EXIFManagerIcon, Mode=OneWay}" x:Uid="EXIFManagerNavigationViewItem" Tag="EXIFManager" />
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
 

@@ -1,11 +1,7 @@
-✅ Added a new entry to the menu called "Extras". It's going to offer additional useful features that are natively built in the Harden System Security app.
+* Added support for verifying the Mandatory ASLR exclusions in the Microsoft Defender category: https://github.com/HotCakeX/Harden-Windows-Security/pull/1053
 
-🖼️ The first feature under the "Extras" menu is called "Duplicate Photos Finder" and it's been added in this update. It offers all of the tools and controls needed to find duplicate photos among files and folders, review them and delete the duplicates safely. You can undo the deletion too if you accidentally delete something within the app. Helping with organizing your photos and reclaiming storage space. It eliminates the need to install any additional software for this task.
+* Added support for U.S Government cloud environments. You can now sign into the app using a GCC High account and perform all of your security and management tasks in that environment.
 
-It offers similarity threshold to adjust the detection algorithm's sensitivity and has multiple different criteria that are adjustable for selecting original photos among duplicates.
+* You can now press F5 in any of the Security categories in the app to Refresh the data. It will work as if you pressed the "Verify All" button in that category. If Verify action is already in progress, pressing F5 will cancel it.
 
-It doesn't use any 3rd party library or file, works fully offline, and it's very high performance.
-
-Supported Image Formats: jpg, jpeg, png, bmp, gif, tiff, ico, jxr, webp.
-
-The full documentation for this feature is available on the GitHub wiki: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Duplicate-Photo-Finder
+* Added a new feature under the "Extras" menu called "EXIF Manager". It is a privacy-focused feature integrated into the Harden System Security app under the Extras section. It allows you to deeply inspect, copy, and securely strip hidden metadata (EXIF, XMP, Comments, etc.) from your photos. It operates directly on the file's data chunks at the lowest level, strictly adhering to the official specs of each data model and photo format, ensuring that your privacy is protected without re-encoding the image or losing any visual quality. You can find the full documentation for this feature on the GitHub repository's wiki: https://github.com/HotCakeX/Harden-Windows-Security/wiki/EXIF-Manager

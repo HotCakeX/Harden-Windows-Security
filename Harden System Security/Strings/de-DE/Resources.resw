@@ -5447,4 +5447,73 @@ Fingerabdruck: {3}</value>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>Löschen Sie das Originalfoto, das zur Aufbewahrung ausgewählt wurde.</value>
   </data>
+   <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Cloud-Umgebung</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Cloud-Umgebung des Kontos, das aktuell für die Ausführung der Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Cloud-Umgebung des Kontos, das aktuell für die Ausführung der Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>Die Cloud-Umgebung des ausgewählten Kontos wird hier angezeigt</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Cloud-Umgebung</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie die Cloud-Umgebung aus, die für den Anmeldevorgang verwendet werden soll.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie die Cloud-Umgebung aus, die für den Anmeldevorgang verwendet werden soll.</value>
+  </data>
+    <data name="EXIFManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>EXIF-Manager</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Schützen Sie Ihre Privatsphäre, indem Sie nachverfolgbare EXIF-Metadaten aus Mediendateien anzeigen und entfernen.</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Schützen Sie Ihre Privatsphäre, indem Sie nachverfolgbare EXIF-Metadaten aus Mediendateien anzeigen und entfernen.</value>
+  </data>
+  <data name="EXIFManagerPageTitle" xml:space="preserve">
+    <value>Schützen Sie Ihre Privatsphäre, indem Sie nachverfolgbare EXIF-Metadaten aus Mediendateien anzeigen und entfernen.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Alles kopieren</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Daten in die Zwischenablage kopieren.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Daten in die Zwischenablage kopieren.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Alle Daten entfernen</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Daten entfernen, die sicher entfernt werden können.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Daten entfernen, die sicher entfernt werden können.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Alle Abschnitte erweitern</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Abschnitte erweitern, um deren Inhalt anzuzeigen.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Abschnitte erweitern, um deren Inhalt anzuzeigen.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Alle Abschnitte reduzieren</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Abschnitte reduzieren, um deren Inhalt auszublenden.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Abschnitte reduzieren, um deren Inhalt auszublenden.</value>
+  </data>
 </root>

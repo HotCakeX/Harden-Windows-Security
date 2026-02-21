@@ -5447,4 +5447,73 @@
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>מחק את התמונה המקורית שנבחרה להישמר.</value>
   </data>
+     <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>סביבת ענן</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סביבת הענן של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סביבת הענן של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>סביבת הענן של החשבון הנבחר תופיע כאן</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>סביבת ענן</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את סביבת הענן לשימוש עבור פעולת הכניסה.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את סביבת הענן לשימוש עבור פעולת הכניסה.</value>
+  </data>
+    <data name="EXIFManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>מנהל EXIF</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגן על פרטיותך על ידי הצגה והסרה של מטא-נתוני EXIF הניתנים למעקב מקבצי מדיה.</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגן על פרטיותך על ידי הצגה והסרה של מטא-נתוני EXIF הניתנים למעקב מקבצי מדיה.</value>
+  </data>
+  <data name="EXIFManagerPageTitle" xml:space="preserve">
+    <value>הגן על פרטיותך על ידי הצגה והסרה של מטא-נתוני EXIF הניתנים למעקב מקבצי מדיה.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>העתק הכול</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק את כל הנתונים ללוח.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק את כל הנתונים ללוח.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הסר את כל הנתונים</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את כל הנתונים שניתן להסיר בבטחה.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את כל הנתונים שניתן להסיר בבטחה.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הרחב את כל המקטעים</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הרחב את כל המקטעים כדי להציג את התוכן שלהם.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הרחב את כל המקטעים כדי להציג את התוכן שלהם.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>כווץ את כל המקטעים</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כווץ את כל המקטעים כדי להסתיר את התוכן שלהם.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כווץ את כל המקטעים כדי להסתיר את התוכן שלהם.</value>
+  </data>
 </root>

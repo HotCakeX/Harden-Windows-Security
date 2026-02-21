@@ -17,6 +17,7 @@
 
 using System.Threading;
 using AppControlManager.ViewModels;
+using HardenSystemSecurity.Pages.Extras;
 using HardenSystemSecurity.WindowComponents;
 using Windows.Storage;
 
@@ -129,7 +130,10 @@ internal static class ViewModelProvider
 	private static readonly Lazy<CSPVM> _cspVM = new(() => new CSPVM(), false);
 
 	private static readonly Lazy<DuplicatePhotoFinderVM> _duplicateImageFinderVM = new(() =>
-	new DuplicatePhotoFinderVM(), false);
+		new DuplicatePhotoFinderVM(), false);
+
+	private static readonly Lazy<EXIFManagerVM> _eXIFManagerVM = new(() =>
+		new EXIFManagerVM(), false);
 
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
@@ -167,6 +171,7 @@ internal static class ViewModelProvider
 	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
 	internal static CSPVM CSPVM => _cspVM.Value;
 	internal static DuplicatePhotoFinderVM DuplicatePhotoFinderVM => _duplicateImageFinderVM.Value;
+	internal static EXIFManagerVM EXIFManagerVM => _eXIFManagerVM.Value;
 
 
 	/// <summary>

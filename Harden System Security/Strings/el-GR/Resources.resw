@@ -5447,4 +5447,73 @@
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>Διαγράψτε την αρχική φωτογραφία που έχει επιλεγεί για διατήρηση.</value>
   </data>
+    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
+    <value>Περιβάλλον Cloud</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
+    <value>Το Περιβάλλον Cloud του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
+    <value>Περιβάλλον Cloud</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε το Περιβάλλον Cloud που θα χρησιμοποιηθεί για τη λειτουργία εισόδου.</value>
+  </data>
+  <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε το Περιβάλλον Cloud που θα χρησιμοποιηθεί για τη λειτουργία εισόδου.</value>
+  </data>
+    <data name="EXIFManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>Διαχείριση EXIF</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προστατεύστε το απόρρητό σας προβάλλοντας και καταργώντας ανιχνεύσιμα μεταδεδομένα EXIF από αρχεία πολυμέσων.</value>
+  </data>
+  <data name="EXIFManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προστατεύστε το απόρρητό σας προβάλλοντας και καταργώντας ανιχνεύσιμα μεταδεδομένα EXIF από αρχεία πολυμέσων.</value>
+  </data>
+  <data name="EXIFManagerPageTitle" xml:space="preserve">
+    <value>Προστατεύστε το απόρρητό σας προβάλλοντας και καταργώντας ανιχνεύσιμα μεταδεδομένα EXIF από αρχεία πολυμέσων.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αντιγραφή όλων</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγράψτε όλα τα δεδομένα στο πρόχειρο.</value>
+  </data>
+  <data name="CopyAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγράψτε όλα τα δεδομένα στο πρόχειρο.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κατάργηση όλων των δεδομένων</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καταργήστε όλα τα δεδομένα που μπορούν να καταργηθούν με ασφάλεια.</value>
+  </data>
+  <data name="RemoveAllExifDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καταργήστε όλα τα δεδομένα που μπορούν να καταργηθούν με ασφάλεια.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ανάπτυξη όλων των ενοτήτων</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναπτύξτε όλες τις ενότητες για να προβάλετε το περιεχόμενό τους.</value>
+  </data>
+  <data name="ExpandAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναπτύξτε όλες τις ενότητες για να προβάλετε το περιεχόμενό τους.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Σύμπτυξη όλων των ενοτήτων</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Συμπτύξτε όλες τις ενότητες για να αποκρύψετε το περιεχόμενό τους.</value>
+  </data>
+  <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Συμπτύξτε όλες τις ενότητες για να αποκρύψετε το περιεχόμενό τους.</value>
+  </data>
 </root>

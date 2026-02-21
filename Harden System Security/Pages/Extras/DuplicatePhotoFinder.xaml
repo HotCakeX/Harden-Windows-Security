@@ -13,8 +13,8 @@
     KeyboardAcceleratorPlacementMode="Hidden"
     mc:Ignorable="d">
 
-    <!-- 
-        KeyboardAcceleratorPlacementMode="Hidden" prevents the system from automatically showing the tooltip 
+    <!--
+        KeyboardAcceleratorPlacementMode="Hidden" prevents the system from automatically showing the tooltip
         whenever the mouse hovers over this page.
     -->
 
@@ -23,10 +23,10 @@
     </Page.KeyboardAccelerators>
 
     <Page.Resources>
-        <!-- 
-            Custom Button Style for Images: 
-            Removes default background/borders but adds a Scale Animation on Press 
-            so the user knows they clicked it. 
+        <!--
+            Custom Button Style for Images:
+            Removes default background/borders but adds a Scale Animation on Press
+            so the user knows they clicked it.
         -->
         <Style x:Key="ImageButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>

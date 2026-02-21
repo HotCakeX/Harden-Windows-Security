@@ -78,7 +78,7 @@
                                  Tag="Active">
                             <CCToolKit:SegmentedItem.Icon>
                                 <IconSourceElement>
-                                    <BitmapIconSource UriSource="/Assets/External/Bottle.png" ShowAsMonochrome="False" />
+                                    <BitmapIconSource UriSource="ms-appx:///Assets/External/Bottle.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
                             </CCToolKit:SegmentedItem.Icon>
 
@@ -88,7 +88,7 @@
                                                 Tag="Authentication" >
                             <CCToolKit:SegmentedItem.Icon>
                                 <IconSourceElement>
-                                    <BitmapIconSource UriSource="/Assets/External/Authentication.png" ShowAsMonochrome="False" />
+                                    <BitmapIconSource UriSource="ms-appx:///Assets/External/Authentication.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
                             </CCToolKit:SegmentedItem.Icon>
                         </CCToolKit:SegmentedItem>
@@ -97,7 +97,7 @@
                                                 Tag="SignedIn">
                             <CCToolKit:SegmentedItem.Icon>
                                 <IconSourceElement>
-                                    <BitmapIconSource UriSource="/Assets/External/Vault.png" ShowAsMonochrome="False" />
+                                    <BitmapIconSource UriSource="ms-appx:///Assets/External/Vault.png" ShowAsMonochrome="False" />
                                 </IconSourceElement>
                             </CCToolKit:SegmentedItem.Icon>
                         </CCToolKit:SegmentedItem>
@@ -112,14 +112,21 @@
 
                                 <controls:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalSpacing="10" HorizontalAlignment="Center">
 
+                                    <controls:WrapPanel.Resources>
+                                        <ResourceDictionary
+                                            Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
+                                    </controls:WrapPanel.Resources>
+
                                     <TextBlock x:Uid="CurrentlyInUseAccountDetailsTextBlock"
                                                Margin="0,0,0,5"
+                                               Style="{StaticResource BodyStrongTextBlockStyle}"
                                                HorizontalAlignment="Center"/>
 
                                     <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountUsername" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountUsername, Mode=OneWay}" HorizontalAlignment="Center" Width="470"/>
-                                    <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
-                                    <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountAccountIdentifier" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountAccountIdentifier, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
-                                    <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountPermissions" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountPermissions, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
+                                    <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Center" Width="470"/>
+                                    <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountAccountIdentifier" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountAccountIdentifier, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Center" Width="470"/>
+                                    <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountPermissions" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountPermissions, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Center" Width="470"/>
+                                    <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountEnvironment" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountEnvironment, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Center" Width="470"/>
 
                                 </controls:WrapPanel>
 
@@ -210,6 +217,26 @@
                                                 TextAlignment="Center" />
                                         </DataTemplate>
                                     </ComboBox.HeaderTemplate>
+                                </ComboBox>
+
+                                <ComboBox ItemsSource="{x:Bind Host.AuthCompanionCLS.AzureCloudEnvironmentComboBoxSource}"
+                                          Margin="0,5,0,0"
+                                          HorizontalAlignment="Center"
+                                          x:Uid="AzureCloudEnvironmentComboBox"
+                                          SelectedItem="{x:Bind Host.AuthCompanionCLS.AzureCloudEnvironmentComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBox.HeaderTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <TextBlock Text="{x:Bind}"
+                                                HorizontalAlignment="Center"
+                                                TextAlignment="Center" />
+                                        </DataTemplate>
+                                    </ComboBox.HeaderTemplate>
+
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="MSGraph:AzureCloudEnvironmentComboBoxItem">
+                                            <TextBlock Text="{x:Bind Name}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
                                 </ComboBox>
 
                             </StackPanel>
@@ -305,6 +332,7 @@
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -314,6 +342,7 @@
                                                 <TextBox IsReadOnly="True" Header="Tenant ID" Text="{x:Bind TenantID}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="1"/>
                                                 <TextBox IsReadOnly="True" Header="Account Identifier" Text="{x:Bind AccountIdentifier}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="2"/>
                                                 <TextBox IsReadOnly="True" Header="Permissions" Text="{x:Bind Permissions}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="3"/>
+                                                <TextBox IsReadOnly="True" Header="Environment" Text="{x:Bind Environment}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="4"/>
 
                                             </Grid>
                                         </DataTemplate>

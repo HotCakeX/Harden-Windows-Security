@@ -47,7 +47,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(AppControlManager.Pages.Home),
 		typeof(Pages.Intune),
 		typeof(AppControlManager.Pages.IntuneDeploymentDetails),
-		typeof(Pages.Extras.DuplicatePhotoFinder)
+		typeof(Pages.Extras.DuplicatePhotoFinder),
+		typeof(Pages.Extras.EXIFManager)
 		];
 
 
@@ -264,6 +265,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -308,7 +315,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) },
 		{ "Intune", typeof(Pages.Intune) },
 		{ "CSP", typeof(Pages.CSP) },
-		{ "DuplicatePhotosFinder", typeof(Pages.Extras.DuplicatePhotoFinder) }
+		{ "DuplicatePhotosFinder", typeof(Pages.Extras.DuplicatePhotoFinder) },
+		{ "EXIFManager", typeof(Pages.Extras.EXIFManager) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -355,6 +363,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.CSP)] = GlobalVars.GetStr("CSPNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePageCustomMSIXPath)] = GlobalVars.GetStr("UpdatePageCustomMSIXPath");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DuplicatePhotoFinder)] = GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.EXIFManager)] = GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content");
 	}
 
 	/// <summary>
@@ -453,6 +462,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Extras section.
 	/// </summary>
 	internal IconElement? ExtrasIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the EXIF Manager navigation item.
+	/// </summary>
+	internal IconElement? EXIFManagerIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -555,6 +569,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Gift()
 					};
 
+					EXIFManagerIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -6, -6, -6),
+						Source = new Paint_roller()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -640,6 +660,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					EXIFManagerIcon = new FontIcon
+					{
+						Glyph = "\uEC5A",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -658,6 +684,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					IntuneIcon = new FontIcon { Glyph = "\uE753" };
 					DuplicatePhotosFinderIcon = new FontIcon { Glyph = "\uF584" };
 					ExtrasIcon = new FontIcon { Glyph = "\uF6BA" };
+					EXIFManagerIcon = new FontIcon { Glyph = "\uEC5A" };
 					break;
 				}
 		}

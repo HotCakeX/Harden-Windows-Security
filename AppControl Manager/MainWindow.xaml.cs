@@ -693,6 +693,10 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(DuplicatePhotosFinderNavigationViewItem, GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(DuplicatePhotosFinderNavigationViewItem, GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/ToolTipService/ToolTip"));
 
+			EXIFManagerNavigationViewItem.Content = GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(EXIFManagerNavigationViewItem, GlobalVars.GetStr("EXIFManagerNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(EXIFManagerNavigationViewItem, GlobalVars.GetStr("EXIFManagerNavigationViewItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

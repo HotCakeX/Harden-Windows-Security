@@ -808,6 +808,7 @@ jobs:
     needs: [build]
     runs-on: windows-2025
     permissions:
+      contents: read
       attestations: write
       id-token: write
 
@@ -860,6 +861,7 @@ jobs:
     runs-on: windows-2025
     permissions:
       contents: write
+      issues: write
       pull-requests: write
 
     steps:

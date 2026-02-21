@@ -1,0 +1,53 @@
+name: Dependabot Auto-Approve and Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Elevate the default GITHUB_TOKEN permissions
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  approve-and-merge:
+    name: Approve and Merge Dependabot PRs
+    runs-on: ubuntu-latest
+
+    # Ensures this workflow only runs for the official Dependabot account
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Assign PR to HotCakeX
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          # Query the PR to check current assignees
+          IS_ASSIGNED=$(gh pr view "$PR_URL" --json assignees --jq '.assignees | map(.login) | contains(["HotCakeX"])')
+
+          if [ "$IS_ASSIGNED" = "true" ]; then
+            echo "✅ HotCakeX is already assigned to this PR."
+          else
+            echo "🔄 Assigning HotCakeX to the PR..."
+            gh pr edit "$PR_URL" --add-assignee "HotCakeX"
+          fi
+
+      - name: Approve PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          echo "✅ Approving the PR..."
+          # The GITHUB_TOKEN will act on behalf of github-actions[bot] to approve the PR
+          gh pr review "$PR_URL" --approve
+
+      - name: Enable Auto-Merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          echo "✅ Enabling auto-merge for the PR..."
+          # --auto enables native GitHub auto-merge (defers merging until required checks pass).
+          # --squash and --delete-branch maintain the merge strategy.
+          gh pr merge "$PR_URL" --auto --squash --delete-branch

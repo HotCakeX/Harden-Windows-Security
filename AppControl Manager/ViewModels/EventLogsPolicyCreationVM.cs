@@ -228,9 +228,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal void SelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
-		if (lv is null) return;
-
-		ListViewHelper.SelectAll(lv, FileIdentities);
+		ListViewHelper.SelectAll(lv);
 	}
 
 	/// <summary>

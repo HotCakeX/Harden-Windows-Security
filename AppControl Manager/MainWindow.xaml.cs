@@ -697,6 +697,10 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(EXIFManagerNavigationViewItem, GlobalVars.GetStr("EXIFManagerNavigationViewItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(EXIFManagerNavigationViewItem, GlobalVars.GetStr("EXIFManagerNavigationViewItem/ToolTipService/ToolTip"));
 
+			ServiceManagerNavItem.Content = GlobalVars.GetStr("ServiceManagerNavItem/Content");
+			AutomationProperties.SetHelpText(ServiceManagerNavItem, GlobalVars.GetStr("ServiceManagerNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ServiceManagerNavItem, GlobalVars.GetStr("ServiceManagerNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

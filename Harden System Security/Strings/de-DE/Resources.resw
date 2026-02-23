@@ -5516,4 +5516,43 @@ Fingerabdruck: {3}</value>
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Alle Abschnitte reduzieren, um deren Inhalt auszublenden.</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>Dienst-Manager</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erhalten Sie umfassende Transparenz über alle verfügbaren Dienste auf dem System mit tiefgehenden Einblicken in die Konfiguration. Filtern Sie problemlos Microsoft-Dienste, um Drittanbieter-Dienste zu isolieren, und übernehmen Sie die volle administrative Kontrolle, um Dienste zu konfigurieren, bereitzustellen oder zu löschen, um die Systemleistung und Sicherheit zu optimieren.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erhalten Sie umfassende Transparenz über alle verfügbaren Dienste auf dem System mit tiefgehenden Einblicken in die Konfiguration. Filtern Sie problemlos Microsoft-Dienste, um Drittanbieter-Dienste zu isolieren, und übernehmen Sie die volle administrative Kontrolle, um Dienste zu konfigurieren, bereitzustellen oder zu löschen, um die Systemleistung und Sicherheit zu optimieren.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>Erhalten Sie umfassende Transparenz über alle verfügbaren Dienste auf dem System mit tiefgehenden Einblicken in die Konfiguration. Filtern Sie problemlos Microsoft-Dienste, um Drittanbieter-Dienste zu isolieren, und übernehmen Sie die volle administrative Kontrolle, um Dienste zu konfigurieren, bereitzustellen oder zu löschen, um die Systemleistung und Sicherheit zu optimieren.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>Dienste laden</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle verfügbaren Dienste auf dem System laden.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle verfügbaren Dienste auf dem System laden.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Filter auf die Liste der Dienste anwenden.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Filter auf die Liste der Dienste anwenden.</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>Akku-Bericht erstellen</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erstellen Sie einen Akku-Bericht für Ihr Gerät (sofern vorhanden). Er enthält detaillierte Informationen zu Akkunutzung, Stromverbrauch und Leistung.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erstellen Sie einen Akku-Bericht für Ihr Gerät (sofern vorhanden). Er enthält detaillierte Informationen zu Akkunutzung, Stromverbrauch und Leistung.</value>
+  </data>
 </root>

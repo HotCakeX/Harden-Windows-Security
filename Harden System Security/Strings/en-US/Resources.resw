@@ -5516,4 +5516,43 @@ Thumbprint: {3}</value>
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Collapse all sections to hide their content.</value>
   </data>
+  <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>Service Manager</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gain extensive visibility into all available services on the system with deep-level configuration insights. Easily filter Microsoft services to isolate third-party services, and take full administrative control to configure, provision, or delete services in order to optimize system performance and security.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Gain extensive visibility into all available services on the system with deep-level configuration insights. Easily filter Microsoft services to isolate third-party services, and take full administrative control to configure, provision, or delete services in order to optimize system performance and security.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>Gain extensive visibility into all available services on the system with deep-level configuration insights. Easily filter Microsoft services to isolate third-party services, and take full administrative control to configure, provision, or delete services in order to optimize system performance and security.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>Load Services</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Load all available services on the system.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Load all available services on the system.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apply filters to the list of services.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apply filters to the list of services.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>Generate Battery Report</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Generate a Battery Report for your device (if it has one). It contains detailed information about your battery usage, wattage and performance.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Generate a Battery Report for your device (if it has one). It contains detailed information about your battery usage, wattage and performance.</value>
+  </data>
 </root>

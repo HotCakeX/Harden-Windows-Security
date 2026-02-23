@@ -15,11 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Threading;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.Pages.Extras;
 using HardenSystemSecurity.WindowComponents;
-using Windows.Storage;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -135,6 +132,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<EXIFManagerVM> _eXIFManagerVM = new(() =>
 		new EXIFManagerVM(), false);
 
+	private static readonly Lazy<ServiceManagerVM> _serviceManagerVM = new(() =>
+		new ServiceManagerVM(), false);
+
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
 	internal static MainWindowVM MainWindowVM => _mainWindowVM.Value;
@@ -172,6 +172,7 @@ internal static class ViewModelProvider
 	internal static CSPVM CSPVM => _cspVM.Value;
 	internal static DuplicatePhotoFinderVM DuplicatePhotoFinderVM => _duplicateImageFinderVM.Value;
 	internal static EXIFManagerVM EXIFManagerVM => _eXIFManagerVM.Value;
+	internal static ServiceManagerVM ServiceManagerVM => _serviceManagerVM.Value;
 
 
 	/// <summary>

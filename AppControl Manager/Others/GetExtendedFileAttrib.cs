@@ -38,12 +38,7 @@ internal static partial class GetExtendedFileAttrib
 	/// operations.
 	/// https://learn.microsoft.com/windows/win32/api/winver/nf-winver-getfileversioninfoexw#parameters
 	/// </summary>
-	private const int FILE_VER_GET_NEUTRAL = 2;
-
-	/// <summary>
-	/// Represents an error code indicating that a specified resource type could not be found. The value is 1813 (-2147023083).
-	/// </summary>
-	private const int ERROR_RESOURCE_TYPE_NOT_FOUND = 1813;
+	private const uint FILE_VER_GET_NEUTRAL = 2;
 
 	/// <summary>
 	/// Retrieves extended file information, including version, original file name, internal name, file description, and
@@ -77,16 +72,15 @@ internal static partial class GetExtendedFileAttrib
 			Span<byte> spanData = new(versionData);
 
 			// Extract version from the version data
-			if (!TryGetVersion(spanData, out Version? version, out int versionErrorCode))
+			if (!TryGetVersion(spanData, out Version? version))
 			{
-				// Throw Win32Exception using captured error code
-				throw new Win32Exception(versionErrorCode);
+				return BadCaseReturnVal;
 			}
 
 			// Extract locale and encoding information
-			if (!TryGetLocaleAndEncoding(spanData, out string? locale, out string? encoding, out int localeErrorCode))
+			if (!TryGetLocaleAndEncoding(spanData, out string? locale, out string? encoding))
 			{
-				throw new Win32Exception(localeErrorCode);
+				return BadCaseReturnVal;
 			}
 
 			// Retrieve various file information based on locale and encoding and return the result
@@ -112,29 +106,24 @@ internal static partial class GetExtendedFileAttrib
 		}
 	}
 
-
 	/// <summary>
 	/// Extracts version information from a byte array and outputs it as a Version object.
 	/// </summary>
 	/// <param name="data">The byte array containing version information to be extracted.</param>
 	/// <param name="version">Outputs the extracted version information as a Version object.</param>
-	/// <param name="win32Error">Outputs the Win32 error code when extraction fails.</param>
 	/// <returns>Returns true if the version was successfully extracted, otherwise false.</returns>
-	private static unsafe bool TryGetVersion(Span<byte> data, out Version? version, out int win32Error)
+	private static unsafe bool TryGetVersion(Span<byte> data, out Version? version)
 	{
 		version = null;
-		win32Error = 0;
 
 		// pin span directly
 		fixed (byte* pData = data)
 		{
 			IntPtr basePtr = (IntPtr)pData;
 
-			// Query the root block for version info
-			if (!NativeMethods.VerQueryValueW(basePtr, "\\", out nint buffer, out _))
+			// Query the root block for version info and make sure the returned length is large enough for the struct
+			if (NativeMethods.VerQueryValueW(basePtr, "\\", out nint buffer, out uint len) == 0 || buffer == IntPtr.Zero || len < sizeof(VS_FIXEDFILEINFO))
 			{
-				// Capture Win32 error immediately after failure.
-				win32Error = Marshal.GetLastPInvokeError();
 				return false;
 			}
 
@@ -152,40 +141,35 @@ internal static partial class GetExtendedFileAttrib
 		}
 	}
 
-
 	/// <summary>
 	/// Extracts locale and encoding information from a byte span.
 	/// </summary>
 	/// <param name="data">The byte span containing data from which locale and encoding are extracted.</param>
 	/// <param name="locale">Outputs the locale information derived from the data.</param>
 	/// <param name="encoding">Outputs the encoding information derived from the data.</param>
-	/// <param name="win32Error">Outputs the Win32 error code when extraction fails.</param>
 	/// <returns>Returns a boolean indicating the success of the extraction process.</returns>
-	private static unsafe bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding, out int win32Error)
+	private static unsafe bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding)
 	{
 		locale = null;
 		encoding = null;
-		win32Error = 0;
 
 		// pin span instead of allocating a new array each call.
 		fixed (byte* pData = data)
 		{
 			IntPtr basePtr = (IntPtr)pData;
 
-			// Query the translation block for locale and encoding
-			if (!NativeMethods.VerQueryValueW(basePtr, "\\VarFileInfo\\Translation", out nint buffer, out _))
+			// Query the translation block for locale and encoding, verifying length is at least 4 bytes (2 WORDs)
+			if (NativeMethods.VerQueryValueW(basePtr, "\\VarFileInfo\\Translation", out nint buffer, out uint len) == 0 || buffer == IntPtr.Zero || len < 4)
 			{
-				win32Error = Marshal.GetLastPInvokeError();
 				return false;
 			}
 
-			// Copy the translation values (two WORDs)
-			short[] translations = new short[2];
-			Marshal.Copy(buffer, translations, 0, 2);
+			// Cast directly to ushort* (WORD)
+			ushort* pTranslations = (ushort*)buffer;
 
 			// Convert the translation values to hex strings
-			locale = translations[0].ToString("X4", CultureInfo.InvariantCulture);
-			encoding = translations[1].ToString("X4", CultureInfo.InvariantCulture);
+			locale = pTranslations[0].ToString("X4", CultureInfo.InvariantCulture);
+			encoding = pTranslations[1].ToString("X4", CultureInfo.InvariantCulture);
 			return true;
 		}
 	}
@@ -200,7 +184,7 @@ internal static partial class GetExtendedFileAttrib
 	/// <returns>Returns the localized resource string or null if not found.</returns>
 	private static unsafe string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
 	{
-		string[] encodings = [encoding, Cp1252FallbackCode, UnicodeFallbackCode];
+		ReadOnlySpan<string> encodings = [encoding, Cp1252FallbackCode, UnicodeFallbackCode];
 
 		// pin once, reuse base pointer across attempts.
 		fixed (byte* pData = versionBlock)
@@ -209,22 +193,21 @@ internal static partial class GetExtendedFileAttrib
 
 			foreach (string enc in encodings)
 			{
-				string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
+				string subBlock = $"\\StringFileInfo\\{locale}{enc}{resource}";
 
-				if (NativeMethods.VerQueryValueW(basePtr, subBlock, out nint buffer, out _))
-					return Marshal.PtrToStringAuto(buffer);
+				// Grab the length to safely instantiate the string
+				if (NativeMethods.VerQueryValueW(basePtr, subBlock, out nint buffer, out uint len) != 0 && buffer != IntPtr.Zero && len > 0)
+				{
+					ReadOnlySpan<char> valueSpan = new((void*)buffer, (int)len);
+					valueSpan = valueSpan.TrimEnd('\0');
 
-				// Capture the VerQueryValueW's error immediately if it failed above.
-				int lastError = Marshal.GetLastPInvokeError();
-
-				// If error is not resource type not found, throw the error
-				if (lastError != ERROR_RESOURCE_TYPE_NOT_FOUND)
-					throw new Win32Exception(lastError);
+					// If the resulting string is empty, return the interned string.Empty to avoid allocating a new object on the heap
+					return valueSpan.IsEmpty ? string.Empty : new string(valueSpan);
+				}
 			}
 		}
 		return null;
 	}
-
 
 	/// <summary>
 	/// Check if a string is null or whitespace and return null if it is

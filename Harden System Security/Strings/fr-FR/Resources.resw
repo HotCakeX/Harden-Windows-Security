@@ -5516,4 +5516,43 @@ Empreinte : {3}</value>
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Réduire toutes les sections pour masquer leur contenu.</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>Gestionnaire de services</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Obtenez une visibilité approfondie de tous les services disponibles sur le système avec des informations de configuration détaillées. Filtrez facilement les services Microsoft pour isoler les services tiers, et prenez le contrôle administratif total pour configurer, provisionner ou supprimer des services afin d'optimiser les performances et la sécurité du système.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Obtenez une visibilité approfondie de tous les services disponibles sur le système avec des informations de configuration détaillées. Filtrez facilement les services Microsoft pour isoler les services tiers, et prenez le contrôle administratif total pour configurer, provisionner ou supprimer des services afin d'optimiser les performances et la sécurité du système.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>Obtenez une visibilité approfondie de tous les services disponibles sur le système avec des informations de configuration détaillées. Filtrez facilement les services Microsoft pour isoler les services tiers, et prenez le contrôle administratif total pour configurer, provisionner ou supprimer des services afin d'optimiser les performances et la sécurité du système.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>Charger les services</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Charger tous les services disponibles sur le système.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Charger tous les services disponibles sur le système.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>Filtres</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Appliquer des filtres à la liste des services.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Appliquer des filtres à la liste des services.</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>Générer un rapport de batterie</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Générez un rapport de batterie pour votre appareil (s'il en possède une). Il contient des informations détaillées sur l'utilisation de votre batterie, la consommation d'énergie et les performances.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Générez un rapport de batterie pour votre appareil (s'il en possède une). Il contient des informations détaillées sur l'utilisation de votre batterie, la consommation d'énergie et les performances.</value>
+  </data>
 </root>

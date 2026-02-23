@@ -185,7 +185,7 @@ public partial class App : Application
 					// Run the command
 					await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(presetIndex, opEnum);
 
-					Logger.Write("Operation completed successfully.");
+					Logger.Write("Operation completed.");
 				}
 
 				// If a device usage intent is requested, execute it headlessly.

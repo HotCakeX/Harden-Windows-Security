@@ -42,7 +42,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
 
-		CalculateColumnWidths();
+		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -436,12 +436,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	internal void SelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Deployment_IntuneGroupsListView);
-		if (lv is null)
-		{
-			return;
-		}
-
-		ListViewHelper.SelectAll(lv, GroupNamesCollection);
+		ListViewHelper.SelectAll(lv);
 	}
 
 	/// <summary>

@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -62,6 +63,26 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	private const float HoverScale = 1.15f;
 
 	private readonly SolidColorBrush _fallbackCircleFill = new(Colors.LightGray);
+
+	// Static image cache to prevent the UI Asynchronous Image Decoder from dropping images during ListView virtualization
+	// Also improves the overall performance since it's static and all pages use the same cache instead of recreating the images.
+	private static readonly BitmapImage[] ImageCache = [
+		new(new("ms-appx:///Assets/DeviceIntents/Development.png")), // 0
+		new(new("ms-appx:///Assets/DeviceIntents/Gaming.png")), // 1
+		new(new("ms-appx:///Assets/DeviceIntents/School.png")), // 2
+		new(new("ms-appx:///Assets/DeviceIntents/Business.png")), // 3
+		new(new("ms-appx:///Assets/DeviceIntents/Specialized.png")), // 4
+		new(new("ms-appx:///Assets/DeviceIntents/Privileged.png")) // 5
+	];
+
+	private static readonly string[] TitleCache = [
+		GlobalVars.GetStr("DeviceUsageIntent-Development-Title"), // 0
+		GlobalVars.GetStr("DeviceUsageIntent-Gaming-Title"), // 1
+		GlobalVars.GetStr("DeviceUsageIntent-School-Title"), // 2
+		GlobalVars.GetStr("DeviceUsageIntent-Business-Title"), // 3
+		GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"), // 4
+		GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title") // 5
+		];
 
 	// State for layout animation
 	private readonly List<FrameworkElement> _circleElements = [];
@@ -297,6 +318,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		return _hoverEase;
 	}
 
+
 	/// <summary>
 	/// Creates a circular icon using an Ellipse filled with an ImageBrush (no halo).
 	/// Adds a tooltip and accessibility HelpText/Name.
@@ -309,7 +331,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		{
 			ImageBrush imageBrush = new()
 			{
-				ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(GetImageUriForIntent(intent)),
+				ImageSource = ImageCache[(int)intent],
 				Stretch = Stretch.UniformToFill,
 				AlignmentX = AlignmentX.Center,
 				AlignmentY = AlignmentY.Center
@@ -330,7 +352,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		};
 
 		// Accessibility + tooltip content
-		string title = GetTitleForIntent(intent);
+		string title = TitleCache[(int)intent];
 
 		// Name is what screen readers announce as the control name.
 		AutomationProperties.SetName(ellipse, title);
@@ -343,28 +365,6 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 
 		return ellipse;
 	}
-
-	private static Uri GetImageUriForIntent(Intent intent) => intent switch
-	{
-		Intent.Development => new("ms-appx:///Assets/DeviceIntents/Development.png"),
-		Intent.Gaming => new("ms-appx:///Assets/DeviceIntents/Gaming.png"),
-		Intent.School => new("ms-appx:///Assets/DeviceIntents/School.png"),
-		Intent.Business => new("ms-appx:///Assets/DeviceIntents/Business.png"),
-		Intent.SpecializedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Specialized.png"),
-		Intent.PrivilegedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Privileged.png"),
-		_ => new("ms-appx:///Assets/DeviceIntents/Development.png")
-	};
-
-	private static string GetTitleForIntent(Intent intent) => intent switch
-	{
-		Intent.Development => GlobalVars.GetStr("DeviceUsageIntent-Development-Title"),
-		Intent.Gaming => GlobalVars.GetStr("DeviceUsageIntent-Gaming-Title"),
-		Intent.School => GlobalVars.GetStr("DeviceUsageIntent-School-Title"),
-		Intent.Business => GlobalVars.GetStr("DeviceUsageIntent-Business-Title"),
-		Intent.SpecializedAccessWorkstation => GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"),
-		Intent.PrivilegedAccessWorkstation => GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title"),
-		_ => "N/A"
-	};
 
 	// Per-item hover/touch scaling (Composition)
 

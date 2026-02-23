@@ -438,9 +438,7 @@ DeviceEvents
 	internal void SelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
-		if (lv is null) return;
-
-		ListViewHelper.SelectAll(lv, FileIdentities);
+		ListViewHelper.SelectAll(lv);
 	}
 
 	/// <summary>
@@ -449,9 +447,7 @@ DeviceEvents
 	internal void DeSelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
-		if (lv is null) return;
-
-		lv.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
+		lv?.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
 	}
 
 	/// <summary>

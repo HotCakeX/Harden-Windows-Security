@@ -5516,4 +5516,43 @@
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>כווץ את כל המקטעים כדי להסתיר את התוכן שלהם.</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>מנהל השירותים</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבל נראות מקיפה על כל השירותים הזמינים במערכת עם תובנות תצורה ברמה מעמיקה. סנן בקלות שירותי Microsoft כדי לבודד שירותי צד שלישי, וקח שליטה ניהולית מלאה כדי להגדיר, להקצות או למחוק שירותים במטרה למטב את ביצועי המערכת ואת האבטחה.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבל נראות מקיפה על כל השירותים הזמינים במערכת עם תובנות תצורה ברמה מעמיקה. סנן בקלות שירותי Microsoft כדי לבודד שירותי צד שלישי, וקח שליטה ניהולית מלאה כדי להגדיר, להקצות או למחוק שירותים במטרה למטב את ביצועי המערכת ואת האבטחה.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>קבל נראות מקיפה על כל השירותים הזמינים במערכת עם תובנות תצורה ברמה מעמיקה. סנן בקלות שירותי Microsoft כדי לבודד שירותי צד שלישי, וקח שליטה ניהולית מלאה כדי להגדיר, להקצות או למחוק שירותים במטרה למטב את ביצועי המערכת ואת האבטחה.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>טען שירותים</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>טען את כל השירותים הזמינים במערכת.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>טען את כל השירותים הזמינים במערכת.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>מסננים</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל מסננים על רשימת השירותים.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל מסננים על רשימת השירותים.</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>הפק דוח סוללה</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפק דוח סוללה עבור המכשיר שלך (אם קיימת סוללה). הדוח מכיל מידע מפורט על השימוש בסוללה, צריכת החשמל והביצועים.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפק דוח סוללה עבור המכשיר שלך (אם קיימת סוללה). הדוח מכיל מידע מפורט על השימוש בסוללה, צריכת החשמל והביצועים.</value>
+  </data>
 </root>

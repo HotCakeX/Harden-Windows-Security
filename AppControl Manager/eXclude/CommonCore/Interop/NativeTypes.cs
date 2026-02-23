@@ -640,7 +640,7 @@ internal enum SERVICE_STATE : uint
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_status_process
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal struct SERVICE_STATUS
+internal struct SERVICE_STATUS_PROCESS
 {
 	internal uint dwServiceType;
 	internal uint dwCurrentState;
@@ -649,6 +649,8 @@ internal struct SERVICE_STATUS
 	internal uint dwServiceSpecificExitCode;
 	internal uint dwCheckPoint;
 	internal uint dwWaitHint;
+	internal uint dwProcessId;
+	internal uint dwServiceFlags;
 }
 
 /// <summary>
@@ -1384,4 +1386,284 @@ internal enum FW_POLICY_STORE_FLAGS : uint
 	SAVE_GP_CACHE = 0x0008,
 	NOT_USED_VALUE_16 = 0x0010,
 	MAX = 0x0020
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-enum_service_status_processa
+/// </summary>
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+internal unsafe struct ENUM_SERVICE_STATUS_PROCESS
+{
+	internal char* lpServiceName;
+	internal char* lpDisplayName;
+	internal SERVICE_STATUS_PROCESS ServiceStatusProcess;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-query_service_configw
+/// </summary>
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+internal unsafe struct QUERY_SERVICE_CONFIGW
+{
+	internal uint dwServiceType;
+	internal uint dwStartType;
+	internal uint dwErrorControl;
+	internal char* lpBinaryPathName;
+	internal char* lpLoadOrderGroup;
+	internal uint dwTagId;
+	internal char* lpDependencies;
+	internal char* lpServiceStartName;
+	internal char* lpDisplayName;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_descriptionw
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct SERVICE_DESCRIPTIONW { internal char* lpDescription; }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_delayed_auto_start_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SERVICE_DELAYED_AUTO_START_INFO { internal int fDelayedAutostart; }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_sid_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SERVICE_SID_INFO { internal uint dwServiceSidType; }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_required_privileges_infow
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct SERVICE_REQUIRED_PRIVILEGES_INFOW { internal char* pmszRequiredPrivileges; }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_launch_protected_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SERVICE_LAUNCH_PROTECTED_INFO { internal uint dwLaunchProtected; }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_preshutdown_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SERVICE_PRESHUTDOWN_INFO { internal uint dwPreshutdownTimeout; }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-sc_action
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SC_ACTION
+{
+	internal uint Type; // This is an enum.
+	internal uint Delay;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_failure_actionsw
+/// </summary>
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+internal unsafe struct SERVICE_FAILURE_ACTIONSW
+{
+	internal uint dwResetPeriod;
+	internal char* lpRebootMsg;
+	internal char* lpCommand;
+	internal uint cActions;
+	internal SC_ACTION* lpsaActions;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_trigger_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct SERVICE_TRIGGER_INFO
+{
+	internal uint cTriggers;
+	internal SERVICE_TRIGGER* pTriggers;
+	internal byte* pReserved;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_trigger
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct SERVICE_TRIGGER
+{
+	internal uint dwTriggerType;
+	internal uint dwAction;
+	internal Guid* pTriggerSubtype;
+	internal uint cDataItems;
+	internal IntPtr pDataItems;
+}
+
+/// <summary>
+/// Defined here: https://learn.microsoft.com/windows/win32/api/winver/nf-winver-verqueryvaluew
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct LANGANDCODEPAGE { internal ushort wLanguage; internal ushort wCodePage; }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/aclui/ns-aclui-si_object_info
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SI_OBJECT_INFO
+{
+	internal uint dwFlags;
+	internal IntPtr hInstance;  // HINSTANCE
+	internal IntPtr pszServerName; // LPWSTR
+	internal IntPtr pszObjectName; // LPWSTR
+	internal IntPtr pszPageTitle; // LPWSTR
+	internal Guid guidObjectType;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/aclui/ns-aclui-si_access
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SI_ACCESS
+{
+	internal IntPtr pguid; // const GUID*
+	internal uint mask;
+	internal IntPtr pszName; // LPCWSTR
+	internal uint dwFlags;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/aclui/ns-aclui-si_inherit_type
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SI_INHERIT_TYPE
+{
+	internal IntPtr pguid;
+	internal uint dwFlags;
+	internal IntPtr pszName;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/accctrl/ns-accctrl-trustee_w
+/// </summary>
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+internal struct TRUSTEE_W
+{
+	internal IntPtr pMultipleTrustee;
+	internal int MultipleTrusteeOperation;
+	internal int TrusteeForm;
+	internal int TrusteeType;
+	internal IntPtr ptstrName;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-object_type_list
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct OBJECT_TYPE_LIST
+{
+	internal ushort Level;
+	internal ushort Sbz;
+	internal IntPtr ObjectType;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/aclui/nn-aclui-isecurityinformation
+/// </summary>
+[GeneratedComInterface]
+[Guid("965FC360-16FF-11d0-91CB-00AA00BBB723")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface ISecurityInformation
+{
+	[PreserveSig]
+	unsafe int GetObjectInformation(SI_OBJECT_INFO* pObjectInfo);
+
+	[PreserveSig]
+	unsafe int GetSecurity(uint RequestedInformation, IntPtr* ppSecurityDescriptor, int fDefault);
+
+	[PreserveSig]
+	int SetSecurity(uint SecurityInformation, IntPtr pSecurityDescriptor);
+
+	[PreserveSig]
+	unsafe int GetAccessRights(Guid* pguidObjectType, uint dwFlags, IntPtr* ppAccess, uint* pcAccesses, uint* piDefaultAccess);
+
+	[PreserveSig]
+	unsafe int MapGeneric(Guid* pguidObjectType, byte* pAceFlags, uint* pMask);
+
+	[PreserveSig]
+	unsafe int GetInheritTypes(IntPtr* ppInheritTypes, uint* pcInheritTypes);
+
+	[PreserveSig]
+	int PropertySheetPageCallback(IntPtr hwnd, uint uMsg, uint uPage);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/aclui/nn-aclui-isecurityinformation2
+/// </summary>
+[GeneratedComInterface]
+[Guid("c3ccfdb4-6f88-11d2-a3ce-00c04fb1782a")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface ISecurityInformation2
+{
+	[PreserveSig]
+	int IsDaclCanonical(IntPtr pDacl);
+
+	[PreserveSig]
+	int LookupSids(uint cSids, IntPtr rgpSids, out IntPtr ppdo);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/en-us/windows/win32/api/aclui/nn-aclui-isecurityinformation3
+/// </summary>
+[GeneratedComInterface]
+[Guid("E2CDC9CC-31BD-4f8f-8C8B-B641AF516A1A")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface ISecurityInformation3
+{
+	[PreserveSig]
+	unsafe int GetFullResourceName(IntPtr* ppszResourceName);
+
+	[PreserveSig]
+	int OpenElevatedEditor(IntPtr hWnd, uint uPage);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/aclui/nn-aclui-ieffectivepermission
+/// </summary>
+[GeneratedComInterface]
+[Guid("3853DC76-9F35-407c-88A1-D19344365FBC")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IEffectivePermission
+{
+	[PreserveSig]
+	unsafe int GetEffectivePermission(
+		Guid* pguidObjectType, IntPtr pUserSid, IntPtr pszServerName, IntPtr pSD,
+		IntPtr* ppObjectTypeList, uint* pcObjectTypeListLength,
+		IntPtr* ppGrantedAccessList, uint* pcGrantedAccessListLength);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/aclui/nn-aclui-isecurityobjecttypeinfo
+/// </summary>
+[GeneratedComInterface]
+[Guid("FC3066EB-79EF-444b-9111-D18A75EBF2FA")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface ISecurityObjectTypeInfo
+{
+	[PreserveSig]
+	unsafe int GetInheritSource(uint si, IntPtr pACL, IntPtr* ppInheritArray);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_status
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SERVICE_STATUS
+{
+	internal uint dwServiceType;
+	internal uint dwCurrentState;
+	internal uint dwControlsAccepted;
+	internal uint dwWin32ExitCode;
+	internal uint dwServiceSpecificExitCode;
+	internal uint dwCheckPoint;
+	internal uint dwWaitHint;
 }

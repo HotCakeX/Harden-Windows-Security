@@ -1366,7 +1366,11 @@ internal sealed partial class ProtectVM : ViewModelBase
 					if (IsCancellationException(ex)) throw;
 
 					// If any category fails, stop all operations
-					MainInfoBar.WriteWarning($"Failed to process category '{selectedCategory.Title}': {ex.Message}");
+					MainInfoBar.WriteWarning($"Failed to process category '{selectedCategory.Title}'. Please view the logs for the full error details.");
+
+					// It's important to print the full exception details here for both CLI and GUI modes.				
+					Logger.Write(ex);
+
 					errorsOccurred = true;
 					break;
 				}

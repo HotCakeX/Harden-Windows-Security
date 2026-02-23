@@ -69,11 +69,7 @@ internal sealed partial class ListViewIncrementalController(
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
 	/// </summary>
-	internal void SelectAll_Click()
-	{
-		if (ListViewRef is null || ObservableSource is null) return;
-		ListViewHelper.SelectAll(ListViewRef, ObservableSource);
-	}
+	internal void SelectAll_Click() => ListViewHelper.SelectAll(ListViewRef);
 
 	/// <summary>
 	/// Event handler for the Clear Data button

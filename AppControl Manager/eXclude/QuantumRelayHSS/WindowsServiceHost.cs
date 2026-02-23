@@ -285,7 +285,7 @@ internal static class WindowsServiceHost
 
 	private static void ReportServiceStatus(SERVICE_STATE currentState, uint controlsAccepted = 0, uint win32ExitCode = 0, uint waitHintMs = 0)
 	{
-		SERVICE_STATUS status = new()
+		SERVICE_STATUS_PROCESS status = new()
 		{
 			dwServiceType = NativeMethods.SERVICE_WIN32_OWN_PROCESS,
 			dwCurrentState = (uint)currentState,

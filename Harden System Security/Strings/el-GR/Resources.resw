@@ -5516,4 +5516,43 @@
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Συμπτύξτε όλες τις ενότητες για να αποκρύψετε το περιεχόμενό τους.</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>Διαχείριση Υπηρεσιών</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποκτήστε εκτεταμένη ορατότητα σε όλες τις διαθέσιμες υπηρεσίες του συστήματος με εις βάθος πληροφορίες διαμόρφωσης. Φιλτράρετε εύκολα τις υπηρεσίες της Microsoft για να απομονώσετε υπηρεσίες τρίτων και αναλάβετε τον πλήρη διαχειριστικό έλεγχο για τη διαμόρφωση, την παροχή ή τη διαγραφή υπηρεσιών, προκειμένου να βελτιστοποιήσετε την απόδοση και την ασφάλεια του συστήματος.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποκτήστε εκτεταμένη ορατότητα σε όλες τις διαθέσιμες υπηρεσίες του συστήματος με εις βάθος πληροφορίες διαμόρφωσης. Φιλτράρετε εύκολα τις υπηρεσίες της Microsoft για να απομονώσετε υπηρεσίες τρίτων και αναλάβετε τον πλήρη διαχειριστικό έλεγχο για τη διαμόρφωση, την παροχή ή τη διαγραφή υπηρεσιών, προκειμένου να βελτιστοποιήσετε την απόδοση και την ασφάλεια του συστήματος.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>Αποκτήστε εκτεταμένη ορατότητα σε όλες τις διαθέσιμες υπηρεσίες του συστήματος με εις βάθος πληροφορίες διαμόρφωσης. Φιλτράρετε εύκολα τις υπηρεσίες της Microsoft για να απομονώσετε υπηρεσίες τρίτων και αναλάβετε τον πλήρη διαχειριστικό έλεγχο για τη διαμόρφωση, την παροχή ή τη διαγραφή υπηρεσιών, προκειμένου να βελτιστοποιήσετε την απόδοση και την ασφάλεια του συστήματος.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>Φόρτωση Υπηρεσιών</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Φορτώστε όλες τις διαθέσιμες υπηρεσίες στο σύστημα.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Φορτώστε όλες τις διαθέσιμες υπηρεσίες στο σύστημα.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>Φίλτρα</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμόστε φίλτρα στη λίστα των υπηρεσιών.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμόστε φίλτρα στη λίστα των υπηρεσιών.</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>Δημιουργία αναφοράς μπαταρίας</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε μια αναφορά μπαταρίας για τη συσκευή σας (εάν διαθέτει). Περιέχει λεπτομερείς πληροφορίες σχετικά με τη χρήση της μπαταρίας, την κατανάλωση ρεύματος και την απόδοση.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε μια αναφορά μπαταρίας για τη συσκευή σας (εάν διαθέτει). Περιέχει λεπτομερείς πληροφορίες σχετικά με τη χρήση της μπαταρίας, την κατανάλωση ρεύματος και την απόδοση.</value>
+  </data>
 </root>

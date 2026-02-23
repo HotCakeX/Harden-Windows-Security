@@ -5516,4 +5516,43 @@
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>എല്ലാ വിഭാഗങ്ങളുടെയും ഉള്ളടക്കം മറയ്‌ക്കുന്നതിന് അവ ചുരുക്കുക.</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>സേവന മാനേജർ</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ലഭ്യമായ എല്ലാ സേവനങ്ങളുടെയും വിപുലമായ ദൃശ്യപരത ആഴത്തിലുള്ള കോൺഫിഗറേഷൻ വിവരങ്ങളോടെ നേടുക. മൂന്നാം കക്ഷി സേവനങ്ങളെ വേർതിരിക്കുന്നതിന് മൈക്രോസോഫ്റ്റ് സേവനങ്ങൾ എളുപ്പത്തിൽ ഫിൽട്ടർ ചെയ്യുക, കൂടാതെ സിസ്റ്റത്തിന്റെ പ്രകടനവും സുരക്ഷയും മികച്ചതാക്കുന്നതിന് സേവനങ്ങൾ കോൺഫിഗർ ചെയ്യുന്നതിനോ സജ്ജീകരിക്കുന്നതിനോ ഇല്ലാതാക്കുന്നതിനോ ഉള്ള പൂർണ്ണ അഡ്മിനിസ്ട്രേറ്റീവ് നിയന്ത്രണം ഏറ്റെടുക്കുക.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ലഭ്യമായ എല്ലാ സേവനങ്ങളുടെയും വിപുലമായ ദൃശ്യപരത ആഴത്തിലുള്ള കോൺഫിഗറേഷൻ വിവരങ്ങളോടെ നേടുക. മൂന്നാം കക്ഷി സേവനങ്ങളെ വേർതിരിക്കുന്നതിന് മൈക്രോസോഫ്റ്റ് സേവനങ്ങൾ എളുപ്പത്തിൽ ഫിൽട്ടർ ചെയ്യുക, കൂടാതെ സിസ്റ്റത്തിന്റെ പ്രകടനവും സുരക്ഷയും മികച്ചതാക്കുന്നതിന് സേവനങ്ങൾ കോൺഫിഗർ ചെയ്യുന്നതിനോ സജ്ജീകരിക്കുന്നതിനോ ഇല്ലാതാക്കുന്നതിനോ ഉള്ള പൂർണ്ണ അഡ്മിനിസ്ട്രേറ്റീവ് നിയന്ത്രണം ഏറ്റെടുക്കുക.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ലഭ്യമായ എല്ലാ സേവനങ്ങളുടെയും വിപുലമായ ദൃശ്യപരത ആഴത്തിലുള്ള കോൺഫിഗറേഷൻ വിവരങ്ങളോടെ നേടുക. മൂന്നാം കക്ഷി സേവനങ്ങളെ വേർതിരിക്കുന്നതിന് മൈക്രോസോഫ്റ്റ് സേവനങ്ങൾ എളുപ്പത്തിൽ ഫിൽട്ടർ ചെയ്യുക, കൂടാതെ സിസ്റ്റത്തിന്റെ പ്രകടനവും സുരക്ഷയും മികച്ചതാക്കുന്നതിന് സേവനങ്ങൾ കോൺഫിഗർ ചെയ്യുന്നതിനോ സജ്ജീകരിക്കുന്നതിനോ ഇല്ലാതാക്കുന്നതിനോ ഉള്ള പൂർണ്ണ അഡ്മിനിസ്ട്രേറ്റീവ് നിയന്ത്രണം ഏറ്റെടുക്കുക.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>സേവനങ്ങൾ ലോഡുചെയ്യുക</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ലഭ്യമായ എല്ലാ സേവനങ്ങൾ ലോഡുചെയ്യുക.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ലഭ്യമായ എല്ലാ സേവനങ്ങൾ ലോഡുചെയ്യുക.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>ഫിൽട്ടറുകൾ</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സേവനങ്ങളുടെ ലിസ്റ്റിലേക്ക് ഫിൽട്ടറുകൾ പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സേവനങ്ങളുടെ ലിസ്റ്റിലേക്ക് ഫിൽട്ടറുകൾ പ്രയോഗിക്കുക.</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>ബാറ്ററി റിപ്പോർട്ട് ജനറേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഉപകരണത്തിനായി ഒരു ബാറ്ററി റിപ്പോർട്ട് ജനറേറ്റ് ചെയ്യുക (അതിന് ഒന്നുണ്ടെങ്കിൽ). ഇതിൽ നിങ്ങളുടെ ബാറ്ററി ഉപയോഗം, വാട്ടേജ്, പ്രകടനം എന്നിവയെക്കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ അടങ്ങിയിരിക്കുന്നു.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഉപകരണത്തിനായി ഒരു ബാറ്ററി റിപ്പോർട്ട് ജനറേറ്റ് ചെയ്യുക (അതിന് ഒന്നുണ്ടെങ്കിൽ). ഇതിൽ നിങ്ങളുടെ ബാറ്ററി ഉപയോഗം, വാട്ടേജ്, പ്രകടനം എന്നിവയെക്കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ അടങ്ങിയിരിക്കുന്നു.</value>
+  </data>
 </root>

@@ -5516,4 +5516,43 @@ Odcisk Palca: {3}</value>
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Zwiń wszystkie sekcje, aby ukryć ich zawartość.</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>Menedżer usług</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uzyskaj szeroki wgląd we wszystkie dostępne usługi w systemie dzięki szczegółowym informacjom o konfiguracji. Łatwo filtruj usługi firmy Microsoft, aby wyizolować usługi innych firm, i przejmij pełną kontrolę administracyjną nad konfigurowaniem, udostępnianiem lub usuwaniem usług w celu optymalizacji wydajności i bezpieczeństwa systemu.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Uzyskaj szeroki wgląd we wszystkie dostępne usługi w systemie dzięki szczegółowym informacjom o konfiguracji. Łatwo filtruj usługi firmy Microsoft, aby wyizolować usługi innych firm, i przejmij pełną kontrolę administracyjną nad konfigurowaniem, udostępnianiem lub usuwaniem usług w celu optymalizacji wydajności i bezpieczeństwa systemu.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>Uzyskaj szeroki wgląd we wszystkie dostępne usługi w systemie dzięki szczegółowym informacjom o konfiguracji. Łatwo filtruj usługi firmy Microsoft, aby wyizolować usługi innych firm, i przejmij pełną kontrolę administracyjną nad konfigurowaniem, udostępnianiem lub usuwaniem usług w celu optymalizacji wydajności i bezpieczeństwa systemu.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>Załaduj usługi</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Załaduj wszystkie dostępne usługi w systemie.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Załaduj wszystkie dostępne usługi w systemie.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>Filtry</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuj filtry do listy usług.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj filtry do listy usług.</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>Wygeneruj raport o baterii</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wygeneruj raport o baterii dla swojego urządzenia (jeśli ją posiada). Zawiera on szczegółowe informacje na temat zużycia baterii, poboru mocy i wydajności.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wygeneruj raport o baterii dla swojego urządzenia (jeśli ją posiada). Zawiera on szczegółowe informacje na temat zużycia baterii, poboru mocy i wydajności.</value>
+  </data>
 </root>

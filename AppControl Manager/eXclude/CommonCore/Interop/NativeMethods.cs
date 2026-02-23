@@ -308,11 +308,11 @@ internal static unsafe partial class NativeMethods
 
 	/// <summary>
 	/// https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-verqueryvaluew
+	/// If it returns 0, it just means the data isn't there.
 	/// </summary>
-	[LibraryImport("Version.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[LibraryImport("Version.dll", StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool VerQueryValueW(IntPtr block, string subBlock, out IntPtr buffer, out int len);
+	internal static partial int VerQueryValueW(IntPtr block, string subBlock, out IntPtr buffer, out uint len);
 
 
 	/// <summary>
@@ -1436,7 +1436,7 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("ADVAPI32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool SetServiceStatus(IntPtr hServiceStatus, ref SERVICE_STATUS lpServiceStatus);
+	internal static partial bool SetServiceStatus(IntPtr hServiceStatus, ref SERVICE_STATUS_PROCESS lpServiceStatus);
 
 
 	/// <summary>
@@ -2435,7 +2435,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fasp/230d1ae7-b42e-4d9c-b997-b1463aaa0ded
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-fasp/230d1ae7-b42e-4d9c-b997-b1463aaa0ded
 	/// </summary>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
@@ -2449,7 +2449,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fasp/2959ec3a-df7c-4da9-b118-385b62312067
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-fasp/2959ec3a-df7c-4da9-b118-385b62312067
 	/// </summary>
 	/// <param name="hPolicy"></param>
 	/// <returns></returns>
@@ -2469,5 +2469,173 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("FirewallAPI.dll")]
 	internal static partial uint FWDeleteAllFirewallRules(nint hPolicy);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-enumservicesstatusexw
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	internal static partial int EnumServicesStatusExW(
+		IntPtr hSCManager, int infoLevel, uint dwServiceType, uint dwServiceState,
+		IntPtr lpServices, uint cbBufSize, out uint pcbBytesNeeded, out uint lpServicesReturned,
+		ref uint lpResumeHandle, string? pszGroupName);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-queryserviceconfigw
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	internal static partial int QueryServiceConfigW(IntPtr hService, IntPtr lpServiceConfig, uint cbBufSize, out uint pcbBytesNeeded);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-queryserviceconfig2w
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	internal static partial int QueryServiceConfig2W(IntPtr hService, uint dwInfoLevel, IntPtr lpBuffer, uint cbBufSize, out uint pcbBytesNeeded);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	internal static partial uint ExpandEnvironmentStringsW(string lpSrc, IntPtr lpDst, uint nSize);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winver/nf-winver-getfileversioninfosizew
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("Version.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	internal static partial uint GetFileVersionInfoSizeW(string lptstrFilename, out uint dwHandle);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winver/nf-winver-getfileversioninfow
+	/// </summary>
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[LibraryImport("Version.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	internal static partial int GetFileVersionInfoW(string lptstrFilename, uint dwHandle, uint dwLen, IntPtr lpData);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/aclui/nf-aclui-editsecurity
+	/// </summary>
+	[LibraryImport("aclui.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool EditSecurity(IntPtr hwndOwner, ISecurityInformation psi);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-localalloc
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr LocalAlloc(uint uFlags, nuint uBytes);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-queryserviceobjectsecurity
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool QueryServiceObjectSecurity(
+		IntPtr hService,
+		uint dwSecurityInformation,
+		IntPtr lpSecurityDescriptor,
+		uint cbBufSize,
+		out uint pcbBytesNeeded);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-setserviceobjectsecurity
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetServiceObjectSecurity(
+		IntPtr hService,
+		uint dwSecurityInformation,
+		IntPtr lpSecurityDescriptor);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/aclui/nf-aclui-editsecurityadvanced
+	/// </summary>
+	[LibraryImport("aclui.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int EditSecurityAdvanced(IntPtr hwndOwner, ISecurityInformation psi, uint uSIPage);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/aclapi/nf-aclapi-geteffectiverightsfromaclw
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int GetEffectiveRightsFromAclW(IntPtr pacl, ref TRUSTEE_W pTrustee, out uint pAccessRights);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptordacl
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetSecurityDescriptorDacl(IntPtr pSecurityDescriptor, out int lpbDaclPresent, out IntPtr pDacl, out int lpbDaclDefaulted);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shobjectproperties
+	/// </summary>
+	[LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SHObjectProperties(IntPtr hwnd, uint shopObjectType, string pszObjectName, string pszPropertyPage);
+
+
+	// Service Access Rights and Control Constants
+	internal const uint SERVICE_CHANGE_CONFIG = 0x0002;
+	internal const uint SERVICE_START = 0x0010;
+	internal const uint SERVICE_STOP = 0x0020;
+	internal const uint SERVICE_PAUSE_CONTINUE = 0x0040;
+	internal const uint SERVICE_QUERY_STATUS = 0x0004;
+	internal const uint SERVICE_NO_CHANGE = 0xFFFFFFFF;
+	internal const uint SERVICE_CONTROL_PAUSE = 0x00000002;
+	internal const uint SERVICE_CONTROL_CONTINUE = 0x00000003;
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-controlservice
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool ControlService(IntPtr hService, uint dwControl, ref SERVICE_STATUS lpServiceStatus);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-changeserviceconfig2w
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool ChangeServiceConfig2W(IntPtr hService, uint dwInfoLevel, IntPtr lpInfo);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-deleteservice
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DeleteService(IntPtr hService);
+
+	// Access right for deleting a service
+	internal const uint DELETE = 0x00010000;
 
 }

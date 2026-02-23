@@ -293,6 +293,13 @@ internal sealed partial class MContainerJsonContext : JsonSerializerContext
 			filePath += ".json";
 		}
 
+		// Make sure the folder that user selected to save the report to exists
+		string? directory = Path.GetDirectoryName(filePath);
+		if (!string.IsNullOrEmpty(directory))
+		{
+			_ = Directory.CreateDirectory(directory);
+		}
+
 		File.WriteAllBytes(filePath, buffer.WrittenSpan);
 	}
 

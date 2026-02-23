@@ -239,19 +239,25 @@ internal static partial class ListViewHelper
 	private const double InitValueAdded = 20;
 
 	/// <summary>
-	/// Select all of the items in the ListView's ItemsSource
+	/// Select all of the items in the ListView's ItemsSource.
 	/// </summary>
 	/// <param name="lw"></param>
-	/// <param name="source"></param>
-	internal static void SelectAll(ListView lw, IList source)
+	internal static void SelectAll(ListView? lw)
 	{
-		// Clear existing selections from the List View
-		lw.SelectedItems.Clear();
+		if (lw is null) return;
 
-		foreach (var item in source)
+		switch (lw.SelectionMode)
 		{
-			// Select each item
-			lw.SelectedItems.Add(item);
+			case ListViewSelectionMode.Multiple:
+			case ListViewSelectionMode.Extended:
+				lw.SelectRange(new(0, (uint)lw.Items.Count));
+				break;
+			case ListViewSelectionMode.Single:
+				lw.SelectedItem = lw.Items.FirstOrDefault();
+				break;
+			case ListViewSelectionMode.None:
+			default:
+				break;
 		}
 	}
 

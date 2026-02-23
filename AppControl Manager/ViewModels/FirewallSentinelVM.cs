@@ -1619,8 +1619,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	internal void BlockedPacketsListView_SelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.FirewallBlockedLogs);
-		if (lv is null) return;
-		ListViewHelper.SelectAll(lv, BlockedPackets);
+		ListViewHelper.SelectAll(lv);
 	}
 
 	internal void BlockedPacketsListView_DeSelectAll_Click()

@@ -446,6 +446,8 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+                <NavigationViewItem x:Name="ServiceManagerNavItem" Icon="{x:Bind ViewModel.ServiceManagerIcon, Mode=OneWay}" x:Uid="ServiceManagerNavItem" Tag="ServiceManager"/>
+
                 <!-- Extras -->
 
                 <NavigationViewItemHeader x:Name="ExtraFeaturesNavigationViewItemHeader" x:Uid="ExtraFeaturesNavigationViewItemHeader" />
@@ -668,6 +670,33 @@
                                                     <FontIcon Grid.Column="0"
                                                               Glyph="&#xECC5;"
                                                               FontFamily="Segoe Fluent Icons"
+                                                              FontSize="16"/>
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <Button x:Uid="GenerateBatteryReportButton"
+                                            HorizontalAlignment="Center"
+                                            Click="{x:Bind ViewModel.GenerateBatteryReport}"
+                                            IsEnabled="{x:Bind ViewModel.IsGenerateBatteryReportButtonEnabled, Mode=OneWay}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xF607;"                                                              
                                                               FontSize="16"/>
 
                                                     <TextBlock Grid.Column="1"

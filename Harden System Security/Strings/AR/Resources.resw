@@ -5516,4 +5516,43 @@
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>طي كافة المقاطع لإخفاء محتواها.</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>مدير الخدمات</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>احصل على رؤية شاملة لجميع الخدمات المتاحة على النظام مع رؤى تكوين عميقة. قم بتصفية خدمات Microsoft بسهولة لعزل خدمات الجهات الخارجية، وتولى الرقابة الإدارية الكاملة لتكوين الخدمات أو توفيرها أو حذفها من أجل تحسين أداء النظام وأمانه.</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>احصل على رؤية شاملة لجميع الخدمات المتاحة على النظام مع رؤى تكوين عميقة. قم بتصفية خدمات Microsoft بسهولة لعزل خدمات الجهات الخارجية، وتولى الرقابة الإدارية الكاملة لتكوين الخدمات أو توفيرها أو حذفها من أجل تحسين أداء النظام وأمانه.</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>احصل على رؤية شاملة لجميع الخدمات المتاحة على النظام مع رؤى تكوين عميقة. قم بتصفية خدمات Microsoft بسهولة لعزل خدمات الجهات الخارجية، وتولى الرقابة الإدارية الكاملة لتكوين الخدمات أو توفيرها أو حذفها من أجل تحسين أداء النظام وأمانه.</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>تحميل الخدمات</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحميل كافة الخدمات المتاحة على النظام.</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحميل كافة الخدمات المتاحة على النظام.</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>عوامل التصفية</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تطبيق عوامل التصفية على قائمة الخدمات.</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تطبيق عوامل التصفية على قائمة الخدمات.</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>إنشاء تقرير البطارية</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بإنشاء تقرير بطارية لجهازك (إذا كان يحتوي على بطارية). يحتوي التقرير على معلومات تفصيلية حول استخدام البطارية واستهلاك الطاقة والأداء.</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بإنشاء تقرير بطارية لجهازك (إذا كان يحتوي على بطارية). يحتوي التقرير على معلومات تفصيلية حول استخدام البطارية واستهلاك الطاقة والأداء.</value>
+  </data>
 </root>

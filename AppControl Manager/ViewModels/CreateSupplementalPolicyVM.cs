@@ -1606,9 +1606,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal void StrictKernel_SelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
-		if (lv is null) return;
-
-		ListViewHelper.SelectAll(lv, StrictKernelModeScanResults);
+		ListViewHelper.SelectAll(lv);
 	}
 
 	/// <summary>

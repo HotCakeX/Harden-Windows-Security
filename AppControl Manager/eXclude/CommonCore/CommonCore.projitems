@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Power\PowerPlan.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\BinaryProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThermalMonitors\StorageTemperature.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThermalMonitors\TemperatureSampler.cs" />
   </ItemGroup>

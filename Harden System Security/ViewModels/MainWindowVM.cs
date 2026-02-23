@@ -271,6 +271,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ServiceManager)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("ServiceManagerNavItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.ServiceManager)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -316,7 +322,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "Intune", typeof(Pages.Intune) },
 		{ "CSP", typeof(Pages.CSP) },
 		{ "DuplicatePhotosFinder", typeof(Pages.Extras.DuplicatePhotoFinder) },
-		{ "EXIFManager", typeof(Pages.Extras.EXIFManager) }
+		{ "EXIFManager", typeof(Pages.Extras.EXIFManager) },
+		{ "ServiceManager", typeof(Pages.ServiceManager) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -364,6 +371,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePageCustomMSIXPath)] = GlobalVars.GetStr("UpdatePageCustomMSIXPath");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DuplicatePhotoFinder)] = GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.EXIFManager)] = GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.ServiceManager)] = GlobalVars.GetStr("ServiceManagerNavItem/Content");
 	}
 
 	/// <summary>
@@ -467,6 +475,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the EXIF Manager navigation item.
 	/// </summary>
 	internal IconElement? EXIFManagerIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Service Manager navigation item.
+	/// </summary>
+	internal IconElement? ServiceManagerIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -575,6 +588,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Paint_roller()
 					};
 
+					ServiceManagerIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -6, -6, -6),
+						Source = new Service()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -666,6 +685,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					ServiceManagerIcon = new FontIcon
+					{
+						Glyph = "\uEC7A",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -685,6 +710,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					DuplicatePhotosFinderIcon = new FontIcon { Glyph = "\uF584" };
 					ExtrasIcon = new FontIcon { Glyph = "\uF6BA" };
 					EXIFManagerIcon = new FontIcon { Glyph = "\uEC5A" };
+					ServiceManagerIcon = new FontIcon { Glyph = "\uEC7A" };
 					break;
 				}
 		}
@@ -824,6 +850,55 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		finally
 		{
 			IsCheckForAllAppUpdatesButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Whether the button for generating a battery report is enabled.
+	/// Generating a battery report doesn't require administrator privileges.
+	/// </summary>
+	internal bool IsGenerateBatteryReportButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Generates a battery report and saves it to a user-selected location.
+	/// </summary>
+	internal async void GenerateBatteryReport()
+	{
+		try
+		{
+			IsGenerateBatteryReportButtonEnabled = false;
+
+			string? savePath = FileDialogHelper.ShowSaveFileDialog("HTML Files|*.html", "Battery Life Report.html");
+
+			if (savePath is null)
+			{
+				MainInfoBar.WriteWarning("Battery report generation cancelled.");
+				return;
+			}
+
+			// Ensure the file path ends with .html
+			if (!savePath.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+			{
+				savePath += ".html";
+			}
+
+			MainInfoBar.WriteInfo("Generating battery report...");
+
+			await Task.Run(() =>
+			{
+				_ = ProcessStarter.RunCommand("powercfg.exe", $"/batteryreport /output \"{savePath}\"");
+			});
+
+			MainInfoBar.WriteSuccess($"Battery report successfully generated at {savePath}");
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsGenerateBatteryReportButtonEnabled = true;
 		}
 	}
 

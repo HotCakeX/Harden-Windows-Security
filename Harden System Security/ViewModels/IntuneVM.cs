@@ -47,7 +47,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			Dispatcher), AuthenticationContext.Intune);
 
 		// Initialize column widths so headers have padding initially.
-		CalculateColumnWidths();
+		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
 
 		// Load policy files from the hardening directory
 		LoadHardeningPolicyFiles();

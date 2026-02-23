@@ -5516,4 +5516,43 @@
   <data name="CollapseAllSectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>सभी अनुभागों की सामग्री छिपाने के लिए उन्हें संक्षिप्त करें।</value>
   </data>
+    <data name="ServiceManagerNavItem.Content" xml:space="preserve">
+    <value>सेवा प्रबंधक</value>
+  </data>
+  <data name="ServiceManagerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कॉन्फ़िगरेशन की गहन जानकारी के साथ सिस्टम पर उपलब्ध सभी सेवाओं की व्यापक दृश्यता प्राप्त करें। तृतीय-पक्ष सेवाओं को अलग करने के लिए Microsoft सेवाओं को आसानी से फ़िल्टर करें, और सिस्टम के प्रदर्शन और सुरक्षा को अनुकूलित करने के लिए सेवाओं को कॉन्फ़िगर करने, प्रावधान करने या हटाने का पूर्ण प्रशासनिक नियंत्रण लें।</value>
+  </data>
+  <data name="ServiceManagerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कॉन्फ़िगरेशन की गहन जानकारी के साथ सिस्टम पर उपलब्ध सभी सेवाओं की व्यापक दृश्यता प्राप्त करें। तृतीय-पक्ष सेवाओं को अलग करने के लिए Microsoft सेवाओं को आसानी से फ़िल्टर करें, और सिस्टम के प्रदर्शन और सुरक्षा को अनुकूलित करने के लिए सेवाओं को कॉन्फ़िगर करने, प्रावधान करने या हटाने का पूर्ण प्रशासनिक नियंत्रण लें।</value>
+  </data>
+  <data name="ServiceManagerPageTitle" xml:space="preserve">
+    <value>कॉन्फ़िगरेशन की गहन जानकारी के साथ सिस्टम पर उपलब्ध सभी सेवाओं की व्यापक दृश्यता प्राप्त करें। तृतीय-पक्ष सेवाओं को अलग करने के लिए Microsoft सेवाओं को आसानी से फ़िल्टर करें, और सिस्टम के प्रदर्शन और सुरक्षा को अनुकूलित करने के लिए सेवाओं को कॉन्फ़िगर करने, प्रावधान करने या हटाने का पूर्ण प्रशासनिक नियंत्रण लें।</value>
+  </data>
+  <data name="LoadServicesButton.Content" xml:space="preserve">
+    <value>सेवाएँ लोड करें</value>
+  </data>
+  <data name="LoadServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर उपलब्ध सभी सेवाओं को लोड करें।</value>
+  </data>
+  <data name="LoadServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर उपलब्ध सभी सेवाओं को लोड करें।</value>
+  </data>
+  <data name="FiltersButton.Content" xml:space="preserve">
+    <value>फ़िल्टर</value>
+  </data>
+  <data name="FiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सेवाओं की सूची में फ़िल्टर लागू करें।</value>
+  </data>
+  <data name="FiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सेवाओं की सूची में फ़िल्टर लागू करें।</value>
+  </data>
+    <data name="GenerateBatteryReportButton.Content" xml:space="preserve">
+    <value>बैटरी रिपोर्ट जनरेट करें</value>
+  </data>
+  <data name="GenerateBatteryReportButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अपने डिवाइस के लिए बैटरी रिपोर्ट जनरेट करें (यदि इसमें बैटरी है)। इसमें आपके बैटरी उपयोग, वाटेज और प्रदर्शन के बारे में विस्तृत जानकारी शामिल है।</value>
+  </data>
+  <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अपने डिवाइस के लिए बैटरी रिपोर्ट जनरेट करें (यदि इसमें बैटरी है)। इसमें आपके बैटरी उपयोग, वाटेज और प्रदर्शन के बारे में विस्तृत जानकारी शामिल है।</value>
+  </data>
 </root>

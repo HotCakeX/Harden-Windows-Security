@@ -20,6 +20,7 @@ namespace CommonCore.GroupPolicy;
 /// <summary>
 /// Specifies the intent or purpose of the device.
 /// This enumeration is used to apply policies and configurations based on usage intent.
+/// It is IMPORTANT for the order of this to remain static and if changed, the values in the IntentCircles's class must also change, as well as those in the JSON files etc.
 /// </summary>
 internal enum Intent : int
 {
@@ -35,10 +36,6 @@ internal enum Intent : int
 /// <summary>
 /// Defines an intent item with associated metadata to display it in the UI.
 /// </summary>
-/// <param name="intent"></param>
-/// <param name="title"></param>
-/// <param name="description"></param>
-/// <param name="image"></param>
 internal sealed class IntentItem(Intent intent, string title, string description, Uri image)
 {
 	internal Intent Intent => intent;

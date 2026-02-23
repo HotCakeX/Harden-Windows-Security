@@ -54,7 +54,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
-		ComputeColumnWidths();
+		_ = Dispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>

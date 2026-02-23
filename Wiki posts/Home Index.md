@@ -62,6 +62,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/d186f4e5b83d5097099d6ce05573bf1844d7a7b3/Pictures/Gifs/Harden%20System%20Security%20Menu/CBOM.gif" alt="Harden System Security Menu Item" width="30"> [Cryptographic Bill of Materials](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cryptographic-Bill-of-Materials)
 - <img src="https://github.com/HotCakeX/.github/blob/a38f44e66f5eac033c255cbafa5d629ece92bd4d/Pictures/Gifs/Harden%20System%20Security%20Menu/Intune%20Cloud.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [Intune](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security)
 - <img src="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/Assets/ProtectionCategoriesIcons/CSP.png?raw=true" alt="Harden System Security Menu Item" width="30"> [Configuration Service Provider (CSP)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configuration-Service-Provider-%7C-Harden-System-Security)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/c1b81ef1d0804d887e59cec425563aea5a362d51/Pictures/Gifs/Harden%20System%20Security%20Menu/Service%20Manager.gif" alt="Harden System Security Menu Item" width="30"> [Service Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Service-Manager)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/d73489091644d3366bf2e876c108174aefbd6c48/Pictures/Gifs/Harden%20System%20Security%20Menu/Extras.gif" alt="Harden System Security Menu Item" width="30"> Extras
 

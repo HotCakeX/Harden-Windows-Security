@@ -824,7 +824,7 @@ jobs:
         run: ls -R Downloaded-Artifacts
 
       - name: Generating Artifact Attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
         # subject-path: "${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
           subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder

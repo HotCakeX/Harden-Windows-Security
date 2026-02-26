@@ -6959,4 +6959,64 @@
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>സൈൻ ഇൻ പ്രവർത്തനത്തിനായി ഉപയോഗിക്കുന്നതിന് ക്ലൗഡ് പരിസ്ഥിതി തിരഞ്ഞെടുക്കുക.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>ലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തടഞ്ഞ ഇവന്റുകൾക്കായി വിൻഡോസ് ഫയർവാൾ ലോഗുകൾ സ്കാൻ ചെയ്യുക. ലോഗുകൾ നിർമ്മിക്കുന്നതിന് ഡ്രോപ്പ് ചെയ്ത പാക്കറ്റ് ഓഡിറ്റിംഗ് പ്രവർത്തനക്ഷമമാക്കിയിരിക്കണം.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തടഞ്ഞ ഇവന്റുകൾക്കായി വിൻഡോസ് ഫയർവാൾ ലോഗുകൾ സ്കാൻ ചെയ്യുക. ലോഗുകൾ നിർമ്മിക്കുന്നതിന് ഡ്രോപ്പ് ചെയ്ത പാക്കറ്റ് ഓഡിറ്റിംഗ് പ്രവർത്തനക്ഷമമാക്കിയിരിക്കണം.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>ലൈവ് മോണിറ്റർ ആരംഭിക്കുക</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>ലൈവ് മോണിറ്റർ നിർത്തുക</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പാക്കറ്റ് ഡ്രോപ്പ് ഓഡിറ്റിംഗ് പ്രവർത്തനക്ഷമമാക്കുക</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പാക്കറ്റുകൾ ഡ്രോപ്പ് ചെയ്യുമ്പോഴോ ഫയർവാൾ വഴി കണക്ഷനുകൾ തടയുമ്പോഴോ സിസ്റ്റം ലോഗുകൾ നിർമ്മിക്കുന്നതിനായി പാക്കറ്റ് ഡ്രോപ്പ് ഓഡിറ്റിംഗ് പ്രവർത്തനക്ഷമമാക്കുക.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പാക്കറ്റുകൾ ഡ്രോപ്പ് ചെയ്യുമ്പോഴോ ഫയർവാൾ വഴി കണക്ഷനുകൾ തടയുമ്പോഴോ സിസ്റ്റം ലോഗുകൾ നിർമ്മിക്കുന്നതിനായി പാക്കറ്റ് ഡ്രോപ്പ് ഓഡിറ്റിംഗ് പ്രവർത്തനക്ഷമമാക്കുക.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പാക്കറ്റ് ഡ്രോപ്പ് ഓഡിറ്റിംഗ് പ്രവർത്തനരഹിതമാക്കുക</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പാക്കറ്റുകൾ ഡ്രോപ്പ് ചെയ്യുമ്പോഴോ ഫയർവാൾ വഴി കണക്ഷനുകൾ തടയുമ്പോഴോ സിസ്റ്റം ലോഗുകൾ നിർമ്മിക്കുന്നത് നിർത്താൻ പാക്കറ്റ് ഡ്രോപ്പ് ഓഡിറ്റിംഗ് പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പാക്കറ്റുകൾ ഡ്രോപ്പ് ചെയ്യുമ്പോഴോ ഫയർവാൾ വഴി കണക്ഷനുകൾ തടയുമ്പോഴോ സിസ്റ്റം ലോഗുകൾ നിർമ്മിക്കുന്നത് നിർത്താൻ പാക്കറ്റ് ഡ്രോപ്പ് ഓഡിറ്റിംഗ് പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഡെസ്റ്റിനേഷൻ വിലാസങ്ങൾ റിസോൾവ് ചെയ്യുക</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തടഞ്ഞ ഇവന്റുകൾക്കായി ഡെസ്റ്റിനേഷൻ IP വിലാസങ്ങൾ ഹോസ്റ്റ് നാമങ്ങളിലേക്ക് റിസോൾവ് ചെയ്യാൻ ശ്രമിക്കുക. സുരക്ഷിതമായ DNS ലുക്കപ്പുകൾ നടത്തുന്നതിന് Cloudflare, Google DNS over HTTPS സെർവറുകൾ ഉപയോഗിക്കും.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തടഞ്ഞ ഇവന്റുകൾക്കായി ഡെസ്റ്റിനേഷൻ IP വിലാസങ്ങൾ ഹോസ്റ്റ് നാമങ്ങളിലേക്ക് റിസോൾവ് ചെയ്യാൻ ശ്രമിക്കുക. സുരക്ഷിതമായ DNS ലുക്കപ്പുകൾ നടത്തുന്നതിന് Cloudflare, Google DNS over HTTPS സെർവറുകൾ ഉപയോഗിക്കും.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>ടോക്കണുകൾ പ്രാദേശികമായി കാഷെ ചെയ്യുക</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഓതന്റിക്കേഷൻ ടോക്കണുകൾ പ്രാദേശികമായി കാഷെ ചെയ്യാൻ ഈ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കുക, അതുവഴി ആപ്പ് അടച്ചുതുറക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യേണ്ടതില്ല. ഓതന്റിക്കേഷൻ ടോക്കണുകൾ ഡിസ്കിൽ എൻക്രിപ്റ്റ് ചെയ്ത് സൂക്ഷിക്കുകയും ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ നീക്കം ചെയ്യപ്പെടുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഓതന്റിക്കേഷൻ ടോക്കണുകൾ പ്രാദേശികമായി കാഷെ ചെയ്യാൻ ഈ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കുക, അതുവഴി ആപ്പ് അടച്ചുതുറക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യേണ്ടതില്ല. ഓതന്റിക്കേഷൻ ടോക്കണുകൾ ഡിസ്കിൽ എൻക്രിപ്റ്റ് ചെയ്ത് സൂക്ഷിക്കുകയും ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ നീക്കം ചെയ്യപ്പെടുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>ലോക്കൽ കാഷെ മായ്‌ക്കുക</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രാദേശികമായി കാഷെ ചെയ്ത ഓതന്റിക്കേഷൻ ടോക്കണുകൾ മായ്‌ക്കുക. അടുത്ത തവണ ആപ്പ് ഉപയോഗിക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യാൻ ഇത് ആവശ്യപ്പെടുന്നു.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രാദേശികമായി കാഷെ ചെയ്ത ഓതന്റിക്കേഷൻ ടോക്കണുകൾ മായ്‌ക്കുക. അടുത്ത തവണ ആപ്പ് ഉപയോഗിക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യാൻ ഇത് ആവശ്യപ്പെടുന്നു.</value>
+  </data>
 </root>

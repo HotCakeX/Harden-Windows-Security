@@ -15,15 +15,21 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Threading;
+using Microsoft.UI.Dispatching;
 
 namespace CommonCore.MicrosoftGraph;
 
-internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T>, IDisposable
+internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T>, IEnumerable<T>, IDisposable
 {
-	private readonly ReaderWriterLockSlim _lock = new();
+	// SupportsRecursion is critical here to prevent LockRecursionException if the UI thread 
+	// tries to read the collection while a write lock is held.
+	private readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
 
 	protected override void InsertItem(int index, T item)
 	{
@@ -77,28 +83,68 @@ internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T
 		}
 	}
 
-	// Override GetEnumerator to ensure thread-safe enumeration.
-	internal new IEnumerator<T> GetEnumerator()
+	protected override void MoveItem(int oldIndex, int newIndex)
 	{
+		_lock.EnterWriteLock();
+		try
+		{
+			base.MoveItem(oldIndex, newIndex);
+		}
+		finally
+		{
+			_lock.ExitWriteLock();
+		}
+	}
+
+	// Ensure CollectionChanged is marshalled to the UI thread.
+	protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+	{
+		if (!GlobalVars.AppDispatcher.HasThreadAccess)
+		{
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() => base.OnCollectionChanged(e));
+		}
+		else
+		{
+			base.OnCollectionChanged(e);
+		}
+	}
+
+	// Ensure PropertyChanged is marshalled to the UI thread.
+	protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+	{
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
+		{
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() => base.OnPropertyChanged(e));
+		}
+		else
+		{
+			base.OnPropertyChanged(e);
+		}
+	}
+
+	public new IEnumerator<T> GetEnumerator()
+	{
+		T[] items;
 		_lock.EnterReadLock();
 		try
 		{
-			// Create a snapshot of the items to iterate over.
-			T[] items = new T[Items.Count];
+			items = new T[Items.Count];
 			Items.CopyTo(items, 0);
-			foreach (T? item in items)
-			{
-				yield return item;
-			}
 		}
 		finally
 		{
 			_lock.ExitReadLock();
 		}
+
+		// By returning an enumerator over the snapshotted array outside the lock, we don't hold the lock during iteration.
+		return ((IEnumerable<T>)items).GetEnumerator();
 	}
 
-	public void Dispose()
-	{
-		_lock.Dispose();
-	}
+	// Overriding standard interface enumerators to ensure thread-safety when cast to IEnumerable or used by LINQ.
+	IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+
+	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+	public void Dispose() => _lock.Dispose();
+
 }

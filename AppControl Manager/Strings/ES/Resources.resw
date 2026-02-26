@@ -6959,4 +6959,64 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Seleccione el entorno en la nube que se usará para la operación de inicio de sesión.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>Escanear registros</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Escanee los registros del Firewall de Windows en busca de eventos bloqueados. La auditoría de paquetes descartados debe estar habilitada para generar los registros.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Escanee los registros del Firewall de Windows en busca de eventos bloqueados. La auditoría de paquetes descartados debe estar habilitada para generar los registros.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>Iniciar monitor en vivo</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>Detener monitor en vivo</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Habilitar auditoría de paquetes descartados</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilite la auditoría de paquetes descartados para que el sistema genere registros cuando se descarten paquetes o el firewall bloquee conexiones.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilite la auditoría de paquetes descartados para que el sistema genere registros cuando se descarten paquetes o el firewall bloquee conexiones.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Deshabilitar auditoría de paquetes descartados</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deshabilite la auditoría de paquetes descartados para que el sistema deje de generar registros cuando se descarten paquetes o el firewall bloquee conexiones.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deshabilite la auditoría de paquetes descartados para que el sistema deje de generar registros cuando se descarten paquetes o el firewall bloquee conexiones.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Resolver direcciones de destino</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Intente resolver las direcciones IP de destino a nombres de host para eventos bloqueados. Se utilizarán servidores de Cloudflare y Google DNS sobre HTTPS para realizar búsquedas seguras de DNS.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Intente resolver las direcciones IP de destino a nombres de host para eventos bloqueados. Se utilizarán servidores de Cloudflare y Google DNS sobre HTTPS para realizar búsquedas seguras de DNS.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Almacenar tokens en caché localmente</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilite esta opción para almacenar los tokens de autenticación en la caché local para que no tenga que volver a autenticarse manualmente después de cerrar y volver a abrir la aplicación. Los tokens de autenticación se cifran en el disco y se eliminan cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilite esta opción para almacenar los tokens de autenticación en la caché local para que no tenga que volver a autenticarse manualmente después de cerrar y volver a abrir la aplicación. Los tokens de autenticación se cifran en el disco y se eliminan cuando se desinstala la aplicación.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Borrar caché local</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Borre los tokens de autenticación almacenados en la caché local. Esto requerirá que se vuelva a autenticar manualmente la próxima vez que use la aplicación.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Borre los tokens de autenticación almacenados en la caché local. Esto requerirá que se vuelva a autenticar manualmente la próxima vez que use la aplicación.</value>
+  </data>
 </root>

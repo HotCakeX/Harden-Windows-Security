@@ -6,7 +6,8 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
-    xmlns:CCToolKit="using:CommonCore.ToolKits">
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    Loaded="{x:Bind GraphAuthPanel_Loaded}">
 
     <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 
@@ -239,9 +240,31 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
 
+                                <CheckBox x:Uid="CacheTokensLocallyCheckBox"
+                                          IsChecked="{x:Bind AppSettings.CacheAuthenticationTokensLocally, Mode=TwoWay}"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,5,0,0"/>
+
+                                <Button x:Uid="ClearLocalCacheButton"
+                                        Click="{x:Bind Host.AuthCompanionCLS.ClearLocalCacheButton_Click}"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,5,0,0">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                    <AnimatedIcon.Source>
+                                                        <animatedvisuals:TrashCan/>
+                                                    </AnimatedIcon.Source>
+                                                </AnimatedIcon>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
                             </StackPanel>
                         </controls:Case>
-
 
                         <controls:Case Value="SignedIn">
 

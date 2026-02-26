@@ -346,22 +346,38 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 			StopAnimations();
 
 			TimeSpan duration = TimeSpan.FromMilliseconds(200);
-			LinearEasingFunction ease = Compositor.CreateLinearEasingFunction();
+			CubicBezierEasingFunction ease = Compositor.CreateCubicBezierEasingFunction(new Vector2(0.2f, 0.8f), new Vector2(0.2f, 1f));
 
-			Vector3KeyFrameAnimation shrinkY = Compositor.CreateVector3KeyFrameAnimation();
-			shrinkY.Target = "Scale";
-			shrinkY.InsertKeyFrame(1f, new Vector3(1, 0, 1), ease); // Keep width, shrink height
-			shrinkY.Duration = duration;
+			// 1. Top and Right lines shrink first immediately (reversing the end of the open animation)
+			Vector3KeyFrameAnimation topShrink = Compositor.CreateVector3KeyFrameAnimation();
+			topShrink.Target = "Scale";
+			topShrink.InsertKeyFrame(1f, new Vector3(0f, 1f, 1f), ease);
+			topShrink.Duration = duration;
 
-			Vector3KeyFrameAnimation shrinkX = Compositor.CreateVector3KeyFrameAnimation();
-			shrinkX.Target = "Scale";
-			shrinkX.InsertKeyFrame(1f, new Vector3(0, 1, 1), ease); // Keep height, shrink width
-			shrinkX.Duration = duration;
+			Vector3KeyFrameAnimation rightShrink = Compositor.CreateVector3KeyFrameAnimation();
+			rightShrink.Target = "Scale";
+			rightShrink.InsertKeyFrame(1f, new Vector3(1f, 0f, 1f), ease);
+			rightShrink.Duration = duration;
 
-			LeftLine.StartAnimation("Scale", shrinkY);
-			RightLine.StartAnimation("Scale", shrinkY);
-			TopLine.StartAnimation("Scale", shrinkX);
-			BottomLine.StartAnimation("Scale", shrinkX);
+			// 2. Left and Bottom lines shrink delayed (reversing the start of the open animation)
+			Vector3KeyFrameAnimation leftShrink = Compositor.CreateVector3KeyFrameAnimation();
+			leftShrink.Target = "Scale";
+			leftShrink.InsertKeyFrame(0f, Vector3.One); // Hold at full scale during the delay
+			leftShrink.InsertKeyFrame(1f, new Vector3(1f, 0f, 1f), ease);
+			leftShrink.DelayTime = duration;
+			leftShrink.Duration = duration;
+
+			Vector3KeyFrameAnimation bottomShrink = Compositor.CreateVector3KeyFrameAnimation();
+			bottomShrink.Target = "Scale";
+			bottomShrink.InsertKeyFrame(0f, Vector3.One); // Hold at full scale during the delay
+			bottomShrink.InsertKeyFrame(1f, new Vector3(0f, 1f, 1f), ease);
+			bottomShrink.DelayTime = duration;
+			bottomShrink.Duration = duration;
+
+			TopLine.StartAnimation("Scale", topShrink);
+			RightLine.StartAnimation("Scale", rightShrink);
+			LeftLine.StartAnimation("Scale", leftShrink);
+			BottomLine.StartAnimation("Scale", bottomShrink);
 		}
 
 		// Stops animations on all lines to ensure no delayed animations trigger after PlayClose is called

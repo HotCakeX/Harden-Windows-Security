@@ -15,7 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace CommonCore;
 
@@ -169,5 +171,166 @@ internal static class Firewall
 		{
 			throw new InvalidOperationException($"Failed to restore firewall defaults. Error code: {result} (0x{result:X8})");
 		}
+	}
+}
+
+internal static class FirewallWmiHelper
+{
+	/// <summary>
+	/// Retrieves a dictionary mapping Firewall Rule IDs (InstanceID/Name) to their Display Names.
+	/// Extracts records from both the standard local store (aka Persistent Store) and the Group Policy 'localhost' store.
+	/// </summary>
+	/// <returns>Dictionary with Rule IDs as keys and DisplayNames as values.</returns>
+	internal static Dictionary<string, string> GetFirewallRulesMapping()
+	{
+		Dictionary<string, string> mappings = new(StringComparer.OrdinalIgnoreCase);
+
+		Guid CLSID_WbemLocator = new("4590F811-1D3A-11D0-891F-00AA004B2E24");
+		Guid IID_IWbemLocator = new("DC12A687-737F-11CF-884D-00AA004B2E24");
+		Guid CLSID_WbemContext = new("674B6698-EE92-11D0-AD71-00C04FD8FDFF");
+		Guid IID_IWbemContext = new("44aca674-e8fc-11d0-a07c-00c04fb68820");
+
+		uint CLSCTX_INPROC_SERVER = 1;
+		uint RPC_C_AUTHN_WINNT = 10;
+		uint RPC_C_AUTHZ_NONE = 0;
+		uint RPC_C_AUTHN_LEVEL_CALL = 3;
+		uint RPC_C_IMP_LEVEL_IMPERSONATE = 3;
+		int WBEM_FLAG_FORWARD_ONLY = 0x20;
+		int WBEM_FLAG_RETURN_IMMEDIATELY = 0x10;
+		int WBEM_INFINITE = -1;
+
+		// 1. Create Locator
+		int hr = NativeMethods.CoCreateInstanceWbemLocator(
+			in CLSID_WbemLocator,
+			IntPtr.Zero,
+			CLSCTX_INPROC_SERVER,
+			in IID_IWbemLocator,
+			out IWbemLocator? locator);
+
+		if (hr < 0 || locator is null)
+		{
+			return mappings;
+		}
+
+		// 2. Connect to the StandardCimv2 namespace
+		hr = locator.ConnectServer(
+			"root\\StandardCimv2",
+			IntPtr.Zero,
+			IntPtr.Zero,
+			IntPtr.Zero,
+			0,
+			IntPtr.Zero,
+			IntPtr.Zero,
+			out IWbemServices? services);
+
+		if (hr < 0 || services is null)
+		{
+			return mappings;
+		}
+
+		// 3. Set Proxy Blanket
+		hr = NativeMethods.CoSetProxyBlanket(
+			services,
+			RPC_C_AUTHN_WINNT,
+			RPC_C_AUTHZ_NONE,
+			IntPtr.Zero,
+			RPC_C_AUTHN_LEVEL_CALL,
+			RPC_C_IMP_LEVEL_IMPERSONATE,
+			IntPtr.Zero,
+			0);
+
+		if (hr < 0)
+		{
+			return mappings;
+		}
+
+		// Centralized fetching logic
+		void FetchRules(IWbemContext? context)
+		{
+			int queryHr = services.ExecQuery(
+				"WQL",
+				"SELECT InstanceID, ElementName, DisplayName FROM MSFT_NetFirewallRule",
+				WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+				context,
+				out IEnumWbemClassObject? enumerator);
+
+			if (queryHr < 0 || enumerator is null)
+			{
+				return;
+			}
+
+			while (true)
+			{
+				queryHr = enumerator.Next(WBEM_INFINITE, 1, out IWbemClassObject? obj, out uint returned);
+
+				if (queryHr != 0 || returned == 0 || obj is null)
+				{
+					break;
+				}
+
+				// A. Read InstanceID (Rule Name mapped in Event Viewer Origin)
+				string? name = null;
+				queryHr = obj.Get("InstanceID", 0, out VARIANT valName, IntPtr.Zero, IntPtr.Zero);
+				if (queryHr == 0 && valName.vt == 8 && valName.bstrVal != IntPtr.Zero) // 8 == VT_BSTR
+				{
+					name = Marshal.PtrToStringBSTR(valName.bstrVal);
+				}
+				_ = NativeMethods.VariantClear(ref valName);
+
+				// B. Read DisplayName 
+				string? displayName = null;
+				queryHr = obj.Get("DisplayName", 0, out VARIANT valDisplay, IntPtr.Zero, IntPtr.Zero);
+				if (queryHr == 0 && valDisplay.vt == 8 && valDisplay.bstrVal != IntPtr.Zero) // 8 == VT_BSTR
+				{
+					displayName = Marshal.PtrToStringBSTR(valDisplay.bstrVal);
+				}
+				_ = NativeMethods.VariantClear(ref valDisplay);
+
+				// C. Safely Fallback to ElementName 
+				if (string.IsNullOrWhiteSpace(displayName))
+				{
+					queryHr = obj.Get("ElementName", 0, out VARIANT valElement, IntPtr.Zero, IntPtr.Zero);
+					if (queryHr == 0 && valElement.vt == 8 && valElement.bstrVal != IntPtr.Zero) // 8 == VT_BSTR
+					{
+						displayName = Marshal.PtrToStringBSTR(valElement.bstrVal);
+					}
+					_ = NativeMethods.VariantClear(ref valElement);
+				}
+
+				// Feed to mappings correlation dict
+				if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(displayName))
+				{
+					mappings[name] = displayName;
+				}
+			}
+		}
+
+		// Loop 1 equivalent: Local Firewall rules (Default context)
+		FetchRules(null);
+
+		// Loop 2 equivalent: Local Group Policy Firewall rules
+		hr = NativeMethods.CoCreateInstanceWbemContext(
+			in CLSID_WbemContext,
+			IntPtr.Zero,
+			CLSCTX_INPROC_SERVER,
+			in IID_IWbemContext,
+			out IWbemContext? context);
+
+		if (hr >= 0 && context is not null)
+		{
+			// Assign the WMI context to fetch only from 'localhost' Policy Store
+			VARIANT storeVal = new()
+			{
+				vt = 8, // VT_BSTR
+				bstrVal = Marshal.StringToBSTR("localhost")
+			};
+
+			_ = context.SetValue("PolicyStore", 0, in storeVal);
+			_ = NativeMethods.VariantClear(ref storeVal);
+
+			FetchRules(context);
+		}
+
+		return mappings;
 	}
 }

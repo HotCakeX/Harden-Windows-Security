@@ -15,9 +15,16 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AppControlManager.IntelGathering;
@@ -26,6 +33,8 @@ internal static class GetFirewallLogs
 {
 	// Security event log path.
 	private const string SecurityLogPath = "Security";
+
+	private static readonly Lazy<Dictionary<string, string>> FilterOriginRuleMap = new(FirewallWmiHelper.GetFirewallRulesMapping, LazyThreadSafetyMode.ExecutionAndPublication);
 
 	/// <summary>
 	/// 5152: The Windows Filtering Platform has blocked a packet.
@@ -44,11 +53,24 @@ internal static class GetFirewallLogs
 	// Watcher for real-time monitoring
 	private static EventLogWatcher? watcher;
 
+	// Cache to hold resolved destination addresses
+	private static readonly ConcurrentDictionary<string, string> ResolvedAddressCache = new(StringComparer.OrdinalIgnoreCase);
+
+	// Counter used to alternate between Cloudflare and Google DNS over HTTPS APIs across multiple threads
+	private static long _dnsRequestCounter;
+
+	// Shared HttpClient optimized for fast, direct connections to DNS over HTTPS APIs
+	private static readonly HttpClient DnsHttpClient = new()
+	{
+		Timeout = TimeSpan.FromSeconds(3)
+	};
+
 	/// <summary>
 	/// Retrieves blocked packet events.
 	/// </summary>
+	/// <param name="resolveDestinationAddresses">Determines whether to synchronously resolve destination IP addresses to domains.</param>
 	/// <returns></returns>
-	internal static async Task<List<FirewallEvent>> GetBlockedPackets()
+	internal static async Task<List<FirewallEvent>> GetBlockedPackets(bool resolveDestinationAddresses)
 	{
 		return await Task.Run(() =>
 		{
@@ -64,7 +86,7 @@ internal static class GetFirewallLogs
 			{
 				using (eventRecord)
 				{
-					FirewallEvent? fwEvent = ParseFirewallEvent(eventRecord);
+					FirewallEvent? fwEvent = ParseFirewallEvent(eventRecord, resolveDestinationAddresses);
 					if (fwEvent is not null)
 					{
 						results.Add(fwEvent);
@@ -83,8 +105,9 @@ internal static class GetFirewallLogs
 	/// <summary>
 	/// Starts real-time monitoring of firewall blocked events.
 	/// </summary>
+	/// <param name="resolveDestinationAddresses">Determines whether to synchronously resolve destination IP addresses to domains.</param>
 	/// <param name="callback">Action to invoke when a new event is found.</param>
-	internal static void StartRealTimeMonitoring(Action<FirewallEvent> callback)
+	internal static void StartRealTimeMonitoring(bool resolveDestinationAddresses, Action<FirewallEvent> callback)
 	{
 		// Ensure any existing watcher is stopped
 		StopRealTimeMonitoring();
@@ -103,7 +126,7 @@ internal static class GetFirewallLogs
 				{
 					using (record)
 					{
-						FirewallEvent? fwEvent = ParseFirewallEvent(record);
+						FirewallEvent? fwEvent = ParseFirewallEvent(record, resolveDestinationAddresses);
 						if (fwEvent is not null)
 						{
 							callback(fwEvent);
@@ -135,11 +158,206 @@ internal static class GetFirewallLogs
 	}
 
 	/// <summary>
+	/// Determines if an IPAddress is part of a private, link-local, or loopback range.
+	/// </summary>
+	/// <param name="ip">The IPAddress to check.</param>
+	/// <returns>True if the IP is private or local, otherwise false.</returns>
+	internal static bool IsPrivateOrLocalIpAddress(IPAddress ip)
+	{
+		if (IPAddress.IsLoopback(ip))
+		{
+			return true;
+		}
+
+		if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+		{
+			Span<byte> bytes = stackalloc byte[4];
+			if (ip.TryWriteBytes(bytes, out int bytesWritten))
+			{
+				byte b0 = bytes[0];
+				byte b1 = bytes[1];
+
+				// 10.0.0.0/8 (Private)
+				if (b0 == 10)
+				{
+					return true;
+				}
+
+				// 172.16.0.0/12 (Private)
+				if (b0 == 172 && b1 >= 16 && b1 <= 31)
+				{
+					return true;
+				}
+
+				// 192.168.0.0/16 (Private)
+				if (b0 == 192 && b1 == 168)
+				{
+					return true;
+				}
+
+				// 169.254.0.0/16 (Link-local)
+				if (b0 == 169 && b1 == 254)
+				{
+					return true;
+				}
+
+				// 100.64.0.0/10 (Carrier-grade NAT)
+				if (b0 == 100 && b1 >= 64 && b1 <= 127)
+				{
+					return true;
+				}
+			}
+		}
+		else if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+		{
+			if (ip.IsIPv6LinkLocal || ip.IsIPv6SiteLocal || ip.IsIPv6Multicast)
+			{
+				return true;
+			}
+
+			Span<byte> bytes = stackalloc byte[16];
+			if (ip.TryWriteBytes(bytes, out int bytesWritten))
+			{
+				byte b0 = bytes[0];
+
+				// fc00::/7 Unique Local Address
+				if ((b0 & 0xFE) == 0xFC)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	/// Synchronously resolves an IP address to a domain name using Cloudflare's direct 1.1.1.1 or Google's direct 8.8.8.8 DoH API.
+	/// </summary>
+	/// <param name="ipAddress">The IP address to resolve.</param>
+	/// <returns></returns>
+	private static string ResolveIpAddress(string ipAddress)
+	{
+		if (ResolvedAddressCache.TryGetValue(ipAddress, out string? cachedHostName))
+		{
+			return cachedHostName;
+		}
+
+		if (!IPAddress.TryParse(ipAddress, out IPAddress? parsedIp))
+		{
+			return ipAddress; // Not a valid IP
+		}
+
+		// Skip DNS resolution for private, local, and loopback IP addresses
+		if (IsPrivateOrLocalIpAddress(parsedIp))
+		{
+			return ipAddress;
+		}
+
+		try
+		{
+			string arpaName = GetArpaName(parsedIp);
+			if (string.IsNullOrEmpty(arpaName))
+			{
+				return ipAddress;
+			}
+
+			// Alternate between Cloudflare (1.1.1.1) and Google (8.8.8.8) DoH APIs
+			long counter = Interlocked.Increment(ref _dnsRequestCounter);
+			bool useCloudflare = (counter % 2) != 0;
+			string url = useCloudflare
+				? $"https://1.1.1.1/dns-query?name={arpaName}&type=PTR"
+				: $"https://8.8.8.8/resolve?name={arpaName}&type=PTR";
+
+			using HttpRequestMessage request = new(HttpMethod.Get, url);
+			request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/dns-json"));
+
+			using HttpResponseMessage response = DnsHttpClient.Send(request);
+
+			if (response.IsSuccessStatusCode)
+			{
+				using Stream responseStream = response.Content.ReadAsStream();
+				using JsonDocument jsonDoc = JsonDocument.Parse(responseStream);
+
+				if (jsonDoc.RootElement.TryGetProperty("Answer", out JsonElement answers) &&
+					answers.ValueKind == JsonValueKind.Array &&
+					answers.GetArrayLength() > 0)
+				{
+					JsonElement firstAnswer = answers[0];
+					if (firstAnswer.TryGetProperty("data", out JsonElement dataElement))
+					{
+						string? hostName = dataElement.GetString();
+						if (!string.IsNullOrWhiteSpace(hostName))
+						{
+							// Cloudflare and Google return PTR records with a trailing dot (e.g., "example.com."). We strip it.
+							if (hostName.EndsWith('.'))
+							{
+								hostName = hostName[..^1];
+							}
+
+							_ = ResolvedAddressCache.TryAdd(ipAddress, hostName);
+							return hostName;
+						}
+					}
+				}
+			}
+
+			// If we get here, resolution failed or no answer was provided (NXDOMAIN)
+			_ = ResolvedAddressCache.TryAdd(ipAddress, ipAddress);
+			return ipAddress;
+		}
+		catch
+		{
+			return ipAddress;
+		}
+	}
+
+	/// <summary>
+	/// Converts an IPAddress to its corresponding in-addr.arpa or ip6.arpa representation for reverse DNS lookups.
+	/// </summary>
+	/// <param name="ip">The IPAddress to parse.</param>
+	/// <returns>The .arpa mapped name.</returns>
+	private static string GetArpaName(IPAddress ip)
+	{
+		byte[] bytes = ip.GetAddressBytes();
+
+		if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+		{
+			return $"{bytes[3]}.{bytes[2]}.{bytes[1]}.{bytes[0]}.in-addr.arpa";
+		}
+		else if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+		{
+			return string.Create(72, bytes, static (span, b) =>
+			{
+				int pos = 0;
+				for (int i = b.Length - 1; i >= 0; i--)
+				{
+					byte val = b[i];
+
+					// Low nibble
+					int low = val & 0x0F;
+					span[pos++] = low < 10 ? (char)('0' + low) : (char)('a' + low - 10);
+					span[pos++] = '.';
+
+					// High nibble
+					int high = (val >> 4) & 0x0F;
+					span[pos++] = high < 10 ? (char)('0' + high) : (char)('a' + high - 10);
+					span[pos++] = '.';
+				}
+				"ip6.arpa".AsSpan().CopyTo(span[pos..]);
+			});
+		}
+
+		return string.Empty;
+	}
+
+	/// <summary>
 	/// Parses an EventRecord into a <see cref="FirewallEvent"/> object.
 	/// </summary>
 	/// <param name="eventRecord"></param>
+	/// <param name="resolveDestinationAddresses">Determines whether to synchronously resolve destination IP addresses to domains.</param>
 	/// <returns></returns>
-	private static FirewallEvent? ParseFirewallEvent(EventRecord eventRecord)
+	private static FirewallEvent? ParseFirewallEvent(EventRecord eventRecord, bool resolveDestinationAddresses)
 	{
 		string xmlString = eventRecord.ToXml();
 		ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
@@ -162,6 +380,11 @@ internal static class GetFirewallLogs
 		if (filterOrigin is not null && ExcludedFilterOrigins.Contains(filterOrigin))
 		{
 			return null;
+		}
+
+		if (FilterOriginRuleMap.Value.TryGetValue(filterOrigin ?? string.Empty, out string? ruleName))
+		{
+			filterOrigin = ruleName;
 		}
 
 		// Clean up Direction
@@ -206,6 +429,12 @@ internal static class GetFirewallLogs
 				89 => "OSPFIGP",
 				_ => protocol
 			};
+		}
+
+		// Resolve destination address if requested
+		if (resolveDestinationAddresses && !string.IsNullOrWhiteSpace(destAddress))
+		{
+			destAddress = ResolveIpAddress(destAddress);
 		}
 
 		// Clean up Application Path

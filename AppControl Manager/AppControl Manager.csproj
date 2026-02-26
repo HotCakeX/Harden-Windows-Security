@@ -61,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.67.0</FileVersion>
+		<FileVersion>2.0.68.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>
@@ -201,6 +201,7 @@
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.82.1" />
 		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.82.1" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.82.1" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.3" />

@@ -6959,4 +6959,64 @@
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>בחר את סביבת הענן לשימוש עבור פעולת הכניסה.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>סרוק יומנים</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סרוק את יומני חומת האש של Windows לאיתור אירועים חסומים. יש להפעיל ביקורת על מנות שנשמטו כדי ליצור את היומנים.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סרוק את יומני חומת האש של Windows לאיתור אירועים חסומים. יש להפעיל ביקורת על מנות שנשמטו כדי ליצור את היומנים.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>הפעל צג חי</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>עצור צג חי</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הפעל ביקורת על מנות שנשמטו</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל ביקורת על מנות שנשמטו כדי שהמערכת תייצר יומנים כאשר מנות נשמטות או כשחיבורים נחסמים על ידי חומת האש.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל ביקורת על מנות שנשמטו כדי שהמערכת תייצר יומנים כאשר מנות נשמטות או כשחיבורים נחסמים על ידי חומת האש.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>השבת ביקורת על מנות שנשמטו</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השבת ביקורת על מנות שנשמטו כדי שהמערכת תפסיק לייצר יומנים כאשר מנות נשמטות או כשחיבורים נחסמים על ידי חומת האש.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השבת ביקורת על מנות שנשמטו כדי שהמערכת תפסיק לייצר יומנים כאשר מנות נשמטות או כשחיבורים נחסמים על ידי חומת האש.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פענח כתובות יעד</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נסה לפענח את כתובות ה-IP של היעד לשמות מארחים עבור אירועים חסומים. ייעשה שימוש בשרתי Cloudflare ו-Google DNS over HTTPS לביצוע בדיקות DNS מאובטחות.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נסה לפענח את כתובות ה-IP של היעד לשמות מארחים עבור אירועים חסומים. ייעשה שימוש בשרתי Cloudflare ו-Google DNS over HTTPS לביצוע בדיקות DNS מאובטחות.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>שמור אסימונים במטמון המקומי</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל אפשרות זו כדי לשמור את אסימוני האימות במטמון המקומי, כך שלא תצטרך לבצע אימות ידני מחדש לאחר סגירה ופתיחה מחדש של האפליקציה. אסימוני האימות מוצפנים בדיסק ומוסרים בעת הסרת ההתקנה של האפליקציה.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל אפשרות זו כדי לשמור את אסימוני האימות במטמון המקומי, כך שלא תצטרך לבצע אימות ידני מחדש לאחר סגירה ופתיחה מחדש של האפליקציה. אסימוני האימות מוצפנים בדיסק ומוסרים בעת הסרת ההתקנה של האפליקציה.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>נקה מטמון מקומי</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה את אסימוני האימות השמורים במטמון המקומי. פעולה זו תדרוש ממך לבצע אימות ידני מחדש בפעם הבאה שתשתמש באפליקציה.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה את אסימוני האימות השמורים במטמון המקומי. פעולה זו תדרוש ממך לבצע אימות ידני מחדש בפעם הבאה שתשתמש באפליקציה.</value>
+  </data>
 </root>

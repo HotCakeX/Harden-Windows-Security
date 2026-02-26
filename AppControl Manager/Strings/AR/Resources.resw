@@ -6959,4 +6959,64 @@
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>حدد البيئة السحابية لاستخدامها في عملية تسجيل الدخول.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>مسح السجلات</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>امسح سجلات جدار حماية Windows بحثًا عن الأحداث المحظورة. يجب تمكين تدقيق الحزم المسقطة لإنشاء السجلات.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>امسح سجلات جدار حماية Windows بحثًا عن الأحداث المحظورة. يجب تمكين تدقيق الحزم المسقطة لإنشاء السجلات.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>بدء المراقبة المباشرة</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>إيقاف المراقبة المباشرة</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تمكين تدقيق الحزم المسقطة</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتمكين تدقيق الحزم المسقطة حتى يقوم النظام بإنشاء سجلات عند إسقاط الحزم أو حظر الاتصالات بواسطة جدار الحماية.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتمكين تدقيق الحزم المسقطة حتى يقوم النظام بإنشاء سجلات عند إسقاط الحزم أو حظر الاتصالات بواسطة جدار الحماية.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تعطيل تدقيق الحزم المسقطة</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتعطيل تدقيق الحزم المسقطة حتى يتوقف النظام عن إنشاء سجلات عند إسقاط الحزم أو حظر الاتصالات بواسطة جدار الحماية.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتعطيل تدقيق الحزم المسقطة حتى يتوقف النظام عن إنشاء سجلات عند إسقاط الحزم أو حظر الاتصالات بواسطة جدار الحماية.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تحليل عناوين الوجهة</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حاول تحليل عناوين IP للوجهة إلى أسماء مضيفين للأحداث المحظورة. سيتم استخدام خوادم Cloudflare و Google DNS over HTTPS لإجراء عمليات بحث DNS آمنة.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حاول تحليل عناوين IP للوجهة إلى أسماء مضيفين للأحداث المحظورة. سيتم استخدام خوادم Cloudflare و Google DNS over HTTPS لإجراء عمليات بحث DNS آمنة.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>تخزين الرموز المميزة في ذاكرة التخزين المؤقت محلياً</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتمكين هذا الخيار لتخزين رموز المصادقة المميزة في ذاكرة التخزين المؤقت محلياً حتى لا تضطر إلى المصادقة يدوياً مرة أخرى بعد إغلاق التطبيق وإعادة فتحه. يتم تشفير رموز المصادقة المميزة على القرص وإزالتها عند إلغاء تثبيت التطبيق.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتمكين هذا الخيار لتخزين رموز المصادقة المميزة في ذاكرة التخزين المؤقت محلياً حتى لا تضطر إلى المصادقة يدوياً مرة أخرى بعد إغلاق التطبيق وإعادة فتحه. يتم تشفير رموز المصادقة المميزة على القرص وإزالتها عند إلغاء تثبيت التطبيق.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>مسح ذاكرة التخزين المؤقت المحلية</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>امسح رموز المصادقة المميزة المخزنة مؤقتاً محلياً. سيتطلب منك ذلك المصادقة يدوياً مرة أخرى في المرة القادمة التي تستخدم فيها التطبيق.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>امسح رموز المصادقة المميزة المخزنة مؤقتاً محلياً. سيتطلب منك ذلك المصادقة يدوياً مرة أخرى في المرة القادمة التي تستخدم فيها التطبيق.</value>
+  </data>
 </root>

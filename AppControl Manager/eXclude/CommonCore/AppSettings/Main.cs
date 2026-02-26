@@ -76,6 +76,7 @@ internal sealed partial class Main : ViewModelBase
 		EncryptPoliciesLibrary = ReadValue(nameof(EncryptPoliciesLibrary), EncryptPoliciesLibrary);
 		EncryptionScopePoliciesLibrary = ReadValue(nameof(EncryptionScopePoliciesLibrary), EncryptionScopePoliciesLibrary);
 		FirewallSentinelPinnedPolicyID = ReadValue(nameof(FirewallSentinelPinnedPolicyID), FirewallSentinelPinnedPolicyID);
+		CacheAuthenticationTokensLocally = ReadValue(nameof(CacheAuthenticationTokensLocally), CacheAuthenticationTokensLocally);
 	}
 
 	/// <summary>
@@ -567,4 +568,18 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// Whether local authentication token caching for Microsoft Graph is enabled or disabled.
+	/// </summary>
+	internal bool CacheAuthenticationTokensLocally
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(CacheAuthenticationTokensLocally), field);
+			}
+		}
+	}
 }

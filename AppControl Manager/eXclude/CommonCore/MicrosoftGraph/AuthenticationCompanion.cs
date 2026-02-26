@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using Microsoft.Identity.Client;
 using Microsoft.UI.Xaml;
@@ -58,6 +59,46 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
+	}
+
+	/// <summary>
+	/// Auto-selects the CurrentActiveAccount if there is exactly 1 authenticated account that matches the requested AuthContext.
+	/// </summary>
+	internal void AutoSelectAccountIfApplicable()
+	{
+		if (CurrentActiveAccount is null)
+		{
+			List<AuthenticatedAccounts> matchingAccounts = [];
+			foreach (AuthenticatedAccounts account in AuthenticatedAccounts)
+			{
+				if (account.AuthContext == _AuthContext)
+				{
+					matchingAccounts.Add(account);
+				}
+			}
+
+			if (matchingAccounts.Count == 1)
+			{
+				CurrentActiveAccount = matchingAccounts[0];
+			}
+		}
+	}
+
+	/// <summary>
+	/// Restores the previously cached accounts utilizing silent sign in. Recommended to be called on initialization or View loaded.
+	/// </summary>
+	internal async Task InitializeAccountsAsync()
+	{
+		ManageButtonsStates(false);
+		try
+		{
+			await Main.RestoreCachedAccountsAsync();
+			AutoSelectAccountIfApplicable();
+		}
+		finally
+		{
+			ManageButtonsStates(true);
+		}
 	}
 
 	/// <summary>
@@ -398,5 +439,33 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		catch { }
 
 		CancelAndDisposeCts();
+	}
+
+	/// <summary>
+	/// Deletes local tokens stored on the disk
+	/// </summary>
+	internal async void ClearLocalCacheButton_Click()
+	{
+		try
+		{
+			ManageButtonsStates(false);
+
+			await Main.ClearLocalCacheAsync();
+
+			AuthenticatedAccounts.Clear();
+			CurrentActiveAccount = null;
+			ListViewSelectedAccount = null;
+
+			_InfoBar.WriteSuccess("Local token cache cleared successfully.");
+		}
+		catch (Exception ex)
+		{
+			_InfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_InfoBar.IsClosable = true;
+			ManageButtonsStates(true);
+		}
 	}
 }

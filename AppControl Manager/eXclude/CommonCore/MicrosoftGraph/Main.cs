@@ -31,6 +31,7 @@ using AppControlManager.SiPolicy;
 #endif
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Broker;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace CommonCore.MicrosoftGraph;
 
@@ -84,41 +85,80 @@ internal static class Main
 	#endregion
 
 	/// <summary>
-	/// Provides a thread-safe cache for storing instances of public client applications, keyed by sign-in method and Azure
-	/// cloud environment.
+	/// Provides a thread-safe cache for storing instances of public client applications, keyed by sign-in method, Azure
+	/// cloud environment, and whether local token caching is enabled.
 	/// </summary>
-	private static readonly ConcurrentDictionary<(SignInMethods, AzureCloudInstance), IPublicClientApplication> AppCache = new();
+	private static readonly ConcurrentDictionary<(SignInMethods, AzureCloudInstance, bool), IPublicClientApplication> AppCache = new();
+
+	/// <summary>
+	/// Provides a thread-safe cache for storing instances of MSAL cache helpers to ensure they can be unregistered properly.
+	/// </summary>
+	private static readonly ConcurrentDictionary<(SignInMethods, AzureCloudInstance, bool), MsalCacheHelper> CacheHelpers = new();
+
+	private static readonly SemaphoreSlim AppCacheLock = new(1, 1);
+
+	// Prevents file locking IOExceptions if metadata is read/written rapidly.
+	private static readonly SemaphoreSlim MetadataFileLock = new(1, 1);
+
+	// The location where token cache and metadata JSON files are saved to.
+	private static readonly string TokenCacheDiskLocation = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "CachedAuthTokens")).FullName;
 
 	/// <summary>
 	/// Lazily creates or gets an IPublicClientApplication configured for the specific Sign In Method and Azure Cloud Environment.
+	/// Automatically sets up on-disk caching too if enabled.
 	/// </summary>
-	private static IPublicClientApplication GetApp(SignInMethods method, AzureCloudInstance environment)
+	private static async Task<IPublicClientApplication> GetAppAsync(SignInMethods method, AzureCloudInstance environment, bool useCache)
 	{
-		(SignInMethods, AzureCloudInstance) key = (method, environment);
+		(SignInMethods, AzureCloudInstance, bool) key = (method, environment, useCache);
 
-		return AppCache.GetOrAdd(key, k =>
+		if (AppCache.TryGetValue(key, out IPublicClientApplication? cachedApp))
 		{
-			string authorityAudience = k.Item2 == AzureCloudInstance.AzureUsGovernment ? "organizations" : "common";
+			return cachedApp;
+		}
 
-			if (k.Item1 == SignInMethods.WebAccountManager)
+		await AppCacheLock.WaitAsync();
+		try
+		{
+			if (AppCache.TryGetValue(key, out cachedApp))
 			{
-				return PublicClientApplicationBuilder.Create(ClientId)
+				return cachedApp;
+			}
+
+			string authorityAudience = environment == AzureCloudInstance.AzureUsGovernment ? "organizations" : "common";
+
+			IPublicClientApplication app = method == SignInMethods.WebAccountManager
+				? PublicClientApplicationBuilder.Create(ClientId)
 					.WithDefaultRedirectUri()
 					.WithParentActivityOrWindow(GetWindowHandle)
 					.WithLegacyCacheCompatibility(false)
 					.WithBroker(OptionsForBroker)
-					.WithAuthority(k.Item2, authorityAudience)
-					.Build();
-			}
-			else
-			{
-				return PublicClientApplicationBuilder.Create(ClientId)
-					.WithAuthority(k.Item2, authorityAudience)
+					.WithAuthority(environment, authorityAudience)
+					.Build()
+				: PublicClientApplicationBuilder.Create(ClientId)
+					.WithAuthority(environment, authorityAudience)
 					.WithRedirectUri("http://localhost")
 					.WithLegacyCacheCompatibility(false)
 					.Build();
+
+			if (useCache)
+			{
+				StorageCreationProperties storageProperties = new StorageCreationPropertiesBuilder($"msal_{method}_{environment}.cache", TokenCacheDiskLocation)
+					.Build();
+
+				// Setup cache helper securely bound to app instance
+				MsalCacheHelper cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+				cacheHelper.RegisterCache(app.UserTokenCache);
+
+				_ = CacheHelpers.TryAdd(key, cacheHelper);
 			}
-		});
+
+			_ = AppCache.TryAdd(key, app);
+			return app;
+		}
+		finally
+		{
+			_ = AppCacheLock.Release();
+		}
 	}
 
 	/// <summary>
@@ -155,23 +195,22 @@ internal static class Main
 		// Proactive refresh window to avoid near-expiry usage
 		TimeSpan proactiveWindow = TimeSpan.FromMinutes(10);
 
-		AuthenticationResult currentResult = account.AuthResult;
+		AuthenticationResult? currentResult = account.AuthResult;
 		DateTimeOffset now = DateTimeOffset.UtcNow;
 
-		// If token is sufficiently valid, return it
-		if (currentResult.ExpiresOn - now > proactiveWindow)
+		// If token is sufficiently valid, return it immediately
+		if (currentResult is not null && (currentResult.ExpiresOn - now > proactiveWindow))
 		{
 			return currentResult.AccessToken;
 		}
 
-		// Select correct application based on original sign-in method and environment
-		IPublicClientApplication selectedApp = GetApp(account.MethodUsed, account.Environment);
+		// Select correct application based on original sign-in method, environment, and cache policy
+		IPublicClientApplication selectedApp = await GetAppAsync(account.MethodUsed, account.Environment, account.UseCache);
 
 		// Perform silent acquisition using the original scopes for this authentication context
 		AuthenticationResult refreshedResult = await selectedApp
 			.AcquireTokenSilent(Scopes[account.AuthContext], account.Account)
-			.ExecuteAsync(cancellationToken)
-			.ConfigureAwait(false);
+			.ExecuteAsync(cancellationToken);
 
 		// Update stored result so subsequent calls benefit
 		account.AuthResult = refreshedResult;
@@ -364,11 +403,14 @@ DeviceEvents
 		AuthenticationResult? authResult = null;
 		bool error = false;
 
+		// Capture the specific user choice regarding cache at sign in time
+		bool useCache = GlobalVars.Settings.CacheAuthenticationTokensLocally;
+
 		AuthenticatedAccounts? newAccount = null;
 
 		try
 		{
-			IPublicClientApplication app = GetApp(signInMethod, environment);
+			IPublicClientApplication app = await GetAppAsync(signInMethod, environment, useCache);
 
 			switch (signInMethod)
 			{
@@ -408,14 +450,15 @@ DeviceEvents
 				// Add the account that was successfully authenticated to the dictionary
 				newAccount = new(
 					accountIdentifier: authResult.Account.HomeAccountId.Identifier,
-					userName: authResult.Account.Username,
+					username: authResult.Account.Username,
 					tenantID: authResult.TenantId,
 					permissions: string.Join(", ", Scopes[context]),
 					authContext: context,
 					authResult: authResult,
 					account: authResult.Account,
 					methodUsed: signInMethod, // Record the method used for future silent refresh
-					environment: environment
+					environment: environment,
+					useCache: useCache // Bind this sign in session strictly to this cache setting
 				);
 
 				AuthenticatedAccounts? possibleDuplicate =
@@ -425,7 +468,8 @@ DeviceEvents
 							string.Equals(authResult.Account.Username, x.Username, StringComparison.OrdinalIgnoreCase) &&
 							string.Equals(authResult.TenantId, x.TenantID, StringComparison.OrdinalIgnoreCase) &&
 							string.Equals(newAccount.Permissions, x.Permissions, StringComparison.OrdinalIgnoreCase) &&
-							newAccount.Environment == x.Environment
+							x.AuthContext == context &&
+							x.Environment == environment
 						);
 
 				// Check if the account is already authenticated
@@ -439,6 +483,7 @@ DeviceEvents
 				}
 
 				AuthenticationCompanion.AuthenticatedAccounts.Add(newAccount);
+				await SaveAccountsMetadataAsync();
 			}
 		}
 
@@ -452,9 +497,12 @@ DeviceEvents
 	/// <returns></returns>
 	internal static async Task SignOut(AuthenticatedAccounts account)
 	{
-		IPublicClientApplication app = GetApp(account.MethodUsed, account.Environment);
+		// Make sure we select the exact same instance used for token creation
+		IPublicClientApplication app = await GetAppAsync(account.MethodUsed, account.Environment, account.UseCache);
 		await app.RemoveAsync(account.Account);
 		_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(account);
+		await SaveAccountsMetadataAsync();
+
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("SignedOutAccountMessage"),
 			account.Username));
@@ -1572,6 +1620,287 @@ DeviceEvents
 		{
 			string errorContent = await response.Content.ReadAsStringAsync();
 			throw new InvalidOperationException($"Failed to delete assignment {assignmentId}: {response.StatusCode} - {errorContent}");
+		}
+	}
+
+	/// <summary>
+	/// Persist current signed in accounts metadata so it can be restored on app restart.
+	/// </summary>
+	internal static async Task SaveAccountsMetadataAsync()
+	{
+		await MetadataFileLock.WaitAsync();
+		try
+		{
+			string metadataFilePath = Path.Combine(TokenCacheDiskLocation, "AccountsMetadata.json");
+
+			List<SavedAccountMetadata> metadataList = [];
+
+			foreach (AuthenticatedAccounts a in AuthenticationCompanion.AuthenticatedAccounts)
+			{
+				// Only save accounts that were originally signed in with caching requested
+				if (a.UseCache)
+				{
+					metadataList.Add(new SavedAccountMetadata
+					(
+						accountIdentifier: a.AccountIdentifier,
+						username: a.Username,
+						tenantID: a.TenantID,
+						permissions: a.Permissions,
+						authContext: a.AuthContext,
+						methodUsed: a.MethodUsed,
+						environment: a.Environment,
+						useCache: a.UseCache
+					));
+				}
+			}
+
+			string json = JsonSerializer.Serialize(metadataList, MSGraphJsonContext.Default.ListSavedAccountMetadata);
+
+			// Cross-process file writing safety with retry loop
+			for (int i = 0; i < 5; i++)
+			{
+				try
+				{
+					using FileStream stream = new(metadataFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
+					using StreamWriter writer = new(stream);
+					await writer.WriteAsync(json);
+					break;
+				}
+				catch (IOException) when (i < 4)
+				{
+					await Task.Delay(100);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Failed to save account metadata: {ex.Message}");
+		}
+		finally
+		{
+			_ = MetadataFileLock.Release();
+		}
+	}
+
+	/// <summary>
+	/// Clears the locally stored token cache metadata from the disk.
+	/// </summary>
+	internal static async Task ClearLocalCacheAsync()
+	{
+		await MetadataFileLock.WaitAsync();
+		try
+		{
+			await AppCacheLock.WaitAsync();
+			try
+			{
+				// Unregister cache helpers to prevent memory leaks and file locking issues
+				foreach (KeyValuePair<(SignInMethods, AzureCloudInstance, bool), MsalCacheHelper> kvp in CacheHelpers)
+				{
+					try
+					{
+						if (AppCache.TryGetValue(kvp.Key, out IPublicClientApplication? app))
+						{
+							kvp.Value.UnregisterCache(app.UserTokenCache);
+						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Write($"Failed to unregister MSAL cache helper: {ex.Message}");
+					}
+				}
+				CacheHelpers.Clear();
+
+				// Clean up MSAL apps and accounts from memory first to ensure no file locks or stale caches
+				foreach (IPublicClientApplication app in AppCache.Values)
+				{
+					try
+					{
+						IEnumerable<IAccount> accounts = await app.GetAccountsAsync();
+						foreach (IAccount acc in accounts)
+						{
+							await app.RemoveAsync(acc);
+						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Write($"Failed to clear MSAL accounts for an app instance: {ex.Message}");
+					}
+				}
+
+				// Completely clear the AppCache dictionary to prevent memory leaks
+				AppCache.Clear();
+			}
+			finally
+			{
+				_ = AppCacheLock.Release();
+			}
+
+			if (Directory.Exists(TokenCacheDiskLocation))
+			{
+				string[] files = Directory.GetFiles(TokenCacheDiskLocation);
+				foreach (string file in files)
+				{
+					// Retry loop for cross-process delays
+					for (int i = 0; i < 5; i++)
+					{
+						try
+						{
+							File.Delete(file);
+							break;
+						}
+						catch (Exception ex)
+						{
+							if (i == 4)
+							{
+								Logger.Write($"Failed to delete cache file {file}: {ex.Message}");
+							}
+							else
+							{
+								await Task.Delay(100);
+							}
+						}
+					}
+				}
+			}
+		}
+		finally
+		{
+			_ = MetadataFileLock.Release();
+		}
+	}
+
+	/// <summary>
+	/// Automatically restores authenticated accounts mapped from metadata using the silently cached tokens.
+	/// Called via UI initialization context once.
+	/// </summary>
+	internal static async Task RestoreCachedAccountsAsync()
+	{
+		string metadataFilePath = Path.Combine(TokenCacheDiskLocation, "AccountsMetadata.json");
+
+		string json = string.Empty;
+		bool fileExists = false;
+
+		await MetadataFileLock.WaitAsync();
+		try
+		{
+			if (File.Exists(metadataFilePath))
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					try
+					{
+						using FileStream stream = new(metadataFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+						using StreamReader reader = new(stream);
+						json = await reader.ReadToEndAsync();
+						fileExists = true;
+						break;
+					}
+					catch (IOException) when (i < 4)
+					{
+						await Task.Delay(100);
+					}
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Failed to read account metadata: {ex.Message}");
+		}
+		finally
+		{
+			_ = MetadataFileLock.Release();
+		}
+
+		if (!fileExists || string.IsNullOrWhiteSpace(json))
+		{
+			return;
+		}
+
+		List<SavedAccountMetadata>? metadataList = null;
+
+		try
+		{
+			metadataList = JsonSerializer.Deserialize(json, MSGraphJsonContext.Default.ListSavedAccountMetadata);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Failed to deserialize cached accounts metadata (possible corruption): {ex.Message}. Clearing local cache to prevent orphaned files.");
+
+			// If serialization fails, the metadata file is corrupt. Clear the cache entirely to avoid persistent orphan MSAL files.
+			await ClearLocalCacheAsync();
+			return;
+		}
+
+		if (metadataList is not null)
+		{
+			bool metadataNeedsUpdate = false;
+
+			foreach (SavedAccountMetadata meta in metadataList)
+			{
+				IPublicClientApplication app = await GetAppAsync(meta.MethodUsed, meta.Environment, meta.UseCache);
+				IAccount? account = await app.GetAccountAsync(meta.AccountIdentifier);
+
+				if (account is not null)
+				{
+					AuthenticationResult? authResult = null;
+					bool skipAccount = false;
+
+					try
+					{
+						authResult = await app.AcquireTokenSilent(Scopes[meta.AuthContext], account).ExecuteAsync();
+					}
+					catch (MsalUiRequiredException)
+					{
+						// Token is completely expired and can't be refreshed automatically.
+						// The user will need to sign in again interactively. We don't restore it.
+						skipAccount = true;
+						metadataNeedsUpdate = true; // Mark orphaned entry for JSON cleanup
+					}
+					catch (Exception ex)
+					{
+						// Network error or other transient issue. We still populate the account in the UI
+						// but leave AuthResult as null. GetValidAccessTokenAsync will handle performing a network request to refresh it later.
+						Logger.Write($"Failed to silently acquire token for cached account {meta.Username} during restoration (offline?): {ex.Message}");
+					}
+
+					if (!skipAccount)
+					{
+						AuthenticatedAccounts restoredAccount = new(
+							accountIdentifier: meta.AccountIdentifier,
+							username: meta.Username,
+							tenantID: meta.TenantID,
+							permissions: meta.Permissions,
+							authContext: meta.AuthContext,
+							authResult: authResult,
+							account: account,
+							methodUsed: meta.MethodUsed,
+							environment: meta.Environment,
+							useCache: meta.UseCache
+						);
+
+						bool exists = AuthenticationCompanion.AuthenticatedAccounts.Any(x =>
+							string.Equals(x.AccountIdentifier, meta.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
+							x.AuthContext == meta.AuthContext &&
+							x.Environment == meta.Environment);
+
+						if (!exists)
+						{
+							AuthenticationCompanion.AuthenticatedAccounts.Add(restoredAccount);
+						}
+					}
+				}
+				else
+				{
+					// Account was completely removed from the MSAL cache but remained in our JSON metadata
+					metadataNeedsUpdate = true;
+				}
+			}
+
+			// If we detected any missing/expired sessions, overwrite the JSON to clean up dead entries
+			if (metadataNeedsUpdate)
+			{
+				await SaveAccountsMetadataAsync();
+			}
 		}
 	}
 }

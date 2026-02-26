@@ -1667,3 +1667,177 @@ internal struct SERVICE_STATUS
 	internal uint dwCheckPoint;
 	internal uint dwWaitHint;
 }
+
+#region For WMI and COM usages porting from C++
+
+/// <summary>
+/// Raw unmanaged COM VARIANT structure for Native AOT.
+/// </summary>
+[StructLayout(LayoutKind.Explicit)]
+internal struct VARIANT
+{
+	[FieldOffset(0)] internal ushort vt;
+	[FieldOffset(2)] internal ushort wReserved1;
+	[FieldOffset(4)] internal ushort wReserved2;
+	[FieldOffset(6)] internal ushort wReserved3;
+	[FieldOffset(8)] internal IntPtr bstrVal;
+	[FieldOffset(8)] internal long llVal;
+	[FieldOffset(8)] internal int lVal;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wbemcli/nn-wbemcli-iwbemcontext
+/// </summary>
+[GeneratedComInterface]
+[Guid("44aca674-e8fc-11d0-a07c-00c04fb68820")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IWbemContext
+{
+	[PreserveSig] int Clone(out IWbemContext ppNewCopy);
+	[PreserveSig] int GetNames(int lFlags, out IntPtr pNames);
+	[PreserveSig] int BeginEnumeration(int lFlags);
+	[PreserveSig] int Next(int lFlags, out IntPtr pstrName, out VARIANT pValue);
+	[PreserveSig] int EndEnumeration();
+
+	[PreserveSig]
+	int SetValue(
+		[MarshalAs(UnmanagedType.LPWStr)] string strName,
+		int lFlags,
+		in VARIANT pValue);
+
+	[PreserveSig]
+	int GetValue(
+		[MarshalAs(UnmanagedType.LPWStr)] string strName,
+		int lFlags,
+		out VARIANT pValue);
+
+	[PreserveSig] int DeleteValue([MarshalAs(UnmanagedType.LPWStr)] string strName, int lFlags);
+	[PreserveSig] int DeleteAll();
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wbemcli/nn-wbemcli-iwbemlocator
+/// </summary>
+[GeneratedComInterface]
+[Guid("DC12A687-737F-11CF-884D-00AA004B2E24")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IWbemLocator
+{
+	[PreserveSig]
+	int ConnectServer(
+		[MarshalAs(UnmanagedType.BStr)] string strNetworkResource,
+		IntPtr strUser,
+		IntPtr strPassword,
+		IntPtr strLocale,
+		int lSecurityFlags,
+		IntPtr strAuthority,
+		IntPtr pCtx,
+		out IWbemServices ppNamespace);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wbemcli/nn-wbemcli-iwbemservices
+/// </summary>
+[GeneratedComInterface]
+[Guid("9556DC99-828C-11CF-A37E-00AA003240C7")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IWbemServices
+{
+	[PreserveSig] int OpenNamespace(IntPtr strNamespace, int lFlags, IntPtr pCtx, out IWbemServices ppWorkingNamespace, IntPtr ppResult);
+	[PreserveSig] int CancelAsyncCall(IntPtr pSink);
+	[PreserveSig] int QueryObjectSink(int lFlags, out IntPtr ppResponseHandler);
+	[PreserveSig] int GetObject([MarshalAs(UnmanagedType.BStr)] string strObjectPath, int lFlags, IntPtr pCtx, out IWbemClassObject ppObject, IntPtr ppCallResult);
+	[PreserveSig] int GetObjectAsync(IntPtr strObjectPath, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int PutClass(IntPtr pObject, int lFlags, IntPtr pCtx, IntPtr ppCallResult);
+	[PreserveSig] int PutClassAsync(IntPtr pObject, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int DeleteClass(IntPtr strClass, int lFlags, IntPtr pCtx, IntPtr ppCallResult);
+	[PreserveSig] int DeleteClassAsync(IntPtr strClass, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int CreateClassEnum(IntPtr strSuperclass, int lFlags, IntPtr pCtx, out IEnumWbemClassObject ppEnum);
+	[PreserveSig] int CreateClassEnumAsync(IntPtr strSuperclass, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int PutInstance(IntPtr pInst, int lFlags, IntPtr pCtx, IntPtr ppCallResult);
+	[PreserveSig] int PutInstanceAsync(IntPtr pInst, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int DeleteInstance(IntPtr strObjectPath, int lFlags, IntPtr pCtx, IntPtr ppCallResult);
+	[PreserveSig] int DeleteInstanceAsync(IntPtr strObjectPath, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int CreateInstanceEnum(IntPtr strFilter, int lFlags, IntPtr pCtx, out IEnumWbemClassObject ppEnum);
+	[PreserveSig] int CreateInstanceEnumAsync(IntPtr strFilter, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+
+	[PreserveSig]
+	int ExecQuery(
+		[MarshalAs(UnmanagedType.BStr)] string strQueryLanguage,
+		[MarshalAs(UnmanagedType.BStr)] string strQuery,
+		int lFlags,
+		IWbemContext? pCtx,
+		out IEnumWbemClassObject ppEnum);
+
+	[PreserveSig] int ExecQueryAsync(IntPtr strQueryLanguage, IntPtr strQuery, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int ExecNotificationQuery(IntPtr strQueryLanguage, IntPtr strQuery, int lFlags, IntPtr pCtx, out IEnumWbemClassObject ppEnum);
+	[PreserveSig] int ExecNotificationQueryAsync(IntPtr strQueryLanguage, IntPtr strQuery, int lFlags, IntPtr pCtx, IntPtr pResponseHandler);
+	[PreserveSig] int ExecMethod(IntPtr strObjectPath, IntPtr strMethodName, int lFlags, IntPtr pCtx, IntPtr pInParams, out IntPtr ppOutParams, IntPtr ppCallResult);
+	[PreserveSig] int ExecMethodAsync(IntPtr strObjectPath, IntPtr strMethodName, int lFlags, IntPtr pCtx, IntPtr pInParams, IntPtr pResponseHandler);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wbemcli/nn-wbemcli-ienumwbemclassobject
+/// </summary>
+[GeneratedComInterface]
+[Guid("027947E1-D731-11CE-A357-000000000001")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IEnumWbemClassObject
+{
+	[PreserveSig] int Reset();
+
+	[PreserveSig]
+	int Next(
+		int lTimeout,
+		uint uCount,
+		out IWbemClassObject? apObject,
+		out uint puReturned);
+
+	[PreserveSig] int NextAsync(uint uCount, IntPtr pSink);
+	[PreserveSig] int Clone(out IEnumWbemClassObject ppEnum);
+	[PreserveSig] int Skip(int lTimeout, uint nCount);
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wbemcli/nn-wbemcli-iwbemclassobject
+/// </summary>
+[GeneratedComInterface]
+[Guid("DC12A681-737F-11CF-884D-00AA004B2E24")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IWbemClassObject
+{
+	[PreserveSig] int GetQualifierSet(out IntPtr ppQualSet);
+
+	[PreserveSig]
+	int Get(
+		[MarshalAs(UnmanagedType.LPWStr)] string wszName,
+		int lFlags,
+		out VARIANT pVal,
+		IntPtr pType,
+		IntPtr plFlavor);
+
+	[PreserveSig] int Put(IntPtr wszName, int lFlags, IntPtr pVal, int Type);
+	[PreserveSig] int Delete(IntPtr wszName);
+	[PreserveSig] int GetNames(IntPtr wszQualifierName, int lFlags, IntPtr pQualifierVal, out IntPtr pNames);
+	[PreserveSig] int BeginEnumeration(int lEnumFlags);
+	[PreserveSig] int Next(int lFlags, out IntPtr strName, out VARIANT pVal, IntPtr pType, IntPtr plFlavor);
+	[PreserveSig] int EndEnumeration();
+	[PreserveSig] int GetPropertyQualifierSet(IntPtr wszProperty, out IntPtr ppQualSet);
+	[PreserveSig] int Clone(out IWbemClassObject ppCopy);
+	[PreserveSig] int GetObjectText(int lFlags, out IntPtr pstrObjectText);
+	[PreserveSig] int SpawnDerivedClass(int lFlags, out IWbemClassObject ppNewClass);
+	[PreserveSig] int SpawnInstance(int lFlags, out IWbemClassObject ppNewInstance);
+	[PreserveSig] int CompareTo(int lFlags, IWbemClassObject pCompareTo);
+	[PreserveSig] int GetPropertyOrigin(IntPtr wszName, out IntPtr pstrClassName);
+	[PreserveSig] int InheritsFrom(IntPtr strAncestor);
+	[PreserveSig] int GetMethod(IntPtr wszName, int lFlags, out IWbemClassObject ppInSignature, out IWbemClassObject ppOutSignature);
+	[PreserveSig] int PutMethod(IntPtr wszName, int lFlags, IWbemClassObject pInSignature, IWbemClassObject pOutSignature);
+	[PreserveSig] int DeleteMethod(IntPtr wszName);
+	[PreserveSig] int BeginMethodEnumeration(int lEnumFlags);
+	[PreserveSig] int NextMethod(int lFlags, out IntPtr pstrName, out IWbemClassObject ppInSignature, out IWbemClassObject ppOutSignature);
+	[PreserveSig] int EndMethodEnumeration();
+	[PreserveSig] int GetMethodQualifierSet(IntPtr wszMethod, out IntPtr ppQualSet);
+	[PreserveSig] int GetMethodOrigin(IntPtr wszMethodName, out IntPtr pstrClassName);
+}
+
+#endregion

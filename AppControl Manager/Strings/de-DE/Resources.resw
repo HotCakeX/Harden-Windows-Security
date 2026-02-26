@@ -6959,4 +6959,64 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wählen Sie die Cloud-Umgebung aus, die für den Anmeldevorgang verwendet werden soll.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>Protokolle scannen</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie die Windows-Firewall-Protokolle nach blockierten Ereignissen. Die Überwachung verworfener Pakete muss aktiviert sein, um die Protokolle zu generieren.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie die Windows-Firewall-Protokolle nach blockierten Ereignissen. Die Überwachung verworfener Pakete muss aktiviert sein, um die Protokolle zu generieren.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>Live-Monitor starten</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>Live-Monitor beenden</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Überwachung verworfener Pakete aktivieren</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktivieren Sie die Überwachung verworfener Pakete, damit das System Protokolle generiert, wenn Pakete verworfen oder Verbindungen durch die Firewall blockiert werden.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aktivieren Sie die Überwachung verworfener Pakete, damit das System Protokolle generiert, wenn Pakete verworfen oder Verbindungen durch die Firewall blockiert werden.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Überwachung verworfener Pakete deaktivieren</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deaktivieren Sie die Überwachung verworfener Pakete, damit das System keine Protokolle mehr generiert, wenn Pakete verworfen oder Verbindungen durch die Firewall blockiert werden.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deaktivieren Sie die Überwachung verworfener Pakete, damit das System keine Protokolle mehr generiert, wenn Pakete verworfen oder Verbindungen durch die Firewall blockiert werden.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zieladressen auflösen</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Versuchen Sie, die Ziel-IP-Adressen für blockierte Ereignisse in Hostnamen aufzulösen. Für sichere DNS-Abfragen werden Cloudflare- und Google DNS-over-HTTPS-Server verwendet.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Versuchen Sie, die Ziel-IP-Adressen für blockierte Ereignisse in Hostnamen aufzulösen. Für sichere DNS-Abfragen werden Cloudflare- und Google DNS-over-HTTPS-Server verwendet.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Token lokal zwischenspeichern</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktivieren Sie diese Option, um die Authentifizierungstoken lokal zwischenzuspeichern, damit Sie sich nach dem Schließen und erneuten Öffnen der App nicht erneut manuell authentifizieren müssen. Die Authentifizierungstoken werden auf dem Datenträger verschlüsselt und bei der Deinstallation der App entfernt.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aktivieren Sie diese Option, um die Authentifizierungstoken lokal zwischenzuspeichern, damit Sie sich nach dem Schließen und erneuten Öffnen der App nicht erneut manuell authentifizieren müssen. Die Authentifizierungstoken werden auf dem Datenträger verschlüsselt und bei der Deinstallation der App entfernt.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Lokalen Cache leeren</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Löschen Sie die lokal zwischengespeicherten Authentifizierungstoken. Dies erfordert, dass Sie sich bei der nächsten Verwendung der App erneut manuell authentifizieren.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Löschen Sie die lokal zwischengespeicherten Authentifizierungstoken. Dies erfordert, dass Sie sich bei der nächsten Verwendung der App erneut manuell authentifizieren.</value>
+  </data>
 </root>

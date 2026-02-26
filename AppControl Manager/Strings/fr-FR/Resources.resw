@@ -6959,4 +6959,64 @@
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Sélectionnez l'environnement cloud à utiliser pour l'opération de connexion.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>Analyser les journaux</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Analysez les journaux du Pare-feu Windows à la recherche d'événements bloqués. L'audit des paquets rejetés doit être activé pour générer les journaux.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Analysez les journaux du Pare-feu Windows à la recherche d'événements bloqués. L'audit des paquets rejetés doit être activé pour générer les journaux.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>Démarrer la surveillance en direct</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>Arrêter la surveillance en direct</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Activer l'audit des paquets rejetés</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Activez l'audit des paquets rejetés pour que le système génère des journaux lorsque des paquets sont rejetés ou que des connexions sont bloquées par le pare-feu.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Activez l'audit des paquets rejetés pour que le système génère des journaux lorsque des paquets sont rejetés ou que des connexions sont bloquées par le pare-feu.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Désactiver l'audit des paquets rejetés</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Désactivez l'audit des paquets rejetés pour que le système cesse de générer des journaux lorsque des paquets sont rejetés ou que des connexions sont bloquées par le pare-feu.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Désactivez l'audit des paquets rejetés pour que le système cesse de générer des journaux lorsque des paquets sont rejetés ou que des connexions sont bloquées par le pare-feu.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Résoudre les adresses de destination</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tentez de résoudre les adresses IP de destination en noms d'hôtes pour les événements bloqués. Des serveurs Cloudflare et Google DNS over HTTPS seront utilisés pour effectuer des requêtes DNS sécurisées.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Tentez de résoudre les adresses IP de destination en noms d'hôtes pour les événements bloqués. Des serveurs Cloudflare et Google DNS over HTTPS seront utilisés pour effectuer des requêtes DNS sécurisées.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Mettre en cache les jetons localement</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Activez cette option pour mettre en cache les jetons d'authentification localement afin de ne pas avoir à vous authentifier manuellement après avoir fermé et rouvert l'application. Les jetons d'authentification sont chiffrés sur le disque et supprimés lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Activez cette option pour mettre en cache les jetons d'authentification localement afin de ne pas avoir à vous authentifier manuellement après avoir fermé et rouvert l'application. Les jetons d'authentification sont chiffrés sur le disque et supprimés lors de la désinstallation de l'application.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Effacer le cache local</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Effacez les jetons d'authentification mis en cache localement. Vous devrez vous authentifier de nouveau manuellement lors de la prochaine utilisation de l'application.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Effacez les jetons d'authentification mis en cache localement. Vous devrez vous authentifier de nouveau manuellement lors de la prochaine utilisation de l'application.</value>
+  </data>
 </root>

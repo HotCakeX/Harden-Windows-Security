@@ -2309,7 +2309,7 @@ internal static unsafe partial class NativeMethods
 	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogid
 	/// </summary>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[LibraryImport("ole32.dll")]
+	[LibraryImport("OLE32")]
 	internal static partial int CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string lpszProgID, out Guid lpclsid);
 
 
@@ -2317,7 +2317,7 @@ internal static unsafe partial class NativeMethods
 	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance
 	/// </summary>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[LibraryImport("ole32.dll", EntryPoint = "CoCreateInstance")]
+	[LibraryImport("OLE32", EntryPoint = "CoCreateInstance")]
 	internal static partial int CoCreateInstanceForLicensing(in Guid rclsid, IntPtr pUnkOuter, uint dwClsContext, in Guid riid, out IEditionUpgradeManager ppv);
 
 
@@ -2339,7 +2339,7 @@ internal static unsafe partial class NativeMethods
 	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree
 	/// </summary>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[LibraryImport("ole32.dll")]
+	[LibraryImport("OLE32")]
 	internal static partial void CoTaskMemFree(IntPtr pv);
 
 
@@ -2581,7 +2581,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptordacl
+	/// https://learn.microsoft.com/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptordacl
 	/// </summary>
 	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -2590,7 +2590,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shobjectproperties
+	/// https://learn.microsoft.com/windows/win32/api/shlobj_core/nf-shlobj_core-shobjectproperties
 	/// </summary>
 	[LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -2637,5 +2637,55 @@ internal static unsafe partial class NativeMethods
 
 	// Access right for deleting a service
 	internal const uint DELETE = 0x00010000;
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-variantclear
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int VariantClear(ref VARIANT pvarg);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance
+	/// </summary>
+	[LibraryImport("OLE32", EntryPoint = "CoCreateInstance")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoCreateInstanceWbemLocator(
+		in Guid rclsid,
+		IntPtr pUnkOuter,
+		uint dwClsContext,
+		in Guid riid,
+		out IWbemLocator ppv);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance
+	/// </summary>
+	[LibraryImport("OLE32", EntryPoint = "CoCreateInstance")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoCreateInstanceWbemContext(
+		in Guid rclsid,
+		IntPtr pUnkOuter,
+		uint dwClsContext,
+		in Guid riid,
+		out IWbemContext ppv);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cosetproxyblanket
+	/// </summary>
+	[LibraryImport("OLE32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoSetProxyBlanket(
+		IWbemServices pProxy,
+		uint dwAuthnSvc,
+		uint dwAuthzSvc,
+		IntPtr pServerPrincName,
+		uint dwAuthnLevel,
+		uint dwImpLevel,
+		IntPtr pAuthInfo,
+		uint dwCapabilities);
 
 }

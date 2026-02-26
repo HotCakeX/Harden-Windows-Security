@@ -6959,4 +6959,64 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz środowisko chmury do użycia podczas operacji logowania.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>Skanuj dzienniki</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeskanuj dzienniki Zapory Windows pod kątem zablokowanych zdarzeń. Aby wygenerować dzienniki, musi być włączone audytowanie odrzuconych pakietów.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeskanuj dzienniki Zapory Windows pod kątem zablokowanych zdarzeń. Aby wygenerować dzienniki, musi być włączone audytowanie odrzuconych pakietów.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>Uruchom monitor na żywo</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>Zatrzymaj monitor na żywo</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Włącz audytowanie odrzuconych pakietów</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz audytowanie odrzuconych pakietów, aby system generował dzienniki, gdy pakiety są odrzucane lub połączenia są blokowane przez zaporę.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz audytowanie odrzuconych pakietów, aby system generował dzienniki, gdy pakiety są odrzucane lub połączenia są blokowane przez zaporę.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wyłącz audytowanie odrzuconych pakietów</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyłącz audytowanie odrzuconych pakietów, aby system przestał generować dzienniki, gdy pakiety są odrzucane lub połączenia są blokowane przez zaporę.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyłącz audytowanie odrzuconych pakietów, aby system przestał generować dzienniki, gdy pakiety są odrzucane lub połączenia są blokowane przez zaporę.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Rozpoznaj adresy docelowe</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Spróbuj rozpoznać docelowe adresy IP na nazwy hostów dla zablokowanych zdarzeń. Do wykonania bezpiecznych zapytań DNS zostaną użyte serwery Cloudflare i Google DNS over HTTPS.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Spróbuj rozpoznać docelowe adresy IP na nazwy hostów dla zablokowanych zdarzeń. Do wykonania bezpiecznych zapytań DNS zostaną użyte serwery Cloudflare i Google DNS over HTTPS.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Buforuj tokeny lokalnie</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz tę opcję, aby buforować tokeny uwierzytelniania lokalnie, dzięki czemu nie będzie konieczne ponowne ręczne uwierzytelnianie po zamknięciu i ponownym otwarciu aplikacji. Tokeny uwierzytelniania są szyfrowane na dysku i usuwane podczas odinstalowywania aplikacji.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz tę opcję, aby buforować tokeny uwierzytelniania lokalnie, dzięki czemu nie będzie konieczne ponowne ręczne uwierzytelnianie po zamknięciu i ponownym otwarciu aplikacji. Tokeny uwierzytelniania są szyfrowane na dysku i usuwane podczas odinstalowywania aplikacji.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Wyczyść lokalną pamięć podręczną</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyczyść lokalnie buforowane tokeny uwierzytelniania. Będzie to wymagało ponownego ręcznego uwierzytelnienia przy następnym użyciu aplikacji.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyczyść lokalnie buforowane tokeny uwierzytelniania. Będzie to wymagało ponownego ręcznego uwierzytelnienia przy następnym użyciu aplikacji.</value>
+  </data>
 </root>

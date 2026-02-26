@@ -6959,4 +6959,64 @@
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Επιλέξτε το Περιβάλλον Cloud που θα χρησιμοποιηθεί για τη λειτουργία εισόδου.</value>
   </data>
+    <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>Σάρωση αρχείων καταγραφής</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Σαρώστε τα αρχεία καταγραφής του Τείχους προστασίας των Windows για αποκλεισμένα συμβάντα. Ο έλεγχος απορριφθέντων πακέτων πρέπει να είναι ενεργοποιημένος για τη δημιουργία των αρχείων καταγραφής.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Σαρώστε τα αρχεία καταγραφής του Τείχους προστασίας των Windows για αποκλεισμένα συμβάντα. Ο έλεγχος απορριφθέντων πακέτων πρέπει να είναι ενεργοποιημένος για τη δημιουργία των αρχείων καταγραφής.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>Έναρξη ζωντανής παρακολούθησης</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>Διακοπή ζωντανής παρακολούθησης</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ενεργοποίηση ελέγχου απορριφθέντων πακέτων</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποιήστε τον έλεγχο απορριφθέντων πακέτων ώστε το σύστημα να δημιουργεί αρχεία καταγραφής όταν απορρίπτονται πακέτα ή αποκλείονται συνδέσεις από το τείχος προστασίας.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποιήστε τον έλεγχο απορριφθέντων πακέτων ώστε το σύστημα να δημιουργεί αρχεία καταγραφής όταν απορρίπτονται πακέτα ή αποκλείονται συνδέσεις από το τείχος προστασίας.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Απενεργοποίηση ελέγχου απορριφθέντων πακέτων</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Απενεργοποιήστε τον έλεγχο απορριφθέντων πακέτων ώστε το σύστημα να σταματήσει να δημιουργεί αρχεία καταγραφής όταν απορρίπτονται πακέτα ή αποκλείονται συνδέσεις από το τείχος προστασίας.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Απενεργοποιήστε τον έλεγχο απορριφθέντων πακέτων ώστε το σύστημα να σταματήσει να δημιουργεί αρχεία καταγραφής όταν απορρίπτονται πακέτα ή αποκλείονται συνδέσεις από το τείχος προστασίας.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Επίλυση διευθύνσεων προορισμού</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιχειρήστε να επιλύσετε τις διευθύνσεις IP προορισμού σε ονόματα κεντρικών υπολογιστών για αποκλεισμένα συμβάντα. Θα χρησιμοποιηθούν διακομιστές Cloudflare και Google DNS over HTTPS για την εκτέλεση ασφαλών αναζητήσεων DNS.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιχειρήστε να επιλύσετε τις διευθύνσεις IP προορισμού σε ονόματα κεντρικών υπολογιστών για αποκλεισμένα συμβάντα. Θα χρησιμοποιηθούν διακομιστές Cloudflare και Google DNS over HTTPS για την εκτέλεση ασφαλών αναζητήσεων DNS.</value>
+  </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Τοπική προσωρινή αποθήκευση διακριτικών</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποιήστε αυτήν την επιλογή για την τοπική προσωρινή αποθήκευση των διακριτικών ελέγχου ταυτότητας, ώστε να μην χρειάζεται να κάνετε ξανά έλεγχο ταυτότητας με μη αυτόματο τρόπο μετά το κλείσιμο και το εκ νέου άνοιγμα της εφαρμογής. Τα διακριτικά ελέγχου ταυτότητας κρυπτογραφούνται στον δίσκο και καταργούνται κατά την απεγκατάσταση της εφαρμογής.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποιήστε αυτήν την επιλογή για την τοπική προσωρινή αποθήκευση των διακριτικών ελέγχου ταυτότητας, ώστε να μην χρειάζεται να κάνετε ξανά έλεγχο ταυτότητας με μη αυτόματο τρόπο μετά το κλείσιμο και το εκ νέου άνοιγμα της εφαρμογής. Τα διακριτικά ελέγχου ταυτότητας κρυπτογραφούνται στον δίσκο και καταργούνται κατά την απεγκατάσταση της εφαρμογής.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Εκκαθάριση τοπικής προσωρινής μνήμης</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κάντε εκκαθάριση των τοπικά προσωρινά αποθηκευμένων διακριτικών ελέγχου ταυτότητας. Αυτό θα απαιτήσει να κάνετε ξανά έλεγχο ταυτότητας με μη αυτόματο τρόπο την επόμενη φορά που θα χρησιμοποιήσετε την εφαρμογή.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κάντε εκκαθάριση των τοπικά προσωρινά αποθηκευμένων διακριτικών ελέγχου ταυτότητας. Αυτό θα απαιτήσει να κάνετε ξανά έλεγχο ταυτότητας με μη αυτόματο τρόπο την επόμενη φορά που θα χρησιμοποιήσετε την εφαρμογή.</value>
+  </data>
 </root>

@@ -6959,4 +6959,64 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AzureCloudEnvironmentComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Select the Cloud Environment to use for the Sign in operation.</value>
   </data>
+  <data name="ScanFirewallLogsButton.Content" xml:space="preserve">
+    <value>Scan Logs</value>
+  </data>
+  <data name="ScanFirewallLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Scan the Windows Firewall logs for blocked events. Dropped packet auditing must be enabled to generate the logs.</value>
+  </data>
+  <data name="ScanFirewallLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Scan the Windows Firewall logs for blocked events. Dropped packet auditing must be enabled to generate the logs.</value>
+  </data>
+  <data name="StartLiveMonitor" xml:space="preserve">
+    <value>Start Live Monitor</value>
+  </data>
+    <data name="StopLiveMonitor" xml:space="preserve">
+    <value>Stop Live Monitor</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Enable Packet Drop Auditing</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable Packet Drop Auditing so the system generates logs when packets are dropped or connections are blocked by the firewall.</value>
+  </data>
+  <data name="EnablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable Packet Drop Auditing so the system generates logs when packets are dropped or connections are blocked by the firewall.</value>
+  </data>
+    <data name="DisablePacketDropAuditingMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Disable Packet Drop Auditing</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Disable Packet Drop Auditing so the system stops generating logs when packets are dropped or connections are blocked by the firewall.</value>
+  </data>
+  <data name="DisablePacketDropAuditingMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Disable Packet Drop Auditing so the system stops generating logs when packets are dropped or connections are blocked by the firewall.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Resolve Destination Addresses</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Attempt to resolve the destination IP addresses to host names for blocked events. Cloudflare and Google DNS over HTTPS servers will be used to perform secure DNS lookups.</value>
+  </data>
+  <data name="ResolveDestinationAddressesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Attempt to resolve the destination IP addresses to host names for blocked events. Cloudflare and Google DNS over HTTPS servers will be used to perform secure DNS lookups.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Cache Tokens Locally</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable this option to cache the authentication tokens locally so that you won't have to manually authenticate again after you close and reopen the app. The authentication tokens are encrypted on disk and removed when the app is uninstalled.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable this option to cache the authentication tokens locally so that you won't have to manually authenticate again after you close and reopen the app. The authentication tokens are encrypted on disk and removed when the app is uninstalled.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Clear Local Cache</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear the locally cached authentication tokens. This will require you to manually authenticate again the next time you use the app.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Clear the locally cached authentication tokens. This will require you to manually authenticate again the next time you use the app.</value>
+  </data>
 </root>

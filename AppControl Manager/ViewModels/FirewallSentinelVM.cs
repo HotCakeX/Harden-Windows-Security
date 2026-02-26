@@ -94,7 +94,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		// Initialize the column manager for the Blocked Packets ListView
 		FirewallColumnManager = new ListViewColumnManager<FirewallEvent>(
 		[
-			new("TimeCreated", "Time", x => x.TimeCreated?.ToString(), useRawHeader: true),
+			new("TimeCreated", GlobalVars.GetStr("TimeCreatedHeader/Text"), x => x.TimeCreated?.ToString(), useRawHeader: true),
 			new("Application", "Application", x => x.Application, useRawHeader: true),
 			new("Direction", "Direction", x => x.Direction, useRawHeader: true),
 			new("Protocol", "Protocol", x => x.Protocol, useRawHeader: true),
@@ -1529,10 +1529,30 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		}
 	}
 
+	/// <summary>
+	/// Determines if the destination IP addresses should be resolved to their hostnames during log scanning.
+	/// </summary>
+	internal bool IsResolveDestinationAddressesEnabled { get; set => SP(ref field, value); }
+
 	internal bool BlockedPacketsScanProgressRingIsActive { get; set => SP(ref field, value); }
 	internal Visibility BlockedPacketsScanProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool FirewallEventsSectionElementsAreEnabled { get; set => SP(ref field, value); } = true;
+	internal bool FirewallEventsSectionElementsAreEnabled
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(IsScanLogsButtonEnabled));
+			}
+		}
+	} = true;
+
+	/// <summary>
+	/// Controls the enabled state of the Scan Logs button.
+	/// Mutually exclusive with Real-Time Monitoring.
+	/// </summary>
+	internal bool IsScanLogsButtonEnabled => FirewallEventsSectionElementsAreEnabled && !IsRealTimeMonitoring;
 
 	/// <summary>
 	/// Fetches the blocked packets logs and updates the UI.
@@ -1548,7 +1568,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 			BlockedPackets.Clear();
 			AllBlockedPackets.Clear();
 
-			List<FirewallEvent> events = await GetFirewallLogs.GetBlockedPackets();
+			List<FirewallEvent> events = await GetFirewallLogs.GetBlockedPackets(IsResolveDestinationAddressesEnabled);
 
 			AllBlockedPackets.AddRange(events);
 
@@ -1630,7 +1650,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	private static readonly FrozenDictionary<string, (string Label, Func<FirewallEvent, object?> Getter)> FirewallEventsColumnMappings = new Dictionary<string, (string Label, Func<FirewallEvent, object?> Getter)>()
 			{
-				{ "TimeCreated", ("Time Created", x => x.TimeCreated) },
+				{ "TimeCreated", (GlobalVars.GetStr("TimeCreatedHeader/Text"), x => x.TimeCreated) },
 				{ "Application", ("Application", x => x.Application) },
 				{ "Direction", ("Direction", x => x.Direction) },
 				{ "Protocol", ("Protocol", x => x.Protocol) },
@@ -1740,11 +1760,12 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 			if (SP(ref field, value))
 			{
 				ToggleRealTimeMonitoringState(value);
+				OnPropertyChanged(nameof(IsScanLogsButtonEnabled));
 			}
 		}
 	}
 
-	internal string RealTimeMonitoringButtonText => IsRealTimeMonitoring ? "Stop Live Monitor" : "Start Live Monitor";
+	internal string RealTimeMonitoringButtonText => IsRealTimeMonitoring ? GlobalVars.GetStr("StopLiveMonitor") : GlobalVars.GetStr("StartLiveMonitor");
 	internal string RealTimeMonitoringButtonIcon => IsRealTimeMonitoring ? "\uE71A" : "\uE768"; // Stop / Play icons
 
 	/// <summary>
@@ -1760,7 +1781,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				// Make sure auditing is enabled on the system first
 				await EnablePacketDropAuditing();
 
-				GetFirewallLogs.StartRealTimeMonitoring((fwEvent) =>
+				GetFirewallLogs.StartRealTimeMonitoring(IsResolveDestinationAddressesEnabled, (fwEvent) =>
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{

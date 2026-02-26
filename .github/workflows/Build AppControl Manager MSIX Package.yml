@@ -772,7 +772,7 @@ jobs:
           path: ${{ env.X64MSBuildLog_PATH }}
 
       - name: Uploading Artifact 3
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           retention-days: 1
           compression-level: 0

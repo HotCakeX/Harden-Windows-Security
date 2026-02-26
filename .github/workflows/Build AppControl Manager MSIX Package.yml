@@ -74,7 +74,7 @@ jobs:
 #
 
       - name: Check out the repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Building And Packaging the AppControl Manager
         id: main_buildOp

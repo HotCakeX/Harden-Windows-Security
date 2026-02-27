@@ -85,7 +85,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 				}
 				finally
 				{
-					_restoreLock.Release();
+					_ = _restoreLock.Release();
 				}
 			}
 

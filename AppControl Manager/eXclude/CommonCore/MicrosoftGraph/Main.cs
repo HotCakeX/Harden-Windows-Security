@@ -1693,24 +1693,7 @@ DeviceEvents
 			await AppCacheLock.WaitAsync();
 			try
 			{
-				// Unregister cache helpers to prevent memory leaks and file locking issues
-				foreach (KeyValuePair<(SignInMethods, AzureCloudInstance, bool), MsalCacheHelper> kvp in CacheHelpers)
-				{
-					try
-					{
-						if (AppCache.TryGetValue(kvp.Key, out IPublicClientApplication? app))
-						{
-							kvp.Value.UnregisterCache(app.UserTokenCache);
-						}
-					}
-					catch (Exception ex)
-					{
-						Logger.Write($"Failed to unregister MSAL cache helper: {ex.Message}");
-					}
-				}
-				CacheHelpers.Clear();
-
-				// Clean up MSAL apps and accounts from memory first to ensure no file locks or stale caches
+				// Clean up MSAL apps and accounts from memory and disk first to ensure native disk-purging hooks run
 				foreach (IPublicClientApplication app in AppCache.Values)
 				{
 					try
@@ -1726,6 +1709,23 @@ DeviceEvents
 						Logger.Write($"Failed to clear MSAL accounts for an app instance: {ex.Message}");
 					}
 				}
+
+				// Unregister cache helpers after accounts are removed to prevent memory leaks and file locking issues
+				foreach (KeyValuePair<(SignInMethods, AzureCloudInstance, bool), MsalCacheHelper> kvp in CacheHelpers)
+				{
+					try
+					{
+						if (AppCache.TryGetValue(kvp.Key, out IPublicClientApplication? app))
+						{
+							kvp.Value.UnregisterCache(app.UserTokenCache);
+						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Write($"Failed to unregister MSAL cache helper: {ex.Message}");
+					}
+				}
+				CacheHelpers.Clear();
 
 				// Completely clear the AppCache dictionary to prevent memory leaks
 				AppCache.Clear();

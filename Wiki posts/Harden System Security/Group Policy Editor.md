@@ -21,6 +21,7 @@ In addition to retrieving the system's effective machine policies, you can also 
 ## Edit Group Policy Values
 
 You can seamlessly edit the value of any loaded policy directly from the UI by right-clicking a policy and selecting **Edit**. The editor provides a rigorous, real-time input validation system tailored to the specific Registry Value Type of the policy:
+
 * **REG_DWORD & REG_QWORD**: Ensures the input is a valid 32-bit or 64-bit integer.
 * **REG_BINARY & REG_NONE**: Validates hexadecimal strings, filters invalid characters, and ensures an even number of characters.
 * **REG_MULTI_SZ**: Provides a multi-line text input that automatically handles null separators for easily editing string arrays.

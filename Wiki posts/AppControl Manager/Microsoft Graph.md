@@ -68,3 +68,13 @@ The displayed details for the active account include:
 * **Environment**: The Azure Cloud environment (Public or US Government) the account is authenticated against.
 
 <br>
+
+## Local Token Caching
+
+Use the `Cache Tokens Locally` checkbox before signing into your tenant in order to enable local caching of the authentication tokens for that specific tenant. If before signing in, the checkbox is not selected, the authentication tokens will only be stored in the app's memory and will be lost once the application is closed.
+
+Token caching helps you save time by not having to sign in every time you close and reopen the application, by encrypting and storing the authentication tokens securely on your local device. The exact location is in the App's own cache directory which is cleaned up automatically by the system when app itself is uninstalled.
+
+You can use the `Clear Local Cache` button to manually clear all locally cached tokens. This will log you out of all accounts that were signed in with the `Cache Tokens Locally` option enabled, and remove their authentication tokens from the application's memory and local storage.
+
+The encryption of the local cache is done via [DPAPI](https://learn.microsoft.com/dotnet/standard/security/how-to-use-data-protection) and current user's context. That means if the tokens are ever moved to another system then they won't be readable. They cannot be read by another user account on the same device either.

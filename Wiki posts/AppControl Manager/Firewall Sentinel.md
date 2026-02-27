@@ -76,6 +76,11 @@ Additionally, the feature supports a real-time stream of blocked connections dir
 
 To facilitate this, `Packet Drop Auditing` is automatically enabled on the system when viewing real-time logs. This setting is mandatory for capturing blocked packet data. You may also manually toggle this setting via the `Actions` menu.
 
+Use the "Resolve Destination Addresses" option to resolve the destination IP addresses to host names. This can help you identify the destination of blocked events more easily. However, it may increase the time it takes to scan logs, especially if there are many unique destination IP addresses. It alternates between Cloudflare and Google's DNS over HTTPS servers via their IP addresses. This provides 2 benefits:
+
+   * It will work even if system DNS in unavailable.
+   * It is secure and private as it does not leak DNS queries to third parties. Local or loopback IP addresses are automatically detected and not resolved.
+
 ## Notes and Technical Tips
 
 *   **Process Restart Requirement:** When authorizing a new third-party program in Firewall Sentinel, **if the application is currently running**, you must close and restart it. This ensures its files are re-analyzed and tagged correctly. If a program remains unable to connect to the Internet after authorization, it likely indicates that background processes or files associated with the application were not closed completely. In such instances, a system reboot will ensure all processes are terminated and correctly tagged upon the next startup.

@@ -240,28 +240,40 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
 
-                                <CheckBox x:Uid="CacheTokensLocallyCheckBox"
-                                          IsChecked="{x:Bind AppSettings.CacheAuthenticationTokensLocally, Mode=TwoWay}"
-                                          HorizontalAlignment="Center"
-                                          Margin="0,5,0,0"/>
+                                <Border CornerRadius="10"
+                                        Margin="0,5,0,0"
+                                        Padding="6,4"
+                                        BorderThickness="1"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        HorizontalAlignment="Center">
 
-                                <Button x:Uid="ClearLocalCacheButton"
+                                    <StackPanel Orientation="Vertical" Spacing="10" HorizontalAlignment="Center">
+
+                                        <CheckBox x:Uid="CacheTokensLocallyCheckBox"
+                                                  IsChecked="{x:Bind AppSettings.CacheAuthenticationTokensLocally, Mode=TwoWay}"
+                                                  HorizontalAlignment="Center"/>
+
+                                        <Button x:Uid="ClearLocalCacheButton"
                                         Click="{x:Bind Host.AuthCompanionCLS.ClearLocalCacheButton_Click}"
-                                        HorizontalAlignment="Center"
-                                        Margin="0,5,0,0">
-                                    <Button.ContentTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                                    <AnimatedIcon.Source>
-                                                        <animatedvisuals:TrashCan/>
-                                                    </AnimatedIcon.Source>
-                                                </AnimatedIcon>
-                                                <TextBlock Text="{x:Bind}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </Button.ContentTemplate>
-                                </Button>
+                                        HorizontalAlignment="Center">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                            <AnimatedIcon.Source>
+                                                                <animatedvisuals:TrashCan/>
+                                                            </AnimatedIcon.Source>
+                                                        </AnimatedIcon>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+
+                                    </StackPanel>
+
+                                </Border>
 
                             </StackPanel>
                         </controls:Case>

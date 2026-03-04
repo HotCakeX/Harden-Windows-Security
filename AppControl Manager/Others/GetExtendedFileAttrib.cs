@@ -16,6 +16,7 @@
 //
 
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
@@ -193,15 +194,8 @@ internal static partial class GetExtendedFileAttrib
 			{
 				string subBlock = $"\\StringFileInfo\\{locale}{enc}{resource}";
 
-				// Grab the length to safely instantiate the string
-				if (NativeMethods.VerQueryValueW(basePtr, subBlock, out nint buffer, out uint len) != 0 && buffer != IntPtr.Zero && len > 0)
-				{
-					ReadOnlySpan<char> valueSpan = new((void*)buffer, (int)len);
-					valueSpan = valueSpan.TrimEnd('\0');
-
-					// If the resulting string is empty, return the interned string.Empty to avoid allocating a new object on the heap
-					return valueSpan.IsEmpty ? string.Empty : new string(valueSpan);
-				}
+				if (NativeMethods.VerQueryValueW(basePtr, subBlock, out nint buffer, out _) != 0)
+					return Marshal.PtrToStringAuto(buffer);
 			}
 		}
 		return null;

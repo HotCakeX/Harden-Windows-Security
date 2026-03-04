@@ -98,6 +98,7 @@ internal static class LocalFilesScan
 			List<Task> tasks = new(scalability);
 
 			// Loop over each chunk of data
+			// Could use Parallel.ForEach here but the real time progress won't be as accurate as the current implementation
 			foreach (string[] chunk in SplitArrays)
 			{
 				// Run each chunk of data in a different thread

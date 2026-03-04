@@ -5555,4 +5555,22 @@ Fingerabdruck: {3}</value>
   <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Erstellen Sie einen Akku-Bericht für Ihr Gerät (sofern vorhanden). Er enthält detaillierte Informationen zu Akkunutzung, Stromverbrauch und Leistung.</value>
   </data>
+      <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Token lokal zwischenspeichern</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktivieren Sie diese Option, um die Authentifizierungstoken lokal zwischenzuspeichern, damit Sie sich nach dem Schließen und erneuten Öffnen der App nicht erneut manuell authentifizieren müssen. Die Authentifizierungstoken werden auf dem Datenträger verschlüsselt und bei der Deinstallation der App entfernt.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aktivieren Sie diese Option, um die Authentifizierungstoken lokal zwischenzuspeichern, damit Sie sich nach dem Schließen und erneuten Öffnen der App nicht erneut manuell authentifizieren müssen. Die Authentifizierungstoken werden auf dem Datenträger verschlüsselt und bei der Deinstallation der App entfernt.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Lokalen Cache leeren</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Löschen Sie die lokal zwischengespeicherten Authentifizierungstoken. Dies erfordert, dass Sie sich bei der nächsten Verwendung der App erneut manuell authentifizieren.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Löschen Sie die lokal zwischengespeicherten Authentifizierungstoken. Dies erfordert, dass Sie sich bei der nächsten Verwendung der App erneut manuell authentifizieren.</value>
+  </data>
 </root>

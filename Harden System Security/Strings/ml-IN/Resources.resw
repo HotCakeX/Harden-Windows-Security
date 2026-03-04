@@ -5555,4 +5555,22 @@
   <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>നിങ്ങളുടെ ഉപകരണത്തിനായി ഒരു ബാറ്ററി റിപ്പോർട്ട് ജനറേറ്റ് ചെയ്യുക (അതിന് ഒന്നുണ്ടെങ്കിൽ). ഇതിൽ നിങ്ങളുടെ ബാറ്ററി ഉപയോഗം, വാട്ടേജ്, പ്രകടനം എന്നിവയെക്കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ അടങ്ങിയിരിക്കുന്നു.</value>
   </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>ടോക്കണുകൾ പ്രാദേശികമായി കാഷെ ചെയ്യുക</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഓതന്റിക്കേഷൻ ടോക്കണുകൾ പ്രാദേശികമായി കാഷെ ചെയ്യാൻ ഈ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കുക, അതുവഴി ആപ്പ് അടച്ചുതുറക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യേണ്ടതില്ല. ഓതന്റിക്കേഷൻ ടോക്കണുകൾ ഡിസ്കിൽ എൻക്രിപ്റ്റ് ചെയ്ത് സൂക്ഷിക്കുകയും ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ നീക്കം ചെയ്യപ്പെടുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഓതന്റിക്കേഷൻ ടോക്കണുകൾ പ്രാദേശികമായി കാഷെ ചെയ്യാൻ ഈ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കുക, അതുവഴി ആപ്പ് അടച്ചുതുറക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യേണ്ടതില്ല. ഓതന്റിക്കേഷൻ ടോക്കണുകൾ ഡിസ്കിൽ എൻക്രിപ്റ്റ് ചെയ്ത് സൂക്ഷിക്കുകയും ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ നീക്കം ചെയ്യപ്പെടുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>ലോക്കൽ കാഷെ മായ്‌ക്കുക</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രാദേശികമായി കാഷെ ചെയ്ത ഓതന്റിക്കേഷൻ ടോക്കണുകൾ മായ്‌ക്കുക. അടുത്ത തവണ ആപ്പ് ഉപയോഗിക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യാൻ ഇത് ആവശ്യപ്പെടുന്നു.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രാദേശികമായി കാഷെ ചെയ്ത ഓതന്റിക്കേഷൻ ടോക്കണുകൾ മായ്‌ക്കുക. അടുത്ത തവണ ആപ്പ് ഉപയോഗിക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യാൻ ഇത് ആവശ്യപ്പെടുന്നു.</value>
+  </data>
 </root>

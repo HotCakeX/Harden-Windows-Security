@@ -1,13 +1,3 @@
-# Microsoft Graph and Signing In Improvements
+* Improved file enumeration performance.
 
-* You can now cache the authentication tokens locally by enabling the "Cache Tokens Locally" option Microsoft Graph button so that you won't have to manually authenticate again after you close and reopen the app. The authentication tokens are encrypted on disk and removed when the app is uninstalled. The token cache can only be read by the current user on the same system. If it was exfiltrated, the tokens would be useless to an attacker as they are encrypted and tied to the current user and system. You can clear the local authentication token cache via the provided button.
-
-* When navigating to different pages that utilize the Microsoft Graph button, the correct account based on the authentication context is automatically selected, improving the user experience. It was suggested on GitHub discussion by community members.
-
-# Firewall Sentinel Updates
-
-* The filter origin column now displays friendly names of the custom rules responsible for generating the blocked event. 
-
-* The "Scan Logs" and "Start Live Monitor" buttons are now mutually exclusive and only one of them can be used at a time which is the expected behavior.
-
-* For the Log scanning area, added an option under the Actions menu called "Resolve Destination Addresses". If on (off by default), it will attempt to resolve the destination IP addresses to host names. This can help you identify the destination of blocked events more easily.
+* Fixed an encoding issue with certain files' properties.

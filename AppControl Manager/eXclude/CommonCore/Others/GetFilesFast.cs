@@ -198,8 +198,25 @@ internal static class FileUtility
 								return false;
 							}
 
-							// If the file has the correct extension or wildcard was used
-							if (extensions.Contains("*") || extensions.Contains(Path.GetExtension(entry.ToFullPath())))
+							/*
+							 
+							 Make sure the file has the correct extension
+							 This 100% works: Path.GetExtension(entry.FileName)
+							 But the problem is the FrozenSet<string> which doesn't support ReadOnlySpan<char> for .Contains method.
+							 So to lower allocations in this hot path and avoid calling ToFullPath() method, we need to use Span pased lookups that is as fast as FrozenSet or faster.
+
+							 Another thing:
+
+							 previously we were doing this: "if (extensions.Contains(Path.GetExtension(entry.ToFullPath())))"
+
+							 But "if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))" should be faster, because:
+							 1. ToString() uses Span-based overload which is extremely fast.
+							 2. We only use ToString() on the file's extension, so realistically only 2-4 chars.
+							 3. We avoid allocating a long string for the full path via "ToFullPath()" method which we don't need.
+							 4. The "Path.GetExtension" method also uses the Span-based overload which is better than String-based one.
+
+							*/
+							if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
 							{
 								return true;
 							}
@@ -254,8 +271,8 @@ internal static class FileUtility
 										return false;
 									}
 
-									// If the file has the correct extension or wildcard was used
-									if (extensions.Contains("*") || extensions.Contains(Path.GetExtension(entry.ToFullPath())))
+									// Make sure the file has the correct extension
+									if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
 									{
 										return true;
 									}
@@ -294,33 +311,19 @@ internal static class FileUtility
 		// If files are provided, process them
 		if (files is { Count: > 0 })
 		{
-
 			// Ensure the files aren't already in the directories that were scanned
 			IReadOnlyCollection<string> filesToUse = directories is not null && directories.Count > 0 ?
 				TestFilePath(directories, files) :
 				files;
 
-			// If user provided wildcard then add all files without checking their extensions
-			if (extensions.Contains("*"))
+			// Make sure the files have the correct extension
+			foreach (string file in filesToUse)
 			{
-				foreach (string file in filesToUse)
-				{
-					cToken?.ThrowIfCancellationRequested();
+				cToken?.ThrowIfCancellationRequested();
 
+				if (extensions.Contains(Path.GetExtension(file)))
+				{
 					bc.Add(file);
-				}
-			}
-			// If user provided no extensions to filter by or provided extensions that are not wildcard
-			else
-			{
-				foreach (string file in filesToUse)
-				{
-					cToken?.ThrowIfCancellationRequested();
-
-					if (extensions.Contains(Path.GetExtension(file)))
-					{
-						bc.Add(file);
-					}
 				}
 			}
 		}

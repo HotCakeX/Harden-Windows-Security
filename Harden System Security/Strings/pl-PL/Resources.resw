@@ -5555,4 +5555,22 @@ Odcisk Palca: {3}</value>
   <data name="GenerateBatteryReportButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wygeneruj raport o baterii dla swojego urządzenia (jeśli ją posiada). Zawiera on szczegółowe informacje na temat zużycia baterii, poboru mocy i wydajności.</value>
   </data>
+    <data name="CacheTokensLocallyCheckBox.Content" xml:space="preserve">
+    <value>Buforuj tokeny lokalnie</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz tę opcję, aby buforować tokeny uwierzytelniania lokalnie, dzięki czemu nie będzie konieczne ponowne ręczne uwierzytelnianie po zamknięciu i ponownym otwarciu aplikacji. Tokeny uwierzytelniania są szyfrowane na dysku i usuwane podczas odinstalowywania aplikacji.</value>
+  </data>
+  <data name="CacheTokensLocallyCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz tę opcję, aby buforować tokeny uwierzytelniania lokalnie, dzięki czemu nie będzie konieczne ponowne ręczne uwierzytelnianie po zamknięciu i ponownym otwarciu aplikacji. Tokeny uwierzytelniania są szyfrowane na dysku i usuwane podczas odinstalowywania aplikacji.</value>
+  </data>
+  <data name="ClearLocalCacheButton.Content" xml:space="preserve">
+    <value>Wyczyść lokalną pamięć podręczną</value>
+  </data>
+  <data name="ClearLocalCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyczyść lokalnie buforowane tokeny uwierzytelniania. Będzie to wymagało ponownego ręcznego uwierzytelnienia przy następnym użyciu aplikacji.</value>
+  </data>
+  <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyczyść lokalnie buforowane tokeny uwierzytelniania. Będzie to wymagało ponownego ręcznego uwierzytelnienia przy następnym użyciu aplikacji.</value>
+  </data>
 </root>

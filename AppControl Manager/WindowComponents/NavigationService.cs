@@ -319,46 +319,6 @@ internal sealed class NavigationService
 		}
 	}
 
-#if APP_CONTROL_MANAGER
-	/// <summary>
-	/// Event handler for the sidebar base policy browse button
-	/// </summary>
-	internal async void SidebarBasePolicyBrowseButton_Click()
-	{
-		try
-		{
-			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
-			await AddPoliciesFromPaths(selectedFilePaths);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-	}
-
-	/// <summary>
-	/// Adds policies to the sidebar library from a list of file paths.
-	/// </summary>
-	/// <param name="filePaths">The paths of the files to add.</param>
-	internal async Task AddPoliciesFromPaths(List<string> filePaths)
-	{
-		if (filePaths.Count > 0)
-		{
-			foreach (string selectedFile in filePaths)
-			{
-				await Task.Run(() =>
-				{
-					mainWindowVM.AssignToSidebar(ViewModels.PolicyEditorVM.ParseFilePathAsPolicyRepresent(selectedFile));
-				});
-			}
-
-			// Show the animated icons on the currently visible page
-			AffectPagesAnimatedIconsVisibilitiesEx(true);
-		}
-	}
-
-#endif
-
 	/// <summary>
 	/// Used to refresh the Settings page but re-navigating to it so we can display the new language after user changes app language.
 	/// Settings page is the only point where language can be changed for the app.

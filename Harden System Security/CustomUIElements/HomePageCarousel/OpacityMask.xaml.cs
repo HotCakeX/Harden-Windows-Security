@@ -167,7 +167,11 @@ internal sealed partial class OpacityMaskView : ContentControl
 	}
 
 	// On control unload, ensure we tear down composition resources and clear the child visual
-	private void OpacityMaskView_Unloaded(object sender, RoutedEventArgs e) => CleanupComposition();
+	private void OpacityMaskView_Unloaded(object sender, RoutedEventArgs e)
+	{
+		Unloaded -= OpacityMaskView_Unloaded;
+		CleanupComposition();
+	}
 
 	/// <summary>
 	/// Clears the ElementCompositionPreview child visual and disposes all composition resources created by this control.

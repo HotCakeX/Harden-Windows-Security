@@ -77,6 +77,7 @@ internal sealed partial class Main : ViewModelBase
 		EncryptionScopePoliciesLibrary = ReadValue(nameof(EncryptionScopePoliciesLibrary), EncryptionScopePoliciesLibrary);
 		FirewallSentinelPinnedPolicyID = ReadValue(nameof(FirewallSentinelPinnedPolicyID), FirewallSentinelPinnedPolicyID);
 		CacheAuthenticationTokensLocally = ReadValue(nameof(CacheAuthenticationTokensLocally), CacheAuthenticationTokensLocally);
+		CustomSidebarPoliciesLibraryCacheLocation = ReadValue(nameof(CustomSidebarPoliciesLibraryCacheLocation), CustomSidebarPoliciesLibraryCacheLocation);
 	}
 
 	/// <summary>
@@ -582,4 +583,19 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// A custom directory where the Sidebar's Policies Library will use as the local cache instead of the default one.
+	/// </summary>
+	internal string CustomSidebarPoliciesLibraryCacheLocation
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(CustomSidebarPoliciesLibraryCacheLocation), field);
+			}
+		}
+	} = string.Empty;
+
 }

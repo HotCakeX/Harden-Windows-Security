@@ -44,10 +44,13 @@
 //    SOFTWARE
 //
 
+using System.Numerics;
 using CommunityToolkit.WinUI.Animations;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
 
 namespace HardenSystemSecurity.CustomUIElements.HomePageCarousel;
@@ -66,7 +69,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(ImageUrlProperty, value);
 	}
 
-	public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null, (d, e) => ((HeaderTile)d).HeaderChanged((string)e.OldValue, (string)e.NewValue)));
+	public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null, (d, e) => ((HeaderTile)d).HeaderChanged()));
 
 	public string Header
 	{
@@ -98,7 +101,23 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(IsSelectedProperty, value);
 	}
 
-	internal HeaderTile() => DefaultStyleKey = typeof(HeaderTile);
+	internal HeaderTile()
+	{
+		Visual visual = ElementCompositionPreview.GetElementVisual(this);
+		visual.Scale = new Vector3(0.8f);
+
+		Vector2 center = new(0.5f, 0.5f);
+		const string expression = "Vector2(this.Target.Size.X * X, this.Target.Size.Y * Y)";
+		ExpressionAnimation animation = visual.Compositor.CreateExpressionAnimation(expression);
+
+		animation.SetScalarParameter("X", center.X);
+		animation.SetScalarParameter("Y", center.Y);
+
+		visual.StopAnimation("CenterPoint.XY");
+		visual.StartAnimation("CenterPoint.XY", animation);
+
+		DefaultStyleKey = typeof(HeaderTile);
+	}
 
 	private void IsSelectedChanged(object oldValue, object newValue)
 	{
@@ -121,11 +140,5 @@ internal sealed partial class HeaderTile : Button
 		}
 	}
 
-	private void HeaderChanged(string oldValue, string newValue)
-	{
-		if (!string.IsNullOrEmpty(Header))
-		{
-			AutomationProperties.SetName(this, Header);
-		}
-	}
+	private void HeaderChanged() => AutomationProperties.SetName(this, Header);
 }

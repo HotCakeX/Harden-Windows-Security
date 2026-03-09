@@ -90,7 +90,7 @@
                     <!-- Progress Ring -->
                     <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
                                   Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}"
-                                  VerticalAlignment="Center"                                  
+                                  VerticalAlignment="Center"
                                   Margin="0,0,8,0" />
 
                     <!-- Load Services -->
@@ -138,7 +138,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Margin="8,0">
-                    <FontIcon Glyph="&#xE74C;"                              
+                    <FontIcon Glyph="&#xE74C;"
                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                               VerticalAlignment="Center"/>
                     <TextBlock VerticalAlignment="Center">
@@ -161,7 +161,7 @@
                     <TextBox x:Uid="SearchBoxTextBox"
                              VerticalAlignment="Center"
                              BorderThickness="0"
-                             Background="Transparent" 
+                             Background="Transparent"
                              Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <AppBarSeparator VerticalAlignment="Center" Margin="0,4"/>

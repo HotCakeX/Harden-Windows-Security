@@ -3,13 +3,10 @@
     x:Class="HardenSystemSecurity.CustomUIElements.HomePageCarousel.HeaderCarousel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"    
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     Loaded="{x:Bind UserControl_Loaded}"
-    Unloaded="{x:Bind UserControl_Unloaded}"
-    mc:Ignorable="d">
+    Unloaded="{x:Bind UserControl_Unloaded}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>

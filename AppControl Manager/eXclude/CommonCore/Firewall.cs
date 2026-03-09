@@ -277,7 +277,7 @@ internal static class FirewallWmiHelper
 				}
 				_ = NativeMethods.VariantClear(ref valName);
 
-				// B. Read DisplayName 
+				// B. Read DisplayName
 				string? displayName = null;
 				queryHr = obj.Get("DisplayName", 0, out VARIANT valDisplay, IntPtr.Zero, IntPtr.Zero);
 				if (queryHr == 0 && valDisplay.vt == 8 && valDisplay.bstrVal != IntPtr.Zero) // 8 == VT_BSTR
@@ -286,7 +286,7 @@ internal static class FirewallWmiHelper
 				}
 				_ = NativeMethods.VariantClear(ref valDisplay);
 
-				// C. Safely Fallback to ElementName 
+				// C. Safely Fallback to ElementName
 				if (string.IsNullOrWhiteSpace(displayName))
 				{
 					queryHr = obj.Get("ElementName", 0, out VARIANT valElement, IntPtr.Zero, IntPtr.Zero);

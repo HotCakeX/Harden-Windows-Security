@@ -23,7 +23,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CommonCore.IncrementalCollection;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -447,15 +446,13 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Smooth scrolling the list to bring the specified index into view, centering vertically
 	/// </summary>
-	/// <param name="listViewBase">Represents the base list view that contains the items to be scrolled into view.</param>
 	/// <param name="listView">Specifies the ListView that displays the items and is affected by the scrolling action.</param>
+	/// <param name="listViewScrollViewer">Specifies the ScrollViewer of the ListView.</param>
 	/// <param name="index">Indicates the position of the item to be centered vertically in the ListView.</param>
 	/// <param name="disableAnimation">Controls whether the scrolling action should be animated or occur instantly.</param>
 	/// <param name="scrollIfVisible">Determines if the scrolling should occur even if the item is already visible.</param>
-	/// <param name="additionalHorizontalOffset">Allows for an extra horizontal adjustment when positioning the item in view.</param>
-	/// <param name="additionalVerticalOffset">Enables an additional vertical adjustment when centering the item in the view.</param>
 	/// <returns>Returns a Task representing the asynchronous operation of scrolling the item into view.</returns>
-	internal static async Task SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(this ListViewBase listViewBase, ListView listView, int index, bool disableAnimation = false, bool scrollIfVisible = true, int additionalHorizontalOffset = 0, int additionalVerticalOffset = 0)
+	internal static async Task SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(ListView listView, ScrollViewer listViewScrollViewer, int index, bool disableAnimation = false, bool scrollIfVisible = true)
 	{
 
 		// Only perform the scroll if the setting is enabled
@@ -478,29 +475,23 @@ internal static partial class ListViewHelper
 			return;
 		}
 
-		if (index > (listViewBase.Items.Count - 1))
+		if (index > (listView.Items.Count - 1))
 		{
-			index = listViewBase.Items.Count - 1;
+			index = listView.Items.Count - 1;
 		}
 
-		if (index < -listViewBase.Items.Count)
+		if (index < -listView.Items.Count)
 		{
-			index = -listViewBase.Items.Count;
+			index = -listView.Items.Count;
 		}
 
-		index = (index < 0) ? (index + listViewBase.Items.Count) : index;
+		index = (index < 0) ? (index + listView.Items.Count) : index;
 
 		bool isVirtualizing = default;
 		double previousXOffset = default;
 		double previousYOffset = default;
 
-		ScrollViewer? scrollViewer = listViewBase.FindDescendant<ScrollViewer>();
-		SelectorItem? selectorItem = listViewBase.ContainerFromIndex(index) as SelectorItem;
-
-		if (scrollViewer is null)
-		{
-			return;
-		}
+		SelectorItem? selectorItem = listView.ContainerFromIndex(index) as SelectorItem;
 
 		// If selectorItem is null then the panel is virtualized.
 		// So in order to get the container of the item we need to scroll to that item first and then use ContainerFromIndex
@@ -508,8 +499,8 @@ internal static partial class ListViewHelper
 		{
 			isVirtualizing = true;
 
-			previousXOffset = scrollViewer.HorizontalOffset;
-			previousYOffset = scrollViewer.VerticalOffset;
+			previousXOffset = listViewScrollViewer.HorizontalOffset;
+			previousYOffset = listViewScrollViewer.VerticalOffset;
 
 			TaskCompletionSource<object?> tcs = new();
 
@@ -517,34 +508,34 @@ internal static partial class ListViewHelper
 
 			try
 			{
-				scrollViewer.ViewChanged += ViewChanged;
-				listViewBase.ScrollIntoView(listViewBase.Items[index], ScrollIntoViewAlignment.Leading);
+				listViewScrollViewer.ViewChanged += ViewChanged;
+				listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
 				_ = await tcs.Task;
 			}
 			finally
 			{
-				scrollViewer.ViewChanged -= ViewChanged;
+				listViewScrollViewer.ViewChanged -= ViewChanged;
 			}
 
-			selectorItem = (SelectorItem)listViewBase.ContainerFromIndex(index);
+			selectorItem = (SelectorItem)listView.ContainerFromIndex(index);
 		}
 
-		GeneralTransform transform = selectorItem.TransformToVisual((UIElement)scrollViewer.Content);
+		GeneralTransform transform = selectorItem.TransformToVisual((UIElement)listViewScrollViewer.Content);
 		Point position = transform.TransformPoint(new Point(0, 0));
 
 		// Scrolling back to previous position
 		if (isVirtualizing)
 		{
-			await scrollViewer.ChangeViewAsync(previousXOffset, previousYOffset, zoomFactor: null, disableAnimation: true);
+			await listViewScrollViewer.ChangeViewAsync(previousXOffset, previousYOffset, zoomFactor: null, disableAnimation: true);
 		}
 
-		double listViewBaseWidth = listViewBase.ActualWidth;
+		double listViewBaseWidth = listView.ActualWidth;
 		double selectorItemWidth = selectorItem.ActualWidth;
-		double listViewBaseHeight = listViewBase.ActualHeight;
+		double listViewBaseHeight = listView.ActualHeight;
 		double selectorItemHeight = selectorItem.ActualHeight;
 
-		previousXOffset = scrollViewer.HorizontalOffset;
-		previousYOffset = scrollViewer.VerticalOffset;
+		previousXOffset = listViewScrollViewer.HorizontalOffset;
+		previousYOffset = listViewScrollViewer.VerticalOffset;
 
 		double minXPosition = position.X - listViewBaseWidth + selectorItemWidth;
 		double minYPosition = position.Y - listViewBaseHeight + selectorItemHeight;
@@ -564,11 +555,11 @@ internal static partial class ListViewHelper
 		// Center it vertically
 		else
 		{
-			finalXPosition = previousXOffset + additionalHorizontalOffset;
-			finalYPosition = maxYPosition - ((listViewBaseHeight - selectorItemHeight) / 2.0) + additionalVerticalOffset;
+			finalXPosition = previousXOffset;
+			finalYPosition = maxYPosition - ((listViewBaseHeight - selectorItemHeight) / 2.0);
 		}
 
-		await scrollViewer.ChangeViewAsync(finalXPosition, finalYPosition, zoomFactor: null, disableAnimation);
+		await listViewScrollViewer.ChangeViewAsync(finalXPosition, finalYPosition, zoomFactor: null, disableAnimation);
 	}
 
 	/// <summary>

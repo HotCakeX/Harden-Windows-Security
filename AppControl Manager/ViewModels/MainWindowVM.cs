@@ -28,6 +28,7 @@ using AnimatedVisuals;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.WindowComponents;
+using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -429,17 +430,29 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		if (GlobalVars.PackageSource is 1)
 			UnelevatedPages.Add(typeof(Pages.UpdatePage));
 
-		// If Persistent library is enabled, populate the policies library on the Sidebar with the local cache content
 		// Fire and forget since this runs at startup and we can't let it slow us down
+		_ = InitialPoliciesLibrarySetup();
+	}
+
+	// Commands that need to run during app startup and when the location of the Policies Library cache changes.
+	internal async Task InitialPoliciesLibrarySetup()
+	{
+		// If Persistent library is enabled, populate the policies library on the Sidebar with the local cache content
 		if (AppSettings.PersistentPoliciesLibrary)
 		{
-			_ = Task.Run(async () =>
+			await Task.Run(async () =>
 			{
 				await PoliciesLibraryCacheLock.WaitAsync();
 				try
 				{
+					await Dispatcher.EnqueueAsync(() =>
+					{
+						// Make sure the sidebar library is cleared first
+						SidebarPoliciesLibrary.Clear();
+					});
+
 					// Get all of the files in the cache first
-					IEnumerable<string> currentFiles = Directory.EnumerateFiles(SidebarPoliciesLibraryCache);
+					IEnumerable<string> currentFiles = Directory.EnumerateFiles(GetSidebarPoliciesLibraryCacheLocation());
 
 					foreach (string file in currentFiles)
 					{
@@ -534,7 +547,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 								UniqueObjID = Guid.Parse(uniqueID)
 							};
 
-							_ = Dispatcher.TryEnqueue(() =>
+							await Dispatcher.EnqueueAsync(() =>
 							{
 								SidebarPoliciesLibrary.Add(policyToAdd);
 							});
@@ -558,9 +571,97 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Local cache of the Sidebar's policies library where policies are kept for persistence.
+	/// The default Local cache of the Sidebar's policies library where policies are kept for persistence.
 	/// </summary>
-	internal static readonly string SidebarPoliciesLibraryCache = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "PoliciesLibraryCache")).FullName;
+	private static readonly string DefaultSidebarPoliciesLibraryCache = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "PoliciesLibraryCache")).FullName;
+
+	// Returns the Policies Library Cache directory to be used at runtime.
+	// Will return the default path as fallback if any problem happens.
+	internal string GetSidebarPoliciesLibraryCacheLocation()
+	{
+		try
+		{
+			if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation))
+			{
+				DirectoryInfo customDirPath = Directory.CreateDirectory(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation);
+
+				return customDirPath.FullName;
+			}
+		}
+		catch (Exception ex)
+		{
+			// If an error occured, we want to print it on the Sidebar's infobar and continue using our own guaranteed path.
+			MainInfoBar.WriteError(ex);
+		}
+
+		return DefaultSidebarPoliciesLibraryCache;
+	}
+
+	// Moves the cache directory from the default location to the user-defined location.
+	internal async Task SetSidebarPoliciesLibraryCacheLocationToCustom()
+	{
+		try
+		{
+			await PoliciesLibraryCacheLock.WaitAsync();
+			await Task.Run(() =>
+			{
+				// We can only proceed if there is a user-defined location in the first place.
+				if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation))
+				{
+					DirectoryInfo customDirPath = Directory.CreateDirectory(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation);
+
+					// Enumerate all files in the default cache directory
+					IEnumerable<string> files = Directory.EnumerateFiles(DefaultSidebarPoliciesLibraryCache);
+					foreach (string file in files)
+					{
+						string fileName = Path.GetFileName(file);
+						string pathToCopyTo = Path.Combine(customDirPath.FullName, fileName);
+						File.Move(file, pathToCopyTo, true);
+					}
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_ = PoliciesLibraryCacheLock.Release();
+		}
+	}
+
+	// Moves the cache directory from the custom user-defined location to the default location.
+	internal async Task SetSidebarPoliciesLibraryCacheLocationToDefault()
+	{
+		try
+		{
+			await PoliciesLibraryCacheLock.WaitAsync();
+			await Task.Run(() =>
+			{
+				// The user-defined directory must exist so we can move files from it. We shouldn't try to create the directory.
+				if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation) && Directory.Exists(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation))
+				{
+					// Enumerate all files in the custom user-defined cache directory
+					IEnumerable<string> files = Directory.EnumerateFiles(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation);
+					foreach (string file in files)
+					{
+						string fileName = Path.GetFileName(file);
+						string pathToCopyTo = Path.Combine(DefaultSidebarPoliciesLibraryCache, fileName);
+						File.Move(file, pathToCopyTo, true);
+					}
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_ = PoliciesLibraryCacheLock.Release();
+		}
+	}
 
 	/// <summary>
 	/// Visibility for the ItemsRepeater in the sidebar
@@ -733,7 +834,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			{
 				await Task.Run(() =>
 				{
-					string filePath = Path.Combine(SidebarPoliciesLibraryCache, $"{policy.UniqueObjID}.xml");
+					string filePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), $"{policy.UniqueObjID}.xml");
 
 					XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy.PolicyObj);
 
@@ -792,7 +893,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			await Task.Run(() =>
 			{
 				// Enumerate all files in the cache directory
-				IEnumerable<string> files = Directory.EnumerateFiles(SidebarPoliciesLibraryCache);
+				IEnumerable<string> files = Directory.EnumerateFiles(GetSidebarPoliciesLibraryCacheLocation());
 				foreach (string file in files)
 				{
 					try

@@ -61,6 +61,19 @@ If using Administrator Protection mode in the OS, it's recommended to switch to 
 
 You can restore policies from a backup directory containing one or more XML/CIP/P7B/BIN App Control policy files by simply dragging all of the files and dropping them on the Sidebar's Policies Library (only works when the app is running unelevated).
 
+### Cache Location
+
+By default, the location of the Policies Library cache on disk is in the app's internal OS-designated directory which is automatically cleared during app uninstallation. You can choose a custom location to be used as the Policies Library cache by using the **Manage Cache Location** button under the **Actions** menu. Once you press that button, you will be presented with multiple options:
+
+* **Browse and Set**: Browse for and select a directory to use as the custom location for the policies library cache. All of the policies from the default location will be moved to this new location.
+
+* **Open**: Open the selected custom policies library cache location in the file explorer.
+
+* **Clear**: Move all of the policies from the custom cache location to the default location and then clear the selected custom cache path.
+
+> [!TIP]\
+> Being able to change the Policies Library cache location on disk can come in handy if you, for instance, intend to sync the policy files with OneDrive, GitHub and so on.
+
 ### Assigning Policies From the Library to Different Section of the App
 
 Pages within the AppControl Manager that require a policy automatically recognize when there is any policy in the library. As you navigate to these pages, subtle indicators appear <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/AugmentationIndicator.gif" width="25">, prompting you to open the Sidebar and quickly assign a policy to these sections.

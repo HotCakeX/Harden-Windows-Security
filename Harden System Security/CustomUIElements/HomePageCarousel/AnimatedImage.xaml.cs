@@ -67,26 +67,20 @@ internal sealed partial class AnimatedImage : UserControl
 		set => SetValue(ImageUrlProperty, value);
 	}
 
-	public AnimatedImage() => this.InitializeComponent();
+	internal AnimatedImage() => InitializeComponent();
 
 	private void AnimatedImage_Unloaded(object sender, RoutedEventArgs e)
 	{
-		if (selectAnimation != null)
-		{
-			selectAnimation.Completed -= SelectAnimation_Completed;
-			selectAnimation = null;
-		}
+		selectAnimation?.Completed -= SelectAnimation_Completed;
+		selectAnimation = null;
 	}
 
 	private void IsImageChanged(Uri oldValue, Uri newValue)
 	{
-		BottomImage.Source = new BitmapImage(this.ImageUrl);
+		BottomImage.Source = new BitmapImage(ImageUrl);
 		BottomImage.Opacity = 1;
 
-		if (selectAnimation != null)
-		{
-			selectAnimation.Completed -= SelectAnimation_Completed;
-		}
+		selectAnimation?.Completed -= SelectAnimation_Completed;
 
 		selectAnimation = [new OpacityAnimation() { From = 1, To = 0, Duration = TimeSpan.FromMilliseconds(800) }];
 		selectAnimation.Completed += SelectAnimation_Completed;
@@ -97,11 +91,9 @@ internal sealed partial class AnimatedImage : UserControl
 	{
 		try
 		{
-			TopImage.Source = new BitmapImage(this.ImageUrl);
+			TopImage.Source = new BitmapImage(ImageUrl);
 			TopImage.Opacity = 1;
 		}
-		catch
-		{
-		}
+		catch { }
 	}
 }

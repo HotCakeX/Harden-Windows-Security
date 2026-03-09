@@ -199,7 +199,7 @@ internal static class FileUtility
 							}
 
 							/*
-							 
+
 							 Make sure the file has the correct extension
 							 This 100% works: Path.GetExtension(entry.FileName)
 							 But the problem is the FrozenSet<string> which doesn't support ReadOnlySpan<char> for .Contains method.

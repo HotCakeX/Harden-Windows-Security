@@ -36,6 +36,7 @@ using System.Collections.Generic;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml.Input;
 using CommonCore.ToolKits;
+using AppControlManager.CustomUIElements;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -1329,7 +1330,7 @@ internal sealed partial class MainWindow : Window
 			{
 				await Task.Run(() =>
 				{
-					IEnumerable<string> currentFiles = Directory.EnumerateFiles(MainWindowVM.SidebarPoliciesLibraryCache, $"{policyContext.UniqueObjID}.xml", enumerationOptionsForPoliciesLibraryRemoval);
+					IEnumerable<string> currentFiles = Directory.EnumerateFiles(ViewModel.GetSidebarPoliciesLibraryCacheLocation(), $"{policyContext.UniqueObjID}.xml", enumerationOptionsForPoliciesLibraryRemoval);
 					foreach (string file in currentFiles)
 					{
 						File.Delete(file);
@@ -1378,7 +1379,7 @@ internal sealed partial class MainWindow : Window
 			if (ViewModel.AppSettings.PersistentPoliciesLibrary)
 			{
 				// Get all of the files in the cache first
-				IEnumerable<string> currentFiles = Directory.EnumerateFiles(MainWindowVM.SidebarPoliciesLibraryCache);
+				IEnumerable<string> currentFiles = Directory.EnumerateFiles(ViewModel.GetSidebarPoliciesLibraryCacheLocation());
 
 				// Loop over all of the policies in the in-memory library
 				foreach (PolicyFileRepresent item in ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary)
@@ -1525,7 +1526,7 @@ internal sealed partial class MainWindow : Window
 					}
 				}
 
-				await Nav.AddPoliciesFromPaths(validFiles);
+				await AddPoliciesFromPaths(validFiles);
 			}
 		}
 		catch (Exception ex)
@@ -1543,12 +1544,56 @@ internal sealed partial class MainWindow : Window
 	{
 		try
 		{
-			await ViewModels.ViewModelBase.OpenFileInDefaultFileHandler(MainWindowVM.SidebarPoliciesLibraryCache);
+			await ViewModels.ViewModelBase.OpenFileInDefaultFileHandler(ViewModel.GetSidebarPoliciesLibraryCacheLocation());
 		}
 		catch (Exception ex)
 		{
 			ViewModel.MainInfoBar.WriteError(ex);
 		}
+	}
+
+	/// <summary>
+	/// Event handler for the sidebar base policy browse button
+	/// </summary>
+	private async void SidebarBasePolicyBrowseButton_Click()
+	{
+		try
+		{
+			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
+			await AddPoliciesFromPaths(selectedFilePaths);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Adds policies to the sidebar library from a list of file paths.
+	/// </summary>
+	/// <param name="filePaths">The paths of the files to add.</param>
+	private async Task AddPoliciesFromPaths(List<string> filePaths)
+	{
+		if (filePaths.Count > 0)
+		{
+			foreach (string selectedFile in filePaths)
+			{
+				await Task.Run(() =>
+				{
+					ViewModel.AssignToSidebar(ViewModels.PolicyEditorVM.ParseFilePathAsPolicyRepresent(selectedFile));
+				});
+			}
+
+			// Show the animated icons on the currently visible page
+			Nav.AffectPagesAnimatedIconsVisibilitiesEx(true);
+		}
+	}
+
+	// Opens a content dialog to display options to user for managing the cache location of the Policies Library.
+	private async void ManageCustomPoliciesLibraryCacheLocation_Click()
+	{
+		using CustomPoliciesLibraryCacheLocationManagerDialog customDialog = new();
+		_ = await customDialog.ShowAsync();
 	}
 
 	#endregion

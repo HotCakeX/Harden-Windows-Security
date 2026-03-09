@@ -1,3 +1,1 @@
-* Improved file enumeration performance.
-
-* Fixed an encoding issue with certain files' properties.
+* Added the ability to choose a custom path for the Policies Library cache location. By default, the location of the Policies Library cache on disk is in the app's internal OS-designated directory which is automatically cleared during app uninstallation. You can choose a custom location to be used as the Policies Library cache by using the "Manage Cache Location" button under the "Actions" menu on the Sidebar. Once you press that button, you will be presented with multiple options. Being able to change the Policies Library cache location on disk can come in handy if you, for instance, intend to sync the policy files with OneDrive, GitHub and so on. It was a feature request from the GitHub community's discussion: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1084

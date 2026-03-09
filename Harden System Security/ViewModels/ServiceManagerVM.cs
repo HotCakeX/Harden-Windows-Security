@@ -1821,7 +1821,7 @@ internal sealed partial class ServiceSecurityInformation :
 		return 0; // S_OK
 	}
 
-	public int OpenElevatedEditor(IntPtr hWnd, uint uPage) => unchecked((int)0x80004001); // E_NOTIMPL	
+	public int OpenElevatedEditor(IntPtr hWnd, uint uPage) => unchecked((int)0x80004001); // E_NOTIMPL
 
 	public unsafe int GetEffectivePermission(
 		Guid* pguidObjectType, IntPtr pUserSid, IntPtr pszServerName, IntPtr pSD,

@@ -61,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.69.0</FileVersion>
+		<FileVersion>2.0.70.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>
@@ -109,13 +109,13 @@
 		<NuGetAudit>false</NuGetAudit>
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 
-        <!--
+		<!--
              https://learn.microsoft.com/visualstudio/code-quality/disable-code-analysis
              This project utilizes extensive and comprehensive analyzers that can take a lot of time to complete.
              So we disable them for debug/design time and only run them during release configuration.
 		-->
 
-        <RunAnalyzers>false</RunAnalyzers>
+		<RunAnalyzers>false</RunAnalyzers>
 
 	</PropertyGroup>
 
@@ -196,13 +196,12 @@
 		<!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
 		<PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
-		<PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.2.250604" />
 		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.82.1" />
 		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.82.1" />
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.82.1" />
-        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
+		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.3" />
 		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.3" />
@@ -227,8 +226,8 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.260209005" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.251231004" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260204000" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2124" />
-        <PackageReference Include="System.Numerics.Tensors" Version="10.0.3" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2124" />
+		<PackageReference Include="System.Numerics.Tensors" Version="10.0.3" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.251221100">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -21,13 +21,12 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
-using Microsoft.UI.Dispatching;
 
 namespace CommonCore.MicrosoftGraph;
 
 internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T>, IEnumerable<T>, IDisposable
 {
-	// SupportsRecursion is critical here to prevent LockRecursionException if the UI thread 
+	// SupportsRecursion is critical here to prevent LockRecursionException if the UI thread
 	// tries to read the collection while a write lock is held.
 	private readonly ReaderWriterLockSlim _lock = new(LockRecursionPolicy.SupportsRecursion);
 

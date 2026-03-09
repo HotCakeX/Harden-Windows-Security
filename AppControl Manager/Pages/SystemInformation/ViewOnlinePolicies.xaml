@@ -9,7 +9,6 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 

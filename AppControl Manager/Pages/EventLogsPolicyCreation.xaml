@@ -3,7 +3,6 @@
     x:Class="AppControlManager.Pages.EventLogsPolicyCreation"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
@@ -131,16 +130,28 @@
                                                     SelectedIndex="{x:Bind ViewModel.SelectedCreationMethod, Mode=TwoWay}">
                                         <CCToolKit:SegmentedItem x:Uid="AddToPolicySegmentedItem"
                                                             Tag="AddToPolicy"
-                                                            Width="160"
-                                                            Icon="{ui:FontIcon Glyph=&#xEB49;}" />
+                                                            Width="160">
+                                            <CCToolKit:SegmentedItem.Icon>
+                                                <FontIcon Glyph="&#xEB49;" />
+                                            </CCToolKit:SegmentedItem.Icon>
+                                        </CCToolKit:SegmentedItem>
+
                                         <CCToolKit:SegmentedItem x:Uid="BasePolicyFileSegmentedItem"
                                                             Tag="BasePolicyFile"
-                                                            Width="160"
-                                                            Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                                            Width="160">
+                                            <CCToolKit:SegmentedItem.Icon>
+                                                <FontIcon Glyph="&#xEB49;" />
+                                            </CCToolKit:SegmentedItem.Icon>
+                                        </CCToolKit:SegmentedItem>
+
                                         <CCToolKit:SegmentedItem x:Uid="BasePolicyGUIDSegmentedItem"
                                                             Tag="BaseGUID"
-                                                            Width="160"
-                                                            Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                                            Width="160">
+                                            <CCToolKit:SegmentedItem.Icon>
+                                                <FontIcon Glyph="&#xEB49;" />
+                                            </CCToolKit:SegmentedItem.Icon>
+                                        </CCToolKit:SegmentedItem>
+
                                     </CCToolKit:Segmented>
                                     <controls:SwitchPresenter Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
 

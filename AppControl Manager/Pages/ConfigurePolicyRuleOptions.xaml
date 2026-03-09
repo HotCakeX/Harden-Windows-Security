@@ -2,7 +2,6 @@
     x:Class="AppControlManager.Pages.ConfigurePolicyRuleOptions"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -111,8 +110,10 @@
 
                 <controls:SettingsExpander x:Uid="PolicyRuleExpander"
                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                           IsExpanded="{x:Bind ViewModel.SettingsExpanderIsExpanded, Mode=TwoWay}"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+                                           IsExpanded="{x:Bind ViewModel.SettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE71D;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
                         <Button x:Uid="ApplyThePolicyRuleOptionsChangesButton"
@@ -309,8 +310,10 @@
 
                 </controls:SettingsExpander>
 
-                <controls:SettingsCard x:Uid="PolicyTemplateSettingCard"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xE799;}">
+                <controls:SettingsCard x:Uid="PolicyTemplateSettingCard">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE799;" />
+                    </controls:SettingsCard.HeaderIcon>
 
                     <controls:WrapPanel Orientation="Horizontal">
 

@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -21,8 +20,10 @@
             <!-- Allow Microsoft -->
             <controls:SettingsExpander
                 x:Uid="AllowMicrosoftSettings"
-                IsExpanded="{x:Bind ViewModel.AllowMicrosoftSettingsIsExpanded, Mode=TwoWay}"
-                HeaderIcon="{ui:FontIcon Glyph=&#xF0EF;}">
+                IsExpanded="{x:Bind ViewModel.AllowMicrosoftSettingsIsExpanded, Mode=TwoWay}">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xF0EF;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -147,8 +148,10 @@
             <!-- Default Windows -->
             <controls:SettingsExpander
                 x:Uid="DefaultWindowsSettings"
-                IsExpanded="{x:Bind ViewModel.DefaultWindowsSettingsIsExpanded, Mode=TwoWay}"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEA18;}">
+                IsExpanded="{x:Bind ViewModel.DefaultWindowsSettingsIsExpanded, Mode=TwoWay}">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEA18;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -275,8 +278,10 @@
             <!-- Signed and Reputable -->
             <controls:SettingsExpander
                 IsExpanded="{x:Bind ViewModel.SignedAndReputableSettingsIsExpanded, Mode=TwoWay}"
-                x:Uid="SignedAndReputableSettings"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEA0D;}">
+                x:Uid="SignedAndReputableSettings">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEA0D;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -398,8 +403,10 @@
             <!-- Microsoft Recommended Driver Block Rules -->
             <controls:SettingsExpander
                 IsExpanded="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsIsExpanded, Mode=TwoWay}"
-                x:Uid="RecommendedDriverBlockRulesSettings"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}">
+                x:Uid="RecommendedDriverBlockRulesSettings">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEC1B;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -492,8 +499,11 @@
             <controls:SettingsExpander
                 x:Name="RecommendedUserModeBlockRulesSettings"
                 x:Uid="RecommendedUserModeBlockRulesSettings"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}"
                 IsExpanded="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsIsExpanded, Mode=TwoWay}">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEC1B;" />
+                </controls:SettingsExpander.HeaderIcon>
+
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
                         BorderThickness="0"
@@ -559,8 +569,10 @@
             <!-- Strict Kernel-mode policy -->
             <controls:SettingsExpander
                 IsExpanded="{x:Bind ViewModel.StrictKernelModesSettingsIsExpanded, Mode=TwoWay}"
-                x:Uid="StrictKernelModePolicySection"
-                HeaderIcon="{ui:FontIcon Glyph=&#xE945;}">
+                x:Uid="StrictKernelModePolicySection">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE945;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -645,8 +657,10 @@
             <!-- RMM Blocking -->
             <controls:SettingsExpander
                 IsExpanded="{x:Bind ViewModel.RMMBlockingSettingsIsExpanded, Mode=TwoWay}"
-                x:Uid="RMMBlockingSection"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEA14;}">
+                x:Uid="RMMBlockingSection">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEA14;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -724,8 +738,10 @@
             <!-- Downloads Defense Measure -->
             <controls:SettingsExpander
                 IsExpanded="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsIsExpanded, Mode=TwoWay}"
-                x:Uid="DownloadsDefenseMeasureSection"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEC9C;}">
+                x:Uid="DownloadsDefenseMeasureSection">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEC9C;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -804,8 +820,10 @@
             <!-- Dangerous Script Hosts Blocking -->
             <controls:SettingsExpander
                 IsExpanded="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsIsExpanded, Mode=TwoWay}"
-                x:Uid="DangerousScriptHostsBlockingSection"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEA44;}">
+                x:Uid="DangerousScriptHostsBlockingSection">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEA44;" />
+                </controls:SettingsExpander.HeaderIcon>
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2

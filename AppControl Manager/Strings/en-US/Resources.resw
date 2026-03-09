@@ -7019,4 +7019,53 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Clear the locally cached authentication tokens. This will require you to manually authenticate again the next time you use the app.</value>
   </data>
+  <!--NEW-->
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Manage Cache Location</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Manage the location of the Policies Library cache on your system.</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Manage the location of the Policies Library cache on your system.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.Title" xml:space="preserve">
+    <value>Manage Policies Library Cache</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.CloseButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Move all of the policies from the custom cache location to the default location and then clear the selected custom cache path.</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Move all of the policies from the custom cache location to the default location and then clear the selected custom cache path.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the selected custom policies library cache location in the file explorer.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the selected custom policies library cache location in the file explorer.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Browse And Set</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for and select a directory to use as the custom location for the policies library cache. All of the policies from the default location will be moved to this new location.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for and select a directory to use as the custom location for the policies library cache. All of the policies from the default location will be moved to this new location.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheTextBox.PlaceholderText" xml:space="preserve">
+    <value>Selected path will appear here</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
+    <value>Custom Cache Location</value>
+  </data>
 </root>

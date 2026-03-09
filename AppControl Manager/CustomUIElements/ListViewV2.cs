@@ -82,22 +82,21 @@ internal sealed partial class ListViewV2 : ListView
 			}
 
 			ListView lv = (ListView)sender;
+			ScrollViewer? sv = lv.FindScrollViewer();
 
-			// Early exit when there is no selection or the list is empty.
+			// Early exit when there is no selection, the list is empty or ScrollViewer couldn't be found for the ListView.
 			// This prevents container lookups and ScrollIntoView calls.
-			if (lv.Items.Count == 0 || lv.SelectedIndex < 0)
+			if (lv.Items.Count == 0 || lv.SelectedIndex < 0 || sv is null)
 			{
 				return;
 			}
 
 			await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(
-					listViewBase: lv,
 					listView: lv,
+					listViewScrollViewer: sv,
 					index: lv.SelectedIndex,
 					disableAnimation: false,
-					scrollIfVisible: true,
-					additionalHorizontalOffset: 0,
-					additionalVerticalOffset: 0
+					scrollIfVisible: true
 				);
 		}
 		catch (Exception ex)

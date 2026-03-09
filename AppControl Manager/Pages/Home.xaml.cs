@@ -235,7 +235,7 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		}
 	}
 
-	private void OnUnloadedDisposeResources(object sender, RoutedEventArgs e)
+	private void OnUnloadedDisposeResources()
 	{
 		DetachRenderHook();
 
@@ -1008,6 +1008,6 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		_disposed = true;
 
 		// This detaches render hooks, stops timers, and disposes all CanvasRenderTargets, etc.
-		OnUnloadedDisposeResources(this, new RoutedEventArgs());
+		OnUnloadedDisposeResources();
 	}
 }

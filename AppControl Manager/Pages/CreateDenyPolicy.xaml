@@ -494,8 +494,10 @@
 
                 <!-- Files and Folders Scan -->
                 <controls:SettingsExpander x:Uid="CreateDenyPolicyFilesAndFoldersSettingsExpander"
-                                           IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+                                           IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE71D;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"
@@ -717,9 +719,12 @@
                         </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
-                                           IsClickEnabled="True" IsActionIconVisible="True"
-                                           Click="{x:Bind ViewModel.FilesAndFoldersViewFileDetailsSettingsCard_Click}"/>
+                                               IsClickEnabled="True" IsActionIconVisible="True"
+                                               Click="{x:Bind ViewModel.FilesAndFoldersViewFileDetailsSettingsCard_Click}">
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE83B;" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
 
                     </controls:SettingsExpander.Items>
 
@@ -729,9 +734,11 @@
                 <!-- Package Family Name (PFN) -->
                 <controls:SettingsExpander x:Uid="CreateDenyPolicyPFNSettingsExpander"
                                            IsEnabled="{x:Bind ViewModel.IsElevated}"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}"
                                            Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}"
                                            IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8F1;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"
@@ -918,8 +925,10 @@
 
                 <!-- Custom File Path Rules -->
                 <controls:SettingsExpander x:Uid="DenyPolicyCustomPatternBasedFileRuleSettingsExpander"
-                                           IsExpanded="{x:Bind ViewModel.CustomFilePathRulesSettingsExpanderIsExpanded, Mode=TwoWay}"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE8A1;}">
+                                           IsExpanded="{x:Bind ViewModel.CustomFilePathRulesSettingsExpanderIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8A1;" />
+                    </controls:SettingsExpander.HeaderIcon>
 
                     <controls:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"

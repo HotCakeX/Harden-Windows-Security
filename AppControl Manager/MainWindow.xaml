@@ -5,8 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:siPolicy="using:AppControlManager.SiPolicy"
@@ -704,24 +702,29 @@
                                                             <MicaBackdrop Kind="Base"/>
                                                         </MenuFlyout.SystemBackdrop>
 
-                                                        <MenuFlyoutItem x:Uid="AddPoliciesMenuFlyoutSubItem" Click="{x:Bind Nav.SidebarBasePolicyBrowseButton_Click}">
+                                                        <MenuFlyoutItem x:Uid="AddPoliciesMenuFlyoutSubItem" Click="{x:Bind SidebarBasePolicyBrowseButton_Click}">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xE78C;" />
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
-                                                        <MenuFlyoutItem x:Uid="RemoveAllMenuFlyoutSubItem" Click="ClearPoliciesLibrary">
+                                                        <MenuFlyoutItem x:Uid="RemoveAllMenuFlyoutSubItem" Click="{x:Bind ClearPoliciesLibrary}">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xE70F;" />
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
-                                                        <MenuFlyoutItem x:Uid="BackupAllMenuFlyoutSubItem" Click="BackupLibrary">
+                                                        <MenuFlyoutItem x:Uid="BackupAllMenuFlyoutSubItem" Click="{x:Bind BackupLibrary}">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xEDA2;" />
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
-                                                        <MenuFlyoutItem x:Uid="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem" Click="OpenPoliciesLibraryCacheLocation">
+                                                        <MenuFlyoutItem x:Uid="OpenPoliciesLibraryCacheLocationMenuFlyoutSubItem" Click="{x:Bind OpenPoliciesLibraryCacheLocation}">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xE8DA;" />
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+                                                        <MenuFlyoutItem x:Uid="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem" Click="{x:Bind ManageCustomPoliciesLibraryCacheLocation_Click}">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="&#xE912;" />
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
                                                     </MenuFlyout>

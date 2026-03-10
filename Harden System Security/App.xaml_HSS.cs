@@ -271,7 +271,7 @@ public partial class App : Application
 
 		MainWindow = new MainWindow();
 
-		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(GlobalVars.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
+		MainWindowVM.SetCaptionButtonsFlowDirection(Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection));
 
 		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
 		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(GlobalVars.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings

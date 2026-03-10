@@ -10,15 +10,7 @@
     x:Uid="AddKeyProtectorContentDialog"
     DefaultButton="Close"
     IsPrimaryButtonEnabled="True"
-    PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
-    Style="{ThemeResource DefaultContentDialogStyle}"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
-
-    <customUI:ContentDialogV2.Resources>
-        <ResourceDictionary>
-            <x:Double x:Key="ContentDialogMaxWidth">1200</x:Double>
-        </ResourceDictionary>
-    </customUI:ContentDialogV2.Resources>
+    PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}">
 
     <Grid RowSpacing="12" Padding="4">
         <Grid.RowDefinitions>

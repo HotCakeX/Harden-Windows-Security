@@ -610,10 +610,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			}
 			else if (!errorsOccurred)
 			{
-				FilesAndFoldersInfoBar.WriteSuccess(string.Format(
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					FilesAndFoldersInfoBar.WriteSuccess(string.Format(
 					GlobalVars.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
-					FilesAndFoldersSupplementalPolicyName
-				));
+					FilesAndFoldersSupplementalPolicyName));
+				}
+				else
+				{
+					FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
+
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
 			}
 
@@ -939,10 +946,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (!errorsOccurred)
 			{
-				CertificatesBasedInfoBar.WriteSuccess(string.Format(
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					CertificatesBasedInfoBar.WriteSuccess(string.Format(
 					GlobalVars.GetStr("SuccessfullyCreatedCertificatePolicyMessage"),
-					CertificatesBasedSupplementalPolicyName
-				));
+					CertificatesBasedSupplementalPolicyName));
+				}
+				else
+				{
+					CertificatesBasedInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 
 				CertificatesInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -1106,7 +1119,14 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (!errorsOccurred)
 			{
-				ISGInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedISGBasedSupplementalPolicyMessage"));
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					ISGInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedISGBasedSupplementalPolicyMessage"));
+				}
+				else
+				{
+					ISGInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 
 				ISGInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -1463,7 +1483,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			if (!ErrorsOccurred)
 			{
 				StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
-				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedStrictKernelModePolicyMessage"));
+
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedStrictKernelModePolicyMessage"));
+				}
+				else
+				{
+					StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 			}
 
 			StrictKernelModeElementsAreEnabled = true;
@@ -2062,7 +2090,14 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			}
 			else if (!errorsOccurred)
 			{
-				PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPFNSupplementalPolicyMessage"));
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPFNSupplementalPolicyMessage"));
+				}
+				else
+				{
+					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 
 				PFNInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -2413,7 +2448,14 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			}
 			else if (!errorsOccurred)
 			{
-				CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPatternBasedFileRuleMessage"));
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPatternBasedFileRuleMessage"));
+				}
+				else
+				{
+					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 
 				CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}

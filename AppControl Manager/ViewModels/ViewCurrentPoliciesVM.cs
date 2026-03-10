@@ -814,8 +814,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
-		if (lv is null) return;
-
 		if (CiPolicyInfoPropertyMappings.TryGetValue(key, out var map))
 		{
 			// TElement = CiPolicyInfo, copy just that one property

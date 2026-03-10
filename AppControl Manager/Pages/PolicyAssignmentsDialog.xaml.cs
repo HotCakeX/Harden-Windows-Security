@@ -36,7 +36,6 @@ internal sealed partial class PolicyAssignmentsDialog : ContentDialogV2, INotify
 		InitializeComponent();
 		_policy = policy;
 		_viewModel = viewModel;
-		FlowDirection = Enum.Parse<FlowDirection>(viewModel.AppSettings.ApplicationGlobalFlowDirection);
 	}
 
 	private readonly CiPolicyInfo _policy;

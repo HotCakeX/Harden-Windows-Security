@@ -23,7 +23,7 @@ using Windows.Media.Playback;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.ApplicationModel.UserActivities;
-using CommunityToolkit.WinUI;
+using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using CommonCore.AppSettings;

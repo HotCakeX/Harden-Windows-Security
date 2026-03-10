@@ -155,7 +155,7 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 	}
 
 	/// <summary>
-	/// Internal method to load data. Assumes the semaphore is already held.
+	/// Internal method to load data. Assumes the semaphore is already held by the caller.
 	/// Contains core logic shared by <see cref="LoadAdditionalItemsAsync"/> and <see cref="ForceReloadAsync"/>.
 	/// </summary>
 	/// <returns>Number of items loaded.</returns>
@@ -258,7 +258,7 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 	/// This API is intended for scenarios where the logical dataset is fully recomputed externally
 	/// (e.g., a global sort of the backing list) and the bound collection should reflect it atomically.
 	/// </remarks>
-	public async Task BulkReplaceAsync(List<TDataType> items)
+	internal async Task BulkReplaceAsync(List<TDataType> items)
 	{
 		// Serialize this replace with incremental loads, refreshes, and other replaces.
 		// Using the same semaphore guarantees no overlapping mutations (prevents reentrancy exceptions).
@@ -338,38 +338,6 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 	private void BaseRaiseReset() => base.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
 	/// <summary>
-	/// Atomically replaces the contents of this collection under the same semaphore used by incremental loads.
-	/// This guarantees no mutation overlaps (no "modify during CollectionChanged" reentrancy).
-	/// </summary>
-	/// <param name="items">The new items to set (may be empty).</param>
-	internal async Task ReplaceAllExclusiveAsync(List<TDataType> items)
-	{
-		// Serialize with any other load/refresh/replace operations using the same semaphore.
-		await LoadingMeowTex.WaitAsync();
-		try
-		{
-			// Check if disposed while waiting for the semaphore
-			if (_isDisposed) return;
-
-			// Suppress per-item notifications; emit a single Reset at the end.
-			using (BeginBulkUpdate())
-			{
-				// Clear and re-populate
-				ClearItems();
-
-				foreach (TDataType item in CollectionsMarshal.AsSpan(items))
-				{
-					Items.Add(item); // suppressed notification
-				}
-			}
-		}
-		finally
-		{
-			_ = LoadingMeowTex.Release();
-		}
-	}
-
-	/// <summary>
 	/// Releases all resources used by the incremental collection.
 	/// </summary>
 	public void Dispose()
@@ -389,7 +357,7 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 	// Clears current items, resets paging counters, marks additional items available,
 	// then immediately loads the first page so UI shows fresh "page 1" post-sort.
 	// Safe to call from UI thread; avoids deadlock by NOT calling LoadAdditionalItemsAsync (which re-acquires the semaphore).
-	public async Task ForceReloadAsync()
+	internal async Task ForceReloadAsync()
 	{
 		// Serialize with any other load/refresh/reload operations.
 		await LoadingMeowTex.WaitAsync();

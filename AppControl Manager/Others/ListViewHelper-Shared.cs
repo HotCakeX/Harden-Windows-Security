@@ -405,15 +405,12 @@ internal static partial class ListViewHelper
 	/// <param name="lw">The ListView whose SelectedItem will be used.</param>
 	internal static void CopyToClipboard<TElement>(
 		Func<TElement, string?> getProperty,
-		ListView lw)
+		ListView? lw)
 	{
-		if (lw.SelectedItem is TElement selected)
+		if (lw?.SelectedItem is TElement selected)
 		{
 			string? propertyValue = getProperty(selected);
-			if (propertyValue is not null)
-			{
-				ClipboardManagement.CopyText(propertyValue);
-			}
+			ClipboardManagement.CopyText(propertyValue);
 		}
 	}
 

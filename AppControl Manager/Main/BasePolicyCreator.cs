@@ -660,6 +660,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
 		}
 
+		// Reset PolicyID and BasePolicyID
+		policyObj = SetCiPolicyInfo.Set(policyObj, true, null, null);
+
 		// If it is to be deployed
 		if (deploy)
 		{
@@ -733,6 +736,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			.ToList()
 			.ForEach(x => x.FilePath = pathToUse);
 
+		// Reset PolicyID and BasePolicyID
+		policyObj = SetCiPolicyInfo.Set(policyObj, true, null, null);
+
 		// If it is to be deployed
 		if (deploy)
 		{
@@ -763,6 +769,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			// Add the audit mode rule option to the policy
 			policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
 		}
+
+		// Reset PolicyID and BasePolicyID
+		policyObj = SetCiPolicyInfo.Set(policyObj, true, null, null);
 
 		// If it is to be deployed
 		if (deploy)

@@ -769,7 +769,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				Content = GlobalVars.GetStr("OSLogsDeletionContentDialogMsg"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("OK"),
-				FlowDirection = Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -805,7 +804,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				Content = GlobalVars.GetStr("OSLogsDeletionContentDialogMsg"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("OK"),
-				FlowDirection = Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection),
 				DefaultButton = ContentDialogButton.Close
 			};
 

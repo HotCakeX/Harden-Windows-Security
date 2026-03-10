@@ -133,7 +133,7 @@
         <customUI:ListViewV2 Grid.Row="1"
                              RegistryKey="DenyPolicy_FilesAndFolders_ScanResults"
                              Loaded="{x:Bind ViewModel.LVController.ListView_Loaded}"
-                             Unloaded="{x:Bind ViewModel.LVController.ListView_Unloaded}"
+                             Unloaded="{x:Bind ViewModel.LVController.CleanupBindings}"
                              ContainerContentChanging="{x:Bind ViewModel.LVController.ListView_ContainerContentChanging}"
                              SelectionMode="Extended"
                              ItemsSource="{x:Bind ViewModel.LVController.ObservableSource, Mode=OneWay}">

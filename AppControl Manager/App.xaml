@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"

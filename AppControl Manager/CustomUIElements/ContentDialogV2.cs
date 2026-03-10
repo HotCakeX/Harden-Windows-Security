@@ -96,6 +96,10 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			RequestedTheme = GetRequestedTheme();
 			CornerRadius = DialogCorner;
 			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"];
+			FlowDirection = Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection);
+
+			// https://github.com/microsoft/microsoft-ui-xaml/issues/424
+			Resources["ContentDialogMaxWidth"] = 2000;
 
 			// Immediately disable the default ContentDialog shadow by setting the Translation property
 			Translation = ZeroVector;

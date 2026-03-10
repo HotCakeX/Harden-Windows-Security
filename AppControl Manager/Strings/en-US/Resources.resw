@@ -7068,4 +7068,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
     <value>Custom Cache Location</value>
   </data>
+  <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
+    <value>Successfully updated the selected policy by adding new rules to it.</value>
+  </data>
 </root>

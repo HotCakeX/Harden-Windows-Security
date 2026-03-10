@@ -287,9 +287,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 				},
 				PrimaryButtonText = "Delete Original",
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -420,9 +418,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 					Content = contentPanel,
 					PrimaryButtonText = "Delete All",
 					CloseButtonText = GlobalVars.GetStr("Cancel"),
-					DefaultButton = ContentDialogButton.Close,
-					Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-					FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+					DefaultButton = ContentDialogButton.Close
 				};
 
 				ContentDialogResult result = await dialog.ShowAsync();
@@ -513,9 +509,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 				Content = "Are you sure you want to delete all duplicate photos? This action cannot be undone.",
 				PrimaryButtonText = "Yes, Delete All",
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -1172,9 +1166,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 			Title = titleBlock,
 			Content = contentGrid,
 			CloseButtonText = "Close",
-			DefaultButton = ContentDialogButton.Close,
-			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-			FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			DefaultButton = ContentDialogButton.Close
 		};
 
 		// Only add Delete button if it is a duplicate

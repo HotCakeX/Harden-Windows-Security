@@ -282,8 +282,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
 
-		if (lv is null) return;
-
 		if (SimulationOutputPropertyMappings.TryGetValue(key, out var map))
 		{
 			// TElement = SimulationOutput, copy just that one property

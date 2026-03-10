@@ -799,9 +799,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				Content = string.Format(GlobalVars.GetStr("ImportFirewallRulesWarning"), Path.GetFileName(fileLocation)),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("ImportButtonText"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -843,9 +841,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				Content = GlobalVars.GetStr("RestoreLocalFirewallRulesWarning"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("RestoreDefaultsButtonText"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -887,9 +883,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				Content = GlobalVars.GetStr("DeleteAllLocalFirewallRulesWarning"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("DeleteAllButtonText"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -931,9 +925,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				Content = GlobalVars.GetStr("DeleteAllGPOFirewallRulesWarning"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("DeleteAllButtonText"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();

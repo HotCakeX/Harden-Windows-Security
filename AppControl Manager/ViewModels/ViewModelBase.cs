@@ -380,8 +380,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		OpenInFileExplorerCore(lv);
 	}
 
-	internal static void OpenInFileExplorer(ListView? lv) => OpenInFileExplorerCore(lv);
-
 	private static void OpenInFileExplorerCore(ListView? lv)
 	{
 		if (lv is null) return;

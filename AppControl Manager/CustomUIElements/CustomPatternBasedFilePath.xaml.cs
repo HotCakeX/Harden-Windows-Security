@@ -22,9 +22,8 @@ using Microsoft.UI.Xaml.Controls;
 namespace AppControlManager.CustomUIElements;
 
 // https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
-internal sealed partial class CustomPatternBasedFilePath : ContentDialog
+internal sealed partial class CustomPatternBasedFilePath : ContentDialogV2
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
 
 	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [];
 
@@ -66,14 +65,8 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 	internal CustomPatternBasedFilePath()
 	{
 		PopulateFilePathPatternExamplesCollection();
-
 		InitializeComponent();
-
-		XamlRoot = App.MainWindow?.Content.XamlRoot;
-
 		CustomPatternBasedFilePathListView.ItemsSource = FilePathPatternExamplesCollection;
-
-		RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
 	}
 }
 

@@ -241,9 +241,7 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 			},
 			PrimaryButtonText = "Remove All Metadata",
 			CloseButtonText = GlobalVars.GetStr("Cancel"),
-			DefaultButton = ContentDialogButton.Close,
-			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-			FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			DefaultButton = ContentDialogButton.Close
 		};
 
 		ContentDialogResult result = await dialog.ShowAsync();

@@ -9,14 +9,7 @@
     x:Uid="SigningDetailsDialog"
     PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
     IsPrimaryButtonEnabled="False"
-    DefaultButton="Primary"
-    Style="{ThemeResource DefaultContentDialogStyle}"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
-
-    <customUI:ContentDialogV2.Resources>
-        <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/424 -->
-        <x:Double x:Key="ContentDialogMaxWidth">2000</x:Double>
-    </customUI:ContentDialogV2.Resources>
+    DefaultButton="Primary">
 
     <ScrollView>
 

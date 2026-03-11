@@ -7,14 +7,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     DefaultButton="Close"
     IsEnabled="{x:Bind AreElementsEnabled, Mode=OneWay}"
-    x:Uid="CustomPoliciesLibraryCacheLocationManagerDialog"
-    Style="{ThemeResource DefaultContentDialogStyle}"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
-
-    <customUI:ContentDialogV2.Resources>
-        <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/424 -->
-        <x:Double x:Key="ContentDialogMaxWidth">2000</x:Double>
-    </customUI:ContentDialogV2.Resources>
+    x:Uid="CustomPoliciesLibraryCacheLocationManagerDialog">
 
     <ScrollView>
 

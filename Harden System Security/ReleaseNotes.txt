@@ -3,3 +3,5 @@
 * When navigating to different pages that utilize the Microsoft Graph button, the correct account based on the authentication context is automatically selected, improving the user experience. It was suggested on GitHub discussion by community members.
 
 * Improved file enumeration performance.
+
+* Updated dependencies to the latest versions.

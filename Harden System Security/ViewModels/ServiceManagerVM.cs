@@ -1151,9 +1151,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				},
 				PrimaryButtonText = "Yes, I'm Sure.",
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -1237,9 +1235,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				},
 				PrimaryButtonText = "Yes, I'm Sure.",
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -1340,9 +1336,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				},
 				PrimaryButtonText = "Delete",
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();

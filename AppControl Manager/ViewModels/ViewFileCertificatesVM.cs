@@ -287,8 +287,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.View_File_Certificates);
 
-		if (lv is null) return;
-
 		if (FileCertificateInfoColPropertyMappings.TryGetValue(key, out var map))
 		{
 			// TElement = FileCertificateInfoCol, copy just that one property

@@ -413,10 +413,6 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 		}
 
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Deployment_IntuneGroupsListView);
-		if (lv is null)
-		{
-			return;
-		}
 
 		ListViewHelper.CopyToClipboard<IntuneGroupItemListView>(g => mapping.Getter(g)?.ToString(), lv);
 	}

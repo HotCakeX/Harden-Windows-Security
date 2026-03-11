@@ -840,9 +840,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				Content = GlobalVars.GetStr("BitLockerDecryptingSelectedVolumeBody"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("DecryptMenuFlyoutItem/Text"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			// Show the dialog and wait for user response
@@ -949,9 +947,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				Content = GlobalVars.GetStr("BitLockerResumeSelectedVolumeBody"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				PrimaryButtonText = GlobalVars.GetStr("ResumeMenuFlyoutItem/Text"),
-				DefaultButton = ContentDialogButton.Close,
-				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
-				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+				DefaultButton = ContentDialogButton.Close
 			};
 
 			// Show the dialog and wait for user response

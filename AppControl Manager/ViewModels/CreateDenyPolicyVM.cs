@@ -445,7 +445,14 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			}
 			else if (!errorsOccurred)
 			{
-				FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.GetStr("DenyPolicyCreatedSuccessfully") + filesAndFoldersDenyPolicyName + "'");
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.GetStr("DenyPolicyCreatedSuccessfully") + filesAndFoldersDenyPolicyName + "'");
+				}
+				else
+				{
+					FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -851,7 +858,14 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			}
 			else if (!errorsOccurred)
 			{
-				PFNInfoBar.WriteSuccess(GlobalVars.GetStr("DenyPolicyCreated"));
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("DenyPolicyCreated"));
+				}
+				else
+				{
+					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 
 				PFNInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -1151,7 +1165,14 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			}
 			else if (!errorsOccurred)
 			{
-				CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage"));
+				if (OperationModeComboBoxSelectedIndex is 0)
+				{
+					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage"));
+				}
+				else
+				{
+					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+				}
 
 				CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}

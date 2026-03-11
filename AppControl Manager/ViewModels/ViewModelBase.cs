@@ -23,7 +23,7 @@ using Windows.Media.Playback;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.ApplicationModel.UserActivities;
-using CommunityToolkit.WinUI;
+using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using CommonCore.AppSettings;
@@ -379,8 +379,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewKey);
 		OpenInFileExplorerCore(lv);
 	}
-
-	internal static void OpenInFileExplorer(ListView? lv) => OpenInFileExplorerCore(lv);
 
 	private static void OpenInFileExplorerCore(ListView? lv)
 	{

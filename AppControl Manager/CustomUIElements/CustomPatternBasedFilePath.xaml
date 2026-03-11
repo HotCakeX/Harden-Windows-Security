@@ -1,4 +1,4 @@
-<ContentDialog
+<customUI:ContentDialogV2
     x:Class="AppControlManager.CustomUIElements.CustomPatternBasedFilePath"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,17 +8,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     x:Uid="CustomPatternBasedFilePathsDialog"
     IsPrimaryButtonEnabled="False"
-    DefaultButton="Primary"
-    BorderThickness="1"
-    CornerRadius="8"
-    Style="{ThemeResource DefaultContentDialogStyle}"
-    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
-
-    <ContentDialog.Resources>
-        <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/424 -->
-        <x:Double x:Key="ContentDialogMaxWidth">900</x:Double>
-    </ContentDialog.Resources>
+    DefaultButton="Close">
 
     <Grid>
 
@@ -101,4 +91,4 @@
 
     </Grid>
 
-</ContentDialog>
+</customUI:ContentDialogV2>

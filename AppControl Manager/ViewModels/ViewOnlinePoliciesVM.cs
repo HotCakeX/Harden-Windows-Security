@@ -513,8 +513,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Online_Deployed_Policies);
 
-		if (lv is null) return;
-
 		if (ViewCurrentPoliciesVM.CiPolicyInfoPropertyMappings.TryGetValue(key, out var map))
 		{
 			// TElement = CiPolicyInfo, copy just that one property

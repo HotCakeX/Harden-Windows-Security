@@ -81,7 +81,7 @@ internal sealed partial class ListViewIncrementalController(
 		await _viewOperationLock.WaitAsync();
 		try
 		{
-			await ObservableSource.ReplaceAllExclusiveAsync([]);
+			await ObservableSource.BulkReplaceAsync([]);
 
 			// Clear the backing full source list as well
 			FullSource.Clear();
@@ -115,10 +115,6 @@ internal sealed partial class ListViewIncrementalController(
 	// References to the ListView and its ScrollViewer that this controller works with.
 	private ScrollViewer? ScrollViewerRef;
 	private ListView? ListViewRef;
-
-	// Column width change threshold (avoid micro layout churn)
-	// Only apply a width change when the delta exceeds this threshold to keep layout stable.
-	private const double ColumnWidthUpdateThreshold = 0.5;
 
 	// Look-ahead row count for proactive width fit while scrolling
 	// We measure a small buffer before/after visible rows to pre-fit widths and reduce visible pops.
@@ -201,10 +197,7 @@ internal sealed partial class ListViewIncrementalController(
 		ScheduleWidthRecalc();
 
 		// Now that binding points to the new instance, dispose the old incremental collection (if any).
-		if (old is IDisposable disposableOld)
-		{
-			try { disposableOld.Dispose(); } catch { }
-		}
+		try { old?.Dispose(); } catch { }
 	}
 
 	/// <summary>
@@ -344,8 +337,7 @@ internal sealed partial class ListViewIncrementalController(
 	private async Task ResetFilteredViewToTopAsync()
 	{
 		// If we have no viewer, nothing to do.
-		if (ScrollViewerRef is null)
-			return;
+		if (ScrollViewerRef is null) return;
 
 		// Immediately clamp vertical to 0, preserve horizontal.
 		double clamped = ScrollViewerRef.HorizontalOffset;
@@ -354,9 +346,7 @@ internal sealed partial class ListViewIncrementalController(
 		_ = ScrollViewerRef.ChangeView(clamped, 0, null, true);
 
 		if (ListViewRef is null || ListViewRef.Items.Count == 0)
-		{
 			return;
-		}
 
 		// Let the UI process the collection change and realize/recycle containers, then anchor to the very first item.
 		await Dispatcher.EnqueueAsync(() =>
@@ -390,21 +380,9 @@ internal sealed partial class ListViewIncrementalController(
 		}
 	}
 
-	internal void CopySingleCell(string? propertyKey)
-	{
-		if (string.IsNullOrWhiteSpace(propertyKey) || ListViewRef is null)
-			return;
-
-		// Copy a single mapped cell from the selected item.
-		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(propertyKey, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-		{
-			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), ListViewRef);
-		}
-	}
-
 	// Cleans up controller's own bindings to the currently bound ListView/ScrollViewer.
 	// Safe to call multiple times.
-	private void CleanupBindings()
+	internal void CleanupBindings()
 	{
 		// Detach our collection change handler from the current observable (if any).
 		ObservableSource?.CollectionChanged -= Collection_CollectionChanged;
@@ -423,37 +401,20 @@ internal sealed partial class ListViewIncrementalController(
 		ScrollViewerRef = null;
 	}
 
-	// Handler to clean up our controller bindings as soon as the ListView leaves the tree.
-	internal void ListView_Unloaded(object sender, RoutedEventArgs e) => CleanupBindings();
-
 	private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
 	{
 		// While the user is scrolling (intermediate), debounce recomputations to avoid excessive layout passes.
 		// When auto-resize is disabled, never recompute on scroll.
-		if (!GlobalVars.Settings.AutoResizeListViewColumns)
-		{
-			return;
-		}
-
-		if (e.IsIntermediate)
-		{
+		if (GlobalVars.Settings.AutoResizeListViewColumns)
 			ScheduleWidthRecalc();
-		}
-		else
-		{
-			// When scrolling settles, perform a definitive pass to reflect the presently visible window + look-ahead.
-			ScheduleWidthRecalc();
-		}
 	}
 
-	internal void ListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	internal void ListView_ContainerContentChanging()
 	{
 		// Virtualization/realization changed (new rows realized). Debounce column width recalculation.
 		// When auto-resize is disabled, never recompute on realization.
-		if (!GlobalVars.Settings.AutoResizeListViewColumns)
-			return;
-
-		ScheduleWidthRecalc();
+		if (GlobalVars.Settings.AutoResizeListViewColumns)
+			ScheduleWidthRecalc();
 	}
 
 	private void Collection_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -522,8 +483,7 @@ internal sealed partial class ListViewIncrementalController(
 		double[] headerWidths = new double[columnCount];
 		for (int i = 0; i < columnCount; i++)
 		{
-			string headerResourceKey = headerResourceKeys[i];
-			string headerText = GlobalVars.GetStr(headerResourceKey);
+			string headerText = GlobalVars.GetStr(headerResourceKeys[i]);
 			headerWidths[i] = ListViewHelper.MeasureText(headerText);
 		}
 
@@ -604,8 +564,7 @@ internal sealed partial class ListViewIncrementalController(
 		{
 			double proposed = newWidths[i];
 
-			double existing = current[i];
-			if (Math.Abs(proposed - existing) > ColumnWidthUpdateThreshold)
+			if (Math.Abs(proposed - current[i]) > 0.5) // Only apply a width change when the delta exceeds this threshold to keep layout stable.
 			{
 				applyWidthCallback(i, proposed);
 			}
@@ -638,8 +597,7 @@ internal sealed partial class ListViewIncrementalController(
 		for (int i = 0; i < columnCount; i++)
 		{
 			// Ensure we respect header minimums
-			string headerResourceKey = headerResourceKeys[i];
-			string headerText = GlobalVars.GetStr(headerResourceKey);
+			string headerText = GlobalVars.GetStr(headerResourceKeys[i]);
 			double headerMin = ListViewHelper.MeasureText(headerText);
 
 			double current = i < currentWidths.Count ? currentWidths[i] : 0;
@@ -682,13 +640,10 @@ internal sealed partial class ListViewIncrementalController(
 	internal void InitializeHeaderOnlyColumnWidths()
 	{
 		// Compute widths solely from header resource texts
-		int columnCount = columnPropertyKeys.Length;
-
-		double[] headerWidths = new double[columnCount];
-		for (int i = 0; i < columnCount; i++)
+		double[] headerWidths = new double[columnPropertyKeys.Length];
+		for (int i = 0; i < columnPropertyKeys.Length; i++)
 		{
-			string headerResourceKey = headerResourceKeys[i];
-			string headerText = GlobalVars.GetStr(headerResourceKey);
+			string headerText = GlobalVars.GetStr(headerResourceKeys[i]);
 			headerWidths[i] = ListViewHelper.MeasureText(headerText);
 		}
 
@@ -778,7 +733,7 @@ internal sealed partial class ListViewIncrementalController(
 			filteredCollection.SuspendLoads(true);
 
 			// Replace atomically under the same semaphore as incremental loading.
-			await filteredCollection.ReplaceAllExclusiveAsync(subset);
+			await filteredCollection.BulkReplaceAsync(subset);
 		}
 		else
 		{
@@ -875,6 +830,11 @@ internal sealed partial class ListViewIncrementalController(
 	internal void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		string key = (string)((MenuFlyoutItem)sender).Tag;
-		CopySingleCell(key);
+
+		// Copy a single mapped cell from the selected item.
+		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+		{
+			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), ListViewRef);
+		}
 	}
 }

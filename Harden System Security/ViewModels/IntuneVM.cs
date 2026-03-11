@@ -380,7 +380,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 
 			await Main.DeleteConfigurationPolicy(
 				AuthCompanionCLS.CurrentActiveAccount,
-				SelectedPolicyInListView.Id!);
+				SelectedPolicyInListView.Id);
 
 			MainInfoBar.WriteSuccess("Policy deleted successfully.");
 

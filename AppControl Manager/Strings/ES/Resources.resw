@@ -7019,4 +7019,55 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Borre los tokens de autenticación almacenados en la caché local. Esto requerirá que se vuelva a autenticar manualmente la próxima vez que use la aplicación.</value>
   </data>
+    <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Administrar ubicación de caché</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Administre la ubicación de la caché de la Biblioteca de directivas en su sistema.</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Administre la ubicación de la caché de la Biblioteca de directivas en su sistema.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.Title" xml:space="preserve">
+    <value>Administrar caché de la Biblioteca de directivas</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.CloseButtonText" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mueva todas las directivas de la ubicación de caché personalizada a la ubicación predeterminada y, a continuación, borre la ruta de caché personalizada seleccionada.</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Mueva todas las directivas de la ubicación de caché personalizada a la ubicación predeterminada y, a continuación, borre la ruta de caché personalizada seleccionada.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abra la ubicación de caché de la biblioteca de directivas personalizada seleccionada en el explorador de archivos.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abra la ubicación de caché de la biblioteca de directivas personalizada seleccionada en el explorador de archivos.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Examinar y establecer</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examine y seleccione un directorio para usarlo como la ubicación personalizada para la caché de la biblioteca de directivas. Todas las directivas de la ubicación predeterminada se moverán a esta nueva ubicación.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examine y seleccione un directorio para usarlo como la ubicación personalizada para la caché de la biblioteca de directivas. Todas las directivas de la ubicación predeterminada se moverán a esta nueva ubicación.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheTextBox.PlaceholderText" xml:space="preserve">
+    <value>La ruta seleccionada aparecerá aquí</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
+    <value>Ubicación de caché personalizada</value>
+  </data>
+  <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
+    <value>La directiva seleccionada se actualizó correctamente al agregarle nuevas reglas.</value>
+  </data>
 </root>

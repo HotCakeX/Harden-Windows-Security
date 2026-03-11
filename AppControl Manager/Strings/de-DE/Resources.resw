@@ -7019,4 +7019,55 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Löschen Sie die lokal zwischengespeicherten Authentifizierungstoken. Dies erfordert, dass Sie sich bei der nächsten Verwendung der App erneut manuell authentifizieren.</value>
   </data>
+    <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Speicherort des Caches verwalten</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verwalten Sie den Speicherort des Caches der Richtlinienbibliothek auf Ihrem System.</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verwalten Sie den Speicherort des Caches der Richtlinienbibliothek auf Ihrem System.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.Title" xml:space="preserve">
+    <value>Cache der Richtlinienbibliothek verwalten</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.CloseButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verschieben Sie alle Richtlinien vom benutzerdefinierten Cache-Speicherort an den Standardspeicherort und löschen Sie dann den ausgewählten benutzerdefinierten Cache-Pfad.</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verschieben Sie alle Richtlinien vom benutzerdefinierten Cache-Speicherort an den Standardspeicherort und löschen Sie dann den ausgewählten benutzerdefinierten Cache-Pfad.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Öffnen Sie den ausgewählten benutzerdefinierten Cache-Speicherort der Richtlinienbibliothek im Datei-Explorer.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Öffnen Sie den ausgewählten benutzerdefinierten Cache-Speicherort der Richtlinienbibliothek im Datei-Explorer.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Durchsuchen und festlegen</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen und wählen Sie ein Verzeichnis aus, das als benutzerdefinierter Speicherort für den Cache der Richtlinienbibliothek verwendet werden soll. Alle Richtlinien vom Standardspeicherort werden an diesen neuen Speicherort verschoben.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen und wählen Sie ein Verzeichnis aus, das als benutzerdefinierter Speicherort für den Cache der Richtlinienbibliothek verwendet werden soll. Alle Richtlinien vom Standardspeicherort werden an diesen neuen Speicherort verschoben.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheTextBox.PlaceholderText" xml:space="preserve">
+    <value>Der ausgewählte Pfad wird hier angezeigt</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
+    <value>Benutzerdefinierter Cache-Speicherort</value>
+  </data>
+  <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
+    <value>Die ausgewählte Richtlinie wurde durch das Hinzufügen neuer Regeln erfolgreich aktualisiert.</value>
+  </data>
 </root>

@@ -7019,4 +7019,55 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wyczyść lokalnie buforowane tokeny uwierzytelniania. Będzie to wymagało ponownego ręcznego uwierzytelnienia przy następnym użyciu aplikacji.</value>
   </data>
+    <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Zarządzaj lokalizacją pamięci podręcznej</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj lokalizacją pamięci podręcznej biblioteki zasad w swoim systemie.</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj lokalizacją pamięci podręcznej biblioteki zasad w swoim systemie.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.Title" xml:space="preserve">
+    <value>Zarządzaj pamięcią podręczną biblioteki zasad</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.CloseButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przenieś wszystkie zasady z niestandardowej lokalizacji pamięci podręcznej do domyślnej lokalizacji, a następnie wyczyść wybraną niestandardową ścieżkę pamięci podręcznej.</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przenieś wszystkie zasady z niestandardowej lokalizacji pamięci podręcznej do domyślnej lokalizacji, a następnie wyczyść wybraną niestandardową ścieżkę pamięci podręcznej.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Otwórz</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz wybraną niestandardową lokalizację pamięci podręcznej biblioteki zasad w Eksploratorze plików.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz wybraną niestandardową lokalizację pamięci podręcznej biblioteki zasad w Eksploratorze plików.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>Przeglądaj i ustaw</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj i wybierz katalog, który ma być używany jako niestandardowa lokalizacja pamięci podręcznej biblioteki zasad. Wszystkie zasady z domyślnej lokalizacji zostaną przeniesione do tej nowej lokalizacji.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj i wybierz katalog, który ma być używany jako niestandardowa lokalizacja pamięci podręcznej biblioteki zasad. Wszystkie zasady z domyślnej lokalizacji zostaną przeniesione do tej nowej lokalizacji.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheTextBox.PlaceholderText" xml:space="preserve">
+    <value>Wybrana ścieżka pojawi się tutaj</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
+    <value>Niestandardowa lokalizacja pamięci podręcznej</value>
+  </data>
+  <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
+    <value>Pomyślnie zaktualizowano wybraną zasadę, dodając do niej nowe reguły.</value>
+  </data>
 </root>

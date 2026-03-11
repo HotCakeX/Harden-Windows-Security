@@ -7019,4 +7019,55 @@
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>പ്രാദേശികമായി കാഷെ ചെയ്ത ഓതന്റിക്കേഷൻ ടോക്കണുകൾ മായ്‌ക്കുക. അടുത്ത തവണ ആപ്പ് ഉപയോഗിക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യാൻ ഇത് ആവശ്യപ്പെടുന്നു.</value>
   </data>
+    <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>ക്യാഷെ ലൊക്കേഷൻ മാനേജ് ചെയ്യുക</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ സിസ്റ്റത്തിൽ പോളിസി ലൈബ്രറി ക്യാഷെയുടെ ലൊക്കേഷൻ മാനേജ് ചെയ്യുക.</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ സിസ്റ്റത്തിൽ പോളിസി ലൈബ്രറി ക്യാഷെയുടെ ലൊക്കേഷൻ മാനേജ് ചെയ്യുക.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.Title" xml:space="preserve">
+    <value>പോളിസി ലൈബ്രറി ക്യാഷെ മാനേജ് ചെയ്യുക</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.CloseButtonText" xml:space="preserve">
+    <value>ശരി</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>മായ്‌ക്കുക</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം ക്യാഷെ ലൊക്കേഷനിൽ നിന്ന് ഡിഫോൾട്ട് ലൊക്കേഷനിലേക്ക് എല്ലാ പോളിസികളും നീക്കുക, തുടർന്ന് തിരഞ്ഞെടുത്ത കസ്റ്റം ക്യാഷെ പാത്ത് മായ്‌ക്കുക.</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം ക്യാഷെ ലൊക്കേഷനിൽ നിന്ന് ഡിഫോൾട്ട് ലൊക്കേഷനിലേക്ക് എല്ലാ പോളിസികളും നീക്കുക, തുടർന്ന് തിരഞ്ഞെടുത്ത കസ്റ്റം ക്യാഷെ പാത്ത് മായ്‌ക്കുക.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>തുറക്കുക</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയൽ എക്സ്പ്ലോററിൽ തിരഞ്ഞെടുത്ത കസ്റ്റം പോളിസി ലൈബ്രറി ക്യാഷെ ലൊക്കേഷൻ തുറക്കുക.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയൽ എക്സ്പ്ലോററിൽ തിരഞ്ഞെടുത്ത കസ്റ്റം പോളിസി ലൈബ്രറി ക്യാഷെ ലൊക്കേഷൻ തുറക്കുക.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>ബ്രൗസ് ചെയ്‌ത് സജ്ജമാക്കുക</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പോളിസി ലൈബ്രറി ക്യാഷെയ്‌ക്കുള്ള കസ്റ്റം ലൊക്കേഷനായി ഉപയോഗിക്കുന്നതിന് ഒരു ഡയറക്‌ടറി ബ്രൗസ് ചെയ്‌ത് തിരഞ്ഞെടുക്കുക. ഡിഫോൾട്ട് ലൊക്കേഷനിൽ നിന്നുള്ള എല്ലാ പോളിസികളും ഈ പുതിയ ലൊക്കേഷനിലേക്ക് നീക്കും.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പോളിസി ലൈബ്രറി ക്യാഷെയ്‌ക്കുള്ള കസ്റ്റം ലൊക്കേഷനായി ഉപയോഗിക്കുന്നതിന് ഒരു ഡയറക്‌ടറി ബ്രൗസ് ചെയ്‌ത് തിരഞ്ഞെടുക്കുക. ഡിഫോൾട്ട് ലൊക്കേഷനിൽ നിന്നുള്ള എല്ലാ പോളിസികളും ഈ പുതിയ ലൊക്കേഷനിലേക്ക് നീക്കും.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheTextBox.PlaceholderText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പാത്ത് ഇവിടെ ദൃശ്യമാകും</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
+    <value>കസ്റ്റം ക്യാഷെ ലൊക്കേഷൻ</value>
+  </data>
+  <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസിയിലേക്ക് പുതിയ റൂളുകൾ ചേർത്ത് അത് വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്‌തു.</value>
+  </data>
 </root>

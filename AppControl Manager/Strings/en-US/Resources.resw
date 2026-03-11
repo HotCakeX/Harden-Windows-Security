@@ -7019,7 +7019,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Clear the locally cached authentication tokens. This will require you to manually authenticate again the next time you use the app.</value>
   </data>
-  <!--NEW-->
   <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
     <value>Manage Cache Location</value>
   </data>

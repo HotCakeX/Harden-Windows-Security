@@ -7019,4 +7019,55 @@
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>נקה את אסימוני האימות השמורים במטמון המקומי. פעולה זו תדרוש ממך לבצע אימות ידני מחדש בפעם הבאה שתשתמש באפליקציה.</value>
   </data>
+    <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>ניהול מיקום מטמון</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל את מיקום מטמון ספריית המדיניות במערכת שלך.</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל את מיקום מטמון ספריית המדיניות במערכת שלך.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.Title" xml:space="preserve">
+    <value>ניהול מטמון ספריית המדיניות</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.CloseButtonText" xml:space="preserve">
+    <value>אישור</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>נקה</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העבר את כל פריטי המדיניות ממיקום המטמון המותאם אישית למיקום ברירת המחדל, ולאחר מכן נקה את נתיב המטמון המותאם אישית שנבחר.</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העבר את כל פריטי המדיניות ממיקום המטמון המותאם אישית למיקום ברירת המחדל, ולאחר מכן נקה את נתיב המטמון המותאם אישית שנבחר.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>פתח</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את מיקום מטמון ספריית המדיניות המותאם אישית שנבחר בסייר הקבצים.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את מיקום מטמון ספריית המדיניות המותאם אישית שנבחר בסייר הקבצים.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>עיון והגדרה</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין ובחר ספריה שתשמש כמיקום המותאם אישית עבור מטמון ספריית המדיניות. כל פריטי המדיניות ממיקום ברירת המחדל יועברו למיקום חדש זה.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין ובחר ספריה שתשמש כמיקום המותאם אישית עבור מטמון ספריית המדיניות. כל פריטי המדיניות ממיקום ברירת המחדל יועברו למיקום חדש זה.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheTextBox.PlaceholderText" xml:space="preserve">
+    <value>הנתיב שנבחר יופיע כאן</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
+    <value>מיקום מטמון מותאם אישית</value>
+  </data>
+  <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
+    <value>המדיניות שנבחרה עודכנה בהצלחה על-ידי הוספת כללים חדשים אליה.</value>
+  </data>
 </root>

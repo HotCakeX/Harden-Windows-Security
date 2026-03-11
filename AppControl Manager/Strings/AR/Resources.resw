@@ -7019,4 +7019,55 @@
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>امسح رموز المصادقة المميزة المخزنة مؤقتاً محلياً. سيتطلب منك ذلك المصادقة يدوياً مرة أخرى في المرة القادمة التي تستخدم فيها التطبيق.</value>
   </data>
+    <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>إدارة موقع ذاكرة التخزين المؤقت</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة موقع ذاكرة التخزين المؤقت لمكتبة النهج على نظامك.</value>
+  </data>
+  <data name="ManageCustomPoliciesLibraryCacheLocationMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة موقع ذاكرة التخزين المؤقت لمكتبة النهج على نظامك.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.Title" xml:space="preserve">
+    <value>إدارة ذاكرة التخزين المؤقت لمكتبة النهج</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheLocationManagerDialog.CloseButtonText" xml:space="preserve">
+    <value>موافق</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>مسح</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقل كافة النُهج من موقع ذاكرة التخزين المؤقت المخصص إلى الموقع الافتراضي، ثم امسح مسار ذاكرة التخزين المؤقت المخصص المحدد.</value>
+  </data>
+  <data name="ClearCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقل كافة النُهج من موقع ذاكرة التخزين المؤقت المخصص إلى الموقع الافتراضي، ثم امسح مسار ذاكرة التخزين المؤقت المخصص المحدد.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>فتح</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>افتح موقع ذاكرة التخزين المؤقت لمكتبة النهج المخصصة المحدد في مستكشف الملفات.</value>
+  </data>
+  <data name="OpenCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>افتح موقع ذاكرة التخزين المؤقت لمكتبة النهج المخصصة المحدد في مستكشف الملفات.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.Content" xml:space="preserve">
+    <value>استعراض وتعيين</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض الدليل وحدده لاستخدامه كموقع مخصص لذاكرة التخزين المؤقت لمكتبة النهج. سيتم نقل جميع النُهج من الموقع الافتراضي إلى هذا الموقع الجديد.</value>
+  </data>
+  <data name="BrowseAndSetCustomPoliciesLibraryCacheButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض الدليل وحدده لاستخدامه كموقع مخصص لذاكرة التخزين المؤقت لمكتبة النهج. سيتم نقل جميع النُهج من الموقع الافتراضي إلى هذا الموقع الجديد.</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheTextBox.PlaceholderText" xml:space="preserve">
+    <value>سيظهر المسار المحدد هنا</value>
+  </data>
+  <data name="CustomPoliciesLibraryCacheDialogInnerTitle.Text" xml:space="preserve">
+    <value>موقع ذاكرة التخزين المؤقت المخصص</value>
+  </data>
+  <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
+    <value>تم تحديث النهج المحدد بنجاح عن طريق إضافة قواعد جديدة إليه.</value>
+  </data>
 </root>

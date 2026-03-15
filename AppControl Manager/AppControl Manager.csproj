@@ -203,8 +203,8 @@
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.83.1" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.4" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.4" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.5" />
+		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.5" />
 
 		<!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
 		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.251219" />
@@ -215,8 +215,8 @@
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.16.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3800.47" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
-		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.4" />
-		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.4" />
+		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
+		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.47" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
@@ -227,12 +227,12 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.251231004" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260204000" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2124" />
-		<PackageReference Include="System.Numerics.Tensors" Version="10.0.4" />
+		<PackageReference Include="System.Numerics.Tensors" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.251221100">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.4" />
+		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.5" />
 
 	</ItemGroup>
 

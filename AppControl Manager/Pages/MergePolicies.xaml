@@ -33,11 +33,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.PolicyMergerInfoBarTitle, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.PolicyMergerInfoBarIsOpen, Mode=TwoWay}"
-                            Message="{x:Bind ViewModel.PolicyMergerInfoBarMessage, Mode=OneWay}"
-                            IsClosable="{x:Bind ViewModel.PolicyMergerInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.PolicyMergerInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.MainInfoBar.Title, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}">
                     </customUI:InfoBarV2>
                 </controls:SettingsExpander.ItemsHeader>
 
@@ -178,11 +178,11 @@
                                         BorderThickness="0"
                                         CornerRadius="0"
                                         IsIconVisible="True"
-                                        Title="{x:Bind ViewModel.AdvancedFeaturesInfoBarTitle, Mode=OneWay}"
-                                        IsOpen="{x:Bind ViewModel.AdvancedFeaturesInfoBarIsOpen, Mode=TwoWay}"
-                                        Message="{x:Bind ViewModel.AdvancedFeaturesInfoBarMessage, Mode=OneWay}"
-                                        IsClosable="{x:Bind ViewModel.AdvancedFeaturesInfoBarIsClosable, Mode=OneWay}"
-                                        Severity="{x:Bind ViewModel.AdvancedFeaturesInfoBarSeverity, Mode=OneWay}">
+                                        Title="{x:Bind ViewModel.AdvancedFeaturesInfoBar.Title, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.AdvancedFeaturesInfoBar.IsOpen, Mode=TwoWay}"
+                                        Message="{x:Bind ViewModel.AdvancedFeaturesInfoBar.Message, Mode=OneWay}"
+                                        IsClosable="{x:Bind ViewModel.AdvancedFeaturesInfoBar.IsClosable, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.AdvancedFeaturesInfoBar.Severity, Mode=OneWay}">
                     </customUI:InfoBarV2>
                 </controls:SettingsExpander.ItemsHeader>
 

@@ -40,12 +40,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	[SetsRequiredMembers]
 	internal WindowsFirewallVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
@@ -54,7 +49,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
-		_ = Dispatcher.TryEnqueue(ComputeColumnWidths);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -294,7 +289,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				// Get all of the .exe files in the folders user selected.
 				(IEnumerable<string>, int) detectedCatFiles = FileUtility.GetFilesFast(selectedDirectories, null, [".exe"]);
 
-				_ = Dispatcher.TryEnqueue(() =>
+				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 				{
 					foreach (string item in detectedCatFiles.Item1)
 					{
@@ -655,7 +650,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		try
 		{
 			ManagementUIIsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			List<FirewallRule> rulesToDelete = [];
 			foreach (object item in lv.SelectedItems)
@@ -693,7 +688,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			ManagementUIIsEnabled = true;
 		}
 	}
@@ -735,7 +730,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		try
 		{
 			ManagementUIIsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string defaultFileName = isGpo ? "GPO_Firewall_Rules.wfw" : "Local_Firewall_Rules.wfw";
 
@@ -759,7 +754,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		finally
 		{
 			ManagementUIIsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -783,7 +778,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		try
 		{
 			ManagementUIIsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? fileLocation = FileDialogHelper.ShowFilePickerDialog("Windows Firewall Policy|*.wfw");
 
@@ -821,7 +816,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		finally
 		{
 			ManagementUIIsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -833,7 +828,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		try
 		{
 			ManagementUIIsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
@@ -863,7 +858,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		finally
 		{
 			ManagementUIIsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -875,7 +870,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		try
 		{
 			ManagementUIIsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
@@ -905,7 +900,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		finally
 		{
 			ManagementUIIsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -917,7 +912,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		try
 		{
 			ManagementUIIsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
@@ -947,7 +942,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		finally
 		{
 			ManagementUIIsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

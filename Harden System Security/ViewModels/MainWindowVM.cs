@@ -393,13 +393,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
-
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
 	}
 
 	#region UI-Bound Properties
@@ -719,11 +712,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// The main InfoBar for the Sidebar.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
 	/// Whether the button for configuring nested virtualizations on Sidebar is enabled.

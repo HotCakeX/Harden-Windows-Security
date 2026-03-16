@@ -33,23 +33,10 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 {
-	internal IntuneDeploymentDetailsVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+	internal IntuneDeploymentDetailsVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
-		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
-	}
 
-	internal readonly InfoBarSettings MainInfoBar;
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
 	/// The target account used for fetching Intune groups.
@@ -200,10 +187,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
 	/// the ListView with group names.
 	/// </summary>
-	internal async void RefreshIntuneGroupsButton_Click()
-	{
-		await RefreshIntuneGroups();
-	}
+	internal async void RefreshIntuneGroupsButton_Click() => await RefreshIntuneGroups();
 
 	private async Task RefreshIntuneGroups()
 	{
@@ -441,12 +425,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	internal void DeSelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Deployment_IntuneGroupsListView);
-		if (lv is null)
-		{
-			return;
-		}
-
-		lv.SelectedItems.Clear();
+		lv?.SelectedItems.Clear();
 	}
 
 	/// <summary>
@@ -561,7 +540,6 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 		try
 		{
-
 			int count = lv.SelectedItems.Count;
 			string firstName = (lv.SelectedItems[0] as IntuneGroupItemListView)?.GroupName ?? string.Empty;
 			string summaryText = count == 1
@@ -663,7 +641,6 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 		try
 		{
-
 			AreElementsEnabled = false;
 
 			using CustomUIElements.ContentDialogV2 dialog = new()

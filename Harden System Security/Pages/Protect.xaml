@@ -296,10 +296,10 @@
 
         <customUI:InfoBarV2 Grid.Row="1"
           Margin="15,0,15,10"
-          IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-          Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-          Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-          IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+          IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+          Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+          Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+          IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
 
         <ScrollViewer Grid.Row="2"
                       Visibility="{x:Bind ViewModel.IsDeviceIntentSectionVisible, Mode=OneWay}"

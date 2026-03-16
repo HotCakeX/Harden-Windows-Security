@@ -116,7 +116,7 @@ internal static class PolicySettingsManager
 	/// Sets the policy ID info.
 	/// </summary>
 	/// <param name="PolicyObj"></param>
-	/// <param name="PolicyFilePath"></param>
+	/// <param name="PolicyIDInfo"></param>
 	internal static void SetPolicyIDInfo(SiPolicy.SiPolicy PolicyObj, string? PolicyIDInfo)
 	{
 		if (string.IsNullOrWhiteSpace(PolicyIDInfo))
@@ -158,7 +158,7 @@ internal static class PolicySettingsManager
 	/// <summary>
 	/// Gets all of the policy settings and return a custom class of them for Policy Editor.
 	/// </summary>
-	/// <param name="PolicyObj"></param>
+	/// <param name="policySettings"></param>
 	/// <param name="VMRef"></param>
 	/// <returns></returns>
 	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(List<Setting>? policySettings, ViewModels.PolicyEditorVM VMRef)
@@ -321,7 +321,7 @@ internal static class PolicySettingsManager
 	/// <summary>
 	/// Sets the HVCI option to Strict or (2) in an App Control policy.
 	/// </summary>
-	/// <param name="filePath"></param>
+	/// <param name="policyObj"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy.SiPolicy UpdateHVCIOptions(SiPolicy.SiPolicy policyObj)
 	{

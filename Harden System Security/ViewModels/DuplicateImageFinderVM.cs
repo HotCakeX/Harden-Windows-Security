@@ -38,24 +38,11 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 {
-	internal DuplicatePhotoFinderVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+	// Subscribe to collection changes so EmptyStatePlaceholderVisibility stays in sync with the UI
+	internal DuplicatePhotoFinderVM() => FilteredDuplicateGroups.CollectionChanged += (s, e) => OnPropertyChanged(nameof(EmptyStatePlaceholderVisibility));
 
-		// Subscribe to collection changes so EmptyStatePlaceholderVisibility stays in sync with the UI
-		FilteredDuplicateGroups.CollectionChanged += (s, e) => OnPropertyChanged(nameof(EmptyStatePlaceholderVisibility));
-	}
 
-	internal readonly InfoBarSettings MainInfoBar;
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	// Whether the UI elements are enabled or disabled
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
@@ -154,7 +141,6 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	// Event handler for DragOver
 	internal void Grid_DragOver(object sender, DragEventArgs e) => e.AcceptedOperation = DataPackageOperation.Copy;
 
-
 	// Event handler for Drop
 	internal async void Grid_Drop(object sender, DragEventArgs e)
 	{
@@ -212,7 +198,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 			IsProgressIndeterminate = false;
 
 			ScanProgress = 0;
-			MainInfoBarIsOpen = false;
+			MainInfoBar.IsOpen = false;
 
 			AllDuplicateGroups.Clear();
 			FilteredDuplicateGroups.Clear();

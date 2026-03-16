@@ -38,12 +38,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	[SetsRequiredMembers]
 	internal MicrosoftDefenderVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
@@ -53,7 +48,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
 		// To size the listview columns with some padding after initial page load.
-		_ = Dispatcher.TryEnqueue(ComputeColumnWidths);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -342,9 +337,9 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				string[] oneDriveDirs = OneDriveDirectories.Get();
+				List<string> oneDriveDirs = OneDriveDirectories.Get();
 
-				if (oneDriveDirs.Length > 0)
+				if (oneDriveDirs.Count > 0)
 				{
 					// Wrap them with double quotes and separate them with a space
 					string oneDriveDirsFinal = string.Join(" ", oneDriveDirs.Select(item => $"\"{item}\""));
@@ -1109,7 +1104,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1146,7 +1141,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1208,7 +1203,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1311,7 +1306,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1399,7 +1394,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1437,7 +1432,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}

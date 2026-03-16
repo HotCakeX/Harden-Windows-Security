@@ -21,7 +21,6 @@ using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.Helpers;
 
@@ -31,14 +30,9 @@ namespace HardenSystemSecurity.Helpers;
 internal abstract partial class MUnitListViewModelBase : ViewModelBase, IMUnitListViewModel
 {
 	/// <summary>
-	/// The main InfoBar for this VM.
+	/// The main InfoBar.
 	/// </summary>
 	public required InfoBarSettings MainInfoBar { get; init; } // Set in the Ctor of the VM class the inherits from this class.
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	public Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 

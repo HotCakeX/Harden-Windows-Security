@@ -683,7 +683,7 @@ internal sealed partial class MUnit(
 			if (SP(ref field, value))
 			{
 				// Force immediate UI update on the correct thread
-				_ = Dispatcher.TryEnqueue(() =>
+				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 				{
 					OnPropertyChanged(nameof(StatusState));
 				});

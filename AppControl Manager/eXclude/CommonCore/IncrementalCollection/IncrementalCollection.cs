@@ -191,7 +191,7 @@ internal sealed partial class IncrementalCollection<T>(
 	/// <param name="propertyName">The name of the property that changed.</param>
 	private void OnPropertyChanged(string propertyName)
 	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		PropertyChanged?.Invoke(this, new(propertyName));
 	}
 
 	/// <summary>

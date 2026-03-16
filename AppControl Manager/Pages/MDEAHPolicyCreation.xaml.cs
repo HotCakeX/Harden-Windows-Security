@@ -31,7 +31,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 {
 
 	private MDEAHPolicyCreationVM ViewModel => ViewModelProvider.MDEAHPolicyCreationVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal MDEAHPolicyCreation()
 	{
@@ -53,7 +52,7 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 		// Light up the local page's button icon
 		ViewModel.LightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("AddToPolicySegmentedItem/Content")),
 			actionPack2: (LightUp2, GlobalVars.GetStr("BasePolicyFileSegmentedItem/Content"))
 		);

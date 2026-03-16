@@ -24,14 +24,13 @@
         </Grid.RowDefinitions>
 
         <!-- InfoBar -->
-        <customUI:InfoBarV2 x:Name="MainInfoBar"
-                            Grid.Row="0"
+        <customUI:InfoBarV2 Grid.Row="0"
                             Margin="0,0,0,12"
                             Title="EXIF Manager"
-                            Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+                            Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
 
         <!-- Toolbar Area -->
         <Border Grid.Row="1"

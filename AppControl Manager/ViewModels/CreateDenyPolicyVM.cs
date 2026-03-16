@@ -44,36 +44,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	{
 		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
 
-		// InfoBar manager for the FilesAndFolders section
-		FilesAndFoldersInfoBar = new InfoBarSettings(
-			() => FilesAndFoldersInfoBarIsOpen, value => FilesAndFoldersInfoBarIsOpen = value,
-			() => FilesAndFoldersInfoBarMessage, value => FilesAndFoldersInfoBarMessage = value,
-			() => FilesAndFoldersInfoBarSeverity, value => FilesAndFoldersInfoBarSeverity = value,
-			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
-			Dispatcher,
-			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
-
 		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
 
-		// InfoBar manager for the PFN section
-		PFNInfoBar = new InfoBarSettings(
-			() => PFNInfoBarIsOpen, value => PFNInfoBarIsOpen = value,
-			() => PFNInfoBarMessage, value => PFNInfoBarMessage = value,
-			() => PFNInfoBarSeverity, value => PFNInfoBarSeverity = value,
-			() => PFNInfoBarIsClosable, value => PFNInfoBarIsClosable = value,
-			Dispatcher,
-			() => PFNInfoBarTitle, value => PFNInfoBarTitle = value);
-
 		PFNBasedCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
-
-		// InfoBar manager for the CustomFilePathRules section
-		CustomFilePathRulesInfoBar = new InfoBarSettings(
-			() => CustomFilePathRulesInfoBarIsOpen, value => CustomFilePathRulesInfoBarIsOpen = value,
-			() => CustomFilePathRulesInfoBarMessage, value => CustomFilePathRulesInfoBarMessage = value,
-			() => CustomFilePathRulesInfoBarSeverity, value => CustomFilePathRulesInfoBarSeverity = value,
-			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
-			Dispatcher,
-			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
 
@@ -133,7 +106,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal bool FilesAndFoldersSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
-	internal readonly InfoBarSettings FilesAndFoldersInfoBar;
+	internal readonly InfoBarSettings FilesAndFoldersInfoBar = new();
 
 	internal double FilesAndFoldersProgressRingValue { get; set => SP(ref field, value); }
 
@@ -191,11 +164,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("Scalability") + "2";
 
-	internal bool FilesAndFoldersInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool FilesAndFoldersInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? FilesAndFoldersInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? FilesAndFoldersInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity FilesAndFoldersInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
 	// Column width dependency properties
 	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
@@ -353,7 +321,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					await Dispatcher.EnqueueAsync(() =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 					{
 						// Creating incremental collection by passing the source List.
 						HighPerfIncrementalCollection<FileIdentity> incrementalCollection = new(LVController.FullSource);
@@ -535,15 +503,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 	#region Package Family Names
 
-	internal readonly InfoBarSettings PFNInfoBar;
+	internal readonly InfoBarSettings PFNInfoBar = new();
 
 	internal Visibility PFNInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	internal bool PFNInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool PFNInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? PFNInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? PFNInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity PFNInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
 	/// <summary>
 	/// Whether the UI elements for the PFN section are enabled or disabled.
@@ -1016,15 +978,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal bool CustomFilePathRulesSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
-	internal readonly InfoBarSettings CustomFilePathRulesInfoBar;
+	internal readonly InfoBarSettings CustomFilePathRulesInfoBar = new();
 
 	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	internal bool CustomFilePathRulesInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool CustomFilePathRulesInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? CustomFilePathRulesInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? CustomFilePathRulesInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity CustomFilePathRulesInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
 	internal bool CustomPatternBasedFileRuleBasedDeployButton { get; set => SP(ref field, value); }
 
@@ -1088,7 +1044,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		{
 			CustomFilePathRulesElementsAreEnabled = false;
 
-			CustomFilePathRulesInfoBarIsClosable = false;
+			CustomFilePathRulesInfoBar.IsClosable = false;
 
 			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPatternBasedFilePathRuleDenyPolicyMessage"));
 
@@ -1181,7 +1137,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 			CustomFilePathRulesElementsAreEnabled = true;
 
-			CustomFilePathRulesInfoBarIsClosable = true;
+			CustomFilePathRulesInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1193,7 +1149,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		try
 		{
 			// Instantiate the Content Dialog
-			CustomUIElements.CustomPatternBasedFilePath customDialog = new();
+			using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
 
 			GlobalVars.CurrentlyOpenContentDialog = customDialog;
 

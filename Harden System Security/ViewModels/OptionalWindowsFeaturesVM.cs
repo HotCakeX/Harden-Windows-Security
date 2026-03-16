@@ -719,13 +719,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		VerifyCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("VerifyRecommendedConfigurations"));
 		RemoveCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("RemoveRecommendedConfigurations"));
 
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		UpdateFilteredItems();
 
 		UpdateCancellableButtonsEnabledStates();
@@ -749,12 +742,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -1042,7 +1030,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Subscribe to item-specific progress updates
 			_dismServiceClient.ItemProgressUpdated += async (itemName, current, total) =>
 			{
-				await Dispatcher.EnqueueAsync(() =>
+				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					// Update the item's progress
 					DISMOutputEntry? entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, itemName, StringComparison.OrdinalIgnoreCase));
@@ -1139,7 +1127,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			_currentOperationType = "Enabling";
 
 			// Disable buttons and search, but set processing state for the specific item
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = false;
 				entry.IsProcessing = true;
@@ -1172,7 +1160,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 					? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 					: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-				await Dispatcher.EnqueueAsync(() =>
+				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					if (updatedResults.Count > 0)
 					{
@@ -1198,7 +1186,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		finally
 		{
 			// Always reset processing state and re-enable buttons and search
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				entry.IsProcessing = false;
 				entry.ProgressCurrent = 0;
@@ -1221,7 +1209,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			_currentOperationType = "Disabling";
 
 			// Disable buttons and search, but set processing state for the specific item
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = false;
 				entry.IsProcessing = true;
@@ -1254,7 +1242,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 					? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 					: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-				await Dispatcher.EnqueueAsync(() =>
+				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					if (updatedResults.Count > 0)
 					{
@@ -1280,7 +1268,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		finally
 		{
 			// Always reset processing state and re-enable buttons and search
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				entry.IsProcessing = false;
 				entry.ProgressCurrent = 0;
@@ -1325,7 +1313,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				{
 					try
 					{
-						await Dispatcher.EnqueueAsync(() =>
+						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = true;
 							entry.ProgressCurrent = 0;
@@ -1352,7 +1340,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 								? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 								: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-							await Dispatcher.EnqueueAsync(() =>
+							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 							{
 								if (updatedResults.Count > 0)
 								{
@@ -1378,7 +1366,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					}
 					finally
 					{
-						await Dispatcher.EnqueueAsync(() =>
+						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = false;
 							entry.ProgressCurrent = 0;
@@ -1389,7 +1377,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			});
 
 			// Show final results
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
@@ -1460,7 +1448,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				{
 					try
 					{
-						await Dispatcher.EnqueueAsync(() =>
+						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = true;
 							entry.ProgressCurrent = 0;
@@ -1487,7 +1475,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 								? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 								: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-							await Dispatcher.EnqueueAsync(() =>
+							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 							{
 								if (updatedResults.Count > 0)
 								{
@@ -1513,7 +1501,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					}
 					finally
 					{
-						await Dispatcher.EnqueueAsync(() =>
+						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = false;
 							entry.ProgressCurrent = 0;
@@ -1524,7 +1512,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			});
 
 			// Show final results
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
@@ -1844,7 +1832,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			ApplyCancellableButton.Begin();
 
-			await Dispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
+			await GlobalVars.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 			// Set operation type for progress logging
 			_currentOperationType = "Applying Recommended Configurations";
@@ -1873,7 +1861,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 					// Try to find the corresponding list item (if present) and show its progress (initially indeterminate)
 					DISMOutputEntry? entry = null;
-					await Dispatcher.EnqueueAsync(() =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 					{
 						entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
 						if (entry != null)
@@ -1918,7 +1906,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						// Always collapse the item's progress once this config is done
 						if (entry != null)
 						{
-							await Dispatcher.EnqueueAsync(() =>
+							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 							{
 								entry.IsProcessing = false;
 								entry.ProgressCurrent = 0;
@@ -1931,7 +1919,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			ApplyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
@@ -1959,7 +1947,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				HandleExceptions(ex, ref errorsOccurred, ref ApplyCancellableButton.wasCancelled, MainInfoBar);
 			});
@@ -1970,7 +1958,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
 			}
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
 				ApplyCancellableButton.End();
@@ -1989,7 +1977,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		bool errorsOccurred = false;
 
 		VerifyCancellableButton.Begin();
-		await Dispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
+		await GlobalVars.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 		// Track which UI entries we mark as "processing" so we can reliably unmark them
 		HashSet<string> targetNames = SecurityHardeningConfigs
@@ -2012,7 +2000,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("VerifyingSecurityHardeningState"), SecurityHardeningConfigs.Count));
 
 			// Mark all recommended items present in the ListView as "in progress" with indeterminate bars
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				foreach (DISMOutputEntry entry in AllItems)
 				{
@@ -2107,7 +2095,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			// Show verification results
 			bool allCorrect = incorrectCount == 0;
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (allCorrect)
 				{
@@ -2133,7 +2121,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				HandleExceptions(ex, ref errorsOccurred, ref VerifyCancellableButton.wasCancelled, MainInfoBar);
 			});
@@ -2142,7 +2130,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		finally
 		{
 			// Unmark all recommended items as "processing"
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				foreach (DISMOutputEntry entry in AllItems)
 				{
@@ -2159,7 +2147,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
 			}
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
 				VerifyCancellableButton.End();
@@ -2178,7 +2166,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		bool errorsOccurred = false;
 
 		RemoveCancellableButton.Begin();
-		await Dispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
+		await GlobalVars.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 		try
 		{
@@ -2215,7 +2203,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 					// Try to find the corresponding list item (if present) and show its progress (initially indeterminate)
 					DISMOutputEntry? entry = null;
-					await Dispatcher.EnqueueAsync(() =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 					{
 						entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
 						if (entry != null)
@@ -2260,7 +2248,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						// Always collapse the item's progress once this config is done
 						if (entry != null)
 						{
-							await Dispatcher.EnqueueAsync(() =>
+							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 							{
 								entry.IsProcessing = false;
 								entry.ProgressCurrent = 0;
@@ -2274,7 +2262,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			RemoveCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 			// Show final results
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
@@ -2310,7 +2298,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
 			}
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
 				RemoveCancellableButton.End();
@@ -2537,7 +2525,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
 					"OSFeaturesAndCapabilities|*.JSON",
@@ -2562,7 +2550,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 }

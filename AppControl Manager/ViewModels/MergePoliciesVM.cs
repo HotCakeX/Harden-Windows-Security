@@ -22,32 +22,12 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class MergePoliciesVM : ViewModelBase
 {
-	internal MergePoliciesVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => PolicyMergerInfoBarIsOpen, value => PolicyMergerInfoBarIsOpen = value,
-			() => PolicyMergerInfoBarMessage, value => PolicyMergerInfoBarMessage = value,
-			() => PolicyMergerInfoBarSeverity, value => PolicyMergerInfoBarSeverity = value,
-			() => PolicyMergerInfoBarIsClosable, value => PolicyMergerInfoBarIsClosable = value,
-			Dispatcher,
-			() => PolicyMergerInfoBarTitle, value => PolicyMergerInfoBarTitle = value);
-
-		AdvancedFeaturesInfoBar = new InfoBarSettings(
-			() => AdvancedFeaturesInfoBarIsOpen, value => AdvancedFeaturesInfoBarIsOpen = value,
-			() => AdvancedFeaturesInfoBarMessage, value => AdvancedFeaturesInfoBarMessage = value,
-			() => AdvancedFeaturesInfoBarSeverity, value => AdvancedFeaturesInfoBarSeverity = value,
-			() => AdvancedFeaturesInfoBarIsClosable, value => AdvancedFeaturesInfoBarIsClosable = value,
-			Dispatcher,
-			() => AdvancedFeaturesInfoBarTitle, value => AdvancedFeaturesInfoBarTitle = value);
-	}
-
-	private readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	#region UI-Bound Properties
 
@@ -58,12 +38,6 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	internal PolicyFileRepresent? MainPolicy { get; set => SP(ref field, value); }
 
 	internal bool MergeButtonState { get; set => SP(ref field, value); } = true;
-
-	internal bool PolicyMergerInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? PolicyMergerInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? PolicyMergerInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity PolicyMergerInfoBarSeverity { get; set => SP(ref field, value); }
-	internal bool PolicyMergerInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal Visibility MergeProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -95,7 +69,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 			MergeButtonState = false;
 			MergeProgressRingVisibility = Visibility.Visible;
 
-			PolicyMergerInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("MergePolicies_MergingMessage"));
 
@@ -145,7 +119,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 		}
 		finally
 		{
-			PolicyMergerInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			MergeProgressRingVisibility = Visibility.Collapsed;
 			MergeButtonState = true;
 		}
@@ -211,13 +185,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 	#region Advanced Features Section
 
-	private readonly InfoBarSettings AdvancedFeaturesInfoBar;
-
-	internal bool AdvancedFeaturesInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? AdvancedFeaturesInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? AdvancedFeaturesInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity AdvancedFeaturesInfoBarSeverity { get; set => SP(ref field, value); }
-	internal bool AdvancedFeaturesInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings AdvancedFeaturesInfoBar = new();
 
 	/// <summary>
 	/// Whether the elements for converting policies to AppIDTagging type are enabled or not.

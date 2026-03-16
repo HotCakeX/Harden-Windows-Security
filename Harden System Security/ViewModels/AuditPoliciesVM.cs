@@ -34,28 +34,13 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class AuditPoliciesVM : ViewModelBase
 {
-	internal AuditPoliciesVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		// To adjust the initial width of the columns, giving them nice paddings.
-		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
-	}
+	// To adjust the initial width of the columns, giving them nice paddings.
+	internal AuditPoliciesVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -271,7 +256,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			}
 
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
 					"Audit Policies|*.JSON",
@@ -298,7 +283,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -312,7 +297,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? selectedFilePath = FileDialogHelper.ShowFilePickerDialog(GlobalVars.JSONPickerFilter);
 
@@ -378,7 +363,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -399,7 +384,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			try
 			{
 				ElementsAreEnabled = false;
-				MainInfoBarIsClosable = false;
+				MainInfoBar.IsClosable = false;
 
 				await Task.Run(async () =>
 				{
@@ -413,7 +398,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 					AuditPolicyManager.SetAuditPolicies([auditPolicyStruct]);
 
 					// Commit the changes
-					await Dispatcher.EnqueueAsync(auditPolicy.CommitChanges);
+					await GlobalVars.AppDispatcher.EnqueueAsync(auditPolicy.CommitChanges);
 				});
 
 				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("AuditPolicyAppliedSuccess"), auditPolicy.SubcategoryName, auditPolicy.AuditSettingDescription));
@@ -428,7 +413,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			finally
 			{
 				ElementsAreEnabled = true;
-				MainInfoBarIsClosable = true;
+				MainInfoBar.IsClosable = true;
 			}
 		}
 	}
@@ -458,7 +443,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			AllAuditPolicies.Clear();
 			AuditPolicies.Clear();
@@ -478,7 +463,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

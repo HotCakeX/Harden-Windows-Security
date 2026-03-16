@@ -33,17 +33,8 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 {
-	internal CryptographicBillOfMaterialsVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		// Give column widths paddings to look better
-		_ = Dispatcher.TryEnqueue(() =>
+	// Give column widths paddings to look better
+	internal CryptographicBillOfMaterialsVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 		{
 			CA_CalculateColumnWidths();
 			CNG_CalculateColumnWidths();
@@ -51,15 +42,9 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			TLS_CalculateColumnWidths();
 			REG_CalculateColumnWidths();
 		});
-	}
 
 	// Main InfoBar for this VM
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;
 
@@ -110,7 +95,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			CryptoAlgorithms.Clear();
 			AllCryptoAlgorithms.Clear();
@@ -122,7 +107,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 				// Enrich with availability and PQ capability details
 				AlgorithmManager.TestAlgorithmAvailability(list);
 
-				_ = Dispatcher.EnqueueAsync(() =>
+				_ = GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					CryptoAlgorithms.AddRange(list);
 					AllCryptoAlgorithms.AddRange(list);
@@ -139,7 +124,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -282,7 +267,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			CngCurves.Clear();
 			AllCngCurves.Clear();
@@ -291,7 +276,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			{
 				List<EccCurveCng> list = EccCurveManager.EnumerateCngCurves();
 
-				_ = Dispatcher.EnqueueAsync(() =>
+				_ = GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					CngCurves.AddRange(list);
 					AllCngCurves.AddRange(list);
@@ -308,7 +293,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -439,7 +424,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			SslProviderCurves.Clear();
 			AllSslProviderCurves.Clear();
@@ -448,7 +433,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			{
 				List<EccCurveSslProvider> list = EccCurveManager.EnumerateSslProviderCurves();
 
-				_ = Dispatcher.EnqueueAsync(() =>
+				_ = GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					SslProviderCurves.AddRange(list);
 					AllSslProviderCurves.AddRange(list);
@@ -465,7 +450,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -622,7 +607,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			TlsCipherSuites.Clear();
 			AllTlsCipherSuites.Clear();
@@ -635,7 +620,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 					? CipherSuiteManager.EnumerateConfiguredCipherSuites()
 					: CipherSuiteManager.EnumerateAllCipherSuites();
 
-				_ = Dispatcher.EnqueueAsync(() =>
+				_ = GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					TlsCipherSuites.AddRange(cipherSuites);
 					AllTlsCipherSuites.AddRange(cipherSuites);
@@ -652,7 +637,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -815,7 +800,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			RegisteredProviders.Clear();
 			AllRegisteredProviders.Clear();
@@ -824,7 +809,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			{
 				List<string> list = AlgorithmManager.EnumerateRegisteredProviders();
 
-				_ = Dispatcher.EnqueueAsync(() =>
+				_ = GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					RegisteredProviders.AddRange(list);
 					AllRegisteredProviders.AddRange(list);
@@ -841,7 +826,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -936,7 +921,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			await _RetrieveRegisteredProviders();
 
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string fileName = $"CBOM_{Environment.MachineName}.json";
 			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
@@ -969,7 +954,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -982,7 +967,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Retrieve the latest data first
 			await _RetrieveCryptoAlgorithms();
@@ -1003,7 +988,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

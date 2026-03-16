@@ -40,12 +40,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	[SetsRequiredMembers]
 	internal BitLockerVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
@@ -54,7 +49,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
-		_ = Dispatcher.TryEnqueue(ComputeColumnWidths);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -257,7 +252,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		try
 		{
 			BitLockerUiEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("RetrievingBitLockerVolumesEllipsis"));
 
@@ -272,7 +267,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		finally
 		{
 			BitLockerUiEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -530,7 +525,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 
 			BitLockerUiEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingKeyProtectorFromVolume"), keyProtector.ID, volume.MountPoint));
 
 			// Don't throw if KeyProtector is bound to the volume and keeping it unlocked.
@@ -559,7 +554,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		finally
 		{
 			BitLockerUiEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -719,7 +714,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 
 			BitLockerUiEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Instantiate the Content Dialog
 			using BitLockerEncryptDriveDialog customDialog = new(SelectedBitLockerVolume, AllBitLockerVolumes);
@@ -814,7 +809,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		finally
 		{
 			BitLockerUiEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -832,7 +827,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 
 			BitLockerUiEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
@@ -869,7 +864,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		finally
 		{
 			BitLockerUiEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -887,7 +882,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 
 			BitLockerUiEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Instantiate the Content Dialog
 			using BitLockerSuspend customDialog = new();
@@ -921,7 +916,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		finally
 		{
 			BitLockerUiEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -939,7 +934,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 
 			BitLockerUiEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
@@ -976,7 +971,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		finally
 		{
 			BitLockerUiEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -996,7 +991,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 
 			BitLockerUiEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Show save dialog
 			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
@@ -1046,7 +1041,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		finally
 		{
 			BitLockerUiEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

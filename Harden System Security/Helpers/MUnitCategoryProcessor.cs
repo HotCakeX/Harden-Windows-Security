@@ -48,7 +48,7 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 	/// <param name="allMUnits">All MUnits for the category</param>
 	/// <param name="selectedSubCategories">Selected sub-categories (null means only include MUnits without sub-categories)</param>
 	/// <returns>Filtered list of MUnits</returns>
-	protected virtual List<MUnit> FilterMUnitsBySubCategories(List<MUnit> allMUnits, List<SubCategories>? selectedSubCategories)
+	private static List<MUnit> FilterMUnitsBySubCategories(List<MUnit> allMUnits, List<SubCategories>? selectedSubCategories)
 	{
 		if (selectedSubCategories == null || selectedSubCategories.Count == 0)
 		{
@@ -71,7 +71,7 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 	/// - Include MUnits containing Intent.All when an intent is selected.
 	/// - Otherwise include if any MUnit.DeviceIntents equals the selectedIntent.
 	/// </summary>
-	protected virtual List<MUnit> FilterMUnitsByIntents(List<MUnit> mUnits, Intent? selectedIntent)
+	private static List<MUnit> FilterMUnitsByIntents(List<MUnit> mUnits, Intent? selectedIntent)
 	{
 		// If no intent selected, do not filter and return the collection immediately.
 		if (selectedIntent is null)
@@ -105,7 +105,7 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 	/// </summary>
 	/// <param name="mUnits">The list of MUnits to process.</param>
 	/// <returns>A new list of MUnits with conflicts resolved.</returns>
-	protected virtual List<MUnit> ResolvePolicyConflicts(List<MUnit> mUnits)
+	private static List<MUnit> ResolvePolicyConflicts(List<MUnit> mUnits)
 	{
 		if (mUnits is null || mUnits.Count <= 1)
 			return mUnits ?? [];

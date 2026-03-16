@@ -27,7 +27,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private ConfigurePolicyRuleOptionsVM ViewModel => ViewModelProvider.ConfigurePolicyRuleOptionsVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal ConfigurePolicyRuleOptions()
 	{
@@ -43,7 +42,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		// Light up the local page's button icons
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("ConfigurePolicyRuleOptions_ButtonContent")));
 	}
 

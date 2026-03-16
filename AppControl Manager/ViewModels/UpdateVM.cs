@@ -26,7 +26,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Management.Deployment;
@@ -47,24 +46,7 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class UpdateVM : ViewModelBase
 {
-	internal UpdateVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		AppPackageInstallerInfoBar = new InfoBarSettings(
-			() => AppPackageInstallerInfoBarIsOpen, value => AppPackageInstallerInfoBarIsOpen = value,
-			() => AppPackageInstallerInfoBarMessage, value => AppPackageInstallerInfoBarMessage = value,
-			() => AppPackageInstallerInfoBarSeverity, value => AppPackageInstallerInfoBarSeverity = value,
-			() => AppPackageInstallerInfoBarIsClosable, value => AppPackageInstallerInfoBarIsClosable = value,
-			Dispatcher, null, null);
-	}
-
-	internal readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	#region UI-Bound Properties
 
@@ -77,8 +59,8 @@ internal sealed partial class UpdateVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				MainInfoBarIsClosable = field;
-				AppPackageInstallerInfoBarIsClosable = field;
+				MainInfoBar.IsClosable = field;
+				AppPackageInstallerInfoBar.IsClosable = field;
 				ProgressBarVisibility = field ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
@@ -88,11 +70,6 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// Content of the main update button
 	/// </summary>
 	internal string UpdateButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -395,11 +372,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// </summary>
 	private const string CertCommonName = "SelfSignedCertForAppControlManager";
 
-	internal readonly InfoBarSettings AppPackageInstallerInfoBar;
-	internal bool AppPackageInstallerInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? AppPackageInstallerInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity AppPackageInstallerInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool AppPackageInstallerInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings AppPackageInstallerInfoBar = new();
 
 	/// <summary>
 	/// The package path that the user supplied.
@@ -513,7 +486,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 				ForceUpdateFromAnyVersion = true
 			};
 
-			IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(new Uri(packagePath), options);
+			IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(new(packagePath), options);
 
 			// This event is signaled when the operation completes
 			using ManualResetEvent opCompletedEvent = new(false);

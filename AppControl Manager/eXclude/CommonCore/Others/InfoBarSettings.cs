@@ -15,67 +15,25 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.UI.Dispatching;
+using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 
 namespace CommonCore.Others;
 
 /// <summary>
-/// Used to pass ViewModel based properties of an InfoBar element to a class constructor
-/// in a way that the receiver will be able to modify the original objects.
+/// ViewModels initialize this in their ctor and XAML pages directly bind to the properties available in each instance.
 /// </summary>
-/// <param name="getIsOpen"></param>
-/// <param name="setIsOpen"></param>
-/// <param name="getMessage"></param>
-/// <param name="setMessage"></param>
-/// <param name="getSeverity"></param>
-/// <param name="setSeverity"></param>
-/// <param name="getIsClosable"></param>
-/// <param name="setIsClosable"></param>
-/// <param name="getTitle"></param>
-/// <param name="setTitle"></param>
-internal sealed class InfoBarSettings(
-	Func<bool> getIsOpen, Action<bool> setIsOpen,
-	Func<string?> getMessage, Action<string?> setMessage,
-	Func<InfoBarSeverity> getSeverity, Action<InfoBarSeverity> setSeverity,
-	Func<bool> getIsClosable, Action<bool> setIsClosable,
-	DispatcherQueue DQ,
-	Func<string?>? getTitle = null, Action<string?>? setTitle = null)
+internal sealed class InfoBarSettings : ViewModelBase
 {
-	internal bool IsOpen
-	{
-		get => getIsOpen();
-		set => setIsOpen(value);
-	}
-
-	internal string? Message
-	{
-		get => getMessage();
-		set => setMessage(value);
-	}
-
-	internal InfoBarSeverity Severity
-	{
-		get => getSeverity();
-		set => setSeverity(value);
-	}
-
-	internal bool IsClosable
-	{
-		get => getIsClosable();
-		set => setIsClosable(value);
-	}
-
-	internal string? Title
-	{
-		// call the delegate if non-null, otherwise no-op fallback:
-		get => getTitle?.Invoke();
-		set => (setTitle ?? (_ => { }))(value);
-	}
+	internal InfoBarSeverity Severity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool IsOpen { get; set => SP(ref field, value); }
+	internal bool IsClosable { get; set => SP(ref field, value); } = true;
+	internal string? Message { get; set => SP(ref field, value); }
+	internal string? Title { get; set => SP(ref field, value); }
 
 	internal void WriteInfo(string Msg, string? title = null)
 	{
-		if (DQ.HasThreadAccess)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
@@ -85,7 +43,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = DQ.TryEnqueue(() =>
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;
@@ -99,7 +57,7 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteWarning(string Msg, string? title = null)
 	{
-		if (DQ.HasThreadAccess)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
@@ -109,7 +67,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = DQ.TryEnqueue(() =>
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;
@@ -124,7 +82,7 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteError(Exception ex, string? Msg = null, string? title = null)
 	{
-		if (DQ.HasThreadAccess)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg is not null ? CreateProperString(Msg) + ex.Message : ex.Message;
@@ -134,7 +92,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = DQ.TryEnqueue(() =>
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg is not null ? CreateProperString(Msg) + ex.Message : ex.Message;
@@ -148,7 +106,7 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteSuccess(string Msg, string? title = null)
 	{
-		if (DQ.HasThreadAccess)
+		if (GlobalVars.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
@@ -158,7 +116,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = DQ.TryEnqueue(() =>
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;

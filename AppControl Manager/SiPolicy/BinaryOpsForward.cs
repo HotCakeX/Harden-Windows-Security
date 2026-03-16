@@ -834,7 +834,7 @@ internal static partial class BinaryOpsForward
 
 		foreach (AppRoot appRootItem in CollectionsMarshal.AsSpan(appSettingsRegion.App))
 		{
-			AppManifest applicationManifest = Helper.RetrieveApplicationManifest(new Uri(appRootItem.Manifest));
+			AppManifest applicationManifest = Helper.RetrieveApplicationManifest(new(appRootItem.Manifest));
 
 			if (appRootItem.Setting is not null)
 			{

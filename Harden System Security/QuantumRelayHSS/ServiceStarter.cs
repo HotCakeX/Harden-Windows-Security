@@ -187,21 +187,6 @@ internal static partial class ServiceStarter
 	}
 
 
-	// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_status_process
-	[StructLayout(LayoutKind.Sequential)]
-	private struct SERVICE_STATUS_PROCESS
-	{
-		internal uint dwServiceType;
-		internal uint dwCurrentState;
-		internal uint dwControlsAccepted;
-		internal uint dwWin32ExitCode;
-		internal uint dwServiceSpecificExitCode;
-		internal uint dwCheckPoint;
-		internal uint dwWaitHint;
-		internal uint dwProcessId;
-		internal uint dwServiceFlags;
-	}
-
 	// https://learn.microsoft.com/windows/win32/services/service-security-and-access-rights
 	private const uint SC_MANAGER_CONNECT = 0x0001;
 	private const uint SERVICE_QUERY_STATUS = 0x0004;

@@ -31,8 +31,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
-	private NavigationService nav => ViewModelProvider.NavigationService;
 
 	internal AllowNewApps()
 	{
@@ -58,7 +56,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{
 		base.OnNavigatedTo(e);
-		nav.AffectPagesAnimatedIconsVisibilities(ContentFrame);
+		ViewModelProvider.NavigationService.AffectPagesAnimatedIconsVisibilities(ContentFrame);
 	}
 
 	/// <summary>
@@ -69,7 +67,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 	protected override void OnNavigatedFrom(NavigationEventArgs e)
 	{
 		base.OnNavigatedFrom(e);
-		nav.AffectPagesAnimatedIconsVisibilities(ContentFrame);
+		ViewModelProvider.NavigationService.AffectPagesAnimatedIconsVisibilities(ContentFrame);
 	}
 
 	public void SetVisibility(Visibility visibility)
@@ -77,7 +75,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 		// Light up the local page's button icons
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (ViewModel.LightUp1, GlobalVars.GetStr("AllowNewApps_SidebarButtonContent")));
 	}
 
@@ -113,7 +111,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 
 			// The same method that runs for the main Navigation in the MainWindow class must run here
 			// Since this is a 2nd nested NavigationView and has different frame
-			nav.AffectPagesAnimatedIconsVisibilities(ContentFrame);
+			ViewModelProvider.NavigationService.AffectPagesAnimatedIconsVisibilities(ContentFrame);
 		}
 	}
 

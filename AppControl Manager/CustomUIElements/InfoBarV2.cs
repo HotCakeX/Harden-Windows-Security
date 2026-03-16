@@ -1949,7 +1949,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 	private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		PropertyChanged?.Invoke(this, new(propertyName));
 	}
 
 	#endregion
@@ -1961,7 +1961,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 /// Event arguments for InfoBarV2 animation events.
 /// Provides information about the animation that started or completed.
 /// </summary>
-internal sealed class InfoBarV2AnimationEventArgs(
+internal readonly struct InfoBarV2AnimationEventArgs(
 	InfoBarV2.InfoBarAnimationType animationType,
 	bool isOpening,
 	TimeSpan duration)

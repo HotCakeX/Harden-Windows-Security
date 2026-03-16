@@ -21,36 +21,18 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 {
-	internal CodeIntegrityInfoVM() => MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-	private readonly InfoBarSettings MainInfoBar;
-
-	#region UI-Bound Properties
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal string? UMCI { get; set => SP(ref field, value); }
 
 	internal string? KMCI { get; set => SP(ref field, value); }
 
 	internal ObservableCollection<CodeIntegrityOption> codeIntegrityOptions = [];
-
-	#endregion
-
 
 	/// <summary>
 	/// Local method to convert numbers to their actual string values

@@ -30,7 +30,6 @@ using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -146,27 +145,12 @@ internal sealed partial class ASRRuleEntry(RegistryPolicyEntry policyEntry, ASRV
 
 internal sealed partial class ASRVM : ViewModelBase
 {
-	internal ASRVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		CreateJSONData();
-	}
+	internal ASRVM() => CreateJSONData();
 
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -595,7 +579,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Generator.GetFileName());
 
@@ -625,7 +609,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -689,7 +673,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					RegistryPolicyParser.RemovePoliciesFromSystem(ASRPolicyFromJSON, GroupPolicyContext.Machine);
 				}, cancellationToken);
 
-				_ = Dispatcher.TryEnqueue(() =>
+				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 				{
 					// Set UI states to NotConfigured.
 					foreach (ASRRuleEntry runtimeEntry in AllASRRules)
@@ -746,7 +730,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					{
 						appliedCount++;
 						parentNeeded = true;
-						_ = Dispatcher.TryEnqueue(() =>
+						_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 						{
 							runtimeEntry.State = desiredState;
 						});
@@ -755,7 +739,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					{
 						// Full sync explicit reset.
 						resetCount++;
-						_ = Dispatcher.TryEnqueue(() =>
+						_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 						{
 							runtimeEntry.State = ASRRuleState.NotConfigured;
 						});

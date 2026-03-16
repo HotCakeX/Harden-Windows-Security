@@ -16,11 +16,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+            <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
                                 IsIconVisible="True"
-                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"
                                 x:Uid="UpdatePageUpdateStatusInfoBar"
                                 Grid.Row="0">
                 <customUI:InfoBarV2.ActionButton>

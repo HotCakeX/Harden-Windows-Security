@@ -46,7 +46,7 @@ internal static class SupplementalForSelf
 		// Get all of the supplemental policies deployed on the system
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicyNoFilter = CiToolHelper.GetPolicies(false, false, true);
 
-		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = [.. CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))];
+		IEnumerable<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase));
 
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy = [.. CurrentlyDeployedSupplementalPolicy1stFilter.Where(policy => string.Equals(policy.BasePolicyID, trimmedBasePolicyID, StringComparison.OrdinalIgnoreCase))];
 
@@ -83,7 +83,7 @@ internal static class SupplementalForSelf
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicyNoFilter = CiToolHelper.GetPolicies(false, false, true);
 
 		// Filter based on their name
-		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = [.. CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))];
+		IEnumerable<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase));
 
 		// Only keep unsigned policies that have the same BasePolicyID as the one we are deploying
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy = [.. CurrentlyDeployedSupplementalPolicy1stFilter.Where(policy => string.Equals(policy.BasePolicyID, trimmedBasePolicyID, StringComparison.OrdinalIgnoreCase) && !policy.IsSignedPolicy)];

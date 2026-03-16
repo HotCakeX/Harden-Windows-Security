@@ -20,33 +20,17 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class BuildNewCertificateVM : ViewModelBase
 {
-
-	internal BuildNewCertificateVM() => MainInfoBar = new InfoBarSettings(
-		() => StatusInfoBarIsOpen, value => StatusInfoBarIsOpen = value,
-		() => StatusInfoBarMessage, value => StatusInfoBarMessage = value,
-		() => StatusInfoBarSeverity, value => StatusInfoBarSeverity = value,
-		() => StatusInfoBarIsClosable, value => StatusInfoBarIsClosable = value,
-		Dispatcher,
-		() => StatusInfoBarTitle, value => StatusInfoBarTitle = value);
-
-	private readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
 	/// To save the generated certificate's thumb print
 	/// </summary>
 	internal string? generatedCertThumbPrint { get; set => SP(ref field, value); }
-
-	internal InfoBarSeverity StatusInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool StatusInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool StatusInfoBarIsClosable { get; set => SP(ref field, value); } = true;
-	internal string? StatusInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? StatusInfoBarTitle { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Gets or sets the visibility state of the progress ring.
@@ -67,7 +51,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				StatusInfoBarIsClosable = field;
+				MainInfoBar.IsClosable = field;
 				ProgressRingVisibility = field ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
@@ -108,7 +92,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 				}
 				else
 				{
-					StatusInfoBarIsOpen = false;
+					MainInfoBar.IsOpen = false;
 				}
 			}
 		}

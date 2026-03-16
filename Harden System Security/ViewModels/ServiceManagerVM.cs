@@ -268,23 +268,10 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 {
 	private const uint SC_MANAGER_CONNECT = 0x0001;
 
-	internal ServiceManagerVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+	internal ServiceManagerVM() => FilteredServices.CollectionChanged += (s, e) => OnPropertyChanged(nameof(EmptyStatePlaceholderVisibility));
 
-		FilteredServices.CollectionChanged += (s, e) => OnPropertyChanged(nameof(EmptyStatePlaceholderVisibility));
-	}
 
-	internal readonly InfoBarSettings MainInfoBar;
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	// Whether the UI elements are enabled or disabled
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
@@ -565,7 +552,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		{
 			AreElementsEnabled = false;
 			IsLoading = true;
-			MainInfoBarIsOpen = false;
+			MainInfoBar.IsOpen = false;
 
 			// Cache current filter states before clearing so they aren't lost on refresh
 			Dictionary<string, HashSet<string>> previousFilters = new(StringComparer.OrdinalIgnoreCase);
@@ -1122,7 +1109,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 				if (success)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
+					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitStartTypeChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Start Type for {svm.Item.ServiceName}.");
@@ -1131,7 +1118,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				else
 				{
 					int error = Marshal.GetLastPInvokeError();
-					_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to update Start Type. Error Code: {error}"));
+					MainInfoBar.WriteWarning($"Failed to update Start Type. Error Code: {error}");
 				}
 			});
 		}
@@ -1180,7 +1167,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 				if (ModifyServiceConfig(svm.Item.ServiceName, newServiceType, NativeMethods.SERVICE_NO_CHANGE, NativeMethods.SERVICE_NO_CHANGE))
 				{
-					_ = Dispatcher.TryEnqueue(() =>
+					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitServiceTypeChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Service Type for {svm.Item.ServiceName}.");
@@ -1189,7 +1176,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				else
 				{
 					int error = Marshal.GetLastPInvokeError();
-					_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to update Service Type. Error Code: {error}"));
+					MainInfoBar.WriteWarning($"Failed to update Service Type. Error Code: {error}");
 				}
 			});
 		}
@@ -1204,7 +1191,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				uint newErrorControl = (uint)svm.SelectedErrorControlIndex;
 				if (ModifyServiceConfig(svm.Item.ServiceName, NativeMethods.SERVICE_NO_CHANGE, NativeMethods.SERVICE_NO_CHANGE, newErrorControl))
 				{
-					_ = Dispatcher.TryEnqueue(() =>
+					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitErrorControlChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Error Control for {svm.Item.ServiceName}.");
@@ -1213,7 +1200,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				else
 				{
 					int error = Marshal.GetLastPInvokeError();
-					_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to update Error Control. Error Code: {error}"));
+					MainInfoBar.WriteWarning($"Failed to update Error Control. Error Code: {error}");
 				}
 			});
 		}
@@ -1252,7 +1239,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			{
 				if (SetLaunchProtected(svm.Item.ServiceName, newLaunchProtected))
 				{
-					_ = Dispatcher.TryEnqueue(() =>
+					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitLaunchProtectedChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Launch Protected for {svm.Item.ServiceName}.");
@@ -1261,7 +1248,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				else
 				{
 					int error = Marshal.GetLastPInvokeError();
-					_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to update Launch Protected. Error Code: {error}"));
+					MainInfoBar.WriteWarning($"Failed to update Launch Protected. Error Code: {error}");
 				}
 			});
 		}
@@ -1273,7 +1260,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero)
 		{
-			_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning("Failed to open Service Control Manager."));
+			MainInfoBar.WriteWarning("Failed to open Service Control Manager.");
 			return false;
 		}
 
@@ -1287,7 +1274,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			if (hService == IntPtr.Zero)
 			{
 				int error = Marshal.GetLastPInvokeError();
-				_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to open service {serviceName}. Error Code: {error}"));
+				MainInfoBar.WriteWarning($"Failed to open service {serviceName}. Error Code: {error}");
 				return false;
 			}
 
@@ -1307,13 +1294,13 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				if (success)
 				{
 					string action = controlCode == 0 ? "started" : controlCode == NativeMethods.SERVICE_CONTROL_STOP ? "stopped" : controlCode == NativeMethods.SERVICE_CONTROL_PAUSE ? "paused" : "resumed";
-					_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteSuccess($"Successfully {action} service {serviceName}."));
+					MainInfoBar.WriteSuccess($"Successfully {action} service {serviceName}.");
 					return true;
 				}
 				else
 				{
 					int error = Marshal.GetLastPInvokeError();
-					_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to modify state for {serviceName}. Error Code: {error}"));
+					MainInfoBar.WriteWarning($"Failed to modify state for {serviceName}. Error Code: {error}");
 					return false;
 				}
 			}
@@ -1348,7 +1335,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 					IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
 					if (scManager == IntPtr.Zero)
 					{
-						_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning("Failed to open Service Control Manager for deletion."));
+						MainInfoBar.WriteWarning("Failed to open Service Control Manager for deletion.");
 						return;
 					}
 
@@ -1359,7 +1346,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 						if (hService == IntPtr.Zero)
 						{
 							int error = Marshal.GetLastPInvokeError();
-							_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to open service {svm.Item.ServiceName} for deletion. Error Code: {error}"));
+							MainInfoBar.WriteWarning($"Failed to open service {svm.Item.ServiceName} for deletion. Error Code: {error}");
 							return;
 						}
 
@@ -1367,7 +1354,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 						{
 							if (NativeMethods.DeleteService(hService))
 							{
-								_ = Dispatcher.TryEnqueue(() =>
+								_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 								{
 									MainInfoBar.WriteSuccess($"Successfully deleted service {svm.Item.ServiceName}.");
 									RefreshList();
@@ -1376,7 +1363,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 							else
 							{
 								int error = Marshal.GetLastPInvokeError();
-								_ = Dispatcher.TryEnqueue(() => MainInfoBar.WriteWarning($"Failed to delete service {svm.Item.ServiceName}. Error Code: {error}"));
+								MainInfoBar.WriteWarning($"Failed to delete service {svm.Item.ServiceName}. Error Code: {error}");
 							}
 						}
 						finally { _ = NativeMethods.CloseServiceHandle(hService); }
@@ -1418,7 +1405,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	private void RefreshList()
 	{
 		Thread.Sleep(500);
-		_ = Dispatcher.TryEnqueue(LoadServices_Click);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(LoadServices_Click);
 	}
 
 	internal async void StartService_Click(object sender, RoutedEventArgs e)

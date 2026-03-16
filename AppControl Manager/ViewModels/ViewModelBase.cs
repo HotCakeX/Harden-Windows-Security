@@ -51,15 +51,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	// Expose the dispatcher queue so that derived classes can marshal
-	// calls to the UI thread when needed.
-
-	// This won't always be available, especially when a type inheriting from this is being instantiated before the app is fully initialized,
-	//protected readonly Microsoft.UI.Dispatching.DispatcherQueue Dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-
-	// Get it from the App class.
-	protected Microsoft.UI.Dispatching.DispatcherQueue Dispatcher => GlobalVars.AppDispatcher;
-
 	/// <summary>
 	/// An instance property reference to the App settings that pages can x:Bind to.
 	/// </summary>
@@ -84,7 +75,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <param name="field">The existing value.</param>
 	/// <param name="newValue">The new value.</param>
 	/// <param name="propertyName"></param>
-	protected bool SP<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+	internal protected bool SP<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
 	{
 		if (EqualityComparer<T>.Default.Equals(field, newValue))
 			return false;
@@ -111,7 +102,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <param name="newValue"></param>
 	/// <param name="propertyName"></param>
 	/// <returns></returns>
-	protected bool SPT(ref string? field, string? newValue, [CallerMemberName] string? propertyName = null)
+	internal protected bool SPT(ref string? field, string? newValue, [CallerMemberName] string? propertyName = null)
 	{
 		if (string.Equals(field, newValue, StringComparison.Ordinal))
 			return false;
@@ -140,7 +131,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// Raises the PropertyChanged event.
 	/// </summary>
 	/// <param name="propertyName">The name of the property that changed.</param>
-	protected void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	internal protected void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 
 #if APP_CONTROL_MANAGER
 
@@ -207,7 +198,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		try
 		{
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				_previousSession?.Dispose();
 			});
@@ -218,14 +209,14 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 			// Set properties
 			activity.VisualElements.DisplayText = displayText;
-			activity.ActivationUri = new Uri($"appcontrol-manager:--action={action}--file={filePath}");
+			activity.ActivationUri = new($"appcontrol-manager:--action={action}--file={filePath}");
 
 			// Save the activity
 			await activity.SaveAsync();
 
 			TaskCompletionSource<UserActivitySession> tcs = new();
 
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				try
 				{
@@ -434,7 +425,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 			string? savePath = Path.Exists(policy.FilePath) ? policy.FilePath : await MainWindow.ExecuteSaveAsXML(policy);
 
 			if (savePath is not null)
-				_ = await Launcher.LaunchUriAsync(new Uri(savePath));
+				_ = await Launcher.LaunchUriAsync(new(savePath));
 		}
 		catch (Exception ex)
 		{
@@ -453,7 +444,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		try
 		{
 			if (filePath is not null)
-				_ = await Launcher.LaunchUriAsync(new Uri(filePath));
+				_ = await Launcher.LaunchUriAsync(new(filePath));
 		}
 		catch (Exception ex)
 		{
@@ -463,7 +454,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	private static readonly MediaPlayer TypeWriterMediaPlayer = new()
 	{
-		Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/Audio/TypeWriter.wav")),
+		Source = MediaSource.CreateFromUri(new("ms-appx:///Assets/Audio/TypeWriter.wav")),
 		// https://learn.microsoft.com/uwp/api/windows.media.systemmediatransportcontrols
 		CommandManager = { IsEnabled = false } // Disable System Media Transport Controls (SMTC) to prevent the audio from being displayed by the OS.
 	};

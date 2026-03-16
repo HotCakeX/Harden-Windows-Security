@@ -41,17 +41,8 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
-	private NavigationService Nav => ViewModelProvider.NavigationService;
-
 	internal SettingsVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		// Populate the ComboBoxes' ItemsSource collections
 		LoadLanguages();
 
@@ -79,14 +70,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
-
-	private MainWindowVM ViewModelMainWindow => ViewModelProvider.MainWindowVM;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal bool UIFlowDirectionToggleSwitch
 	{
@@ -166,7 +150,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				}
 
 				// Refresh this page.
-				Nav.RefreshSettingsPage();
+				ViewModelProvider.NavigationService.RefreshSettingsPage();
 			}
 		}
 	} = SupportedLanguages.TryGetValue(GlobalVars.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;
@@ -223,7 +207,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 			{
 				if (IconsStylesReverse.TryGetValue(field, out string? x))
 				{
-					ViewModelMainWindow.OnIconsStylesChanged(x);
+					ViewModelProvider.MainWindowVM.OnIconsStylesChanged(x);
 
 					GlobalVars.Settings.IconsStyle = x;
 				}
@@ -255,7 +239,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		MainWindowVM.SetCaptionButtonsFlowDirection(((ToggleSwitch)sender).IsOn ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
 		// Needs to run via Dispatcher, otherwise the 1st double-click on the UI elements register as pass-through, meaning they will resize the window as if we clicked on an empty area on the TitleBar.
-		_ = Dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+		_ = GlobalVars.AppDispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
 		{
 			// Get reference to the MainWindow and refresh the localized content
 			if (App.MainWindow is MainWindow mainWindow)

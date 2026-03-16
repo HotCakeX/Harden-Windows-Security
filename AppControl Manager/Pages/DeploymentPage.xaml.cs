@@ -27,7 +27,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private DeploymentVM ViewModel => ViewModelProvider.DeploymentVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal DeploymentPage()
 	{
@@ -44,7 +43,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, Comm
 		ViewModel.UnsignedXMLFilesLightAnimatedIconVisibility = visibility;
 		ViewModel.SignedXMLFilesLightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("DeployUnsignedPolicy")),
 			actionPack2: (LightUp2, GlobalVars.GetStr("DeploySignedPolicy")));
 	}

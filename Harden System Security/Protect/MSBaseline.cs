@@ -126,7 +126,7 @@ internal static class MSBaseline
 	/// Represents a cached download entry with expiration tracking.
 	/// Stores compressed data to minimize memory usage.
 	/// </summary>
-	private sealed class CacheEntry(
+	private readonly struct CacheEntry(
 		byte[] compressedData,
 		DateTime cachedAt,
 		int originalSize
@@ -302,7 +302,7 @@ internal static class MSBaseline
 	private static async Task<byte[]> DownloadSecurityBaselineZip(Uri downloadUrl)
 	{
 		// Check cache first - remove expired entry if found
-		if (_downloadCache.TryGetValue(downloadUrl, out CacheEntry? cacheEntry))
+		if (_downloadCache.TryGetValue(downloadUrl, out CacheEntry cacheEntry))
 		{
 			if (!cacheEntry.IsExpired)
 			{

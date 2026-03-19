@@ -516,7 +516,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					Result<List<AppMitigations>> registryResult = SecurityPolicyRepository.RetrieveSecurityConfigurationListFromRegistry(fileName);
 
 					// If no registry entry exists for this filename, the exclusion is not applied
-					if (registryResult.IsFailure || registryResult.Value.Count is 0)
+					if (!registryResult.IsSuccess || registryResult.Value.Count is 0)
 					{
 						return false;
 					}
@@ -672,7 +672,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		catch (Exception ex)
 		{
-			return Result<AppMitigations>.Failure($"Failed to get system policy: {ex.Message}");
+			return new Result<AppMitigations>(false, $"Failed to get system policy: {ex.Message}");
 		}
 	}
 
@@ -684,21 +684,21 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		try
 		{
 			if (enableList is null && disableList is null)
-				return Result.Failure("The input parameters are invalid. Please specify a list of mitigations to enable or disable for this process.");
+				return new Result(false, "The input parameters are invalid. Please specify a list of mitigations to enable or disable for this process.");
 
 			if (processName.Equals(Path.GetFileNameWithoutExtension(processName)))
 				processName = (processName + ".exe").ToLowerInvariant();
 
 			Result<List<AppMitigations>> fromRegistryByNameResult = SecurityPolicyRepository.RetrieveSecurityConfigurationFromRegistryByName(processName);
-			if (fromRegistryByNameResult.IsFailure)
-				return Result.Failure(fromRegistryByNameResult.Error);
+			if (!fromRegistryByNameResult.IsSuccess)
+				return new Result(false, fromRegistryByNameResult.Error);
 
 			List<AppMitigations> fromRegistryByName = fromRegistryByNameResult.Value;
 			AppMitigations? appMitigations = null;
 			if (fromRegistryByName.Count is 0)
 				appMitigations = new AppMitigations(processName);
 			else if (fromRegistryByName.Count > 1)
-				return Result.Failure("Multiple mitigation policies found that may match the given process name. Please specify the full path to be matched instead.");
+				return new Result(false, "Multiple mitigation policies found that may match the given process name. Please specify the full path to be matched instead.");
 			else
 				appMitigations = fromRegistryByName[0];
 
@@ -706,7 +706,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		catch (Exception ex)
 		{
-			return Result.Failure($"Failed to add mitigations for process: {ex.Message}");
+			return new Result(false, $"Failed to add mitigations for process: {ex.Message}");
 		}
 	}
 
@@ -728,7 +728,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		catch (Exception ex)
 		{
-			return Result.Failure($"Failed to add mitigations to system: {ex.Message}");
+			return new Result(false, $"Failed to add mitigations to system: {ex.Message}");
 		}
 	}
 

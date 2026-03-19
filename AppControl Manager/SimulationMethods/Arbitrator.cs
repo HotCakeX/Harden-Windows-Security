@@ -56,7 +56,7 @@ internal static class Arbitrator
 				// This is used for all levels, not just WHQL levels
 				bool EKUsMatch = false;
 
-				foreach (string EKU in signer.CertEKU!)
+				foreach (string EKU in CollectionsMarshal.AsSpan(signer.CertEKU))
 				{
 					if (simulationInput.EKUOIDs is not null && simulationInput.EKUOIDs.Contains(EKU))
 					{

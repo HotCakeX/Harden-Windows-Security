@@ -78,7 +78,7 @@ internal enum DependencyType
 /// <summary>
 /// Represents a dependency relationship between MUnits.
 /// </summary>
-internal sealed class MUnitDependency(Guid dependentMUnitId, DependencyType type, ExecutionTiming timing)
+internal readonly struct MUnitDependency(Guid dependentMUnitId, DependencyType type, ExecutionTiming timing)
 {
 	/// <summary>
 	/// The unique identifier of the dependent MUnit.

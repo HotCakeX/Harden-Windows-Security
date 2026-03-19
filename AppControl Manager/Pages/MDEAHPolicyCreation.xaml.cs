@@ -121,7 +121,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 		}
 	}
 
-
 	/// <summary>
 	/// Handles the Copy button click.
 	/// Copies the associated query text to the clipboard and plays an animation

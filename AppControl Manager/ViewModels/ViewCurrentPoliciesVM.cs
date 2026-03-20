@@ -39,13 +39,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 {
 	internal ViewCurrentPoliciesVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		// Initialize the column manager with specific definitions for this page
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
 		ColumnManager = new ListViewColumnManager<CiPolicyInfo>(
@@ -66,12 +59,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		ColumnManager.CalculateColumnWidths(AllPolicies);
 	}
 
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	// To store the policies displayed on the ListView
 	internal readonly CommonCore.IncrementalCollection.RangedObservableCollection<CiPolicyInfo> AllPolicies = [];

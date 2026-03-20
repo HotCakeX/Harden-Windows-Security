@@ -211,7 +211,7 @@ internal sealed partial class ListViewIncrementalController(
 		// Initialize a single, reusable debounce timer
 		if (_searchDebounceTimer is null)
 		{
-			_searchDebounceTimer = Dispatcher.CreateTimer();
+			_searchDebounceTimer = GlobalVars.AppDispatcher.CreateTimer();
 			_searchDebounceTimer.IsRepeating = false;
 			_searchDebounceTimer.Tick += (s, e) =>
 			{
@@ -349,7 +349,7 @@ internal sealed partial class ListViewIncrementalController(
 			return;
 
 		// Let the UI process the collection change and realize/recycle containers, then anchor to the very first item.
-		await Dispatcher.EnqueueAsync(() =>
+		await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 		{
 			try
 			{
@@ -359,7 +359,7 @@ internal sealed partial class ListViewIncrementalController(
 		});
 
 		// Clamp again to ensure vertical remains at the very top after the ScrollIntoView operation.
-		await Dispatcher.EnqueueAsync(() =>
+		await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 		{
 			if (ScrollViewerRef is null) return;
 
@@ -436,7 +436,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		if (_recalcTimer is not null) return;
 
-		_recalcTimer = Dispatcher.CreateTimer();
+		_recalcTimer = GlobalVars.AppDispatcher.CreateTimer();
 		_recalcTimer.IsRepeating = false;
 		_recalcTimer.Interval = TimeSpan.FromMilliseconds(20);
 		_recalcTimer.Tick += (s, e) =>

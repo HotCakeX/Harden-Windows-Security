@@ -27,7 +27,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private SimulationVM ViewModel => ViewModelProvider.SimulationVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal Simulation()
 	{
@@ -43,7 +42,7 @@ internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCo
 		// Light up the local page's button icons
 		ViewModel.SelectedPolicyLightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("SimulationNavItem/Content"))
 			);
 	}

@@ -21,10 +21,10 @@
         </Grid.RowDefinitions>
 
         <customUI:InfoBarV2 Grid.Row="0"
-                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+                 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                 Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                 IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
 
         <Border Grid.Row="1" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
 

@@ -19,10 +19,10 @@
 
             <customUI:InfoBarV2 Grid.Row="0"
                                 Margin="0,0,0,5"
-                                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+                                IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}"

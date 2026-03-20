@@ -43,19 +43,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// </summary>
 	internal ViewOnlinePoliciesVM()
 	{
-		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher), AuthenticationContext.Intune);
-
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
 		// Initialize the column manager with specific definitions for this page
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
@@ -75,14 +63,9 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
-	internal readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	#region UI-Bound Properties
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal CiPolicyInfo? ListViewSelectedPolicy
 	{
@@ -414,7 +397,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 		try
 		{
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			AreElementsEnabled = false;
 
 			if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
@@ -449,7 +432,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -460,7 +443,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	{
 		try
 		{
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			AreElementsEnabled = false;
 
 			if (AuthCompanionCLS.CurrentActiveAccount is null)
@@ -481,7 +464,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

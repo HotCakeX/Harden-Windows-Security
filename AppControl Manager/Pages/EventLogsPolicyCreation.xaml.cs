@@ -29,7 +29,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class EventLogsPolicyCreation : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private EventLogsPolicyCreationVM ViewModel => ViewModelProvider.EventLogsPolicyCreationVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal EventLogsPolicyCreation()
 	{
@@ -45,7 +44,7 @@ internal sealed partial class EventLogsPolicyCreation : Page, IAnimatedIconsMana
 		// Light up the local page's button icon
 		ViewModel.LightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("AddToPolicySegmentedItem/Content")),
 			actionPack2: (LightUp2, GlobalVars.GetStr("BasePolicyFileSegmentedItem/Content"))
 		);

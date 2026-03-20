@@ -28,7 +28,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private CreateDenyPolicyVM ViewModel => ViewModelProvider.CreateDenyPolicyVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal CreateDenyPolicy()
 	{
@@ -44,7 +43,7 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 		// Light up the local page's button icons
 		ViewModel.PolicyFileToMergeWithLightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("PolicyToAddNewRulesTo"))
 		);
 	}

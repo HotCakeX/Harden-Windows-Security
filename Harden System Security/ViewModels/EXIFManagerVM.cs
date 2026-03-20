@@ -35,19 +35,8 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class EXIFManagerVM : ViewModelBase
 {
-	internal EXIFManagerVM() =>
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
 
-	internal readonly InfoBarSettings MainInfoBar;
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	// Whether the UI elements are enabled or disabled
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
@@ -360,8 +349,7 @@ internal sealed partial class MetadataCategory(string categoryId, string display
 {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new(propertyName));
 
 	internal string CategoryId => categoryId;
 	internal string DisplayName => displayName;

@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.Helpers;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
@@ -28,23 +27,10 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class FileReputationVM : ViewModelBase
 {
-
-	internal FileReputationVM() => MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -119,7 +105,7 @@ internal sealed partial class FileReputationVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			FileTrustChecker.FileTrustResult? result = await Task.Run(() => FileTrustChecker.CheckFileTrust(filePath));
 
@@ -135,7 +121,7 @@ internal sealed partial class FileReputationVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

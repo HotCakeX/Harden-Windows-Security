@@ -150,10 +150,10 @@
 
                     </controls:WrapPanel>
 
-                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step1InfoBar_Severity, Mode=OneWay}"
-                                        IsOpen="{x:Bind ViewModel.Step1InfoBar_IsOpen, Mode=TwoWay}"
-                                        IsClosable='{x:Bind ViewModel.Step1InfoBar_IsClosable, Mode=OneWay}'
-                                        Message="{x:Bind ViewModel.Step1InfoBar_Message, Mode=OneWay}"
+                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step1InfoBar.Severity, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.Step1InfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable='{x:Bind ViewModel.Step1InfoBar.IsClosable, Mode=OneWay}'
+                                        Message="{x:Bind ViewModel.Step1InfoBar.Message, Mode=OneWay}"
                                         Margin="0,20,0,0" Grid.Row="2"/>
 
                 </Grid>
@@ -249,10 +249,10 @@
 
                     </controls:WrapPanel>
 
-                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step2InfoBar_Severity, Mode=OneWay}"
-                                        IsOpen="{x:Bind ViewModel.Step2InfoBar_IsOpen, Mode=TwoWay}"
-                                        IsClosable='{x:Bind ViewModel.Step2InfoBar_IsClosable, Mode=OneWay}'
-                                        Message="{x:Bind ViewModel.Step2InfoBar_Message, Mode=OneWay}"
+                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step2InfoBar.Severity, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.Step2InfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable='{x:Bind ViewModel.Step2InfoBar.IsClosable, Mode=OneWay}'
+                                        Message="{x:Bind ViewModel.Step2InfoBar.Message, Mode=OneWay}"
                                         Margin="0,20,0,0" Grid.Row="2"/>
 
                 </Grid>
@@ -310,10 +310,10 @@
                         </Button>
                     </controls:WrapPanel>
 
-                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step3InfoBar_Severity, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.Step3InfoBar_IsOpen, Mode=TwoWay}"
-                            IsClosable='{x:Bind ViewModel.Step3InfoBar_IsClosable, Mode=OneWay}'
-                            Message="{x:Bind ViewModel.Step3InfoBar_Message, Mode=OneWay}"
+                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step3InfoBar.Severity, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.Step3InfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable='{x:Bind ViewModel.Step3InfoBar.IsClosable, Mode=OneWay}'
+                            Message="{x:Bind ViewModel.Step3InfoBar.Message, Mode=OneWay}"
                             Margin="0,20,0,0" Grid.Row="2">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton x:Uid="AdditionalActionsDropDownButton"

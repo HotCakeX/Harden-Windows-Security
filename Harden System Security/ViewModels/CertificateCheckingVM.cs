@@ -36,29 +36,13 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class CertificateCheckingVM : ViewModelBase
 {
-
-	internal CertificateCheckingVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		// Calculate initial column widths
-		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
-	}
+	// Calculate initial column widths
+	internal CertificateCheckingVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -471,7 +455,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Clear existing data
 			AllNonStlCertificates.Clear();
@@ -501,7 +485,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 					AuthRootProcessor.FindCertificatesNotChainingToStlRoots(stlRootSha256, IncludeExpiredCertificates);
 
 				// Update UI on the UI thread
-				await Dispatcher.EnqueueAsync(() =>
+				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					// Store CTL header for UI display - this will trigger UpdateCtlHeaderProperties()
 					CurrentCtlHeader = parseResult.Header;
@@ -522,7 +506,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -549,7 +533,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Clear existing data
 			AllNonStlCertificates.Clear();
@@ -567,7 +551,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				DateTime end = DateTime.UtcNow;
 
 				// Update UI on the UI thread
-				await Dispatcher.EnqueueAsync(() =>
+				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					AllNonStlCertificates.AddRange(allCertificates);
 					NonStlCertificates.AddRange(allCertificates);
@@ -587,7 +571,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -751,7 +735,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			}
 
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
 					"Certificates|*.JSON",
@@ -778,7 +762,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

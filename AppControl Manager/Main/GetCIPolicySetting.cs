@@ -19,13 +19,13 @@ using System.Runtime.InteropServices;
 
 namespace AppControlManager.Main;
 
-internal sealed class SecurePolicySetting(object? Value, WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
+internal readonly struct SecurePolicySetting(object? value, WLDP_SECURE_SETTING_VALUE_TYPE valueType, uint valueSize, bool status, int statusCode)
 {
-	internal object? Value { get; set; } = Value;
-	internal WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
-	internal uint ValueSize { get; set; } = ValueSize;
-	internal bool Status { get; set; } = Status;
-	internal int StatusCode { get; set; } = StatusCode;
+	internal object? Value => value;
+	internal WLDP_SECURE_SETTING_VALUE_TYPE ValueType => valueType;
+	internal uint ValueSize => valueSize;
+	internal bool Status => status;
+	internal int StatusCode => statusCode;
 }
 
 internal static class GetCIPolicySetting
@@ -33,7 +33,6 @@ internal static class GetCIPolicySetting
 
 	internal static SecurePolicySetting Invoke(string provider, string key, string valueName)
 	{
-
 		// Create UNICODE_STRING structures
 		UNICODE_STRING ProviderUS = NativeMethods.InitUnicodeString(provider);
 		UNICODE_STRING KeyUS = NativeMethods.InitUnicodeString(key);

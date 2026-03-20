@@ -176,7 +176,7 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 
 	#region IPropertyChangeHost Implementation
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public void RaisePropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	public void RaisePropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 	#endregion
 
 }

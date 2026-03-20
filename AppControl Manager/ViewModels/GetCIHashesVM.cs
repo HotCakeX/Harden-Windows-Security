@@ -22,7 +22,6 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
@@ -30,34 +29,16 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class GetCIHashesVM : ViewModelBase
 {
-	internal GetCIHashesVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+	internal GetCIHashesVM() => InitializeHashItems();
 
-		InitializeHashItems();
-	}
 
-	private readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
-
-	#region UI-Bound Properties
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;
 
 	internal ObservableCollection<HashCardItem> HashItems { get; } = [];
 
 	internal HashCardItem? SelectedHashItem { get; set => SP(ref field, value); }
-
-	#endregion
 
 	internal string? selectedFile { get; set => SP(ref field, value); }
 

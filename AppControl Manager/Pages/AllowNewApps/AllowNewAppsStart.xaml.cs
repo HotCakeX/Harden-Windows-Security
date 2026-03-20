@@ -31,7 +31,6 @@ internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 {
 
 	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal AllowNewAppsStart()
 	{
@@ -54,7 +53,7 @@ internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 		// Light up the local page's button icons
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (ViewModel.LightUp1, GlobalVars.GetStr("AllowNewApps_SidebarButtonContent")));
 	}
 

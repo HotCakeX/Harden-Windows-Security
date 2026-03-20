@@ -54,30 +54,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		EventLogsUtil = _EventLogUtility;
 		PolicyEditorViewModel = _PolicyEditorVM;
 
-		Step1InfoBar = new InfoBarSettings(
-			() => Step1InfoBar_IsOpen, value => Step1InfoBar_IsOpen = value,
-			() => Step1InfoBar_Message, value => Step1InfoBar_Message = value,
-			() => Step1InfoBar_Severity, value => Step1InfoBar_Severity = value,
-			() => Step1InfoBar_IsClosable, value => Step1InfoBar_IsClosable = value,
-			Dispatcher,
-			() => Step1InfoBar_Title, value => Step1InfoBar_Title = value);
-
-		Step2InfoBar = new InfoBarSettings(
-			() => Step2InfoBar_IsOpen, value => Step2InfoBar_IsOpen = value,
-			() => Step2InfoBar_Message, value => Step2InfoBar_Message = value,
-			() => Step2InfoBar_Severity, value => Step2InfoBar_Severity = value,
-			() => Step2InfoBar_IsClosable, value => Step2InfoBar_IsClosable = value,
-			Dispatcher,
-			() => Step2InfoBar_Title, value => Step2InfoBar_Title = value);
-
-		Step3InfoBar = new InfoBarSettings(
-			() => Step3InfoBar_IsOpen, value => Step3InfoBar_IsOpen = value,
-			() => Step3InfoBar_Message, value => Step3InfoBar_Message = value,
-			() => Step3InfoBar_Severity, value => Step3InfoBar_Severity = value,
-			() => Step3InfoBar_IsClosable, value => Step3InfoBar_IsClosable = value,
-			Dispatcher,
-			() => Step3InfoBar_Title, value => Step3InfoBar_Title = value);
-
 
 		// Initialize Local Files Column Manager
 		LocalFilesColumnManager = new ListViewColumnManager<FileIdentity>(
@@ -264,29 +240,12 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// </summary>
 	internal bool DeployPolicyState { get; set => SP(ref field, value); }
 
-	internal InfoBarSeverity Step1InfoBar_Severity { get; set => SP(ref field, value); }
-	internal bool Step1InfoBar_IsOpen { get; set => SP(ref field, value); }
-	internal bool Step1InfoBar_IsClosable { get; set => SP(ref field, value); }
-	internal string? Step1InfoBar_Message { get; set => SP(ref field, value); }
-	internal string? Step1InfoBar_Title { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings Step1InfoBar;
+	internal readonly InfoBarSettings Step1InfoBar = new();
 
-	internal InfoBarSeverity Step2InfoBar_Severity { get; set => SP(ref field, value); }
-	internal bool Step2InfoBar_IsOpen { get; set => SP(ref field, value); }
-	internal bool Step2InfoBar_IsClosable { get; set => SP(ref field, value); }
-	internal string? Step2InfoBar_Message { get; set => SP(ref field, value); }
-	internal string? Step2InfoBar_Title { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings Step2InfoBar = new();
 
-	private readonly InfoBarSettings Step2InfoBar;
-
-	internal InfoBarSeverity Step3InfoBar_Severity { get; set => SP(ref field, value); }
-	internal bool Step3InfoBar_IsOpen { get; set => SP(ref field, value); }
-	internal bool Step3InfoBar_IsClosable { get; set => SP(ref field, value); }
-	internal string? Step3InfoBar_Message { get; set => SP(ref field, value); }
-	internal string? Step3InfoBar_Title { get; set => SP(ref field, value); }
-
-	private readonly InfoBarSettings Step3InfoBar;
+	internal readonly InfoBarSettings Step3InfoBar = new();
 
 	/// <summary>
 	/// Gradient color used for the active border.
@@ -387,8 +346,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 		if (ResetInfoBar)
 		{
-			Step1InfoBar_IsOpen = false;
-			Step1InfoBar_Message = null;
+			Step1InfoBar.IsOpen = false;
+			Step1InfoBar.Message = null;
 		}
 
 		LogSizeNumberBoxIsEnabled = false;
@@ -410,8 +369,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		GoToStep3ButtonIsEnabled = false;
 		Step2GridOpacity = 0.5;
 		Step2Border_ResetStyles();
-		Step2InfoBar_IsOpen = false;
-		Step2InfoBar_Message = null;
+		Step2InfoBar.IsOpen = false;
+		Step2InfoBar.Message = null;
 	}
 
 	internal void EnableStep2()
@@ -429,8 +388,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		CreatePolicyButtonIsEnabled = false;
 		Step3GridOpacity = 0.5;
 		Step3Border_ResetStyles();
-		Step3InfoBar_IsOpen = false;
-		Step3InfoBar_Message = null;
+		Step3InfoBar.IsOpen = false;
+		Step3InfoBar.Message = null;
 	}
 
 	internal void EnableStep3()
@@ -525,7 +484,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
 
-			Step3InfoBar_IsClosable = false;
+			Step3InfoBar.IsClosable = false;
 
 			Step3InfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyFromLogsOrScans"));
 
@@ -613,7 +572,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		{
 			CreatePolicyButtonIsEnabled = true;
 			ResetStepsButtonIsEnabled = true;
-			Step3InfoBar_IsClosable = true;
+			Step3InfoBar.IsClosable = true;
 
 			// Clear the private variable after the policy is created. This allows the user to remove some items from the logs and recreate the policy with less data if needed.
 			fileIdentities.FileIdentitiesInternal.Clear();
@@ -879,7 +838,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			GoToStep2ButtonIsEnabled = false;
 			ResetStepsButtonIsEnabled = false;
 
-			Step1InfoBar_IsClosable = false;
+			Step1InfoBar.IsClosable = false;
 
 			Step1InfoBar.WriteInfo(GlobalVars.GetStr("Starting"));
 
@@ -1016,7 +975,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		{
 			Step1ProgressRingIsActive = false;
 			ResetStepsButtonIsEnabled = true;
-			Step1InfoBar_IsClosable = true;
+			Step1InfoBar.IsClosable = true;
 
 			// Only re-enable the button if errors occurred, otherwise we don't want to override the work that DisableStep1() method does
 			if (errorOccurred)
@@ -1045,7 +1004,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			ResetStepsButtonIsEnabled = false;
 			BrowseForFoldersButtonIsEnabled = false;
 
-			Step2InfoBar_IsClosable = false;
+			Step2InfoBar.IsClosable = false;
 
 			// While the base policy is being deployed is audit mode, set the progress ring as indeterminate
 			Step2ProgressRingIsIndeterminate = true;
@@ -1104,7 +1063,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 						LocalFilesAllFileIdentities.Clear();
 						LocalFilesAllFileIdentities.AddRange(LocalFilesResults);
 
-						await Dispatcher.EnqueueAsync(() =>
+						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 						{
 							// Add the results of the Files/Directories scans to the ObservableCollection
 							LocalFilesFileIdentities = new(LocalFilesResults);
@@ -1144,7 +1103,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				EventLogsAllFileIdentities.Clear();
 				EventLogsAllFileIdentities.AddRange(Output);
 
-				await Dispatcher.EnqueueAsync(() =>
+				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 				{
 					EventLogsFileIdentities.Clear();
 
@@ -1171,7 +1130,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		{
 			Step2ProgressRingIsActive = false;
 			ResetStepsButtonIsEnabled = true;
-			Step2InfoBar_IsClosable = true;
+			Step2InfoBar.IsClosable = true;
 			BrowseForFoldersButtonIsEnabled = true;
 
 			if (errorsOccurred)
@@ -1198,7 +1157,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			DisableStep2();
 			DisableStep3();
 
-			Step1InfoBar_IsClosable = false;
+			Step1InfoBar.IsClosable = false;
 
 			Step1InfoBar.WriteInfo(GlobalVars.GetStr("Resetting"));
 
@@ -1263,7 +1222,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			ResetProgressRingIsActive = false;
 			ResetStepsButtonIsEnabled = true;
 
-			Step1InfoBar_IsClosable = true;
+			Step1InfoBar.IsClosable = true;
 		}
 	}
 

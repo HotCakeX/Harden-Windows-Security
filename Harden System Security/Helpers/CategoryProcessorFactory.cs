@@ -36,32 +36,29 @@ internal static class CategoryProcessorFactory
 	/// </summary>
 	/// <param name="category">The category to get processor for</param>
 	/// <returns>Category processor instance</returns>
-	internal static ICategoryProcessor GetProcessor(Categories category)
+	internal static ICategoryProcessor GetProcessor(Categories category) => category switch
 	{
-		return category switch
-		{
-			Categories.MicrosoftSecurityBaseline => new MicrosoftSecurityBaselineProcessor(),
-			Categories.MSFTSecBaselines_OptionalOverrides => new MicrosoftSecurityBaselineOverridesProcessor(),
-			Categories.Microsoft365AppsSecurityBaseline => new Microsoft365AppsSecurityBaselineProcessor(),
-			Categories.MicrosoftDefender => new MicrosoftDefenderProcessor(),
-			Categories.AttackSurfaceReductionRules => new AttackSurfaceReductionRulesProcessor(),
-			Categories.BitLockerSettings => new BitLockerSettingsProcessor(),
-			Categories.TLSSecurity => new TLSSecurityProcessor(),
-			Categories.LockScreen => new LockScreenProcessor(),
-			Categories.UserAccountControl => new UserAccountControlProcessor(),
-			Categories.DeviceGuard => new DeviceGuardProcessor(),
-			Categories.WindowsFirewall => new WindowsFirewallProcessor(),
-			Categories.OptionalWindowsFeatures => new OptionalWindowsFeaturesProcessor(),
-			Categories.WindowsNetworking => new WindowsNetworkingProcessor(),
-			Categories.MiscellaneousConfigurations => new MiscellaneousConfigurationsProcessor(),
-			Categories.WindowsUpdateConfigurations => new WindowsUpdateConfigurationsProcessor(),
-			Categories.EdgeBrowserConfigurations => new EdgeBrowserConfigurationsProcessor(),
-			Categories.CertificateChecking => throw new InvalidOperationException("Certificate Checking must be interacted with manually."),
-			Categories.CountryIPBlocking => new CountryIPBlockingProcessor(),
-			Categories.NonAdminCommands => new NonAdminCommandsProcessor(),
-			_ => throw new ArgumentException($"Unknown category: {category}", nameof(category))
-		};
-	}
+		Categories.MicrosoftSecurityBaseline => new MicrosoftSecurityBaselineProcessor(),
+		Categories.MSFTSecBaselines_OptionalOverrides => new MicrosoftSecurityBaselineOverridesProcessor(),
+		Categories.Microsoft365AppsSecurityBaseline => new Microsoft365AppsSecurityBaselineProcessor(),
+		Categories.MicrosoftDefender => new MicrosoftDefenderProcessor(),
+		Categories.AttackSurfaceReductionRules => new AttackSurfaceReductionRulesProcessor(),
+		Categories.BitLockerSettings => new BitLockerSettingsProcessor(),
+		Categories.TLSSecurity => new TLSSecurityProcessor(),
+		Categories.LockScreen => new LockScreenProcessor(),
+		Categories.UserAccountControl => new UserAccountControlProcessor(),
+		Categories.DeviceGuard => new DeviceGuardProcessor(),
+		Categories.WindowsFirewall => new WindowsFirewallProcessor(),
+		Categories.OptionalWindowsFeatures => new OptionalWindowsFeaturesProcessor(),
+		Categories.WindowsNetworking => new WindowsNetworkingProcessor(),
+		Categories.MiscellaneousConfigurations => new MiscellaneousConfigurationsProcessor(),
+		Categories.WindowsUpdateConfigurations => new WindowsUpdateConfigurationsProcessor(),
+		Categories.EdgeBrowserConfigurations => new EdgeBrowserConfigurationsProcessor(),
+		Categories.CertificateChecking => throw new InvalidOperationException("Certificate Checking must be interacted with manually."),
+		Categories.CountryIPBlocking => new CountryIPBlockingProcessor(),
+		Categories.NonAdminCommands => new NonAdminCommandsProcessor(),
+		_ => throw new ArgumentException($"Unknown category: {category}", nameof(category))
+	};
 
 	/// <summary>
 	/// Helper to make sure in the ProtectVM's Intents and Presets flows:

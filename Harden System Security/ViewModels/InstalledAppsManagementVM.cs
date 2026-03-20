@@ -33,27 +33,14 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 {
-
-	internal InstalledAppsManagementVM() => MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	public InfoBarSettings MainInfoBar { get; }
+	internal InfoBarSettings MainInfoBar = new();
 
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	public Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	public bool ElementsAreEnabled
+	internal bool ElementsAreEnabled
 	{
 		get; set
 		{
@@ -388,7 +375,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			if (sender is not MenuFlyoutItem menuItem)
 			{
@@ -428,7 +415,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -451,7 +438,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("StartingUninstallationOfMultipleApps"), appsToUninstall.Count));
 
@@ -475,7 +462,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -595,7 +582,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		try
 		{
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			if (sender is not MenuFlyoutItem menuItem)
 			{
@@ -646,7 +633,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -659,7 +646,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		try
 		{
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			if (sender is not MenuFlyoutItem menuItem)
 			{
@@ -694,7 +681,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

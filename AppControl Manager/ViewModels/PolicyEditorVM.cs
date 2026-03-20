@@ -75,15 +75,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	internal PolicyEditorVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher,
-			() => MainInfoBarTitle, value => MainInfoBarTitle = value);
-
-
 		PolicySettingsCollection.CollectionChanged += (s, e) =>
 		{
 			OnPropertyChanged(nameof(PolicySettingsEmptyStateVisibility));
@@ -142,20 +133,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	}
 
 
-	private readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	#region UI-Bound Properties
 
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? MainInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); }
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
-
-	internal Visibility ProgressBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
+	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal bool UIElementsEnabledState { get; set => SP(ref field, value); } = true;
 
@@ -311,9 +293,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 		try
 		{
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
-				MainInfoBarIsClosable = false;
+				MainInfoBar.IsClosable = false;
 
 				ProgressBarVisibility = Visibility.Visible;
 				UIElementsEnabledState = false;
@@ -394,7 +376,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					ref kernelModeAppIDTags);
 			});
 
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				// Process the Allow rules
 				uint _AllowRulesCount = 0;
@@ -689,7 +671,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			});
 
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				try
 				{
@@ -711,7 +693,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 		finally
 		{
-			await Dispatcher.EnqueueAsync(() =>
+			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				UIElementsEnabledState = true;
 				ProgressBarVisibility = Visibility.Collapsed;
@@ -721,7 +703,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessLoadedPolicyMessage"));
 				}
 
-				MainInfoBarIsClosable = true;
+				MainInfoBar.IsClosable = true;
 			});
 		}
 	}
@@ -917,7 +899,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		{
 			UIElementsEnabledState = false;
 
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			if (SelectedPolicy is null)
 			{
@@ -1399,7 +1381,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
-				await Dispatcher.EnqueueAsync(async () =>
+				await GlobalVars.AppDispatcher.EnqueueAsync(async () =>
 				{
 					// Update the Policy Settings again to reflect the newest changes when something is removed from their UI-bound collection.
 					PolicySettingsCollection.Clear();
@@ -1455,7 +1437,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		finally
 		{
 			UIElementsEnabledState = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1499,7 +1481,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		SupplementalPolicySignersCount = "• Supplemental Policy Signer Rules count: 0";
 
 		MainInfoBar.WriteInfo(GlobalVars.GetStr("AllDataClearedMsg"));
-		MainInfoBarIsClosable = true;
+		MainInfoBar.IsClosable = true;
 
 		SignatureRulesColumnManager.CalculateColumnWidths(SignatureRulesCollection);
 		FileRulesColumnManager.CalculateColumnWidths(FileRulesCollection);

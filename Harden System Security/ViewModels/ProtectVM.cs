@@ -35,13 +35,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 {
 	internal ProtectVM()
 	{
-		MainInfoBar = new(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		_ = IsVM(); // Do not wait
 
 		// Initialize cancellable buttons for Presets section
@@ -76,7 +69,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 				if (bool.TryParse(result, out bool actualResult))
 				{
 					// Apply the changes to the checkbox immediately without waiting for user to use ComboBox to switch between presets.
-					_ = Dispatcher.TryEnqueue(() =>
+					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 					{
 						foreach (ProtectionCategoryListViewItem item in ProtectionCategoriesListItemsSource)
 						{
@@ -506,12 +499,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// The main InfoBar for the Protect VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
 	/// Cancellable button for Apply Selected operation

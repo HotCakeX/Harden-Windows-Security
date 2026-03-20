@@ -17,11 +17,11 @@
 
             <controls:WrapPanel Grid.Row="0" HorizontalAlignment="Center" HorizontalSpacing="15" VerticalSpacing="10">
 
-                <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                                    IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
-                                    Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                                    Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                                    Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
+                <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                                    IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"
+                                    Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                                    Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                                    Title="{x:Bind ViewModel.MainInfoBar.Title, Mode=OneWay}"
                                     IsIconVisible="True">
                 </customUI:InfoBarV2>
 

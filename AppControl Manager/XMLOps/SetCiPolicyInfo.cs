@@ -111,7 +111,7 @@ internal static class SetCiPolicyInfo
 	/// <summary>
 	/// An overload of the Set method, responsible for setting the version number, policyID and BasePolicyID in the policy
 	/// </summary>
-	/// <param name="filePath"></param>
+	/// <param name="policyObj"></param>
 	/// <param name="version"></param>
 	/// <param name="ID">This will be used as the BasePolicyID and PolicyID of the policy</param>
 	internal static SiPolicy.SiPolicy Set(SiPolicy.SiPolicy policyObj, Version version, string? ID = null)

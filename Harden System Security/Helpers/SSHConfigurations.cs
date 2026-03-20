@@ -98,10 +98,10 @@ internal static class SSHConfigurations
 		if (Directory.Exists(SSHClientUserConfigDirectory) && File.Exists(SSHClientUserConfigFile))
 		{
 			// Read all lines into a list
-			List<string> configLines = [.. File.ReadAllLines(SSHClientUserConfigFile)];
+			string[] configLines = File.ReadAllLines(SSHClientUserConfigFile);
 
 			// Check if any line starts with "MACs "
-			for (int i = 0; i < configLines.Count; i++)
+			for (int i = 0; i < configLines.Length; i++)
 			{
 				if (configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
 				{
@@ -130,10 +130,10 @@ internal static class SSHConfigurations
 		if (File.Exists(programDataSSHConfigFile))
 		{
 			// Read all lines into a list
-			List<string> configLines = [.. File.ReadAllLines(programDataSSHConfigFile)];
+			string[] configLines = File.ReadAllLines(programDataSSHConfigFile);
 
 			// Check if any line starts with "MACs "
-			for (int i = 0; i < configLines.Count; i++)
+			for (int i = 0; i < configLines.Length; i++)
 			{
 				if (configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
 				{

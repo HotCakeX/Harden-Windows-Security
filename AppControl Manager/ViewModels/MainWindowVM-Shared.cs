@@ -152,7 +152,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
 	{
 		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
-		_ = Dispatcher.TryEnqueue(() =>
+		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 		{
 			// Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
 			InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;

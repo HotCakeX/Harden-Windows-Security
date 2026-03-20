@@ -41,13 +41,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 {
 	internal ViewFileCertificatesVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		// Initialize the column manager with specific definitions for this page
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
 		ColumnManager = new ListViewColumnManager<FileCertificateInfoCol>(
@@ -81,12 +74,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		CalculateColumnWidths();
 	}
 
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
 	/// Whether the UI elements are enabled or disabled.
@@ -390,7 +378,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			return;
 		}
 
-		MainInfoBarIsClosable = false;
+		MainInfoBar.IsClosable = false;
 
 		AreElementsEnabled = false;
 
@@ -579,7 +567,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -699,7 +687,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		try
 		{
 			AreElementsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo($"Scanning UEFI '{variableName}' variable...");
 
 			List<FileCertificateInfoCol> output = [];
@@ -766,7 +754,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -995,7 +983,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		try
 		{
 			AreElementsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			DateTime now = DateTime.Now;
 			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
@@ -1032,7 +1020,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 }

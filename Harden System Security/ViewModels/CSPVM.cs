@@ -120,12 +120,8 @@ internal sealed partial class CSPVM : ViewModelBase
 	/// </summary>
 	private static readonly Uri DDFPackageDownloadURL = new("https://download.microsoft.com/download/2ff2c8b9-2e3f-47af-89e6-11c19b7f0c2a/DDFv2Sept25.zip");
 
-	internal InfoBarSettings MainInfoBar { get; }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); } = true;
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal double ProgressValue { get; set => SP(ref field, value); }
 	internal bool IsLoadingIndeterminate { get; set => SP(ref field, value); }
@@ -189,13 +185,6 @@ internal sealed partial class CSPVM : ViewModelBase
 				PerformSearch(value);
 		}
 	}
-
-	internal CSPVM() => MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
 
 	/// <summary>
 	/// Event handler to open file picker to collect XML files.
@@ -958,7 +947,7 @@ internal sealed partial class CSPVM : ViewModelBase
 				return;
 
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
 					"CSP Effective Results|*.JSON",
@@ -985,7 +974,7 @@ internal sealed partial class CSPVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

@@ -28,7 +28,7 @@ internal static class OneDriveDirectories
 	/// These paths are under each user directory, they can start with OneDrive such as "OneDrive", "OneDrive Personal", "OneDrive Business" etc.
 	/// </summary>
 	/// <returns></returns>
-	internal static string[] Get()
+	internal static List<string> Get()
 	{
 		// List to store the OneDrive directories found
 		List<string> directoriesList = [];
@@ -73,6 +73,6 @@ internal static class OneDriveDirectories
 			Logger.Write($"An error occurred: {ex.Message}", LogTypeIntel.Error);
 		}
 
-		return directoriesList.ToArray();
+		return directoriesList;
 	}
 }

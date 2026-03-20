@@ -33,10 +33,10 @@
 
             <customUI:InfoBarV2 Grid.Row="0"
                                 Margin="0,0,0,5"
-                                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+                                IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
 
             <Expander HorizontalAlignment="Stretch"
                       HorizontalContentAlignment="Stretch"
@@ -582,11 +582,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.FilesAndFoldersInfoBarTitle, Mode=OneWay}"
-                            Message="{x:Bind ViewModel.FilesAndFoldersInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.FilesAndFoldersInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.FilesAndFoldersInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.FilesAndFoldersInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.FilesAndFoldersInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.FilesAndFoldersInfoBar.Message, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.FilesAndFoldersInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.FilesAndFoldersInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.FilesAndFoldersInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -804,11 +804,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.CertificatesBasedInfoBarTitle, Mode=OneWay}"
-                            Message="{x:Bind ViewModel.CertificatesBasedInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.CertificatesBasedInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.CertificatesBasedInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.CertificatesBasedInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.CertificatesBasedInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.CertificatesBasedInfoBar.Message, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CertificatesBasedInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.CertificatesBasedInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CertificatesBasedInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.CertificatesInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -918,11 +918,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.CustomFilePathRulesInfoBarTitle, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsOpen, Mode=TwoWay}"
-                            Message="{x:Bind ViewModel.CustomFilePathRulesInfoBarMessage, Mode=OneWay}"
-                            IsClosable="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.CustomFilePathRulesInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.CustomFilePathRulesInfoBar.Title, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CustomFilePathRulesInfoBar.IsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.CustomFilePathRulesInfoBar.Message, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.CustomFilePathRulesInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CustomFilePathRulesInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}">

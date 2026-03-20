@@ -509,11 +509,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.FilesAndFoldersInfoBarTitle, Mode=OneWay}"
-                            Message="{x:Bind ViewModel.FilesAndFoldersInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.FilesAndFoldersInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.FilesAndFoldersInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.FilesAndFoldersInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.FilesAndFoldersInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.FilesAndFoldersInfoBar.Message, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.FilesAndFoldersInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.FilesAndFoldersInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.FilesAndFoldersInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -809,11 +809,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.CertificatesBasedInfoBarTitle, Mode=OneWay}"
-                            Message="{x:Bind ViewModel.CertificatesBasedInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.CertificatesBasedInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.CertificatesBasedInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.CertificatesBasedInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.CertificatesBasedInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.CertificatesBasedInfoBar.Message, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CertificatesBasedInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.CertificatesBasedInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CertificatesBasedInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.CertificatesInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -1001,11 +1001,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.ISGInfoBarTitle, Mode=OneWay}"
-                            Message="{x:Bind ViewModel.ISGInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.ISGInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.ISGInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.ISGInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.ISGInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.ISGInfoBar.Message, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.ISGInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.ISGInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.ISGInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.ISGInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -1128,11 +1128,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.StrictKernelModeInfoBarTitle, Mode=OneWay}"
-                            Message="{x:Bind ViewModel.StrictKernelModeInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.StrictKernelModeInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.StrictKernelModeInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.StrictKernelModeInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.StrictKernelModeInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.StrictKernelModeInfoBar.Message, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.StrictKernelModeInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.StrictKernelModeInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.StrictKernelModeInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -1313,11 +1313,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.PFNInfoBarTitle, Mode=OneWay}"
-                            Message="{x:Bind ViewModel.PFNInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.PFNInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.PFNInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.PFNInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.PFNInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.PFNInfoBar.Message, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.PFNInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.PFNInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.PFNInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.PFNInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -1553,11 +1553,11 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            Title="{x:Bind ViewModel.CustomFilePathRulesInfoBarTitle, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsOpen, Mode=TwoWay}"
-                            Message="{x:Bind ViewModel.CustomFilePathRulesInfoBarMessage, Mode=OneWay}"
-                            IsClosable="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.CustomFilePathRulesInfoBarSeverity, Mode=OneWay}">
+                            Title="{x:Bind ViewModel.CustomFilePathRulesInfoBar.Title, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CustomFilePathRulesInfoBar.IsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.CustomFilePathRulesInfoBar.Message, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.CustomFilePathRulesInfoBar.IsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CustomFilePathRulesInfoBar.Severity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
                                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                                 Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}">

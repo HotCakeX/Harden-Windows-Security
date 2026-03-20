@@ -28,7 +28,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private CreateSupplementalPolicyVM ViewModel => ViewModelProvider.CreateSupplementalPolicyVM;
-	private SidebarVM sideBarVM => ViewModelProvider.SidebarVM;
 
 	internal CreateSupplementalPolicy()
 	{
@@ -50,7 +49,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		ViewModel.CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility = visibility;
 		ViewModel.PolicyFileToMergeWithLightAnimatedIconVisibility = visibility;
 
-		sideBarVM.AssignActionPacks(
+		ViewModelProvider.SidebarVM.AssignActionPacks(
 			actionPack1: (LightUp1, GlobalVars.GetStr("FilesAndFoldersSupplementalPolicyLabel")),
 			actionPack2: (LightUp2, GlobalVars.GetStr("CertificatesSupplementalPolicyLabel")),
 			actionPack3: (LightUp3, GlobalVars.GetStr("ISGSupplementalPolicyLabel")),

@@ -31,7 +31,7 @@ internal sealed partial class BitLockerSuspend : ContentDialogV2, INPCImplant
 
 	#region IPropertyChangeHost Implementation
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public void RaisePropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	public void RaisePropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 	#endregion
 
 }

@@ -20,30 +20,15 @@ using System.Threading.Tasks;
 using System.Xml;
 using AppControlManager.Main;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class ValidatePolicyVM : ViewModelBase
 {
-	internal ValidatePolicyVM() => MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher,
-			() => MainInfoBarTitle, value => MainInfoBarTitle = value);
 
-
-	private readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	#region UI-Bound Properties
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? MainInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); }
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal bool ElementsAreEnabled
 	{
@@ -52,7 +37,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			if (SP(ref field, value))
 			{
 				ProgressRingVisibility = field ? Visibility.Collapsed : Visibility.Visible;
-				MainInfoBarIsClosable = field;
+				MainInfoBar.IsClosable = field;
 				// Re-evaluate refresh button state when elements are re-enabled
 				OnPropertyChanged(nameof(RefreshButtonEnabled));
 			}
@@ -233,7 +218,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 }

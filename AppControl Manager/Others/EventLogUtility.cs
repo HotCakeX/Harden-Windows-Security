@@ -81,7 +81,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 
 		// Read and calculate initial size
 		ulong initialBytes = ReadMaxSizeBytes();
-		_ = Dispatcher.TryEnqueue(() => MaxSizeMB = initialBytes / 1024d / 1024d);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(() => MaxSizeMB = initialBytes / 1024d / 1024d);
 
 		// Prepare for change notifications
 		_regHandle = _regKey.Handle;
@@ -109,7 +109,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 		// Read and calculate updated size
 		ulong newBytes = ReadMaxSizeBytes();
 		double newMegabytes = newBytes / 1024d / 1024d;
-		_ = Dispatcher.TryEnqueue(() => MaxSizeMB = newMegabytes);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(() => MaxSizeMB = newMegabytes);
 
 		ReArmNotification();
 	}

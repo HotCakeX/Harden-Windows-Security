@@ -7,8 +7,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:local="using:HardenSystemSecurity">
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

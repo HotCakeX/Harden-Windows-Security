@@ -39,29 +39,13 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 {
-
-	internal GroupPolicyEditorVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		// To adjust the initial width of the columns, giving them nice paddings.
-		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
-	}
+	// To adjust the initial width of the columns, giving them nice paddings.
+	internal GroupPolicyEditorVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -628,7 +612,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		if (SelectedFile is null) return;
 
 		ElementsAreEnabled = false;
-		MainInfoBarIsClosable = false;
+		MainInfoBar.IsClosable = false;
 
 		// Make a copy of the original file first
 		ReadOnlySpan<byte> originalFileContent = File.ReadAllBytes(SelectedFile);
@@ -680,7 +664,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -723,7 +707,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Get the selected policies
 			List<RegistryPolicyEntry> policiesToDelete = [];
@@ -799,7 +783,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -851,7 +835,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			AllPolicies.Clear();
 			Policies.Clear();
@@ -882,7 +866,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					// Retrieve friendly names
 					AdmxAdmlParser.PopulateFriendlyNames(policy);
 
-					await Dispatcher.EnqueueAsync(() =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 					{
 						Policies.AddRange(policy);
 						AllPolicies.AddRange(policy);
@@ -895,7 +879,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					// Retrieve friendly names
 					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
 
-					await Dispatcher.EnqueueAsync(() =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 					{
 						Policies.AddRange(policy.Entries);
 						AllPolicies.AddRange(policy.Entries);
@@ -918,7 +902,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1008,7 +992,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			await Task.Run(() =>
 			{
@@ -1044,7 +1028,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1092,7 +1076,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			await Task.Run(() =>
 			{
@@ -1133,7 +1117,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1181,7 +1165,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			await Task.Run(() =>
 			{
@@ -1214,7 +1198,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1262,7 +1246,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			await Task.Run(() =>
 			{
@@ -1290,7 +1274,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1303,7 +1287,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
 					"Security Reports|*.txt",
@@ -1323,7 +1307,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

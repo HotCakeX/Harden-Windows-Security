@@ -35,16 +35,6 @@ internal static class BCDManager
 	private const int STATUS_SUCCESS = 0;
 	private const int STATUS_OBJECT_NAME_NOT_FOUND = unchecked((int)0xC0000034);
 
-	[StructLayout(LayoutKind.Sequential)]
-	private struct BcdElementDataType
-	{
-		internal uint Value;
-
-		internal readonly uint Class => (Value >> 28) & 0xF;
-		internal readonly uint Format => (Value >> 24) & 0xF;
-		internal readonly uint SubType => Value & 0xFFFFFF;
-	}
-
 	internal static void SetNxElement(long value)
 	{
 		IntPtr storeHandle = IntPtr.Zero;

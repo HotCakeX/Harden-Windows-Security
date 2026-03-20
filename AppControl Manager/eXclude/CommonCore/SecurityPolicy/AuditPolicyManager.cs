@@ -151,7 +151,7 @@ internal sealed partial class AuditPolicyInfo(
 	/// Raises the PropertyChanged event.
 	/// </summary>
 	/// <param name="propertyName">The name of the property that changed.</param>
-	private void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	private void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 }
 
 [JsonSerializable(typeof(AuditPolicyInfo))]

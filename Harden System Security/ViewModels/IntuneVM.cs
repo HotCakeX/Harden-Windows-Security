@@ -32,22 +32,10 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 {
 	internal IntuneVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher), AuthenticationContext.Intune);
+		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
 		// Initialize column widths so headers have padding initially.
-		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 		// Load policy files from the hardening directory
 		LoadHardeningPolicyFiles();
@@ -56,13 +44,9 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -226,7 +210,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		try
 		{
 			AreElementsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Fetch data
 			List<DeviceManagementConfigurationPolicy> result = await Main.RetrieveConfigurationPolicies(AuthCompanionCLS.CurrentActiveAccount);
@@ -252,7 +236,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -316,7 +300,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		try
 		{
 			AreElementsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Create the configuration policy from JSON
 			string? createdPolicyId = await Main.CreateConfigurationPolicyFromJson(
@@ -352,7 +336,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -376,7 +360,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		try
 		{
 			AreElementsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			await Main.DeleteConfigurationPolicy(
 				AuthCompanionCLS.CurrentActiveAccount,
@@ -394,7 +378,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

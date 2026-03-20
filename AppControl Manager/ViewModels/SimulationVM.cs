@@ -36,13 +36,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	internal SimulationVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		ProgressRingValueProgress = new Progress<double>(p => ProgressRingValue = p);
 
 		// Initialize the column manager with specific definitions for this page
@@ -70,7 +63,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		ColumnManager.CalculateColumnWidths(SimulationOutputs);
 	}
 
-	internal readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility SelectedPolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -110,11 +103,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// The text entered in the Text box for search.
 	/// </summary>
 	internal string? SearchBoxTextBox { get; set => SPT(ref field, value); }
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Determines whether the UI elements are enabled or disabled.
@@ -307,7 +295,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		{
 			AreElementsEnabled = false;
 
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("PerformingSimulationMessage"));
 
@@ -359,7 +347,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 			}
 
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

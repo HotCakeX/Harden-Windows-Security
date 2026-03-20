@@ -344,7 +344,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		int msIntoMinute = now.Second * 1000 + now.Millisecond;
 		TimeSpan due = TimeSpan.FromMilliseconds(60000 - msIntoMinute);
 
-		_clockTimer = Dispatcher.CreateTimer();
+		_clockTimer = GlobalVars.AppDispatcher.CreateTimer();
 		_clockTimer.IsRepeating = false; // one-shot to align to the next minute
 		_clockTimer.Interval = due;
 		_clockTimer.Tick += OnClockInitialTick;
@@ -361,7 +361,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		AppRamText = GetAppPrivateWorkingSetBytes_Native();
 		UpdateStorageTemperature();
 
-		_appRamTimer = Dispatcher.CreateTimer();
+		_appRamTimer = GlobalVars.AppDispatcher.CreateTimer();
 		_appRamTimer.IsRepeating = true; // repeating update
 		_appRamTimer.Interval = TimeSpan.FromSeconds(2);
 		_appRamTimer.Tick += OnAppRamTick;
@@ -376,7 +376,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		// Set initial value
 		OpenPortsText = GetOpenPortsString();
 
-		_portsTimer = Dispatcher.CreateTimer();
+		_portsTimer = GlobalVars.AppDispatcher.CreateTimer();
 		_portsTimer.IsRepeating = true;
 		_portsTimer.Interval = TimeSpan.FromSeconds(4);
 		_portsTimer.Tick += OnOpenPortsTick;

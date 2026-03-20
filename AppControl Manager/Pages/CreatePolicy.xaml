@@ -30,10 +30,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.AllowMSFTInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.AllowMSFTInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.AllowMSFTInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.AllowMSFTInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -158,10 +158,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.DefaultWinInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.DefaultWinInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.DefaultWinInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.DefaultWinInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -288,10 +288,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.SignedAndRepInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.SignedAndRepInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.SignedAndRepInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.SignedAndRepInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -413,10 +413,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.KernelModeBlockListInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.KernelModeBlockListInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.KernelModeBlockListInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.KernelModeBlockListInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -509,10 +509,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.UserModeBlockListInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.UserModeBlockListInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.UserModeBlockListInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.UserModeBlockListInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -580,10 +580,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.StrictKernelInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.StrictKernelInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.StrictKernelInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.StrictKernelInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -668,10 +668,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.RMMBlockingSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.RMMBlockingSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.RMMBlockingInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.RMMBlockingInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.RMMBlockingInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.RMMBlockingInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -749,10 +749,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.DownloadsDefenseMeasureInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.DownloadsDefenseMeasureInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.DownloadsDefenseMeasureInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.DownloadsDefenseMeasureInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"
@@ -831,10 +831,10 @@
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        Message="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarIsOpen, Mode=TwoWay}"
-                        IsClosable="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
-                        Severity="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarSeverity, Mode=OneWay}">
+                        Message="{x:Bind ViewModel.DangerousScriptHostsBlockingInfoBar.Message, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.DangerousScriptHostsBlockingInfoBar.IsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.DangerousScriptHostsBlockingInfoBar.IsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.DangerousScriptHostsBlockingInfoBar.Severity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
                             <DropDownButton
                                 x:Uid="AdditionalActionsDropDownButton"

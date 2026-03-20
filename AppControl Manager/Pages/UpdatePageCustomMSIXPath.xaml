@@ -16,11 +16,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.AppPackageInstallerInfoBarIsOpen, Mode=TwoWay}"
-                                Message="{x:Bind ViewModel.AppPackageInstallerInfoBarMessage, Mode=OneWay}"
-                                Severity="{x:Bind ViewModel.AppPackageInstallerInfoBarSeverity, Mode=OneWay}"
+            <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.AppPackageInstallerInfoBar.IsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.AppPackageInstallerInfoBar.Message, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.AppPackageInstallerInfoBar.Severity, Mode=OneWay}"
                                 IsIconVisible="True"
-                                IsClosable="{x:Bind ViewModel.AppPackageInstallerInfoBarIsClosable, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.AppPackageInstallerInfoBar.IsClosable, Mode=OneWay}"
                                 Grid.Row="0"/>
 
             <StackPanel HorizontalAlignment="Stretch"

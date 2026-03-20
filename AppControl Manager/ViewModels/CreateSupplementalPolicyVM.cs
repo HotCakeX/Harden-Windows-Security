@@ -46,15 +46,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
 		DriverAutoDetectionProgressRingValueProgress = new Progress<double>(p => DriverAutoDetectionProgressRingValue = p);
 
-		// InfoBar manager for the FilesAndFolders section
-		FilesAndFoldersInfoBar = new InfoBarSettings(
-			() => FilesAndFoldersInfoBarIsOpen, value => FilesAndFoldersInfoBarIsOpen = value,
-			() => FilesAndFoldersInfoBarMessage, value => FilesAndFoldersInfoBarMessage = value,
-			() => FilesAndFoldersInfoBarSeverity, value => FilesAndFoldersInfoBarSeverity = value,
-			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
-			Dispatcher,
-			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
-
 		LVController = new(
 			applyWidthCallback: (index, width) =>
 			{
@@ -98,33 +89,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
 
-		// InfoBar manager for the CertificatesBased section
-		CertificatesBasedInfoBar = new InfoBarSettings(
-			() => CertificatesBasedInfoBarIsOpen, value => CertificatesBasedInfoBarIsOpen = value,
-			() => CertificatesBasedInfoBarMessage, value => CertificatesBasedInfoBarMessage = value,
-			() => CertificatesBasedInfoBarSeverity, value => CertificatesBasedInfoBarSeverity = value,
-			() => CertificatesBasedInfoBarIsClosable, value => CertificatesBasedInfoBarIsClosable = value,
-			Dispatcher,
-			() => CertificatesBasedInfoBarTitle, value => CertificatesBasedInfoBarTitle = value);
-
-		// InfoBar manager for the ISGInfoBar section
-		ISGInfoBar = new InfoBarSettings(
-			() => ISGInfoBarIsOpen, value => ISGInfoBarIsOpen = value,
-			() => ISGInfoBarMessage, value => ISGInfoBarMessage = value,
-			() => ISGInfoBarSeverity, value => ISGInfoBarSeverity = value,
-			() => ISGInfoBarIsClosable, value => ISGInfoBarIsClosable = value,
-			Dispatcher,
-			() => ISGInfoBarTitle, value => ISGInfoBarTitle = value);
-
-		// InfoBar manager for the StrictKernelMode section
-		StrictKernelModeInfoBar = new InfoBarSettings(
-			() => StrictKernelModeInfoBarIsOpen, value => StrictKernelModeInfoBarIsOpen = value,
-			() => StrictKernelModeInfoBarMessage, value => StrictKernelModeInfoBarMessage = value,
-			() => StrictKernelModeInfoBarSeverity, value => StrictKernelModeInfoBarSeverity = value,
-			() => StrictKernelModeInfoBarIsClosable, value => StrictKernelModeInfoBarIsClosable = value,
-			Dispatcher,
-			() => StrictKernelModeInfoBarTitle, value => StrictKernelModeInfoBarTitle = value);
-
 		// Initialize the column manager with specific definitions for Strict Kernel Mode page
 		StrictKernelModeColumnManager = new ListViewColumnManager<FileIdentity>(
 		[
@@ -152,25 +116,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		// Passing the current list (even if empty) initializes defaults.
 		StrictKernelModeColumnManager.CalculateColumnWidths(StrictKernelModeScanResults);
 
-		// InfoBar manager for the PFN section
-		PFNInfoBar = new InfoBarSettings(
-			() => PFNInfoBarIsOpen, value => PFNInfoBarIsOpen = value,
-			() => PFNInfoBarMessage, value => PFNInfoBarMessage = value,
-			() => PFNInfoBarSeverity, value => PFNInfoBarSeverity = value,
-			() => PFNInfoBarIsClosable, value => PFNInfoBarIsClosable = value,
-			Dispatcher,
-			() => PFNInfoBarTitle, value => PFNInfoBarTitle = value);
-
 		PFNBasedCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
-
-		// InfoBar manager for the CustomFilePathRules section
-		CustomFilePathRulesInfoBar = new InfoBarSettings(
-			() => CustomFilePathRulesInfoBarIsOpen, value => CustomFilePathRulesInfoBarIsOpen = value,
-			() => CustomFilePathRulesInfoBarMessage, value => CustomFilePathRulesInfoBarMessage = value,
-			() => CustomFilePathRulesInfoBarSeverity, value => CustomFilePathRulesInfoBarSeverity = value,
-			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
-			Dispatcher,
-			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
 	}
@@ -253,13 +199,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal Visibility FilesAndFoldersBrowseForFilesSettingsCardVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
-	internal bool FilesAndFoldersInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool FilesAndFoldersInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? FilesAndFoldersInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? FilesAndFoldersInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity FilesAndFoldersInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-
-	private readonly InfoBarSettings FilesAndFoldersInfoBar;
+	internal readonly InfoBarSettings FilesAndFoldersInfoBar = new();
 
 	internal ScanLevelsComboBoxType FilesAndFoldersScanLevelComboBoxSelectedItem
 	{
@@ -495,7 +435,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					await Dispatcher.EnqueueAsync(() =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 					{
 						// Creating incremental collection by passing the source List.
 						HighPerfIncrementalCollection<FileIdentity> incrementalCollection = new(LVController.FullSource);
@@ -626,7 +566,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			FilesAndFoldersCancellableButton.End();
 
-			FilesAndFoldersInfoBarIsClosable = true;
+			FilesAndFoldersInfoBar.IsClosable = true;
 
 			FilesAndFoldersElementsAreEnabled = true;
 		}
@@ -692,13 +632,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal bool CertificatesBasedInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool CertificatesBasedInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? CertificatesBasedInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? CertificatesBasedInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity CertificatesBasedInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
-	private readonly InfoBarSettings CertificatesBasedInfoBar;
+	internal readonly InfoBarSettings CertificatesBasedInfoBar = new();
 
 	/// <summary>
 	/// Whether the Settings Expander for the Certificates Based section is expanded.
@@ -962,7 +897,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			CertificatesBasedElementsAreEnabled = true;
 
-			CertificatesBasedInfoBarIsClosable = true;
+			CertificatesBasedInfoBar.IsClosable = true;
 		}
 	}
 
@@ -995,13 +930,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal Visibility ISGInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool ISGInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool ISGInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? ISGInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? ISGInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity ISGInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-
-	private readonly InfoBarSettings ISGInfoBar;
+	internal readonly InfoBarSettings ISGInfoBar = new();
 
 	/// <summary>
 	/// Base policy for the ISG based supplemental policy
@@ -1133,7 +1062,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			ISGElementsAreEnabled = true;
 
-			ISGInfoBarIsClosable = true;
+			ISGInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1205,13 +1134,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal Visibility StrictKernelModeInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool StrictKernelModeInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool StrictKernelModeInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? StrictKernelModeInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? StrictKernelModeInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity StrictKernelModeInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-
-	private readonly InfoBarSettings StrictKernelModeInfoBar;
+	internal readonly InfoBarSettings StrictKernelModeInfoBar = new();
 
 	/// <summary>
 	/// The base policy for the Strict kernel-mode supplemental policy.
@@ -1288,7 +1211,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			StrictKernelModeElementsAreEnabled = false;
 
-			StrictKernelModeInfoBarIsClosable = false;
+			StrictKernelModeInfoBar.IsClosable = false;
 			StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("ScanningSystemForEvents"));
 			StrictKernelModeSettingsExpanderIsExpanded = true;
 
@@ -1352,7 +1275,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyScannedSystemForEvents"));
 			}
 
-			StrictKernelModeInfoBarIsClosable = true;
+			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1406,7 +1329,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			StrictKernelModeElementsAreEnabled = false;
 
-			StrictKernelModeInfoBarIsClosable = false;
+			StrictKernelModeInfoBar.IsClosable = false;
 
 			StrictKernelModeInfoBar.WriteInfo(string.Format(
 				GlobalVars.GetStr("CreatingStrictKernelModePolicyMessage"),
@@ -1495,7 +1418,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			}
 
 			StrictKernelModeElementsAreEnabled = true;
-			StrictKernelModeInfoBarIsClosable = true;
+			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1513,7 +1436,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			StrictKernelModeElementsAreEnabled = false;
 
-			StrictKernelModeInfoBarIsClosable = false;
+			StrictKernelModeInfoBar.IsClosable = false;
 
 			StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("ScanningSystemForDrivers"));
 
@@ -1592,7 +1515,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			StrictKernelModeElementsAreEnabled = true;
 
-			StrictKernelModeInfoBarIsClosable = true;
+			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1725,13 +1648,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal Visibility PFNInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool PFNInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool PFNInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? PFNInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? PFNInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity PFNInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
-	private readonly InfoBarSettings PFNInfoBar;
+	internal readonly InfoBarSettings PFNInfoBar = new();
 
 	/// <summary>
 	/// To track whether the expandable settings section for the PFN supplemental policy has expanded so the apps list can be pre-loaded
@@ -1992,7 +1910,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			PFNElementsAreEnabled = false;
 
-			PFNInfoBarIsClosable = false;
+			PFNInfoBar.IsClosable = false;
 
 			PFNInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPFNSupplementalPolicyMessage"));
 
@@ -2106,7 +2024,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			PFNElementsAreEnabled = true;
 
-			PFNInfoBarIsClosable = true;
+			PFNInfoBar.IsClosable = true;
 		}
 	}
 
@@ -2245,13 +2163,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool CustomFilePathRulesInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool CustomFilePathRulesInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? CustomFilePathRulesInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? CustomFilePathRulesInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity CustomFilePathRulesInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
-	private readonly InfoBarSettings CustomFilePathRulesInfoBar;
+	internal readonly InfoBarSettings CustomFilePathRulesInfoBar = new();
 
 	/// <summary>
 	/// The base policy for the Custom Pattern-based File Rule supplemental policy.
@@ -2369,7 +2282,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPatternBasedFileRuleMessage"));
 
-			CustomFilePathRulesInfoBarIsClosable = false;
+			CustomFilePathRulesInfoBar.IsClosable = false;
 
 			PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -2464,7 +2377,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			CustomFilePathRulesElementsAreEnabled = true;
 
-			CustomFilePathRulesInfoBarIsClosable = true;
+			CustomFilePathRulesInfoBar.IsClosable = true;
 		}
 	}
 
@@ -2474,7 +2387,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal async void SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click()
 	{
 		// Instantiate the Content Dialog
-		CustomUIElements.CustomPatternBasedFilePath customDialog = new();
+		using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
 
 		GlobalVars.CurrentlyOpenContentDialog = customDialog;
 
@@ -2506,11 +2419,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Controls the visibility of all of the elements related to browsing for base policy file.
 	/// </summary>
-	internal Visibility BasePolicyElementsVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Visible;
-
+	internal Visibility BasePolicyElementsVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
 	/// <summary>
 	/// The mode of operation for the Supplemental creation page.

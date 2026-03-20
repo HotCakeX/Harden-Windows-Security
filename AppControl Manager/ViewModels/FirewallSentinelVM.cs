@@ -42,54 +42,17 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 {
 	internal FirewallSentinelVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-		() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-		() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-		() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-		() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-		Dispatcher,
-		() => MainInfoBarTitle, value => MainInfoBarTitle = value);
-
 		// Subscribe to the Sidebar Library's collection changed event to keep the list in sync real-time
 		ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.CollectionChanged += SidebarPoliciesLibrary_CollectionChanged;
 
 		// Initialize the list of policies
 		FilterPolicies();
 
-
 		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
-
-		// InfoBar manager for the FilesAndFolders section
-		FilesAndFoldersInfoBar = new InfoBarSettings(
-			() => FilesAndFoldersInfoBarIsOpen, value => FilesAndFoldersInfoBarIsOpen = value,
-			() => FilesAndFoldersInfoBarMessage, value => FilesAndFoldersInfoBarMessage = value,
-			() => FilesAndFoldersInfoBarSeverity, value => FilesAndFoldersInfoBarSeverity = value,
-			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
-			Dispatcher,
-			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
 
 		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("ExpandPinnedPolicyButton/Content"));
 
-		// InfoBar manager for the CertificatesBased section
-		CertificatesBasedInfoBar = new InfoBarSettings(
-			() => CertificatesBasedInfoBarIsOpen, value => CertificatesBasedInfoBarIsOpen = value,
-			() => CertificatesBasedInfoBarMessage, value => CertificatesBasedInfoBarMessage = value,
-			() => CertificatesBasedInfoBarSeverity, value => CertificatesBasedInfoBarSeverity = value,
-			() => CertificatesBasedInfoBarIsClosable, value => CertificatesBasedInfoBarIsClosable = value,
-			Dispatcher,
-			() => CertificatesBasedInfoBarTitle, value => CertificatesBasedInfoBarTitle = value);
-
-		// InfoBar manager for the CustomFilePathRules section
-		CustomFilePathRulesInfoBar = new InfoBarSettings(
-			() => CustomFilePathRulesInfoBarIsOpen, value => CustomFilePathRulesInfoBarIsOpen = value,
-			() => CustomFilePathRulesInfoBarMessage, value => CustomFilePathRulesInfoBarMessage = value,
-			() => CustomFilePathRulesInfoBarSeverity, value => CustomFilePathRulesInfoBarSeverity = value,
-			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
-			Dispatcher,
-			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
-
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("ExpandPinnedPolicyButton/Content"));
-
 
 		// Initialize the column manager for the Blocked Packets ListView
 		FirewallColumnManager = new ListViewColumnManager<FirewallEvent>(
@@ -133,13 +96,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	private void SidebarPoliciesLibrary_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
 			FilterPolicies();
 
-	private readonly InfoBarSettings MainInfoBar;
-
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); } = true;
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? MainInfoBarTitle { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
 	/// Gets or sets the visibility state of the progress ring.
@@ -155,7 +112,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		{
 			if (SP(ref field, value))
 			{
-				MainInfoBarIsClosable = field;
+				MainInfoBar.IsClosable = field;
 				ProgressRingVisibility = field ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
@@ -562,7 +519,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 			}
 
 			// Remove the pinned policy
-			_ = Dispatcher.TryEnqueue(() =>
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 			{
 				PinnedPolicy = null;
 			});
@@ -763,7 +720,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				// Pin the policy in the UI
-				_ = Dispatcher.TryEnqueue(() =>
+				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 				{
 					PinnedPolicy = policy;
 				});
@@ -959,13 +916,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	internal Visibility FilesAndFoldersBrowseForFilesSettingsCardVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
-	internal bool FilesAndFoldersInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool FilesAndFoldersInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? FilesAndFoldersInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? FilesAndFoldersInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity FilesAndFoldersInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
-	private readonly InfoBarSettings FilesAndFoldersInfoBar;
+	internal readonly InfoBarSettings FilesAndFoldersInfoBar = new();
 
 	internal ScanLevelsComboBoxType FilesAndFoldersScanLevelComboBoxSelectedItem
 	{
@@ -1176,7 +1128,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 			FilesAndFoldersCancellableButton.End();
 
-			FilesAndFoldersInfoBarIsClosable = true;
+			FilesAndFoldersInfoBar.IsClosable = true;
 
 			FilesAndFoldersElementsAreEnabled = true;
 		}
@@ -1191,13 +1143,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal bool CertificatesBasedInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool CertificatesBasedInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? CertificatesBasedInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? CertificatesBasedInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity CertificatesBasedInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
-	private readonly InfoBarSettings CertificatesBasedInfoBar;
+	internal readonly InfoBarSettings CertificatesBasedInfoBar = new();
 
 	/// <summary>
 	/// Whether the Settings Expander for the Certificates Based section is expanded.
@@ -1328,7 +1275,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 			CertificatesBasedElementsAreEnabled = true;
 
-			CertificatesBasedInfoBarIsClosable = true;
+			CertificatesBasedInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1356,13 +1303,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool CustomFilePathRulesInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool CustomFilePathRulesInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal string? CustomFilePathRulesInfoBarMessage { get; set => SP(ref field, value); }
-	internal string? CustomFilePathRulesInfoBarTitle { get; set => SP(ref field, value); }
-	internal InfoBarSeverity CustomFilePathRulesInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
-	private readonly InfoBarSettings CustomFilePathRulesInfoBar;
+	internal readonly InfoBarSettings CustomFilePathRulesInfoBar = new();
 
 	/// <summary>
 	/// The custom pattern used for file rule.
@@ -1414,7 +1356,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPatternBasedFileRuleMessage"));
 
-			CustomFilePathRulesInfoBarIsClosable = false;
+			CustomFilePathRulesInfoBar.IsClosable = false;
 
 			PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -1470,7 +1412,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 			CustomFilePathRulesElementsAreEnabled = true;
 
-			CustomFilePathRulesInfoBarIsClosable = true;
+			CustomFilePathRulesInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1480,7 +1422,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	internal async void SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click()
 	{
 		// Instantiate the Content Dialog
-		CustomUIElements.CustomPatternBasedFilePath customDialog = new();
+		using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
 
 		GlobalVars.CurrentlyOpenContentDialog = customDialog;
 
@@ -1783,7 +1725,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 				GetFirewallLogs.StartRealTimeMonitoring(IsResolveDestinationAddressesEnabled, (fwEvent) =>
 				{
-					_ = Dispatcher.TryEnqueue(() =>
+					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 					{
 						// Add to the main storage
 						AllBlockedPackets.Add(fwEvent);

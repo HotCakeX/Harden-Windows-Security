@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -84,28 +83,13 @@ internal sealed partial class CountryDataJsonContext : JsonSerializerContext
 
 internal sealed partial class CountryIPBlockingVM : ViewModelBase
 {
-	internal CountryIPBlockingVM()
-	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		// Load countries data
-		_ = LoadCountriesDataAsync();
-	}
+	// Load countries data
+	internal CountryIPBlockingVM() => _ = LoadCountriesDataAsync();
 
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -195,7 +179,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		}
 
 		// Update UI on the dispatcher thread
-		_ = Dispatcher.TryEnqueue(() =>
+		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 		{
 			// Update the observable collection
 			CountryLists.Clear();

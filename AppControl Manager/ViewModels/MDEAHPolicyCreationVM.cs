@@ -36,25 +36,9 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthHost, IDisposable
 {
-
-	private PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
-
 	internal MDEAHPolicyCreationVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher), AuthenticationContext.MDEAdvancedHunting);
-
+		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.MDEAdvancedHunting);
 
 		// Initialize the column manager with specific definitions for this page
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
@@ -135,7 +119,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
-	internal readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
@@ -162,11 +146,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	internal PolicyFileRepresent? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// For Animated Sidebar related actions for policy assignments.
@@ -484,7 +463,7 @@ DeviceEvents
 			ScanLogsProgressRingIsActive = true;
 			ScanLogsProgressRingVisibility = Visibility.Visible;
 
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("ScanningMDEAdvancedHuntingCsvLogs"));
 
@@ -558,7 +537,7 @@ DeviceEvents
 				MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
 			}
 
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -606,7 +585,7 @@ DeviceEvents
 				);
 			}
 
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// All of the File Identities that will be used to put in the policy XML file
 			List<FileIdentity> SelectedLogs = [];
@@ -814,7 +793,7 @@ DeviceEvents
 		{
 			AreElementsEnabled = true;
 
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRingIsActive = false;
@@ -836,7 +815,7 @@ DeviceEvents
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(finalSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
 
@@ -849,7 +828,7 @@ DeviceEvents
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 			return;
 
-		MainInfoBarIsClosable = false;
+		MainInfoBar.IsClosable = false;
 
 		MainInfoBar.WriteInfo(GlobalVars.GetStr("RetrievingMDEAdvancedHuntingDataMessage"));
 
@@ -939,7 +918,7 @@ DeviceEvents
 		{
 			AreElementsEnabled = true;
 
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1007,7 +986,7 @@ DeviceEvents
 		try
 		{
 			AreElementsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			await FileIdentity.ExportToJson(FileIdentities, MainInfoBar);
 		}
@@ -1018,7 +997,7 @@ DeviceEvents
 		finally
 		{
 			AreElementsEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

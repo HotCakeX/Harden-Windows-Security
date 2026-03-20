@@ -41,7 +41,7 @@ internal static class AppUpdate
 	/// </summary>
 	internal static event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
 
-	internal static StoreContext? _StoreContext;
+	private static StoreContext? _StoreContext;
 
 	/// <summary>
 	/// Downloads the version file from GitHub,

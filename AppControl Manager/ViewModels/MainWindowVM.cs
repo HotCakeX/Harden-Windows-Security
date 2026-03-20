@@ -415,13 +415,6 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
 
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		// Subscribe to encryption setting changes
 		GlobalVars.Settings.EncryptPoliciesLibraryChanged += (s, e) => OnEncryptPoliciesLibraryChanged(e);
 
@@ -445,7 +438,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 				await PoliciesLibraryCacheLock.WaitAsync();
 				try
 				{
-					await Dispatcher.EnqueueAsync(() =>
+					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 					{
 						// Make sure the sidebar library is cleared first
 						SidebarPoliciesLibrary.Clear();
@@ -547,7 +540,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 								UniqueObjID = Guid.Parse(uniqueID)
 							};
 
-							await Dispatcher.EnqueueAsync(() =>
+							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 							{
 								SidebarPoliciesLibrary.Add(policyToAdd);
 							});
@@ -824,7 +817,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		await PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
-			_ = Dispatcher.TryEnqueue(() =>
+			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
 			{
 				SidebarPoliciesLibrary.Add(policy);
 			});
@@ -1290,10 +1283,6 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The main InfoBar for the Sidebar.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 }

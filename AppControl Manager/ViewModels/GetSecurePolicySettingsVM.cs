@@ -18,25 +18,13 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using AppControlManager.Main;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 {
-	internal GetSecurePolicySettingsVM() => MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
 
-	private readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal string? Provider { get; set => SP(ref field, value); }
 	internal string? Key { get; set => SP(ref field, value); }
@@ -54,7 +42,7 @@ internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 	{
 		try
 		{
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			// Check if all fields are filled
 			if (string.IsNullOrWhiteSpace(Provider) || string.IsNullOrWhiteSpace(Key) || string.IsNullOrWhiteSpace(ValueName))
@@ -87,7 +75,7 @@ internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 }

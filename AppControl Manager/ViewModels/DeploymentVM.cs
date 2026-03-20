@@ -39,19 +39,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 {
 	internal DeploymentVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher), AuthenticationContext.Intune);
+		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
 		if (GlobalVars.IsOlderThan24H2)
 		{
@@ -72,15 +60,10 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		SetLocalVisualState();
 	}
 
-	internal readonly InfoBarSettings MainInfoBar;
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility UnsignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility SignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = GlobalVars.GetStr("LocalDeploymentActive");
 
@@ -329,7 +312,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + FilesForUnsignedDeployment.Count + GlobalVars.GetStr("UnsignedXMLFiles"));
 
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainProgressBarVisibility = Visibility.Visible;
 
@@ -379,7 +362,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			AreElementsEnabled = true;
 
 			MainProgressBarVisibility = Visibility.Collapsed;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -472,7 +455,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			AreElementsEnabled = false;
 			DeploySignedXMLButtonIsEnabled = false;
 
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + FilesForSignedDeployment.Count + GlobalVars.GetStr("SignedXMLFiles"));
 
@@ -561,7 +544,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			DeploySignedXMLButtonIsEnabled = true;
 
 			MainProgressBarVisibility = Visibility.Collapsed;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -579,7 +562,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		try
 		{
 			AreElementsEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + CIPFiles.Count + GlobalVars.GetStr("CIPFiles"));
 
@@ -621,7 +604,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			AreElementsEnabled = true;
 
 			MainProgressBarVisibility = Visibility.Collapsed;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -651,7 +634,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		{
 			AreElementsEnabled = false;
 
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			MainProgressBarVisibility = Visibility.Visible;
 
 			await Task.Run(async () =>
@@ -683,7 +666,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			MainProgressBarVisibility = Visibility.Collapsed;
 
 			AreElementsEnabled = true;

@@ -29,12 +29,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 	[SetsRequiredMembers]
 	internal LockScreenVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
+		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));

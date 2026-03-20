@@ -20,78 +20,11 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class CreatePolicyVM : ViewModelBase
 {
-	internal CreatePolicyVM()
-	{
-		AllowMSFTInfoBar = new InfoBarSettings(
-			() => AllowMicrosoftSettingsInfoBarIsOpen, value => AllowMicrosoftSettingsInfoBarIsOpen = value,
-			() => AllowMicrosoftSettingsInfoBarMessage, value => AllowMicrosoftSettingsInfoBarMessage = value,
-			() => AllowMicrosoftSettingsInfoBarSeverity, value => AllowMicrosoftSettingsInfoBarSeverity = value,
-			() => AllowMicrosoftSettingsInfoBarIsClosable, value => AllowMicrosoftSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		DefaultWinInfoBar = new InfoBarSettings(
-			() => DefaultWindowsSettingsInfoBarIsOpen, value => DefaultWindowsSettingsInfoBarIsOpen = value,
-			() => DefaultWindowsSettingsInfoBarMessage, value => DefaultWindowsSettingsInfoBarMessage = value,
-			() => DefaultWindowsSettingsInfoBarSeverity, value => DefaultWindowsSettingsInfoBarSeverity = value,
-			() => DefaultWindowsSettingsInfoBarIsClosable, value => DefaultWindowsSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		SignedAndRepInfoBar = new InfoBarSettings(
-			() => SignedAndReputableSettingsInfoBarIsOpen, value => SignedAndReputableSettingsInfoBarIsOpen = value,
-			() => SignedAndReputableSettingsInfoBarMessage, value => SignedAndReputableSettingsInfoBarMessage = value,
-			() => SignedAndReputableSettingsInfoBarSeverity, value => SignedAndReputableSettingsInfoBarSeverity = value,
-			() => SignedAndReputableSettingsInfoBarIsClosable, value => SignedAndReputableSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		KernelModeBlockListInfoBar = new InfoBarSettings(
-			() => RecommendedDriverBlockRulesSettingsInfoBarIsOpen, value => RecommendedDriverBlockRulesSettingsInfoBarIsOpen = value,
-			() => RecommendedDriverBlockRulesSettingsInfoBarMessage, value => RecommendedDriverBlockRulesSettingsInfoBarMessage = value,
-			() => RecommendedDriverBlockRulesSettingsInfoBarSeverity, value => RecommendedDriverBlockRulesSettingsInfoBarSeverity = value,
-			() => RecommendedDriverBlockRulesSettingsInfoBarIsClosable, value => RecommendedDriverBlockRulesSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		UserModeBlockListInfoBar = new InfoBarSettings(
-			() => RecommendedUserModeBlockRulesSettingsInfoBarIsOpen, value => RecommendedUserModeBlockRulesSettingsInfoBarIsOpen = value,
-			() => RecommendedUserModeBlockRulesSettingsInfoBarMessage, value => RecommendedUserModeBlockRulesSettingsInfoBarMessage = value,
-			() => RecommendedUserModeBlockRulesSettingsInfoBarSeverity, value => RecommendedUserModeBlockRulesSettingsInfoBarSeverity = value,
-			() => RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, value => RecommendedUserModeBlockRulesSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		StrictKernelInfoBar = new InfoBarSettings(
-			() => StrictKernelModesSettingsInfoBarIsOpen, value => StrictKernelModesSettingsInfoBarIsOpen = value,
-			() => StrictKernelModesSettingsInfoBarMessage, value => StrictKernelModesSettingsInfoBarMessage = value,
-			() => StrictKernelModesSettingsInfoBarSeverity, value => StrictKernelModesSettingsInfoBarSeverity = value,
-			() => StrictKernelModesSettingsInfoBarIsClosable, value => StrictKernelModesSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		RMMBlockingInfoBar = new InfoBarSettings(
-			() => RMMBlockingSettingsInfoBarIsOpen, value => RMMBlockingSettingsInfoBarIsOpen = value,
-			() => RMMBlockingSettingsInfoBarMessage, value => RMMBlockingSettingsInfoBarMessage = value,
-			() => RMMBlockingSettingsInfoBarSeverity, value => RMMBlockingSettingsInfoBarSeverity = value,
-			() => RMMBlockingSettingsInfoBarIsClosable, value => RMMBlockingSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		DownloadsDefenseMeasureInfoBar = new InfoBarSettings(
-			() => DownloadsDefenseMeasureSettingsInfoBarIsOpen, value => DownloadsDefenseMeasureSettingsInfoBarIsOpen = value,
-			() => DownloadsDefenseMeasureSettingsInfoBarMessage, value => DownloadsDefenseMeasureSettingsInfoBarMessage = value,
-			() => DownloadsDefenseMeasureSettingsInfoBarSeverity, value => DownloadsDefenseMeasureSettingsInfoBarSeverity = value,
-			() => DownloadsDefenseMeasureSettingsInfoBarIsClosable, value => DownloadsDefenseMeasureSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
-		DangerousScriptHostsBlockingInfoBar = new InfoBarSettings(
-			() => DangerousScriptHostsBlockingSettingsInfoBarIsOpen, value => DangerousScriptHostsBlockingSettingsInfoBarIsOpen = value,
-			() => DangerousScriptHostsBlockingSettingsInfoBarMessage, value => DangerousScriptHostsBlockingSettingsInfoBarMessage = value,
-			() => DangerousScriptHostsBlockingSettingsInfoBarSeverity, value => DangerousScriptHostsBlockingSettingsInfoBarSeverity = value,
-			() => DangerousScriptHostsBlockingSettingsInfoBarIsClosable, value => DangerousScriptHostsBlockingSettingsInfoBarIsClosable = value,
-			Dispatcher, null, null);
-	}
-
 	private ConfigurePolicyRuleOptionsVM ConfigurePolicyRuleOptionsViewModel => ViewModelProvider.ConfigurePolicyRuleOptionsVM;
 	internal EventLogUtility EventLogsUtil => ViewModelProvider.EventLogUtility;
 
@@ -108,13 +41,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility AllowMicrosoftInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool AllowMicrosoftSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool AllowMicrosoftSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity AllowMicrosoftSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? AllowMicrosoftSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings AllowMSFTInfoBar;
+	internal readonly InfoBarSettings AllowMSFTInfoBar = new();
 
 	internal SiPolicy.PolicyFileRepresent? _policyPathAllowMicrosoft { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftLogSizeInputIsEnabled { get; set => SP(ref field, value); }
@@ -144,7 +73,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		{
 			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Collapsed;
 
-			AllowMicrosoftSettingsInfoBarIsClosable = false;
+			AllowMSFTInfoBar.IsClosable = false;
 			AllowMSFTInfoBar.WriteInfo(GlobalVars.GetStr("CreatingAllowMicrosoftBasePolicy"));
 
 			AllowMicrosoftSettingsIsExpanded = true;
@@ -196,7 +125,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		{
 			// Re-enable the buttons once the work is done
 			AllowMicrosoftSectionIsEnabled = true;
-			AllowMicrosoftSettingsInfoBarIsClosable = true;
+			AllowMSFTInfoBar.IsClosable = true;
 		}
 	}
 
@@ -226,13 +155,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal SiPolicy.PolicyFileRepresent? _policyPathDefaultWindows { get; set => SP(ref field, value); }
 
-	internal bool DefaultWindowsSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool DefaultWindowsSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity DefaultWindowsSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? DefaultWindowsSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings DefaultWinInfoBar;
+	internal readonly InfoBarSettings DefaultWinInfoBar = new();
 
 	internal bool DefaultWindowsLogSizeInputIsEnabled { get; set => SP(ref field, value); }
 
@@ -261,7 +186,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 		try
 		{
-			DefaultWindowsSettingsInfoBarIsClosable = false;
+			DefaultWinInfoBar.IsClosable = false;
 			DefaultWinInfoBar.WriteInfo(GlobalVars.GetStr("CreatingDefaultWindowsBasePolicy"));
 
 			DefaultWindowsSettingsIsExpanded = true;
@@ -312,7 +237,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		{
 			// Re-enable the buttons once the work is done
 			DefaultWindowsSectionIsEnabled = true;
-			DefaultWindowsSettingsInfoBarIsClosable = true;
+			DefaultWinInfoBar.IsClosable = true;
 		}
 	}
 
@@ -342,13 +267,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal SiPolicy.PolicyFileRepresent? _policyPathSignedAndReputable { get; set => SP(ref field, value); }
 
-	internal bool SignedAndReputableSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool SignedAndReputableSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity SignedAndReputableSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? SignedAndReputableSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool SignedAndReputableSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings SignedAndRepInfoBar;
+	internal readonly InfoBarSettings SignedAndRepInfoBar = new();
 
 	internal bool SignedAndReputableLogSizeInputIsEnabled { get; set => SP(ref field, value); }
 
@@ -376,7 +297,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 		try
 		{
-			SignedAndReputableSettingsInfoBarIsClosable = false;
+			SignedAndRepInfoBar.IsClosable = false;
 			SignedAndRepInfoBar.WriteInfo(GlobalVars.GetStr("CreatingSignedAndReputableBasePolicy"));
 
 			SignedAndReputableSettingsIsExpanded = true;
@@ -424,7 +345,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		finally
 		{
 			SignedAndReputableSectionIsEnabled = true;
-			SignedAndReputableSettingsInfoBarIsClosable = true;
+			SignedAndRepInfoBar.IsClosable = true;
 		}
 	}
 
@@ -447,15 +368,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility RecommendedDriverBlockRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string? _policyPathRecommendedDriverBlockRules { get; set => SP(ref field, value); }
-
-	internal bool RecommendedDriverBlockRulesSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool RecommendedDriverBlockRulesSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity RecommendedDriverBlockRulesSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? RecommendedDriverBlockRulesSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool RecommendedDriverBlockRulesSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings KernelModeBlockListInfoBar;
+	internal readonly InfoBarSettings KernelModeBlockListInfoBar = new();
 
 	internal bool RecommendedDriverBlockRulesCreateAndDeploy { get; set => SP(ref field, value); }
 
@@ -472,7 +387,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RecommendedDriverBlockRulesSectionIsEnabled = false;
 
 			RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
-			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = false;
+			KernelModeBlockListInfoBar.IsClosable = false;
 			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("CreatingRecommendedDriverBlockRulesPolicy"));
 
 			_policyPathMSFTRecommendedDriverBlockRules = await Task.Run(() =>
@@ -506,7 +421,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		finally
 		{
 			RecommendedDriverBlockRulesSectionIsEnabled = true;
-			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
+			KernelModeBlockListInfoBar.IsClosable = true;
 		}
 	}
 
@@ -524,7 +439,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Expand the settings card to make the InfoBar visible
 			RecommendedDriverBlockRulesSettingsIsExpanded = true;
 
-			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = false;
+			KernelModeBlockListInfoBar.IsClosable = false;
 			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("ConfiguringAutoUpdate"));
 
 			await Task.Run(BasePolicyCreator.SetAutoUpdateDriverBlockRules);
@@ -538,7 +453,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		finally
 		{
 			RecommendedDriverBlockRulesSectionIsEnabled = true;
-			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
+			KernelModeBlockListInfoBar.IsClosable = true;
 		}
 	}
 
@@ -563,13 +478,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility RecommendedUserModeBlockRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool RecommendedUserModeBlockRulesSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool RecommendedUserModeBlockRulesSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity RecommendedUserModeBlockRulesSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? RecommendedUserModeBlockRulesSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool RecommendedUserModeBlockRulesSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings UserModeBlockListInfoBar;
+	internal readonly InfoBarSettings UserModeBlockListInfoBar = new();
 
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended user-mode block rules policy
@@ -587,7 +498,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			RecommendedUserModeBlockRulesSettingsIsExpanded = true;
 
-			RecommendedUserModeBlockRulesSettingsInfoBarIsClosable = false;
+			UserModeBlockListInfoBar.IsClosable = false;
 
 			UserModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("CreatingUserModeBlockRules"));
 
@@ -610,7 +521,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 		finally
 		{
-			RecommendedUserModeBlockRulesSettingsInfoBarIsClosable = true;
+			UserModeBlockListInfoBar.IsClosable = true;
 
 			// Re-enable buttons
 			RecommendedUserModeBlockRulesSectionIsEnabled = true;
@@ -641,13 +552,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal bool StrictKernelModesAudit { get; set => SP(ref field, value); } = true;
 	internal bool StrictKernelModeNoFlightRoots { get; set => SP(ref field, value); }
 
-	internal bool StrictKernelModesSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool StrictKernelModesSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity StrictKernelModesSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? StrictKernelModesSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool StrictKernelModesSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings StrictKernelInfoBar;
+	internal readonly InfoBarSettings StrictKernelInfoBar = new();
 
 	/// <summary>
 	/// Event handler to prepare the system for Strict Kernel-mode policy
@@ -661,7 +568,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			StrictKernelModeSectionIsEnabled = false;
-			StrictKernelModesSettingsInfoBarIsClosable = false;
+			StrictKernelInfoBar.IsClosable = false;
 
 			StrictKernelInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicy"));
 
@@ -685,7 +592,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 		finally
 		{
-			StrictKernelModesSettingsInfoBarIsClosable = true;
+			StrictKernelInfoBar.IsClosable = true;
 			StrictKernelModeSectionIsEnabled = true;
 		}
 	}
@@ -713,13 +620,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool RMMBlockingAudit { get; set => SP(ref field, value); }
 
-	internal bool RMMBlockingSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool RMMBlockingSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity RMMBlockingSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? RMMBlockingSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool RMMBlockingSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings RMMBlockingInfoBar;
+	internal readonly InfoBarSettings RMMBlockingInfoBar = new();
 
 	/// <summary>
 	/// Event handler to prepare the RMM Blocking policy
@@ -736,7 +639,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RMMBlockingInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			RMMBlockingSectionIsEnabled = false;
-			RMMBlockingSettingsInfoBarIsClosable = false;
+			RMMBlockingInfoBar.IsClosable = false;
 
 			RMMBlockingInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyRMMBlocking"));
 
@@ -761,7 +664,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 		finally
 		{
-			RMMBlockingSettingsInfoBarIsClosable = true;
+			RMMBlockingInfoBar.IsClosable = true;
 			RMMBlockingSectionIsEnabled = true;
 		}
 	}
@@ -829,13 +732,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool DownloadsDefenseMeasureAudit { get; set => SP(ref field, value); }
 
-	internal bool DownloadsDefenseMeasureSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool DownloadsDefenseMeasureSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity DownloadsDefenseMeasureSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? DownloadsDefenseMeasureSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool DownloadsDefenseMeasureSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings DownloadsDefenseMeasureInfoBar;
+	internal readonly InfoBarSettings DownloadsDefenseMeasureInfoBar = new();
 
 	/// <summary>
 	/// Event handler to prepare the Downloads Defense Measures policy
@@ -852,7 +751,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			DownloadsDefenseMeasureInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			DownloadsDefenseMeasureSectionIsEnabled = false;
-			DownloadsDefenseMeasureSettingsInfoBarIsClosable = false;
+			DownloadsDefenseMeasureInfoBar.IsClosable = false;
 
 			DownloadsDefenseMeasureInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyDownloadsDefenseMeasure"));
 
@@ -877,7 +776,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 		finally
 		{
-			DownloadsDefenseMeasureSettingsInfoBarIsClosable = true;
+			DownloadsDefenseMeasureInfoBar.IsClosable = true;
 			DownloadsDefenseMeasureSectionIsEnabled = true;
 		}
 	}
@@ -905,13 +804,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool DangerousScriptHostsBlockingAudit { get; set => SP(ref field, value); }
 
-	internal bool DangerousScriptHostsBlockingSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal bool DangerousScriptHostsBlockingSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
-	internal InfoBarSeverity DangerousScriptHostsBlockingSettingsInfoBarSeverity { get; set => SP(ref field, value); }
-	internal string? DangerousScriptHostsBlockingSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool DangerousScriptHostsBlockingSettingsIsExpanded { get; set => SP(ref field, value); }
 
-	private readonly InfoBarSettings DangerousScriptHostsBlockingInfoBar;
+	internal readonly InfoBarSettings DangerousScriptHostsBlockingInfoBar = new();
 
 	/// <summary>
 	/// Event handler to prepare the Dangerous Script Hosts Blocking policy
@@ -928,7 +823,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			DangerousScriptHostsBlockingInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			DangerousScriptHostsBlockingSectionIsEnabled = false;
-			DangerousScriptHostsBlockingSettingsInfoBarIsClosable = false;
+			DangerousScriptHostsBlockingInfoBar.IsClosable = false;
 
 			DangerousScriptHostsBlockingInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyDangerousScriptHostsBlocking"));
 
@@ -953,7 +848,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 		finally
 		{
-			DangerousScriptHostsBlockingSettingsInfoBarIsClosable = true;
+			DangerousScriptHostsBlockingInfoBar.IsClosable = true;
 			DangerousScriptHostsBlockingSectionIsEnabled = true;
 		}
 	}

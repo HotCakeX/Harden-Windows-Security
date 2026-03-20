@@ -34,20 +34,13 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 {
 	internal Microsoft365AppsSecurityBaselineVM()
 	{
-		MainInfoBar = new InfoBarSettings(
-			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
-			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
-			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			Dispatcher, null, null);
-
 		// Initialize cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
 		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
 		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
 
 		// To adjust the initial width of the columns, giving them nice paddings.
-		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
+		_ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 		// Enrich the data to improve detection rate by ensuring specialized strategies are registered.
 		SpecializedStrategiesRegistry.RegisterWmiSpecializedVerificationsOnceFromFile();
@@ -98,12 +91,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -286,7 +274,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -316,7 +304,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 			ApplyAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}
@@ -380,7 +368,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -410,7 +398,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 			RemoveAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}
@@ -431,7 +419,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -471,7 +459,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 			VerifyAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}
@@ -652,7 +640,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBarIsClosable = false;
+			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo($"Removing {idsToRemove.Count} selected policies...");
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -679,7 +667,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBarIsClosable = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

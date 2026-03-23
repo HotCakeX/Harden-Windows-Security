@@ -42,7 +42,7 @@ internal static class CustomSerialization
 		if (!string.IsNullOrEmpty(policy.FriendlyName))
 			root.SetAttribute("FriendlyName", policy.FriendlyName);
 
-		root.SetAttribute("PolicyType", ConvertPolicyType(policy.PolicyType));
+		root.SetAttribute("PolicyType", s_policyTypeLabels[(int)policy.PolicyType]);
 
 		// VersionEx, PolicyID, BasePolicyID, PlatformID
 		if (!AppendTextElement(xmlDoc, root, "VersionEx", policy.VersionEx))
@@ -476,9 +476,6 @@ internal static class CustomSerialization
 		"AppID Tagging Policy",
 	];
 
-	// Helper for PolicyType conversion
-	private static string ConvertPolicyType(PolicyType pt) => s_policyTypeLabels[(int)pt];
-
 	// FileRules Helpers
 	private static void AppendAllow(XmlDocument doc, XmlElement parent, Allow allow)
 	{
@@ -790,7 +787,6 @@ internal static class CustomSerialization
 		}
 	}
 
-
 	/// <summary>
 	/// Helper method, its return value must be checked by the caller and handled accordingly
 	/// </summary>
@@ -811,7 +807,6 @@ internal static class CustomSerialization
 		}
 		return false;
 	}
-
 
 	/// <summary>
 	/// Helper method, its return value must be checked by the caller and handled accordingly

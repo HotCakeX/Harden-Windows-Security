@@ -2604,7 +2604,27 @@ internal static unsafe partial class NativeMethods
 	internal const uint SERVICE_STOP = 0x0020;
 	internal const uint SERVICE_PAUSE_CONTINUE = 0x0040;
 	internal const uint SERVICE_QUERY_STATUS = 0x0004;
+
+	// https://learn.microsoft.com/windows/win32/services/service-security-and-access-rights
+	internal const uint SC_MANAGER_CONNECT = 0x0001;
+
+	// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_status_process
+	internal const uint SERVICE_STOPPED = 0x00000001;
+	internal const uint SERVICE_STOP_PENDING = 0x00000003;
+	internal const uint SERVICE_RUNNING = 0x00000004;
+
+	// https://learn.microsoft.com/openspecs/windows_protocols/ms-scmr/a7de3a4b-0b9e-4b9b-8863-b3dbc9bbe02b
+	// Info level for QueryServiceStatusEx
+	internal const int SC_STATUS_PROCESS_INFO = 0;
+
+	// "https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1000-1299-"
+	internal const int ERROR_SERVICE_ALREADY_RUNNING = 1056;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-changeserviceconfigw
+	/// </summary>
 	internal const uint SERVICE_NO_CHANGE = 0xFFFFFFFF;
+
 	internal const uint SERVICE_CONTROL_PAUSE = 0x00000002;
 	internal const uint SERVICE_CONTROL_CONTINUE = 0x00000003;
 

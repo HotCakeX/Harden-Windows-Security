@@ -55,5 +55,4 @@ internal sealed class FilePublisherSignerCreator(
 	internal string? AuthenticodeSHA256 => authenticodeSHA256;
 	internal string? AuthenticodeSHA1 => authenticodeSHA1;
 	internal SSType SiSigningScenario => siSigningScenario;
-
 }

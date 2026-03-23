@@ -725,7 +725,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Configures nested virtualization for all Hyper-V VMs on the system.
 	/// </summary>
-	internal async Task SetNestedVirtualizationForVMs(bool enable)
+	private async Task SetNestedVirtualizationForVMs(bool enable)
 	{
 		try
 		{

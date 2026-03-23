@@ -27,6 +27,7 @@ using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using CommonCore.AppSettings;
+using System.Threading;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity;
@@ -179,9 +180,13 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 #endif
 
 	/// <summary>
-	/// User Activity tracking field
+	/// User Activity tracking field. It's static and uses the semaphore below
+	/// Because we don't want to publish activity concurrently and the way this field is disposed of must be synchronized, one thread at a time
+	/// which is being enforced now.
 	/// </summary>
-	private UserActivitySession? _previousSession;
+	private static UserActivitySession? _previousSession;
+
+	private static readonly SemaphoreSlim UserActivityMeowTex = new(1);
 
 	/// <summary>
 	/// Publishes or updates user activity for the current page.
@@ -190,17 +195,20 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <param name="action">The type of action being performed</param>
 	/// <param name="filePath">The file path associated with the activity</param>
 	/// <param name="displayText">The display text for the activity</param>
-	internal async Task PublishUserActivityAsync(LaunchProtocolActions action, string filePath, string displayText)
+	internal static async Task PublishUserActivityAsync(LaunchProtocolActions action, string filePath, string displayText)
 	{
 		// Only publish if allowed
 		if (!GlobalVars.Settings.PublishUserActivityInTheOS)
 			return;
+
+		await UserActivityMeowTex.WaitAsync();
 
 		try
 		{
 			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
 			{
 				_previousSession?.Dispose();
+				_previousSession = null;
 			});
 
 			// Create the activity
@@ -214,27 +222,15 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 			// Save the activity
 			await activity.SaveAsync();
 
-			TaskCompletionSource<UserActivitySession> tcs = new();
-
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
-			{
-				try
-				{
-					UserActivitySession session = activity.CreateSession();
-					tcs.SetResult(session);
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			});
-
-			// Wait for the UI thread operation to complete and store the result
-			_previousSession = await tcs.Task;
+			_previousSession = await GlobalVars.AppDispatcher.EnqueueAsync(activity.CreateSession);
 		}
 		catch (Exception ex)
 		{
 			Logger.Write($"Failed to publish user activity: {ex.Message}");
+		}
+		finally
+		{
+			_ = UserActivityMeowTex.Release();
 		}
 	}
 

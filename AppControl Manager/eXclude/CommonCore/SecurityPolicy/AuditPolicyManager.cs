@@ -107,7 +107,6 @@ internal sealed partial class AuditPolicyInfo(
 	/// </summary>
 	internal void RevertChanges() => AuditingInformation = OriginalAuditingInformation;
 
-
 	/// <summary>
 	/// Gets the human-readable audit setting
 	/// </summary>

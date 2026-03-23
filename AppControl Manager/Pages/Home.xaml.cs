@@ -33,9 +33,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisibleCrumbar
 {
 #if HARDEN_SYSTEM_SECURITY
-	private ViewModels.HomeVM ViewModel { get; } = HardenSystemSecurity.ViewModels.ViewModelProvider.HomeVM;
+	private ViewModels.HomeVM ViewModel => HardenSystemSecurity.ViewModels.ViewModelProvider.HomeVM;
 #else
-	private ViewModels.HomeVM ViewModel { get; } = ViewModels.ViewModelProvider.HomeVM;
+	private ViewModels.HomeVM ViewModel => ViewModels.ViewModelProvider.HomeVM;
 #endif
 
 

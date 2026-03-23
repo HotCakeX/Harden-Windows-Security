@@ -329,7 +329,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// - Includes items with <see cref="HardenSystemSecurity.DeviceIntents.Intent.All"/> whenever an intent is selected.
 	/// - Includes any MUnit intersecting the selected intents.
 	/// </summary>
-	internal void RecomputeDeviceIntentsPreview()
+	private void RecomputeDeviceIntentsPreview()
 	{
 		// Ensure cache is built
 		_allMUnitsAcrossCategoriesCache ??= BuildAllMUnitsAcrossCategories();
@@ -524,7 +524,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Enum to track which cancellable operation is currently running
 	/// </summary>
-	internal enum RunningOperation
+	private enum RunningOperation
 	{
 		None,
 		Apply,
@@ -536,7 +536,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Tracks which cancellable operation is currently running so that only one of the cancellable buttons will ever be enabled during the operation.
 	/// </summary>
-	internal RunningOperation CurrentRunningOperation
+	private RunningOperation CurrentRunningOperation
 	{
 		get; set
 		{

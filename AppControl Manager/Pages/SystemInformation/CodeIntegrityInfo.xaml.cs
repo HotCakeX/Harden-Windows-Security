@@ -22,7 +22,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class CodeIntegrityInfo : Page
 {
-	private ViewModels.CodeIntegrityInfoVM ViewModel { get; } = ViewModels.ViewModelProvider.CodeIntegrityInfoVM;
+	private ViewModels.CodeIntegrityInfoVM ViewModel => ViewModels.ViewModelProvider.CodeIntegrityInfoVM;
 
 	internal CodeIntegrityInfo()
 	{

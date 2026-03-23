@@ -36,6 +36,7 @@ using AppControlManager.WindowComponents;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Runtime.InteropServices;
+using CommonCore.IncrementalCollection;
 namespace AppControlManager.ViewModels;
 #endif
 
@@ -286,7 +287,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	#region Certificate Common Name
 
 	// To store the selectable Certificate common names
-	internal readonly ObservableCollection<string> CertCommonNames = [];
+	internal readonly RangedObservableCollection<string> CertCommonNames = [];
 	internal readonly List<string> CertCommonNamesList = [];
 
 	internal string? CertCNsAutoSuggestBoxText { get; set => SPT(ref field, value); }
@@ -312,11 +313,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 			CertCommonNames.Clear();
 			CertCommonNamesList.Clear();
 
-			foreach (string item in certCNs)
-			{
-				CertCommonNames.Add(item);
-				CertCommonNamesList.Add(item);
-			}
+			CertCommonNames.AddRange(certCNs);
+			CertCommonNamesList.AddRange(certCNs);
 
 			CertCNAutoSuggestBoxIsSuggestionListOpen = true;
 		}
@@ -373,14 +371,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 			return;
 
 		// Filter menu items based on the search query
-		List<string> suggestions = [.. CertCommonNamesList.Where(name => name.Contains(CertCNsAutoSuggestBoxText, StringComparison.OrdinalIgnoreCase))];
+		IEnumerable<string> suggestions = CertCommonNamesList.Where(name => name.Contains(CertCNsAutoSuggestBoxText, StringComparison.OrdinalIgnoreCase));
 
 		CertCommonNames.Clear();
-
-		foreach (string item in CollectionsMarshal.AsSpan(suggestions))
-		{
-			CertCommonNames.Add(item);
-		}
+		CertCommonNames.AddRange(suggestions);
 	}
 
 	internal void EditButton_CertificateCommonName_Click()

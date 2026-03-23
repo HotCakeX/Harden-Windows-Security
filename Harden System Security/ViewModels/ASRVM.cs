@@ -624,7 +624,6 @@ internal sealed partial class ASRVM : ViewModelBase
 		return new(items: AllASRRules) { Score = AllASRRules.Count(x => x.State == ASRRuleState.Block) };
 	}
 
-
 	/// <summary>
 	/// Applies imported ASR rule states by matching on GUID ID.
 	/// Partial sync (synchronizeExact == false):

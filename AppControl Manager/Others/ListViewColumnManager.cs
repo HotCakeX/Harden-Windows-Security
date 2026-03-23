@@ -292,10 +292,8 @@ internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
 	}
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
+	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+		PropertyChanged?.Invoke(this, new(propertyName));
 }
 
 // Helper class for column selection UI
@@ -321,10 +319,8 @@ public sealed partial class ColumnSelectionItem(string key, string name, bool is
 	} = isChecked;
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
+	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+		PropertyChanged?.Invoke(this, new(propertyName));
 }
 #pragma warning restore CA1515
 
@@ -348,8 +344,6 @@ internal sealed partial class BindableColumnWidth(GridLength initialWidth) : INo
 	} = initialWidth;
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
+	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+		PropertyChanged?.Invoke(this, new(propertyName));
 }

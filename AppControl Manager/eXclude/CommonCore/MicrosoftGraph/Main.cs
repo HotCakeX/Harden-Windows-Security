@@ -73,7 +73,11 @@ internal static class Main
 
 	private readonly static BrokerOptions OptionsForBroker = new(BrokerOptions.OperatingSystems.Windows)
 	{
+#if APP_CONTROL_MANAGER
 		Title = "AppControl Manager"
+#else
+		Title = "Harden System Security"
+#endif
 	};
 
 	/// <summary>
@@ -190,7 +194,7 @@ internal static class Main
 	/// <param name="account">The authenticated account wrapper.</param>
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>Fresh or cached access token string.</returns>
-	internal static async Task<string> GetValidAccessTokenAsync(AuthenticatedAccounts account, CancellationToken cancellationToken)
+	private static async Task<string> GetValidAccessTokenAsync(AuthenticatedAccounts account, CancellationToken cancellationToken)
 	{
 		// Proactive refresh window to avoid near-expiry usage
 		TimeSpan proactiveWindow = TimeSpan.FromMinutes(10);
@@ -222,7 +226,6 @@ internal static class Main
 		return refreshedResult.AccessToken;
 	}
 
-
 	/// <summary>
 	/// Performs an Advanced Hunting query using Microsoft Defender for Endpoint
 	/// Accepts a device name as an optional parameter for filtering
@@ -231,9 +234,7 @@ internal static class Main
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<string?> RunMDEAdvancedHuntingQuery(string? deviceName, AuthenticatedAccounts? account)
 	{
-
-		if (account is null)
-			return null;
+		if (account is null) return null;
 
 		string? output = null;
 
@@ -303,7 +304,6 @@ DeviceEvents
 		}
 	}
 
-
 	/// <summary>
 	/// Fetches the M365/Entra ID groups.
 	/// </summary>
@@ -311,7 +311,6 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<List<IntuneGroupItemListView>> FetchGroups(AuthenticatedAccounts account)
 	{
-
 		List<IntuneGroupItemListView> output = [];
 
 		// Obtain a valid access token (silent refresh if needed)
@@ -388,7 +387,6 @@ DeviceEvents
 
 		return output;
 	}
-
 
 	/// <summary>
 	/// Signs into a tenant
@@ -489,7 +487,6 @@ DeviceEvents
 
 		return (!error, newAccount);
 	}
-
 
 	/// <summary>
 	/// Signs out the user
@@ -620,7 +617,6 @@ DeviceEvents
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// https://learn.microsoft.com/mem/intune/configuration/custom-settings-windows-10
@@ -886,7 +882,6 @@ DeviceEvents
 			allPolicies);
 	}
 
-
 	/// <summary>
 	/// Deletes a custom Intune policy identified by the given policy ID.
 	/// </summary>
@@ -896,9 +891,7 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException">Thrown when the user is not authenticated or the deletion fails.</exception>
 	internal static async Task DeletePolicy(AuthenticatedAccounts? account, string policyId)
 	{
-
-		if (account is null)
-			return;
+		if (account is null) return;
 
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
@@ -985,9 +978,7 @@ DeviceEvents
 			groupTypes: unifiedGroup ? ["Unified"] : []
 		);
 
-		string jsonPayload = JsonSerializer.Serialize(
-			payload,
-			MSGraphJsonContext.Default.Group);
+		string jsonPayload = JsonSerializer.Serialize(payload, MSGraphJsonContext.Default.Group);
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateGroup",
@@ -1045,10 +1036,8 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task DeleteGroup(AuthenticatedAccounts? account, string groupId)
 	{
-		if (account is null)
-		{
-			return;
-		}
+		if (account is null) return;
+
 		if (string.IsNullOrWhiteSpace(groupId))
 		{
 			throw new ArgumentException("groupId is null or empty", nameof(groupId));
@@ -1147,7 +1136,6 @@ DeviceEvents
 		return allPolicies;
 	}
 
-
 	/// <summary>
 	/// Creates an Intune configuration policy from a JSON file.
 	/// </summary>
@@ -1158,8 +1146,7 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<string?> CreateConfigurationPolicyFromJson(AuthenticatedAccounts account, string jsonFilePath)
 	{
-		if (account is null)
-			return null;
+		if (account is null) return null;
 
 		if (string.IsNullOrEmpty(jsonFilePath) || !File.Exists(jsonFilePath))
 		{

@@ -54,8 +54,7 @@ internal static class NewCertificateSignerRules
 
 		foreach (CertificateSignerCreator signer in CollectionsMarshal.AsSpan(signerData))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string SignerID = $"ID_SIGNER_R_{guid}";
+			string SignerID = $"ID_SIGNER_R_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			Signer newSigner = new(
 				id: SignerID,

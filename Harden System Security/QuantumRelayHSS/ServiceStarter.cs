@@ -46,7 +46,7 @@ internal static partial class ServiceStarter
 		try
 		{
 			// Open the Service Control Manager by openning a service handle.
-			scmHandle = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+			scmHandle = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 			if (scmHandle == IntPtr.Zero)
 			{
 				int error = Marshal.GetLastPInvokeError();
@@ -54,7 +54,7 @@ internal static partial class ServiceStarter
 			}
 
 			// Open the service with rights to start and query status.
-			serviceHandle = NativeMethods.OpenServiceW(scmHandle, serviceName, SERVICE_START | SERVICE_QUERY_STATUS);
+			serviceHandle = NativeMethods.OpenServiceW(scmHandle, serviceName, NativeMethods.SERVICE_START | NativeMethods.SERVICE_QUERY_STATUS);
 			if (serviceHandle == IntPtr.Zero)
 			{
 				int error = Marshal.GetLastPInvokeError();
@@ -65,15 +65,15 @@ internal static partial class ServiceStarter
 
 			// If already running, nothing to do.
 			SERVICE_STATUS_PROCESS status = QueryServiceStatusProcess(serviceHandle);
-			if (status.dwCurrentState == SERVICE_RUNNING)
+			if (status.dwCurrentState == NativeMethods.SERVICE_RUNNING)
 			{
 				return;
 			}
 
 			// If stopping, wait until fully stopped before attempting to start.
-			if (status.dwCurrentState == SERVICE_STOP_PENDING)
+			if (status.dwCurrentState == NativeMethods.SERVICE_STOP_PENDING)
 			{
-				await WaitForStateAsync(serviceHandle, SERVICE_STOPPED, deadlineUtc, cancellationToken).ConfigureAwait(false);
+				await WaitForStateAsync(serviceHandle, NativeMethods.SERVICE_STOPPED, deadlineUtc, cancellationToken).ConfigureAwait(false);
 			}
 
 			// Attempt to start (ignore "already running" error).
@@ -81,14 +81,14 @@ internal static partial class ServiceStarter
 			if (!startOk)
 			{
 				int error = Marshal.GetLastPInvokeError();
-				if (error != ERROR_SERVICE_ALREADY_RUNNING)
+				if (error != NativeMethods.ERROR_SERVICE_ALREADY_RUNNING)
 				{
 					throw new Win32Exception(error, $"StartServiceW failed for '{serviceName}' with error {error}.");
 				}
 			}
 
 			// Wait until the service reports running.
-			await WaitForStateAsync(serviceHandle, SERVICE_RUNNING, deadlineUtc, cancellationToken).ConfigureAwait(false);
+			await WaitForStateAsync(serviceHandle, NativeMethods.SERVICE_RUNNING, deadlineUtc, cancellationToken).ConfigureAwait(false);
 		}
 		finally
 		{
@@ -170,7 +170,7 @@ internal static partial class ServiceStarter
 
 		try
 		{
-			bool ok = NativeMethods.QueryServiceStatusEx(serviceHandle, SC_STATUS_PROCESS_INFO, buffer, (uint)size, out uint bytesNeeded);
+			bool ok = NativeMethods.QueryServiceStatusEx(serviceHandle, NativeMethods.SC_STATUS_PROCESS_INFO, buffer, (uint)size, out uint bytesNeeded);
 			if (!ok)
 			{
 				int error = Marshal.GetLastPInvokeError();
@@ -185,22 +185,4 @@ internal static partial class ServiceStarter
 			Marshal.FreeHGlobal(buffer);
 		}
 	}
-
-
-	// https://learn.microsoft.com/windows/win32/services/service-security-and-access-rights
-	private const uint SC_MANAGER_CONNECT = 0x0001;
-	private const uint SERVICE_QUERY_STATUS = 0x0004;
-	private const uint SERVICE_START = 0x0010;
-
-	// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_status_process
-	private const uint SERVICE_STOPPED = 0x00000001;
-	private const uint SERVICE_STOP_PENDING = 0x00000003;
-	private const uint SERVICE_RUNNING = 0x00000004;
-
-	// https://learn.microsoft.com/openspecs/windows_protocols/ms-scmr/a7de3a4b-0b9e-4b9b-8863-b3dbc9bbe02b
-	// Info level for QueryServiceStatusEx
-	private const int SC_STATUS_PROCESS_INFO = 0;
-
-	// "https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1000-1299-"
-	private const int ERROR_SERVICE_ALREADY_RUNNING = 1056;
 }

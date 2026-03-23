@@ -112,7 +112,6 @@ internal static partial class DetailsRetrieval
 		}
 
 		return details;
-
 	}
 
 	/// <summary>

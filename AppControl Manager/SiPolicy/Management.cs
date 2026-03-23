@@ -75,9 +75,7 @@ internal static class Management
 	internal static void SavePolicyToFile(SiPolicy policy, string filePath)
 	{
 		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
-
 		xmlObj.Save(filePath);
-
 		CiPolicyTest.TestCiPolicy(filePath);
 	}
 

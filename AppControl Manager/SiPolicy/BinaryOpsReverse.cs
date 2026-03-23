@@ -175,7 +175,7 @@ internal static class BinaryOpsReverse
 		policy.FileRules = fileRules.ToList();
 
 		// SIGNERS SECTION
-		List<Signer> signerList = [];
+		policy.Signers = [];
 		string[] signerIds = new string[signerCount];
 		for (int idx = 0; idx < signerCount; idx++)
 		{
@@ -183,9 +183,8 @@ internal static class BinaryOpsReverse
 			string id = $"ID_SIGNER_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 			s.ID = id;
 			signerIds[idx] = id;
-			signerList.Add(s);
+			policy.Signers.Add(s);
 		}
-		policy.Signers = signerList;
 
 		// UPDATE POLICY SIGNERS
 		uint upCount = reader.ReadUInt32();
@@ -202,7 +201,7 @@ internal static class BinaryOpsReverse
 		// SIGNING SCENARIOS
 		// Pre-generate schema-compliant SigningScenario IDs and use them consistently,
 		// and map inherited scenario indices to these real IDs.
-		List<SigningScenario> scenList = [];
+		policy.SigningScenarios = [];
 		string[] scenarioIds = new string[scenarioCount];
 		for (int si = 0; si < scenarioCount; si++)
 		{
@@ -210,16 +209,15 @@ internal static class BinaryOpsReverse
 		}
 		for (int si = 0; si < scenarioCount; si++)
 		{
-			scenList.Add(ParseScenario(reader, signerIds, fileRuleIds, si, scenarioIds));
+			policy.SigningScenarios.Add(ParseScenario(reader, signerIds, fileRuleIds, si, scenarioIds));
 		}
-		policy.SigningScenarios = scenList;
 
 		// HVCI OPTIONS
 		policy.HvciOptions = reader.ReadUInt32();
 
 		// SETTINGS SECTION
 		uint setCount = reader.ReadUInt32();
-		List<Setting> sets = [];
+		policy.Settings = [];
 		for (uint i = 0; i < setCount; i++)
 		{
 			string? prov = ReadStringValue(reader);
@@ -238,9 +236,8 @@ internal static class BinaryOpsReverse
 			if (prov is null || key is null || valName is null || data is null)
 				continue;
 
-			sets.Add(new Setting(provider: prov, key: key, valueName: valName, value: new SettingValueType(item: data)));
+			policy.Settings.Add(new Setting(provider: prov, key: key, valueName: valName, value: new SettingValueType(item: data)));
 		}
-		policy.Settings = sets;
 
 		// Version‐specific blocks:
 		if (version >= 3)

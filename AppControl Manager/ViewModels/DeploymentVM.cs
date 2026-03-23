@@ -39,6 +39,8 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 {
 	internal DeploymentVM()
 	{
+		MainInfoBar = new();
+
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
 		if (GlobalVars.IsOlderThan24H2)
@@ -60,7 +62,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		SetLocalVisualState();
 	}
 
-	internal readonly InfoBarSettings MainInfoBar = new();
+	internal readonly InfoBarSettings MainInfoBar;
 
 	internal Visibility UnsignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility SignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;

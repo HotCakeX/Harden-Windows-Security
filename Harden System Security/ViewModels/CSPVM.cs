@@ -31,6 +31,7 @@ using System.Xml;
 using System.Xml.Linq;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.IncrementalCollection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
@@ -152,7 +153,7 @@ internal sealed partial class CSPVM : ViewModelBase
 	/// <summary>
 	/// Collection bound to the UI ListView.
 	/// </summary>
-	internal ObservableCollection<CspPolicyEntry> Policies = [];
+	internal readonly RangedObservableCollection<CspPolicyEntry> Policies = [];
 
 	/// <summary>
 	/// Backing field used for filtering etc.
@@ -286,10 +287,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			});
 
 			// Add data to the Observable Collection
-			foreach (CspPolicyEntry p in CollectionsMarshal.AsSpan(workingEntries))
-			{
-				Policies.Add(p);
-			}
+			Policies.AddRange(workingEntries);
 
 			PerformSearch(SearchKeyword);
 
@@ -439,10 +437,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			if (Policies.Count != AllPolicies.Count)
 			{
 				Policies.Clear();
-				foreach (CspPolicyEntry p in CollectionsMarshal.AsSpan(AllPolicies))
-				{
-					Policies.Add(p);
-				}
+				Policies.AddRange(AllPolicies);
 			}
 			return;
 		}
@@ -469,16 +464,11 @@ internal sealed partial class CSPVM : ViewModelBase
 			);
 		}
 
-		List<CspPolicyEntry> filtered = query.ToList();
-
 		Policies.Clear();
-		foreach (CspPolicyEntry p in CollectionsMarshal.AsSpan(filtered))
-		{
-			Policies.Add(p);
-		}
+		Policies.AddRange(query);
 	}
 
-	internal static class EmbeddedModeUtil
+	private static class EmbeddedModeUtil
 	{
 		private static byte[]? _cachedHash;
 

@@ -42,39 +42,14 @@ internal static class NewPFNLevelRules
 		// Ensure the lists are initialized
 		siPolicy.FileRules ??= [];
 
-		// Find the User Mode Signing Scenario (Value 12)
-		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(siPolicy, 12);
 
-		// Ensure UMCI exists
-		if (umci == null)
-		{
-			umci = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners
-				{
-					FileRulesRef = new FileRulesRef([])
-				}
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(umci);
-			siPolicy.SigningScenarios = scenarios;
-		}
-		else
-		{
-			// Ensure nested objects exist
-			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 
 		foreach (PFNRuleCreator PFN in CollectionsMarshal.AsSpan(PFNData))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string ID = $"ID_ALLOW_A_{guid}";
+			string ID = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			// Create new PackageFamilyName rule
 			Allow newPFNRule = new(id: ID)
@@ -89,7 +64,7 @@ internal static class NewPFNLevelRules
 			// Create FileRuleRef for the PFN
 			FileRuleRef newRef = new(ruleID: ID);
 
-			umci.ProductSigners.FileRulesRef.FileRuleRef.Add(newRef);
+			umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(newRef);
 		}
 
 		return siPolicy;
@@ -112,38 +87,14 @@ internal static class NewPFNLevelRules
 		// Ensure the lists are initialized
 		siPolicy.FileRules ??= [];
 
-		// Find the User Mode Signing Scenario (Value 12)
-		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(siPolicy, 12);
 
-		// Ensure UMCI exists
-		if (umci == null)
-		{
-			umci = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners
-				{
-					FileRulesRef = new FileRulesRef([])
-				}
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(umci);
-			siPolicy.SigningScenarios = scenarios;
-		}
-		else
-		{
-			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 
 		foreach (PFNRuleCreator PFN in CollectionsMarshal.AsSpan(PFNData))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string ID = $"ID_DENY_A_{guid}";
+			string ID = $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			// Create new PackageFamilyName rule
 			Deny newPFNRule = new(id: ID)
@@ -158,7 +109,7 @@ internal static class NewPFNLevelRules
 			// Create FileRuleRef for the PFN
 			FileRuleRef newRef = new(ruleID: ID);
 
-			umci.ProductSigners.FileRulesRef.FileRuleRef.Add(newRef);
+			umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(newRef);
 		}
 
 		return siPolicy;

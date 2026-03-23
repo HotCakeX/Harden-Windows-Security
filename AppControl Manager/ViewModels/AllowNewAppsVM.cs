@@ -431,7 +431,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
 	/// And only after this method, the ItemsSource must be assigned to the ListView.
 	/// </summary>
-	internal void CalculateColumnWidthLocalFiles() => LocalFilesColumnManager.CalculateColumnWidths(LocalFilesFileIdentities);
+	private void CalculateColumnWidthLocalFiles() => LocalFilesColumnManager.CalculateColumnWidths(LocalFilesFileIdentities);
 
 	#endregion
 
@@ -819,7 +819,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal double Step2ProgressRingValue { get; set => SP(ref field, value); }
 
 	// A Progress<double> so Report() callbacks run on the UI thread
-	internal IProgress<double> Step2ProgressRingProgress;
+	private IProgress<double> Step2ProgressRingProgress;
 
 	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
 

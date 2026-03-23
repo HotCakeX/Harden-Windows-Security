@@ -45,22 +45,8 @@ internal static class NewFilePathRules
 		// Ensure the lists are initialized.
 		policyObj.FileRules ??= [];
 
-		// Ensure UMCI Scenario exists
-		SigningScenario? umciScenario = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umciScenario is null)
-		{
-			umciScenario = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners()
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-
-			List<SigningScenario> scenarios = policyObj.SigningScenarios ?? [];
-			scenarios.Add(umciScenario);
-			policyObj.SigningScenarios = scenarios;
-		}
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
 
 		// Ensure FileRulesRef exists
 		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
@@ -68,10 +54,8 @@ internal static class NewFilePathRules
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in CollectionsMarshal.AsSpan(data))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 			// Create a unique ID for the rule
-			string allowRuleID = $"ID_ALLOW_A_{guid}";
+			string allowRuleID = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			// Create a new Allow FilePath rule
 			Allow newAllowRule = new(id: allowRuleID)
@@ -117,22 +101,8 @@ internal static class NewFilePathRules
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
 
-		// Ensure UMCI Scenario exists
-		SigningScenario? umciScenario = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umciScenario is null)
-		{
-			umciScenario = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners()
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-
-			List<SigningScenario> scenarios = policyObj.SigningScenarios ?? [];
-			scenarios.Add(umciScenario);
-			policyObj.SigningScenarios = scenarios;
-		}
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
 
 		// Ensure FileRulesRef exists
 		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
@@ -140,10 +110,8 @@ internal static class NewFilePathRules
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in CollectionsMarshal.AsSpan(data))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-
 			// Create a unique ID for the rule
-			string denyRuleID = $"ID_DENY_A_{guid}";
+			string denyRuleID = $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			// Create a new Deny FilePath rule
 			Deny newDenyRule = new(id: denyRuleID)

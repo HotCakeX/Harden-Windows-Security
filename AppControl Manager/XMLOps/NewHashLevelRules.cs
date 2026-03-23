@@ -45,50 +45,12 @@ internal static class NewHashLevelRules
 		// Ensure the lists are initialized.
 		siPolicy.FileRules ??= [];
 
-		// Ensure Signing Scenarios exist
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(siPolicy, 12);
+		SigningScenario kmciScenario = NewPublisherLevelRules.EnsureScenario(siPolicy, 131);
 
-		// UMCI (User Mode - 12)
-		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umci == null)
-		{
-			umci = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(umci);
-			siPolicy.SigningScenarios = scenarios;
-		}
-		else
-		{
-			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		// KMCI (Kernel Mode - 131)
-		SigningScenario? kmci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
-		if (kmci == null)
-		{
-			kmci = new SigningScenario
-			(
-				value: 131,
-				id: "ID_SIGNINGSCENARIO_KMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "Kernel Mode Signing Scenario" };
-			// Re-fetch scenarios as we might have updated the array above
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(kmci);
-			siPolicy.SigningScenarios = scenarios;
-		}
-		else
-		{
-			kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		kmciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in CollectionsMarshal.AsSpan(hashes))
@@ -118,8 +80,8 @@ internal static class NewHashLevelRules
 			// For User-Mode files
 			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
-				umci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
 			}
 
 			// For Kernel-Mode files
@@ -131,8 +93,8 @@ internal static class NewHashLevelRules
 					Logger.Write(string.Format(GlobalVars.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
-				kmci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
-				kmci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
+				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
+				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
 			}
 		}
 
@@ -158,51 +120,12 @@ internal static class NewHashLevelRules
 		// Ensure the lists are initialized
 		siPolicy.FileRules ??= [];
 
-		// Ensure Signing Scenarios exist
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(siPolicy, 12);
+		SigningScenario kmciScenario = NewPublisherLevelRules.EnsureScenario(siPolicy, 131);
 
-		// UMCI (User Mode - 12)
-		SigningScenario? umci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umci == null)
-		{
-			umci = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(umci);
-			siPolicy.SigningScenarios = scenarios;
-		}
-		else
-		{
-			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		// KMCI (Kernel Mode - 131)
-		SigningScenario? kmci = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
-		if (kmci == null)
-		{
-			kmci = new SigningScenario
-			(
-				value: 131,
-				id: "ID_SIGNINGSCENARIO_KMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "Kernel Mode Signing Scenario" };
-			// Re-fetch scenarios as we might have updated the array above
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(kmci);
-			siPolicy.SigningScenarios = scenarios;
-		}
-		else
-		{
-			kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		kmciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in CollectionsMarshal.AsSpan(hashes))
@@ -232,8 +155,8 @@ internal static class NewHashLevelRules
 			// For User-Mode files
 			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
-				umci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
 			}
 
 			// For Kernel-Mode files
@@ -245,8 +168,8 @@ internal static class NewHashLevelRules
 					Logger.Write(string.Format(GlobalVars.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
-				kmci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
-				kmci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
+				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
+				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
 			}
 		}
 

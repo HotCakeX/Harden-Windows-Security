@@ -52,7 +52,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Only one cancellable operation can be active at a time for this page.
 	/// </summary>
-	internal enum RunningOperation
+	private enum RunningOperation
 	{
 		None,
 		Apply,
@@ -63,7 +63,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Tracks the currently running operation and toggles each button's enabled state.
 	/// </summary>
-	internal RunningOperation CurrentRunningOperation
+	private RunningOperation CurrentRunningOperation
 	{
 		get; set
 		{
@@ -132,7 +132,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
 
-	internal void CalculateColumnWidths()
+	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));

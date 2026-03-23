@@ -32,6 +32,8 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 {
 	internal IntuneVM()
 	{
+		MainInfoBar = new();
+
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
 		// Initialize column widths so headers have padding initially.
@@ -44,7 +46,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar = new();
+	internal readonly InfoBarSettings MainInfoBar;
 
 	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
 
@@ -73,9 +75,9 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 
 	/// <summary>
 	/// Non-custom device configuration policies (Windows) retrieved from Intune via Microsoft Graph.
-	/// This ObservableCollection is bound to the ListView.
+	/// This Collection is bound to the ListView.
 	/// </summary>
-	internal ObservableCollection<DeviceManagementConfigurationPolicy> Policies { get; } = [];
+	internal readonly CommonCore.IncrementalCollection.RangedObservableCollection<DeviceManagementConfigurationPolicy> Policies = [];
 
 	/// <summary>
 	/// Backing store of all policies (used for search/sort without losing the original data).
@@ -97,7 +99,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
 
-	internal void CalculateColumnWidths()
+	private void CalculateColumnWidths()
 	{
 		double maxWidth1 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("NameHeader/Text"));
 		double maxWidth2 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("DescriptionHeader/Text"));
@@ -165,10 +167,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		}
 
 		Policies.Clear();
-		foreach (DeviceManagementConfigurationPolicy item in filtered)
-		{
-			Policies.Add(item);
-		}
+		Policies.AddRange(filtered);
 
 		if (savedHorizontal.HasValue && sv is not null)
 		{
@@ -218,11 +217,8 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			Policies.Clear();
 			AllPolicies.Clear();
 
-			foreach (DeviceManagementConfigurationPolicy item in result)
-			{
-				Policies.Add(item);
-				AllPolicies.Add(item);
-			}
+			Policies.AddRange(result);
+			AllPolicies.AddRange(result);
 
 			CalculateColumnWidths();
 			SearchKeyword = null;
@@ -243,7 +239,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// <summary>
 	/// Items source for the hardening policies ComboBox.
 	/// </summary>
-	internal ObservableCollection<IntunePolicyFileItem> PolicyFiles { get; } = [];
+	internal readonly ObservableCollection<IntunePolicyFileItem> PolicyFiles = [];
 
 	/// <summary>
 	/// Selected file in the ComboBox.

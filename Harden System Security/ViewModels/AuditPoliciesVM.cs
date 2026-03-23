@@ -63,7 +63,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
 
-	internal void CalculateColumnWidths()
+	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("CategoryHeader/Text"));

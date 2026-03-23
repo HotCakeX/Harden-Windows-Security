@@ -280,7 +280,6 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
-
 			case ScanLevels.WildCardFolderPath:
 				{
 					if (folderPaths is not null)
@@ -289,7 +288,6 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
-
 			case ScanLevels.CustomFileRulePattern:
 				{
 					if (customFileRulePatterns is not null)
@@ -298,7 +296,6 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
-
 			case ScanLevels.PFN:
 				{
 					if (packageFamilyNames is not null)
@@ -307,7 +304,6 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
-
 			case ScanLevels.FileName:
 				{
 					if (data is not null)
@@ -340,9 +336,7 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
-
 			default:
-
 				break;
 		}
 
@@ -388,23 +382,19 @@ internal static class SignerAndHashBuilder
 				// MDE doesn't generate Issuer TBS hash for some files
 				// For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
-				string? issuerTBSHash = corDataValue.IssuerTBSHash;
-				string? publisherTBSHash = corDataValue.PublisherTBSHash;
-
 				// currentCorData to store the current SignerInfo/Correlated
 				CertificateDetailsCreator? currentCorData;
 
-				if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
+				if (string.IsNullOrWhiteSpace(corDataValue.IssuerTBSHash) && !string.IsNullOrWhiteSpace(corDataValue.PublisherTBSHash))
 				{
 					Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
 
 					currentCorData = new CertificateDetailsCreator(
-						corDataValue.PublisherTBSHash!,
+						corDataValue.PublisherTBSHash,
 						corDataValue.PublisherName!,
-						corDataValue.PublisherTBSHash!,
+						corDataValue.PublisherTBSHash,
 						corDataValue.PublisherName!
 					);
-
 				}
 				else
 				{
@@ -452,23 +442,19 @@ internal static class SignerAndHashBuilder
 				// MDE doesn't generate Issuer TBS hash for some files
 				// For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
-				string? issuerTBSHash = corDataValue.IssuerTBSHash;
-				string? publisherTBSHash = corDataValue.PublisherTBSHash;
-
 				// currentCorData to store the current SignerInfo/Correlated
 				CertificateDetailsCreator? currentCorData;
 
-				if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
+				if (string.IsNullOrWhiteSpace(corDataValue.IssuerTBSHash) && !string.IsNullOrWhiteSpace(corDataValue.PublisherTBSHash))
 				{
 					Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
 
 					currentCorData = new CertificateDetailsCreator(
-						corDataValue.PublisherTBSHash!,
+						corDataValue.PublisherTBSHash,
 						corDataValue.PublisherName!,
-						corDataValue.PublisherTBSHash!,
+						corDataValue.PublisherTBSHash,
 						corDataValue.PublisherName!
 					);
-
 				}
 				else
 				{
@@ -551,23 +537,18 @@ internal static class SignerAndHashBuilder
 
 		foreach (FileIdentity hashData in CollectionsMarshal.AsSpan(unsignedData))
 		{
-			string? sha256 = hashData.SHA256Hash;
-			string? sha1 = hashData.SHA1Hash;
-			string? filePath = hashData.FilePath;
-			SiPolicyIntel.SSType siSigningScenario = hashData.SISigningScenario;
-
-			if (string.IsNullOrWhiteSpace(sha256) || string.IsNullOrWhiteSpace(sha1) || string.IsNullOrWhiteSpace(filePath))
+			if (string.IsNullOrWhiteSpace(hashData.SHA256Hash) || string.IsNullOrWhiteSpace(hashData.SHA1Hash) || string.IsNullOrWhiteSpace(hashData.FilePath))
 			{
 				Logger.Write(GlobalVars.GetStr("BuildSignerNullPropertiesMessage"));
 				continue;
 			}
 
 			completeHashes.Add(new HashCreator(
-				authenticodeSHA256: sha256,
-				authenticodeSHA1: sha1,
-				filePath: filePath,
+				authenticodeSHA256: hashData.SHA256Hash,
+				authenticodeSHA1: hashData.SHA1Hash,
+				filePath: hashData.FilePath,
 				fileName: hashData.FileName,
-				siSigningScenario: siSigningScenario
+				siSigningScenario: hashData.SISigningScenario
 			));
 		}
 

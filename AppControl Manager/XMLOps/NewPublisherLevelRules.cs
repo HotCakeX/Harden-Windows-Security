@@ -58,8 +58,7 @@ internal static class NewPublisherLevelRules
 		{
 			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(publisherData.CertificateDetails))
 			{
-				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-				string SignerID = $"ID_SIGNER_B_{guid}";
+				string SignerID = $"ID_SIGNER_B_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 				Signer newSigner = new(
 					id: SignerID,
@@ -125,8 +124,7 @@ internal static class NewPublisherLevelRules
 		{
 			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(publisherData.CertificateDetails))
 			{
-				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-				string SignerID = $"ID_SIGNER_B_{guid}";
+				string SignerID = $"ID_SIGNER_B_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 				Signer newSigner = new(
 					id: SignerID,
@@ -172,9 +170,8 @@ internal static class NewPublisherLevelRules
 			)
 			{ FriendlyName = scenarioValue == 12 ? "User Mode Signing Scenario" : "Kernel Mode Signing Scenario" };
 
-			List<SigningScenario> scenarios = policyObj.SigningScenarios ?? [];
-			scenarios.Add(scenario);
-			policyObj.SigningScenarios = scenarios;
+			policyObj.SigningScenarios ??= [];
+			policyObj.SigningScenarios.Add(scenario);
 		}
 		return scenario;
 	}

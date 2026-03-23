@@ -64,59 +64,23 @@ internal sealed class AllowRuleComparer : IEqualityComparer<AllowRule>
 
 	public int GetHashCode(AllowRule obj)
 	{
+		HashCode hash = new();
+
 		Allow allow = obj.AllowElement;
-		long hash = 17;  // Start with an initial value
 
-		// Rule 1: Use PackageFamilyName for hash calculation
-		if (!string.IsNullOrWhiteSpace(allow.PackageFamilyName))
-		{
-			hash = (hash * 31 + allow.PackageFamilyName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		// Rule 2: Use Hash for hash calculation
 		if (!allow.Hash.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(allow.Hash.Span)) % Merger.modulus;
+			hash.AddBytes(allow.Hash.Span);
 		}
+		hash.Add(allow.PackageFamilyName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(allow.FilePath, StringComparer.OrdinalIgnoreCase);
+		hash.Add(allow.MinimumFileVersion, StringComparer.OrdinalIgnoreCase);
+		hash.Add(allow.MaximumFileVersion, StringComparer.OrdinalIgnoreCase);
+		hash.Add(allow.InternalName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(allow.FileDescription, StringComparer.OrdinalIgnoreCase);
+		hash.Add(allow.ProductName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(allow.FileName, StringComparer.OrdinalIgnoreCase);
 
-		// Rule 3: Use FilePath for hash calculation
-		if (!string.IsNullOrWhiteSpace(allow.FilePath))
-		{
-			hash = (hash * 31 + allow.FilePath.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		// Rule 4: Use MinimumFileVersion, MaximumFileVersion, and name-related properties for hash
-		if (!string.IsNullOrWhiteSpace(allow.MinimumFileVersion))
-		{
-			hash = (hash * 31 + allow.MinimumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		if (!string.IsNullOrWhiteSpace(allow.MaximumFileVersion))
-		{
-			hash = (hash * 31 + allow.MaximumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		if (!string.IsNullOrWhiteSpace(allow.InternalName))
-		{
-			hash = (hash * 31 + allow.InternalName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		if (!string.IsNullOrWhiteSpace(allow.FileDescription))
-		{
-			hash = (hash * 31 + allow.FileDescription.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		if (!string.IsNullOrWhiteSpace(allow.ProductName))
-		{
-			hash = (hash * 31 + allow.ProductName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		if (!string.IsNullOrWhiteSpace(allow.FileName))
-		{
-			hash = (hash * 31 + allow.FileName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		// Final adjustment to ensure the result is a non-negative int
-		return (int)(hash & 0x7FFFFFFF); // Use only positive values
+		return hash.ToHashCode();
 	}
 }

@@ -22,7 +22,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class BuildNewCertificate : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private ViewModels.BuildNewCertificateVM ViewModel { get; } = ViewModels.ViewModelProvider.BuildNewCertificateVM;
+	private ViewModels.BuildNewCertificateVM ViewModel => ViewModels.ViewModelProvider.BuildNewCertificateVM;
 
 	internal BuildNewCertificate()
 	{

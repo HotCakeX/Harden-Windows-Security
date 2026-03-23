@@ -65,57 +65,24 @@ internal sealed class FileRuleRuleComparer : IEqualityComparer<FileRuleRule>
 
 	public int GetHashCode(FileRuleRule obj)
 	{
+		HashCode hash = new();
+
 		FileRule fileRule = obj.FileRuleElement;
-		long hash = 17; // Starting prime for hash code calculation.
 
-		// Rule 1: Use PackageFamilyName (if available).
-		if (!string.IsNullOrWhiteSpace(fileRule.PackageFamilyName))
-		{
-			hash = (hash * 31 + fileRule.PackageFamilyName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		// Rule 2: Incorporate Hash if available.
 		if (!fileRule.Hash.IsEmpty)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(fileRule.Hash.Span)) % Merger.modulus;
+			hash.AddBytes(fileRule.Hash.Span);
 		}
+		hash.Add(fileRule.PackageFamilyName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.FilePath, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.MinimumFileVersion, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.MaximumFileVersion, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.InternalName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.FileDescription, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.ProductName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.FileName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(fileRule.Type);
 
-		// Rule 3: Incorporate FilePath if available.
-		if (!string.IsNullOrWhiteSpace(fileRule.FilePath))
-		{
-			hash = (hash * 31 + fileRule.FilePath.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		// Rule 4: Incorporate MinimumFileVersion, MaximumFileVersion and name-related properties.
-		if (!string.IsNullOrWhiteSpace(fileRule.MinimumFileVersion))
-		{
-			hash = (hash * 31 + fileRule.MinimumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-		if (!string.IsNullOrWhiteSpace(fileRule.MaximumFileVersion))
-		{
-			hash = (hash * 31 + fileRule.MaximumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-		if (!string.IsNullOrWhiteSpace(fileRule.InternalName))
-		{
-			hash = (hash * 31 + fileRule.InternalName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-		if (!string.IsNullOrWhiteSpace(fileRule.FileDescription))
-		{
-			hash = (hash * 31 + fileRule.FileDescription.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-		if (!string.IsNullOrWhiteSpace(fileRule.ProductName))
-		{
-			hash = (hash * 31 + fileRule.ProductName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-		if (!string.IsNullOrWhiteSpace(fileRule.FileName))
-		{
-			hash = (hash * 31 + fileRule.FileName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
-		}
-
-		// Incorporate the FileRule Type into the hash to ensure that differing Type values produce different hashes.
-		hash = (hash * 31 + fileRule.Type.GetHashCode()) % Merger.modulus;
-
-		// Final adjustment to ensure the hash code is a non-negative int.
-		return (int)(hash & 0x7FFFFFFF);
+		return hash.ToHashCode();
 	}
 }

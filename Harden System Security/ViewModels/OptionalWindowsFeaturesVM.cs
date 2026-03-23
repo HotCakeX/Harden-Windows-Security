@@ -1630,7 +1630,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Defines the operation to perform during Apply for each feature/capability
 	/// </summary>
-	internal enum ApplyOperation
+	private enum ApplyOperation
 	{
 		Enable,  // For features: EnableFeature, For capabilities: AddCapability
 		Disable  // For features: DisableFeature, For capabilities: RemoveCapability
@@ -1639,7 +1639,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Configurations for each feature/capability defining apply strategy, remove strategy, and valid verification states.
 	/// </summary>
-	internal sealed class OptionalFeatureConfig(
+	private sealed class OptionalFeatureConfig(
 		string name,
 		DISMResultType type,
 		ApplyOperation applyStrategy,

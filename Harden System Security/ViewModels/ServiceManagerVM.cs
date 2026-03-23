@@ -266,8 +266,6 @@ internal sealed partial class FilterGroupVM(string groupName) : ViewModelBase
 
 internal sealed partial class ServiceManagerVM : ViewModelBase
 {
-	private const uint SC_MANAGER_CONNECT = 0x0001;
-
 	internal ServiceManagerVM() => FilteredServices.CollectionChanged += (s, e) => OnPropertyChanged(nameof(EmptyStatePlaceholderVisibility));
 
 
@@ -926,12 +924,10 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	{
 		if (sender is Button button && button.Tag is not null)
 		{
-			string textToCopy = button.Tag.ToString() ?? string.Empty;
-			if (!string.IsNullOrWhiteSpace(textToCopy))
+			string? textToCopy = button.Tag.ToString();
+			if (!string.IsNullOrEmpty(textToCopy))
 			{
-				Windows.ApplicationModel.DataTransfer.DataPackage package = new();
-				package.SetText(textToCopy);
-				Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(package);
+				ClipboardManagement.CopyText(textToCopy);
 
 				// Visually animate the button to show a checkmark, then revert back smoothly
 				if (button.Content is FontIcon icon)
@@ -1006,7 +1002,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 	private bool ModifyServiceConfig(string serviceName, uint serviceType, uint startType, uint errorControl)
 	{
-		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
 		try
 		{
@@ -1023,7 +1019,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 	private unsafe bool SetDelayedAutoStart(string serviceName, bool isDelayed)
 	{
-		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
 		try
 		{
@@ -1041,7 +1037,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 	private unsafe bool SetLaunchProtected(string serviceName, uint launchProtected)
 	{
-		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
 		try
 		{
@@ -1257,7 +1253,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	private bool ChangeServiceState(ServiceItemViewModel svm, uint controlCode)
 	{
 		string serviceName = svm.Item.ServiceName;
-		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero)
 		{
 			MainInfoBar.WriteWarning("Failed to open Service Control Manager.");
@@ -1332,7 +1328,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			{
 				await Task.Run(() =>
 				{
-					IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+					IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 					if (scManager == IntPtr.Zero)
 					{
 						MainInfoBar.WriteWarning("Failed to open Service Control Manager for deletion.");
@@ -1376,7 +1372,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 	private unsafe static void WaitForServiceState(string serviceName, uint desiredState, int timeoutMs)
 	{
-		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return;
 		try
 		{
@@ -1388,8 +1384,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				while (elapsed < timeoutMs)
 				{
 					SERVICE_STATUS_PROCESS status = new();
-					// SC_STATUS_PROCESS_INFO = 0
-					if (NativeMethods.QueryServiceStatusEx(hService, 0, (IntPtr)(&status), (uint)sizeof(SERVICE_STATUS_PROCESS), out uint _))
+					if (NativeMethods.QueryServiceStatusEx(hService, NativeMethods.SC_STATUS_PROCESS_INFO, (IntPtr)(&status), (uint)sizeof(SERVICE_STATUS_PROCESS), out uint _))
 					{
 						if (status.dwCurrentState == desiredState) return;
 					}

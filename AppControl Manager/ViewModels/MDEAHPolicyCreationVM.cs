@@ -38,6 +38,8 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 {
 	internal MDEAHPolicyCreationVM()
 	{
+		MainInfoBar = new();
+
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.MDEAdvancedHunting);
 
 		// Initialize the column manager with specific definitions for this page
@@ -119,7 +121,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
-	internal readonly InfoBarSettings MainInfoBar = new();
+	internal readonly InfoBarSettings MainInfoBar;
 
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result

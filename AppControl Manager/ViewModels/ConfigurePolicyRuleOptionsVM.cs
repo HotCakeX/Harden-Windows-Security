@@ -308,7 +308,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// Helper method to get selected policy rule options from the UI checkboxes.
 	/// </summary>
 	/// <returns></returns>
-	internal List<OptionType> GetSelectedPolicyRuleOptions()
+	private List<OptionType> GetSelectedPolicyRuleOptions()
 	{
 		List<OptionType> selectedRules = [];
 

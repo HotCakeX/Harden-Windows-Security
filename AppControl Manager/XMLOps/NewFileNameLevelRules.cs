@@ -45,56 +45,16 @@ internal static class NewFileNameLevelRules
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
 
-		// Ensure Signing Scenarios exist
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
+		SigningScenario kmciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 131);
 
-		// UMCI (User Mode - 12)
-		SigningScenario? umci = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umci == null)
-		{
-			umci = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-			List<SigningScenario> scenarios = policyObj.SigningScenarios ?? [];
-			scenarios.Add(umci);
-			policyObj.SigningScenarios = scenarios;
-		}
-		else
-		{
-			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		// KMCI (Kernel Mode - 131)
-		SigningScenario? kmci = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
-		if (kmci == null)
-		{
-			kmci = new SigningScenario
-			(
-				value: 131,
-				id: "ID_SIGNINGSCENARIO_KMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "Kernel Mode Signing Scenario" };
-			// Re-fetch scenarios as we might have updated the array above
-			List<SigningScenario> scenarios = policyObj.SigningScenarios ?? [];
-			scenarios.Add(kmci);
-			policyObj.SigningScenarios = scenarios;
-		}
-		else
-		{
-			kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		kmciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 
 		foreach (FileNameRuleCreator fileNameItem in CollectionsMarshal.AsSpan(fileNameData))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string allowID = $"ID_ALLOW_A_{guid}";
+			string allowID = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			Allow newFileAttrib = new(id: allowID)
 			{
@@ -125,13 +85,13 @@ internal static class NewFileNameLevelRules
 			// For User-Mode files
 			if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowID));
 			}
 
 			// For Kernel-Mode files
 			else if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
-				kmci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowID));
+				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowID));
 			}
 		}
 
@@ -152,56 +112,16 @@ internal static class NewFileNameLevelRules
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
 
-		// Ensure Signing Scenarios exist
+		// Ensure Scenarios exist
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 12);
+		SigningScenario kmciScenario = NewPublisherLevelRules.EnsureScenario(policyObj, 131);
 
-		// UMCI (User Mode - 12)
-		SigningScenario? umci = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umci == null)
-		{
-			umci = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "User Mode Signing Scenario" };
-			List<SigningScenario> scenarios = policyObj.SigningScenarios ?? [];
-			scenarios.Add(umci);
-			policyObj.SigningScenarios = scenarios;
-		}
-		else
-		{
-			umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		// KMCI (Kernel Mode - 131)
-		SigningScenario? kmci = policyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
-		if (kmci == null)
-		{
-			kmci = new SigningScenario
-			(
-				value: 131,
-				id: "ID_SIGNINGSCENARIO_KMCI",
-				productSigners: new ProductSigners { FileRulesRef = new FileRulesRef([]) }
-			)
-			{ FriendlyName = "Kernel Mode Signing Scenario" };
-			// Re-fetch scenarios as we might have updated the array above
-			List<SigningScenario> scenarios = policyObj.SigningScenarios ?? [];
-			scenarios.Add(kmci);
-			policyObj.SigningScenarios = scenarios;
-		}
-		else
-		{
-			kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		}
-
-		umci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
-		kmci.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		umciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
+		kmciScenario.ProductSigners.FileRulesRef ??= new FileRulesRef([]);
 
 		foreach (FileNameRuleCreator fileNameItem in CollectionsMarshal.AsSpan(fileNameData))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string denyID = $"ID_Deny_A_{guid}";
+			string denyID = $"ID_Deny_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			Deny newFileAttrib = new(id: denyID)
 			{
@@ -232,13 +152,13 @@ internal static class NewFileNameLevelRules
 			// For User-Mode files
 			if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
-				umci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyID));
+				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyID));
 			}
 
 			// For Kernel-Mode files
 			else if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
-				kmci.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyID));
+				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyID));
 			}
 		}
 

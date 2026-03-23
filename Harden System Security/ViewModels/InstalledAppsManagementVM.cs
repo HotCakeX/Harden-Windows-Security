@@ -99,7 +99,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// Package Manager used in the view model.
 	/// </summary>
-	internal static PackageManager PackageMgr = new();
+	private readonly PackageManager PackageMgr = new();
 
 	/// <summary>
 	/// Flag to prevent recursive selection change events during selection restoration
@@ -128,7 +128,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 	}
 
-	internal async Task RefreshAppsList()
+	private async Task RefreshAppsList()
 	{
 		try
 		{
@@ -193,7 +193,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// ListView reference of the UI.
 	/// </summary>
-	internal volatile ListViewBase? UIListView;
+	private volatile ListViewBase? UIListView;
 
 	/// <summary>
 	/// Event handler for when the ListView is loaded - store reference and sync selection
@@ -471,7 +471,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	/// <param name="package"></param>
 	/// <returns>true if error occurred, false if OK</returns>
-	internal async Task<bool> UninstallApp(PackagedAppView package)
+	private async Task<bool> UninstallApp(PackagedAppView package)
 	{
 		bool error = false;
 

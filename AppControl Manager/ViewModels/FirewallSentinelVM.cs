@@ -886,7 +886,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	#region Files and Folders scan
 
 	// A Progress<double> so Report() callbacks run on the UI thread
-	internal IProgress<double> FilesAndFoldersProgressRingValueProgress;
+	private IProgress<double> FilesAndFoldersProgressRingValueProgress;
 	internal double FilesAndFoldersProgressRingValue { get; set => SP(ref field, value); }
 
 	/// <summary>

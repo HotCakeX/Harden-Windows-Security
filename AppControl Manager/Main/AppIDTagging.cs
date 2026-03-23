@@ -111,24 +111,7 @@ internal static class AppIDTagging
 	internal static SiPolicy.SiPolicy AddTags(SiPolicy.SiPolicy siPolicy, Dictionary<string, string> tags)
 	{
 		// Ensure UMCI Scenario exists
-		SigningScenario? umciScenario = siPolicy.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-		if (umciScenario is null)
-		{
-			umciScenario = new SigningScenario
-			(
-				value: 12,
-				id: "ID_SIGNINGSCENARIO_UMCI",
-				productSigners: new ProductSigners()
-			)
-			{
-				FriendlyName = "User Mode Signing Scenario",
-				AppIDTags = new AppIDTags()
-			};
-
-			List<SigningScenario> scenarios = siPolicy.SigningScenarios ?? [];
-			scenarios.Add(umciScenario);
-			siPolicy.SigningScenarios = scenarios;
-		}
+		SigningScenario umciScenario = NewPublisherLevelRules.EnsureScenario(siPolicy, 12);
 
 		umciScenario.AppIDTags ??= new AppIDTags();
 		umciScenario.AppIDTags.AppIDTag ??= [];

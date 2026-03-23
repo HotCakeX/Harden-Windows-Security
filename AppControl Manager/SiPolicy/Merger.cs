@@ -41,7 +41,7 @@ namespace AppControlManager.SiPolicy;
 /// In the "EKUs" node there must be unique EKUs only based on their value. If 2 Signers need to reference the same EKU value, they must use same EKU's ID in their CertEKU section.
 ///
 /// </summary>
-internal static class Merger
+internal static partial class Merger
 {
 	/// <summary>
 	/// This is the Main method that is responsible for merging 2 or more App Control policies,
@@ -174,10 +174,10 @@ internal static class Merger
 		// Data aggregation
 		// ID randomization
 		// De-duplication
-		Task<HashSet<AllowRule>> taskAllowRules = Task.Run(() => Factory.CollectAllowRules(allPolicies));
-		Task<HashSet<DenyRule>> taskDenyRules = Task.Run(() => Factory.CollectDenyRules(allPolicies));
-		Task<HashSet<FileRuleRule>> taskFileRules = Task.Run(() => Factory.CollectFileRules(allPolicies));
-		Task<SignerCollection> taskSignerRules = Task.Run(() => Factory.CollectSignerRules(allPolicies));
+		Task<HashSet<AllowRule>> taskAllowRules = Task.Run(() => CollectAllowRules(allPolicies));
+		Task<HashSet<DenyRule>> taskDenyRules = Task.Run(() => CollectDenyRules(allPolicies));
+		Task<HashSet<FileRuleRule>> taskFileRules = Task.Run(() => CollectFileRules(allPolicies));
+		Task<SignerCollection> taskSignerRules = Task.Run(() => CollectSignerRules(allPolicies));
 
 		// Await all tasks to complete
 		Task.WaitAll(taskAllowRules, taskDenyRules, taskFileRules, taskSignerRules);
@@ -435,16 +435,6 @@ internal static class Merger
 		kernelModeAllowedSigners = tempKernelModeAllowed;
 		kernelModeDeniedSigners = tempKernelModeDenied;
 
-		FileAttribDeDuplication.EnsureUniqueFileAttributes(
-			ref fileRulesNode,
-			signers,
-			userModeAllowedSigners,
-			userModeDeniedSigners,
-			kernelModeAllowedSigners,
-			kernelModeDeniedSigners
-			);
-
-
 		#region AppID Tags
 
 		List<AppIDTag> userModeAppIDTagsCol = [];
@@ -463,7 +453,7 @@ internal static class Merger
 			foreach (SigningScenario sc in CollectionsMarshal.AsSpan(policy.SigningScenarios))
 			{
 				// User-Mode Signing Scenario
-				if (string.Equals(sc.Value.ToString(), "12", StringComparison.OrdinalIgnoreCase))
+				if (sc.Value == 12)
 				{
 					// Only flip it from false to true
 					if (!enforceDllUserMode)
@@ -482,7 +472,7 @@ internal static class Merger
 				}
 
 				// kernel-Mode Signing Scenario
-				if (string.Equals(sc.Value.ToString(), "131", StringComparison.OrdinalIgnoreCase))
+				if (sc.Value == 131)
 				{
 					// Only flip it from false to true
 					if (!enforceDllKernelMode)
@@ -808,9 +798,17 @@ internal static class Merger
 	internal static bool DoEKUsMatch(List<EKU> ekusX, List<EKU> ekusY)
 	{
 		// Extract EKU values and ignore IDs
-		HashSet<int> ekuValuesX = [.. ekusX.Where(e => !e.Value.IsEmpty).Select(e => CustomMethods.GetByteArrayHashCode(e.Value.Span))];
+		HashSet<int> ekuValuesX = [.. ekusX.Where(e => !e.Value.IsEmpty).Select(e => {
+					HashCode h = new();
+					h.AddBytes(e.Value.Span);
+					return h.ToHashCode();
+		})];
 
-		HashSet<int> ekuValuesY = [.. ekusY.Where(e => !e.Value.IsEmpty).Select(e => CustomMethods.GetByteArrayHashCode(e.Value.Span))];
+		HashSet<int> ekuValuesY = [.. ekusY.Where(e => !e.Value.IsEmpty).Select(e => {
+					HashCode h = new();
+					h.AddBytes(e.Value.Span);
+					return h.ToHashCode();
+		})];
 
 		// Compare sets of EKU values
 		return ekuValuesX.SetEquals(ekuValuesY);
@@ -917,11 +915,11 @@ internal static class Merger
 
 	/// <summary>
 	/// Helper method to check if two strings are both whitespace or exactly equal
-	/// ✅ " " and " " -> Equal
-	/// ✅ "text" and "text" -> Equal
-	/// ❌ "text" and " text " -> Not Equal
-	/// ❌ null and " " -> Not Equal
-	/// ❌ null and null -> Not Equal
+	/// " " and " " -> Equal
+	/// "text" and "text" -> Equal
+	/// "text" and " text " -> Not Equal
+	/// null and " " -> Not Equal
+	/// null and null -> Not Equal
 	/// </summary>
 	/// <param name="a"></param>
 	/// <param name="b"></param>
@@ -943,7 +941,4 @@ internal static class Merger
 
 		return false; // Otherwise, they are not equal
 	}
-
-
-	internal const long modulus = 0x7FFFFFFF; // A prime modulus to prevent overflow and ensure a non-negative int.
 }

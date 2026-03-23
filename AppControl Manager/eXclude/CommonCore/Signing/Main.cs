@@ -96,11 +96,8 @@ internal static class Main
 		if (!signingCertificate.HasPrivateKey)
 			throw new InvalidOperationException(GlobalVars.GetStr("CertificateMustHavePrivateKey"));
 
-		// The required OID for Code Integrity policy signing.
-		const string contentTypeOid = "1.3.6.1.4.1.311.79.1";
-
 		// Create ContentInfo with the specified content type OID and file content
-		ContentInfo contentInfo = new(new Oid(contentTypeOid), fileContent);
+		ContentInfo contentInfo = new(new Oid(Structure.CodeIntegrityOID), fileContent);
 
 		SignedCms signedCms = new(contentInfo, false);
 

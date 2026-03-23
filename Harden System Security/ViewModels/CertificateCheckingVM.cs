@@ -185,7 +185,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <summary>
 	/// Calculate optimal column widths based on content
 	/// </summary>
-	internal void CalculateColumnWidths()
+	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first
 		double maxStoreLocationWidth = ListViewHelper.MeasureText(GlobalVars.GetStr("StoreLocationHeader/Text"));

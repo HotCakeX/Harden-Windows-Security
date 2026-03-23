@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class ValidatePolicy : Page, CommonCore.UI.IPageHeaderProvider
 {
 
-	private ViewModels.ValidatePolicyVM ViewModel { get; } = ViewModels.ViewModelProvider.ValidatePolicyVM;
+	private ViewModels.ValidatePolicyVM ViewModel => ViewModels.ViewModelProvider.ValidatePolicyVM;
 
 	internal ValidatePolicy()
 	{

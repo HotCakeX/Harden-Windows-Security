@@ -43,6 +43,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// </summary>
 	internal ViewOnlinePoliciesVM()
 	{
+		MainInfoBar = new();
+
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
 		// Initialize the column manager with specific definitions for this page
@@ -63,7 +65,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
-	internal readonly InfoBarSettings MainInfoBar = new();
+	internal readonly InfoBarSettings MainInfoBar;
 
 	#region UI-Bound Properties
 
@@ -337,7 +339,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	{
 		try
 		{
-
 			string? searchTerm = SearchBoxTextBox?.Trim();
 
 			if (searchTerm is null)
@@ -352,27 +353,19 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 				savedHorizontal = Sv.HorizontalOffset;
 			}
 
-			IEnumerable<CiPolicyInfo> filteredResults = [];
-
-			await Task.Run(() =>
-			{
-				// Perform a case-insensitive search in all relevant fields
-				filteredResults = AllPoliciesOutput.Where(p =>
-				p.PolicyID.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-				(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-				);
-			});
+			// Perform a case-insensitive search in all relevant fields
+			IEnumerable<CiPolicyInfo> filteredResults = await Task.Run(() =>
+				AllPoliciesOutput.Where(p =>
+					p.PolicyID.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+					(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+					(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+					p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+					(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+					)
+			);
 
 			AllPolicies.Clear();
-
-			// Update the ObservableCollection with the filtered results
-			foreach (CiPolicyInfo item in filteredResults)
-			{
-				AllPolicies.Add(item);
-			}
+			AllPolicies.AddRange(filteredResults); // Update the ObservableCollection with the filtered results
 
 			if (Sv != null && savedHorizontal.HasValue)
 			{
@@ -385,7 +378,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			MainInfoBar.WriteError(ex);
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the RemovePolicyButton click
@@ -491,8 +483,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// <param name="e"></param>
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
-		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
-		string key = (string)menuItem.Tag;
+		string key = (string)((MenuFlyoutItem)sender).Tag;
 
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Online_Deployed_Policies);
 

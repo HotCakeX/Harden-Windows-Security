@@ -71,7 +71,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
 
-	internal void CalculateColumnWidths()
+	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("KeynameHeader/Text"));
@@ -143,7 +143,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the SearchBox text change
 	/// </summary>
-	internal void SearchBox_TextChanged()
+	private void SearchBox_TextChanged()
 	{
 		string? searchTerm = SearchKeyword?.Trim();
 

@@ -26,23 +26,18 @@ namespace AppControlManager.SiPolicy;
 
 internal static partial class BinaryOpsForward
 {
-	private static BinaryWriter BodyWriter = null!;
-	private static BinaryWriter HeaderWriter = null!;
-
 	[GeneratedRegex(@"\$\(([^()]+)\)", RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace)]
 	private static partial Regex MacroRegex();
 
 	/// <summary>
 	/// Writes a string value to the binary writer, with a trailing zero terminator.
 	/// </summary>
-	internal static void WriteOptionalStringValue(string? value)
+	private static void WriteOptionalStringValue(string? value, BinaryWriter BodyWriter)
 	{
-		const uint Terminator = 0;
-
 		// if we have no actual text, write a zero-length prefix
 		if (string.IsNullOrWhiteSpace(value))
 		{
-			BodyWriter.Write(Terminator);
+			BodyWriter.Write(0U);
 		}
 		else
 		{
@@ -63,13 +58,13 @@ internal static partial class BinaryOpsForward
 		}
 
 		// and in every case, emit the trailing zero terminator
-		BodyWriter.Write(Terminator);
+		BodyWriter.Write(0U);
 	}
 
 	/// <summary>
 	/// Writes a counted array of bytes, padded to next 4-byte boundary.
 	/// </summary>
-	internal static void WritePaddedCountedBytes(ReadOnlyMemory<byte> data)
+	private static void WritePaddedCountedBytes(ReadOnlyMemory<byte> data, BinaryWriter BodyWriter)
 	{
 		uint length = (uint)data.Length;
 		BodyWriter.Write(length);
@@ -89,29 +84,26 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes a file rule as binary (for main file rules block).
 	/// </summary>
-	private static void ConvertFileRuleToBinary(
-		ref Dictionary<string, uint> fileRuleIdToIndexMap,
-		object fileRule,
-		uint fileRuleIndex)
+	private static void ConvertFileRuleToBinary(ref Dictionary<string, uint> fileRuleIdToIndexMap, object fileRule, uint fileRuleIndex, BinaryWriter BodyWriter)
 	{
 		switch (fileRule)
 		{
 			case Allow allowRule:
 				fileRuleIdToIndexMap.Add(allowRule.ID, fileRuleIndex);
 				BodyWriter.Write(1U);
-				WriteOptionalStringValue(allowRule.FileName);
+				WriteOptionalStringValue(allowRule.FileName, BodyWriter);
 				{
 					ulong minFileVersionNumber = Helper.ConvertStringVersionToUInt64(allowRule.MinimumFileVersion);
 					BodyWriter.Write((uint)(minFileVersionNumber & uint.MaxValue));
 					BodyWriter.Write((uint)(minFileVersionNumber >> 32));
 				}
-				WritePaddedCountedBytes(allowRule.Hash);
+				WritePaddedCountedBytes(allowRule.Hash, BodyWriter);
 				break;
 
 			case Deny denyRule:
 				fileRuleIdToIndexMap.Add(denyRule.ID, fileRuleIndex);
 				BodyWriter.Write(0U);
-				WriteOptionalStringValue(denyRule.FileName);
+				WriteOptionalStringValue(denyRule.FileName, BodyWriter);
 				{
 					ulong minFileVersionNumber = (denyRule.MinimumFileVersion is not null || denyRule.MaximumFileVersion is not null)
 						? Helper.ConvertStringVersionToUInt64(denyRule.MinimumFileVersion)
@@ -120,20 +112,20 @@ internal static partial class BinaryOpsForward
 					BodyWriter.Write((uint)(minFileVersionNumber & uint.MaxValue));
 					BodyWriter.Write((uint)(minFileVersionNumber >> 32));
 				}
-				WritePaddedCountedBytes(denyRule.Hash);
+				WritePaddedCountedBytes(denyRule.Hash, BodyWriter);
 				break;
 
 			case FileAttrib fileAttributeRule:
 				fileRuleIdToIndexMap.Add(fileAttributeRule.ID, fileRuleIndex);
 				BodyWriter.Write(2U);
-				WriteOptionalStringValue(fileAttributeRule.FileName);
+				WriteOptionalStringValue(fileAttributeRule.FileName, BodyWriter);
 				{
 					ulong minFileVersionNumber = Helper.ConvertStringVersionToUInt64(fileAttributeRule.MinimumFileVersion);
 					BodyWriter.Write((uint)(minFileVersionNumber & uint.MaxValue));
 					BodyWriter.Write((uint)(minFileVersionNumber >> 32));
 				}
 
-				WritePaddedCountedBytes(fileAttributeRule.Hash);
+				WritePaddedCountedBytes(fileAttributeRule.Hash, BodyWriter);
 				break;
 
 			default:
@@ -144,9 +136,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes a string or macro value (for AppIDs) to the binary writer.
 	/// </summary>
-	internal static void ParseStringMacros(
-	string? strs,
-	ref Dictionary<string, string> mapMacroId2Value)
+	private static void ParseStringMacros(string? strs, ref Dictionary<string, string> mapMacroId2Value, BinaryWriter BodyWriter)
 	{
 		if (strs is null)
 		{
@@ -158,10 +148,9 @@ internal static partial class BinaryOpsForward
 		{
 			// Split by macro pattern, capturing the macro IDs in the result
 			string[] tokens = MacroRegex().Split(strs);
-			int length = tokens.Length;
 
 			// Allocate array for replacements without zero-initializing
-			string[] replacements = GC.AllocateUninitializedArray<string>(length);
+			string[] replacements = GC.AllocateUninitializedArray<string>(tokens.Length);
 
 			uint count = 0;
 
@@ -188,13 +177,13 @@ internal static partial class BinaryOpsForward
 
 			BodyWriter.Write(count);
 			for (uint i = 0; i < count; i++)
-				WriteOptionalStringValue(replacements[i]);
+				WriteOptionalStringValue(replacements[i], BodyWriter);
 		}
 		else
 		{
 			// Single literal string
 			BodyWriter.Write(1U);
-			WriteOptionalStringValue(strs);
+			WriteOptionalStringValue(strs, BodyWriter);
 		}
 	}
 
@@ -219,9 +208,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes AppIDs and MaximumFileVersion for file rules (AppIDs block).
 	/// </summary>
-	internal static void WriteAppIdsAndMaxFileVersion(
-		ref Dictionary<string, string> macroIdToValueMap,
-		object fileRule)
+	private static void WriteAppIdsAndMaxFileVersion(ref Dictionary<string, string> macroIdToValueMap, object fileRule, BinaryWriter BodyWriter)
 	{
 		switch (fileRule)
 		{
@@ -238,7 +225,7 @@ internal static partial class BinaryOpsForward
 					BodyWriter.Write((uint)(maxFileVersionNumber & uint.MaxValue));
 					BodyWriter.Write((uint)(maxFileVersionNumber >> 32));
 
-					ParseStringMacros(allowRule.AppIDs, ref macroIdToValueMap);
+					ParseStringMacros(allowRule.AppIDs, ref macroIdToValueMap, BodyWriter);
 				}
 				break;
 
@@ -255,7 +242,7 @@ internal static partial class BinaryOpsForward
 					BodyWriter.Write((uint)(maxFileVersionNumber & uint.MaxValue));
 					BodyWriter.Write((uint)(maxFileVersionNumber >> 32));
 
-					ParseStringMacros(denyRule.AppIDs, ref macroIdToValueMap);
+					ParseStringMacros(denyRule.AppIDs, ref macroIdToValueMap, BodyWriter);
 				}
 				break;
 
@@ -272,7 +259,7 @@ internal static partial class BinaryOpsForward
 					BodyWriter.Write((uint)(maxFileVersionNumber & uint.MaxValue));
 					BodyWriter.Write((uint)(maxFileVersionNumber >> 32));
 
-					ParseStringMacros(fileAttributeRule.AppIDs, ref macroIdToValueMap);
+					ParseStringMacros(fileAttributeRule.AppIDs, ref macroIdToValueMap, BodyWriter);
 				}
 				break;
 
@@ -284,26 +271,26 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes InternalName, FileDescription, ProductName for file rules.
 	/// </summary>
-	private static void WriteFileMetadata(object rule)
+	private static void WriteFileMetadata(object rule, BinaryWriter BodyWriter)
 	{
 		switch (rule)
 		{
 			case Allow allow:
-				WriteOptionalStringValue(allow.InternalName);
-				WriteOptionalStringValue(allow.FileDescription);
-				WriteOptionalStringValue(allow.ProductName);
+				WriteOptionalStringValue(allow.InternalName, BodyWriter);
+				WriteOptionalStringValue(allow.FileDescription, BodyWriter);
+				WriteOptionalStringValue(allow.ProductName, BodyWriter);
 				break;
 
 			case Deny deny:
-				WriteOptionalStringValue(deny.InternalName);
-				WriteOptionalStringValue(deny.FileDescription);
-				WriteOptionalStringValue(deny.ProductName);
+				WriteOptionalStringValue(deny.InternalName, BodyWriter);
+				WriteOptionalStringValue(deny.FileDescription, BodyWriter);
+				WriteOptionalStringValue(deny.ProductName, BodyWriter);
 				break;
 
 			case FileAttrib fileAttrib:
-				WriteOptionalStringValue(fileAttrib.InternalName);
-				WriteOptionalStringValue(fileAttrib.FileDescription);
-				WriteOptionalStringValue(fileAttrib.ProductName);
+				WriteOptionalStringValue(fileAttrib.InternalName, BodyWriter);
+				WriteOptionalStringValue(fileAttrib.FileDescription, BodyWriter);
+				WriteOptionalStringValue(fileAttrib.ProductName, BodyWriter);
 				break;
 
 			default:
@@ -314,13 +301,13 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes PackageFamilyName and PackageVersion for file rules.
 	/// </summary>
-	private static void WritePackageInfo(object fileRule)
+	private static void WritePackageInfo(object fileRule, BinaryWriter BodyWriter)
 	{
 		switch (fileRule)
 		{
 			case Allow allowRule:
 				{
-					WriteOptionalStringValue(allowRule.PackageFamilyName);
+					WriteOptionalStringValue(allowRule.PackageFamilyName, BodyWriter);
 					ulong versionNumber = Helper.ConvertStringVersionToUInt64(allowRule.PackageVersion);
 
 					BodyWriter.Write((uint)(versionNumber & uint.MaxValue));
@@ -330,7 +317,7 @@ internal static partial class BinaryOpsForward
 
 			case Deny denyRule:
 				{
-					WriteOptionalStringValue(denyRule.PackageFamilyName);
+					WriteOptionalStringValue(denyRule.PackageFamilyName, BodyWriter);
 					ulong versionNumber = Helper.ConvertStringVersionToUInt64(denyRule.PackageVersion);
 
 					BodyWriter.Write((uint)(versionNumber & uint.MaxValue));
@@ -340,7 +327,7 @@ internal static partial class BinaryOpsForward
 
 			case FileAttrib fileAttribRule:
 				{
-					WriteOptionalStringValue(fileAttribRule.PackageFamilyName);
+					WriteOptionalStringValue(fileAttribRule.PackageFamilyName, BodyWriter);
 					ulong versionNumber = Helper.ConvertStringVersionToUInt64(fileAttribRule.PackageVersion);
 
 					BodyWriter.Write((uint)(versionNumber & uint.MaxValue));
@@ -356,20 +343,20 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes FilePath for file rules.
 	/// </summary>
-	private static void WriteFilePath(object rule)
+	private static void WriteFilePath(object rule, BinaryWriter BodyWriter)
 	{
 		switch (rule)
 		{
 			case Allow allow:
-				WriteOptionalStringValue(allow.FilePath);
+				WriteOptionalStringValue(allow.FilePath, BodyWriter);
 				break;
 
 			case Deny deny:
-				WriteOptionalStringValue(deny.FilePath);
+				WriteOptionalStringValue(deny.FilePath, BodyWriter);
 				break;
 
 			case FileAttrib fileAttrib:
-				WriteOptionalStringValue(fileAttrib.FilePath);
+				WriteOptionalStringValue(fileAttrib.FilePath, BodyWriter);
 				break;
 
 			default:
@@ -380,24 +367,16 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes a Signer into binary format.
 	/// </summary>
-	private static void ConvertSignerToBinary(
-	Signer signerData,
-	Dictionary<string, uint> ekuIdToIndexMap,
-	Dictionary<string, uint> fileRuleIdToIndexMap,
-	List<object>? fileRuleArray)
+	private static void ConvertSignerToBinary(Signer signerData, Dictionary<string, uint> ekuIdToIndexMap, Dictionary<string, uint> fileRuleIdToIndexMap, List<object>? fileRuleArray, BinaryWriter BodyWriter)
 	{
-		uint tbsCertIndicator = 0;
-
 		if (signerData.CertRoot.Type is CertEnumType.TBS)
 		{
-			BodyWriter.Write(tbsCertIndicator);
-			WritePaddedCountedBytes(signerData.CertRoot.Value);
+			BodyWriter.Write(0U); // TBS Cert Indicator 
+			WritePaddedCountedBytes(signerData.CertRoot.Value, BodyWriter);
 		}
 		else
 		{
-			uint publicKeyIndicator = 1;
-
-			BodyWriter.Write(publicKeyIndicator);
+			BodyWriter.Write(1U); // Public Key Indicator
 			BodyWriter.Write((uint)signerData.CertRoot.Value.Span[0]);
 		}
 
@@ -425,29 +404,29 @@ internal static partial class BinaryOpsForward
 
 		if (signerData.CertIssuer is not null)
 		{
-			WriteOptionalStringValue(signerData.CertIssuer.Value);
+			WriteOptionalStringValue(signerData.CertIssuer.Value, BodyWriter);
 		}
 		else
 		{
-			WriteOptionalStringValue(null);
+			WriteOptionalStringValue(null, BodyWriter);
 		}
 
 		if (signerData.CertPublisher is not null)
 		{
-			WriteOptionalStringValue(signerData.CertPublisher.Value);
+			WriteOptionalStringValue(signerData.CertPublisher.Value, BodyWriter);
 		}
 		else
 		{
-			WriteOptionalStringValue(null);
+			WriteOptionalStringValue(null, BodyWriter);
 		}
 
 		if (signerData.CertOemID is not null)
 		{
-			WriteOptionalStringValue(signerData.CertOemID.Value);
+			WriteOptionalStringValue(signerData.CertOemID.Value, BodyWriter);
 		}
 		else
 		{
-			WriteOptionalStringValue(null);
+			WriteOptionalStringValue(null, BodyWriter);
 		}
 
 		if (signerData.FileAttribRef is not null)
@@ -488,12 +467,9 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes a SigningScenario to binary.
 	/// </summary>
-	private static void ConvertScenarioToBinary(
-		SigningScenario signingScenario,
-		Dictionary<string, uint> scenarioIdToIndexMap)
+	private static void ConvertScenarioToBinary(SigningScenario signingScenario, Dictionary<string, uint> scenarioIdToIndexMap, BinaryWriter BodyWriter)
 	{
-		uint scenarioValue = signingScenario.Value;
-		BodyWriter.Write(scenarioValue);
+		BodyWriter.Write((uint)signingScenario.Value);
 
 		if (signingScenario.InheritedScenarios is not null)
 		{
@@ -532,11 +508,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes AllowedSigners to binary.
 	/// </summary>
-	private static void ConvertAllowedSignersToBinary(
-	AllowedSigners? allowedSigners,
-	Dictionary<string, uint> signerIdToIndexMap,
-	Dictionary<string, uint> fileRuleIdToIndexMap,
-	List<object>? fileRuleArray)
+	private static void ConvertAllowedSignersToBinary(AllowedSigners? allowedSigners, Dictionary<string, uint> signerIdToIndexMap, Dictionary<string, uint> fileRuleIdToIndexMap, List<object>? fileRuleArray, BinaryWriter BodyWriter)
 	{
 		if (allowedSigners is null)
 		{
@@ -602,11 +574,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes DeniedSigners to binary.
 	/// </summary>
-	private static void ConvertDeniedSignersToBinary(
-	DeniedSigners? deniedSigners,
-	Dictionary<string, uint> signerIdToIndexMap,
-	Dictionary<string, uint> fileRuleIdToIndexMap,
-	List<object>? fileRuleArray)
+	private static void ConvertDeniedSignersToBinary(DeniedSigners? deniedSigners, Dictionary<string, uint> signerIdToIndexMap, Dictionary<string, uint> fileRuleIdToIndexMap, List<object>? fileRuleArray, BinaryWriter BodyWriter)
 	{
 		if (deniedSigners is null)
 		{
@@ -676,7 +644,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes secure settings to binary.
 	/// </summary>
-	private static void ConvertSecureSettingsToBinary(Setting[] secureSetting)
+	private static void ConvertSecureSettingsToBinary(Setting[] secureSetting, BinaryWriter BodyWriter)
 	{
 		if (secureSetting.Length == 0)
 		{
@@ -693,16 +661,16 @@ internal static partial class BinaryOpsForward
 			string provider = secureSetting[(int)index].Provider;
 			string valueName = secureSetting[(int)index].ValueName;
 
-			WriteOptionalStringValue(provider);
-			WriteOptionalStringValue(key);
-			WriteOptionalStringValue(valueName);
+			WriteOptionalStringValue(provider, BodyWriter);
+			WriteOptionalStringValue(key, BodyWriter);
+			WriteOptionalStringValue(valueName, BodyWriter);
 
 			object data = secureSetting[(int)index].Value.Item;
 
 			if (data is string v2)
 			{
 				BodyWriter.Write(3U);
-				WriteOptionalStringValue(v2);
+				WriteOptionalStringValue(v2, BodyWriter);
 			}
 			else if (data is bool v1)
 			{
@@ -718,7 +686,7 @@ internal static partial class BinaryOpsForward
 			{
 				// It will be byte
 				BodyWriter.Write(2U);
-				WritePaddedCountedBytes((ReadOnlyMemory<byte>)data);
+				WritePaddedCountedBytes((ReadOnlyMemory<byte>)data, BodyWriter);
 			}
 		}
 	}
@@ -726,9 +694,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Serializes required file rules to binary.
 	/// </summary>
-	internal static void ConvertRequiredFileRulesToBinary(
-		FileRulesRef? fileRulesRef,
-		Dictionary<string, uint> fileRuleIdToIndexMap)
+	private static void ConvertRequiredFileRulesToBinary(FileRulesRef? fileRulesRef, Dictionary<string, uint> fileRuleIdToIndexMap, BinaryWriter BodyWriter)
 	{
 		if (fileRulesRef is not null && fileRulesRef.FileRuleRef.Count != 0)
 		{
@@ -764,7 +730,7 @@ internal static partial class BinaryOpsForward
 	/// Writes app settings as binary.
 	/// </summary>
 	/// <param name="setting"></param>
-	internal static void WriteStringSetAppSetting(AppSetting? setting)
+	private static void WriteStringSetAppSetting(AppSetting? setting, BinaryWriter BodyWriter)
 	{
 		const byte Tag = 4;
 
@@ -781,11 +747,11 @@ internal static partial class BinaryOpsForward
 
 		foreach (string rawValue in CollectionsMarshal.AsSpan(values))
 		{
-			WriteOptionalStringValue(rawValue);
+			WriteOptionalStringValue(rawValue, BodyWriter);
 		}
 	}
 
-	private static void WriteBooleanAppSetting(AppSetting? setting)
+	private static void WriteBooleanAppSetting(AppSetting? setting, BinaryWriter BodyWriter)
 	{
 		const byte Tag = 0;
 
@@ -802,7 +768,7 @@ internal static partial class BinaryOpsForward
 		BodyWriter.Write(valueByte);
 	}
 
-	internal static void WriteStringAppSetting(AppSetting? setting)
+	private static void WriteStringAppSetting(AppSetting? setting, BinaryWriter BodyWriter)
 	{
 		const byte Tag = 3;
 
@@ -816,13 +782,13 @@ internal static partial class BinaryOpsForward
 				GlobalVars.GetStr("StringAppSettingMultipleValuesError"))
 		};
 
-		WriteOptionalStringValue(rawValue);
+		WriteOptionalStringValue(rawValue, BodyWriter);
 	}
 
 	/// <summary>
 	/// Writes application settings region to binary.
 	/// </summary>
-	internal static void WriteAppSettings(AppSettingRegion? appSettingsRegion)
+	private static void WriteAppSettings(AppSettingRegion? appSettingsRegion, BinaryWriter BodyWriter)
 	{
 		if (appSettingsRegion is not { App.Count: > 0 })
 		{
@@ -854,7 +820,7 @@ internal static partial class BinaryOpsForward
 				}
 			}
 
-			WriteOptionalStringValue(applicationManifest.Id);
+			WriteOptionalStringValue(applicationManifest.Id, BodyWriter);
 
 			BodyWriter.Write((uint)applicationManifest.SettingDefinition.Count);
 
@@ -864,18 +830,18 @@ internal static partial class BinaryOpsForward
 					.FirstOrDefault(policySetting =>
 						string.Equals(policySetting.Name, currentDefinitionInLoop.Name, StringComparison.OrdinalIgnoreCase));
 
-				WriteOptionalStringValue(currentDefinitionInLoop.Name);
+				WriteOptionalStringValue(currentDefinitionInLoop.Name, BodyWriter);
 
 				switch (currentDefinitionInLoop.Type)
 				{
 					case SettingType.Bool:
-						WriteBooleanAppSetting(foundSetting);
+						WriteBooleanAppSetting(foundSetting, BodyWriter);
 						break;
 					case SettingType.StringList:
-						WriteStringAppSetting(foundSetting);
+						WriteStringAppSetting(foundSetting, BodyWriter);
 						break;
 					case SettingType.StringSet:
-						WriteStringSetAppSetting(foundSetting);
+						WriteStringSetAppSetting(foundSetting, BodyWriter);
 						break;
 					default:
 						throw new InvalidOperationException(
@@ -898,9 +864,7 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes HotPatch (Allow rule relationships) to binary.
 	/// </summary>
-	private static void WriteHotpatchSettings(
-		Dictionary<string, uint> fileRuleIdToIndexMap,
-		List<object>? fileRules)
+	private static void WriteHotpatchSettings(Dictionary<string, uint> fileRuleIdToIndexMap, List<object>? fileRules, BinaryWriter BodyWriter)
 	{
 		if (fileRules is null || fileRules.Count == 0)
 		{
@@ -977,14 +941,11 @@ internal static partial class BinaryOpsForward
 		using MemoryStream bodyMemoryStream = new();
 
 		// Initialize writers: BodyWriter writes to the memory stream, HeaderWriter writes to the output stream
-		BodyWriter = new(bodyMemoryStream, encoding);
-		HeaderWriter = new(outputStream, encoding, true);
+		using BinaryWriter BodyWriter = new(bodyMemoryStream, encoding);
+		using BinaryWriter HeaderWriter = new(outputStream, encoding, true);
 
 		try
 		{
-			// Determine if this is a supplemental policy
-			bool isSupplementalPolicy = policyData.PolicyType is PolicyType.SupplementalPolicy;
-
 			// Prepare dictionaries to map object IDs to their index positions in arrays
 			Dictionary<string, uint> ekuIdToIndexMap = [];
 			Dictionary<string, uint> fileRuleIdToIndexMap = [];
@@ -1042,7 +1003,7 @@ internal static partial class BinaryOpsForward
 			policyOptionFlags |= 0x80000000;
 
 			// If supplemental, set the supplemental-policy flag bit
-			if (isSupplementalPolicy)
+			if (policyData.PolicyType is PolicyType.SupplementalPolicy)
 			{
 				policyOptionFlags |= 0x40000000;
 			}
@@ -1057,12 +1018,9 @@ internal static partial class BinaryOpsForward
 			HeaderWriter.Write((uint)(policyData.SigningScenarios?.Count ?? 0));
 
 			// Collect macros into a lookup for later use in substitutions
-			if (policyData.Macros is not null)
+			foreach (MacrosMacro macro in CollectionsMarshal.AsSpan(policyData.Macros))
 			{
-				foreach (MacrosMacro macro in CollectionsMarshal.AsSpan(policyData.Macros))
-				{
-					macroIdToValueMap.Add(macro.Id, macro.Value);
-				}
+				macroIdToValueMap.Add(macro.Id, macro.Value);
 			}
 
 			// Convert the string version to a 64-bit number, then split into two 32-bit parts
@@ -1090,7 +1048,7 @@ internal static partial class BinaryOpsForward
 				}
 				foreach (EKU eku in CollectionsMarshal.AsSpan(policyData.EKUs))
 				{
-					WritePaddedCountedBytes(eku.Value);
+					WritePaddedCountedBytes(eku.Value, BodyWriter);
 				}
 			}
 
@@ -1107,7 +1065,7 @@ internal static partial class BinaryOpsForward
 				policyData.FileRules.Sort(Helper.CompareFileRuleObjects);
 				for (uint ruleIndex = 0; ruleIndex < policyData.FileRules.Count; ++ruleIndex)
 				{
-					ConvertFileRuleToBinary(ref fileRuleIdToIndexMap, policyData.FileRules[(int)ruleIndex], ruleIndex);
+					ConvertFileRuleToBinary(ref fileRuleIdToIndexMap, policyData.FileRules[(int)ruleIndex], ruleIndex, BodyWriter);
 				}
 			}
 
@@ -1134,7 +1092,7 @@ internal static partial class BinaryOpsForward
 			{
 				foreach (Signer signer in CollectionsMarshal.AsSpan(policyData.Signers))
 				{
-					ConvertSignerToBinary(signer, ekuIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
+					ConvertSignerToBinary(signer, ekuIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
 					if (policyData.PolicyType is PolicyType.AppIDTaggingPolicy
 						&& (policyData.CiSigners is null || policyData.CiSigners.Count == 0))
 					{
@@ -1199,12 +1157,12 @@ internal static partial class BinaryOpsForward
 			{
 				foreach (SigningScenario scenario in CollectionsMarshal.AsSpan(policyData.SigningScenarios))
 				{
-					ConvertScenarioToBinary(scenario, scenarioIdToIndexMap);
+					ConvertScenarioToBinary(scenario, scenarioIdToIndexMap, BodyWriter);
 
 					// ProductSigners: allowed, denied, required file rules (or zeros if null)
-					ConvertAllowedSignersToBinary(scenario.ProductSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-					ConvertDeniedSignersToBinary(scenario.ProductSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-					ConvertRequiredFileRulesToBinary(scenario.ProductSigners.FileRulesRef, fileRuleIdToIndexMap);
+					ConvertAllowedSignersToBinary(scenario.ProductSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
+					ConvertDeniedSignersToBinary(scenario.ProductSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
+					ConvertRequiredFileRulesToBinary(scenario.ProductSigners.FileRulesRef, fileRuleIdToIndexMap, BodyWriter);
 
 					// TestSigners: allowed, denied, required file rules (or zeros if null)
 					if (scenario.TestSigners is null)
@@ -1215,9 +1173,9 @@ internal static partial class BinaryOpsForward
 					}
 					else
 					{
-						ConvertAllowedSignersToBinary(scenario.TestSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-						ConvertDeniedSignersToBinary(scenario.TestSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-						ConvertRequiredFileRulesToBinary(scenario.TestSigners.FileRulesRef, fileRuleIdToIndexMap);
+						ConvertAllowedSignersToBinary(scenario.TestSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
+						ConvertDeniedSignersToBinary(scenario.TestSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
+						ConvertRequiredFileRulesToBinary(scenario.TestSigners.FileRulesRef, fileRuleIdToIndexMap, BodyWriter);
 					}
 
 					// TestSigningSigners: allowed, denied, required file rules (or zeros if null)
@@ -1229,9 +1187,9 @@ internal static partial class BinaryOpsForward
 					}
 					else
 					{
-						ConvertAllowedSignersToBinary(scenario.TestSigningSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-						ConvertDeniedSignersToBinary(scenario.TestSigningSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules);
-						ConvertRequiredFileRulesToBinary(scenario.TestSigningSigners.FileRulesRef, fileRuleIdToIndexMap);
+						ConvertAllowedSignersToBinary(scenario.TestSigningSigners.AllowedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
+						ConvertDeniedSignersToBinary(scenario.TestSigningSigners.DeniedSigners, signerIdToIndexMap, fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
+						ConvertRequiredFileRulesToBinary(scenario.TestSigningSigners.FileRulesRef, fileRuleIdToIndexMap, BodyWriter);
 					}
 
 					// Map AppID tags to secure settings
@@ -1255,7 +1213,7 @@ internal static partial class BinaryOpsForward
 			Helper.AppendSettingFromRule(secureSettingsList, policyData);
 
 			// Convert all secure settings to binary and write them
-			ConvertSecureSettingsToBinary(secureSettingsList.ToArray());
+			ConvertSecureSettingsToBinary(secureSettingsList.ToArray(), BodyWriter);
 
 			// Section marker 3: write App IDs and max file version metadata
 			BodyWriter.Write(3U);
@@ -1263,7 +1221,7 @@ internal static partial class BinaryOpsForward
 			{
 				foreach (object fileRule in CollectionsMarshal.AsSpan(policyData.FileRules))
 				{
-					WriteAppIdsAndMaxFileVersion(ref macroIdToValueMap, fileRule);
+					WriteAppIdsAndMaxFileVersion(ref macroIdToValueMap, fileRule, BodyWriter);
 				}
 			}
 
@@ -1289,7 +1247,7 @@ internal static partial class BinaryOpsForward
 			{
 				foreach (object fileRule in CollectionsMarshal.AsSpan(policyData.FileRules))
 				{
-					WriteFileMetadata(fileRule);
+					WriteFileMetadata(fileRule, BodyWriter);
 				}
 			}
 
@@ -1299,7 +1257,7 @@ internal static partial class BinaryOpsForward
 			{
 				foreach (object fileRule in CollectionsMarshal.AsSpan(policyData.FileRules))
 				{
-					WritePackageInfo(fileRule);
+					WritePackageInfo(fileRule, BodyWriter);
 				}
 			}
 
@@ -1345,17 +1303,17 @@ internal static partial class BinaryOpsForward
 			{
 				foreach (object fileRule in CollectionsMarshal.AsSpan(policyData.FileRules))
 				{
-					WriteFilePath(fileRule);
+					WriteFilePath(fileRule, BodyWriter);
 				}
 			}
 
 			// Section marker 8: write application-specific settings
 			BodyWriter.Write(8U);
-			WriteAppSettings(policyData.AppSettings);
+			WriteAppSettings(policyData.AppSettings, BodyWriter);
 
 			// Section marker 9: write Hotpatch settings
 			BodyWriter.Write(9U);
-			WriteHotpatchSettings(fileRuleIdToIndexMap, policyData.FileRules);
+			WriteHotpatchSettings(fileRuleIdToIndexMap, policyData.FileRules, BodyWriter);
 
 			// Section marker 10: end of sections
 			BodyWriter.Write(10U);
@@ -1378,11 +1336,9 @@ internal static partial class BinaryOpsForward
 		}
 		finally
 		{
-			// Ensure all streams and writers are properly closed and disposed
+			// Ensure all streams and writers are properly closed
 			BodyWriter.Close();
 			HeaderWriter.Close();
-			BodyWriter.Dispose();
-			HeaderWriter.Dispose();
 		}
 	}
 

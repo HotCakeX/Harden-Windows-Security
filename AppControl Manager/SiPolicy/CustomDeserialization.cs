@@ -65,10 +65,8 @@ internal static class CustomDeserialization
 		// Policy Type - if missing, Base policy type is assigned
 		PolicyType policyType = root.HasAttribute("PolicyType") ? ConvertStringToPolicyType(root.GetAttribute("PolicyType")) : PolicyType.BasePolicy;
 
-		// Generate a new GUID
-		Guid newRandomGUID = Guid.CreateVersion7();
-		// Convert it to string
-		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
+		// Generate a new ID
+		string newRandomGUIDString = $"{{{Guid.CreateVersion7().ToString().ToUpperInvariant()}}}";
 
 		// Read basic text elements
 		string versionText = GetElementText(root, "VersionEx");
@@ -144,7 +142,6 @@ internal static class CustomDeserialization
 		XmlElement? ekusElement = root["EKUs", GlobalVars.SiPolicyNamespace];
 		if (ekusElement is not null)
 		{
-			List<EKU> ekus = [];
 			foreach (XmlNode node in ekusElement.ChildNodes)
 			{
 				if (node is XmlElement ekuElem)
@@ -155,7 +152,7 @@ internal static class CustomDeserialization
 
 					string id = ekuElem.GetAttribute("ID");
 
-					ekus.Add(new EKU(
+					policy.EKUs.Add(new EKU(
 						id: id,
 						value: ConvertHexStringToByteArray(ekuElem.GetAttribute("Value")),
 						friendlyName: ekuFriendlyName
@@ -167,7 +164,6 @@ internal static class CustomDeserialization
 					}
 				}
 			}
-			policy.EKUs = [.. ekus];
 		}
 
 		// Deserialize FileRules
@@ -182,7 +178,6 @@ internal static class CustomDeserialization
 		XmlElement? fileRulesElement = root["FileRules", GlobalVars.SiPolicyNamespace];
 		if (fileRulesElement is not null)
 		{
-			List<object> fileRules = [];
 			foreach (XmlNode node in fileRulesElement.ChildNodes)
 			{
 				if (node is XmlElement ruleElem)
@@ -190,23 +185,22 @@ internal static class CustomDeserialization
 					switch (ruleElem.LocalName)
 					{
 						case "Allow":
-							fileRules.Add(DeserializeAllow(ruleElem, AllowRulesIDsCol));
+							policy.FileRules.Add(DeserializeAllow(ruleElem, AllowRulesIDsCol));
 							break;
 						case "Deny":
-							fileRules.Add(DeserializeDeny(ruleElem, DenyRulesIDsCol));
+							policy.FileRules.Add(DeserializeDeny(ruleElem, DenyRulesIDsCol));
 							break;
 						case "FileAttrib":
-							fileRules.Add(DeserializeFileAttrib(ruleElem, FileAttribRulesIDsCol));
+							policy.FileRules.Add(DeserializeFileAttrib(ruleElem, FileAttribRulesIDsCol));
 							break;
 						case "FileRule":
-							fileRules.Add(DeserializeFileRule(ruleElem, FileRulesIDsCol));
+							policy.FileRules.Add(DeserializeFileRule(ruleElem, FileRulesIDsCol));
 							break;
 						default:
 							break;
 					}
 				}
 			}
-			policy.FileRules = fileRules;
 		}
 
 		// Deserialize Signers
@@ -214,15 +208,14 @@ internal static class CustomDeserialization
 		if (signersElement is not null)
 		{
 			HashSet<string> SignersIDsCol = [];
-			List<Signer> signers = [];
+			policy.Signers = [];
 			foreach (XmlNode node in signersElement.ChildNodes)
 			{
 				if (node is XmlElement signerElem)
 				{
-					signers.Add(DeserializeSigner(signerElem, SignersIDsCol));
+					policy.Signers.Add(DeserializeSigner(signerElem, SignersIDsCol));
 				}
 			}
-			policy.Signers = signers;
 		}
 
 		// Deserialize SigningScenarios
@@ -235,7 +228,6 @@ internal static class CustomDeserialization
 		XmlElement? signingScenariosElement = root["SigningScenarios", GlobalVars.SiPolicyNamespace];
 		if (signingScenariosElement is not null)
 		{
-			List<SigningScenario> scenarios = [];
 			foreach (XmlNode node in signingScenariosElement.ChildNodes)
 			{
 				if (node is XmlElement scenarioElem)
@@ -255,10 +247,9 @@ internal static class CustomDeserialization
 						}
 					}
 
-					scenarios.Add(signingScenario);
+					policy.SigningScenarios.Add(signingScenario);
 				}
 			}
-			policy.SigningScenarios = scenarios;
 		}
 
 		// Deserialize UpdatePolicySigners
@@ -267,15 +258,13 @@ internal static class CustomDeserialization
 		XmlElement? upsElement = root["UpdatePolicySigners", GlobalVars.SiPolicyNamespace];
 		if (upsElement is not null)
 		{
-			List<UpdatePolicySigner> upsList = [];
 			foreach (XmlNode node in upsElement.ChildNodes)
 			{
 				if (node is XmlElement upsChild)
 				{
-					upsList.Add(new UpdatePolicySigner(signerID: upsChild.GetAttribute("SignerId")));
+					policy.UpdatePolicySigners.Add(new UpdatePolicySigner(signerID: upsChild.GetAttribute("SignerId")));
 				}
 			}
-			policy.UpdatePolicySigners = upsList;
 		}
 
 		// If policy requires to be Signed
@@ -290,15 +279,13 @@ internal static class CustomDeserialization
 		XmlElement? ciElement = root["CiSigners", GlobalVars.SiPolicyNamespace];
 		if (ciElement is not null)
 		{
-			List<CiSigner> ciList = [];
 			foreach (XmlNode node in ciElement.ChildNodes)
 			{
 				if (node is XmlElement ciChild)
 				{
-					ciList.Add(new CiSigner(signerID: ciChild.GetAttribute("SignerId")));
+					policy.CiSigners.Add(new CiSigner(signerID: ciChild.GetAttribute("SignerId")));
 				}
 			}
-			policy.CiSigners = ciList;
 		}
 
 		// Deserialize HvciOptions
@@ -314,15 +301,13 @@ internal static class CustomDeserialization
 		XmlElement? settingsElem = root["Settings", GlobalVars.SiPolicyNamespace];
 		if (settingsElem is not null)
 		{
-			List<Setting> settings = [];
 			foreach (XmlNode node in settingsElem.ChildNodes)
 			{
 				if (node is XmlElement settingElem)
 				{
-					settings.Add(DeserializeSetting(settingElem));
+					policy.Settings.Add(DeserializeSetting(settingElem));
 				}
 			}
-			policy.Settings = settings;
 		}
 
 		if (policy.Settings.Count > ushort.MaxValue)
@@ -339,7 +324,6 @@ internal static class CustomDeserialization
 		XmlElement? macrosElem = root["Macros", GlobalVars.SiPolicyNamespace];
 		if (macrosElem is not null)
 		{
-			List<MacrosMacro> macros = [];
 			foreach (XmlNode node in macrosElem.ChildNodes)
 			{
 				if (node is XmlElement macroElem)
@@ -347,7 +331,7 @@ internal static class CustomDeserialization
 					string id = macroElem.GetAttribute("Id");
 					string value = macroElem.GetAttribute("Value");
 					MacrosMacro macro = new(id, value);
-					macros.Add(macro);
+					policy.Macros.Add(macro);
 
 					if (!MacrosIDsCol.Add(macro.Id))
 					{
@@ -355,7 +339,6 @@ internal static class CustomDeserialization
 					}
 				}
 			}
-			policy.Macros = macros;
 		}
 
 		// Deserialize SupplementalPolicySigners
@@ -364,15 +347,13 @@ internal static class CustomDeserialization
 		XmlElement? suppElem = root["SupplementalPolicySigners", GlobalVars.SiPolicyNamespace];
 		if (suppElem is not null)
 		{
-			List<SupplementalPolicySigner> spsList = [];
 			foreach (XmlNode node in suppElem.ChildNodes)
 			{
 				if (node is XmlElement spsElem)
 				{
-					spsList.Add(new SupplementalPolicySigner(signerID: spsElem.GetAttribute("SignerId")));
+					policy.SupplementalPolicySigners.Add(new SupplementalPolicySigner(signerID: spsElem.GetAttribute("SignerId")));
 				}
 			}
-			policy.SupplementalPolicySigners = spsList;
 		}
 
 		if (policy.PolicyType is PolicyType.SupplementalPolicy && policy.SupplementalPolicySigners.Count != 0)
@@ -808,15 +789,14 @@ internal static class CustomDeserialization
 		XmlNodeList farNodes = elem.GetElementsByTagName("FileAttribRef", GlobalVars.SiPolicyNamespace);
 		if (farNodes.Count > 0)
 		{
-			List<FileAttribRef> fars = [];
+			signer.FileAttribRef = [];
 			foreach (XmlNode node in farNodes)
 			{
 				if (node is XmlElement farElem)
 				{
-					fars.Add(new FileAttribRef(ruleID: farElem.GetAttribute("RuleID")));
+					signer.FileAttribRef.Add(new FileAttribRef(ruleID: farElem.GetAttribute("RuleID")));
 				}
 			}
-			signer.FileAttribRef = fars;
 		}
 
 		return signer;

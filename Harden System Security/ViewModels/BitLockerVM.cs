@@ -189,10 +189,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// <summary>
 	/// Closes the sidebar pane.
 	/// </summary>
-	internal void CloseBitLockerDetailsPane()
-	{
-		IsBitLockerDetailsPaneOpen = false;
-	}
+	internal void CloseBitLockerDetailsPane() => IsBitLockerDetailsPaneOpen = false;
 
 	internal Visibility NoSelectionVisibility => SelectedBitLockerVolume is null ? Visibility.Visible : Visibility.Collapsed;
 

@@ -77,8 +77,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in CollectionsMarshal.AsSpan(whqlFilePublisherSigners))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
+			string FileAttribID = $"ID_FILEATTRIB_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			#region Creating File <FileAttrib> node
 
@@ -118,8 +117,7 @@ internal static class NewWHQLFilePublisherLevelRules
 			{
 				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
-				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-				string signerID = $"ID_SIGNER_A_{guid2}";
+				string signerID = $"ID_SIGNER_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 				if (string.IsNullOrWhiteSpace(whqlFilePublisherData.Opus))
 					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID");
@@ -206,8 +204,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in CollectionsMarshal.AsSpan(whqlFilePublisherSigners))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
+			string FileAttribID = $"ID_FILEATTRIB_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			#region Creating File <FileAttrib> node
 
@@ -247,8 +244,7 @@ internal static class NewWHQLFilePublisherLevelRules
 			{
 				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
-				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-				string signerID = $"ID_SIGNER_A_{guid2}";
+				string signerID = $"ID_SIGNER_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 				if (string.IsNullOrWhiteSpace(whqlFilePublisherData.Opus))
 					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID");

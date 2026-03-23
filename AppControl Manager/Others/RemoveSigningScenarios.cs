@@ -44,7 +44,7 @@ internal static class RemoveSigningScenarios
 			foreach (SigningScenario sc in CollectionsMarshal.AsSpan(policyObj.SigningScenarios))
 			{
 				// User-Mode Signing Scenario
-				if (string.Equals(sc.Value.ToString(), "12", StringComparison.OrdinalIgnoreCase))
+				if (sc.Value == 12)
 				{
 					foreach (AllowedSigner allowedSigner in CollectionsMarshal.AsSpan(sc.ProductSigners.AllowedSigners?.AllowedSigner))
 					{
@@ -75,7 +75,7 @@ internal static class RemoveSigningScenarios
 			}
 
 			// Remove any signing scenario with the value 12 representing User-Mode
-			_ = policyObj.SigningScenarios?.RemoveAll(scenario => string.Equals(scenario.Value.ToString(), "12", StringComparison.OrdinalIgnoreCase));
+			_ = policyObj.SigningScenarios?.RemoveAll(scenario => scenario.Value == 12);
 
 			// Remove all Signers that are for User-Mode signing scenario
 			_ = policyObj.Signers?.RemoveAll(s => userModeSignerIDs.Contains(s.ID));
@@ -117,7 +117,7 @@ internal static class RemoveSigningScenarios
 			foreach (SigningScenario sc in CollectionsMarshal.AsSpan(policyObj.SigningScenarios))
 			{
 				// kernel-Mode Signing Scenario
-				if (string.Equals(sc.Value.ToString(), "131", StringComparison.OrdinalIgnoreCase))
+				if (sc.Value == 131)
 				{
 					foreach (AllowedSigner allowedSigner in CollectionsMarshal.AsSpan(sc.ProductSigners.AllowedSigners?.AllowedSigner))
 					{
@@ -148,7 +148,7 @@ internal static class RemoveSigningScenarios
 			}
 
 			// Remove any signing scenario with the value 131 representing kernel-Mode
-			_ = policyObj.SigningScenarios?.RemoveAll(scenario => string.Equals(scenario.Value.ToString(), "131", StringComparison.OrdinalIgnoreCase));
+			_ = policyObj.SigningScenarios?.RemoveAll(scenario => scenario.Value == 131);
 
 			// Remove all Signers that are for kernel-Mode signing scenario
 			_ = policyObj.Signers?.RemoveAll(s => kernelModeSignerIDs.Contains(s.ID));

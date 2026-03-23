@@ -111,7 +111,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	internal double FilesAndFoldersProgressRingValue { get; set => SP(ref field, value); }
 
 	// A Progress<double> so Report() callbacks run on the UI thread
-	internal IProgress<double> FilesAndFoldersProgressRingValueProgress;
+	private IProgress<double> FilesAndFoldersProgressRingValueProgress;
 
 	internal Visibility FilesAndFoldersBrowseForFilesSettingsCardVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 

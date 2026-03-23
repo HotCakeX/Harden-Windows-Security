@@ -57,8 +57,7 @@ internal static class NewFilePublisherLevelRules
 
 		foreach (FilePublisherSignerCreator filePublisherData in CollectionsMarshal.AsSpan(filePublisherSigners))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
+			string FileAttribID = $"ID_FILEATTRIB_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			#region Creating File <FileAttrib> node
 
@@ -96,8 +95,7 @@ internal static class NewFilePublisherLevelRules
 
 			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(filePublisherData.CertificateDetails))
 			{
-				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-				string signerID = $"ID_SIGNER_A_{guid2}";
+				string signerID = $"ID_SIGNER_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 				Signer newSigner = new(
 					id: signerID,
@@ -166,8 +164,7 @@ internal static class NewFilePublisherLevelRules
 
 		foreach (FilePublisherSignerCreator filePublisherData in CollectionsMarshal.AsSpan(filePublisherSigners))
 		{
-			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
+			string FileAttribID = $"ID_FILEATTRIB_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			#region Creating File <FileAttrib> node
 
@@ -205,8 +202,7 @@ internal static class NewFilePublisherLevelRules
 
 			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(filePublisherData.CertificateDetails))
 			{
-				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
-				string signerID = $"ID_SIGNER_A_{guid2}";
+				string signerID = $"ID_SIGNER_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 				Signer newSigner = new(
 					id: signerID,

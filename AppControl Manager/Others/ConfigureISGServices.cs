@@ -27,18 +27,6 @@ namespace AppControlManager.Others;
 
 internal static class ConfigureISGServices
 {
-
-	/// <summary>
-	/// https://learn.microsoft.com/windows/win32/services/service-security-and-access-rights#access-rights-for-the-service-control-manager
-	/// </summary>
-	private const uint SC_MANAGER_ALL_ACCESS = 0xF003F;
-
-	/// <summary>
-	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-changeserviceconfigw
-	/// </summary>
-	private const uint SERVICE_NO_CHANGE = 0xFFFFFFFF;
-
-
 	/// <summary>
 	/// Sets the start mode of a Windows service.
 	/// </summary>
@@ -46,7 +34,7 @@ internal static class ConfigureISGServices
 	/// <param name="startType">Desired start type.</param>
 	private static void SetServiceStartType(string serviceName, ServiceStartType startType)
 	{
-		IntPtr scmHandle = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_ALL_ACCESS);
+		IntPtr scmHandle = NativeMethods.OpenSCManagerW(null, null, CommonCore.ServiceManagement.SC_MANAGER_ALL_ACCESS);
 
 		if (scmHandle == IntPtr.Zero)
 		{
@@ -57,7 +45,7 @@ internal static class ConfigureISGServices
 
 		try
 		{
-			IntPtr serviceHandle = NativeMethods.OpenServiceW(scmHandle, serviceName, SC_MANAGER_ALL_ACCESS);
+			IntPtr serviceHandle = NativeMethods.OpenServiceW(scmHandle, serviceName, CommonCore.ServiceManagement.SC_MANAGER_ALL_ACCESS);
 
 			if (serviceHandle == IntPtr.Zero)
 			{
@@ -69,16 +57,16 @@ internal static class ConfigureISGServices
 			{
 				bool result = NativeMethods.ChangeServiceConfigW(
 					serviceHandle,
-					SERVICE_NO_CHANGE,                // Service type: no change
-					(uint)startType,                  // New start type
-					SERVICE_NO_CHANGE,                // Error control: no change
-					null,                             // Binary path: no change
-					null,                             // Load order group: no change
-					IntPtr.Zero,                      // Tag ID: no change
-					IntPtr.Zero,                      // Dependencies: no change
-					null,                             // Account name: no change
-					null,                             // Password: no change
-					null                              // Display name: no change
+					NativeMethods.SERVICE_NO_CHANGE,    // Service type: no change
+					(uint)startType,                    // New start type
+					NativeMethods.SERVICE_NO_CHANGE,    // Error control: no change
+					null,                               // Binary path: no change
+					null,                               // Load order group: no change
+					IntPtr.Zero,                        // Tag ID: no change
+					IntPtr.Zero,                        // Dependencies: no change
+					null,                               // Account name: no change
+					null,                               // Password: no change
+					null                                // Display name: no change
 				);
 
 				if (!result)
@@ -110,7 +98,6 @@ internal static class ConfigureISGServices
 		Manual = 0x00000003,
 		Disabled = 0x00000004
 	}
-
 
 	/// <summary>
 	/// Starts the AppIdTel and sets the AppIDSvc service to auto start

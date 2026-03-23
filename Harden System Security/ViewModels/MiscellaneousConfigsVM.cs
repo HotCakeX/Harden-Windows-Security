@@ -66,7 +66,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 	/// <summary>
 	/// Create <see cref="MUnit"/> that is not for Group Policies.
 	/// </summary>
-	internal static List<MUnit> CreateUnits()
+	private static List<MUnit> CreateUnits()
 	{
 		List<MUnit> output = [];
 

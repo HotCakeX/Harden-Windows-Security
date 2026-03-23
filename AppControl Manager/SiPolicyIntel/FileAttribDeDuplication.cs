@@ -22,32 +22,11 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
+[Obsolete]
 internal static class FileAttribDeDuplication
 {
-	/// <summary>
-	/// When 2 FilePublisher or WHQLFilePublisher level signers reference the same FileAttrib
-	/// And they are in different Signing Scenarios and/or one of them allows and the other denies, the FileAttribs that they point to through FileAttribRefs must remain.
-	/// However, if the signers belong to the same SigningScenario and/or they both allow or deny, both signers "can" reference the same FileAttrib.
-	/// De-duplication is not necessary here but if it is to be done, each signer must have its context.
-	/// Context: Whether signer is allowing or denying, or if it's kernel-mode or user-mode.
-	///
-	/// So 1 file attribute is enough for a single file to refer to all of its signers that are in the same signing scenario and authorization section.
-	/// The only time when 2 file attributes for the same file (with same details) need to exist is when the same file is referenced in different signing scenarios and/or authorization sections, and for each signing scenario/authorization section there needs to be a different fileAttribute.
-	/// </summary>
-	/// <param name="fileRulesNode"></param>
-	/// <param name="signers"></param>
-	/// <param name="userModeAllowedSigners"></param>
-	/// <param name="userModeDeniedSigners"></param>
-	/// <param name="kernelModeAllowedSigners"></param>
-	/// <param name="kernelModeDeniedSigners"></param>
-	internal static void EnsureUniqueFileAttributes(
-		ref List<object> fileRulesNode,
-		List<Signer> signers,
-		IEnumerable<AllowedSigner> userModeAllowedSigners,
-		IEnumerable<DeniedSigner> userModeDeniedSigners,
-		IEnumerable<AllowedSigner> kernelModeAllowedSigners,
-		IEnumerable<DeniedSigner> kernelModeDeniedSigners
-		)
+	[Obsolete]
+	internal static void EnsureUniqueFileAttributes(ref List<object> fileRulesNode, List<Signer> signers, IEnumerable<AllowedSigner> userModeAllowedSigners, IEnumerable<DeniedSigner> userModeDeniedSigners, IEnumerable<AllowedSigner> kernelModeAllowedSigners, IEnumerable<DeniedSigner> kernelModeDeniedSigners)
 	{
 		// Step 1: a list of file attributes in the <FileRules> node
 		List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList() ?? [];
@@ -218,19 +197,7 @@ internal static class FileAttribDeDuplication
 	/// It updates FileAttribRefs by swapping the RuleID from the duplicate to the one kept.
 	/// Only duplicates that are referenced exclusively from a single dictionary (usage key without a comma) are deduplicated.
 	/// </summary>
-	/// <param name="group"></param>
-	/// <param name="allowedSignerUMCIDictionary"></param>
-	/// <param name="deniedSignerUMCIDictionary"></param>
-	/// <param name="allowedSignerKMCIDictionary"></param>
-	/// <param name="deniedSignerKMCIDictionary"></param>
-	/// <param name="fileAttribIdsToRemove"></param>
-	private static void ProcessDuplicateGroup(
-		List<FileAttrib> group,
-		Dictionary<string, Signer> allowedSignerUMCIDictionary,
-		Dictionary<string, Signer> deniedSignerUMCIDictionary,
-		Dictionary<string, Signer> allowedSignerKMCIDictionary,
-		Dictionary<string, Signer> deniedSignerKMCIDictionary,
-		HashSet<string> fileAttribIdsToRemove)
+	private static void ProcessDuplicateGroup(List<FileAttrib> group, Dictionary<string, Signer> allowedSignerUMCIDictionary, Dictionary<string, Signer> deniedSignerUMCIDictionary, Dictionary<string, Signer> allowedSignerKMCIDictionary, Dictionary<string, Signer> deniedSignerKMCIDictionary, HashSet<string> fileAttribIdsToRemove)
 	{
 		// Create a mapping of each FileAttrib to the set of signer dictionary keys in which it is referenced.
 		// The keys can be: "allowedUMCI", "deniedUMCI", "allowedKMCI", "deniedKMCI".
@@ -364,8 +331,6 @@ internal static class FileAttribDeDuplication
 	/// Compares two version strings using the System.Version class.
 	/// Returns -1 if v1 is lower than v2, 1 if v1 is higher than v2, or 0 if they are equal or unparsable.
 	/// </summary>
-	/// <param name="v1"></param>
-	/// <param name="v2"></param>
 	/// <returns></returns>
 	private static int CompareVersions(string v1, string v2)
 	{

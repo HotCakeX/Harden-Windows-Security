@@ -100,7 +100,10 @@ internal unsafe static class ServiceManagement
 		internal bool Success;
 	}
 
-	private const uint SC_MANAGER_ALL_ACCESS = 0xF003F;
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/services/service-security-and-access-rights#access-rights-for-the-service-control-manager
+	/// </summary>
+	internal const uint SC_MANAGER_ALL_ACCESS = 0xF003F;
 	private const uint SERVICE_QUERY_CONFIG = 0x0001;
 	private const uint SERVICE_TYPE_ALL = 0x0000003F;
 	private const uint SERVICE_STATE_ALL = 0x00000003;
@@ -184,7 +187,7 @@ internal unsafe static class ServiceManagement
 		return servicesList;
 	}
 
-	internal static ServiceItem? ProcessService(IntPtr scManager, string serviceName, string displayName, SERVICE_STATUS_PROCESS status)
+	private static ServiceItem? ProcessService(IntPtr scManager, string serviceName, string displayName, SERVICE_STATUS_PROCESS status)
 	{
 		IntPtr hService = NativeMethods.OpenServiceW(scManager, serviceName, SERVICE_QUERY_CONFIG);
 		if (hService == IntPtr.Zero) return null;
@@ -274,7 +277,7 @@ internal unsafe static class ServiceManagement
 		return null;
 	}
 
-	internal static string GetServiceDescription(IntPtr hService)
+	private static string GetServiceDescription(IntPtr hService)
 	{
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_DESCRIPTION, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
 		{
@@ -292,7 +295,7 @@ internal unsafe static class ServiceManagement
 		return string.Empty;
 	}
 
-	internal static bool GetServiceDelayedAutoStart(IntPtr hService)
+	private static bool GetServiceDelayedAutoStart(IntPtr hService)
 	{
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_DELAYED_AUTO_START_INFO, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
 		{
@@ -307,7 +310,7 @@ internal unsafe static class ServiceManagement
 		return false;
 	}
 
-	internal static string[] GetRequiredPrivileges(IntPtr hService)
+	private static string[] GetRequiredPrivileges(IntPtr hService)
 	{
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_REQUIRED_PRIVILEGES_INFO, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
 		{
@@ -325,7 +328,7 @@ internal unsafe static class ServiceManagement
 		return [];
 	}
 
-	internal static uint GetServiceSidType(IntPtr hService)
+	private static uint GetServiceSidType(IntPtr hService)
 	{
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_SERVICE_SID_INFO, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
 		{
@@ -340,7 +343,7 @@ internal unsafe static class ServiceManagement
 		return 0;
 	}
 
-	internal static uint GetLaunchProtected(IntPtr hService)
+	private static uint GetLaunchProtected(IntPtr hService)
 	{
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_LAUNCH_PROTECTED, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
 		{
@@ -355,7 +358,7 @@ internal unsafe static class ServiceManagement
 		return 0;
 	}
 
-	internal static uint GetPreshutdownTimeout(IntPtr hService)
+	private static uint GetPreshutdownTimeout(IntPtr hService)
 	{
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_PRESHUTDOWN_INFO, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
 		{
@@ -370,7 +373,7 @@ internal unsafe static class ServiceManagement
 		return 0;
 	}
 
-	internal static List<string> GetFailureActions(IntPtr hService)
+	private static List<string> GetFailureActions(IntPtr hService)
 	{
 		List<string> actions = [];
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_FAILURE_ACTIONS, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
@@ -407,7 +410,7 @@ internal unsafe static class ServiceManagement
 		return actions;
 	}
 
-	internal static List<string> GetTriggers(IntPtr hService)
+	private static List<string> GetTriggers(IntPtr hService)
 	{
 		List<string> triggerList = [];
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_TRIGGER_INFO, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)
@@ -449,7 +452,7 @@ internal unsafe static class ServiceManagement
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
-	internal static string GetStateName(uint state) => state switch
+	private static string GetStateName(uint state) => state switch
 	{
 		1 => "Stopped",
 		2 => "Start Pending",
@@ -462,7 +465,7 @@ internal unsafe static class ServiceManagement
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_sid_info
-	internal static string GetSidTypeName(uint sidType) => sidType switch
+	private static string GetSidTypeName(uint sidType) => sidType switch
 	{
 		0 => "None",
 		1 => "Unrestricted",
@@ -471,7 +474,7 @@ internal unsafe static class ServiceManagement
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_launch_protected_info
-	internal static string GetLaunchProtectedName(uint lp) => lp switch
+	private static string GetLaunchProtectedName(uint lp) => lp switch
 	{
 		0 => "None",
 		1 => "Windows",
@@ -481,7 +484,7 @@ internal unsafe static class ServiceManagement
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status
-	internal static string GetControlsAcceptedNames(uint controls)
+	private static string GetControlsAcceptedNames(uint controls)
 	{
 		List<string> accepted = [];
 		if ((controls & 0x1) != 0) accepted.Add("Stop");
@@ -501,10 +504,10 @@ internal unsafe static class ServiceManagement
 		return accepted.Count > 0 ? string.Join(", ", accepted) : "None";
 	}
 
-	internal static string GetServiceFlagsName(uint flags) => (flags & 0x1) != 0 ? "Runs in shared process" : "Standalone process";
+	private static string GetServiceFlagsName(uint flags) => (flags & 0x1) != 0 ? "Runs in shared process" : "Standalone process";
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew
-	internal static string GetServiceTypeNames(uint serviceType)
+	private static string GetServiceTypeNames(uint serviceType)
 	{
 		List<string> types = [];
 		if ((serviceType & 0x1) != 0) types.Add("Kernel Driver");
@@ -518,7 +521,7 @@ internal unsafe static class ServiceManagement
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew
-	internal static string GetStartTypeName(uint startType, bool isDelayed)
+	private static string GetStartTypeName(uint startType, bool isDelayed)
 	{
 		string baseName = startType switch
 		{
@@ -533,7 +536,7 @@ internal unsafe static class ServiceManagement
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew
-	internal static string GetErrorControlName(uint errorControl) => errorControl switch
+	private static string GetErrorControlName(uint errorControl) => errorControl switch
 	{
 		0 => "Ignore",
 		1 => "Normal",
@@ -542,7 +545,7 @@ internal unsafe static class ServiceManagement
 		_ => "Unknown"
 	};
 
-	internal static string[] ParseDoubleNullTerminatedString(char* ptr)
+	private static string[] ParseDoubleNullTerminatedString(char* ptr)
 	{
 		if (ptr == null) return [];
 		List<string> list = [];
@@ -558,7 +561,7 @@ internal unsafe static class ServiceManagement
 
 	private static readonly string[] extensions = [".exe ", ".sys ", ".dll "];
 
-	internal static string NormalizeServicePath(string rawPath)
+	private static string NormalizeServicePath(string rawPath)
 	{
 		string path = rawPath.Trim();
 		if (string.IsNullOrWhiteSpace(path)) return string.Empty;
@@ -669,7 +672,7 @@ internal unsafe static class ServiceManagement
 		return details;
 	}
 
-	internal static string GetStringFileInfo(IntPtr pBlock, string hex, string prop)
+	private static string GetStringFileInfo(IntPtr pBlock, string hex, string prop)
 	{
 		if (NativeMethods.VerQueryValueW(pBlock, $@"\StringFileInfo\{hex}\{prop}", out nint stringBuffer, out uint stringLength) != 0 && stringLength > 0 && stringBuffer != IntPtr.Zero)
 			return new string((char*)stringBuffer);

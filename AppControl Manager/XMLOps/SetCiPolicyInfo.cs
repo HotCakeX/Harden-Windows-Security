@@ -51,11 +51,7 @@ internal static class SetCiPolicyInfo
 		// If the resetPolicyID is true, then assign a new GUID to the PolicyID and BasePolicyID
 		if (resetPolicyID == true)
 		{
-			// Generate a new GUID
-			Guid newRandomGUID = Guid.CreateVersion7();
-
-			// Convert it to string
-			string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
+			string newRandomGUIDString = $"{{{Guid.CreateVersion7().ToString().ToUpperInvariant()}}}";
 
 			policyObj.BasePolicyID = newRandomGUIDString;
 			policyObj.PolicyID = newRandomGUIDString;

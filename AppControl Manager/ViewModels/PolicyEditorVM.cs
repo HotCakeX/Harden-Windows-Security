@@ -318,11 +318,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			// Collections to deserialize the policy object into
 			List<object> fileRulesNode = [];
 			List<Signer> signers = [];
-			IEnumerable<CiSigner> ciSigners = [];
-			IEnumerable<AllowedSigner> userModeAllowedSigners = [];
-			IEnumerable<DeniedSigner> userModeDeniedSigners = [];
-			IEnumerable<AllowedSigner> kernelModeAllowedSigners = [];
-			IEnumerable<DeniedSigner> kernelModeDeniedSigners = [];
+			List<CiSigner> ciSigners = [];
+			List<AllowedSigner> userModeAllowedSigners = [];
+			List<DeniedSigner> userModeDeniedSigners = [];
+			List<AllowedSigner> kernelModeAllowedSigners = [];
+			List<DeniedSigner> kernelModeDeniedSigners = [];
 			List<SupplementalPolicySigner> supplementalPolicySignersCol = [];
 			List<UpdatePolicySigner> updatePolicySignersCol = [];
 			HashSet<FileRuleRule> fileRules = [];

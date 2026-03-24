@@ -23,7 +23,7 @@ namespace CommonCore.Others;
 /// <summary>
 /// ViewModels initialize this in their ctor and XAML pages directly bind to the properties available in each instance.
 /// </summary>
-internal sealed class InfoBarSettings : ViewModelBase
+internal sealed partial class InfoBarSettings : ViewModelBase
 {
 	internal InfoBarSeverity Severity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool IsOpen { get; set => SP(ref field, value); }

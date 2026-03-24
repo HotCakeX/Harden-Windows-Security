@@ -67,11 +67,11 @@ internal static partial class Merger
 		List<EKU> ekusToUse = [];
 		List<object> fileRulesNode = [];
 		List<Signer> signers = [];
-		IEnumerable<CiSigner> ciSigners = [];
-		IEnumerable<AllowedSigner> userModeAllowedSigners = [];
-		IEnumerable<DeniedSigner> userModeDeniedSigners = [];
-		IEnumerable<AllowedSigner> kernelModeAllowedSigners = [];
-		IEnumerable<DeniedSigner> kernelModeDeniedSigners = [];
+		List<CiSigner> ciSigners = [];
+		List<AllowedSigner> userModeAllowedSigners = [];
+		List<DeniedSigner> userModeDeniedSigners = [];
+		List<AllowedSigner> kernelModeAllowedSigners = [];
+		List<DeniedSigner> kernelModeDeniedSigners = [];
 		List<SupplementalPolicySigner> supplementalPolicySignersCol = [];
 		List<UpdatePolicySigner> updatePolicySignersCol = [];
 		HashSet<FileRuleRule> fileRules = []; // Not used by the policy generator method in here
@@ -154,11 +154,11 @@ internal static partial class Merger
 		ref List<EKU> ekusToUse,
 		ref List<object> fileRulesNode,
 		ref List<Signer> signers,
-		ref IEnumerable<CiSigner> ciSigners,
-		ref IEnumerable<AllowedSigner> userModeAllowedSigners,
-		ref IEnumerable<DeniedSigner> userModeDeniedSigners,
-		ref IEnumerable<AllowedSigner> kernelModeAllowedSigners,
-		ref IEnumerable<DeniedSigner> kernelModeDeniedSigners,
+		ref List<CiSigner> ciSigners,
+		ref List<AllowedSigner> userModeAllowedSigners,
+		ref List<DeniedSigner> userModeDeniedSigners,
+		ref List<AllowedSigner> kernelModeAllowedSigners,
+		ref List<DeniedSigner> kernelModeDeniedSigners,
 		ref List<SupplementalPolicySigner> supplementalPolicySignersCol,
 		ref List<UpdatePolicySigner> updatePolicySignersCol,
 		ref HashSet<FileRuleRule> fileRules,
@@ -189,15 +189,6 @@ internal static partial class Merger
 		denyRules = taskDenyRules.Result;
 		fileRules = taskFileRules.Result;
 		signerCollection = taskSignerRules.Result;
-
-		// Initialize temporary lists for output collections
-		// Their ref types are IEnumerable because of HashSets
-		List<CiSigner> tempCiSigners = [];
-		List<AllowedSigner> tempUserModeAllowed = [];
-		List<DeniedSigner> tempUserModeDenied = [];
-		List<AllowedSigner> tempKernelModeAllowed = [];
-		List<DeniedSigner> tempKernelModeDenied = [];
-
 
 		// Process AllowRules
 		//  - Add AllowElement to FileRulesNode
@@ -266,27 +257,27 @@ internal static partial class Merger
 			{
 				if (item.CiSignerElement is not null)
 				{
-					tempCiSigners.Add(item.CiSignerElement);
+					ciSigners.Add(item.CiSignerElement);
 				}
 
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempUserModeAllowed.Add(item.AllowedSignerElement);
+					userModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempUserModeDenied.Add(item.DeniedSignerElement);
+					userModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 			else // KernelMode
 			{
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+					kernelModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempKernelModeDenied.Add(item.DeniedSignerElement);
+					kernelModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 		}
@@ -311,27 +302,27 @@ internal static partial class Merger
 			{
 				if (item.CiSignerElement is not null)
 				{
-					tempCiSigners.Add(item.CiSignerElement);
+					ciSigners.Add(item.CiSignerElement);
 				}
 
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempUserModeAllowed.Add(item.AllowedSignerElement);
+					userModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempUserModeDenied.Add(item.DeniedSignerElement);
+					userModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 			else // KernelMode
 			{
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+					kernelModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempKernelModeDenied.Add(item.DeniedSignerElement);
+					kernelModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 		}
@@ -352,27 +343,27 @@ internal static partial class Merger
 			{
 				if (item.CiSignerElement is not null)
 				{
-					tempCiSigners.Add(item.CiSignerElement);
+					ciSigners.Add(item.CiSignerElement);
 				}
 
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempUserModeAllowed.Add(item.AllowedSignerElement);
+					userModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempUserModeDenied.Add(item.DeniedSignerElement);
+					userModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 			else // KernelMode
 			{
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+					kernelModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempKernelModeDenied.Add(item.DeniedSignerElement);
+					kernelModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 		}
@@ -389,27 +380,27 @@ internal static partial class Merger
 			{
 				if (item.CiSignerElement is not null)
 				{
-					tempCiSigners.Add(item.CiSignerElement);
+					ciSigners.Add(item.CiSignerElement);
 				}
 
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempUserModeAllowed.Add(item.AllowedSignerElement);
+					userModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempUserModeDenied.Add(item.DeniedSignerElement);
+					userModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 			else // KernelMode
 			{
 				if (item.Auth is Authorization.Allow && item.AllowedSignerElement is not null)
 				{
-					tempKernelModeAllowed.Add(item.AllowedSignerElement);
+					kernelModeAllowedSigners.Add(item.AllowedSignerElement);
 				}
 				else if (item.Auth is Authorization.Deny && item.DeniedSignerElement is not null)
 				{
-					tempKernelModeDenied.Add(item.DeniedSignerElement);
+					kernelModeDeniedSigners.Add(item.DeniedSignerElement);
 				}
 			}
 		}
@@ -428,12 +419,14 @@ internal static partial class Merger
 			updatePolicySignersCol.Add(item.UpdatePolicySigner);
 		}
 
-		// Assign aggregated results to ref parameters
-		ciSigners = tempCiSigners;
-		userModeAllowedSigners = tempUserModeAllowed;
-		userModeDeniedSigners = tempUserModeDenied;
-		kernelModeAllowedSigners = tempKernelModeAllowed;
-		kernelModeDeniedSigners = tempKernelModeDenied;
+		FileAttribDeDuplication.EnsureUniqueFileAttributes(
+			ref fileRulesNode,
+			signers,
+			userModeAllowedSigners,
+			userModeDeniedSigners,
+			kernelModeAllowedSigners,
+			kernelModeDeniedSigners
+			);
 
 		#region AppID Tags
 

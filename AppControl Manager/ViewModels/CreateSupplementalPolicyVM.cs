@@ -330,7 +330,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Main button's event handler for files and folders Supplemental policy creation
 	/// </summary>
-	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => await CreateFilesAndFoldersSupplementalPolicyButton_Internal(sender);
+	private async Task CreateFilesAndFoldersSupplementalPolicyButton_Internal(object? sender)
 	{
 		_FilesAndFoldersSupplementalPolicyPath = null;
 
@@ -524,7 +525,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// Assign the created policy to the Sidebar
 				ViewModelProvider.MainWindowVM.AssignToSidebar(_FilesAndFoldersSupplementalPolicyPath);
 
-				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+				if (sender is not null)
+					MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -616,6 +618,51 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			string key = (string)((Button)sender).Tag;
 			LVController.SortByHeader(key, FilesAndFoldersScanResultsSearchTextBox);
+		}
+		finally
+		{
+			FilesAndFoldersElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Used by CLI operations.
+	/// </summary>
+	internal async Task OpenInCreateSupplementalPolicy_FilesAndFolders(string basePolicyPath, List<string> files, List<string> folders, string policyName, string outputPath)
+	{
+		try
+		{
+			FilesAndFoldersElementsAreEnabled = false;
+
+			filesAndFoldersFilePaths.Clear();
+			foreach (string item in CollectionsMarshal.AsSpan(files))
+			{
+				filesAndFoldersFilePaths.Add(item);
+			}
+
+			filesAndFoldersFolderPaths.Clear();
+			foreach (string item in CollectionsMarshal.AsSpan(folders))
+			{
+				filesAndFoldersFolderPaths.Add(item);
+			}
+
+			await Task.Run(() =>
+			{
+				SiPolicy.SiPolicy policyObj = Management.Initialize(basePolicyPath, null);
+
+				FilesAndFoldersBasePolicy = new(policyObj);
+			});
+
+			FilesAndFoldersSupplementalPolicyName = policyName;
+
+			await CreateFilesAndFoldersSupplementalPolicyButton_Internal(null);
+
+			if (_FilesAndFoldersSupplementalPolicyPath is not null)
+				Management.SavePolicyToFile(_FilesAndFoldersSupplementalPolicyPath.PolicyObj, outputPath);
+		}
+		catch (Exception ex)
+		{
+			FilesAndFoldersInfoBar.WriteError(ex);
 		}
 		finally
 		{

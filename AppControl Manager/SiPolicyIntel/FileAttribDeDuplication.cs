@@ -22,58 +22,66 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
-[Obsolete]
+/// <summary>
+/// When 2 different <see cref="FilePublisherSignerRule"/> or <see cref="WHQLFilePublisher"/> level <see cref="Signer"/>s reference the same <see cref="FileAttrib"/> (i.e., the certificate details are the same but the file's properties are different)
+/// And they are in different <see cref="SigningScenario"/> and/or one of them allows and the other denies, the <see cref="FileAttrib"/>s that they point to via <see cref="FileAttribRef"/>s MUST remain.
+/// However, if the <see cref="Signer"/>s belong to the same <see cref="SigningScenario"/> and/or they both allow or deny, both <see cref="Signer"/>s CAN reference the same <see cref="FileAttrib"/>.
+/// This kind of De-duplication is not necessary but if it is to be done, each <see cref="Signer"/> must have its context.
+/// Context: Whether signer is allowing or denying, or if it's <see cref="SSType.KernelMode"/> or <see cref="SSType.UserMode"/>.
+///
+/// So 1 <see cref="FileAttrib"/> is enough for a single file to refer to all of its <see cref="Signer"/>s that are in the same <see cref="SigningScenario"/> and <see cref="Authorization"/> section.
+/// The only time when 2 <see cref="FileAttrib"/> for the same file (with same details) need to exist is when the same file is referenced in different <see cref="SigningScenario"/>s and/or <see cref="Authorization"/> sections, and for each <see cref="SigningScenario"/>/<see cref="Authorization"/> section there needs to be a different <see cref="FileAttrib"/>.
+/// </summary>
 internal static class FileAttribDeDuplication
 {
-	[Obsolete]
-	internal static void EnsureUniqueFileAttributes(ref List<object> fileRulesNode, List<Signer> signers, IEnumerable<AllowedSigner> userModeAllowedSigners, IEnumerable<DeniedSigner> userModeDeniedSigners, IEnumerable<AllowedSigner> kernelModeAllowedSigners, IEnumerable<DeniedSigner> kernelModeDeniedSigners)
-	{
-		// Step 1: a list of file attributes in the <FileRules> node
-		List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList() ?? [];
 
-		// Step 2: Group duplicate FileAttribs using custom equality logic.
+	internal static void EnsureUniqueFileAttributes(ref List<object> fileRulesNode, List<Signer> signers, List<AllowedSigner> userModeAllowedSigners, List<DeniedSigner> userModeDeniedSigners, List<AllowedSigner> kernelModeAllowedSigners, List<DeniedSigner> kernelModeDeniedSigners)
+	{
+		// Step 1: Group duplicate FileAttribs using custom equality logic.
 
 		// Each group contains FileAttribs that are considered duplicates based on our custom rules.
 		List<List<FileAttrib>> duplicateGroups = [];
-
-		foreach (FileAttrib fileAttrib in CollectionsMarshal.AsSpan(fileAttribs))
+		foreach (object item in CollectionsMarshal.AsSpan(fileRulesNode))
 		{
-			bool addedToGroup = false;
-			foreach (List<FileAttrib> group in CollectionsMarshal.AsSpan(duplicateGroups))
+			if (item is FileAttrib fileAttrib)
 			{
-				// Use the first element of the group as the representative.
-				FileAttrib group0 = group[0];
-
-				if (Merger.CompareCommonRuleProperties(
-					null, null,
-					null, null,
-					group0.PackageFamilyName, fileAttrib.PackageFamilyName,
-					group0.Hash, fileAttrib.Hash,
-					group0.FilePath, fileAttrib.FilePath,
-					group0.FileName, fileAttrib.FileName,
-					group0.MinimumFileVersion, fileAttrib.MinimumFileVersion,
-					group0.MaximumFileVersion, fileAttrib.MaximumFileVersion,
-					group0.InternalName, fileAttrib.InternalName,
-					group0.FileDescription, fileAttrib.FileDescription,
-					group0.ProductName, fileAttrib.ProductName))
+				bool addedToGroup = false;
+				foreach (List<FileAttrib> group in CollectionsMarshal.AsSpan(duplicateGroups))
 				{
-					group.Add(fileAttrib);
-					addedToGroup = true;
-					break;
+					// Use the first element of the group as the representative.
+					FileAttrib group0 = group[0];
+
+					if (Merger.CompareCommonRuleProperties(
+						null, null,
+						null, null,
+						group0.PackageFamilyName, fileAttrib.PackageFamilyName,
+						group0.Hash, fileAttrib.Hash,
+						group0.FilePath, fileAttrib.FilePath,
+						group0.FileName, fileAttrib.FileName,
+						group0.MinimumFileVersion, fileAttrib.MinimumFileVersion,
+						group0.MaximumFileVersion, fileAttrib.MaximumFileVersion,
+						group0.InternalName, fileAttrib.InternalName,
+						group0.FileDescription, fileAttrib.FileDescription,
+						group0.ProductName, fileAttrib.ProductName))
+					{
+						group.Add(fileAttrib);
+						addedToGroup = true;
+						break;
+					}
 				}
-			}
-			if (!addedToGroup)
-			{
-				// Start a new group for a fileAttrib that doesn't match any existing group.
-				duplicateGroups.Add([fileAttrib]);
+				if (!addedToGroup)
+				{
+					// Start a new group for a fileAttrib that doesn't match any existing group.
+					duplicateGroups.Add([fileAttrib]);
+				}
 			}
 		}
 
 
-		// Step 3: Build a dictionary of all Signers.
+		// Step 2: Build a dictionary of all Signers.
 
 		// This dictionary indexes Signer objects by their ID for later lookup.
-		Dictionary<string, Signer> signerDictionary = [];
+		Dictionary<string, Signer> signerDictionary = new(signers.Count, StringComparer.OrdinalIgnoreCase);
 		foreach (Signer signer in CollectionsMarshal.AsSpan(signers))
 		{
 			if (!signerDictionary.TryAdd(signer.ID, signer))
@@ -83,18 +91,18 @@ internal static class FileAttribDeDuplication
 		}
 
 
-		// Step 4: Partition signers into four dictionaries based on their mode and type.
+		// Step 3: Partition signers into four dictionaries based on their mode and type.
 
 		// We create four dictionaries: Allowed and Denied for User Mode and Kernel Mode.
-		Dictionary<string, Signer> allowedSignerUMCIDictionary = [];
-		Dictionary<string, Signer> deniedSignerUMCIDictionary = [];
-		Dictionary<string, Signer> allowedSignerKMCIDictionary = [];
-		Dictionary<string, Signer> deniedSignerKMCIDictionary = [];
+		Dictionary<string, Signer> allowedSignerUMCIDictionary = new(userModeAllowedSigners.Count, StringComparer.OrdinalIgnoreCase);
+		Dictionary<string, Signer> allowedSignerKMCIDictionary = new(kernelModeAllowedSigners.Count, StringComparer.OrdinalIgnoreCase);
+		Dictionary<string, Signer> deniedSignerUMCIDictionary = new(userModeDeniedSigners.Count, StringComparer.OrdinalIgnoreCase);
+		Dictionary<string, Signer> deniedSignerKMCIDictionary = new(kernelModeDeniedSigners.Count, StringComparer.OrdinalIgnoreCase);
 
 		// Process each SigningScenario from the policy.
 
 		// For each User-Mode allowed signer, add it to the corresponding dictionary
-		foreach (AllowedSigner item in userModeAllowedSigners)
+		foreach (AllowedSigner item in CollectionsMarshal.AsSpan(userModeAllowedSigners))
 		{
 			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
 			{
@@ -103,7 +111,7 @@ internal static class FileAttribDeDuplication
 		}
 
 		// For each Kernel-Mode allowed signer, add it to the corresponding dictionary
-		foreach (AllowedSigner item in kernelModeAllowedSigners)
+		foreach (AllowedSigner item in CollectionsMarshal.AsSpan(kernelModeAllowedSigners))
 		{
 			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
 			{
@@ -112,7 +120,7 @@ internal static class FileAttribDeDuplication
 		}
 
 		// For each User-Mode denied signer, add it to the corresponding dictionary
-		foreach (DeniedSigner item in userModeDeniedSigners)
+		foreach (DeniedSigner item in CollectionsMarshal.AsSpan(userModeDeniedSigners))
 		{
 			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
 			{
@@ -121,7 +129,7 @@ internal static class FileAttribDeDuplication
 		}
 
 		// For each Kernel-Mode denied signer, add it to the corresponding dictionary
-		foreach (DeniedSigner item in kernelModeDeniedSigners)
+		foreach (DeniedSigner item in CollectionsMarshal.AsSpan(kernelModeDeniedSigners))
 		{
 			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
 			{
@@ -130,10 +138,10 @@ internal static class FileAttribDeDuplication
 		}
 
 
-		// Step 5: Process duplicate groups to update FileAttribRefs and mark duplicates.
+		// Step 4: Process duplicate groups to update FileAttribRefs and mark duplicates.
 
 		// We keep track of FileAttrib IDs that must be removed from FileRules.
-		HashSet<string> fileAttribIdsToRemove = [];
+		HashSet<string> fileAttribIdsToRemove = new(StringComparer.Ordinal);
 		foreach (List<FileAttrib> group in CollectionsMarshal.AsSpan(duplicateGroups))
 		{
 			// Only groups with more than one FileAttrib need deduplication.
@@ -150,14 +158,11 @@ internal static class FileAttribDeDuplication
 		}
 
 
-		// Step 6: Update the FileRules collection to remove duplicate FileAttrib objects.
-		List<object> fileRulesItems = [.. fileRulesNode];
-		_ = fileRulesItems.RemoveAll(item => item is FileAttrib fa && fileAttribIdsToRemove.Contains(fa.ID));
-		fileRulesNode = fileRulesItems.ToList();
+		// Step 5: Update the FileRules collection to remove duplicate FileAttrib objects.
+		_ = fileRulesNode.RemoveAll(item => item is FileAttrib fa && fileAttribIdsToRemove.Contains(fa.ID));
 
 
-		// Step 7: Post-process each signer to deduplicate FileAttribRef arrays.
-
+		// Step 6: Post-process each signer to deduplicate FileAttribRef arrays.
 
 		/*
 			Why Duplicates Can Occur:
@@ -193,36 +198,36 @@ internal static class FileAttribDeDuplication
 	}
 
 	/// <summary>
-	/// For a group of duplicate FileAttribs, this method deduplicates them within the same signer dictionary.
-	/// It updates FileAttribRefs by swapping the RuleID from the duplicate to the one kept.
-	/// Only duplicates that are referenced exclusively from a single dictionary (usage key without a comma) are deduplicated.
+	/// For a group of duplicate <see cref="FileAttrib"/>s, this method deduplicates them within the same <see cref="Signer"/> dictionary.
+	/// It updates <see cref="FileAttribRef"/>s by swapping the <see cref="FileAttribRef.RuleID"/> from the duplicate to the one kept.
+	/// Only duplicates that are referenced exclusively from a <see cref="Signer"/> dictionary (usage key without a comma) are deduplicated.
 	/// </summary>
 	private static void ProcessDuplicateGroup(List<FileAttrib> group, Dictionary<string, Signer> allowedSignerUMCIDictionary, Dictionary<string, Signer> deniedSignerUMCIDictionary, Dictionary<string, Signer> allowedSignerKMCIDictionary, Dictionary<string, Signer> deniedSignerKMCIDictionary, HashSet<string> fileAttribIdsToRemove)
 	{
 		// Create a mapping of each FileAttrib to the set of signer dictionary keys in which it is referenced.
 		// The keys can be: "allowedUMCI", "deniedUMCI", "allowedKMCI", "deniedKMCI".
-		Dictionary<FileAttrib, HashSet<string>> usage = [];
+		Dictionary<FileAttrib, HashSet<string>> usage = new(group.Count);
 		foreach (FileAttrib fa in CollectionsMarshal.AsSpan(group))
 		{
-			HashSet<string> dicts = [];
+			HashSet<string> dicts = new(2, StringComparer.OrdinalIgnoreCase); // Average capacity initially
 
 			// Check if any signer in Allowed User Mode references this FileAttrib.
-			if (allowedSignerUMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => r.RuleID == fa.ID)))
+			if (allowedSignerUMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => string.Equals(r.RuleID, fa.ID, StringComparison.OrdinalIgnoreCase))))
 			{
 				_ = dicts.Add("allowedUMCI");
 			}
 			// Check if any signer in Denied User Mode references this FileAttrib.
-			if (deniedSignerUMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => r.RuleID == fa.ID)))
+			if (deniedSignerUMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => string.Equals(r.RuleID, fa.ID, StringComparison.OrdinalIgnoreCase))))
 			{
 				_ = dicts.Add("deniedUMCI");
 			}
 			// Check if any signer in Allowed Kernel Mode references this FileAttrib.
-			if (allowedSignerKMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => r.RuleID == fa.ID)))
+			if (allowedSignerKMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => string.Equals(r.RuleID, fa.ID, StringComparison.OrdinalIgnoreCase))))
 			{
 				_ = dicts.Add("allowedKMCI");
 			}
 			// Check if any signer in Denied Kernel Mode references this FileAttrib.
-			if (deniedSignerKMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => r.RuleID == fa.ID)))
+			if (deniedSignerKMCIDictionary.Values.Any(signer => signer.FileAttribRef is not null && signer.FileAttribRef.Any(r => string.Equals(r.RuleID, fa.ID, StringComparison.OrdinalIgnoreCase))))
 			{
 				_ = dicts.Add("deniedKMCI");
 			}
@@ -232,19 +237,17 @@ internal static class FileAttribDeDuplication
 		// Partition the FileAttribs by their usage keys.
 		// The key is a comma-separated string representing the set of dictionaries in which the FileAttrib is referenced.
 		// The keys can be: "allowedUMCI", "deniedUMCI", "allowedKMCI", "deniedKMCI".
-		Dictionary<string, List<FileAttrib>> partitions = [];
+		Dictionary<string, List<FileAttrib>> partitions = new(usage.Count);
 		foreach (KeyValuePair<FileAttrib, HashSet<string>> kvp in usage)
 		{
-			FileAttrib fa = kvp.Key;
-			HashSet<string> dictSet = kvp.Value;
-			string key = string.Join(",", dictSet.OrderBy(s => s)); // Sorting ensures consistent key ordering.
+			string key = string.Join(",", kvp.Value.OrderBy(s => s)); // Sorting ensures consistent key ordering.
 			if (!partitions.TryGetValue(key, out List<FileAttrib>? value))
 			{
 				value = [];
 				partitions[key] = value;
 			}
 
-			value.Add(fa);
+			value.Add(kvp.Key);
 		}
 
 		// Process each partition. Only partitions that refer to a single dictionary (no comma in key) are eligible.
@@ -312,7 +315,7 @@ internal static class FileAttribDeDuplication
 								// Update each FileAttribRef that references the duplicate by swapping its RuleID.
 								foreach (FileAttribRef fileAttribRef in CollectionsMarshal.AsSpan(signer.FileAttribRef))
 								{
-									if (fileAttribRef.RuleID == duplicate.ID)
+									if (string.Equals(fileAttribRef.RuleID, duplicate.ID, StringComparison.OrdinalIgnoreCase))
 									{
 										fileAttribRef.RuleID = kept.ID;
 									}

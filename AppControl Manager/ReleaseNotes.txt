@@ -3,3 +3,5 @@
 * In the Policy Creation page, the Policy ID and Base Policy ID of the following special policies are now uniquely generated every time you create any of them, making the behavior consistent with the rest of the policies in the page: "Remote Monitoring and Management Blocking", "Dangerous Script Hosts Blocking", "Downloads Defense Measures". This completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1088
 
 * Updated dependencies to the latest versions.
+
+* Improved policy creation performance.

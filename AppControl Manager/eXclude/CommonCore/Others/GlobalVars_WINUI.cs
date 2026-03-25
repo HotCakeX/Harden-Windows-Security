@@ -133,10 +133,12 @@ internal static partial class GlobalVars
 	/// </summary>
 	internal static AppSettings.Main Settings => _appSettings.Value;
 
+#pragma warning disable IDE0370
 	/// <summary>
 	/// Global dispatcher queue for the application that can be accessed from anywhere.
 	/// </summary>
 	internal static DispatcherQueue AppDispatcher { get; set; } = null!;
+#pragma warning restore IDE0370
 
 	/// <summary>
 	/// Convert it to a normal Version object

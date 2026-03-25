@@ -135,7 +135,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal readonly ListViewIncrementalController LVController;
 
 	// A Progress<double> so Report() callbacks run on the UI thread
-	private IProgress<double> FilesAndFoldersProgressRingValueProgress;
+	private readonly IProgress<double> FilesAndFoldersProgressRingValueProgress;
 	internal double FilesAndFoldersProgressRingValue { get; set => SP(ref field, value); }
 
 	/// <summary>
@@ -1158,7 +1158,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	#region Strict Kernel-Mode Supplemental Policy
 
 	// A Progress<double> so Report() callbacks run on the UI thread
-	private IProgress<double> DriverAutoDetectionProgressRingValueProgress;
+	private readonly IProgress<double> DriverAutoDetectionProgressRingValueProgress;
 	internal double DriverAutoDetectionProgressRingValue { get; set => SP(ref field, value); }
 
 	/// <summary>

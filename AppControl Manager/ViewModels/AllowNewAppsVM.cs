@@ -819,7 +819,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal double Step2ProgressRingValue { get; set => SP(ref field, value); }
 
 	// A Progress<double> so Report() callbacks run on the UI thread
-	private IProgress<double> Step2ProgressRingProgress;
+	private readonly IProgress<double> Step2ProgressRingProgress;
 
 	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
 

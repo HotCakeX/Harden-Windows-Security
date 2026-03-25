@@ -110,7 +110,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
 	// a Progress<double> so Report() callbacks run on the UI thread
-	private IProgress<double> ProgressRingValueProgress;
+	private readonly IProgress<double> ProgressRingValueProgress;
 
 	/// <summary>
 	/// Value of the UI Progress Ring.

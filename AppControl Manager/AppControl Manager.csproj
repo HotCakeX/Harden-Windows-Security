@@ -21,7 +21,7 @@
         By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especailly the perview versions.
         If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
         -->
-		<WindowsSdkPackageVersion>10.0.26100.85-preview</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.84</WindowsSdkPackageVersion>
 
 		<!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -202,7 +202,7 @@
 		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.83.1" />
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.83.1" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.5" />
 		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.5" />
 
@@ -218,17 +218,17 @@
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
 		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.3" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.47" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.53" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25122902" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260203002" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260222000" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.260125001" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.260209005" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.260317003" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.251231004" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260204000" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2124" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260224000" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2141" />
 		<PackageReference Include="System.Numerics.Tensors" Version="10.0.5" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.251221100">
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260316102">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

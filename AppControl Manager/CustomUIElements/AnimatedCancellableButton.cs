@@ -464,7 +464,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	private AttachedCardShadow? CreateShadow() => new AttachedCardShadow
+	private AttachedCardShadow? CreateShadow() => new()
 	{
 		Color = GetCurrentShadowColor(),
 		Offset = ZeroOffsetString,

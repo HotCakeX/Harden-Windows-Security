@@ -5,3 +5,5 @@
 * Updated dependencies to the latest versions.
 
 * Improved policy creation performance.
+
+* In Deny and Supplemental policy creation pages, assigning policies from Sidebar to the page adjusts the creation mode for you, completes this feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1097

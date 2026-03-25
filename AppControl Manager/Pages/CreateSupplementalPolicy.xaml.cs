@@ -74,6 +74,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.FilesAndFoldersBasePolicy = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 0;
 		}
 	}
 
@@ -88,6 +90,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.CertificatesBasedBasePolicy = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 0;
 		}
 	}
 
@@ -101,6 +105,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.ISGBasedBasePolicy = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 0;
 		}
 	}
 
@@ -114,6 +120,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.StrictKernelModeBasePolicy = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 0;
 		}
 	}
 
@@ -127,6 +135,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.PFNBasePolicy = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 0;
 		}
 	}
 
@@ -140,6 +150,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.CustomPatternBasedFileRuleBasedBasePolicy = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 0;
 		}
 	}
 
@@ -150,6 +162,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.PolicyFileToMergeWith = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 1;
 		}
 	}
 

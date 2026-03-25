@@ -58,6 +58,8 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 		if (param is PolicyFileRepresent policy)
 		{
 			ViewModel.PolicyFileToMergeWith = policy;
+
+			ViewModel.OperationModeComboBoxSelectedIndex = 1;
 		}
 	}
 

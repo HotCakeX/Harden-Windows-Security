@@ -161,8 +161,4 @@ internal static partial class GlobalVars
 	internal static readonly string LogsDirectory = Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
 #endif
 
-	// To track the currently open Content Dialog across the app. Every piece of code that tries to display a content dialog, whether custom or generic, must assign it first
-	// to this variable before using ShowAsync() method to display it.
-	internal static ContentDialog? CurrentlyOpenContentDialog;
-
 }

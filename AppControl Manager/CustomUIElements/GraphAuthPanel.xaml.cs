@@ -32,7 +32,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 		get => (IGraphAuthHost)GetValue(HostProperty); set => SetValue(HostProperty, value);
 	}
 
-	internal static readonly DependencyProperty HostProperty =
+	private static readonly DependencyProperty HostProperty =
 		DependencyProperty.Register(
 			nameof(Host),
 			typeof(IGraphAuthHost),

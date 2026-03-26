@@ -176,7 +176,6 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 			7 => KeyProtectorType.RecoveryPassword,
 			_ => throw new InvalidOperationException($"{SelectedKeyProtectorTypeIndex} is not a valid key protector to be added")
 		};
-
 	}
 
 

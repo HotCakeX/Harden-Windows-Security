@@ -2436,8 +2436,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		// Instantiate the Content Dialog
 		using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
 
-		GlobalVars.CurrentlyOpenContentDialog = customDialog;
-
 		// Show the dialog
 		_ = await customDialog.ShowAsync();
 	}

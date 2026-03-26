@@ -47,7 +47,7 @@ internal sealed partial class ButtonV2 : Button
 	};
 
 	// DP to observe either a string or a numeric count
-	internal static readonly DependencyProperty ObservedDataProperty =
+	private static readonly DependencyProperty ObservedDataProperty =
 		DependencyProperty.Register(
 			nameof(ObservedData),
 			typeof(object),

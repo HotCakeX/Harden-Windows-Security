@@ -43,7 +43,7 @@ internal sealed partial class ListViewV3 : ListView
 	/// A DP added to the ListView which is a type Enum, used to register it in the caches.
 	/// This property is exposed and is available in the XAML just like other native properties of the ListView.
 	/// </summary>
-	internal static readonly DependencyProperty RegistryKeyProperty =
+	private static readonly DependencyProperty RegistryKeyProperty =
 		DependencyProperty.Register(
 			name: nameof(RegistryKey),
 			propertyType: typeof(ListViewHelper.ListViewsRegistry),

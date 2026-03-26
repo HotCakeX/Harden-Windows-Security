@@ -75,29 +75,17 @@ internal sealed class FileIdentityComparer : IEqualityComparer<FileIdentity>
 	/// <returns>A hash code for the given FileIdentity instance.</returns>
 	public int GetHashCode(FileIdentity? obj)
 	{
-		// Return a default hash code (0) if obj is null to avoid exceptions
 		if (obj is null) return 0;
 
-		// Initialize a hash variable
-		int hash = 17;
+		HashCode hash = new();
 
-		// Combine hash codes of the specified properties using a common technique
+		hash.Add(obj.SHA256Hash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(obj.SHA256FlatHash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(obj.ProductName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(obj.InternalName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(obj.OriginalFileName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(obj.FileDescription, StringComparer.OrdinalIgnoreCase);
 
-		// unchecked allows overflow but does not decrease accuracy of the HashSet
-		// When implementing GetHashCode, the important aspect is that the same input will always yield the same output.
-		// Even if that output results in a wrapped value due to overflow, it will consistently represent that specific object.
-
-		unchecked
-		{
-			hash = hash * 31 + (obj.SHA256Hash?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0);
-			hash = hash * 31 + (obj.SHA256FlatHash?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0);
-			hash = hash * 31 + (obj.ProductName?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0);
-			hash = hash * 31 + (obj.InternalName?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0);
-			hash = hash * 31 + (obj.OriginalFileName?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0);
-			hash = hash * 31 + (obj.FileDescription?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0);
-		}
-
-		// Return the computed hash code
-		return hash;
+		return hash.ToHashCode();
 	}
 }

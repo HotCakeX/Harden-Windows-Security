@@ -1151,8 +1151,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			// Instantiate the Content Dialog
 			using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
 
-			GlobalVars.CurrentlyOpenContentDialog = customDialog;
-
 			// Show the dialog
 			_ = await customDialog.ShowAsync();
 		}

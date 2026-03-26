@@ -984,6 +984,7 @@
                     <Frame x:Name="ContentFrame"
                            Margin="15,10,15,10"
                            Grid.Row="2"
+                           Navigated="{x:Bind Nav.UpdateHeaderFromCurrentPage}"
                            AutomationProperties.LandmarkType="Main" />
 
                 </Grid>

@@ -55,7 +55,7 @@ internal sealed partial class AnimatedImage : UserControl
 {
 	private AnimationSet? selectAnimation;
 
-	public static readonly DependencyProperty ImageUrlProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty ImageUrlProperty = DependencyProperty.Register(
 		nameof(ImageUrl),
 		typeof(Uri),
 		typeof(AnimatedImage),

@@ -170,7 +170,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	// We can override these defaults in XAML.
 
 	// Default: FadeAndScale animation type
-	internal static readonly DependencyProperty AnimationTypeProperty =
+	private static readonly DependencyProperty AnimationTypeProperty =
 		DependencyProperty.Register(
 			nameof(AnimationType),
 			typeof(InfoBarAnimationType),
@@ -178,7 +178,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(InfoBarAnimationType.FadeAndScale, OnAnimationTypeChanged)); // DEFAULT: FadeAndScale
 
 	// Default: 300ms animation duration
-	internal static readonly DependencyProperty AnimationDurationProperty =
+	private static readonly DependencyProperty AnimationDurationProperty =
 		DependencyProperty.Register(
 			nameof(AnimationDuration),
 			typeof(TimeSpan),
@@ -186,7 +186,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(300), OnAnimationDurationChanged)); // DEFAULT: 300ms
 
 	// Default: True - easing enabled
-	internal static readonly DependencyProperty UseEasingProperty =
+	private static readonly DependencyProperty UseEasingProperty =
 		DependencyProperty.Register(
 			nameof(UseEasing),
 			typeof(bool),
@@ -194,7 +194,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(true, OnUseEasingChanged)); // DEFAULT: True
 
 	// Default: CubicEase with EaseOut mode
-	internal static readonly DependencyProperty EasingFunctionProperty =
+	private static readonly DependencyProperty EasingFunctionProperty =
 		DependencyProperty.Register(
 			nameof(EasingFunction),
 			typeof(EasingFunctionBase),
@@ -202,7 +202,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(new CubicEase { EasingMode = EasingMode.EaseOut }, OnEasingFunctionChanged)); // DEFAULT: CubicEase EaseOut
 
 	// Default: 100.0 pixel slide distance
-	internal static readonly DependencyProperty SlideDistanceProperty =
+	private static readonly DependencyProperty SlideDistanceProperty =
 		DependencyProperty.Register(
 			nameof(SlideDistance),
 			typeof(double),
@@ -210,7 +210,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(100.0, OnSlideDistanceChanged)); // DEFAULT: 100.0
 
 	// Default: 0.85 scale from value
-	internal static readonly DependencyProperty ScaleFromProperty =
+	private static readonly DependencyProperty ScaleFromProperty =
 		DependencyProperty.Register(
 			nameof(ScaleFrom),
 			typeof(double),
@@ -218,7 +218,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(0.85, OnScaleFromChanged)); // DEFAULT: 0.85
 
 	// Default: 1.0 scale to value (normal size)
-	internal static readonly DependencyProperty ScaleToProperty =
+	private static readonly DependencyProperty ScaleToProperty =
 		DependencyProperty.Register(
 			nameof(ScaleTo),
 			typeof(double),
@@ -226,7 +226,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(1.0, OnScaleToChanged)); // DEFAULT: 1.0
 
 	// Default: True - animations enabled
-	internal static readonly DependencyProperty EnableAnimationProperty =
+	private static readonly DependencyProperty EnableAnimationProperty =
 		DependencyProperty.Register(
 			nameof(EnableAnimation),
 			typeof(bool),
@@ -234,7 +234,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(true, OnEnableAnimationChanged)); // DEFAULT: True
 
 	// Default: Zero delay before animation starts
-	internal static readonly DependencyProperty AnimationDelayProperty =
+	private static readonly DependencyProperty AnimationDelayProperty =
 		DependencyProperty.Register(
 			nameof(AnimationDelay),
 			typeof(TimeSpan),
@@ -242,7 +242,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.Zero, OnAnimationDelayChanged)); // DEFAULT: 0ms
 
 	// Default: 250ms fade in duration (0.25 seconds)
-	internal static readonly DependencyProperty FadeInDurationProperty =
+	private static readonly DependencyProperty FadeInDurationProperty =
 		DependencyProperty.Register(
 			nameof(FadeInDuration),
 			typeof(TimeSpan),
@@ -250,7 +250,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(250), OnFadeInDurationChanged)); // DEFAULT: 250ms (0.25s)
 
 	// Default: 400ms fade out duration (0.4 seconds)
-	internal static readonly DependencyProperty FadeOutDurationProperty =
+	private static readonly DependencyProperty FadeOutDurationProperty =
 		DependencyProperty.Register(
 			nameof(FadeOutDuration),
 			typeof(TimeSpan),
@@ -258,7 +258,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(400), OnFadeOutDurationChanged)); // DEFAULT: 400ms (0.4s)
 
 	// Default: 300ms scale in duration (0.3 seconds)
-	internal static readonly DependencyProperty ScaleInDurationProperty =
+	private static readonly DependencyProperty ScaleInDurationProperty =
 		DependencyProperty.Register(
 			nameof(ScaleInDuration),
 			typeof(TimeSpan),
@@ -266,7 +266,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(300), OnScaleInDurationChanged)); // DEFAULT: 300ms (0.3s)
 
 	// Default: 450ms scale out duration (0.45 seconds)
-	internal static readonly DependencyProperty ScaleOutDurationProperty =
+	private static readonly DependencyProperty ScaleOutDurationProperty =
 		DependencyProperty.Register(
 			nameof(ScaleOutDuration),
 			typeof(TimeSpan),
@@ -274,7 +274,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(450), OnScaleOutDurationChanged)); // DEFAULT: 450ms (0.45s)
 
 	// Default: True - intercept close button clicks for animation
-	internal static readonly DependencyProperty InterceptCloseButtonProperty =
+	private static readonly DependencyProperty InterceptCloseButtonProperty =
 		DependencyProperty.Register(
 			nameof(InterceptCloseButton),
 			typeof(bool),
@@ -282,7 +282,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(true)); // DEFAULT: True
 
 	// Default: True - force close animation even for programmatic closes
-	internal static readonly DependencyProperty ForceCloseAnimationProperty =
+	private static readonly DependencyProperty ForceCloseAnimationProperty =
 		DependencyProperty.Register(
 			nameof(ForceCloseAnimation),
 			typeof(bool),

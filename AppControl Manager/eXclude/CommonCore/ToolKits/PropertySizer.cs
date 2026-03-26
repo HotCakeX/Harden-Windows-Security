@@ -37,7 +37,7 @@ internal sealed partial class PropertySizer : SizerBase
 		VerticalAlignment = VerticalAlignment.Stretch;
 	}
 
-	public static readonly DependencyProperty BindingProperty =
+	internal static readonly DependencyProperty BindingProperty =
 		DependencyProperty.Register(nameof(Binding), typeof(double), typeof(PropertySizer), new PropertyMetadata(0d));
 
 	public double Binding
@@ -46,7 +46,7 @@ internal sealed partial class PropertySizer : SizerBase
 		set => SetValue(BindingProperty, value);
 	}
 
-	public static readonly DependencyProperty MinimumProperty =
+	private static readonly DependencyProperty MinimumProperty =
 		DependencyProperty.Register(nameof(Minimum), typeof(double), typeof(PropertySizer), new PropertyMetadata(0d));
 
 	public double Minimum
@@ -55,7 +55,7 @@ internal sealed partial class PropertySizer : SizerBase
 		set => SetValue(MinimumProperty, value);
 	}
 
-	public static readonly DependencyProperty MaximumProperty =
+	private static readonly DependencyProperty MaximumProperty =
 		DependencyProperty.Register(nameof(Maximum), typeof(double), typeof(PropertySizer), new PropertyMetadata(0d));
 
 	public double Maximum
@@ -64,7 +64,7 @@ internal sealed partial class PropertySizer : SizerBase
 		set => SetValue(MaximumProperty, value);
 	}
 
-	public static readonly DependencyProperty IsDragInvertedProperty =
+	private static readonly DependencyProperty IsDragInvertedProperty =
 		DependencyProperty.Register(nameof(IsDragInverted), typeof(bool), typeof(PropertySizer), new PropertyMetadata(false));
 
 	public bool IsDragInverted

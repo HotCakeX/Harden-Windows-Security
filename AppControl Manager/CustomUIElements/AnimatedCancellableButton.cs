@@ -82,7 +82,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 
 	internal new event RoutedEventHandler? Click;
 
-	internal static readonly DependencyProperty CancelMethodProperty =
+	private static readonly DependencyProperty CancelMethodProperty =
 		DependencyProperty.Register(
 			nameof(CancelMethod),
 			typeof(Func<Task>),
@@ -95,7 +95,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		set => SetValue(CancelMethodProperty, value);
 	}
 
-	internal static readonly DependencyProperty ExternalOperationInProgressProperty =
+	private static readonly DependencyProperty ExternalOperationInProgressProperty =
 		DependencyProperty.Register(
 			nameof(ExternalOperationInProgress),
 			typeof(bool),
@@ -124,7 +124,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalIsCancelStateProperty =
+	private static readonly DependencyProperty ExternalIsCancelStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalIsCancelState),
 			typeof(bool),
@@ -145,7 +145,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalIsCancellingStateProperty =
+	private static readonly DependencyProperty ExternalIsCancellingStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalIsCancellingState),
 			typeof(bool),
@@ -166,7 +166,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalIsAnimatingProperty =
+	private static readonly DependencyProperty ExternalIsAnimatingProperty =
 		DependencyProperty.Register(
 			nameof(ExternalIsAnimating),
 			typeof(bool),
@@ -187,7 +187,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalButtonContentProperty =
+	private static readonly DependencyProperty ExternalButtonContentProperty =
 		DependencyProperty.Register(
 			nameof(ExternalButtonContent),
 			typeof(string),
@@ -213,7 +213,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalOriginalTextProperty =
+	private static readonly DependencyProperty ExternalOriginalTextProperty =
 		DependencyProperty.Register(
 			nameof(ExternalOriginalText),
 			typeof(string),
@@ -234,7 +234,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalInternalIsCancelStateProperty =
+	private static readonly DependencyProperty ExternalInternalIsCancelStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsCancelState),
 			typeof(bool),
@@ -255,7 +255,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalInternalIsCancellingStateProperty =
+	private static readonly DependencyProperty ExternalInternalIsCancellingStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsCancellingState),
 			typeof(bool),
@@ -276,7 +276,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalInternalIsAnimatingProperty =
+	private static readonly DependencyProperty ExternalInternalIsAnimatingProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsAnimating),
 			typeof(bool),
@@ -297,7 +297,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalInternalIsOperationInProgressProperty =
+	private static readonly DependencyProperty ExternalInternalIsOperationInProgressProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsOperationInProgress),
 			typeof(bool),
@@ -318,7 +318,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalInternalSuppressExternalClickProperty =
+	private static readonly DependencyProperty ExternalInternalSuppressExternalClickProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalSuppressExternalClick),
 			typeof(bool),
@@ -339,7 +339,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalShadowAnimationRunningProperty =
+	private static readonly DependencyProperty ExternalShadowAnimationRunningProperty =
 		DependencyProperty.Register(
 			nameof(ExternalShadowAnimationRunning),
 			typeof(bool),
@@ -372,7 +372,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	internal static readonly DependencyProperty ExternalOperationStartedProperty =
+	private static readonly DependencyProperty ExternalOperationStartedProperty =
 		DependencyProperty.Register(
 			nameof(ExternalOperationStarted),
 			typeof(bool),
@@ -395,7 +395,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	}
 
 	// Allows opting out of automatic disposal on Unloaded (default false).
-	internal static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
+	private static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
 		DependencyProperty.Register(
 			nameof(DisposeOnlyOnExplicitCall),
 			typeof(bool),
@@ -1092,47 +1092,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 		catch (Exception)
 		{ }
-	}
-
-	internal bool IsCancelState => !_isDisposed && !_isDisposing && ExternalInternalIsCancelState;
-
-	internal bool IsCancellingState => !_isDisposed && !_isDisposing && ExternalInternalIsCancellingState;
-
-	internal bool IsOperationInProgress => !_isDisposed && !_isDisposing && ExternalInternalIsOperationInProgress;
-
-	internal bool IsSuppressingExternalClick => !_isDisposed && !_isDisposing && ExternalInternalSuppressExternalClick;
-
-	internal bool IsShadowAnimationRunning => !_isDisposed && !_isDisposing && _isShadowAnimationRunning;
-
-	internal int CurrentShadowColorIndex => _isDisposed || _isDisposing ? 0 : _currentColorIndex;
-
-	internal bool IsInColorTransition => !_isDisposed && !_isDisposing && _inColorTransition;
-
-	internal double ColorTransitionProgress => (_isDisposed || _isDisposing || !_inColorTransition) ? 0.0 : (double)_colorTransitionCounter / COLOR_TRANSITION_DURATION;
-
-	internal double AnimationDurationMilliseconds
-	{
-		get => _isDisposed || _isDisposing ? 150.0 : _fadeOutAnimation.Duration.TimeSpan.TotalMilliseconds;
-		set
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			Duration duration = new(TimeSpan.FromMilliseconds(Math.Max(50, value)));
-			_fadeOutAnimation.Duration = duration;
-			_fadeInAnimation.Duration = duration;
-		}
-	}
-
-	internal double ShadowAnimationDurationMilliseconds
-	{
-		get => _isDisposed || _isDisposing ? 50.0 : _shadowTimer?.Interval.TotalMilliseconds ?? 50.0;
-		set
-		{
-			if (!_isDisposed && !_isDisposing && _shadowTimer is not null)
-			{
-				_shadowTimer.Interval = TimeSpan.FromMilliseconds(Math.Max(10, value));
-			}
-		}
 	}
 
 	protected override void OnApplyTemplate()

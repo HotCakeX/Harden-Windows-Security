@@ -228,7 +228,7 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.251219" />
-		<PackageReference Include="CommunityToolkit.Common" Version="8.4.1" />
+		<PackageReference Include="CommunityToolkit.Common" Version="8.4.2" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.17.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />

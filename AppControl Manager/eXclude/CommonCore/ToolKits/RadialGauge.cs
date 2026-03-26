@@ -208,52 +208,52 @@ internal sealed partial class RadialGauge : UserControl
 		UpdateVisuals(); // Ensure visuals are calculated immediately
 	}
 
-	public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
 		nameof(Minimum), typeof(double), typeof(RadialGauge), new PropertyMetadata(0.0, OnRangeChanged));
 
-	public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
 		nameof(Maximum), typeof(double), typeof(RadialGauge), new PropertyMetadata(100.0, OnRangeChanged));
 
-	public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+	internal static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
 		nameof(Value), typeof(double), typeof(RadialGauge), new PropertyMetadata(0.0, OnValueChanged));
 
-	public static readonly DependencyProperty StepSizeProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty StepSizeProperty = DependencyProperty.Register(
 		nameof(StepSize), typeof(double), typeof(RadialGauge), new PropertyMetadata(1.0));
 
-	public static readonly DependencyProperty TickSpacingProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty TickSpacingProperty = DependencyProperty.Register(
 		nameof(TickSpacing), typeof(int), typeof(RadialGauge), new PropertyMetadata(10, OnAppearanceChanged));
 
-	public static readonly DependencyProperty ScaleWidthProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty ScaleWidthProperty = DependencyProperty.Register(
 		nameof(ScaleWidth), typeof(double), typeof(RadialGauge), new PropertyMetadata(12.0, OnAppearanceChanged));
 
-	public static readonly DependencyProperty ScalePaddingProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty ScalePaddingProperty = DependencyProperty.Register(
 		nameof(ScalePadding), typeof(double), typeof(RadialGauge), new PropertyMetadata(10.0, OnAppearanceChanged));
 
-	public static readonly DependencyProperty TickWidthProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty TickWidthProperty = DependencyProperty.Register(
 		nameof(TickWidth), typeof(double), typeof(RadialGauge), new PropertyMetadata(2.0, OnAppearanceChanged));
 
-	public static readonly DependencyProperty TickLengthProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty TickLengthProperty = DependencyProperty.Register(
 		nameof(TickLength), typeof(double), typeof(RadialGauge), new PropertyMetadata(6.0, OnAppearanceChanged));
 
-	public static readonly DependencyProperty TickPaddingProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty TickPaddingProperty = DependencyProperty.Register(
 		nameof(TickPadding), typeof(double), typeof(RadialGauge), new PropertyMetadata(20.0, OnAppearanceChanged));
 
-	public static readonly DependencyProperty ValueStringFormatProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty ValueStringFormatProperty = DependencyProperty.Register(
 		nameof(ValueStringFormat), typeof(string), typeof(RadialGauge), new PropertyMetadata("N0", OnValueChanged));
 
-	public static readonly DependencyProperty IsInteractiveProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty IsInteractiveProperty = DependencyProperty.Register(
 		nameof(IsInteractive), typeof(bool), typeof(RadialGauge), new PropertyMetadata(true));
 
-	public static readonly DependencyProperty UnitProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty UnitProperty = DependencyProperty.Register(
 		nameof(Unit), typeof(string), typeof(RadialGauge), new PropertyMetadata("Threads", OnUnitChanged));
 
-	public static readonly DependencyProperty ScaleBrushProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty ScaleBrushProperty = DependencyProperty.Register(
 		nameof(ScaleBrush), typeof(Brush), typeof(RadialGauge), new PropertyMetadata(null, OnAppearanceChanged));
 
-	public static readonly DependencyProperty MinAngleProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty MinAngleProperty = DependencyProperty.Register(
 		nameof(MinAngle), typeof(int), typeof(RadialGauge), new PropertyMetadata(-150, OnAngleChanged));
 
-	public static readonly DependencyProperty MaxAngleProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty MaxAngleProperty = DependencyProperty.Register(
 		nameof(MaxAngle), typeof(int), typeof(RadialGauge), new PropertyMetadata(150, OnAngleChanged));
 
 	public double Minimum

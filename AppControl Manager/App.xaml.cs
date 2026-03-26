@@ -254,14 +254,6 @@ public partial class App : Application
 				// Ensure we're on the UI thread before showing the dialog
 				await MainWindow.DispatcherQueue.EnqueueAsync(async () =>
 				{
-					// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error
-					if (GlobalVars.CurrentlyOpenContentDialog is ContentDialog dialog)
-					{
-						dialog.Hide();
-
-						// Remove it after hiding it
-						GlobalVars.CurrentlyOpenContentDialog = null;
-					}
 					using AppControlManager.CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
 						Title = GlobalVars.GetStr("ErrorDialogTitle"),
@@ -272,6 +264,10 @@ public partial class App : Application
 					// Show the dialog
 					_ = await errorDialog.ShowAsync();
 				});
+			}
+			catch
+			{
+				Logger.Write("Could not display the content dialog for error details!", LogTypeIntel.Error);
 			}
 			finally
 			{

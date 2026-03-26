@@ -493,13 +493,6 @@ internal sealed partial class MainWindow : Window
 
 		await DispatcherQueue.EnqueueAsync(async () =>
 		{
-			// If there is an existing content dialog open, close it
-			if (GlobalVars.CurrentlyOpenContentDialog is ContentDialog existingDialog)
-			{
-				existingDialog.Hide();
-				GlobalVars.CurrentlyOpenContentDialog = null;
-			}
-
 			using AppControlManager.CustomUIElements.ContentDialogV2 confirmCloseDialog = new()
 			{
 				Title = GlobalVars.GetStr("ConfirmExitTitle"),

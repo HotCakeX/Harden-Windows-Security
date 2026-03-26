@@ -59,7 +59,7 @@ internal sealed partial class TileGallery : UserControl
 		set => SetValue(SourceProperty, value);
 	}
 
-	public static readonly DependencyProperty SourceProperty =
+	private static readonly DependencyProperty SourceProperty =
 		DependencyProperty.Register("Source", typeof(object), typeof(TileGallery), new PropertyMetadata(null));
 
 	private void Scroller_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)

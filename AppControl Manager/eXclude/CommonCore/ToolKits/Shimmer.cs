@@ -43,7 +43,7 @@ internal sealed partial class Shimmer : UserControl
 	/// <summary>
 	/// Identifies the <see cref="Duration"/> dependency property.
 	/// </summary>
-	public static readonly DependencyProperty DurationProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty DurationProperty = DependencyProperty.Register(
 	   nameof(Duration),
 	   typeof(object),
 	   typeof(Shimmer),
@@ -52,7 +52,7 @@ internal sealed partial class Shimmer : UserControl
 	/// <summary>
 	/// Identifies the <see cref="IsActive"/> dependency property.
 	/// </summary>
-	public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
 	  nameof(IsActive),
 	  typeof(bool),
 	  typeof(Shimmer),

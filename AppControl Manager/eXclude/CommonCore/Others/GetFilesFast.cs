@@ -164,6 +164,9 @@ internal static class FileUtility
 
 		// If custom extensions are provided, use them and make them case-insensitive
 
+		// Using this improves performance by ~40% and creates 0 allocations where it's used.
+		FrozenSet<string>.AlternateLookup<ReadOnlySpan<char>> lookup = extensions.GetAlternateLookup<ReadOnlySpan<char>>();
+
 		// https://learn.microsoft.com/dotnet/api/system.collections.concurrent.blockingcollection-1
 		// https://learn.microsoft.com/dotnet/standard/collections/thread-safe/when-to-use-a-thread-safe-collection
 		// https://learn.microsoft.com/dotnet/standard/collections/thread-safe/blockingcollection-overview
@@ -216,7 +219,8 @@ internal static class FileUtility
 							 4. The "Path.GetExtension" method also uses the Span-based overload which is better than String-based one.
 
 							*/
-							if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
+							//	if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
+							if (lookup.Contains(Path.GetExtension(entry.FileName)))
 							{
 								return true;
 							}
@@ -272,7 +276,8 @@ internal static class FileUtility
 									}
 
 									// Make sure the file has the correct extension
-									if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
+									// if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
+									if (lookup.Contains(Path.GetExtension(entry.FileName)))
 									{
 										return true;
 									}

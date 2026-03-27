@@ -26,7 +26,6 @@ using Windows.Foundation;
 using Windows.UI;
 
 #if HARDEN_SYSTEM_SECURITY
-#pragma warning disable CA1852
 using HardenSystemSecurity;
 #endif
 
@@ -95,7 +94,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? TransparentBrush;
 			BorderThickness = BorderThick;
 			XamlRoot = App.MainWindow?.Content.XamlRoot;
-			RequestedTheme = GetRequestedTheme();
+			RequestedTheme = Enum.TryParse<ElementTheme>(GlobalVars.Settings.AppTheme, true, out ElementTheme theme) ? theme : ElementTheme.Default; // Using TryParse because "System" is among the strings too.
 			CornerRadius = DialogCorner;
 			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"];
 			FlowDirection = Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection);
@@ -135,46 +134,11 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 	}
 
-	// Method for theme determination - called once per instance using advanced pattern matching
-	private static ElementTheme GetRequestedTheme()
-	{
-		try
-		{
-			return GlobalVars.Settings.AppTheme switch
-			{
-				string theme when string.Equals(theme, "Light", StringComparison.OrdinalIgnoreCase) => ElementTheme.Light,
-				string theme when string.Equals(theme, "Dark", StringComparison.OrdinalIgnoreCase) => ElementTheme.Dark,
-				_ => ElementTheme.Default
-			};
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			return ElementTheme.Default;
-		}
-	}
-
 	protected override void OnApplyTemplate()
 	{
-		try
-		{
-			// Immediately disable shadows when template is applied - this is the earliest point we can access the visual tree
-			DisableDefaultShadowImmediately();
-			base.OnApplyTemplate();
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			try
-			{
-				base.OnApplyTemplate();
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// OnApplyTemplate must never throw - continue with default state
-			}
-		}
+		// Immediately disable shadows when template is applied - this is the earliest point we can access the visual tree
+		DisableDefaultShadowImmediately(); // Catches all errors so safe to not wrap it in try/catch here.
+		base.OnApplyTemplate();
 	}
 
 	private void DisableDefaultShadowImmediately()
@@ -521,17 +485,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			catch (Exception innerEx)
 			{
 				Logger.Write(innerEx);
-				// Return basic shadow as final fallback - must never throw
-				try
-				{
-					return new AttachedCardShadow();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// If we can't create any shadow, return null - handled by caller
-					return null!;
-				}
+				// Return basic shadow as final fallback	
+				return new AttachedCardShadow();
 			}
 		}
 	}
@@ -554,35 +509,18 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		{
 			Logger.Write(ex);
 			// Return minimal border as fallback
-			try
+
+			return new Border
 			{
-				return new Border
-				{
-					Background = TransparentBrush,
-					HorizontalAlignment = HorizontalAlignment.Stretch,
-					VerticalAlignment = VerticalAlignment.Stretch
-				};
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// Return basic border as final fallback - must never throw
-				try
-				{
-					return new();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// If we can't create any border, return null - handled by caller
-					return null!;
-				}
-			}
+				Background = TransparentBrush,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch
+			};
 		}
 	}
 
-	// Method for creating dialog container with specific properties
-	private static Border CreateDialogContainer(Brush? background, Brush? borderBrush, Thickness borderThickness, CornerRadius cornerRadius)
+	// Method for creating dialog container with default dialog corner radius
+	private static Border CreateDialogContainerWithDialogCorner(Brush? background, Brush? borderBrush, Thickness borderThickness)
 	{
 		try
 		{
@@ -591,7 +529,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				Background = background,
 				BorderBrush = borderBrush,
 				BorderThickness = borderThickness,
-				CornerRadius = cornerRadius,
+				CornerRadius = DialogCorner,
 				Margin = ShadowThickness,
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch
@@ -608,7 +546,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					Background = background,
 					BorderBrush = borderBrush,
 					BorderThickness = borderThickness,
-					CornerRadius = cornerRadius,
+					CornerRadius = DialogCorner,
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch
 				};
@@ -616,71 +554,13 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			catch (Exception innerEx)
 			{
 				Logger.Write(innerEx);
-				// Return basic border with just background as final fallback
-				try
-				{
-					return new Border
-					{
-						Background = background,
-						HorizontalAlignment = HorizontalAlignment.Stretch,
-						VerticalAlignment = VerticalAlignment.Stretch
-					};
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// Return basic border as absolute final fallback - must never throw
-					try
-					{
-						return new Border();
-					}
-					catch (Exception absoluteFinalEx)
-					{
-						Logger.Write(absoluteFinalEx);
-						// If we can't create any border, return null - handled by caller
-						return null!;
-					}
-				}
-			}
-		}
-	}
-
-	// Method for creating dialog container with default dialog corner radius
-	private static Border CreateDialogContainerWithDialogCorner(Brush? background, Brush? borderBrush, Thickness borderThickness)
-	{
-		try
-		{
-			return CreateDialogContainer(background, borderBrush, borderThickness, DialogCorner);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			// Return basic border as fallback - must never throw
-			try
-			{
+				// Return basic border with just background as final fallback		
 				return new Border
 				{
 					Background = background,
-					BorderBrush = borderBrush,
-					BorderThickness = borderThickness,
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch
 				};
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// Return minimal border as final fallback
-				try
-				{
-					return new Border();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// If we can't create any border, return null - handled by caller
-					return null!;
-				}
 			}
 		}
 	}
@@ -1397,28 +1277,15 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 							// Create shadow container using static method
 							_shadowContainer = CreateShadowContainer();
-							if (_shadowContainer is null)
-							{
-								// Skip shadow application if container creation failed
-								break;
-							}
 
 							// Create dialog container using static method
 							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundBorder.Background, backgroundBorder.BorderBrush, backgroundBorder.BorderThickness);
-							if (_dialogContainer is null)
-							{
-								// Skip shadow application if dialog container creation failed
-								break;
-							}
 
 							// Apply shadow to the shadow container
 							try
 							{
 								AttachedCardShadow dialogShadow = CreateShadow();
-								if (dialogShadow is not null)
-								{
-									Effects.SetShadow(_shadowContainer, dialogShadow);
-								}
+								Effects.SetShadow(_shadowContainer, dialogShadow);
 							}
 							catch (Exception shadowEx)
 							{
@@ -1491,28 +1358,15 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 							// Create shadow container using static method
 							_shadowContainer = CreateShadowContainer();
-							if (_shadowContainer is null)
-							{
-								// Skip shadow application if container creation failed
-								break;
-							}
 
 							// Create dialog container using static method
 							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundGrid.Background, BorderBrush, BorderThickness);
-							if (_dialogContainer is null)
-							{
-								// Skip shadow application if dialog container creation failed
-								break;
-							}
 
 							// Apply shadow to the shadow container
 							try
 							{
 								AttachedCardShadow dialogShadow = CreateShadow();
-								if (dialogShadow is not null)
-								{
-									Effects.SetShadow(_shadowContainer, dialogShadow);
-								}
+								Effects.SetShadow(_shadowContainer, dialogShadow);
 							}
 							catch (Exception shadowEx)
 							{
@@ -1558,28 +1412,15 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 							// Create shadow container using static method
 							_shadowContainer = CreateShadowContainer();
-							if (_shadowContainer is null)
-							{
-								// Skip shadow application if container creation failed
-								break;
-							}
 
 							// Create dialog container using static method
 							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundPanel.Background, BorderBrush, BorderThickness);
-							if (_dialogContainer is null)
-							{
-								// Skip shadow application if dialog container creation failed
-								break;
-							}
 
 							// Apply shadow to the shadow container
 							try
 							{
 								AttachedCardShadow dialogShadow = CreateShadow();
-								if (dialogShadow is not null)
-								{
-									Effects.SetShadow(_shadowContainer, dialogShadow);
-								}
+								Effects.SetShadow(_shadowContainer, dialogShadow);
 							}
 							catch (Exception shadowEx)
 							{
@@ -1632,11 +1473,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			try
 			{
 				AttachedCardShadow simpleShadow = CreateShadow();
-				if (simpleShadow is not null)
-				{
-					Effects.SetShadow(this, simpleShadow);
-					_shadowApplied = true;
-				}
+				Effects.SetShadow(this, simpleShadow);
+				_shadowApplied = true;
 			}
 			catch (Exception fallbackEx)
 			{

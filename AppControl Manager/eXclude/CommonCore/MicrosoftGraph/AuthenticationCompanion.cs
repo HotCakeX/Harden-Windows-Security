@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;
@@ -241,7 +240,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// <summary>
 	/// To save the cancellation token source for sign in operation
 	/// </summary>
-	internal CancellationTokenSource? cancellationTokenSource;
+	private CancellationTokenSource? cancellationTokenSource;
 
 	/// <summary>
 	/// Event handler for the Cancel Sign In button
@@ -319,16 +318,23 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	{
 		if (cancellationTokenSource is not null)
 		{
-			cancellationTokenSource.Cancel();
-			cancellationTokenSource.Dispose();
+			try
+			{
+				cancellationTokenSource.Cancel();
+				cancellationTokenSource.Dispose();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 			cancellationTokenSource = null;
 		}
 	}
 
 	/// <summary>
-	/// All Sign-in methods supported by the app.
+	/// All Sign-in methods supported by the app. Used for ComboBox source too.
 	/// </summary>
-	private static readonly List<AuthenticationContextComboBox> _SignInMethodsComboBoxSource =
+	internal static readonly List<AuthenticationContextComboBox> SignInMethodsComboBoxSource =
 	[
 		new AuthenticationContextComboBox(
 			name: "Web Account Manager (WAM)",
@@ -342,14 +348,9 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	];
 
 	/// <summary>
-	/// Sign In methods ComboBox source.
-	/// </summary>
-	internal List<AuthenticationContextComboBox> SignInMethodsComboBoxSource => _SignInMethodsComboBoxSource;
-
-	/// <summary>
 	/// Bound to the ComboBox's SelectedItem property with the default value.
 	/// </summary>
-	internal AuthenticationContextComboBox SignInMethodsComboBoxSelectedItem { get; set => SP(ref field, value); } = _SignInMethodsComboBoxSource[1];
+	internal AuthenticationContextComboBox SignInMethodsComboBoxSelectedItem { get; set => SP(ref field, value); } = SignInMethodsComboBoxSource[1];
 
 	/// <summary>
 	/// Authentication context ComboBox source
@@ -369,22 +370,21 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// <summary>
 	/// Azure Cloud environment source items.
 	/// </summary>
-	private static readonly List<AzureCloudEnvironmentComboBoxItem> _AzureCloudEnvironmentComboBoxSource =
+	internal static readonly List<AzureCloudEnvironmentComboBoxItem> AzureCloudEnvironmentComboBoxSource =
 	[
 		new AzureCloudEnvironmentComboBoxItem("Public", AzureCloudInstance.AzurePublic),
 		new AzureCloudEnvironmentComboBoxItem("US Government (GCC High)", AzureCloudInstance.AzureUsGovernment)
 	];
 
-	internal List<AzureCloudEnvironmentComboBoxItem> AzureCloudEnvironmentComboBoxSource => _AzureCloudEnvironmentComboBoxSource;
-
-	internal AzureCloudEnvironmentComboBoxItem AzureCloudEnvironmentComboBoxSelectedItem { get; set => SP(ref field, value); } = _AzureCloudEnvironmentComboBoxSource[0];
-
+	internal AzureCloudEnvironmentComboBoxItem AzureCloudEnvironmentComboBoxSelectedItem { get; set => SP(ref field, value); } = AzureCloudEnvironmentComboBoxSource[0];
 
 	/// <summary>
 	/// Signs into the Microsoft tenant
 	/// </summary>
 	internal async void SignIn()
 	{
+		CancelAndDisposeCts(); // Make sure any previous token is cancelled and disposed of before storing a new one.
+
 		// create and store the CTS
 		cancellationTokenSource = new CancellationTokenSource();
 

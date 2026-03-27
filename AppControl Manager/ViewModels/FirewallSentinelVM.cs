@@ -929,7 +929,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = DefaultScanLevel;
+	} = ScanLevelsSource[0];
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{

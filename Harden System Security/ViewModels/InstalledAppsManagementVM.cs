@@ -135,14 +135,14 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			ElementsAreEnabled = false;
 
 			// Get the new data first
-			ObservableCollection<GroupInfoListForPackagedAppView> newItems = await GetAppsList.GetContactsGroupedAsync(this);
+			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
 
 			// Suppress selection change side effects while replacing ItemsSource to preserve persisted selection
 			_isUpdatingItemsSource = true;
 			try
 			{
-				AppsListItemsSource = newItems;
-				AppsListItemsSourceBackingList = AppsListItemsSource.ToList();
+				AppsListItemsSource = results.Item1;
+				AppsListItemsSourceBackingList = results.Item2;
 
 				// Update counts after loading apps
 				UpdateCounts();

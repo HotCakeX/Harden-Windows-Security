@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder"
-    x:Name="RootPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
+    xmlns:ACMVM="using:AppControlManager.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:core="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
@@ -621,7 +621,7 @@
                     BorderThickness="1"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                    AllowDrop="{x:Bind ACMVM:ViewModelBase.IsNotElevated}"
                     DragOver="{x:Bind ViewModel.Grid_DragOver}"
                     Drop="{x:Bind ViewModel.Grid_Drop}">
                 <StackPanel Spacing="16" HorizontalAlignment="Center">

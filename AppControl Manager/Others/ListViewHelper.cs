@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using AppControlManager.IntelGathering;
 using CommonCore.IncrementalCollection;
@@ -179,10 +178,10 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Creates a collection of PropertyFilterItem objects from FileIdentityPropertyMappings for use in ComboBox binding
 	/// </summary>
-	/// <returns>ObservableCollection of PropertyFilterItem objects</returns>
-	internal static ObservableCollection<PropertyFilterItem> CreatePropertyFilterItems()
+	/// <returns>List of PropertyFilterItem objects</returns>
+	internal static List<PropertyFilterItem> CreatePropertyFilterItems()
 	{
-		ObservableCollection<PropertyFilterItem> items = [];
+		List<PropertyFilterItem> items = new(FileIdentityPropertyMappings.Count);
 		foreach (KeyValuePair<string, (string Label, Func<FileIdentity, object?> Getter)> mapping in FileIdentityPropertyMappings)
 		{
 			items.Add(new PropertyFilterItem(mapping.Key, mapping.Value.Label, mapping.Value.Getter));

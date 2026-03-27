@@ -1285,4 +1285,17 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal readonly InfoBarSettings MainInfoBar = new();
 
+	internal bool SidebarElementsAreEnabled
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SidebarProgressRingVisibility = field ? Visibility.Collapsed : Visibility.Visible;
+			}
+		}
+	} = true;
+
+	internal Visibility SidebarProgressRingVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
+
 }

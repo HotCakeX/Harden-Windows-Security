@@ -61,10 +61,7 @@ internal static class CiToolHelper
 			ushort part4 = (ushort)(num & 0x000000000000FFFF);         // Lowest 16 bits
 
 			// Form the version string and attempt to parse it into a Version object, don't need the bool output of the parse result
-			_ = Version.TryParse($"{part1}.{part2}.{part3}.{part4}"!, out Version? VersionOutput);
-
-			// Return the constructed Version object
-			return VersionOutput!;
+			return Version.Parse($"{part1}.{part2}.{part3}.{part4}");
 		}
 		catch (Exception ex)
 		{

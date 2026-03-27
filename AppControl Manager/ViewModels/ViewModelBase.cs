@@ -26,7 +26,6 @@ using Windows.ApplicationModel.UserActivities;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using CommonCore.AppSettings;
 using System.Threading;
 
 #if HARDEN_SYSTEM_SECURITY
@@ -37,7 +36,6 @@ using HardenSystemSecurity;
 using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics;
 using AppControlManager.IntelGathering;
-using System.Collections.ObjectModel;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using System.IO;
@@ -65,7 +63,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <summary>
 	/// Same as IsElevated but in reverse.
 	/// </summary>
-	internal bool IsNotElevated => !GlobalVars.IsElevated;
+	internal static bool IsNotElevated => !GlobalVars.IsElevated;
 
 	/// <summary>
 	/// Sets the field to <paramref name="newValue"/> if it differs from its current contents,
@@ -152,7 +150,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		return chain;
 	}
 
-	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
+	internal static readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
 	[
 		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash")),
 		new("File Publisher", ScanLevels.FilePublisher, 4, BuildFallbackChain("Publisher", "Hash")),
@@ -163,7 +161,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		new("File Name", ScanLevels.FileName, 2, BuildFallbackChain("Hash"))
 	];
 
-	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
+	internal static readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
 	[
 		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash")),
 		new("File Publisher", ScanLevels.FilePublisher, 4, BuildFallbackChain("Publisher", "Hash")),
@@ -171,11 +169,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		new("Hash", ScanLevels.Hash, 5, BuildFallbackChain("No Fallback")),
 		new("File Name", ScanLevels.FileName, 2, BuildFallbackChain("Hash"))
 	];
-
-	/// <summary>
-	/// The default scan level used by the ItemsSources of ComboBoxes.
-	/// </summary>
-	internal static readonly ScanLevelsComboBoxType DefaultScanLevel = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash"));
 
 #endif
 
@@ -186,7 +179,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// </summary>
 	private static UserActivitySession? _previousSession;
 
-	private static readonly SemaphoreSlim UserActivityMeowTex = new(1);
+	private static readonly SemaphoreSlim UserActivitySemaphore = new(1, 1);
 
 	/// <summary>
 	/// Publishes or updates user activity for the current page.
@@ -201,7 +194,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		if (!GlobalVars.Settings.PublishUserActivityInTheOS)
 			return;
 
-		await UserActivityMeowTex.WaitAsync();
+		await UserActivitySemaphore.WaitAsync();
 
 		try
 		{
@@ -230,7 +223,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		}
 		finally
 		{
-			_ = UserActivityMeowTex.Release();
+			_ = UserActivitySemaphore.Release();
 		}
 	}
 
@@ -245,7 +238,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		DeployRMMAuditPolicy = 3,
 		DeployRMMBlockPolicy = 4
 	}
-
 
 	/// <summary>
 	/// Handles different types of exceptions, used mainly by methods that deal with cancellable workflows.
@@ -341,7 +333,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		return false;
 	}
-
 
 	/// <summary>
 	/// Determines if an exception hierarchy contains an OperationCanceledException at any nesting level.
@@ -473,10 +464,8 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 #if APP_CONTROL_MANAGER
 
 	// Create PropertyFilterItem collections only once lazily.
-	private static readonly Lazy<ObservableCollection<ListViewHelper.PropertyFilterItem>> _lazyItems
+	internal static readonly Lazy<List<ListViewHelper.PropertyFilterItem>> PropertyFilterItems
 		= new(valueFactory: ListViewHelper.CreatePropertyFilterItems, isThreadSafe: true);
-
-	internal ObservableCollection<ListViewHelper.PropertyFilterItem> PropertyFilterItems => _lazyItems.Value;
 
 #endif
 

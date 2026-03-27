@@ -17,9 +17,7 @@
 
 using System.IO;
 using System.Threading;
-using AppControlManager.ViewModels;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -133,10 +131,10 @@ internal static partial class GlobalVars
 	/// </summary>
 	internal static AppSettings.Main Settings => _appSettings.Value;
 
-#pragma warning disable IDE0370
 	/// <summary>
 	/// Global dispatcher queue for the application that can be accessed from anywhere.
 	/// </summary>
+#pragma warning disable IDE0370
 	internal static DispatcherQueue AppDispatcher { get; set; } = null!;
 #pragma warning restore IDE0370
 

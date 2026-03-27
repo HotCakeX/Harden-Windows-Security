@@ -5573,4 +5573,26 @@ Thumbprint: {3}</value>
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Clear the locally cached authentication tokens. This will require you to manually authenticate again the next time you use the app.</value>
   </data>
+  <!--NEW-->
+  <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Relaunch the app to run with a different set of privileges.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Relaunch the app to run with a different set of privileges.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>Running with Administrator privileges. All features of the app are available. You can relaunch to run with limited privileges.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>Running with limited privileges. Features that require elevated privileges are not available.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>Relaunch the app</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>Relaunch</value>
+  </data>
 </root>

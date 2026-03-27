@@ -19,7 +19,6 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -227,14 +226,12 @@ internal sealed class NavigationService
 						GlobalVars.Settings.PromptForElevationOnStartup = true;
 					}
 
-					// Build navigation argument to restore this page after elevation.
-					string? navArg = null;
-
 					// Attempt to find a tag for the page, only top-level pages that have a tab in MainWindow XAML work
 					KeyValuePair<string, Type> taggedEntry = mainWindowVM.NavigationPageToItemContentMap
 						.FirstOrDefault(kv => Equals(kv.Value, nextNavPageType));
 
-					navArg = $"--navtag={taggedEntry.Key}";
+					// Build navigation argument to restore this page after elevation.
+					string? navArg = $"--navtag={taggedEntry.Key}";
 
 					// Relaunch elevated with the navigation argument
 					if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, navArg))

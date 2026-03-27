@@ -35,7 +35,7 @@ namespace HardenSystemSecurity;
 
 #pragma warning disable CA1515
 
-public partial class App : Application
+public sealed partial class App : Application
 {
 	// Ephemeral activation context used only during this launch session
 	private static string? _activationFilePath;

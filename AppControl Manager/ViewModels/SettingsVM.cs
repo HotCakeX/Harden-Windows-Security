@@ -193,12 +193,12 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{"Windows Accent", 1 },
 		{"Monochromatic" , 2 }
 	};
-	private static readonly Dictionary<int, string> IconsStylesReverse = new()
-	{
-		{ 0, "Animated" },
-		{ 1, "Windows Accent"},
-		{ 2, "Monochromatic" }
-	};
+
+	private static readonly string[] IconsStylesReverse = [
+		"Animated",
+		"Windows Accent",
+		"Monochromatic"
+	];
 
 	internal int IconsStylesComboBoxSelectedIndex
 	{
@@ -206,16 +206,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				if (IconsStylesReverse.TryGetValue(field, out string? x))
-				{
-					ViewModelProvider.MainWindowVM.OnIconsStylesChanged(x);
+				string x = IconsStylesReverse[field];
 
-					GlobalVars.Settings.IconsStyle = x;
-				}
-				else
-				{
-					Logger.Write($"Unknown Icons Style Index: {field}");
-				}
+				ViewModelProvider.MainWindowVM.OnIconsStylesChanged(x);
+
+				GlobalVars.Settings.IconsStyle = x;
 			}
 		}
 	} = IconsStyles.TryGetValue(GlobalVars.Settings.IconsStyle, out int x) ? x : 2;

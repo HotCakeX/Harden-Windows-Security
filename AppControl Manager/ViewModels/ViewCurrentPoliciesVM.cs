@@ -171,11 +171,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			AllPoliciesOutput.AddRange(policies);
 
 			// Store all of the policies in the ObservableCollection
-			foreach (CiPolicyInfo policy in CollectionsMarshal.AsSpan(policies))
-			{
-				// Add the retrieved policies to the ObservableCollection
-				AllPolicies.Add(policy);
-			}
+			AllPolicies.AddRange(policies);
 
 			await Task.Run(() => ColumnManager.CalculateColumnWidths(AllPolicies));
 		}
@@ -188,7 +184,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			UIElementsEnabledState = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for when the Swap Policy ComboBox's selection changes
@@ -366,7 +361,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			UIElementsEnabledState = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the RemovePolicyButton click
@@ -603,7 +597,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		}
 	}
 
-
 	/// <summary>
 	/// If returns true, the signed policy can be removed
 	/// </summary>
@@ -633,7 +626,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 		return false;
 	}
-
 
 	#region Sorting
 
@@ -678,7 +670,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	#endregion
 
-
 	/// <summary>
 	/// Event handler for the search box text change
 	/// </summary>
@@ -720,10 +711,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			AllPolicies.Clear();
 
 			// Update the ObservableCollection with the filtered results
-			foreach (CiPolicyInfo item in filteredResults)
-			{
-				AllPolicies.Add(item);
-			}
+			AllPolicies.AddRange(filteredResults);
 
 			if (Sv != null && savedHorizontal.HasValue)
 			{
@@ -736,7 +724,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			MainInfoBar.WriteError(ex);
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for when a policy is selected from the ListView. It will contain the selected policy.
@@ -927,8 +914,16 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// If we couldn't get the EFI partition path
 			if (EFIRootPath is not null)
 			{
-				// Search recursively on the EFI partition
-				string[] files2 = Directory.GetFiles(EFIRootPath, policyIDAsGUID, SearchOption.AllDirectories);
+				string[] files2 = [];
+				try
+				{
+					// Search recursively on the EFI partition
+					files2 = Directory.GetFiles(EFIRootPath, policyIDAsGUID, SearchOption.AllDirectories);
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex.Message);
+				}
 
 				if (files2.Length > 0)
 				{

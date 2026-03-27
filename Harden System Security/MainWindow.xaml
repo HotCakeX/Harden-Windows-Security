@@ -88,7 +88,9 @@
                 <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="SearchColumn" Width="3*"/>
                 <ColumnDefinition x:Name="RightDragColumn" Width="*" />
-                <ColumnDefinition x:Name="AccountColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="ElevationContextSwitchButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="SidebarAndElevationContextSwitchButtonPadding" Width="30"/>
+                <ColumnDefinition x:Name="SidebarButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
 
@@ -122,7 +124,7 @@
 
             <!-- Main search area at the top -->
             <!-- Wrapped in a Grid to allow overlaying the accelerator text -->
-            <Grid Grid.Column="6" VerticalAlignment="Center" MaxWidth="600">
+            <Grid Grid.Column="6" VerticalAlignment="Center">
                 <AutoSuggestBox x:Name="TitleBarSearchBox"
                                 QueryIcon="Find"
                                 HorizontalAlignment="Stretch"
@@ -225,11 +227,34 @@
                 </StackPanel>
             </Grid>
 
+            <!-- Elevation Context Switch Button -->
+            <Button x:Name="ElevationContextSwitchButton"
+                    x:Uid="ElevationContextSwitchButton"
+                    Click="{x:Bind ElevationContextSwitchButton_Click}"
+                    RightTapped="{x:Bind ElevationContextSwitchButton_RightTapped}"
+                    Grid.Column="8">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <FontIcon Glyph="&#xE748;" FontSize="16"/>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <TeachingTip x:Name="ElevationContextSwitchButtonTeachingTip"
+                         x:Uid="ElevationContextSwitchButtonTeachingTip"
+                         IsLightDismissEnabled="True"
+                         ActionButtonClick="{x:Bind SwitchElevationContext}"
+                         Subtitle="{x:Bind ElevationContextSwitchButtonTeachingTipSubtitle}"
+                         Target="{x:Bind ElevationContextSwitchButton}">
+                <TeachingTip.IconSource>
+                    <FontIconSource Glyph="&#xE748;" />
+                </TeachingTip.IconSource>
+            </TeachingTip>
+
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton"
                     x:Uid="SidebarButton"
                     Click="{x:Bind ViewModel.SidebarButton_Click}"
-                    Grid.Column="8"
+                    Grid.Column="10"
                     Height="32"
                     Margin="5,0,30,0"
                     Background="Transparent"

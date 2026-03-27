@@ -212,6 +212,7 @@ internal sealed partial class MainWindow : Window
 		RectInt32 backRect = MainWindowVM.CalculatePixelRect(BackButtonTitleBar, scale);
 		RectInt32 menuRect = MainWindowVM.CalculatePixelRect(HamburgerMenuButton, scale);
 		RectInt32 searchRect = MainWindowVM.CalculatePixelRect(TitleBarSearchBox, scale);
+		RectInt32 elevationButtonRect = MainWindowVM.CalculatePixelRect(ElevationContextSwitchButton, scale);
 		RectInt32 sidebarRect = MainWindowVM.CalculatePixelRect(SidebarButton, scale);
 
 		// If RTL, flip X around the full window width in pixels
@@ -222,6 +223,7 @@ internal sealed partial class MainWindow : Window
 			backRect = MainWindowVM.FlipHorizontally(backRect, windowWidthPx);
 			menuRect = MainWindowVM.FlipHorizontally(menuRect, windowWidthPx);
 			searchRect = MainWindowVM.FlipHorizontally(searchRect, windowWidthPx);
+			elevationButtonRect = MainWindowVM.FlipHorizontally(elevationButtonRect, windowWidthPx);
 			sidebarRect = MainWindowVM.FlipHorizontally(sidebarRect, windowWidthPx);
 		}
 
@@ -231,7 +233,7 @@ internal sealed partial class MainWindow : Window
 
 		nonClient.SetRegionRects(
 			NonClientRegionKind.Passthrough,
-			[backRect, menuRect, searchRect, sidebarRect]
+			[backRect, menuRect, searchRect, elevationButtonRect, sidebarRect]
 		);
 	}
 
@@ -491,29 +493,10 @@ internal sealed partial class MainWindow : Window
 		// Cancel the closing operation immediately to allow for async confirmation
 		args.Cancel = true;
 
-		await DispatcherQueue.EnqueueAsync(async () =>
+		await AskForConfirmation(() =>
 		{
-			using AppControlManager.CustomUIElements.ContentDialogV2 confirmCloseDialog = new()
-			{
-				Title = GlobalVars.GetStr("ConfirmExitTitle"),
-#if APP_CONTROL_MANAGER
-				// if there is no policy in the Policies library in the Sidebar or if there is but Persistence is enabled
-				Content = (ViewModel.SidebarPoliciesLibrary.Count == 0 || GlobalVars.Settings.PersistentPoliciesLibrary) ? GlobalVars.GetStr("ConfirmExitMsg") : GlobalVars.GetStr("ConfirmExitForUnsavedPoliciesMsg"),
-#else
-				Content = GlobalVars.GetStr("ConfirmExitMsg"),
-#endif
-				PrimaryButtonText = GlobalVars.GetStr("Yes"),
-				CloseButtonText = GlobalVars.GetStr("No"),
-				DefaultButton = ContentDialogButton.Close
-			};
-
-			ContentDialogResult result = await confirmCloseDialog.ShowAsync();
-
-			if (result == ContentDialogResult.Primary)
-			{
-				// Close without re-triggering the cancelable AppWindow.Closing event loop
-				Application.Current.Exit();
-			}
+			// Close without re-triggering the cancelable AppWindow.Closing event loop
+			Application.Current.Exit();
 		});
 	}
 
@@ -1039,7 +1022,7 @@ internal sealed partial class MainWindow : Window
 	/// Triggers the transfer icon animation from any source UIElement to the SidebarButton.
 	/// </summary>
 	/// <param name="sourceElement">The element starting the animation.</param>
-	internal void TriggerTransferIconAnimation(UIElement? sourceElement)
+	private void TriggerTransferIconAnimation(UIElement? sourceElement)
 	{
 		if (sourceElement == null || AnimationOverlay == null || SidebarButton == null || TransferIcon == null)
 			return;
@@ -1115,11 +1098,17 @@ internal sealed partial class MainWindow : Window
 		{
 			try
 			{
+				ViewModel.SidebarElementsAreEnabled = false;
+
 				_ = await ExecuteSaveAsXML(policyContext);
 			}
 			catch (Exception ex)
 			{
 				ViewModel.MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				ViewModel.SidebarElementsAreEnabled = true;
 			}
 		}
 	}
@@ -1130,11 +1119,17 @@ internal sealed partial class MainWindow : Window
 		{
 			try
 			{
+				ViewModel.SidebarElementsAreEnabled = false;
+
 				await ExecuteSaveAsCIP(policyContext);
 			}
 			catch (Exception ex)
 			{
 				ViewModel.MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				ViewModel.SidebarElementsAreEnabled = true;
 			}
 		}
 	}
@@ -1161,11 +1156,17 @@ internal sealed partial class MainWindow : Window
 		{
 			try
 			{
+				ViewModel.SidebarElementsAreEnabled = false;
+
 				_ = await ExecuteSaveAsXML(policyContext);
 			}
 			catch (Exception ex)
 			{
 				ViewModel.MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				ViewModel.SidebarElementsAreEnabled = true;
 			}
 		}
 	}
@@ -1176,11 +1177,17 @@ internal sealed partial class MainWindow : Window
 		{
 			try
 			{
+				ViewModel.SidebarElementsAreEnabled = false;
+
 				await ExecuteSaveAsCIP(policyContext);
 			}
 			catch (Exception ex)
 			{
 				ViewModel.MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				ViewModel.SidebarElementsAreEnabled = true;
 			}
 		}
 	}
@@ -1207,11 +1214,17 @@ internal sealed partial class MainWindow : Window
 		{
 			try
 			{
+				ViewModel.SidebarElementsAreEnabled = false;
+
 				await ViewModelProvider.ConfigurePolicyRuleOptionsVM.OpenInConfigurePolicyRuleOptions(policyContext);
 			}
 			catch (Exception ex)
 			{
 				ViewModel.MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				ViewModel.SidebarElementsAreEnabled = true;
 			}
 		}
 	}
@@ -1222,6 +1235,8 @@ internal sealed partial class MainWindow : Window
 		{
 			try
 			{
+				ViewModel.SidebarElementsAreEnabled = false;
+
 				await Task.Run(() =>
 				{
 					ViewModel.MainInfoBar.WriteInfo($"Deploying the policy: {policyContext.PolicyIdentifier}");
@@ -1241,6 +1256,10 @@ internal sealed partial class MainWindow : Window
 			{
 				ViewModel.MainInfoBar.WriteError(ex);
 			}
+			finally
+			{
+				ViewModel.SidebarElementsAreEnabled = true;
+			}
 		}
 	}
 
@@ -1255,13 +1274,15 @@ internal sealed partial class MainWindow : Window
 		if (savePath is null)
 			return null;
 
-		// Ensure the file path ends with .xml
-		if (!savePath.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+		await Task.Run(() =>
 		{
-			savePath += ".xml";
-		}
-
-		Management.SavePolicyToFile(policyContext.PolicyObj, savePath);
+			// Ensure the file path ends with .xml
+			if (!savePath.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+			{
+				savePath += ".xml";
+			}
+			Management.SavePolicyToFile(policyContext.PolicyObj, savePath);
+		});
 
 		return savePath;
 	}
@@ -1277,13 +1298,15 @@ internal sealed partial class MainWindow : Window
 		if (savePath is null)
 			return;
 
-		// Ensure the file path ends with .cip
-		if (!savePath.EndsWith(".cip", StringComparison.OrdinalIgnoreCase))
+		await Task.Run(() =>
 		{
-			savePath += ".cip";
-		}
-
-		Management.ConvertXMLToBinary(policyContext.PolicyObj, savePath);
+			// Ensure the file path ends with .cip
+			if (!savePath.EndsWith(".cip", StringComparison.OrdinalIgnoreCase))
+			{
+				savePath += ".cip";
+			}
+			Management.ConvertXMLToBinary(policyContext.PolicyObj, savePath);
+		});
 	}
 
 	/// <summary>
@@ -1305,6 +1328,8 @@ internal sealed partial class MainWindow : Window
 		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
+			ViewModel.SidebarElementsAreEnabled = false;
+
 			if (!ViewModel.SidebarPoliciesLibrary.Remove(policyContext))
 			{
 				throw new InvalidOperationException("Failed to remove the policy from the sidebar library.");
@@ -1337,6 +1362,8 @@ internal sealed partial class MainWindow : Window
 		}
 		finally
 		{
+			ViewModel.SidebarElementsAreEnabled = true;
+
 			_ = ViewModel.PoliciesLibraryCacheLock.Release();
 		}
 	}
@@ -1368,23 +1395,28 @@ internal sealed partial class MainWindow : Window
 		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
+			ViewModel.SidebarElementsAreEnabled = false;
+
 			// If library is persistent then remove one by one from the cache first
 			if (ViewModel.AppSettings.PersistentPoliciesLibrary)
 			{
-				// Get all of the files in the cache first
-				IEnumerable<string> currentFiles = Directory.EnumerateFiles(ViewModel.GetSidebarPoliciesLibraryCacheLocation());
-
-				// Loop over all of the policies in the in-memory library
-				foreach (PolicyFileRepresent item in ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary)
+				await Task.Run(() =>
 				{
-					foreach (string file in currentFiles)
+					// Get all of the files in the cache first
+					IEnumerable<string> currentFiles = Directory.EnumerateFiles(ViewModel.GetSidebarPoliciesLibraryCacheLocation());
+
+					// Loop over all of the policies in the in-memory library
+					foreach (PolicyFileRepresent item in ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary)
 					{
-						if (file.EndsWith($"{item.UniqueObjID}.xml", StringComparison.OrdinalIgnoreCase))
+						foreach (string file in currentFiles)
 						{
-							File.Delete(file);
+							if (file.EndsWith($"{item.UniqueObjID}.xml", StringComparison.OrdinalIgnoreCase))
+							{
+								File.Delete(file);
+							}
 						}
 					}
-				}
+				});
 			}
 
 			// Bulk remove from the in-memory library
@@ -1401,6 +1433,8 @@ internal sealed partial class MainWindow : Window
 		}
 		finally
 		{
+			ViewModel.SidebarElementsAreEnabled = true;
+
 			_ = ViewModel.PoliciesLibraryCacheLock.Release();
 		}
 	}
@@ -1415,6 +1449,8 @@ internal sealed partial class MainWindow : Window
 		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
+			ViewModel.SidebarElementsAreEnabled = false;
+
 			if (ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary.Count is 0)
 			{
 				Logger.Write("The Policies Library is empty. Nothing to back up.");
@@ -1444,6 +1480,8 @@ internal sealed partial class MainWindow : Window
 		}
 		finally
 		{
+			ViewModel.SidebarElementsAreEnabled = true;
+
 			_ = ViewModel.PoliciesLibraryCacheLock.Release();
 		}
 	}
@@ -1499,6 +1537,8 @@ internal sealed partial class MainWindow : Window
 	{
 		try
 		{
+			ViewModel.SidebarElementsAreEnabled = false;
+
 			if (e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
 			{
 				IReadOnlyList<Windows.Storage.IStorageItem> items = await e.DataView.GetStorageItemsAsync();
@@ -1526,6 +1566,10 @@ internal sealed partial class MainWindow : Window
 		{
 			ViewModel.MainInfoBar.WriteError(ex);
 		}
+		finally
+		{
+			ViewModel.SidebarElementsAreEnabled = true;
+		}
 	}
 
 	/// <summary>
@@ -1537,11 +1581,17 @@ internal sealed partial class MainWindow : Window
 	{
 		try
 		{
+			ViewModel.SidebarElementsAreEnabled = false;
+
 			await ViewModels.ViewModelBase.OpenFileInDefaultFileHandler(ViewModel.GetSidebarPoliciesLibraryCacheLocation());
 		}
 		catch (Exception ex)
 		{
 			ViewModel.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ViewModel.SidebarElementsAreEnabled = true;
 		}
 	}
 
@@ -1552,12 +1602,18 @@ internal sealed partial class MainWindow : Window
 	{
 		try
 		{
+			ViewModel.SidebarElementsAreEnabled = false;
+
 			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
 			await AddPoliciesFromPaths(selectedFilePaths);
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
+		}
+		finally
+		{
+			ViewModel.SidebarElementsAreEnabled = true;
 		}
 	}
 
@@ -1567,18 +1623,26 @@ internal sealed partial class MainWindow : Window
 	/// <param name="filePaths">The paths of the files to add.</param>
 	private async Task AddPoliciesFromPaths(List<string> filePaths)
 	{
-		if (filePaths.Count > 0)
+		try
 		{
-			foreach (string selectedFile in filePaths)
+			ViewModel.SidebarElementsAreEnabled = false;
+
+			if (filePaths.Count > 0)
 			{
 				await Task.Run(() =>
 				{
-					ViewModel.AssignToSidebar(ViewModels.PolicyEditorVM.ParseFilePathAsPolicyRepresent(selectedFile));
+					foreach (string selectedFile in filePaths)
+					{
+						ViewModel.AssignToSidebar(ViewModels.PolicyEditorVM.ParseFilePathAsPolicyRepresent(selectedFile));
+					}
 				});
+				// Show the animated icons on the currently visible page
+				Nav.AffectPagesAnimatedIconsVisibilitiesEx(true);
 			}
-
-			// Show the animated icons on the currently visible page
-			Nav.AffectPagesAnimatedIconsVisibilitiesEx(true);
+		}
+		finally
+		{
+			ViewModel.SidebarElementsAreEnabled = true;
 		}
 	}
 
@@ -1611,6 +1675,111 @@ internal sealed partial class MainWindow : Window
 	/// </summary>
 	/// <param name="text">The search query text</param>
 	/// <returns>Visible if text is null/empty, otherwise Collapsed.</returns>
-	internal Visibility IsSearchBoxEmpty(string? text) => string.IsNullOrEmpty(text) ? Visibility.Visible : Visibility.Collapsed;
+	private Visibility IsSearchBoxEmpty(string? text) => string.IsNullOrEmpty(text) ? Visibility.Visible : Visibility.Collapsed;
 
+	/// <summary>
+	/// Performs app elevation context switch.
+	/// </summary>
+	private static void ContextSwitchAction()
+	{
+		if (GlobalVars.IsElevated)
+		{
+			// If the app alias is not enabled in the OS, this call still succeeds but the OS will display an error message saying the executable cannot be found.
+#if APP_CONTROL_MANAGER
+			int deElevationResult = NativeMethods.launch_unelevated("AppControl.exe", null, null);
+#else
+			int deElevationResult = NativeMethods.launch_unelevated("HSS.exe", null, null);
+#endif
+			Logger.Write($"de-elevation result: {deElevationResult}");
+			Application.Current.Exit();
+		}
+		else
+		{
+			if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, null))
+			{
+				Application.Current.Exit();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Shows a ContentDialog to the user asking for confirmation for app closing.
+	/// </summary>
+	private async Task AskForConfirmation(Action action)
+	{
+		await DispatcherQueue.EnqueueAsync(async () =>
+		{
+			using AppControlManager.CustomUIElements.ContentDialogV2 confirmCloseDialog = new()
+			{
+				Title = GlobalVars.GetStr("ConfirmExitTitle"),
+#if APP_CONTROL_MANAGER
+				// if there is no policy in the Policies library in the Sidebar or if there is but Persistence is enabled
+				Content = (ViewModel.SidebarPoliciesLibrary.Count == 0 || GlobalVars.Settings.PersistentPoliciesLibrary) ? GlobalVars.GetStr("ConfirmExitMsg") : GlobalVars.GetStr("ConfirmExitForUnsavedPoliciesMsg"),
+#else
+				Content = GlobalVars.GetStr("ConfirmExitMsg"),
+#endif
+				PrimaryButtonText = GlobalVars.GetStr("Yes"),
+				CloseButtonText = GlobalVars.GetStr("No"),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			ContentDialogResult result = await confirmCloseDialog.ShowAsync();
+
+			if (result == ContentDialogResult.Primary)
+			{
+				action();
+			}
+		});
+	}
+
+	/// <summary>
+	/// Switches elevation context for the entire app.
+	/// </summary>
+	private async void SwitchElevationContext(TeachingTip sender, object args)
+	{
+		try
+		{
+			// If we should always ask for confirmation
+			if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0)
+			{
+				await AskForConfirmation(ContextSwitchAction);
+			}
+			// If we should automatically/conditionally ask for confirmation
+			else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 1)
+			{
+				if (!TaskTracking.AppNeedsCloseConfirmation)
+				{
+					ContextSwitchAction();
+				}
+				else
+				{
+					await AskForConfirmation(ContextSwitchAction);
+				}
+			}
+			// If we should never ask for confirmation
+			else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2)
+			{
+				ContextSwitchAction();
+			}
+			else
+			{
+				// Should never reach here since only 0/1/2 are valid values for "AppCloseConfirmationBehavior"
+				ContextSwitchAction();
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	// When the Elevation Context Switch button on the toolbar is right-tapped.
+	private void ElevationContextSwitchButton_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
+		ElevationContextSwitchButtonTeachingTip.IsOpen = true;
+
+	// Subtitle text for the UI's TeachingTip
+	private string ElevationContextSwitchButtonTeachingTipSubtitle = GlobalVars.GetStr(GlobalVars.IsElevated ? "ElevationContextSwitchButtonTeachingTipSubtitleElevated" : "ElevationContextSwitchButtonTeachingTipSubtitleUnelevated");
+
+	private void ElevationContextSwitchButton_Click(object sender, RoutedEventArgs e) =>
+		ElevationContextSwitchButtonTeachingTip.IsOpen = true;
 }

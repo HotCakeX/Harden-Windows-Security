@@ -10,7 +10,6 @@
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:others="using:AppControlManager.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -158,7 +157,7 @@
         <TabView VerticalAlignment="Stretch"
                  IsAddTabButtonVisible="False"
                  Grid.Row="2" TabWidthMode="SizeToContent"
-                 CanReorderTabs="{x:Bind ViewModel.IsNotElevated}">
+                 CanReorderTabs="{x:Bind VM:ViewModelBase.IsNotElevated}">
             <!--
             <TabView.Resources>
                 <SolidColorBrush x:Key="TabViewBackground" Color="{ThemeResource SystemAccentColorLight2}"/>
@@ -254,9 +253,9 @@
 
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_FileBasedRules"
                                              Grid.Row="1"
-                                             AllowDrop="{x:Bind ViewModel.IsNotElevated}"
-                                             CanDragItems="{x:Bind ViewModel.IsNotElevated}"
-                                             CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                             AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                             CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                             CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
                                              IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              SelectionMode="Extended"
                                              ItemsSource="{x:Bind ViewModel.FileRulesCollection, Mode=OneWay}">
@@ -425,9 +424,9 @@
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_SignatureBasedRules"
                                              Grid.Row="1"
                                              SelectionMode="Extended"
-                                             AllowDrop="{x:Bind ViewModel.IsNotElevated}"
-                                             CanDragItems="{x:Bind ViewModel.IsNotElevated}"
-                                             CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                             AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                             CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                             CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
                                              IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
 
@@ -680,10 +679,10 @@
 
                                         </StackPanel>
 
-                                        <ListView AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                        <ListView AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
                                                   Grid.Row="1"
-                                                  CanDragItems="{x:Bind ViewModel.IsNotElevated}"
-                                                  CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                                  CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                                  CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
                                                   IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                                   SelectionMode="Single"
                                                   Height="300"
@@ -865,9 +864,9 @@
                                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                       BorderThickness="1"
                                       Padding="0"
-                                      AllowDrop="{x:Bind ViewModel.IsNotElevated}"
-                                      CanDragItems="{x:Bind ViewModel.IsNotElevated}"
-                                      CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                      AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                      CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                      CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
                                       ItemsSource="{x:Bind ViewModel.PolicySettingsCollection}"
                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                                       ScrollViewer.HorizontalScrollBarVisibility="Auto"

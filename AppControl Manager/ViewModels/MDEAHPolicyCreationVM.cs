@@ -92,11 +92,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	}
 
 	/// <summary>
-	/// Applies the property-based filter to the data
-	/// </summary>
-	internal void ApplyPropertyFilter() => ApplyFilters();
-
-	/// <summary>
 	/// Clears the current property filter
 	/// </summary>
 	internal void ClearPropertyFilter()
@@ -164,7 +159,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	/// </summary>
 	internal string SelectedBarItemTag { get; set; } = "Local";
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = ScanLevelsSourceForLogs[0];
 
 	/// <summary>
 	/// Bound to the Date Picker on the UI.
@@ -198,9 +193,9 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	internal Visibility ScanLogsProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
-	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+	/// The Supplemental policy that is created or the policy that user selected to add the logs to.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? finalSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? FinalSupplementalPolicy;
 
 	internal string? PolicyNameTextBox { get; set => SPT(ref field, value); }
 
@@ -404,7 +399,7 @@ DeviceEvents
 	/// Applies the date, search, and property filters to the data in the ListView.
 	/// </summary>
 	private void ApplyFilters() => ListViewHelper.ApplyFilters(
-			allFileIdentities: AllFileIdentities.AsEnumerable(),
+			allFileIdentities: AllFileIdentities,
 			filteredCollection: FileIdentities,
 			searchText: SearchBoxText,
 			selectedDate: DatePickerDate,
@@ -459,6 +454,8 @@ DeviceEvents
 
 		try
 		{
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
 			AreElementsEnabled = false;
 
 			// Display the progress ring on the ScanLogs button
@@ -561,7 +558,7 @@ DeviceEvents
 		bool Error = false;
 
 		// Empty the class variable that stores the policy file path
-		finalSupplementalPolicyPath = null;
+		FinalSupplementalPolicy = null;
 
 		try
 		{
@@ -655,10 +652,10 @@ DeviceEvents
 								}
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = PolicyToAddLogsTo;
+								FinalSupplementalPolicy = PolicyToAddLogsTo;
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -704,10 +701,10 @@ DeviceEvents
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = new(policyObj);
+								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -756,10 +753,10 @@ DeviceEvents
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = new(policyObj);
+								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -813,13 +810,12 @@ DeviceEvents
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(FinalSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(FinalSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for the button that retrieves the logs
@@ -924,7 +920,6 @@ DeviceEvents
 		}
 	}
 
-
 	/// <summary>
 	/// CTRL + C shortcuts event handler
 	/// </summary>
@@ -987,6 +982,8 @@ DeviceEvents
 	{
 		try
 		{
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
 			AreElementsEnabled = false;
 			MainInfoBar.IsClosable = false;
 

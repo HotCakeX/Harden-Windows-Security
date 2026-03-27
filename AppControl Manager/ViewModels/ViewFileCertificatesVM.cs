@@ -146,9 +146,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			savedHorizontal = Sv.HorizontalOffset;
 		}
 
-		List<FileCertificateInfoCol> results = [];
-
-		results = FilteredCertificates.Where(cert =>
+		IEnumerable<FileCertificateInfoCol> results = FilteredCertificates.Where(cert =>
 					(cert.SubjectCN is not null && cert.SubjectCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.IssuerCN is not null && cert.IssuerCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.TBSHash is not null && cert.TBSHash.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
@@ -172,14 +170,10 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 					(cert.SubjectKeyIdentifier is not null && cert.SubjectKeyIdentifier.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					cert.RawDataLength.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
 					cert.PublicKeyLength.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)
-				).ToList();
+				);
 
 		FileCertificates.Clear();
-
-		foreach (FileCertificateInfoCol item in CollectionsMarshal.AsSpan(results))
-		{
-			FileCertificates.Add(item);
-		}
+		FileCertificates.AddRange(results);
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -543,14 +537,10 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 			// Add the results to the collection
 			FileCertificates.Clear();
+			FileCertificates.AddRange(output);
+
 			FilteredCertificates.Clear();
-
 			FilteredCertificates.AddRange(output);
-
-			foreach (FileCertificateInfoCol item in CollectionsMarshal.AsSpan(output))
-			{
-				FileCertificates.Add(item);
-			}
 
 			await Task.Run(CalculateColumnWidths);
 
@@ -727,13 +717,10 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			});
 
 			FileCertificates.Clear();
+			FileCertificates.AddRange(output);
+
 			FilteredCertificates.Clear();
 			FilteredCertificates.AddRange(output);
-
-			foreach (FileCertificateInfoCol item in CollectionsMarshal.AsSpan(output))
-			{
-				FileCertificates.Add(item);
-			}
 
 			await Task.Run(CalculateColumnWidths);
 

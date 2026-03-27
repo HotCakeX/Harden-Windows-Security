@@ -14,6 +14,7 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
+
 using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;

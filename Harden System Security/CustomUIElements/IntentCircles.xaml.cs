@@ -97,7 +97,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	/// <summary>
 	/// Explicit disposal opt-in DP
 	/// </summary>
-	internal static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
+	private static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
 		DependencyProperty.Register(
 			nameof(DisposeOnlyOnExplicitCall),
 			typeof(bool),
@@ -114,9 +114,9 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	}
 
 	/// <summary>
-	/// ItemsSource DP (public so XAML can bind)
+	/// ItemsSource DP
 	/// </summary>
-	public static readonly DependencyProperty ItemsSourceProperty =
+	private static readonly DependencyProperty ItemsSourceProperty =
 		DependencyProperty.Register(
 			nameof(ItemsSource),
 			typeof(IEnumerable<Intent>),

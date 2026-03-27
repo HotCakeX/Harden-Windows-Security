@@ -7,9 +7,9 @@
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
+    xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    xmlns:others="using:AppControlManager.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Page.Resources>
@@ -511,7 +511,7 @@
                               IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                               SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                               SelectedIndex="0"
-                              ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"
+                              ItemsSource="{x:Bind vm:ViewModelBase.ScanLevelsSourceForLogs}"
                               ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 
                     <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"

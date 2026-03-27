@@ -29,14 +29,14 @@ namespace AppControlManager.CustomUIElements;
 /// </summary>
 internal sealed partial class ListBoxV2 : UserControl
 {
-	public static readonly DependencyProperty ItemsSourceProperty =
+	private static readonly DependencyProperty ItemsSourceProperty =
 		DependencyProperty.Register(
 			nameof(ItemsSource),
 			typeof(IEnumerable),
 			typeof(ListBoxV2),
 			new PropertyMetadata(null));
 
-	public static readonly DependencyProperty SelectionModeProperty =
+	private static readonly DependencyProperty SelectionModeProperty =
 		DependencyProperty.Register(
 			nameof(SelectionMode),
 			typeof(SelectionMode),

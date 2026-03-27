@@ -174,7 +174,7 @@
 
                                 </StackPanel>
 
-                                <ComboBox ItemsSource="{x:Bind Host.AuthCompanionCLS.SignInMethodsComboBoxSource}"
+                                <ComboBox ItemsSource="{x:Bind MSGraph:AuthenticationCompanion.SignInMethodsComboBoxSource}"
                                           Margin="0,5,0,0"
                                           IsEnabled="{x:Bind Host.AreElementsEnabled, Mode=OneWay}"
                                           HorizontalAlignment="Center"
@@ -220,7 +220,7 @@
                                     </ComboBox.HeaderTemplate>
                                 </ComboBox>
 
-                                <ComboBox ItemsSource="{x:Bind Host.AuthCompanionCLS.AzureCloudEnvironmentComboBoxSource}"
+                                <ComboBox ItemsSource="{x:Bind MSGraph:AuthenticationCompanion.AzureCloudEnvironmentComboBoxSource}"
                                           Margin="0,5,0,0"
                                           HorizontalAlignment="Center"
                                           x:Uid="AzureCloudEnvironmentComboBox"

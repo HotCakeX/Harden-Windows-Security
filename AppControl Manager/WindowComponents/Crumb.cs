@@ -27,5 +27,4 @@ internal readonly struct Crumb(string label, Type page)
 {
 	internal string Label => label;
 	internal Type Page => page;
-	public override string ToString() => Label;
 }

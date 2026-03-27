@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
 using Microsoft.Windows.Globalization;
 using Windows.Graphics;
@@ -44,7 +43,7 @@ namespace AppControlManager;
 /// <summary>
 /// Provides application-specific behavior to supplement the default Application class.
 /// </summary>
-public partial class App : Application
+public sealed partial class App : Application
 {
 	/// <summary>
 	/// Tracks whether the cleanup logics have been run.

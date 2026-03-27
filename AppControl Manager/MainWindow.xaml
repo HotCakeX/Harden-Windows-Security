@@ -95,7 +95,9 @@
                 <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="SearchColumn" Width="3*"/>
                 <ColumnDefinition x:Name="RightDragColumn" Width="*" />
-                <ColumnDefinition x:Name="AccountColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="ElevationContextSwitchButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="SidebarAndElevationContextSwitchButtonPadding" Width="30"/>
+                <ColumnDefinition x:Name="SidebarButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
 
@@ -129,7 +131,7 @@
 
             <!-- Main search area at the top -->
             <!-- Wrapped in a Grid to allow overlaying the accelerator text -->
-            <Grid Grid.Column="6" VerticalAlignment="Center" MaxWidth="600">
+            <Grid Grid.Column="6" VerticalAlignment="Center">
                 <AutoSuggestBox x:Name="TitleBarSearchBox"
                                 QueryIcon="Find"
                                 HorizontalAlignment="Stretch"
@@ -232,11 +234,34 @@
                 </StackPanel>
             </Grid>
 
+            <!-- Elevation Context Switch Button -->
+            <Button x:Name="ElevationContextSwitchButton"
+                    x:Uid="ElevationContextSwitchButton"
+                    Click="{x:Bind ElevationContextSwitchButton_Click}"
+                    RightTapped="{x:Bind ElevationContextSwitchButton_RightTapped}"
+                    Grid.Column="8">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <FontIcon Glyph="&#xE748;" FontSize="16"/>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <TeachingTip x:Name="ElevationContextSwitchButtonTeachingTip"
+                         x:Uid="ElevationContextSwitchButtonTeachingTip"
+                         IsLightDismissEnabled="True"
+                         ActionButtonClick="{x:Bind SwitchElevationContext}"
+                         Subtitle="{x:Bind ElevationContextSwitchButtonTeachingTipSubtitle}"
+                         Target="{x:Bind ElevationContextSwitchButton}">
+                <TeachingTip.IconSource>
+                    <FontIconSource Glyph="&#xE748;" />
+                </TeachingTip.IconSource>
+            </TeachingTip>
+
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton"
                     x:Uid="SidebarButton"
                     Click="{x:Bind ViewModel.SidebarButton_Click}"
-                    Grid.Column="8"
+                    Grid.Column="10"
                     Height="32"
                     Margin="5,0,30,0"
                     Background="Transparent"
@@ -408,7 +433,7 @@
                                             BorderThickness="1"
                                             CornerRadius="15"
                                             Shadow="{StaticResource SharedShadow}"
-                                            AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                            AllowDrop="{x:Bind vm:ViewModelBase.IsNotElevated}"
                                             DragOver="{x:Bind OnSidebarDragOver}"
                                             Drop="{x:Bind OnSidebarDrop}">
 
@@ -428,6 +453,7 @@
                                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                                         <FontIcon Glyph="&#xE721;" FontSize="14" />
                                                         <TextBlock x:Uid="SearchThePoliciesLibrary" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center"/>
+                                                        <ProgressRing Margin="8,0,0,0" Visibility="{x:Bind ViewModel.SidebarProgressRingVisibility, Mode=OneWay}" IsActive="True" />
                                                     </StackPanel>
                                                 </TextBox.Header>
                                             </TextBox>
@@ -450,7 +476,7 @@
                                                         <DataTemplate x:DataType="siPolicy:PolicyFileRepresent">
 
                                                             <!-- SwipeControl is Root so input won't be blocked when content is Z-translated. -->
-                                                            <SwipeControl Height="100" Margin="0,4,0,4">
+                                                            <SwipeControl Height="100" IsEnabled="{x:Bind vm:ViewModelProvider.MainWindowVM.SidebarElementsAreEnabled, Mode=OneWay}" Margin="0,4,0,4">
 
                                                                 <SwipeControl.LeftItems>
                                                                     <SwipeItems Mode="Reveal">
@@ -686,6 +712,7 @@
                                             </ScrollViewer>
 
                                             <Button x:Uid="ExtraActionsDropDownButton"
+                                                    IsEnabled="{x:Bind vm:ViewModelProvider.MainWindowVM.SidebarElementsAreEnabled, Mode=OneWay}"
                                                     HorizontalAlignment="Center">
                                                 <Button.ContentTemplate>
                                                     <DataTemplate x:DataType="x:String">

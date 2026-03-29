@@ -217,7 +217,7 @@
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
 		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
-		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.3" />
+		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.4" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.53" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25122902" />

@@ -485,7 +485,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			catch (Exception innerEx)
 			{
 				Logger.Write(innerEx);
-				// Return basic shadow as final fallback	
+				// Return basic shadow as final fallback
 				return new AttachedCardShadow();
 			}
 		}
@@ -554,7 +554,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			catch (Exception innerEx)
 			{
 				Logger.Write(innerEx);
-				// Return basic border with just background as final fallback		
+				// Return basic border with just background as final fallback
 				return new Border
 				{
 					Background = background,

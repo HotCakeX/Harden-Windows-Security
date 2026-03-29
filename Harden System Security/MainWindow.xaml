@@ -719,7 +719,7 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <FontIcon Grid.Column="0"
-                                                              Glyph="&#xF607;"                                                              
+                                                              Glyph="&#xF607;"
                                                               FontSize="16"/>
 
                                                     <TextBlock Grid.Column="1"

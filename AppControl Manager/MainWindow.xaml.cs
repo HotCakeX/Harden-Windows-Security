@@ -493,11 +493,8 @@ internal sealed partial class MainWindow : Window
 		// Cancel the closing operation immediately to allow for async confirmation
 		args.Cancel = true;
 
-		await AskForConfirmation(() =>
-		{
-			// Close without re-triggering the cancelable AppWindow.Closing event loop
-			Application.Current.Exit();
-		});
+		// Close without re-triggering the cancelable AppWindow.Closing event loop
+		await AskForConfirmation(Application.Current.Exit);
 	}
 
 	/// <summary>
@@ -1778,7 +1775,7 @@ internal sealed partial class MainWindow : Window
 		ElevationContextSwitchButtonTeachingTip.IsOpen = true;
 
 	// Subtitle text for the UI's TeachingTip
-	private string ElevationContextSwitchButtonTeachingTipSubtitle = GlobalVars.GetStr(GlobalVars.IsElevated ? "ElevationContextSwitchButtonTeachingTipSubtitleElevated" : "ElevationContextSwitchButtonTeachingTipSubtitleUnelevated");
+	private readonly string ElevationContextSwitchButtonTeachingTipSubtitle = GlobalVars.GetStr(GlobalVars.IsElevated ? "ElevationContextSwitchButtonTeachingTipSubtitleElevated" : "ElevationContextSwitchButtonTeachingTipSubtitleUnelevated");
 
 	private void ElevationContextSwitchButton_Click(object sender, RoutedEventArgs e) =>
 		ElevationContextSwitchButtonTeachingTip.IsOpen = true;

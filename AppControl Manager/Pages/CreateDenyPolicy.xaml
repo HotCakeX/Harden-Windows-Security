@@ -731,7 +731,7 @@
 
 
                 <!-- Package Family Name (PFN) -->
-                <controls:SettingsExpander x:Uid="CreateDenyPolicyPFNSettingsExpander"                                           
+                <controls:SettingsExpander x:Uid="CreateDenyPolicyPFNSettingsExpander"
                                            Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}"
                                            IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}">
                     <controls:SettingsExpander.HeaderIcon>

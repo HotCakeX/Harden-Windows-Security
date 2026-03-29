@@ -7,7 +7,7 @@
     xmlns:ACMVM="using:AppControlManager.ViewModels"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:CCToolKit="using:CommonCore.ToolKits"  
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:Arcane="using:HardenSystemSecurity.Arcane"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 

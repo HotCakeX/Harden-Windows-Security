@@ -371,7 +371,7 @@ internal static partial class BinaryOpsForward
 	{
 		if (signerData.CertRoot.Type is CertEnumType.TBS)
 		{
-			BodyWriter.Write(0U); // TBS Cert Indicator 
+			BodyWriter.Write(0U); // TBS Cert Indicator
 			WritePaddedCountedBytes(signerData.CertRoot.Value, BodyWriter);
 		}
 		else

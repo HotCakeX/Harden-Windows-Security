@@ -7070,4 +7070,25 @@
   <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
     <value>Η επιλεγμένη πολιτική ενημερώθηκε με επιτυχία προσθέτοντας νέους κανόνες σε αυτήν.</value>
   </data>
+    <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επανεκκινήστε την εφαρμογή για εκτέλεση με διαφορετικό σύνολο δικαιωμάτων.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επανεκκινήστε την εφαρμογή για εκτέλεση με διαφορετικό σύνολο δικαιωμάτων.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>Εκτελείται με δικαιώματα διαχειριστή. Όλες οι δυνατότητες της εφαρμογής είναι διαθέσιμες. Μπορείτε να κάνετε επανεκκίνηση για εκτέλεση με περιορισμένα δικαιώματα.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>Εκτελείται με περιορισμένα δικαιώματα. Δυνατότητες που απαιτούν αυξημένα δικαιώματα δεν είναι διαθέσιμες.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>Επανεκκινήστε την εφαρμογή</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>Επανεκκίνηση</value>
+  </data>
 </root>

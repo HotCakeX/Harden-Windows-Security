@@ -7070,4 +7070,25 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
     <value>La directiva seleccionada se actualizó correctamente al agregarle nuevas reglas.</value>
   </data>
+    <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reinicie la aplicación para ejecutarla con diferentes privilegios.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reinicie la aplicación para ejecutarla con diferentes privilegios.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>Ejecutando con privilegios de administrador. Todas las características de la aplicación están disponibles. Puede reiniciar para ejecutar con privilegios limitados.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>Ejecutando con privilegios limitados. Las características que requieren privilegios elevados no están disponibles.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>Reiniciar la aplicación</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>Reiniciar</value>
+  </data>
 </root>

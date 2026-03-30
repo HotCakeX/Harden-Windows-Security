@@ -7070,4 +7070,25 @@
   <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
     <value>Mise à jour réussie de la stratégie sélectionnée en y ajoutant de nouvelles règles.</value>
   </data>
+    <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Relancez l'application pour l'exécuter avec différents privilèges.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Relancez l'application pour l'exécuter avec différents privilèges.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>Exécution avec des privilèges d'administrateur. Toutes les fonctionnalités de l'application sont disponibles. Vous pouvez la relancer pour l'exécuter avec des privilèges limités.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>Exécution avec des privilèges limités. Les fonctionnalités nécessitant des privilèges élevés ne sont pas disponibles.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>Relancer l'application</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>Relancer</value>
+  </data>
 </root>

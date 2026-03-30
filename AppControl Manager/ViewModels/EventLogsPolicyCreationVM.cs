@@ -77,7 +77,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> AllFileIdentities = [];
+	private readonly List<FileIdentity> AllFileIdentities = [];
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
@@ -406,6 +406,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			// Store all of the data in the List
 			AllFileIdentities.AddRange(Output);
+
+			// Sort to display newest event first at top by default
+			AllFileIdentities.Sort((x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
 
 			// Populates the Observable Collection and applies filters to ensure the UI reflects any currently selected Date or Search Text filters.
 			ApplyFilters();

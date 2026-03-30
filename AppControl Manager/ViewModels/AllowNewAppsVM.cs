@@ -117,7 +117,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> LocalFilesAllFileIdentities = [];
+	private readonly List<FileIdentity> LocalFilesAllFileIdentities = [];
 
 	private ListViewHelper.SortState SortStateLocalFiles { get; set; } = new();
 
@@ -127,7 +127,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> EventLogsAllFileIdentities = [];
+	private readonly List<FileIdentity> EventLogsAllFileIdentities = [];
 
 	private ListViewHelper.SortState SortStateEventLogs { get; set; } = new();
 

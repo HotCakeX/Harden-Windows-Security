@@ -274,33 +274,15 @@ internal static partial class ListViewHelper
 	/// The SortState parameter toggles sort order when the same column is pressed.
 	/// </summary>
 	/// <typeparam name="TElement">The element type in the collections.</typeparam>
-	/// <param name="keySelector">
-	/// Function to obtain the sort key (object?) from each element.
-	/// </param>
-	/// <param name="searchBoxText">
-	/// The Text used for filtering (only to decide whether to reset to originalList).
-	/// </param>
-	/// <param name="originalList">
-	/// The full list (if no filter is active).
-	/// </param>
-	/// <param name="observableCollection">
-	/// The observable collection to update.
-	/// </param>
-	/// <param name="sortState">
-	/// An object that holds the current sort key and direction.
-	/// </param>
-	/// <param name="newKey">
-	/// The key for the column being sorted (from the button's Tag).
-	/// </param>
-	/// <param name="regKey">
-	/// Used to find the ListView's ScrollViewer in the cache.
-	/// </param>
-	/// <param name="propertyFilterValue">
-	/// The value of the property filter, if applicable.
-	/// </param>
-	/// <param name="selectedDate">
-	/// The value of the date picker filter, if applicable.
-	/// </param>
+	/// <param name="keySelector">Function to obtain the sort key (object?) from each element.</param>
+	/// <param name="searchBoxText">The Text used for filtering (only to decide whether to reset to originalList).</param>
+	/// <param name="originalList">The full list (if no filter is active).</param>
+	/// <param name="observableCollection">The observable collection to update.</param>
+	/// <param name="sortState">An object that holds the current sort key and direction.</param>
+	/// <param name="newKey">The key for the column being sorted (from the button's Tag).</param>
+	/// <param name="regKey">Used to find the ListView's ScrollViewer in the cache.</param>
+	/// <param name="propertyFilterValue">The value of the property filter, if applicable.</param>
+	/// <param name="selectedDate">The value of the date picker filter, if applicable.</param>
 	internal static void SortColumn<TElement>(
 		Func<TElement, object?> keySelector,
 		string? searchBoxText,
@@ -335,11 +317,11 @@ internal static partial class ListViewHelper
 		// Choose the source (filtered vs. original)
 		// If either the property search, regular search box, or date picker has value then use the Obvs Collection because that means the user is currently seeing a filtered data.
 		bool isSearchEmpty = string.IsNullOrEmpty(searchBoxText) && string.IsNullOrEmpty(propertyFilterValue) && selectedDate is null;
-		IEnumerable<TElement> sourceData = isSearchEmpty
+		List<TElement> sourceData = isSearchEmpty
 			? originalList
-			: observableCollection;
+			: observableCollection.ToList(); // ToList is necessary. If the variable was IEnumerable<TElement> and isSearchEmpty was false, then sortedData would be null due to RangedObservableCollection usage.
 
-		IEnumerable<TElement> sortedData = sortState.IsDescending
+		IOrderedEnumerable<TElement> sortedData = sortState.IsDescending
 			? sourceData.OrderByDescending(keySelector)
 			: sourceData.OrderBy(keySelector);
 

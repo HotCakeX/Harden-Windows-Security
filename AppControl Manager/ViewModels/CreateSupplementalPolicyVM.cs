@@ -1630,16 +1630,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Applies the date and search filters to the data grid
 	/// </summary>
-	private void StrictKernel_ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
+	private void StrictKernel_ApplyFilters() => ListViewHelper.ApplyFilters(
 		allFileIdentities: StrictKernelModeScanResultsList,
 		filteredCollection: StrictKernelModeScanResults,
 		searchText: StrictKernelModeResultsSearchTextBox,
 		selectedDate: null,
 		regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults
 		);
-	}
 
 	/// <summary>
 	/// Deletes the selected row from the results

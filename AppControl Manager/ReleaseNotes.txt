@@ -11,3 +11,5 @@
 * System Information page is now more resilient when encountering deployed policy files in inaccessible locations and handles them gracefully.
 
 * Added a new button to the app's toolbar which allows you to easily relaunch the app with different privileges. If running as Administrator, pressing this button will launch the app with limited privileges and if running with limited privileges, pressing this button will relaunch the app with Administrator privileges.
+
+* Added Japanese language support. Thanks to the community members on GitHub.

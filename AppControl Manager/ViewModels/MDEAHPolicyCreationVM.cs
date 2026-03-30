@@ -125,7 +125,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> AllFileIdentities = [];
+	private readonly List<FileIdentity> AllFileIdentities = [];
 
 	/// <summary>
 	/// To store the MDE Advanced Hunting CSV log file path.
@@ -470,14 +470,14 @@ DeviceEvents
 			FileIdentities.Clear();
 			AllFileIdentities.Clear();
 
-			// To store the output of the MDE Advanced Hunting logs scan.
-			// Ensures the data are unique and are time-prioritized.
-			// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
-			FileIdentityTimeBasedHashSet Output = new();
-
 			// Grab the App Control Logs
 			await Task.Run(() =>
 			{
+				// To store the output of the MDE Advanced Hunting logs scan.
+				// Ensures the data are unique and are time-prioritized.
+				// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
+				FileIdentityTimeBasedHashSet Output = new();
+
 				if (MDEAdvancedHuntingLogs.Count == 0)
 				{
 					throw new InvalidOperationException(
@@ -503,13 +503,13 @@ DeviceEvents
 				{
 					throw new InvalidOperationException(GlobalVars.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs"));
 				}
-			});
 
-			// Store all of the data in the List
-			foreach (FileIdentity item in Output.FileIdentitiesInternal)
-			{
-				AllFileIdentities.Add(item);
-			}
+				// Store all of the data in the List
+				AllFileIdentities.AddRange(Output.FileIdentitiesInternal);
+
+				// Sort to display newest event first at top by default
+				AllFileIdentities.Sort((x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
+			});
 
 			// Instead of manually adding items to the ObservableCollection, we call ApplyFilters.
 			// This ensures that if there's an existing search text or date filter,
@@ -869,37 +869,34 @@ DeviceEvents
 					)
 				);
 
-				// To store the output of the MDE Advanced Hunting logs scan.
-				// Ensures the data are unique and are time-prioritized.
-				// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
-				FileIdentityTimeBasedHashSet Output = new();
-
-				// Grab the App Control Logs
-				HashSet<FileIdentity> data = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
-
-				await Task.Run(() =>
-				{
-					foreach (FileIdentity log in data)
-					{
-						_ = Output.Add(log);
-					}
-				});
-
-				if (Output.Count is 0)
-				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("NoActionableLogsFoundMessage"));
-				}
-
 				AllFileIdentities.Clear();
 				FileIdentities.Clear();
 
 				await Task.Run(() =>
 				{
-					// Store all of the data in the List
-					foreach (FileIdentity log in Output.FileIdentitiesInternal)
+					// To store the output of the MDE Advanced Hunting logs scan.
+					// Ensures the data are unique and are time-prioritized.
+					// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
+					FileIdentityTimeBasedHashSet Output = new();
+
+					// Grab the App Control Logs
+					HashSet<FileIdentity> data = GetMDEAdvancedHuntingLogsData.Retrieve(root.Results);
+
+					foreach (FileIdentity log in data)
 					{
-						AllFileIdentities.Add(log);
+						_ = Output.Add(log);
 					}
+
+					if (Output.Count is 0)
+					{
+						MainInfoBar.WriteWarning(GlobalVars.GetStr("NoActionableLogsFoundMessage"));
+					}
+
+					// Store all of the data in the List
+					AllFileIdentities.AddRange(Output.FileIdentitiesInternal);
+
+					// Sort to display newest event first at top by default
+					AllFileIdentities.Sort((x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
 				});
 
 				// Adds data from the List to Observable collection and makes sure filters are respected

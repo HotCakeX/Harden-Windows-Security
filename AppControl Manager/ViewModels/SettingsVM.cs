@@ -66,6 +66,9 @@ internal sealed partial class SettingsVM : ViewModelBase
 		LanguageOptions.Add(new("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
 		LanguageOptions.Add(new("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
 		LanguageOptions.Add(new("Français", "ms-appx:///Assets/CountryFlags/france-240.png"));
+#if APP_CONTROL_MANAGER
+		LanguageOptions.Add(new("Japanese", "ms-appx:///Assets/CountryFlags/japan-96.png"));
+#endif
 	}
 
 	/// <summary>
@@ -117,7 +120,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ "es", 6 },
 		{ "ml", 7 },
 		{ "de", 8 },
-		{ "fr", 9 }
+		{ "fr", 9 },
+		{ "ja", 10 }
 	};
 
 	private static readonly string[] SupportedLanguagesReverse = [
@@ -130,7 +134,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		 "es",
 		 "ml",
 		 "de",
-		 "fr"
+		 "fr",
+		 "ja"
 	];
 
 	internal int LanguageComboBoxSelectedIndex

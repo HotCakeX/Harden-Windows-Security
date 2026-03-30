@@ -278,7 +278,7 @@ internal sealed class NavigationService
 	/// Updates the BreadCrumbBar in response to a page navigation in the app.
 	/// </summary>
 	/// <param name="currentPageType"></param>
-	internal void SetCrumbBar(Type currentPageType)
+	private void SetCrumbBar(Type currentPageType)
 	{
 		// Get the item from BreadCrumb dictionary that belongs to the next page we navigated to
 		if (mainWindowVM.breadCrumbMappingsV2.TryGetValue(currentPageType, out PageTitleMap? info))

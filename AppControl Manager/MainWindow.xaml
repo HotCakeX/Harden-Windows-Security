@@ -927,10 +927,9 @@
                                        ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
                                        ItemClicked="{x:Bind Nav.BreadcrumbBar_ItemClicked}">
                             <BreadcrumbBar.ItemTemplate>
-                                <DataTemplate x:DataType="WindowComponents:Crumb"
-                                              xmlns:vms="using:AppControlManager.ViewModels">
+                                <DataTemplate x:DataType="WindowComponents:Crumb">
                                     <TextBlock Text="{x:Bind Label}"
-                                               Style="{x:Bind vms:ViewModelProvider.MainWindowVM.BreadcrumbItemStyle, Mode=OneWay}"
+                                               Style="{x:Bind vm:ViewModelProvider.MainWindowVM.BreadcrumbItemStyle, Mode=OneWay}"
                                                TextWrapping="NoWrap"/>
                                 </DataTemplate>
                             </BreadcrumbBar.ItemTemplate>

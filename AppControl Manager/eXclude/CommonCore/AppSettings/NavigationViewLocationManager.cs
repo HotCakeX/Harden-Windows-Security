@@ -29,13 +29,6 @@ internal static class NavigationViewLocationManager
 	// MainWindow listens to this to set the NavigationView's location
 	internal static event EventHandler<NavigationViewLocationChangedEventArgs>? NavigationViewLocationChanged;
 
-	// Method to raise the event when the location changes
-	internal static void OnNavigationViewLocationChanged(string newLocation)
-	{
-		// Raise the NavigationViewLocationChanged event with the new location
-		NavigationViewLocationChanged?.Invoke(
-			null,
-			new(newLocation)
-		);
-	}
+	// Raise the NavigationViewLocationChanged event with the new location
+	internal static void OnNavigationViewLocationChanged(string newLocation) => NavigationViewLocationChanged?.Invoke(null, new(newLocation));
 }

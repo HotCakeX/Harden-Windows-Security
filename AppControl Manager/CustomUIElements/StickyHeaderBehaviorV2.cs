@@ -65,7 +65,7 @@ public static class StickyHeaderBehaviorV2
 	/// <summary>
 	/// Attached property to enable/disable the behavior
 	/// </summary>
-	public static readonly DependencyProperty IsEnabledProperty =
+	private static readonly DependencyProperty IsEnabledProperty =
 		DependencyProperty.RegisterAttached(
 			"IsEnabled",
 			typeof(bool),

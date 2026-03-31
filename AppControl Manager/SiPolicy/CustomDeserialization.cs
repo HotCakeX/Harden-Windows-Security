@@ -96,9 +96,9 @@ internal static class CustomDeserialization
 
 		// Deserialize Rules
 		// Make sure it exists even empty
-		List<RuleType> rules = [];
-		HashSet<OptionType> policyRules = [];
 		XmlElement? rulesElement = root["Rules", GlobalVars.SiPolicyNamespace];
+		List<RuleType> rules = new(capacity: rulesElement?.ChildNodes.Count ?? 0);
+		HashSet<OptionType> policyRules = new(capacity: rulesElement?.ChildNodes.Count ?? 0);
 		if (rulesElement is not null)
 		{
 			foreach (XmlNode node in rulesElement.ChildNodes)
@@ -137,9 +137,9 @@ internal static class CustomDeserialization
 			EKUs = []
 		};
 
-		HashSet<string> EKUIDsCol = [];
 
 		XmlElement? ekusElement = root["EKUs", GlobalVars.SiPolicyNamespace];
+		HashSet<string> EKUIDsCol = new(capacity: ekusElement?.ChildNodes.Count ?? 0);
 		if (ekusElement is not null)
 		{
 			foreach (XmlNode node in ekusElement.ChildNodes)
@@ -168,14 +168,15 @@ internal static class CustomDeserialization
 
 		// Deserialize FileRules
 		// Make sure it exists even empty
-		policy.FileRules = [];
+		XmlElement? fileRulesElement = root["FileRules", GlobalVars.SiPolicyNamespace];
+
+		policy.FileRules = new(capacity: fileRulesElement?.ChildNodes.Count ?? 0);
 
 		HashSet<string> AllowRulesIDsCol = [];
 		HashSet<string> DenyRulesIDsCol = [];
 		HashSet<string> FileAttribRulesIDsCol = [];
 		HashSet<string> FileRulesIDsCol = [];
 
-		XmlElement? fileRulesElement = root["FileRules", GlobalVars.SiPolicyNamespace];
 		if (fileRulesElement is not null)
 		{
 			foreach (XmlNode node in fileRulesElement.ChildNodes)
@@ -208,7 +209,7 @@ internal static class CustomDeserialization
 		if (signersElement is not null)
 		{
 			HashSet<string> SignersIDsCol = [];
-			policy.Signers = [];
+			policy.Signers = new(capacity: signersElement.ChildNodes.Count);
 			foreach (XmlNode node in signersElement.ChildNodes)
 			{
 				if (node is XmlElement signerElem)
@@ -890,7 +891,7 @@ internal static class CustomDeserialization
 				List<ExceptDenyRule>? rules = null;
 				if (edrNodes.Count > 0)
 				{
-					rules = [];
+					rules = new(capacity: edrNodes.Count);
 					foreach (XmlNode node in edrNodes)
 					{
 						if (node is XmlElement ruleElem)

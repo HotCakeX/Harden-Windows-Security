@@ -68,7 +68,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	// Static flyout open state shared among all instances
 	private static bool s_isFlyoutOpen; // true when the shared flyout is open
 
-	internal static readonly DependencyProperty LinkUrlProperty =
+	private static readonly DependencyProperty LinkUrlProperty =
 		DependencyProperty.Register(
 			nameof(LinkUrl),
 			typeof(string),

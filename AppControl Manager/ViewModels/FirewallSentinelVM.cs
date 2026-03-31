@@ -929,7 +929,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = DefaultScanLevel;
+	} = ScanLevelsSource[0];
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -1423,8 +1423,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	{
 		// Instantiate the Content Dialog
 		using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
-
-		GlobalVars.CurrentlyOpenContentDialog = customDialog;
 
 		// Show the dialog
 		_ = await customDialog.ShowAsync();

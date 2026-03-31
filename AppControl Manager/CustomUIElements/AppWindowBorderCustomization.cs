@@ -36,11 +36,10 @@ internal static class AppWindowBorderCustomization
 {
 	private static DispatcherQueueTimer? Timer;
 
-	private const double Speed = 4.0;
 	private static long LastTimestamp; // Last Stopwatch tick count
 	private static float Hue; // Current hue in [0,1)
 	private static readonly float TickToSeconds = (float)(1.0 / Stopwatch.Frequency); // Conversion factor from ticks to seconds
-	private const float InverseSpeed = 1f / (float)Speed;   // Precomputed inverse of Speed
+	private const float InverseSpeed = 1f / 4.0f;   // Precomputed inverse of Speed
 	private static readonly TimeSpan FrameInterval = TimeSpan.FromMilliseconds(16);
 
 	/// <summary>

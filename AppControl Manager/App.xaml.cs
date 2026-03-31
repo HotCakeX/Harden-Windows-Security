@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
 using Microsoft.Windows.Globalization;
 using Windows.Graphics;
@@ -44,7 +43,7 @@ namespace AppControlManager;
 /// <summary>
 /// Provides application-specific behavior to supplement the default Application class.
 /// </summary>
-public partial class App : Application
+public sealed partial class App : Application
 {
 	/// <summary>
 	/// Tracks whether the cleanup logics have been run.
@@ -254,14 +253,6 @@ public partial class App : Application
 				// Ensure we're on the UI thread before showing the dialog
 				await MainWindow.DispatcherQueue.EnqueueAsync(async () =>
 				{
-					// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error
-					if (GlobalVars.CurrentlyOpenContentDialog is ContentDialog dialog)
-					{
-						dialog.Hide();
-
-						// Remove it after hiding it
-						GlobalVars.CurrentlyOpenContentDialog = null;
-					}
 					using AppControlManager.CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
 						Title = GlobalVars.GetStr("ErrorDialogTitle"),
@@ -272,6 +263,10 @@ public partial class App : Application
 					// Show the dialog
 					_ = await errorDialog.ShowAsync();
 				});
+			}
+			catch
+			{
+				Logger.Write("Could not display the content dialog for error details!", LogTypeIntel.Error);
 			}
 			finally
 			{

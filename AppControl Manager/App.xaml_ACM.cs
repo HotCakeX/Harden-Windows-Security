@@ -34,7 +34,7 @@ namespace AppControlManager;
 
 #pragma warning disable CA1515
 
-public partial class App : Application
+public sealed partial class App : Application
 {
 	private static string? _activationAction;
 	private static string? _activationFilePath;

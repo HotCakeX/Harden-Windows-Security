@@ -3,7 +3,7 @@
     x:Class="HardenSystemSecurity.CustomUIElements.HomePageCarousel.HeaderCarousel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"    
+    xmlns:local="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     Loaded="{x:Bind UserControl_Loaded}"
     Unloaded="{x:Bind UserControl_Unloaded}">

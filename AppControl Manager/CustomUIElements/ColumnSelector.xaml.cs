@@ -29,7 +29,7 @@ internal sealed partial class ColumnSelector : UserControl
 	/// <summary>
 	/// Dependency Property to bind the ViewModel's ColumnSelectionItems to this control.
 	/// </summary>
-	public static readonly DependencyProperty ItemsSourceProperty =
+	private static readonly DependencyProperty ItemsSourceProperty =
 		DependencyProperty.Register(
 			nameof(ItemsSource),
 			typeof(ObservableCollection<ColumnSelectionItem>),
@@ -46,7 +46,7 @@ internal sealed partial class ColumnSelector : UserControl
 	{
 		if (ItemsSource is null) return;
 
-		foreach (var item in ItemsSource)
+		foreach (ColumnSelectionItem item in ItemsSource)
 		{
 			item.IsChecked = true;
 		}
@@ -56,7 +56,7 @@ internal sealed partial class ColumnSelector : UserControl
 	{
 		if (ItemsSource is null) return;
 
-		foreach (var item in ItemsSource)
+		foreach (ColumnSelectionItem item in ItemsSource)
 		{
 			item.IsChecked = false;
 		}

@@ -297,8 +297,7 @@ internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
 }
 
 // Helper class for column selection UI
-#pragma warning disable CA1515
-public sealed partial class ColumnSelectionItem(string key, string name, bool isChecked, Action<string, bool> onChanged) : INotifyPropertyChanged
+internal sealed partial class ColumnSelectionItem(string key, string name, bool isChecked, Action<string, bool> onChanged) : INotifyPropertyChanged
 {
 	private Action<string, bool> _onChanged => onChanged;
 
@@ -322,7 +321,6 @@ public sealed partial class ColumnSelectionItem(string key, string name, bool is
 	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
 		PropertyChanged?.Invoke(this, new(propertyName));
 }
-#pragma warning restore CA1515
 
 /// <summary>
 /// A wrapper around GridLength that implements INotifyPropertyChanged.

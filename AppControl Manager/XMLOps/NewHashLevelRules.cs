@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -107,7 +106,7 @@ internal static class NewHashLevelRules
 	/// <param name="siPolicy"></param>
 	/// <param name="hashes"> The Hashes to be used for creating the rules </param>
 	/// <returns>Modified SiPolicy object</returns>
-	internal static SiPolicy.SiPolicy CreateDenyEx(SiPolicy.SiPolicy siPolicy, List<HashCreator> hashes)
+	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy siPolicy, List<HashCreator> hashes)
 	{
 		if (hashes.Count is 0)
 		{

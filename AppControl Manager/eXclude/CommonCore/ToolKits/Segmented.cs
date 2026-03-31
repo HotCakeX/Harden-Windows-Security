@@ -39,10 +39,10 @@ internal sealed partial class EqualPanel : Panel
 	private double _maxItemHeight;
 	private int _visibleItemsCount;
 
-	public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
 		nameof(Spacing), typeof(double), typeof(EqualPanel), new PropertyMetadata(default(double), OnEqualPanelPropertyChanged));
 
-	public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
 		nameof(Orientation), typeof(Orientation), typeof(EqualPanel), new PropertyMetadata(Orientation.Horizontal, OnEqualPanelPropertyChanged));
 
 	public double Spacing
@@ -155,7 +155,7 @@ internal sealed partial class SegmentedItem : ListViewItem
 	internal const string VerticalState = "Vertical";
 	private bool _isVertical;
 
-	public static readonly DependencyProperty ItemHoverMarginProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty ItemHoverMarginProperty = DependencyProperty.Register(
 		nameof(ItemHoverMargin), typeof(Thickness), typeof(SegmentedItem), new PropertyMetadata(new Thickness(0)));
 
 	public Thickness ItemHoverMargin
@@ -164,7 +164,7 @@ internal sealed partial class SegmentedItem : ListViewItem
 		set => SetValue(ItemHoverMarginProperty, value);
 	}
 
-	public static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(IconElement), typeof(SegmentedItem), new PropertyMetadata(null, (d, e) => ((SegmentedItem)d).UpdateVisualStates()));
+	private static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(IconElement), typeof(SegmentedItem), new PropertyMetadata(null, (d, e) => ((SegmentedItem)d).UpdateVisualStates()));
 	public IconElement Icon { get => (IconElement)GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
 	internal SegmentedItem()
@@ -223,7 +223,7 @@ internal sealed partial class Segmented : ListViewBase
 	private int _internalSelectedIndex = -1;
 	private bool _hasLoaded;
 
-	public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(Segmented), new PropertyMetadata(Orientation.Horizontal, (d, e) => ((Segmented)d).OnOrientationChanged()));
+	private static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(Segmented), new PropertyMetadata(Orientation.Horizontal, (d, e) => ((Segmented)d).OnOrientationChanged()));
 	public Orientation Orientation { get => (Orientation)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
 
 	internal Segmented()

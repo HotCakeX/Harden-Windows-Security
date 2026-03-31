@@ -7,7 +7,6 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
-    xmlns:others="using:AppControlManager.Others"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>

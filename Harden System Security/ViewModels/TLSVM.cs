@@ -65,7 +65,6 @@ internal sealed partial class TLSVM : MUnitListViewModelBase
 	/// </summary>
 	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 
-
 	/// <summary>
 	/// Specialized verification for TLS Cipher Suites.
 	/// </summary>

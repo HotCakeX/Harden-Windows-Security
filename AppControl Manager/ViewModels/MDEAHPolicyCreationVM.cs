@@ -92,11 +92,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	}
 
 	/// <summary>
-	/// Applies the property-based filter to the data
-	/// </summary>
-	internal void ApplyPropertyFilter() => ApplyFilters();
-
-	/// <summary>
 	/// Clears the current property filter
 	/// </summary>
 	internal void ClearPropertyFilter()
@@ -130,7 +125,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> AllFileIdentities = [];
+	private readonly List<FileIdentity> AllFileIdentities = [];
 
 	/// <summary>
 	/// To store the MDE Advanced Hunting CSV log file path.
@@ -164,7 +159,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	/// </summary>
 	internal string SelectedBarItemTag { get; set; } = "Local";
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = ScanLevelsSourceForLogs[0];
 
 	/// <summary>
 	/// Bound to the Date Picker on the UI.
@@ -198,9 +193,9 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	internal Visibility ScanLogsProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
-	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+	/// The Supplemental policy that is created or the policy that user selected to add the logs to.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? finalSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? FinalSupplementalPolicy;
 
 	internal string? PolicyNameTextBox { get; set => SPT(ref field, value); }
 
@@ -404,7 +399,7 @@ DeviceEvents
 	/// Applies the date, search, and property filters to the data in the ListView.
 	/// </summary>
 	private void ApplyFilters() => ListViewHelper.ApplyFilters(
-			allFileIdentities: AllFileIdentities.AsEnumerable(),
+			allFileIdentities: AllFileIdentities,
 			filteredCollection: FileIdentities,
 			searchText: SearchBoxText,
 			selectedDate: DatePickerDate,
@@ -459,6 +454,8 @@ DeviceEvents
 
 		try
 		{
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
 			AreElementsEnabled = false;
 
 			// Display the progress ring on the ScanLogs button
@@ -473,14 +470,14 @@ DeviceEvents
 			FileIdentities.Clear();
 			AllFileIdentities.Clear();
 
-			// To store the output of the MDE Advanced Hunting logs scan.
-			// Ensures the data are unique and are time-prioritized.
-			// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
-			FileIdentityTimeBasedHashSet Output = new();
-
 			// Grab the App Control Logs
 			await Task.Run(() =>
 			{
+				// To store the output of the MDE Advanced Hunting logs scan.
+				// Ensures the data are unique and are time-prioritized.
+				// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
+				FileIdentityTimeBasedHashSet Output = new();
+
 				if (MDEAdvancedHuntingLogs.Count == 0)
 				{
 					throw new InvalidOperationException(
@@ -506,13 +503,13 @@ DeviceEvents
 				{
 					throw new InvalidOperationException(GlobalVars.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs"));
 				}
-			});
 
-			// Store all of the data in the List
-			foreach (FileIdentity item in Output.FileIdentitiesInternal)
-			{
-				AllFileIdentities.Add(item);
-			}
+				// Store all of the data in the List
+				AllFileIdentities.AddRange(Output.FileIdentitiesInternal);
+
+				// Sort to display newest event first at top by default
+				AllFileIdentities.Sort((x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
+			});
 
 			// Instead of manually adding items to the ObservableCollection, we call ApplyFilters.
 			// This ensures that if there's an existing search text or date filter,
@@ -561,7 +558,7 @@ DeviceEvents
 		bool Error = false;
 
 		// Empty the class variable that stores the policy file path
-		finalSupplementalPolicyPath = null;
+		FinalSupplementalPolicy = null;
 
 		try
 		{
@@ -655,10 +652,10 @@ DeviceEvents
 								}
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = PolicyToAddLogsTo;
+								FinalSupplementalPolicy = PolicyToAddLogsTo;
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -704,10 +701,10 @@ DeviceEvents
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = new(policyObj);
+								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -756,10 +753,10 @@ DeviceEvents
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = new(policyObj);
+								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -813,13 +810,12 @@ DeviceEvents
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(FinalSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(FinalSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for the button that retrieves the logs
@@ -873,37 +869,34 @@ DeviceEvents
 					)
 				);
 
-				// To store the output of the MDE Advanced Hunting logs scan.
-				// Ensures the data are unique and are time-prioritized.
-				// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
-				FileIdentityTimeBasedHashSet Output = new();
-
-				// Grab the App Control Logs
-				HashSet<FileIdentity> data = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
-
-				await Task.Run(() =>
-				{
-					foreach (FileIdentity log in data)
-					{
-						_ = Output.Add(log);
-					}
-				});
-
-				if (Output.Count is 0)
-				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("NoActionableLogsFoundMessage"));
-				}
-
 				AllFileIdentities.Clear();
 				FileIdentities.Clear();
 
 				await Task.Run(() =>
 				{
-					// Store all of the data in the List
-					foreach (FileIdentity log in Output.FileIdentitiesInternal)
+					// To store the output of the MDE Advanced Hunting logs scan.
+					// Ensures the data are unique and are time-prioritized.
+					// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
+					FileIdentityTimeBasedHashSet Output = new();
+
+					// Grab the App Control Logs
+					HashSet<FileIdentity> data = GetMDEAdvancedHuntingLogsData.Retrieve(root.Results);
+
+					foreach (FileIdentity log in data)
 					{
-						AllFileIdentities.Add(log);
+						_ = Output.Add(log);
 					}
+
+					if (Output.Count is 0)
+					{
+						MainInfoBar.WriteWarning(GlobalVars.GetStr("NoActionableLogsFoundMessage"));
+					}
+
+					// Store all of the data in the List
+					AllFileIdentities.AddRange(Output.FileIdentitiesInternal);
+
+					// Sort to display newest event first at top by default
+					AllFileIdentities.Sort((x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
 				});
 
 				// Adds data from the List to Observable collection and makes sure filters are respected
@@ -923,7 +916,6 @@ DeviceEvents
 			MainInfoBar.IsClosable = true;
 		}
 	}
-
 
 	/// <summary>
 	/// CTRL + C shortcuts event handler
@@ -987,6 +979,8 @@ DeviceEvents
 	{
 		try
 		{
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
 			AreElementsEnabled = false;
 			MainInfoBar.IsClosable = false;
 

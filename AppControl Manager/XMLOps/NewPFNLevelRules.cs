@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -76,7 +75,7 @@ internal static class NewPFNLevelRules
 	/// <param name="siPolicy"></param>
 	/// <param name="PFNData"></param>
 	/// <returns>Modified SiPolicy object</returns>
-	internal static SiPolicy.SiPolicy CreateDenyEx(SiPolicy.SiPolicy siPolicy, List<PFNRuleCreator> PFNData)
+	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy siPolicy, List<PFNRuleCreator> PFNData)
 	{
 		if (PFNData.Count is 0)
 		{

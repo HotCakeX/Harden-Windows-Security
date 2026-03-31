@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using AppControlManager.IntelGathering;
 using CommonCore.IncrementalCollection;
@@ -95,7 +94,7 @@ internal static partial class ListViewHelper
 	/// The value to filter by for the selected property. If null or empty, no property filtering is applied.
 	/// </param>
 	internal static void ApplyFilters(
-		IEnumerable<FileIdentity> allFileIdentities,
+		List<FileIdentity> allFileIdentities,
 		RangedObservableCollection<FileIdentity> filteredCollection,
 		string? searchText,
 		DateTimeOffset? selectedDate,
@@ -113,6 +112,8 @@ internal static partial class ListViewHelper
 			savedHorizontal = Sv.HorizontalOffset;
 		}
 
+		bool NoFilter = true;
+
 		// Get the search term from the SearchBox, converting it to lowercase for case-insensitive searching
 		string? searchTerm = searchText?.Trim();
 
@@ -124,6 +125,8 @@ internal static partial class ListViewHelper
 		// Filter results to include only items where 'TimeCreated' is greater than or equal to the selected date.
 		if (selectedDate is not null)
 		{
+			NoFilter = false;
+
 			filteredResults = filteredResults.Where(item =>
 				item.TimeCreated.HasValue && item.TimeCreated.Value.Date >= selectedDate.Value.Date);
 		}
@@ -131,6 +134,8 @@ internal static partial class ListViewHelper
 		// Filter results further to match the search term across multiple properties, case-insensitively
 		if (!string.IsNullOrWhiteSpace(searchTerm))
 		{
+			NoFilter = false;
+
 			filteredResults = filteredResults.Where(output =>
 				(output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				output.SignatureStatus_String.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -154,6 +159,8 @@ internal static partial class ListViewHelper
 		// Apply property-based filter if specified
 		if (selectedPropertyFilter is not null && !string.IsNullOrEmpty(propertyFilterValue))
 		{
+			NoFilter = false;
+
 			string filterValue = propertyFilterValue.Trim();
 			filteredResults = filteredResults.Where(item =>
 			{
@@ -166,8 +173,15 @@ internal static partial class ListViewHelper
 		// Clear the ObservableCollection
 		filteredCollection.Clear();
 
-		// Add the new filtered results to the ObservableCollection
-		filteredCollection.AddRange(filteredResults);
+		// If there are no filters then use the original list (AddRange's high performance overload), otherwise add the new filtered results to the ObservableCollection.
+		if (NoFilter)
+		{
+			filteredCollection.AddRange(allFileIdentities);
+		}
+		else
+		{
+			filteredCollection.AddRange(filteredResults);
+		}
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -179,10 +193,10 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Creates a collection of PropertyFilterItem objects from FileIdentityPropertyMappings for use in ComboBox binding
 	/// </summary>
-	/// <returns>ObservableCollection of PropertyFilterItem objects</returns>
-	internal static ObservableCollection<PropertyFilterItem> CreatePropertyFilterItems()
+	/// <returns>List of PropertyFilterItem objects</returns>
+	internal static List<PropertyFilterItem> CreatePropertyFilterItems()
 	{
-		ObservableCollection<PropertyFilterItem> items = [];
+		List<PropertyFilterItem> items = new(FileIdentityPropertyMappings.Count);
 		foreach (KeyValuePair<string, (string Label, Func<FileIdentity, object?> Getter)> mapping in FileIdentityPropertyMappings)
 		{
 			items.Add(new PropertyFilterItem(mapping.Key, mapping.Value.Label, mapping.Value.Getter));

@@ -28,13 +28,6 @@ internal static class NavigationBackgroundManager
 	// Event for when the NavigationView background changes
 	internal static event EventHandler<NavigationBackgroundChangedEventArgs>? NavViewBackgroundChange;
 
-	// Method to invoke the event
-	internal static void OnNavigationBackgroundChanged(bool isBackgroundOn)
-	{
-		// Raise the NavViewBackgroundChange event with the new background status
-		NavViewBackgroundChange?.Invoke(
-			null,
-			new(isBackgroundOn)
-		);
-	}
+	// Raise the NavViewBackgroundChange event with the new background status
+	internal static void OnNavigationBackgroundChanged(bool isBackgroundOn) => NavViewBackgroundChange?.Invoke(null, new(isBackgroundOn));
 }

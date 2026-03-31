@@ -243,8 +243,8 @@ internal static class GetAppsList
 			// The list to return as output
 			List<PackagedAppView> apps = [];
 
-			// Get all of the packages on the system
-			IEnumerable<Package> allApps = packageManager.FindPackages();
+			// Get all of the packages on the system if running elevated, otherwise get packages for the current user only.
+			IEnumerable<Package> allApps = GlobalVars.IsElevated ? packageManager.FindPackages() : packageManager.FindPackagesForUser(string.Empty);
 
 			// Loop over each package
 			foreach (Package item in allApps)
@@ -304,11 +304,10 @@ internal static class GetAppsList
 
 	}
 
-#pragma warning disable IDE0055
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
-	internal static async Task<ObservableCollection<GroupInfoListForPackagedAppView>> GetContactsGroupedAsync(object? VMRef = null)
+	internal static async Task<(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>)> GetContactsGroupedAsync(object? VMRef = null)
 	{
 		// Grab Apps objects from pre-existing list
 		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await Get(VMRef)
@@ -326,7 +325,34 @@ internal static class GetAppsList
 															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
 															 select new GroupInfoListForPackagedAppView(items: g, key: g.Key);
 
-		return new(query);
+		return (new(query), new(query));
+	}
+
+	/// <summary>
+	/// Event handler for when the search box of apps list changes. Used by all ViewModels that perform searches among installed packaged apps.
+	/// </summary>
+	internal static ObservableCollection<GroupInfoListForPackagedAppView> PFNAppFilteringTextBox_TextChanged(string? query, List<GroupInfoListForPackagedAppView> fullList)
+	{
+		if (string.IsNullOrWhiteSpace(query))
+		{
+			// If the filter is cleared, restore the original collection
+			return new(fullList);
+		}
+
+		// Filter the original collection
+		List<GroupInfoListForPackagedAppView> filtered = fullList
+			.Select(group => new GroupInfoListForPackagedAppView(
+				items: group.Where(app =>
+				app.DisplayName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.FullName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.Description.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.PackageFamilyName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.Publisher.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.InstallLocation.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.PublisherID.Contains(query, StringComparison.OrdinalIgnoreCase)
+				), key: group.Key)).Where(group => group.Any()).ToList();
+
+		return new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
 	}
 
 }

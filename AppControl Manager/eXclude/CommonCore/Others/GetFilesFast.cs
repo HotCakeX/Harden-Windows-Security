@@ -201,25 +201,7 @@ internal static class FileUtility
 								return false;
 							}
 
-							/*
-
-							 Make sure the file has the correct extension
-							 This 100% works: Path.GetExtension(entry.FileName)
-							 But the problem is the FrozenSet<string> which doesn't support ReadOnlySpan<char> for .Contains method.
-							 So to lower allocations in this hot path and avoid calling ToFullPath() method, we need to use Span pased lookups that is as fast as FrozenSet or faster.
-
-							 Another thing:
-
-							 previously we were doing this: "if (extensions.Contains(Path.GetExtension(entry.ToFullPath())))"
-
-							 But "if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))" should be faster, because:
-							 1. ToString() uses Span-based overload which is extremely fast.
-							 2. We only use ToString() on the file's extension, so realistically only 2-4 chars.
-							 3. We avoid allocating a long string for the full path via "ToFullPath()" method which we don't need.
-							 4. The "Path.GetExtension" method also uses the Span-based overload which is better than String-based one.
-
-							*/
-							//	if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
+							// Make sure the file has the correct extension
 							if (lookup.Contains(Path.GetExtension(entry.FileName)))
 							{
 								return true;
@@ -276,7 +258,6 @@ internal static class FileUtility
 									}
 
 									// Make sure the file has the correct extension
-									// if (extensions.Contains(Path.GetExtension(entry.FileName).ToString()))
 									if (lookup.Contains(Path.GetExtension(entry.FileName)))
 									{
 										return true;

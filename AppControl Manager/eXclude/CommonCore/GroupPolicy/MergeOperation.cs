@@ -38,15 +38,12 @@ internal sealed class MergeOperation(
 	internal RegistryPolicyEntry? OldEntry => oldEntry;
 	internal RegistryPolicyEntry NewEntry => newEntry;
 
-	public override string ToString()
+	public override string ToString() => OperationType switch
 	{
-		return OperationType switch
-		{
-			OperationType.Added => $"ADDED: {KeyName}\\{ValueName} = {FormatValue(NewEntry.ParsedValue)} (Type: {NewEntry.Type})",
-			OperationType.Replaced => $"REPLACED: {KeyName}\\{ValueName}\n  Old: {FormatValue(OldEntry?.ParsedValue)} (Type: {OldEntry?.Type})\n  New: {FormatValue(NewEntry.ParsedValue)} (Type: {NewEntry.Type})",
-			_ => $"UNKNOWN: {KeyName}\\{ValueName}"
-		};
-	}
+		OperationType.Added => $"ADDED: {KeyName}\\{ValueName} = {FormatValue(NewEntry.ParsedValue)} (Type: {NewEntry.Type})",
+		OperationType.Replaced => $"REPLACED: {KeyName}\\{ValueName}\n  Old: {FormatValue(OldEntry?.ParsedValue)} (Type: {OldEntry?.Type})\n  New: {FormatValue(NewEntry.ParsedValue)} (Type: {NewEntry.Type})",
+		_ => $"UNKNOWN: {KeyName}\\{ValueName}"
+	};
 
 	private static string FormatValue(object? value) => value switch
 	{

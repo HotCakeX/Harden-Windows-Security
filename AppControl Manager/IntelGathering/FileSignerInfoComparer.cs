@@ -57,20 +57,13 @@ internal sealed class FileSignerInfoComparer : IEqualityComparer<FileSignerInfo>
 	/// <returns>A hash code for the given FileSignerInfo instance.</returns>
 	public int GetHashCode(FileSignerInfo obj)
 	{
+		if (obj is null) return 0;
 
-		int hashPublisher;
-		int hashIssuer;
+		HashCode hash = new();
 
-		// Get hash codes for both properties, using case-insensitive comparison for strings
-		// Using unchecked to avoid exceptions from overflow
-		unchecked
-		{
-			hashPublisher = obj.PublisherTBSHash?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0;
-			hashIssuer = obj.IssuerTBSHash?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0;
-		}
+		hash.Add(obj.PublisherTBSHash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(obj.IssuerTBSHash, StringComparer.OrdinalIgnoreCase);
 
-		// Combine the hash codes using XOR to produce a single hash code for the instance
-		// Reducing collisions by using 397 prime number
-		return unchecked((hashPublisher * 397) ^ hashIssuer);
+		return hash.ToHashCode();
 	}
 }

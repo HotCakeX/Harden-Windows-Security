@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* Added a new button to the app's toolbar which allows you to easily relaunch the app with different privileges. If running as Administrator, pressing this button will launch the app with limited privileges and if running with limited privileges, pressing this button will relaunch the app with Administrator privileges.

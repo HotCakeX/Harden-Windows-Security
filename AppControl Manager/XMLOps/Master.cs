@@ -56,9 +56,9 @@ internal static class Master
 			policyObj = NewWHQLFilePublisherLevelRules.CreateDeny(policyObj, incomingData.WHQLFilePublisherSigners);
 			policyObj = NewFilePublisherLevelRules.CreateDeny(policyObj, incomingData.FilePublisherSigners);
 			policyObj = NewPublisherLevelRules.CreateDeny(policyObj, incomingData.PublisherSigners);
-			policyObj = NewHashLevelRules.CreateDenyEx(policyObj, incomingData.CompleteHashes);
-			policyObj = NewFilePathRules.CreateDenyEx(policyObj, incomingData.FilePaths);
-			policyObj = NewPFNLevelRules.CreateDenyEx(policyObj, incomingData.PFNRules);
+			policyObj = NewHashLevelRules.CreateDeny(policyObj, incomingData.CompleteHashes);
+			policyObj = NewFilePathRules.CreateDeny(policyObj, incomingData.FilePaths);
+			policyObj = NewPFNLevelRules.CreateDeny(policyObj, incomingData.PFNRules);
 			policyObj = NewFileNameLevelRules.CreateDeny(policyObj, incomingData.FileNameRules);
 
 			if (noAllowAllWildCards)

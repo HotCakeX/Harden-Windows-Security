@@ -19,13 +19,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace CommonCore.IncrementalCollection;
 
 internal sealed class RangedObservableCollection<T> : ObservableCollection<T>
 {
 	internal RangedObservableCollection() : base() { }
-
 	internal RangedObservableCollection(IEnumerable<T> collection) : base(collection) { }
 
 	/// <summary>
@@ -45,6 +45,32 @@ internal sealed class RangedObservableCollection<T> : ObservableCollection<T>
 			Items.Add(item);
 		}
 
+		HandleEvents(startCount);
+	}
+
+	/// <summary>
+	/// Adds a range of items to the collection and fires notification events only once at the end.
+	/// Overload for Lists.
+	/// </summary>
+	internal void AddRange(List<T> collection)
+	{
+		// Ensure we aren't modifying the collection while an event is already processing.
+		CheckReentrancy();
+
+		int startCount = Items.Count;
+
+		// Accessing the protected Items property directly which bypasses the ObservableCollection.InsertItem implementation when we .Add to it.
+		// Effectively suppressing OnCollectionChanged and OnPropertyChanged for individual items.
+		foreach (T item in CollectionsMarshal.AsSpan(collection))
+		{
+			Items.Add(item);
+		}
+
+		HandleEvents(startCount);
+	}
+
+	private void HandleEvents(int startCount)
+	{
 		// Fire the events exactly only once if data was added.
 		if (Items.Count > startCount)
 		{

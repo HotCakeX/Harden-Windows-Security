@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     Title="{x:Bind TitleString, Mode=OneWay}"
     Loaded="{x:Bind PolicyAssignmentsDialog_Loaded}"

@@ -490,6 +490,8 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 									try
 									{
 										byte[] encrypted = ProtectedData.Protect(fileBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+										if (File.Exists(file))
+											File.Delete(file);
 										await File.WriteAllBytesAsync(file, encrypted);
 									}
 									catch (Exception ex)
@@ -511,6 +513,8 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 									// We must decrypt the file on disk.
 									try
 									{
+										if (File.Exists(file))
+											File.Delete(file);
 										await File.WriteAllBytesAsync(file, decryptedBytes!);
 									}
 									catch (Exception ex)
@@ -849,6 +853,8 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						try
 						{
 							byte[] enc = ProtectedData.Protect(memoryStream.ToArray(), PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							if (File.Exists(filePath))
+								File.Delete(filePath);
 							File.WriteAllBytes(filePath, enc);
 						}
 						catch (Exception ex)
@@ -858,6 +864,8 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 					}
 					else
 					{
+						if (File.Exists(filePath))
+							File.Delete(filePath);
 						File.WriteAllBytes(filePath, memoryStream.ToArray());
 					}
 				});
@@ -912,11 +920,15 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						if (shouldEncrypt && !isEncrypted)
 						{
 							byte[] encrypted = ProtectedData.Protect(plainBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							if (File.Exists(file))
+								File.Delete(file);
 							File.WriteAllBytes(file, encrypted);
 						}
 						// Decrypt if requested (toggle off) and currently encrypted
 						else if (!shouldEncrypt && isEncrypted)
 						{
+							if (File.Exists(file))
+								File.Delete(file);
 							File.WriteAllBytes(file, plainBytes);
 						}
 					}
@@ -1284,5 +1296,18 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// The main InfoBar for the Sidebar.
 	/// </summary>
 	internal readonly InfoBarSettings MainInfoBar = new();
+
+	internal bool SidebarElementsAreEnabled
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SidebarProgressRingVisibility = field ? Visibility.Collapsed : Visibility.Visible;
+			}
+		}
+	} = true;
+
+	internal Visibility SidebarProgressRingVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
 
 }

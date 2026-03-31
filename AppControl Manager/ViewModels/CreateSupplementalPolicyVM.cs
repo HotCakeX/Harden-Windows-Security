@@ -211,7 +211,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = DefaultScanLevel;
+	} = ScanLevelsSource[0];
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -239,7 +239,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The final Files and Folders Supplemental policy that is created.
 	/// </summary>
-	internal SiPolicy.PolicyFileRepresent? _FilesAndFoldersSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _FinalFilesAndFoldersSupplementalPolicy;
 
 
 	/// <summary>
@@ -323,9 +323,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_FilesAndFolders() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_FilesAndFolders() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalFilesAndFoldersSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FinalFilesAndFoldersSupplementalPolicy);
 
 	/// <summary>
 	/// Main button's event handler for files and folders Supplemental policy creation
@@ -333,7 +333,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => await CreateFilesAndFoldersSupplementalPolicyButton_Internal(sender);
 	private async Task CreateFilesAndFoldersSupplementalPolicyButton_Internal(object? sender)
 	{
-		_FilesAndFoldersSupplementalPolicyPath = null;
+		_FinalFilesAndFoldersSupplementalPolicy = null;
 
 		FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
 
@@ -485,7 +485,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					}
 
 					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
-					_FilesAndFoldersSupplementalPolicyPath = PolicyFileToMergeWith;
+					_FinalFilesAndFoldersSupplementalPolicy = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -519,11 +519,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					// Assign the new supplemental policy to the local variable
-					_FilesAndFoldersSupplementalPolicyPath = new(policyObj);
+					_FinalFilesAndFoldersSupplementalPolicy = new(policyObj);
 				}
 
 				// Assign the created policy to the Sidebar
-				ViewModelProvider.MainWindowVM.AssignToSidebar(_FilesAndFoldersSupplementalPolicyPath);
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FinalFilesAndFoldersSupplementalPolicy);
 
 				if (sender is not null)
 					MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
@@ -535,7 +535,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FilesAndFoldersSupplementalPolicyPath.PolicyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalFilesAndFoldersSupplementalPolicy.PolicyObj));
 				}
 			});
 
@@ -657,8 +657,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			await CreateFilesAndFoldersSupplementalPolicyButton_Internal(null);
 
-			if (_FilesAndFoldersSupplementalPolicyPath is not null)
-				Management.SavePolicyToFile(_FilesAndFoldersSupplementalPolicyPath.PolicyObj, outputPath);
+			if (_FinalFilesAndFoldersSupplementalPolicy is not null)
+				Management.SavePolicyToFile(_FinalFilesAndFoldersSupplementalPolicy.PolicyObj, outputPath);
 		}
 		catch (Exception ex)
 		{
@@ -690,7 +690,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The final Certificates Supplemental policy that is created.
 	/// </summary>
-	internal SiPolicy.PolicyFileRepresent? _CertificatesSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _FinalCertificatesSupplementalPolicy;
 
 	/// <summary>
 	/// Selected Certificate File Paths
@@ -833,7 +833,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			return;
 		}
 
-		_CertificatesSupplementalPolicyPath = null;
+		_FinalCertificatesSupplementalPolicy = null;
 
 		try
 		{
@@ -884,7 +884,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					}
 
 					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
-					_CertificatesSupplementalPolicyPath = PolicyFileToMergeWith;
+					_FinalCertificatesSupplementalPolicy = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -902,11 +902,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					// Assign the new supplemental policy to the local variable
-					_CertificatesSupplementalPolicyPath = new(policyObj);
+					_FinalCertificatesSupplementalPolicy = new(policyObj);
 				}
 
 				// Assign the created policy to the Sidebar
-				ViewModelProvider.MainWindowVM.AssignToSidebar(_CertificatesSupplementalPolicyPath);
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FinalCertificatesSupplementalPolicy);
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
@@ -915,7 +915,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					CertificatesBasedInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_CertificatesSupplementalPolicyPath.PolicyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalCertificatesSupplementalPolicy.PolicyObj));
 				}
 			});
 		}
@@ -957,9 +957,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for Certificates using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_Certificates() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_CertificatesSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_Certificates() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalCertificatesSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Certificates() => await OpenInDefaultFileHandler(_CertificatesSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_Certificates() => await OpenInDefaultFileHandler(_FinalCertificatesSupplementalPolicy);
 
 	#endregion
 
@@ -994,7 +994,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The final ISG Supplemental policy that is created.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? _ISGSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _FinalISGSupplementalPolicy;
 
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental ISG based policy
@@ -1025,7 +1025,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			return;
 		}
 
-		_ISGSupplementalPolicyPath = null;
+		_FinalISGSupplementalPolicy = null;
 
 		try
 		{
@@ -1049,7 +1049,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					}
 
 					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
-					_ISGSupplementalPolicyPath = PolicyFileToMergeWith;
+					_FinalISGSupplementalPolicy = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -1065,11 +1065,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					finalPolicyObj.BasePolicyID = ISGBasedBasePolicy.PolicyObj.BasePolicyID;
 
 					// Assign the new supplemental policy to the local variable
-					_ISGSupplementalPolicyPath = new(finalPolicyObj);
+					_FinalISGSupplementalPolicy = new(finalPolicyObj);
 				}
 
 				// Assign the created policy to the Sidebar
-				ViewModelProvider.MainWindowVM.AssignToSidebar(_ISGSupplementalPolicyPath);
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FinalISGSupplementalPolicy);
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
@@ -1082,7 +1082,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					await ConfigureISGServices.Configure();
 
 					// Deploy the signed CIP file
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_ISGSupplementalPolicyPath.PolicyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalISGSupplementalPolicy.PolicyObj));
 				}
 			});
 		}
@@ -1149,9 +1149,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for ISG using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_ISG() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_ISGSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_ISG() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalISGSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_ISG() => await OpenInDefaultFileHandler(_ISGSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_ISG() => await OpenInDefaultFileHandler(_FinalISGSupplementalPolicy);
 
 	#endregion
 
@@ -1203,7 +1203,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The final StrictKernelMode Supplemental policy that is created.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? _StrictKernelModeSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _FinalStrictKernelModeSupplementalPolicy;
 
 	internal void StrictKernelModeScanButton_Click() => StrictKernelModePerformScans(false);
 
@@ -1368,7 +1368,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			return;
 		}
 
-		_StrictKernelModeSupplementalPolicyPath = null;
+		_FinalStrictKernelModeSupplementalPolicy = null;
 
 		bool ErrorsOccurred = false;
 
@@ -1405,7 +1405,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					}
 
 					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
-					_StrictKernelModeSupplementalPolicyPath = PolicyFileToMergeWith;
+					_FinalStrictKernelModeSupplementalPolicy = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -1426,11 +1426,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = RemoveSigningScenarios.RemoveUserMode(policyObj);
 
 					// Assign the new supplemental policy to the local variable
-					_StrictKernelModeSupplementalPolicyPath = new(policyObj);
+					_FinalStrictKernelModeSupplementalPolicy = new(policyObj);
 				}
 
 				// Assign the created policy to the Sidebar
-				ViewModelProvider.MainWindowVM.AssignToSidebar(_StrictKernelModeSupplementalPolicyPath);
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FinalStrictKernelModeSupplementalPolicy);
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
@@ -1439,7 +1439,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_StrictKernelModeSupplementalPolicyPath.PolicyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalStrictKernelModeSupplementalPolicy.PolicyObj));
 				}
 			});
 		}
@@ -1569,9 +1569,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for StrictKernelMode using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_StrictKernelMode() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_StrictKernelModeSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_StrictKernelMode() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalStrictKernelModeSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await OpenInDefaultFileHandler(_StrictKernelModeSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await OpenInDefaultFileHandler(_FinalStrictKernelModeSupplementalPolicy);
 
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -1613,9 +1613,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal void StrictKernel_DeSelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
-		if (lv is null) return;
-
-		lv.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
+		lv?.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
 	}
 
 	internal string? StrictKernelModeResultsSearchTextBox
@@ -1632,16 +1630,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Applies the date and search filters to the data grid
 	/// </summary>
-	private void StrictKernel_ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
-		allFileIdentities: StrictKernelModeScanResultsList.AsEnumerable(),
+	private void StrictKernel_ApplyFilters() => ListViewHelper.ApplyFilters(
+		allFileIdentities: StrictKernelModeScanResultsList,
 		filteredCollection: StrictKernelModeScanResults,
 		searchText: StrictKernelModeResultsSearchTextBox,
 		selectedDate: null,
 		regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults
 		);
-	}
 
 	/// <summary>
 	/// Deletes the selected row from the results
@@ -1721,7 +1716,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The final PFN Supplemental policy that is created.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? _PFNSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? _FinalPFNSupplementalPolicy;
 
 	/// <summary>
 	/// Items Source of the ListView that displays the list of the installed packaged apps.
@@ -1744,7 +1739,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (SPT(ref field, value))
 			{
-				PFNAppFilteringTextBox_TextChanged();
+				PFNBasedAppsListItemsSource = GetAppsList.PFNAppFilteringTextBox_TextChanged(field, PFNBasedAppsFullList);
 			}
 		}
 	}
@@ -1767,7 +1762,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		try
 		{
 			PFNElementsAreEnabled = false;
-			PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
+
+			// Get the data first and store in ObservableCollection
+			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
+			PFNBasedAppsListItemsSource = results.Item1;
+			// Store the same data on the FullList used for searching
+			PFNBasedAppsFullList = results.Item2;
 		}
 		finally
 		{
@@ -1827,32 +1827,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	// Used to store the original Apps collection so when we filter the results and then remove the filters,
 	// We can still have access to the original collection of apps
-	private ObservableCollection<GroupInfoListForPackagedAppView>? _AppsListBackingList;
-
-	/// <summary>
-	/// Event handler for when the search box of apps list changes
-	/// </summary>
-	private void PFNAppFilteringTextBox_TextChanged()
-	{
-		// Store the original collection if it hasn't been saved yet
-		_AppsListBackingList ??= PFNBasedAppsListItemsSource;
-
-		if (string.IsNullOrWhiteSpace(PFNBasedSearchKeywordForAppsList))
-		{
-			// If the filter is cleared, restore the original collection
-			PFNBasedAppsListItemsSource = _AppsListBackingList;
-			return;
-		}
-
-		// Filter the original collection
-		List<GroupInfoListForPackagedAppView> filtered = _AppsListBackingList
-			.Select(group => new GroupInfoListForPackagedAppView(
-				items: group.Where(app => app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)),
-				key: group.Key)).Where(group => group.Any()).ToList();
-
-		// Update the ListView source with the filtered data
-		PFNBasedAppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
-	}
+	private List<GroupInfoListForPackagedAppView> PFNBasedAppsFullList = [];
 
 	/// <summary>
 	/// Event handler to happen only once when the section is expanded and apps list is loaded
@@ -1864,7 +1839,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			try
 			{
 				PFNElementsAreEnabled = false;
-				PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
+
+				// Get the data first and store in ObservableCollection
+				(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
+				PFNBasedAppsListItemsSource = results.Item1;
+				// Store the same data on the FullList used for searching
+				PFNBasedAppsFullList = results.Item2;
 			}
 			finally
 			{
@@ -1947,7 +1927,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 
 		// All validation passed - NOW we set button state to indicate operation starting
-		_PFNSupplementalPolicyPath = null;
+		_FinalPFNSupplementalPolicy = null;
 
 		bool errorsOccurred = false;
 
@@ -2002,7 +1982,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					}
 
 					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
-					_PFNSupplementalPolicyPath = PolicyFileToMergeWith;
+					_FinalPFNSupplementalPolicy = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -2022,11 +2002,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					// Assign the new supplemental policy to the local variable
-					_PFNSupplementalPolicyPath = new(policyObj);
+					_FinalPFNSupplementalPolicy = new(policyObj);
 				}
 
 				// Assign the created policy to the Sidebar
-				ViewModelProvider.MainWindowVM.AssignToSidebar(_PFNSupplementalPolicyPath);
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FinalPFNSupplementalPolicy);
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
@@ -2039,7 +2019,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_PFNSupplementalPolicyPath.PolicyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalPFNSupplementalPolicy.PolicyObj));
 				}
 			});
 		}
@@ -2078,9 +2058,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_PFN() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_PFN() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalPFNSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_FinalPFNSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for copying app details to clipboard from the context menu.
@@ -2226,7 +2206,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The final CustomPatternBasedFileRule Supplemental policy that is created.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? _CustomPatternBasedFileRuleSupplementalPolicyPath { get; set => SP(ref field, value); }
+	private SiPolicy.PolicyFileRepresent? _FinalCustomPatternBasedFileRuleSupplementalPolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// The custom pattern used for file rule.
@@ -2317,7 +2297,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 
 		// All validation passed - NOW we set button state to indicate operation starting
-		_CustomPatternBasedFileRuleSupplementalPolicyPath = null;
+		_FinalCustomPatternBasedFileRuleSupplementalPolicy = null;
 
 		bool errorsOccurred = false;
 
@@ -2357,7 +2337,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					}
 
 					// Assign the same Represent object to the sidebar so that we don't change its Unique ID and create duplicate in the Library.
-					_CustomPatternBasedFileRuleSupplementalPolicyPath = PolicyFileToMergeWith;
+					_FinalCustomPatternBasedFileRuleSupplementalPolicy = PolicyFileToMergeWith;
 				}
 				else
 				{
@@ -2377,11 +2357,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
 					// Assign the new supplemental policy to the local variable
-					_CustomPatternBasedFileRuleSupplementalPolicyPath = new(policyObj);
+					_FinalCustomPatternBasedFileRuleSupplementalPolicy = new(policyObj);
 				}
 
 				// Assign the created policy to the Sidebar
-				ViewModelProvider.MainWindowVM.AssignToSidebar(_CustomPatternBasedFileRuleSupplementalPolicyPath);
+				ViewModelProvider.MainWindowVM.AssignToSidebar(_FinalCustomPatternBasedFileRuleSupplementalPolicy);
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
@@ -2392,7 +2372,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				{
 					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
-					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_CustomPatternBasedFileRuleSupplementalPolicyPath.PolicyObj));
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalCustomPatternBasedFileRuleSupplementalPolicy.PolicyObj));
 				}
 			});
 		}
@@ -2436,8 +2416,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		// Instantiate the Content Dialog
 		using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
 
-		GlobalVars.CurrentlyOpenContentDialog = customDialog;
-
 		// Show the dialog
 		_ = await customDialog.ShowAsync();
 	}
@@ -2445,9 +2423,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalCustomPatternBasedFileRuleSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_FinalCustomPatternBasedFileRuleSupplementalPolicy);
 
 	#endregion
 

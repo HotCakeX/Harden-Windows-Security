@@ -19,7 +19,6 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -80,7 +79,6 @@ internal sealed class NavigationService
 			CollectNavigationItems();
 			NavItemsHaveBeenCollected = true;
 		}
-		_frame.Navigated += UpdateHeaderFromCurrentPage;
 	}
 
 #if APP_CONTROL_MANAGER
@@ -228,14 +226,12 @@ internal sealed class NavigationService
 						GlobalVars.Settings.PromptForElevationOnStartup = true;
 					}
 
-					// Build navigation argument to restore this page after elevation.
-					string? navArg = null;
-
 					// Attempt to find a tag for the page, only top-level pages that have a tab in MainWindow XAML work
 					KeyValuePair<string, Type> taggedEntry = mainWindowVM.NavigationPageToItemContentMap
 						.FirstOrDefault(kv => Equals(kv.Value, nextNavPageType));
 
-					navArg = $"--navtag={taggedEntry.Key}";
+					// Build navigation argument to restore this page after elevation.
+					string? navArg = $"--navtag={taggedEntry.Key}";
 
 					// Relaunch elevated with the navigation argument
 					if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, navArg))
@@ -282,7 +278,7 @@ internal sealed class NavigationService
 	/// Updates the BreadCrumbBar in response to a page navigation in the app.
 	/// </summary>
 	/// <param name="currentPageType"></param>
-	internal void SetCrumbBar(Type currentPageType)
+	private void SetCrumbBar(Type currentPageType)
 	{
 		// Get the item from BreadCrumb dictionary that belongs to the next page we navigated to
 		if (mainWindowVM.breadCrumbMappingsV2.TryGetValue(currentPageType, out PageTitleMap? info))
@@ -452,11 +448,11 @@ internal sealed class NavigationService
 	/// Get all NavigationViewItem items in the MainNavigation, that includes MenuItems + any nested MenuItems + FooterMenuItems.
 	/// Only needs to run once.
 	/// </summary>
-	internal void CollectNavigationItems()
+	private void CollectNavigationItems()
 	{
 		if (MainNavigation is null) return;
 
-		List<NavigationViewItem> allItems = [];
+		List<NavigationViewItem> allItems = new(capacity: 23);
 
 		// Recursively collects NavigationViewItems
 		void CollectItems(NavigationViewItem item)
@@ -523,36 +519,33 @@ internal sealed class NavigationService
 	/// <summary>
 	/// Updates ViewModel header props from the current Frame.Content if it implements IPageHeaderProvider.
 	/// </summary>
-	private void UpdateHeaderFromCurrentPage(object sender, NavigationEventArgs e)
+	internal void UpdateHeaderFromCurrentPage(object sender, NavigationEventArgs e)
 	{
-		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+		// Determine provider presence and update header content
+		if (_frame?.Content is CommonCore.UI.IPageHeaderProvider provider)
 		{
-			// Determine provider presence and update header content
-			if (_frame?.Content is CommonCore.UI.IPageHeaderProvider provider)
-			{
-				mainWindowVM.PageHeaderTitle = provider.HeaderTitle;
-				mainWindowVM.PageHeaderGuideUri = provider.HeaderGuideUri;
-				mainWindowVM.HasPageHeader = true;
-			}
-			else
-			{
-				mainWindowVM.PageHeaderTitle = null;
-				mainWindowVM.PageHeaderGuideUri = null;
-				mainWindowVM.HasPageHeader = false;
-			}
+			mainWindowVM.PageHeaderTitle = provider.HeaderTitle;
+			mainWindowVM.PageHeaderGuideUri = provider.HeaderGuideUri;
+			mainWindowVM.HasPageHeader = true;
+		}
+		else
+		{
+			mainWindowVM.PageHeaderTitle = null;
+			mainWindowVM.PageHeaderGuideUri = null;
+			mainWindowVM.HasPageHeader = false;
+		}
 
-			// Compute layout once per navigation using current width
-			bool wide = App.MainWindow?.AppWindow.Size.Width >= MainWindowVM.HeaderThresholdWidth;
+		// Compute layout once per navigation using current width
+		bool wide = App.MainWindow?.AppWindow.Size.Width >= MainWindowVM.HeaderThresholdWidth;
 
-			// Inline vs flyout header visibility depends on width and presence of a header
-			mainWindowVM.HeaderInlineVisibility = (wide && mainWindowVM.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
-			mainWindowVM.HeaderFlyoutVisibility = (!wide && mainWindowVM.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
+		// Inline vs flyout header visibility depends on width and presence of a header
+		mainWindowVM.HeaderInlineVisibility = (wide && mainWindowVM.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
+		mainWindowVM.HeaderFlyoutVisibility = (!wide && mainWindowVM.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
 
-			// Guide button must be invisible when URL is null
-			mainWindowVM.GuideButtonVisibility = mainWindowVM.PageHeaderGuideUri is not null ? Visibility.Visible : Visibility.Collapsed;
+		// Guide button must be invisible when URL is null
+		mainWindowVM.GuideButtonVisibility = mainWindowVM.PageHeaderGuideUri is not null ? Visibility.Visible : Visibility.Collapsed;
 
-			// Determine whether the crumb bar must be visible or not.
-			mainWindowVM.IsCrumbBarVisible = _frame?.Content is CommonCore.UI.IInvisibleCrumbar ? Visibility.Collapsed : Visibility.Visible;
-		});
+		// Determine whether the crumb bar must be visible or not.
+		mainWindowVM.IsCrumbBarVisible = _frame?.Content is CommonCore.UI.IInvisibleCrumbar ? Visibility.Collapsed : Visibility.Visible;
 	}
 }

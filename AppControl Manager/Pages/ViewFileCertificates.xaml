@@ -5,10 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:others="using:AppControlManager.Others"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+    AllowDrop="{x:Bind vm:ViewModelBase.IsNotElevated}"
     DragOver="{x:Bind ViewModel.OnDragOver}"
     Drop="{x:Bind ViewModel.OnDrop}"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">

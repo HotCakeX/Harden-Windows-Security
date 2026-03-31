@@ -29,10 +29,6 @@ internal static class AppThemeManager
 	// MainWindow listens to this
 	internal static event EventHandler<AppThemeChangedEventArgs>? AppThemeChanged;
 
-	// Method to raise the event
-	internal static void OnAppThemeChanged(string newTheme)
-	{
-		// Trigger the AppThemeChanged event with the new theme
-		AppThemeChanged?.Invoke(null, new(newTheme));
-	}
+	// Trigger the AppThemeChanged event with the new theme
+	internal static void OnAppThemeChanged(string newTheme) => AppThemeChanged?.Invoke(null, new(newTheme));
 }

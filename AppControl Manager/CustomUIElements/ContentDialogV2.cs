@@ -26,7 +26,6 @@ using Windows.Foundation;
 using Windows.UI;
 
 #if HARDEN_SYSTEM_SECURITY
-#pragma warning disable CA1852
 using HardenSystemSecurity;
 #endif
 
@@ -49,8 +48,6 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private const double ShadowOpacity = 0.5;
 	private const double ShadowBlurRadius = 25.0;
 	private const double ShadowCornerRadius = 14.0;
-	private const double DialogCornerRadius = 14.0;
-	private const double ShadowMargin = 25;
 	// Use Windows accent color for shadow color to match the border color, if not found then use Hot Pink as fallback
 	private static readonly Color ShadowColor = Application.Current.Resources["SystemAccentColor"] is Color accentColor ? accentColor : Colors.HotPink;
 
@@ -58,13 +55,17 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private static readonly SolidColorBrush TransparentBrush = new(Colors.Transparent);
 	private static readonly Thickness ZeroThickness = new(0);
 	private static readonly System.Numerics.Vector3 ZeroVector = new(0, 0, 0);
-	private static readonly CornerRadius DialogCorner = new(DialogCornerRadius);
+	private static readonly CornerRadius DialogCorner = new(14.0);
 	private static readonly CornerRadius ShadowCorner = new(ShadowCornerRadius);
-	private static readonly Thickness ShadowThickness = new(ShadowMargin, ShadowMargin, ShadowMargin, ShadowMargin);
+	private static readonly Thickness ShadowThickness = new(25, 25, 25, 25);
 	private static readonly Thickness BorderThick = new(0.7);
 
 	private Border? _originalBackgroundBorder; // Keeps reference to the original background element
 	private bool _backgroundBorderSizeHooked;  // Ensures we hook only once
+
+	// To track the currently open Content Dialog across the app.
+	// ContentDialogV2 must always be used across the app. Normal ContentDialog should never be used.
+	private static ContentDialogV2? CurrentlyOpenContentDialog;
 
 	// Static cached shadow instance for performance
 	private static readonly AttachedCardShadow CachedShadow = new()
@@ -93,7 +94,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? TransparentBrush;
 			BorderThickness = BorderThick;
 			XamlRoot = App.MainWindow?.Content.XamlRoot;
-			RequestedTheme = GetRequestedTheme();
+			RequestedTheme = Enum.TryParse<ElementTheme>(GlobalVars.Settings.AppTheme, true, out ElementTheme theme) ? theme : ElementTheme.Default; // Using TryParse because "System" is among the strings too.
 			CornerRadius = DialogCorner;
 			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"];
 			FlowDirection = Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection);
@@ -133,46 +134,11 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 	}
 
-	// Method for theme determination - called once per instance using advanced pattern matching
-	private static ElementTheme GetRequestedTheme()
-	{
-		try
-		{
-			return GlobalVars.Settings.AppTheme switch
-			{
-				string theme when string.Equals(theme, "Light", StringComparison.OrdinalIgnoreCase) => ElementTheme.Light,
-				string theme when string.Equals(theme, "Dark", StringComparison.OrdinalIgnoreCase) => ElementTheme.Dark,
-				_ => ElementTheme.Default
-			};
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			return ElementTheme.Default;
-		}
-	}
-
 	protected override void OnApplyTemplate()
 	{
-		try
-		{
-			// Immediately disable shadows when template is applied - this is the earliest point we can access the visual tree
-			DisableDefaultShadowImmediately();
-			base.OnApplyTemplate();
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			try
-			{
-				base.OnApplyTemplate();
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// OnApplyTemplate must never throw - continue with default state
-			}
-		}
+		// Immediately disable shadows when template is applied - this is the earliest point we can access the visual tree
+		DisableDefaultShadowImmediately(); // Catches all errors so safe to not wrap it in try/catch here.
+		base.OnApplyTemplate();
 	}
 
 	private void DisableDefaultShadowImmediately()
@@ -374,9 +340,9 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			_shadowApplied = false;
 
 			// Clear static reference to allow this dialog to be garbage collected
-			if (ReferenceEquals(GlobalVars.CurrentlyOpenContentDialog, this))
+			if (ReferenceEquals(CurrentlyOpenContentDialog, this))
 			{
-				GlobalVars.CurrentlyOpenContentDialog = null;
+				CurrentlyOpenContentDialog = null;
 			}
 
 			// Clean up event handlers to prevent memory leaks
@@ -519,17 +485,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			catch (Exception innerEx)
 			{
 				Logger.Write(innerEx);
-				// Return basic shadow as final fallback - must never throw
-				try
-				{
-					return new AttachedCardShadow();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// If we can't create any shadow, return null - handled by caller
-					return null!;
-				}
+				// Return basic shadow as final fallback
+				return new AttachedCardShadow();
 			}
 		}
 	}
@@ -552,35 +509,18 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		{
 			Logger.Write(ex);
 			// Return minimal border as fallback
-			try
+
+			return new Border
 			{
-				return new Border
-				{
-					Background = TransparentBrush,
-					HorizontalAlignment = HorizontalAlignment.Stretch,
-					VerticalAlignment = VerticalAlignment.Stretch
-				};
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// Return basic border as final fallback - must never throw
-				try
-				{
-					return new();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// If we can't create any border, return null - handled by caller
-					return null!;
-				}
-			}
+				Background = TransparentBrush,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch
+			};
 		}
 	}
 
-	// Method for creating dialog container with specific properties
-	private static Border CreateDialogContainer(Brush? background, Brush? borderBrush, Thickness borderThickness, CornerRadius cornerRadius)
+	// Method for creating dialog container with default dialog corner radius
+	private static Border CreateDialogContainerWithDialogCorner(Brush? background, Brush? borderBrush, Thickness borderThickness)
 	{
 		try
 		{
@@ -589,7 +529,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				Background = background,
 				BorderBrush = borderBrush,
 				BorderThickness = borderThickness,
-				CornerRadius = cornerRadius,
+				CornerRadius = DialogCorner,
 				Margin = ShadowThickness,
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch
@@ -606,7 +546,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					Background = background,
 					BorderBrush = borderBrush,
 					BorderThickness = borderThickness,
-					CornerRadius = cornerRadius,
+					CornerRadius = DialogCorner,
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch
 				};
@@ -615,70 +555,12 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			{
 				Logger.Write(innerEx);
 				// Return basic border with just background as final fallback
-				try
-				{
-					return new Border
-					{
-						Background = background,
-						HorizontalAlignment = HorizontalAlignment.Stretch,
-						VerticalAlignment = VerticalAlignment.Stretch
-					};
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// Return basic border as absolute final fallback - must never throw
-					try
-					{
-						return new Border();
-					}
-					catch (Exception absoluteFinalEx)
-					{
-						Logger.Write(absoluteFinalEx);
-						// If we can't create any border, return null - handled by caller
-						return null!;
-					}
-				}
-			}
-		}
-	}
-
-	// Method for creating dialog container with default dialog corner radius
-	private static Border CreateDialogContainerWithDialogCorner(Brush? background, Brush? borderBrush, Thickness borderThickness)
-	{
-		try
-		{
-			return CreateDialogContainer(background, borderBrush, borderThickness, DialogCorner);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			// Return basic border as fallback - must never throw
-			try
-			{
 				return new Border
 				{
 					Background = background,
-					BorderBrush = borderBrush,
-					BorderThickness = borderThickness,
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch
 				};
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// Return minimal border as final fallback
-				try
-				{
-					return new Border();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// If we can't create any border, return null - handled by caller
-					return null!;
-				}
 			}
 		}
 	}
@@ -1395,28 +1277,15 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 							// Create shadow container using static method
 							_shadowContainer = CreateShadowContainer();
-							if (_shadowContainer is null)
-							{
-								// Skip shadow application if container creation failed
-								break;
-							}
 
 							// Create dialog container using static method
 							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundBorder.Background, backgroundBorder.BorderBrush, backgroundBorder.BorderThickness);
-							if (_dialogContainer is null)
-							{
-								// Skip shadow application if dialog container creation failed
-								break;
-							}
 
 							// Apply shadow to the shadow container
 							try
 							{
 								AttachedCardShadow dialogShadow = CreateShadow();
-								if (dialogShadow is not null)
-								{
-									Effects.SetShadow(_shadowContainer, dialogShadow);
-								}
+								Effects.SetShadow(_shadowContainer, dialogShadow);
 							}
 							catch (Exception shadowEx)
 							{
@@ -1489,28 +1358,15 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 							// Create shadow container using static method
 							_shadowContainer = CreateShadowContainer();
-							if (_shadowContainer is null)
-							{
-								// Skip shadow application if container creation failed
-								break;
-							}
 
 							// Create dialog container using static method
 							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundGrid.Background, BorderBrush, BorderThickness);
-							if (_dialogContainer is null)
-							{
-								// Skip shadow application if dialog container creation failed
-								break;
-							}
 
 							// Apply shadow to the shadow container
 							try
 							{
 								AttachedCardShadow dialogShadow = CreateShadow();
-								if (dialogShadow is not null)
-								{
-									Effects.SetShadow(_shadowContainer, dialogShadow);
-								}
+								Effects.SetShadow(_shadowContainer, dialogShadow);
 							}
 							catch (Exception shadowEx)
 							{
@@ -1556,28 +1412,15 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 							// Create shadow container using static method
 							_shadowContainer = CreateShadowContainer();
-							if (_shadowContainer is null)
-							{
-								// Skip shadow application if container creation failed
-								break;
-							}
 
 							// Create dialog container using static method
 							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundPanel.Background, BorderBrush, BorderThickness);
-							if (_dialogContainer is null)
-							{
-								// Skip shadow application if dialog container creation failed
-								break;
-							}
 
 							// Apply shadow to the shadow container
 							try
 							{
 								AttachedCardShadow dialogShadow = CreateShadow();
-								if (dialogShadow is not null)
-								{
-									Effects.SetShadow(_shadowContainer, dialogShadow);
-								}
+								Effects.SetShadow(_shadowContainer, dialogShadow);
 							}
 							catch (Exception shadowEx)
 							{
@@ -1630,11 +1473,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			try
 			{
 				AttachedCardShadow simpleShadow = CreateShadow();
-				if (simpleShadow is not null)
-				{
-					Effects.SetShadow(this, simpleShadow);
-					_shadowApplied = true;
-				}
+				Effects.SetShadow(this, simpleShadow);
+				_shadowApplied = true;
 			}
 			catch (Exception fallbackEx)
 			{
@@ -1731,61 +1571,26 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	}
 
 	/// <summary>
-	/// This method can throw during stress testing content dialog by opening and closing it in quick succession.
-	/// The problem is that WinUI ContentDialog has a built-in restriction: "Only a single ContentDialog can be open at any time."
+	/// During stress testing content dialog by opening and closing it in quick succession, an error could be thrown.
+	/// WinUI ContentDialog has a built-in restriction: "Only a single ContentDialog can be open at any time."
 	/// by rapidly opening and closing dialogs, the previous dialog might not be fully closed yet when we try to open a new one,
-	/// causing this COM exception.
+	/// causing COM exception.
 	/// The error occurs at base.ShowAsync() which calls the underlying WinUI ContentDialog.ShowAsync() method.
-	/// This method throws a COMException when another ContentDialog is already open.
-	///	The issue is that the current code tries to call base.ShowAsync() again in the fallback, which will just cause the same error again.
-	///	The code is resilient however, so the app doesn't crash, only an error is logged which is an acceptable outcome.
-	///	The goal is resiliency during stress tests, however, we can improve this with proper dialog queue management.
+	///	That's why we Hide/Close and then dispose of the previous ContentDialogV2 before showing a new one.
 	/// </summary>
 	/// <returns></returns>
 	internal new IAsyncOperation<ContentDialogResult> ShowAsync()
 	{
-		try
+		// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error
+		if (CurrentlyOpenContentDialog is ContentDialogV2 dialog)
 		{
-			GlobalVars.CurrentlyOpenContentDialog = this;
-			return base.ShowAsync();
+			Logger.Write("A Content Dialog is already open, closing it first before displaying the new one");
+			dialog.Hide();
+			dialog.Dispose();
 		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			// Return a completed task with a default result to prevent crashes - dialog must always show
-			try
-			{
-				return Task.FromResult(ContentDialogResult.None).AsAsyncOperation();
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// Try alternative approach for creating async result
-				try
-				{
-					TaskCompletionSource<ContentDialogResult> taskCompletionSource = new();
-					taskCompletionSource.SetResult(ContentDialogResult.None);
-					return taskCompletionSource.Task.AsAsyncOperation();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(finalEx);
-					// Last resort - try base implementation one more time without setting CurrentlyOpenContentDialog
-					try
-					{
-						return base.ShowAsync();
-					}
-					catch (Exception absoluteFinalEx)
-					{
-						Logger.Write(absoluteFinalEx);
-						// Create a minimal async operation that completes immediately
-						TaskCompletionSource<ContentDialogResult> finalTaskSource = new();
-						finalTaskSource.SetResult(ContentDialogResult.None);
-						return finalTaskSource.Task.AsAsyncOperation();
-					}
-				}
-			}
-		}
+
+		CurrentlyOpenContentDialog = this;
+		return base.ShowAsync();
 	}
 
 	/// <summary>
@@ -1809,7 +1614,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			// Reassert corner radius of custom container if WinUI re-templated anything
 			try
 			{
-				_ = (_dialogContainer?.CornerRadius = new CornerRadius(DialogCornerRadius));
+				_ = (_dialogContainer?.CornerRadius = DialogCorner);
 			}
 			catch (Exception exCorner)
 			{
@@ -1860,9 +1665,9 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 
 				// Clear static reference if still pointing to this instance
-				if (ReferenceEquals(GlobalVars.CurrentlyOpenContentDialog, this))
+				if (ReferenceEquals(CurrentlyOpenContentDialog, this))
 				{
-					GlobalVars.CurrentlyOpenContentDialog = null;
+					CurrentlyOpenContentDialog = null;
 				}
 
 				try

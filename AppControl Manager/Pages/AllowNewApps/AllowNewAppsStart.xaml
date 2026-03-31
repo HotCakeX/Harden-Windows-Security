@@ -5,8 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    xmlns:intelgathering="using:AppControlManager.IntelGathering"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Page.Resources>
@@ -288,7 +288,7 @@
 
                         <ComboBox IsEnabled="{x:Bind ViewModel.ScanLevelComboBoxIsEnabled, Mode=OneWay}"
                                   SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                                  ItemsSource="{x:Bind ViewModel.ScanLevelsSource}"
+                                  ItemsSource="{x:Bind vm:ViewModelBase.ScanLevelsSource}"
                                   SelectedIndex="0"
                                   x:Uid="ScanLevelComboBox"
                                   Header="Scan level"

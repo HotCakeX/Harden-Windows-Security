@@ -238,7 +238,7 @@ internal abstract class SizerBase : UserControl
 	private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e) => UpdateVisualState();
 
 
-	public static readonly DependencyProperty OrientationProperty =
+	private static readonly DependencyProperty OrientationProperty =
 		DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(SizerBase), new PropertyMetadata(Orientation.Vertical, (d, e) => ((SizerBase)d).OnOrientationChanged()));
 
 	public Orientation Orientation
@@ -337,7 +337,7 @@ internal sealed partial class GridSplitter : SizerBase
 
 	internal GridSplitter() : base() { }
 
-	public static readonly DependencyProperty ResizeDirectionProperty =
+	private static readonly DependencyProperty ResizeDirectionProperty =
 		DependencyProperty.Register(nameof(ResizeDirection), typeof(GridResizeDirection), typeof(GridSplitter), new PropertyMetadata(GridResizeDirection.Auto, OnResizeDirectionChanged));
 
 	public GridResizeDirection ResizeDirection

@@ -57,7 +57,7 @@ namespace AppControlManager.CustomUIElements.HomePageCarousel;
 
 internal sealed partial class HeaderTile : Button
 {
-	public static readonly DependencyProperty ImageUrlProperty = DependencyProperty.Register(
+	private static readonly DependencyProperty ImageUrlProperty = DependencyProperty.Register(
 	nameof(ImageUrl),
 	typeof(ImageSource),
 	typeof(HeaderTile),
@@ -69,7 +69,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(ImageUrlProperty, value);
 	}
 
-	public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null, (d, e) => ((HeaderTile)d).HeaderChanged()));
+	private static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null, (d, e) => ((HeaderTile)d).HeaderChanged()));
 
 	public string Header
 	{
@@ -77,7 +77,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(HeaderProperty, value);
 	}
 
-	public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null));
+	private static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null));
 
 	public string Description
 	{
@@ -85,7 +85,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(DescriptionProperty, value);
 	}
 
-	public static readonly DependencyProperty SampleIDProperty = DependencyProperty.Register(nameof(SampleID), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: string.Empty));
+	private static readonly DependencyProperty SampleIDProperty = DependencyProperty.Register(nameof(SampleID), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: string.Empty));
 
 	public string SampleID
 	{
@@ -93,7 +93,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(SampleIDProperty, value);
 	}
 
-	public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HeaderTile), new PropertyMetadata(defaultValue: false, (d, e) => ((HeaderTile)d).IsSelectedChanged((bool)e.OldValue, (bool)e.NewValue)));
+	private static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HeaderTile), new PropertyMetadata(defaultValue: false, (d, e) => ((HeaderTile)d).IsSelectedChanged((bool)e.OldValue, (bool)e.NewValue)));
 
 	public bool IsSelected
 	{

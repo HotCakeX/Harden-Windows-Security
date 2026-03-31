@@ -103,7 +103,6 @@ internal static class SetCiPolicyInfo
 		return policyObj;
 	}
 
-
 	/// <summary>
 	/// An overload of the Set method, responsible for setting the version number, policyID and BasePolicyID in the policy
 	/// </summary>
@@ -134,7 +133,6 @@ internal static class SetCiPolicyInfo
 
 		return policyObj;
 	}
-
 
 	/// <summary>
 	/// A method that accepts a string and tests if it is valid to be a Policy ID or Base Policy ID

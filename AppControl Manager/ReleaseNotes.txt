@@ -1,9 +1,15 @@
-* In the Deny and Supplemental policy creation pages, the success message texts have been updated for more clarity, fixing the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1091
-
-* In the Policy Creation page, the Policy ID and Base Policy ID of the following special policies are now uniquely generated every time you create any of them, making the behavior consistent with the rest of the policies in the page: "Remote Monitoring and Management Blocking", "Dangerous Script Hosts Blocking", "Downloads Defense Measures". This completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1088
-
 * Updated dependencies to the latest versions.
 
-* Improved policy creation performance.
+* Improved the search experience when searching for details of packaged apps in the Supplemental and Deny policy creation pages: now many more properties for each app are included during the search, helping you find the app you are looking for easier and faster.
 
-* In Deny and Supplemental policy creation pages, assigning policies from Sidebar to the page adjusts the creation mode for you, completes this feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1097
+* Minor user experience improvements in the MDE Advanced Hunting and Event logs pages.
+
+* In the Supplemental and Deny policy creation pages, the Packaged Apps sections are now available even if the AppControl Manager is not running as administrator, the only difference is that when running as admin, all apps available on the system is shown but when running as standard/unelevated user, only apps installed for the current user will be shown.
+
+* The policies library on the sidebar can now handle extremely large policy files and there is now a progress ring displayed when it's busy processing your large policies.
+
+* System Information page is now more resilient when encountering deployed policy files in inaccessible locations and handles them gracefully.
+
+* Added a new button to the app's toolbar which allows you to easily relaunch the app with different privileges. If running as Administrator, pressing this button will launch the app with limited privileges and if running with limited privileges, pressing this button will relaunch the app with Administrator privileges.
+
+* Added Japanese language support. Thanks to the community members on GitHub.

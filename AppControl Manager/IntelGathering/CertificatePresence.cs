@@ -63,13 +63,10 @@ internal static class CertificatePresence
 		IEnumerable<string>? updatePolicySignerIDs = policyObject.UpdatePolicySigners?.Select(x => x.SignerId);
 
 		// Get all of the <Signer> elements from the policy
-		Dictionary<string, Signer> signerDictionary = [];
-		if (policyObject.Signers is not null)
+		Dictionary<string, Signer> signerDictionary = new(capacity: policyObject.Signers?.Count ?? 0);
+		foreach (Signer signer in CollectionsMarshal.AsSpan(policyObject.Signers))
 		{
-			foreach (Signer signer in CollectionsMarshal.AsSpan(policyObject.Signers))
-			{
-				_ = signerDictionary.TryAdd(signer.ID, signer);
-			}
+			_ = signerDictionary.TryAdd(signer.ID, signer);
 		}
 
 		// Loop over each updatePolicySignerID in the policy

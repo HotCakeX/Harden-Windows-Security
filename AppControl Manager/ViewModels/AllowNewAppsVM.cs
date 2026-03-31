@@ -117,7 +117,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> LocalFilesAllFileIdentities = [];
+	private readonly List<FileIdentity> LocalFilesAllFileIdentities = [];
 
 	private ListViewHelper.SortState SortStateLocalFiles { get; set; } = new();
 
@@ -127,7 +127,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> EventLogsAllFileIdentities = [];
+	private readonly List<FileIdentity> EventLogsAllFileIdentities = [];
 
 	private ListViewHelper.SortState SortStateEventLogs { get; set; } = new();
 
@@ -213,7 +213,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// The Supplemental policy that is created.
 	/// </summary>
-	internal SiPolicy.PolicyFileRepresent? finalSupplementalPolicy { get; set => SP(ref field, value); }
+	private SiPolicy.PolicyFileRepresent? FinalSupplementalPolicy { get; set => SP(ref field, value); }
 
 	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -459,9 +459,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor.
 	/// </summary>
-	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicy);
+	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(FinalSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(FinalSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for the clear button in the base policy selection button.
@@ -538,10 +538,10 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				byte[] cipContent = Management.ConvertXMLToBinary(policyObj);
 
 				// Add the supplemental policy path to the class variable
-				finalSupplementalPolicy = new(policyObj);
+				FinalSupplementalPolicy = new(policyObj);
 
 				// Assign the created policy to the Sidebar
-				ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicy);
+				ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
@@ -660,7 +660,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// Applies the date and search filters to the data grid
 	/// </summary>
 	private void ApplyFiltersLocalFiles() => ListViewHelper.ApplyFilters(
-			allFileIdentities: LocalFilesAllFileIdentities.AsEnumerable(),
+			allFileIdentities: LocalFilesAllFileIdentities,
 			filteredCollection: LocalFilesFileIdentities,
 			searchText: LocalFilesAllFileIdentitiesSearchText,
 			selectedDate: null,
@@ -731,7 +731,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// Applies the date and search filters to the data grid
 	/// </summary>
 	private void ApplyFiltersEventLogs() => ListViewHelper.ApplyFilters(
-			allFileIdentities: EventLogsAllFileIdentities.AsEnumerable(),
+			allFileIdentities: EventLogsAllFileIdentities,
 			filteredCollection: EventLogsFileIdentities,
 			searchText: EventLogsAllFileIdentitiesSearchText,
 			selectedDate: null,
@@ -821,7 +821,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// A Progress<double> so Report() callbacks run on the UI thread
 	private readonly IProgress<double> Step2ProgressRingProgress;
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = ScanLevelsSource[0];
 
 
 	/// <summary>
@@ -1165,7 +1165,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			// Clear the path to the supplemental policy
-			finalSupplementalPolicy = null;
+			FinalSupplementalPolicy = null;
 
 			// Clear the ListViews and their respective search/filter-related lists
 			LocalFilesFileIdentities.Clear();

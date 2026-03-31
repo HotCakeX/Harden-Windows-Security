@@ -66,7 +66,7 @@ internal sealed partial class OpacityMaskView : ContentControl
 	/// <summary>
 	/// Identifies the <see cref="OpacityMask"/> property.
 	/// </summary>
-	public static readonly DependencyProperty OpacityMaskProperty =
+	private static readonly DependencyProperty OpacityMaskProperty =
 		DependencyProperty.Register(nameof(OpacityMask), typeof(UIElement), typeof(OpacityMaskView), new PropertyMetadata(null, OnOpacityMaskChanged));
 
 	private const string ContentPresenterTemplateName = "PART_ContentPresenter";

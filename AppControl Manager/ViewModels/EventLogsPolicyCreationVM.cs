@@ -77,7 +77,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal readonly List<FileIdentity> AllFileIdentities = [];
+	private readonly List<FileIdentity> AllFileIdentities = [];
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
@@ -101,7 +101,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = ScanLevelsSourceForLogs[0];
 
 	/// <summary>
 	/// Bound to the Date Picker on the UI.
@@ -142,9 +142,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal string? AppLockerEVTX { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+	/// The Supplemental policy that is created or the policy that user selected to add the logs to.
 	/// </summary>
-	internal SiPolicy.PolicyFileRepresent? finalSupplementalPolicyPath;
+	private SiPolicy.PolicyFileRepresent? FinalSupplementalPolicy;
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -188,7 +188,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// Applies the date and search filters to the data grid
 	/// </summary>
 	private void ApplyFilters() => ListViewHelper.ApplyFilters(
-		allFileIdentities: AllFileIdentities.AsEnumerable(),
+		allFileIdentities: AllFileIdentities,
 		filteredCollection: FileIdentities,
 		searchText: SearchBoxText,
 		selectedDate: DatePickerDate,
@@ -225,9 +225,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal void DeSelectAll_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
-		if (lv is null) return;
-
-		lv.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
+		lv?.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
 	}
 
 	/// <summary>
@@ -269,9 +267,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(FinalSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
+	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(FinalSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
@@ -292,7 +290,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			));
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the select AppLocker EVTX file path button
@@ -409,6 +406,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			// Store all of the data in the List
 			AllFileIdentities.AddRange(Output);
+
+			// Sort to display newest event first at top by default
+			AllFileIdentities.Sort((x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
 
 			// Populates the Observable Collection and applies filters to ensure the UI reflects any currently selected Date or Search Text filters.
 			ApplyFilters();
@@ -532,10 +532,10 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 									Management.SavePolicyToFile(PolicyToAddLogsTo.PolicyObj, PolicyToAddLogsTo.FilePath);
 								}
 
-								finalSupplementalPolicyPath = PolicyToAddLogsTo;
+								FinalSupplementalPolicy = PolicyToAddLogsTo;
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -578,10 +578,10 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								// Set policy version
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
-								finalSupplementalPolicyPath = new(policyObj);
+								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -627,10 +627,10 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								// Set policy version
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
 
-								finalSupplementalPolicyPath = new(policyObj);
+								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
-								ViewModelProvider.MainWindowVM.AssignToSidebar(finalSupplementalPolicyPath);
+								ViewModelProvider.MainWindowVM.AssignToSidebar(FinalSupplementalPolicy);
 
 								MainWindow.TriggerTransferIconAnimationStatic(sender);
 
@@ -712,6 +712,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		try
 		{
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
 			await FileIdentity.ExportToJson(FileIdentities, MainInfoBar);
 		}
 		catch (Exception ex)
@@ -719,7 +721,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			MainInfoBar.WriteError(ex);
 		}
 	}
-
 
 	internal static async Task ClearAppControlEventLogs(int log)
 	{

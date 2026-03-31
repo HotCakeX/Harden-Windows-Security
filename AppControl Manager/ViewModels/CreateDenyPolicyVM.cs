@@ -146,7 +146,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = DefaultScanLevel;
+	} = ScanLevelsSource[0];
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -557,7 +557,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		{
 			if (SPT(ref field, value))
 			{
-				PFNAppFilteringTextBox_TextChanged();
+				PFNBasedAppsListItemsSource = GetAppsList.PFNAppFilteringTextBox_TextChanged(field, PFNBasedAppsFullList);
 			}
 		}
 	}
@@ -575,7 +575,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		try
 		{
 			PFNElementsAreEnabled = false;
-			PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
+
+			// Get the data first and store in ObservableCollection
+			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
+			PFNBasedAppsListItemsSource = results.Item1;
+			// Store the same data on the FullList used for searching
+			PFNBasedAppsFullList = results.Item2;
 		}
 		finally
 		{
@@ -635,29 +640,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Event handler for when the search box of apps list changes
-	/// </summary>
-	private void PFNAppFilteringTextBox_TextChanged()
-	{
-		if (string.IsNullOrWhiteSpace(PFNBasedSearchKeywordForAppsList))
-		{
-			// If the filter is cleared, restore the original collection
-			PFNBasedAppsListItemsSource = new(PFNBasedAppsFullList);
-			return;
-		}
-
-		// Filter the original collection
-		List<GroupInfoListForPackagedAppView> filtered = PFNBasedAppsFullList
-			.Select(group => new GroupInfoListForPackagedAppView(
-				items: group.Where(app => app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)),
-				key: group.Key)).Where(group => group.Any()).ToList();
-
-		// Update the ListView source with the filtered data
-		PFNBasedAppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
-	}
-
-
-	/// <summary>
 	/// Event handler to happen only once when the section is expanded and apps list is loaded
 	/// </summary>
 	internal async void PFNSettingsCard_Expanded()
@@ -669,10 +651,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				PFNElementsAreEnabled = false;
 
 				// Get the data first and store in ObservableCollection
-				PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
-
+				(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
+				PFNBasedAppsListItemsSource = results.Item1;
 				// Store the same data on the FullList used for searching
-				PFNBasedAppsFullList = new(PFNBasedAppsListItemsSource);
+				PFNBasedAppsFullList = results.Item2;
 			}
 			finally
 			{
@@ -1150,8 +1132,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		{
 			// Instantiate the Content Dialog
 			using CustomUIElements.CustomPatternBasedFilePath customDialog = new();
-
-			GlobalVars.CurrentlyOpenContentDialog = customDialog;
 
 			// Show the dialog
 			_ = await customDialog.ShowAsync();

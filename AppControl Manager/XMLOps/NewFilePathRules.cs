@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -88,7 +87,7 @@ internal static class NewFilePathRules
 	/// <param name="policyObj"></param>
 	/// <param name="data"></param>
 	/// <returns>SiPolicy</returns>
-	internal static SiPolicy.SiPolicy CreateDenyEx(SiPolicy.SiPolicy policyObj, List<FilePathCreator> data)
+	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy policyObj, List<FilePathCreator> data)
 	{
 		if (data.Count is 0)
 		{

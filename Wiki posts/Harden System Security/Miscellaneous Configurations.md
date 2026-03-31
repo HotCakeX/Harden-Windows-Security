@@ -142,3 +142,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures the Antimalware Scan Interface (AMSI) to strictly [enforce Authenticode code signing](https://learn.microsoft.com/windows/win32/api/amsi/nn-amsi-iantimalwareprovider#remarks) requirements for all third-party antimalware providers.
 
 <br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables the [WebClient service](https://techcommunity.microsoft.com/blog/itopstalkblog/how-to-defend-users-from-interception-attacks-via-smb-client-defense/1494995) which prevents attackers from abusing WebDAV to intercept and steal NTLM credentials and other sensitive data via malicious links.
+
+<br>

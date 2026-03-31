@@ -982,4 +982,7 @@
 <data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
     <value>Διαμορφώστε το Antimalware Scan Interface (AMSI) ώστε να επιβάλλει αυστηρά τις απαιτήσεις υπογραφής κώδικα Authenticode για όλους τους τρίτους παρόχους προστασίας από κακόβουλο λογισμικό.</value>
 </data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>Η απενεργοποίηση της υπηρεσίας WebClient αποτρέπει τους επιτιθέμενους από την κατάχρηση του WebDAV για την υποκλοπή και κλοπή διαπιστευτηρίων NTLM και άλλων ευαίσθητων δεδομένων μέσω κακόβουλων συνδέσμων.</value>
+</data>
 </root>

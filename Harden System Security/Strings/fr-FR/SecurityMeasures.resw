@@ -982,4 +982,7 @@
 <data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
     <value>Configurez l'interface d'analyse anti-malware (AMSI) pour appliquer strictement les exigences de signature de code Authenticode pour tous les fournisseurs tiers de logiciels anti-malveillants.</value>
 </data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>La désactivation du service WebClient empêche les attaquants d'abuser de WebDAV pour intercepter et voler des informations d'identification NTLM et d'autres données sensibles via des liens malveillants.</value>
+</data>
 </root>

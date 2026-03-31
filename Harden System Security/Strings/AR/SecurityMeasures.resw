@@ -982,4 +982,7 @@
 <data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
     <value>قم بتكوين واجهة فحص مكافحة البرامج الضارة (AMSI) لفرض متطلبات توقيع التعليمات البرمجية لـ Authenticode بصرامة على جميع موفري برامج مكافحة البرامج الضارة التابعين لجهات خارجية.</value>
 </data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>يؤدي تعطيل خدمة WebClient إلى منع المهاجمين من إساءة استخدام WebDAV لاعتراض وسرقة بيانات اعتماد NTLM وغيرها من البيانات الحساسة عبر الروابط الضارة.</value>
+</data>
 </root>

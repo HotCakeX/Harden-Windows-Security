@@ -18,8 +18,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using CommonCore.GroupPolicy;
+using CommonCore.Interop;
 using CommonCore.SecurityPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -312,6 +314,175 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 					Intent.All
 				],
 				id: new("019b2d62-724c-7a01-a037-050d83b74faf")
+			));
+
+		// Disable WebClient Service
+		output.Add(new(
+				category: Categories.MiscellaneousConfigurations,
+				name: GlobalVars.GetSecurityStr("DisableWebClientService-Miscellaneous"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
+					if (scManager != IntPtr.Zero)
+					{
+						try
+						{
+							IntPtr hService = NativeMethods.OpenServiceW(scManager, "WebClient", NativeMethods.SERVICE_CHANGE_CONFIG | NativeMethods.SERVICE_STOP);
+							if (hService != IntPtr.Zero)
+							{
+								try
+								{
+									SERVICE_STATUS status = new();
+									_ = NativeMethods.ControlService(hService, NativeMethods.SERVICE_CONTROL_STOP, ref status);
+
+									_ = NativeMethods.ChangeServiceConfigW(
+										hService,
+										NativeMethods.SERVICE_NO_CHANGE,
+										4, // SERVICE_DISABLED
+										NativeMethods.SERVICE_NO_CHANGE,
+										null,
+										null,
+										IntPtr.Zero,
+										IntPtr.Zero,
+										null,
+										null,
+										null);
+								}
+								finally
+								{
+									_ = NativeMethods.CloseServiceHandle(hService);
+								}
+							}
+						}
+						finally
+						{
+							_ = NativeMethods.CloseServiceHandle(scManager);
+						}
+					}
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					bool isCompliant = false;
+					IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
+					if (scManager != IntPtr.Zero)
+					{
+						try
+						{
+							uint SERVICE_QUERY_CONFIG = 0x0001;
+							IntPtr hService = NativeMethods.OpenServiceW(scManager, "WebClient", SERVICE_QUERY_CONFIG | NativeMethods.SERVICE_QUERY_STATUS);
+							if (hService != IntPtr.Zero)
+							{
+								try
+								{
+									unsafe
+									{
+										int statusSize = sizeof(SERVICE_STATUS_PROCESS);
+										IntPtr statusBuffer = Marshal.AllocHGlobal(statusSize);
+										try
+										{
+											if (NativeMethods.QueryServiceStatusEx(hService, NativeMethods.SC_STATUS_PROCESS_INFO, statusBuffer, (uint)statusSize, out uint bytesNeeded))
+											{
+												SERVICE_STATUS_PROCESS processStatus = *(SERVICE_STATUS_PROCESS*)statusBuffer;
+
+												if (processStatus.dwCurrentState == NativeMethods.SERVICE_STOPPED)
+												{
+													_ = NativeMethods.QueryServiceConfigW(hService, IntPtr.Zero, 0, out uint configBytesNeeded);
+													if (configBytesNeeded > 0)
+													{
+														IntPtr configBuffer = Marshal.AllocHGlobal((int)configBytesNeeded);
+														try
+														{
+															if (NativeMethods.QueryServiceConfigW(hService, configBuffer, configBytesNeeded, out _) != 0)
+															{
+																QUERY_SERVICE_CONFIGW config = *(QUERY_SERVICE_CONFIGW*)configBuffer;
+
+																if (config.dwStartType == 4) // SERVICE_DISABLED
+																{
+																	isCompliant = true;
+																}
+															}
+														}
+														finally
+														{
+															Marshal.FreeHGlobal(configBuffer);
+														}
+													}
+												}
+											}
+										}
+										finally
+										{
+											Marshal.FreeHGlobal(statusBuffer);
+										}
+									}
+								}
+								finally
+								{
+									_ = NativeMethods.CloseServiceHandle(hService);
+								}
+							}
+							else
+							{
+								int err = Marshal.GetLastPInvokeError();
+								if (err == 1060) // ERROR_SERVICE_DOES_NOT_EXIST
+								{
+									isCompliant = true;
+								}
+							}
+						}
+						finally
+						{
+							_ = NativeMethods.CloseServiceHandle(scManager);
+						}
+					}
+					return isCompliant;
+				}),
+
+				removeStrategy: new DefaultRemove(() =>
+				{
+					IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
+					if (scManager != IntPtr.Zero)
+					{
+						try
+						{
+							IntPtr hService = NativeMethods.OpenServiceW(scManager, "WebClient", NativeMethods.SERVICE_CHANGE_CONFIG);
+							if (hService != IntPtr.Zero)
+							{
+								try
+								{
+									_ = NativeMethods.ChangeServiceConfigW(
+										hService,
+										NativeMethods.SERVICE_NO_CHANGE,
+										3, // SERVICE_DEMAND_START - default state of this service in Windows is Manual
+										NativeMethods.SERVICE_NO_CHANGE,
+										null,
+										null,
+										IntPtr.Zero,
+										IntPtr.Zero,
+										null,
+										null,
+										null);
+								}
+								finally
+								{
+									_ = NativeMethods.CloseServiceHandle(hService);
+								}
+							}
+						}
+						finally
+						{
+							_ = NativeMethods.CloseServiceHandle(scManager);
+						}
+					}
+				}),
+
+				deviceIntents: [
+					Intent.All
+				],
+				url: "https://techcommunity.microsoft.com/blog/itopstalkblog/how-to-defend-users-from-interception-attacks-via-smb-client-defense/1494995",
+				id: new("019d4495-d6ae-76ab-9ea0-f7db73972ed0")
 			));
 
 		return output;

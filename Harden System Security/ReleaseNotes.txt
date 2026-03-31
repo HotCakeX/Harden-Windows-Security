@@ -7,3 +7,5 @@
 * You can now click on the open ports tile on the home page to see all open ports on your system, see which programs are using which port and also view source and destination IP addresses of each port. This can give you advanced overview of active open ports on your system and help you identify any suspicious or unwanted activity.
 
 * Added a new security measure to the Miscellaneous category: Disables the WebClient service which prevents attackers from abusing WebDAV to intercept and steal NTLM credentials and other sensitive data via malicious links.
+
+* Added Security Score to the app! 🎊 When you use the Verify button on the Protect page, at the end there will be a new section displayed which shows you the security score of your system, how many security measures are compliant and how many are not compliant. The details of each category can be viewed by simply browsing to each of their respective pages. Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1105

@@ -10,6 +10,7 @@
     xmlns:GP="using:CommonCore.GroupPolicy"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    Unloaded="{x:Bind ViewModel.Page_Unloaded}"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -507,6 +508,7 @@
 
                         <!-- Verify Selected Button -->
                         <customUI:AnimatedCancellableButton x:Uid="ProtectPageVerifySelectedButton"
+                                                            x:Name="ProtectPageVerifySelectedButton"
                                                             IsEnabled="{x:Bind ViewModel.IsVerifyButtonEnabled, Mode=OneWay}"
                                                             CancelMethod="{x:Bind ViewModel.VerifySelectedCancellableButton.Cancel, Mode=OneWay}"
                                                             ExternalOperationInProgress="{x:Bind ViewModel.VerifySelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
@@ -622,5 +624,88 @@
                       SelectionChanged="{x:Bind ViewModel.ListView_SelectionChanged}"
                       ItemTemplate="{StaticResource ProtectionCategoryListViewTemplate}"/>
         </Grid>
+
+        <!-- Verification Results Popup -->
+        <Popup x:Name="VerificationResultsPopUp"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               HorizontalOffset="-100"
+               PlacementTarget="{x:Bind ProtectPageVerifySelectedButton}">
+            
+            <Border Padding="24"
+                    CornerRadius="20" 
+                    Width="320"
+                    BorderThickness="2"
+                    ui:Effects.Shadow="{StaticResource BorderShadow}">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FFF0F5" Offset="0.0"/>
+                        <!-- LavenderBlush -->
+                        <GradientStop Color="#F0F8FF" Offset="0.5"/>
+                        <!-- AliceBlue -->
+                        <GradientStop Color="#E6E6FA" Offset="1.0"/>
+                        <!-- Lavender -->
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.BorderBrush>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FFB6C1" Offset="0.0"/>
+                        <!-- LightPink -->
+                        <GradientStop Color="#DDA0DD" Offset="1.0"/>
+                        <!-- Plum -->
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+
+                    <!-- Header -->
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE73E;" Foreground="#4A4A4A" FontSize="24"/>
+                        <TextBlock Text="Verification Results" FontSize="20" FontWeight="SemiBold" Foreground="#4A4A4A" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Stats Grid -->
+                    <Grid RowSpacing="12" ColumnSpacing="24" Margin="0,8,0,8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Total Items:" Foreground="#696969" FontWeight="Medium" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.VerificationTotal, Mode=OneWay}" FontSize="18" Foreground="#4A4A4A" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Compliant:" Foreground="#2E8B57" FontWeight="Medium" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.VerificationCompliant, Mode=OneWay}" FontSize="18" Foreground="#2E8B57" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Non-Compliant:" Foreground="#CD5C5C" FontWeight="Medium" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind ViewModel.VerificationNonCompliant, Mode=OneWay}" FontSize="18" Foreground="#CD5C5C" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Percentage -->
+                    <StackPanel Orientation="Vertical" Spacing="0" HorizontalAlignment="Center">
+                        <TextBlock Text="Compliance Score" FontSize="14" Foreground="#696969" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{x:Bind ViewModel.VerificationPercentageString, Mode=OneWay}" FontSize="36" FontWeight="Black" Foreground="#9370DB" HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Close Button -->
+                    <Button Content="Awesome!"
+                            Click="{x:Bind ViewModel.CloseVerificationPopup}"
+                            HorizontalAlignment="Center"
+                            CornerRadius="16"
+                            Padding="32,8"
+                            Background="#DDA0DD"
+                            BorderThickness="0"
+                            Foreground="White"
+                            FontWeight="SemiBold"
+                            Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+        </Popup>
+
     </Grid>
 </Page>

@@ -64,7 +64,7 @@
 		<AssemblyName>HardenSystemSecurity</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>1.0.47.0</FileVersion>
+		<FileVersion>1.0.48.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -215,9 +215,9 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.83.1" />
-		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.83.1" />
-		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.83.1" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.83.3" />
+		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.83.3" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.83.3" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.5" />

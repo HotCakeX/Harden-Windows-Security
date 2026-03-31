@@ -5573,4 +5573,25 @@ Fingerabdruck: {3}</value>
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Löschen Sie die lokal zwischengespeicherten Authentifizierungstoken. Dies erfordert, dass Sie sich bei der nächsten Verwendung der App erneut manuell authentifizieren.</value>
   </data>
+   <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Starten Sie die App neu, um sie mit anderen Berechtigungen auszuführen.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Starten Sie die App neu, um sie mit anderen Berechtigungen auszuführen.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>Wird mit Administratorrechten ausgeführt. Alle Funktionen der App sind verfügbar. Sie können sie neu starten, um sie mit eingeschränkten Berechtigungen auszuführen.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>Wird mit eingeschränkten Berechtigungen ausgeführt. Funktionen, die erweiterte Berechtigungen erfordern, sind nicht verfügbar.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>App neu starten</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>Neu starten</value>
+  </data>
 </root>

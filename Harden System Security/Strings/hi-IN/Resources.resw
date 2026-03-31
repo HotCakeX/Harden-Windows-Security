@@ -5573,4 +5573,25 @@
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>स्थानीय रूप से कैश किए गए प्रमाणीकरण टोकन साफ़ करें। इसके लिए आपको अगली बार ऐप का उपयोग करने पर मैन्युअल रूप से फिर से प्रमाणित करने की आवश्यकता होगी।</value>
   </data>
+    <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>विभिन्न विशेषाधिकारों के साथ चलाने के लिए ऐप को पुनरारंभ करें।</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>विभिन्न विशेषाधिकारों के साथ चलाने के लिए ऐप को पुनरारंभ करें।</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>व्यवस्थापक विशेषाधिकारों के साथ चल रहा है। ऐप की सभी सुविधाएँ उपलब्ध हैं। आप सीमित विशेषाधिकारों के साथ चलाने के लिए पुनरारंभ कर सकते हैं।</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>सीमित विशेषाधिकारों के साथ चल रहा है। उन्नत विशेषाधिकारों की आवश्यकता वाली सुविधाएँ उपलब्ध नहीं हैं।</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>ऐप पुनरारंभ करें</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>पुनरारंभ करें</value>
+  </data>
 </root>

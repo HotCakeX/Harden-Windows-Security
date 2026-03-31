@@ -5573,4 +5573,25 @@ Odcisk Palca: {3}</value>
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wyczyść lokalnie buforowane tokeny uwierzytelniania. Będzie to wymagało ponownego ręcznego uwierzytelnienia przy następnym użyciu aplikacji.</value>
   </data>
+   <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uruchom aplikację ponownie, aby działała z innym zestawem uprawnień.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Uruchom aplikację ponownie, aby działała z innym zestawem uprawnień.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>Działa z uprawnieniami administratora. Wszystkie funkcje aplikacji są dostępne. Możesz uruchomić ją ponownie, aby działała z ograniczonymi uprawnieniami.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>Działa z ograniczonymi uprawnieniami. Funkcje wymagające podwyższonych uprawnień są niedostępne.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>Uruchom aplikację ponownie</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>Uruchom ponownie</value>
+  </data>
 </root>

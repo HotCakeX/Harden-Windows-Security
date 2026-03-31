@@ -5573,7 +5573,6 @@ Thumbprint: {3}</value>
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Clear the locally cached authentication tokens. This will require you to manually authenticate again the next time you use the app.</value>
   </data>
-  <!--NEW-->
   <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Relaunch the app to run with a different set of privileges.</value>
   </data>

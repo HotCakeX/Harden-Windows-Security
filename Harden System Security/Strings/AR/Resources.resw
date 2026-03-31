@@ -5573,4 +5573,25 @@
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>امسح رموز المصادقة المميزة المخزنة مؤقتاً محلياً. سيتطلب منك ذلك المصادقة يدوياً مرة أخرى في المرة القادمة التي تستخدم فيها التطبيق.</value>
   </data>
+   <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أعد تشغيل التطبيق للتشغيل بصلاحيات مختلفة.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أعد تشغيل التطبيق للتشغيل بصلاحيات مختلفة.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>قيد التشغيل بصلاحيات المسؤول. جميع ميزات التطبيق متاحة. يمكنك إعادة التشغيل للتشغيل بصلاحيات محدودة.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>قيد التشغيل بصلاحيات محدودة. الميزات التي تتطلب صلاحيات مرتفعة غير متاحة.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>إعادة تشغيل التطبيق</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>إعادة تشغيل</value>
+  </data>
 </root>

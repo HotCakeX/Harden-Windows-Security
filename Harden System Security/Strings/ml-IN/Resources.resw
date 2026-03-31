@@ -5573,4 +5573,25 @@
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>പ്രാദേശികമായി കാഷെ ചെയ്ത ഓതന്റിക്കേഷൻ ടോക്കണുകൾ മായ്‌ക്കുക. അടുത്ത തവണ ആപ്പ് ഉപയോഗിക്കുമ്പോൾ നിങ്ങൾ വീണ്ടും മാനുവലായി ഓതന്റിക്കേറ്റ് ചെയ്യാൻ ഇത് ആവശ്യപ്പെടുന്നു.</value>
   </data>
+   <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മറ്റൊരു പ്രിവിലേജ് സെറ്റ് ഉപയോഗിച്ച് പ്രവർത്തിപ്പിക്കുന്നതിന് ആപ്പ് വീണ്ടും സമാരംഭിക്കുക.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മറ്റൊരു പ്രിവിലേജ് സെറ്റ് ഉപയോഗിച്ച് പ്രവർത്തിപ്പിക്കുന്നതിന് ആപ്പ് വീണ്ടും സമാരംഭിക്കുക.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>അഡ്മിനിസ്ട്രേറ്റർ പ്രിവിലേജുകളോടെ പ്രവർത്തിക്കുന്നു. ആപ്പിന്റെ എല്ലാ സവിശേഷതകളും ലഭ്യമാണ്. പരിമിതമായ പ്രിവിലേജുകളോടെ പ്രവർത്തിക്കുന്നതിന് നിങ്ങൾക്ക് വീണ്ടും സമാരംഭിക്കാവുന്നതാണ്.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>പരിമിതമായ പ്രിവിലേജുകളോടെ പ്രവർത്തിക്കുന്നു. ഉയർന്ന പ്രിവിലേജുകൾ ആവശ്യമായ സവിശേഷതകൾ ലഭ്യമല്ല.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>ആപ്പ് വീണ്ടും സമാരംഭിക്കുക</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>അടയ്ക്കുക</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>വീണ്ടും സമാരംഭിക്കുക</value>
+  </data>
 </root>

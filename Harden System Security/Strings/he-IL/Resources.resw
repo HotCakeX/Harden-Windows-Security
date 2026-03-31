@@ -5573,4 +5573,25 @@
   <data name="ClearLocalCacheButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>נקה את אסימוני האימות השמורים במטמון המקומי. פעולה זו תדרוש ממך לבצע אימות ידני מחדש בפעם הבאה שתשתמש באפליקציה.</value>
   </data>
+   <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל מחדש את האפליקציה כדי לפעול עם הרשאות שונות.</value>
+  </data>
+  <data name="ElevationContextSwitchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל מחדש את האפליקציה כדי לפעול עם הרשאות שונות.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleElevated" xml:space="preserve">
+    <value>פועל עם הרשאות מנהל. כל תכונות האפליקציה זמינות. באפשרותך להפעיל מחדש כדי לפעול עם הרשאות מוגבלות.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTipSubtitleUnelevated" xml:space="preserve">
+    <value>פועל עם הרשאות מוגבלות. תכונות הדורשות הרשאות מנהל אינן זמינות.</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.Title" xml:space="preserve">
+    <value>הפעל מחדש את האפליקציה</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>סגור</value>
+  </data>
+  <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>הפעל מחדש</value>
+  </data>
 </root>

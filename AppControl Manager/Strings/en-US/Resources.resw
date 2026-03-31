@@ -7070,7 +7070,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SuccessfullyUpdatedSelectedPolicyMessage" xml:space="preserve">
     <value>Successfully updated the selected policy by adding new rules to it.</value>
   </data>
-  <!--NEW-->
   <data name="ElevationContextSwitchButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Relaunch the app to run with a different set of privileges.</value>
   </data>

@@ -181,6 +181,15 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
+
+                                <!-- Clickable Indicator -->
+                                <FontIcon Grid.Row="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          FontSize="12"
+                                          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                          Glyph="&#xE76C;" />
+
                                 <StackPanel Style="{StaticResource CardHeaderStackStyle}">
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE770;"/>
@@ -254,6 +263,15 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
+
+                                <!-- Clickable Indicator -->
+                                <FontIcon Grid.Row="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          FontSize="12"
+                                          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                          Glyph="&#xE76C;" />
+
                                 <StackPanel Style="{StaticResource CardHeaderStackStyle}">
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE8D0;"/>
@@ -376,6 +394,15 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
+
+                                <!-- Clickable Indicator -->
+                                <FontIcon Grid.Row="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          FontSize="12"
+                                          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                          Glyph="&#xE76C;" />
+
                                 <StackPanel Style="{StaticResource CardHeaderStackStyle}">
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE88E;"/>
@@ -446,6 +473,15 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
+
+                                <!-- Clickable Indicator -->
+                                <FontIcon Grid.Row="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          FontSize="12"
+                                          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                          Glyph="&#xE76C;" />
+
                                 <StackPanel Style="{StaticResource CardHeaderStackStyle}">
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xEC5C;"/>
@@ -485,12 +521,21 @@
                         </Border>
 
                         <!-- Open Network Ports -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                        <Button Style="{StaticResource CardButtonStyle}" Click="{x:Bind ViewModel.OnOpenNetworkPortsClick}">
                             <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
+
+                                <!-- Clickable Indicator -->
+                                <FontIcon Grid.Row="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          FontSize="12"
+                                          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                          Glyph="&#xE76C;" />
+
                                 <StackPanel Style="{StaticResource CardHeaderStackStyle}">
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xEC05;"/>
@@ -502,7 +547,7 @@
                                            Style="{StaticResource CardBodyTextStyle}"
                                            Text="{x:Bind ViewModel.OpenPortsText, Mode=OneWay}"/>
                             </Grid>
-                        </Border>
+                        </Button>
 
                         <!-- POWER PLAN -->
                         <Border Style="{StaticResource OverviewCardBorderStyle}">

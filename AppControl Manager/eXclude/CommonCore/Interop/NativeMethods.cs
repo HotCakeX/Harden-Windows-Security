@@ -2708,4 +2708,26 @@ internal static unsafe partial class NativeMethods
 		IntPtr pAuthInfo,
 		uint dwCapabilities);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-getextendedtcptable
+	/// </summary>
+	[LibraryImport("iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetExtendedTcpTable(IntPtr pTcpTable, ref int pdwSize, [MarshalAs(UnmanagedType.Bool)] bool bOrder, int ulAf, int TableClass, uint Reserved);
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-getextendedudptable
+	/// </summary>
+	[LibraryImport("iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetExtendedUdpTable(IntPtr pUdpTable, ref int pdwSize, [MarshalAs(UnmanagedType.Bool)] bool bOrder, int ulAf, int TableClass, uint Reserved);
+
+
+	internal const int AF_INET = 2;
+	internal const int AF_INET6 = 23;
+	internal const int TCP_TABLE_OWNER_PID_ALL = 5;
+	internal const int UDP_TABLE_OWNER_PID = 1;
+	internal const uint MIB_TCP_STATE_LISTEN = 2;
+
 }

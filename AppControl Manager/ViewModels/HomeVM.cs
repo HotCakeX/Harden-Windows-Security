@@ -1868,6 +1868,22 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		return wmiDate;
 	}
 
+	/// <summary>
+	/// Event handler to launch the Open Ports viewing ContentDialog when clicking the tile.
+	/// </summary>
+	internal async void OnOpenNetworkPortsClick(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			using OpenPortsDialog dialog = new();
+			_ = await dialog.ShowAsync();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
 	#region Windows Activation and Licensing Info
 
 	/// <summary>

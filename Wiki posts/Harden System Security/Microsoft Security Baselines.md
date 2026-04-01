@@ -26,6 +26,8 @@ Each security measure has the following details:
 
    * Users usually apply the Microsoft Security Baseline on their system, which is mostly geared towards enterprise use, but then they find that some settings are not user-friendly for personal use. These optional overrides help to mitigate that situation. You can of course disable this toggle if you want to stick strictly to the Microsoft Security Baseline without any modifications.
 
+* When the results are loaded, you can right-click or tap + hold on each security measure in this page and select `Delete` in order to remove it from your system. The Delete key on your keyboard can also be used as a shortcut for this action. This functionality allows you to fine-tune the Microsoft Security baseline policies so that if you don't want or need some of the policies it offers, you can undo and remove them from your system.
+
 <br>
 
 > [!NOTE]

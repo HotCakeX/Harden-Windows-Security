@@ -33,6 +33,7 @@ internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 		this.DataContext = ViewModel;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		ViewModel.UIListView = ProtectionCategoriesListView; // Save a reference to the ListView in the ViewModel for direct access.
+		ViewModel.VerificationResultsPopUp = VerificationResultsPopUp; // Accessing the Popup from VM because if we tie its IsOpen property to TwoWay field in VM then after navigating away and back to the page, making the Popup appear will show 2 Popups on the UI instead which is a bug and this bug applies to TeachingTips as well.
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ProtectPageTitle");

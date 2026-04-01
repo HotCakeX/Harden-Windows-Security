@@ -1,15 +1,3 @@
-* Updated dependencies to the latest versions.
+* Added clickable indicators to the tiles on the home page that are clickable.
 
-* Improved the search experience when searching for details of packaged apps in the Supplemental and Deny policy creation pages: now many more properties for each app are included during the search, helping you find the app you are looking for easier and faster.
-
-* Minor user experience improvements in the MDE Advanced Hunting and Event logs pages.
-
-* In the Supplemental and Deny policy creation pages, the Packaged Apps sections are now available even if the AppControl Manager is not running as administrator, the only difference is that when running as admin, all apps available on the system is shown but when running as standard/unelevated user, only apps installed for the current user will be shown.
-
-* The policies library on the sidebar can now handle extremely large policy files and there is now a progress ring displayed when it's busy processing your large policies.
-
-* System Information page is now more resilient when encountering deployed policy files in inaccessible locations and handles them gracefully.
-
-* Added a new button to the app's toolbar which allows you to easily relaunch the app with different privileges. If running as Administrator, pressing this button will launch the app with limited privileges and if running with limited privileges, pressing this button will relaunch the app with Administrator privileges.
-
-* Added Japanese language support. Thanks to the community members on GitHub.
+* You can now click on the open ports tile on the home page to see all open ports on your system, see which programs are using which port and also view source and destination IP addresses of each port. This can give you advanced overview of active open ports on your system and help you identify any suspicious or unwanted activity.

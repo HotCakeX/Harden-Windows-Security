@@ -225,14 +225,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			typeof(InfoBarV2),
 			new PropertyMetadata(1.0, OnScaleToChanged)); // DEFAULT: 1.0
 
-	// Default: True - animations enabled
-	private static readonly DependencyProperty EnableAnimationProperty =
-		DependencyProperty.Register(
-			nameof(EnableAnimation),
-			typeof(bool),
-			typeof(InfoBarV2),
-			new PropertyMetadata(true, OnEnableAnimationChanged)); // DEFAULT: True
-
 	// Default: Zero delay before animation starts
 	private static readonly DependencyProperty AnimationDelayProperty =
 		DependencyProperty.Register(
@@ -333,12 +325,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	{
 		get => (double)GetValue(ScaleToProperty);
 		set => SetValue(ScaleToProperty, value);
-	}
-
-	internal bool EnableAnimation
-	{
-		get => (bool)GetValue(EnableAnimationProperty);
-		set => SetValue(EnableAnimationProperty, value);
 	}
 
 	internal TimeSpan AnimationDelay
@@ -468,18 +454,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		if (d is InfoBarV2 infoBar && !infoBar._isDisposed && !infoBar._isUnloading)
 		{
 			infoBar.RecreateAnimations();
-		}
-	}
-
-	private static void OnEnableAnimationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-	{
-		if (d is InfoBarV2 infoBar && !infoBar._isDisposed && !infoBar._isUnloading)
-		{
-			// If animations are disabled, stop any running animations immediately
-			if (!(bool)e.NewValue)
-			{
-				infoBar.StopAllAnimations();
-			}
 		}
 	}
 
@@ -679,9 +653,9 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			return;
 		}
 
-		// Only intercept the close if animations are enabled and we should handle close button clicks
+		// Only intercept the close if we should handle close button clicks
 		// The _isHandlingCloseButton flag prevents infinite loops when we set IsOpen=false after animation
-		if (EnableAnimation && InterceptCloseButton && !_isHandlingCloseButton)
+		if (InterceptCloseButton && !_isHandlingCloseButton)
 		{
 			// Cancel the default close behavior so we can show our custom animation first
 			args.Cancel = true;
@@ -722,7 +696,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Update state tracking if InfoBar was closed without my custom animation
-		if (!_isClosingViaButton && EnableAnimation && !IsOpen && _lastKnownIsOpenState)
+		if (!_isClosingViaButton && !IsOpen && _lastKnownIsOpenState)
 		{
 			_lastKnownIsOpenState = false;
 		}
@@ -836,15 +810,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		bool oldState = _lastKnownIsOpenState;
 		_lastKnownIsOpenState = newIsOpenValue;
-
-		// If animations are disabled, use default InfoBar behavior
-		if (!EnableAnimation)
-		{
-			Visibility = IsOpen ? Visibility.Visible : Visibility.Collapsed;
-			Opacity = IsOpen ? 1.0 : 0.0;
-			ResetTransforms();
-			return;
-		}
 
 		// Enhanced conflict handling: if there's an opposite animation in progress, interrupt it
 		if (_animationInProgress)
@@ -977,7 +942,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	}
 
 	/// <summary>
-	/// Fallback method when animations cannot be created or are disabled.
+	/// Fallback method when animations cannot be created.
 	/// Ensures InfoBar still functions correctly without animations.
 	/// </summary>
 	private void FallbackToNonAnimatedBehavior(bool shouldOpen)

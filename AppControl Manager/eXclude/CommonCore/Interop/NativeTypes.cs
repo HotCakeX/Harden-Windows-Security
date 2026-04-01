@@ -1841,3 +1841,64 @@ internal partial interface IWbemClassObject
 }
 
 #endregion
+
+internal enum TCP_TABLE_CLASS : int
+{
+	TCP_TABLE_BASIC_LISTENER,
+	TCP_TABLE_BASIC_CONNECTIONS,
+	TCP_TABLE_BASIC_ALL,
+	TCP_TABLE_OWNER_PID_LISTENER,
+	TCP_TABLE_OWNER_PID_CONNECTIONS,
+	TCP_TABLE_OWNER_PID_ALL,
+	TCP_TABLE_OWNER_MODULE_LISTENER,
+	TCP_TABLE_OWNER_MODULE_CONNECTIONS,
+	TCP_TABLE_OWNER_MODULE_ALL
+}
+
+internal enum UDP_TABLE_CLASS : int
+{
+	UDP_TABLE_BASIC,
+	UDP_TABLE_OWNER_PID,
+	UDP_TABLE_OWNER_MODULE
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct MIB_TCPROW_OWNER_PID
+{
+	internal uint state;
+	internal uint localAddr;
+	internal uint localPort;
+	internal uint remoteAddr;
+	internal uint remotePort;
+	internal uint owningPid;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct MIB_UDPROW_OWNER_PID
+{
+	internal uint localAddr;
+	internal uint localPort;
+	internal uint owningPid;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct MIB_TCP6ROW_OWNER_PID
+{
+	internal fixed byte localAddr[16];
+	internal uint localScopeId;
+	internal uint localPort;
+	internal fixed byte remoteAddr[16];
+	internal uint remoteScopeId;
+	internal uint remotePort;
+	internal uint state;
+	internal uint owningPid;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct MIB_UDP6ROW_OWNER_PID
+{
+	internal fixed byte localAddr[16];
+	internal uint localScopeId;
+	internal uint localPort;
+	internal uint owningPid;
+}

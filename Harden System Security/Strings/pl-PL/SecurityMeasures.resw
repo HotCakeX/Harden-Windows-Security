@@ -982,4 +982,7 @@
 <data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
     <value>Skonfiguruj interfejs Antimalware Scan Interface (AMSI), aby ściśle egzekwował wymagania dotyczące podpisywania kodu Authenticode dla wszystkich dostawców oprogramowania chroniącego przed złośliwym oprogramowaniem firm trzecich.</value>
 </data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>Wyłączenie usługi WebClient zapobiega nadużywaniu protokołu WebDAV przez atakujących w celu przechwytywania i kradzieży poświadczeń NTLM oraz innych poufnych danych za pośrednictwem złośliwych linków.</value>
+</data>
 </root>

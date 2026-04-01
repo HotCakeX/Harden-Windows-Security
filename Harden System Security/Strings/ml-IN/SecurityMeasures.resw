@@ -982,4 +982,7 @@
 <data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
     <value>എല്ലാ തേർഡ്-പാർട്ടി ആന്റിമാൽവെയർ സേവനദാതാക്കൾക്കും Authenticode കോഡ് സൈനിംഗ് ആവശ്യകതകൾ കർശനമായി നടപ്പിലാക്കുന്നതിനായി Antimalware Scan Interface (AMSI) ക്രമീകരിക്കുക.</value>
 </data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>വെബ്ക്ലയന്റ് (WebClient) സേവനം പ്രവർത്തനരഹിതമാക്കുന്നത്, ക്ഷുദ്രകരമായ ലിങ്കുകൾ വഴി NTLM ക്രെഡൻഷ്യലുകളും മറ്റ് തന്ത്രപ്രധാനമായ ഡാറ്റയും തടസ്സപ്പെടുത്തുന്നതിനും മോഷ്ടിക്കുന്നതിനും വെബ്ഡാവ് (WebDAV) ദുരുപയോഗം ചെയ്യുന്നതിൽ നിന്ന് ആക്രമണകാരികളെ തടയുന്നു.</value>
+</data>
 </root>

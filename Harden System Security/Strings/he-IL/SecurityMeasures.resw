@@ -982,4 +982,7 @@
 <data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
     <value>הגדר את ממשק סריקת התוכנות הזדוניות (AMSI) לאכיפה קפדנית של דרישות חתימת הקוד של Authenticode עבור כל ספקי ההגנה מפני תוכנות זדוניות מצד שלישי.</value>
 </data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>השבתת שירות ה-WebClient מונעת מתוקפים לנצל לרעה את WebDAV כדי ליירט ולגנוב אישורי NTLM ונתונים רגישים אחרים באמצעות קישורים זדוניים.</value>
+</data>
 </root>

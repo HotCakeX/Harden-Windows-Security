@@ -27,6 +27,7 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace HardenSystemSecurity.ViewModels;
@@ -679,6 +680,11 @@ internal sealed partial class ProtectVM : ViewModelBase
 	internal volatile ListViewBase? UIListView;
 
 	/// <summary>
+	/// Popup reference of the UI.
+	/// </summary>
+	internal volatile Popup? VerificationResultsPopUp;
+
+	/// <summary>
 	/// To select all of the items in the ListView.
 	/// </summary>
 	private void SelectAllItemsInListView()
@@ -1280,6 +1286,9 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
+			// Close the verification results PopUp if it's open
+			_ = (VerificationResultsPopUp?.IsOpen = false);
+
 			// Set the current running operation to enable/disable appropriate buttons
 			CurrentRunningOperation = operation switch
 			{
@@ -1374,6 +1383,32 @@ internal sealed partial class ProtectVM : ViewModelBase
 					_ => "processed"
 				};
 				MainInfoBar.WriteSuccess($"Successfully {operationPastTense} {processedCategories} categories");
+
+				// Prepare verification results PopUp
+				if (operation == MUnitOperation.Verify)
+				{
+					int total = 0;
+					int compliant = 0;
+
+					foreach (ProtectionCategoryListViewItem selectedCategory in orderedSelection)
+					{
+						(int Total, int Compliant) = await GetCategoryStatsAsync(selectedCategory.Category);
+						total += Total;
+						compliant += Compliant;
+					}
+
+					VerificationTotal = total;
+					VerificationCompliant = compliant;
+					VerificationNonCompliant = total - compliant;
+					VerificationPercentage = total > 0 ? (double)compliant / total * 100.0 : 0.0;
+
+					// Trigger update for the string property
+					OnPropertyChanged(nameof(VerificationPercentageString));
+
+					_ = (VerificationResultsPopUp?.IsOpen = true);
+
+					Logger.Write($"Verified {VerificationTotal} Security Measures in total. {VerificationCompliant} were compliant while {VerificationNonCompliant} were non-compliant. The system's security score is: {VerificationPercentage:F1}% UwU");
+				}
 			}
 		}
 		catch (OperationCanceledException)
@@ -1520,4 +1555,70 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 	internal bool RestorationModePartial { get; set => SP(ref field, value); }
 	internal bool RestorationModeFull { get; set => SP(ref field, value); } = true;
+
+	#region Verification Popup Properties & Methods
+
+	internal int VerificationTotal { get; set => SP(ref field, value); }
+	internal int VerificationCompliant { get; set => SP(ref field, value); }
+	internal int VerificationNonCompliant { get; set => SP(ref field, value); }
+	internal double VerificationPercentage { get; set => SP(ref field, value); }
+	internal string VerificationPercentageString => $"{VerificationPercentage:F1}%";
+
+	internal void CloseVerificationPopup() => VerificationResultsPopUp?.IsOpen = false;
+
+	/// <summary>
+	/// Gathers the total and compliant counts for a specific category using the correct ViewModel.
+	/// </summary>
+	private static async Task<(int Total, int Compliant)> GetCategoryStatsAsync(Categories category)
+	{
+		switch (category)
+		{
+			case Categories.MicrosoftSecurityBaseline:
+				HardenSystemSecurity.Traverse.MicrosoftSecurityBaseline msb = await ViewModelProvider.MicrosoftSecurityBaselineVM.GetTraverseData();
+				return (msb.Items.Count, msb.Score);
+			case Categories.Microsoft365AppsSecurityBaseline:
+				HardenSystemSecurity.Traverse.Microsoft365AppsSecurityBaseline m365 = await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.GetTraverseData();
+				return (m365.Items.Count, m365.Score);
+			case Categories.AttackSurfaceReductionRules:
+				HardenSystemSecurity.Traverse.AttackSurfaceReductionRules asr = await ViewModelProvider.ASRVM.GetTraverseData();
+				return (asr.Items.Count, asr.Score);
+			case Categories.OptionalWindowsFeatures:
+				return (0, 0); // Not tracked in the standard compliant/non-compliant way in traverse data yet
+			case Categories.MicrosoftDefender: return GetMUnitStats(ViewModelProvider.MicrosoftDefenderVM);
+			case Categories.BitLockerSettings: return GetMUnitStats(ViewModelProvider.BitLockerVM);
+			case Categories.TLSSecurity: return GetMUnitStats(ViewModelProvider.TLSVM);
+			case Categories.LockScreen: return GetMUnitStats(ViewModelProvider.LockScreenVM);
+			case Categories.UserAccountControl: return GetMUnitStats(ViewModelProvider.UACVM);
+			case Categories.DeviceGuard: return GetMUnitStats(ViewModelProvider.DeviceGuardVM);
+			case Categories.WindowsFirewall: return GetMUnitStats(ViewModelProvider.WindowsFirewallVM);
+			case Categories.WindowsNetworking: return GetMUnitStats(ViewModelProvider.WindowsNetworkingVM);
+			case Categories.MiscellaneousConfigurations: return GetMUnitStats(ViewModelProvider.MiscellaneousConfigsVM);
+			case Categories.WindowsUpdateConfigurations: return GetMUnitStats(ViewModelProvider.WindowsUpdateVM);
+			case Categories.EdgeBrowserConfigurations: return GetMUnitStats(ViewModelProvider.EdgeVM);
+			case Categories.NonAdminCommands: return GetMUnitStats(ViewModelProvider.NonAdminVM);
+			case Categories.MSFTSecBaselines_OptionalOverrides: return GetMUnitStats(ViewModelProvider.MicrosoftBaseLinesOverridesVM);
+			case Categories.CertificateChecking:
+				return (0, 0); // N/A
+			case Categories.CountryIPBlocking:
+				return (0, 0); // N/A
+			default: return (0, 0);
+		}
+	}
+
+	private static (int Total, int Compliant) GetMUnitStats(IMUnitListViewModel vm)
+	{
+		int total = vm.AllMUnits.Count;
+		int compliant = vm.AllMUnits.Count(m => m.IsApplied == true);
+		return (total, compliant);
+	}
+
+	#endregion
+
+	internal void Page_Unloaded(object sender, RoutedEventArgs e)
+	{
+		// Null the UI references when the page is unloaded.
+		UIListView = null;
+		VerificationResultsPopUp = null;
+	}
+
 }

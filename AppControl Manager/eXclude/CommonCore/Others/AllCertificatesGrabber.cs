@@ -104,8 +104,8 @@ internal static class AllCertificatesGrabber
 				{
 					// Throw a custom exception
 					throw new HashMismatchInCertificateException(
-						string.Format(GlobalVars.GetStr("WinTrustReturnCodeMessage"), verifyTrustResult),
-						string.Format(GlobalVars.GetStr("FileTamperedHashMismatchMessage"), FilePath)
+						string.Format(Atlas.GetStr("WinTrustReturnCodeMessage"), verifyTrustResult),
+						string.Format(Atlas.GetStr("FileTamperedHashMismatchMessage"), FilePath)
 					);
 				}
 

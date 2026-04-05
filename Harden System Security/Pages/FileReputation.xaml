@@ -4,11 +4,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:ACMVM="using:AppControlManager.ViewModels"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
-    <Grid AllowDrop="{x:Bind ACMVM:ViewModelBase.IsNotElevated}"
+    <Grid AllowDrop="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
           DragOver="{x:Bind ViewModel.OnDragOver}"
           Drop="{x:Bind ViewModel.OnDrop}">
 
@@ -51,7 +51,7 @@
 
                 <!-- Drag and drop hint shown when not elevated -->
                 <TextBlock x:Uid="DragAndDropHintFileReputation"
-                           Visibility="{x:Bind ACMVM:ViewModelBase.IsNotElevated}"
+                           Visibility="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                            VerticalAlignment="Center"
                            Opacity="0.7"
                            FontStyle="Italic" />

@@ -67,7 +67,7 @@ internal static class SetCiPolicyInfo
 
 			if (!response.Item1)
 			{
-				throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidGuidFormatError"), basePolicyID));
+				throw new ArgumentException(string.Format(Atlas.GetStr("InvalidGuidFormatError"), basePolicyID));
 			}
 
 			// Set the BasePolicyID of the policy file to the user provided one
@@ -82,7 +82,7 @@ internal static class SetCiPolicyInfo
 		{
 			if (string.Equals(policyObj.PolicyID, policyObj.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 			{
-				Logger.Write(GlobalVars.GetStr("SupplementalPolicyTypeChangeMessage"));
+				Logger.Write(Atlas.GetStr("SupplementalPolicyTypeChangeMessage"));
 
 				policyObj.PolicyType = SiPolicy.PolicyType.BasePolicy;
 			}
@@ -92,7 +92,7 @@ internal static class SetCiPolicyInfo
 		{
 			if (!string.Equals(policyObj.PolicyID, policyObj.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 			{
-				Logger.Write(GlobalVars.GetStr("BasePolicyTypeChangeMessage"));
+				Logger.Write(Atlas.GetStr("BasePolicyTypeChangeMessage"));
 
 				policyObj.PolicyType = SiPolicy.PolicyType.SupplementalPolicy;
 			}
@@ -121,7 +121,7 @@ internal static class SetCiPolicyInfo
 
 			if (!response.Item1)
 			{
-				throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidGuidFormatError"), ID));
+				throw new ArgumentException(string.Format(Atlas.GetStr("InvalidGuidFormatError"), ID));
 			}
 
 			// Set the BasePolicyID of the policy object to the user provided one

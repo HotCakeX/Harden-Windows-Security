@@ -32,6 +32,6 @@ internal sealed partial class EXIFManager : Page, CommonCore.UI.IPageHeaderProvi
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("EXIFManagerPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("EXIFManagerPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/EXIF-Manager");
 }

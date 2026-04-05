@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -35,11 +36,11 @@ internal static class NewHashLevelRules
 	{
 		if (hashes.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoHashesDetectedAllowMessage"));
+			Logger.Write(Atlas.GetStr("NoHashesDetectedAllowMessage"));
 			return siPolicy;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("HashRulesToAddMessage"), hashes.Count, "SiPolicy Object"));
+		Logger.Write(string.Format(Atlas.GetStr("HashRulesToAddMessage"), hashes.Count, "SiPolicy Object"));
 
 		// Ensure the lists are initialized.
 		siPolicy.FileRules ??= [];
@@ -63,7 +64,7 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA256
 			Allow newAuth256Rule = new(id: HashSHA256RuleID)
 			{
-				FriendlyName = string.Format(GlobalVars.GetStr("Sha256HashFriendlyName"), hash.FileName),
+				FriendlyName = string.Format(Atlas.GetStr("Sha256HashFriendlyName"), hash.FileName),
 				Hash = Convert.FromHexString(hash.AuthenticodeSHA256)
 			};
 			siPolicy.FileRules.Add(newAuth256Rule);
@@ -71,25 +72,25 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA1
 			Allow newAuth1Rule = new(id: HashSHA1RuleID)
 			{
-				FriendlyName = string.Format(GlobalVars.GetStr("Sha1HashFriendlyName"), hash.FileName),
+				FriendlyName = string.Format(Atlas.GetStr("Sha1HashFriendlyName"), hash.FileName),
 				Hash = Convert.FromHexString(hash.AuthenticodeSHA1)
 			};
 			siPolicy.FileRules.Add(newAuth1Rule);
 
 			// For User-Mode files
-			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+			if (hash.SiSigningScenario is SSType.UserMode)
 			{
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
 			}
 
 			// For Kernel-Mode files
-			else if (hash.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+			else if (hash.SiSigningScenario is SSType.KernelMode)
 			{
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
 				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
+					Logger.Write(string.Format(Atlas.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
 				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
@@ -110,11 +111,11 @@ internal static class NewHashLevelRules
 	{
 		if (hashes.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoHashesDetectedDenyMessage"));
+			Logger.Write(Atlas.GetStr("NoHashesDetectedDenyMessage"));
 			return siPolicy;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("HashRulesToAddMessage"), hashes.Count, "SiPolicy Object"));
+		Logger.Write(string.Format(Atlas.GetStr("HashRulesToAddMessage"), hashes.Count, "SiPolicy Object"));
 
 		// Ensure the lists are initialized
 		siPolicy.FileRules ??= [];
@@ -138,7 +139,7 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA256
 			Deny newAuth256Rule = new(id: HashSHA256RuleID)
 			{
-				FriendlyName = string.Format(GlobalVars.GetStr("Sha256HashFriendlyName"), hash.FileName),
+				FriendlyName = string.Format(Atlas.GetStr("Sha256HashFriendlyName"), hash.FileName),
 				Hash = Convert.FromHexString(hash.AuthenticodeSHA256)
 			};
 			siPolicy.FileRules.Add(newAuth256Rule);
@@ -146,25 +147,25 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA1
 			Deny newAuth1Rule = new(id: HashSHA1RuleID)
 			{
-				FriendlyName = string.Format(GlobalVars.GetStr("Sha1HashFriendlyName"), hash.FileName),
+				FriendlyName = string.Format(Atlas.GetStr("Sha1HashFriendlyName"), hash.FileName),
 				Hash = Convert.FromHexString(hash.AuthenticodeSHA1)
 			};
 			siPolicy.FileRules.Add(newAuth1Rule);
 
 			// For User-Mode files
-			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+			if (hash.SiSigningScenario is SSType.UserMode)
 			{
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA1RuleID));
 			}
 
 			// For Kernel-Mode files
-			else if (hash.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+			else if (hash.SiSigningScenario is SSType.KernelMode)
 			{
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
 				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
+					Logger.Write(string.Format(Atlas.GetStr("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
 				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: HashSHA256RuleID));

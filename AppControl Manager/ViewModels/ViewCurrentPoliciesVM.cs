@@ -22,10 +22,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.SiPolicyIntel;
+using CommonCore.IntelGathering;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -68,7 +69,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];
 
 	// The Column Manager Composition
-	internal ListViewColumnManager<CiPolicyInfo> ColumnManager { get; }
+	internal readonly ListViewColumnManager<CiPolicyInfo> ColumnManager;
 
 	#region UI-Bound Properties
 
@@ -164,7 +165,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			else
 			{
 				// Run the GetPolicies method asynchronously
-				policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental).Where(x => !string.Equals(x.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase)).ToList());
+				policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental).Where(x => !string.Equals(x.FriendlyName, Atlas.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase)).ToList());
 			}
 
 			// Add all the retrieved policies to the list in class instance
@@ -215,10 +216,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			SolidColorBrush hotPinkBrush = new(Colors.HotPink);
 
 			// Create normal text runs
-			Run normalText1 = new() { Text = GlobalVars.GetStr("SelectedPolicyName") };
-			Run normalText2 = new() { Text = GlobalVars.GetStr("AndID") };
-			Run normalText3 = new() { Text = GlobalVars.GetStr("WillBeChangedTo") };
-			Run normalText4 = new() { Text = GlobalVars.GetStr("PolicyRedeployInfo") };
+			Run normalText1 = new() { Text = Atlas.GetStr("SelectedPolicyName") };
+			Run normalText2 = new() { Text = Atlas.GetStr("AndID") };
+			Run normalText3 = new() { Text = Atlas.GetStr("WillBeChangedTo") };
+			Run normalText4 = new() { Text = Atlas.GetStr("PolicyRedeployInfo") };
 
 			// Create colored runs
 			Run accentPolicyName = new() { Text = ListViewSelectedPolicy.FriendlyName, Foreground = violetBrush };
@@ -227,7 +228,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 			// Create bold text run
 			Bold boldText = new();
-			boldText.Inlines.Add(new Run() { Text = GlobalVars.GetStr("SupplementalPolicyContinues") });
+			boldText.Inlines.Add(new Run() { Text = Atlas.GetStr("SupplementalPolicyContinues") });
 
 			// Add runs to the TextBlock
 			formattedTextBlock.Inlines.Add(normalText1);
@@ -246,10 +247,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// Create and display a ContentDialog with styled TextBlock
 			using ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("SwappingPolicyTitle"),
+				Title = Atlas.GetStr("SwappingPolicyTitle"),
 				Content = formattedTextBlock,
-				PrimaryButtonText = GlobalVars.GetStr("OK"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("OK"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 			};
 
 			// Show the dialog and wait for user response
@@ -395,12 +396,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 					currentlyDeployedBasePolicyIDs = [.. currentlyDeployedPolicies.Where(x => string.Equals(x.PolicyID, x.BasePolicyID, StringComparison.OrdinalIgnoreCase)).Select(p => p.BasePolicyID)];
 
-					currentlyDeployedAppControlManagerSupplementalPolicies = [.. currentlyDeployedPolicies.Where(p => string.Equals(p.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))];
+					currentlyDeployedAppControlManagerSupplementalPolicies = [.. currentlyDeployedPolicies.Where(p => string.Equals(p.FriendlyName, Atlas.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))];
 				});
 
 
 				// Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"
-				if (string.Equals(ListViewSelectedPolicy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))
+				if (string.Equals(ListViewSelectedPolicy.FriendlyName, Atlas.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))
 				{
 
 					// Check if the base policy of the AppControlManagerSupplementalPolicy Supplemental policy is currently deployed on the system
@@ -410,10 +411,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 						// Create and display a ContentDialog with Yes and No options
 						using ContentDialogV2 dialog = new()
 						{
-							Title = GlobalVars.GetStr("WarningTitle"),
-							Content = GlobalVars.GetStr("ManualRemovalWarning") + GlobalVars.AppControlManagerSpecialPolicyName + "' " + GlobalVars.GetStr("ManualRemovalWarningEnd"),
-							PrimaryButtonText = GlobalVars.GetStr("Yes"),
-							CloseButtonText = GlobalVars.GetStr("No"),
+							Title = Atlas.GetStr("WarningTitle"),
+							Content = Atlas.GetStr("ManualRemovalWarning") + Atlas.AppControlManagerSpecialPolicyName + "' " + Atlas.GetStr("ManualRemovalWarningEnd"),
+							PrimaryButtonText = Atlas.GetStr("Yes"),
+							CloseButtonText = Atlas.GetStr("No"),
 						};
 
 						// Show the dialog and wait for user response
@@ -486,9 +487,9 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 									// Create and display a ContentDialog
 									using ContentDialogV2 dialog = new()
 									{
-										Title = GlobalVars.GetStr("WarningTitle"),
-										Content = GlobalVars.GetStr("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.GetStr("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
-										PrimaryButtonText = GlobalVars.GetStr("Understand"),
+										Title = Atlas.GetStr("WarningTitle"),
+										Content = Atlas.GetStr("RestartRequired") + policy.FriendlyName + "' " + Atlas.GetStr("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
+										PrimaryButtonText = Atlas.GetStr("Understand"),
 									};
 
 									// Show the dialog and wait for user response
@@ -607,18 +608,18 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		// When system was last reboot
 		DateTime lastRebootTimeUtc = DateTime.UtcNow - TimeSpan.FromMilliseconds(Environment.TickCount64);
 
-		Logger.Write(GlobalVars.GetStr("LastRebootTime") + lastRebootTimeUtc + " (UTC)");
+		Logger.Write(Atlas.GetStr("LastRebootTime") + lastRebootTimeUtc + " (UTC)");
 
 		// When the policy's 1st stage was completed
 		DateTime? stage1RemovalTime = UserConfiguration.QuerySignedPolicyStage1RemovalTime(policyID);
 
 		if (stage1RemovalTime is not null)
 		{
-			Logger.Write(GlobalVars.GetStr("PolicyStage1Completed") + policyID + "' " + GlobalVars.GetStr("CompletedAt") + stage1RemovalTime + " (UTC)");
+			Logger.Write(Atlas.GetStr("PolicyStage1Completed") + policyID + "' " + Atlas.GetStr("CompletedAt") + stage1RemovalTime + " (UTC)");
 
 			if (stage1RemovalTime < lastRebootTimeUtc)
 			{
-				Logger.Write(GlobalVars.GetStr("PolicySafeToRemove"));
+				Logger.Write(Atlas.GetStr("PolicySafeToRemove"));
 
 				return true;
 			}
@@ -636,17 +637,17 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	internal static readonly FrozenDictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)> CiPolicyInfoPropertyMappings
 		= new Dictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)>
 		{
-			{ "PolicyID",        (GlobalVars.GetStr("PolicyIDLabel"),        ci => ci.PolicyID) },
-			{ "BasePolicyID",    (GlobalVars.GetStr("BasePolicyIDLabel"),    ci => ci.BasePolicyID) },
-			{ "FriendlyName",    (GlobalVars.GetStr("FriendlyNameLabel"),    ci => ci.FriendlyName) },
-			{ "Version",         (GlobalVars.GetStr("VersionLabel/Text"),    ci => ci.Version) },
-			{ "VersionString",   (GlobalVars.GetStr("VersionLabel/Text"),    ci => ci.VersionString) },
-			{ "IsSystemPolicy",  (GlobalVars.GetStr("IsSystemPolicyLabel"),  ci => ci.IsSystemPolicy) },
-			{ "IsSignedPolicy",  (GlobalVars.GetStr("IsSignedPolicyLabel"),  ci => ci.IsSignedPolicy) },
-			{ "IsOnDisk",        (GlobalVars.GetStr("IsOnDiskLabel"),        ci => ci.IsOnDisk) },
-			{ "IsEnforced",      (GlobalVars.GetStr("IsEnforcedLabel"),      ci => ci.IsEnforced) },
-			{ "IsAuthorized",    (GlobalVars.GetStr("IsAuthorizedLabel"),    ci => ci.IsAuthorized) },
-			{ "PolicyOptions",   (GlobalVars.GetStr("PolicyOptionsLabel"),   ci => ci.PolicyOptionsDisplay) }
+			{ "PolicyID",        (Atlas.GetStr("PolicyIDLabel"),        ci => ci.PolicyID) },
+			{ "BasePolicyID",    (Atlas.GetStr("BasePolicyIDLabel"),    ci => ci.BasePolicyID) },
+			{ "FriendlyName",    (Atlas.GetStr("FriendlyNameLabel"),    ci => ci.FriendlyName) },
+			{ "Version",         (Atlas.GetStr("VersionLabel/Text"),    ci => ci.Version) },
+			{ "VersionString",   (Atlas.GetStr("VersionLabel/Text"),    ci => ci.VersionString) },
+			{ "IsSystemPolicy",  (Atlas.GetStr("IsSystemPolicyLabel"),  ci => ci.IsSystemPolicy) },
+			{ "IsSignedPolicy",  (Atlas.GetStr("IsSignedPolicyLabel"),  ci => ci.IsSignedPolicy) },
+			{ "IsOnDisk",        (Atlas.GetStr("IsOnDiskLabel"),        ci => ci.IsOnDisk) },
+			{ "IsEnforced",      (Atlas.GetStr("IsEnforcedLabel"),      ci => ci.IsEnforced) },
+			{ "IsAuthorized",    (Atlas.GetStr("IsAuthorizedLabel"),    ci => ci.IsAuthorized) },
+			{ "PolicyOptions",   (Atlas.GetStr("PolicyOptionsLabel"),   ci => ci.PolicyOptionsDisplay) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -812,12 +813,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Path to the directory where unsigned Code Integrity policies are located.
 	/// </summary>
-	private static readonly string UnsignedPoliciesPath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity", "CIPolicies", "Active");
+	private static readonly string UnsignedPoliciesPath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity", "CIPolicies", "Active");
 
 	/// <summary>
 	/// Path to the directory where the App Control policies in .p7b format are located.
 	/// </summary>
-	private static readonly string P7bPoliciesPath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity");
+	private static readonly string P7bPoliciesPath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity");
 
 	/// <summary>
 	/// To avoid querying the EFI partition path multiple times, we store it here after the first successful retrieval.

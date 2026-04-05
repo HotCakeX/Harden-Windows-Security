@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:ACMVM="using:AppControlManager.ViewModels"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
@@ -30,7 +30,7 @@
                      IsAddTabButtonVisible="False"
                      Grid.Row="1"
                      TabWidthMode="Equal"
-                     CanReorderTabs="{x:Bind ACMVM:ViewModelBase.IsNotElevated}">
+                     CanReorderTabs="{x:Bind CommonCore:ViewModelBase.IsNotElevated}">
 
                 <TabView.TabStripFooter>
                     <Button Click="{x:Bind ViewModel.GenerateCBOM}"

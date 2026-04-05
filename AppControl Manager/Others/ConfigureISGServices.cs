@@ -104,7 +104,7 @@ internal static class ConfigureISGServices
 	/// </summary>
 	internal static async Task Configure()
 	{
-		Logger.Write(GlobalVars.GetStr("ConfiguringAndStartingRequiredIsgServicesMessage"));
+		Logger.Write(Atlas.GetStr("ConfiguringAndStartingRequiredIsgServicesMessage"));
 
 		_ = ProcessStarter.RunCommand("appidtel.exe", "start");
 
@@ -129,13 +129,13 @@ internal static class ConfigureISGServices
 					(valueKind is RegistryValueKind.DWord && value is int num2 && num2 != 0)
 					)
 				{
-					await GlobalVars.AppDispatcher.EnqueueAsync(async () =>
+					await Atlas.AppDispatcher.EnqueueAsync(async () =>
 					{
 						using ContentDialogV2 sacDialog = new()
 						{
-							Title = GlobalVars.GetStr("WarningTitle"),
-							Content = GlobalVars.GetStr("SACIsNotOffForISGPolicyWarning"),
-							CloseButtonText = GlobalVars.GetStr("OK"),
+							Title = Atlas.GetStr("WarningTitle"),
+							Content = Atlas.GetStr("SACIsNotOffForISGPolicyWarning"),
+							CloseButtonText = Atlas.GetStr("OK"),
 							DefaultButton = ContentDialogButton.Close
 						};
 						_ = await sacDialog.ShowAsync();

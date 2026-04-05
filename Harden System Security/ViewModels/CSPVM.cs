@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
@@ -29,8 +28,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -192,13 +189,13 @@ internal sealed partial class CSPVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForDdfFiles_Click()
 	{
-		List<string> files = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		List<string> files = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 		if (files.Count > 0)
 		{
 			LocalFilePaths.Clear();
 			LocalFilePaths.AddRange(files);
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SelectedLocalFilesReady"), files.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SelectedLocalFilesReady"), files.Count));
 			DataSourceName = DDFDataSource.LocalFiles;
 		}
 	}
@@ -230,7 +227,7 @@ internal sealed partial class CSPVM : ViewModelBase
 				// Try Local Files first
 				if (LocalFilePaths.Count > 0)
 				{
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ParsingLocalFiles"), LocalFilePaths.Count));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("ParsingLocalFiles"), LocalFilePaths.Count));
 					workingEntries = CspDdfParser.ParseFiles(LocalFilePaths);
 
 					if (workingEntries.Count > 0)
@@ -239,7 +236,7 @@ internal sealed partial class CSPVM : ViewModelBase
 					}
 					else
 					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("LocalFilesNoValidPolicies"));
+						MainInfoBar.WriteWarning(Atlas.GetStr("LocalFilesNoValidPolicies"));
 					}
 				}
 
@@ -249,21 +246,21 @@ internal sealed partial class CSPVM : ViewModelBase
 					if (CachedZipData.HasValue)
 					{
 						// Use Cache
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("UsingCachedDefinitions"));
+						MainInfoBar.WriteInfo(Atlas.GetStr("UsingCachedDefinitions"));
 						workingEntries = CspDdfParser.ParseZipArchive(CachedZipData.Value);
 						DataSourceName = DDFDataSource.CachedDownload;
 					}
 					else
 					{
 						// Download Fresh
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadingDDFDefinitions"));
+						MainInfoBar.WriteInfo(Atlas.GetStr("DownloadingDDFDefinitions"));
 
 						byte[] rawData = await SecHttpClient.Instance.GetByteArrayAsync(DDFPackageDownloadURL);
 
 						// Store in cache
 						CachedZipData = new(rawData);
 
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("ProcessingDownloadedDefinitions"));
+						MainInfoBar.WriteInfo(Atlas.GetStr("ProcessingDownloadedDefinitions"));
 						workingEntries = CspDdfParser.ParseZipArchive(CachedZipData.Value);
 						DataSourceName = DDFDataSource.FreshDownload;
 					}
@@ -271,7 +268,7 @@ internal sealed partial class CSPVM : ViewModelBase
 
 				if (workingEntries.Count == 0)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("NoValidDDFPolicies"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("NoValidDDFPolicies"));
 					DataSourceName = DDFDataSource.NotLoaded;
 					ElementsAreEnabled = true;
 					return;
@@ -279,7 +276,7 @@ internal sealed partial class CSPVM : ViewModelBase
 
 				// Query Data
 				IsLoadingIndeterminate = false;
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("QueryingSystemForPolicies"), workingEntries.Count));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("QueryingSystemForPolicies"), workingEntries.Count));
 
 				UpdateValues(workingEntries, (pct) => ProgressValue = pct); // a callback to report progress
 
@@ -291,7 +288,7 @@ internal sealed partial class CSPVM : ViewModelBase
 
 			PerformSearch(SearchKeyword);
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyLoadedAndQueriedPolicies"), workingEntries.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyLoadedAndQueriedPolicies"), workingEntries.Count));
 		}
 		catch (Exception ex)
 		{
@@ -328,13 +325,13 @@ internal sealed partial class CSPVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<CspPolicyEntry, object?> Getter)> Mappings =
 		new Dictionary<string, (string Label, Func<CspPolicyEntry, object?> Getter)>(7, StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Name", (GlobalVars.GetStr("NameHeader/Text"), static x => x.Name) },
-			{ "CurrentValue", (GlobalVars.GetStr("CurrentValueHeader/Text"), static x => x.CurrentValue) },
-			{ "DefaultValue", (GlobalVars.GetStr("DefaultValueHeader/Text"), static x => x.DefaultValue) },
+			{ "Name", (Atlas.GetStr("NameHeader/Text"), static x => x.Name) },
+			{ "CurrentValue", (Atlas.GetStr("CurrentValueHeader/Text"), static x => x.CurrentValue) },
+			{ "DefaultValue", (Atlas.GetStr("DefaultValueHeader/Text"), static x => x.DefaultValue) },
 			{ "OMAURI", ("OMA-URI", static x => x.OmaUri) },
-			{ "Description", (GlobalVars.GetStr("DescriptionHeader/Text"), static x => x.Description) },
-			{ "Format", (GlobalVars.GetStr("FormatHeader/Text"), static x => x.Format) },
-			{ "Access", (GlobalVars.GetStr("AccessTypeHeader/Text"), static x => x.AccessTypes) }
+			{ "Description", (Atlas.GetStr("DescriptionHeader/Text"), static x => x.Description) },
+			{ "Format", (Atlas.GetStr("FormatHeader/Text"), static x => x.Format) },
+			{ "Access", (Atlas.GetStr("AccessTypeHeader/Text"), static x => x.AccessTypes) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -414,7 +411,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			uint result = NativeMethods.UnregisterDeviceWithLocalManagement();
 			if (result != 0)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("FailedToUnregisterDevice"), result));
+				Logger.Write(string.Format(Atlas.GetStr("FailedToUnregisterDevice"), result));
 			}
 
 			// Restore original registry state
@@ -484,7 +481,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			if (_cachedHash is not null)
 				return _cachedHash;
 
-			string uuid = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get root\\cimv2 Win32_ComputerSystemProduct UUID");
+			string uuid = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get root\\cimv2 Win32_ComputerSystemProduct UUID");
 			uuid = uuid.Trim('"');
 
 			Guid g = Guid.Parse(uuid);
@@ -575,7 +572,7 @@ internal sealed partial class CSPVM : ViewModelBase
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("FailedToParseFile"), file));
+					Logger.Write(string.Format(Atlas.GetStr("FailedToParseFile"), file));
 					Logger.Write(ex);
 				}
 			}
@@ -602,7 +599,7 @@ internal sealed partial class CSPVM : ViewModelBase
 					}
 					catch (Exception ex)
 					{
-						Logger.Write(string.Format(GlobalVars.GetStr("FailedToParseZipEntry"), entry.FullName));
+						Logger.Write(string.Format(Atlas.GetStr("FailedToParseZipEntry"), entry.FullName));
 						Logger.Write(ex);
 					}
 				}
@@ -655,7 +652,7 @@ internal sealed partial class CSPVM : ViewModelBase
 								nodeName,
 								EnsureDotSlash(currentPath),
 								props.Element("Description")?.Value?.Trim(),
-								format?.Elements().FirstOrDefault()?.Name.LocalName.Trim() ?? GlobalVars.GetStr("UnknownState"),
+								format?.Elements().FirstOrDefault()?.Name.LocalName.Trim() ?? Atlas.GetStr("UnknownState"),
 								props.Element("DefaultValue")?.Value,
 								string.Join(", ", props.Element("AccessType")?.Elements().Select(e => e.Name.LocalName) ?? []),
 								GetAllowedValues(props),
@@ -708,13 +705,13 @@ internal sealed partial class CSPVM : ViewModelBase
 					string file = admx.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals("File", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
 					string name = admx.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
 					// Constructing a representation string
-					return string.Format(GlobalVars.GetStr("AdmxFilePolicyFormat"), file, name);
+					return string.Format(Atlas.GetStr("AdmxFilePolicyFormat"), file, name);
 				}
 			}
 			else if (valType.Equals("XSD", StringComparison.OrdinalIgnoreCase))
 			{
 				// e.g.,: <MSFT:Value><![CDATA[<xs:schema ...]]></MSFT:Value>
-				return allowed.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? GlobalVars.GetStr("XSDSchemaText");
+				return allowed.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? Atlas.GetStr("XSDSchemaText");
 			}
 
 			return string.Empty;
@@ -789,7 +786,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			try
 			{
 				uint hr = NativeMethods.RegisterDeviceWithLocalManagement(out _);
-				if (hr != 0) return (string.Format(GlobalVars.GetStr("RegisterFailedFormat"), hr), false);
+				if (hr != 0) return (string.Format(Atlas.GetStr("RegisterFailedFormat"), hr), false);
 
 				// Increment first, then build using the new ID.
 				_cmdCounter++;
@@ -802,16 +799,16 @@ internal sealed partial class CSPVM : ViewModelBase
 				if (status == 200)
 				{
 					string val = ExtractResultData(resultXml);
-					string finalVal = string.IsNullOrEmpty(val) ? GlobalVars.GetStr("EmptyText") : val.Trim();
+					string finalVal = string.IsNullOrEmpty(val) ? Atlas.GetStr("EmptyText") : val.Trim();
 					return (finalVal, true);
 				}
 				else if (status == 404)
 				{
-					return (GlobalVars.GetStr("NotFoundText"), false);
+					return (Atlas.GetStr("NotFoundText"), false);
 				}
 				else
 				{
-					return (string.Format(GlobalVars.GetStr("StatusFormat"), status), false);
+					return (string.Format(Atlas.GetStr("StatusFormat"), status), false);
 				}
 			}
 			catch (Exception ex)
@@ -955,7 +952,7 @@ internal sealed partial class CSPVM : ViewModelBase
 				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedCSPData"), CSPData.Count, saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedCSPData"), CSPData.Count, saveLocation));
 		}
 		catch (Exception ex)
 		{

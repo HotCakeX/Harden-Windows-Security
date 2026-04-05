@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -41,7 +42,12 @@ internal static class NewWHQLFilePublisherLevelRules
 	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
 	private const string EKUID = "ID_EKU_E_MSFTWHQL";
-	private const string EKUValue = "010A2B0601040182370A0305";
+
+	/// <summary>
+	/// WHQL EKU Hex value
+	/// </summary>
+	internal const string EKUValue = "010A2B0601040182370A0305";
+
 	private const string EKUFriendlyName = "Windows Hardware Driver Verification";
 
 	/// <summary>
@@ -55,11 +61,11 @@ internal static class NewWHQLFilePublisherLevelRules
 	{
 		if (whqlFilePublisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoWHQLFilePublisherSignersDetectedAllowMessage"));
+			Logger.Write(Atlas.GetStr("NoWHQLFilePublisherSignersDetectedAllowMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
+		Logger.Write(string.Format(Atlas.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
 		// Ensure the lists are initialized.
 		policyObj.FileRules ??= [];
@@ -83,7 +89,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			FileAttrib newFileAttrib = new(id: FileAttribID)
 			{
-				FriendlyName = GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
 				MinimumFileVersion = whqlFilePublisherData.FileVersion?.ToString()
 			};
 
@@ -139,13 +145,13 @@ internal static class NewWHQLFilePublisherLevelRules
 				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
-				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+				if (whqlFilePublisherData.SiSigningScenario is SSType.UserMode)
 				{
 					umciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: signerID, exceptDenyRule: null));
 					policyObj.CiSigners.Add(new CiSigner(signerID: signerID));
 				}
 				// For Kernel-Mode files
-				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+				else if (whqlFilePublisherData.SiSigningScenario is SSType.KernelMode)
 				{
 					kmciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: signerID, exceptDenyRule: null));
 				}
@@ -182,11 +188,11 @@ internal static class NewWHQLFilePublisherLevelRules
 	{
 		if (whqlFilePublisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoWHQLFilePublisherSignersDetectedDenyMessage"));
+			Logger.Write(Atlas.GetStr("NoWHQLFilePublisherSignersDetectedDenyMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
+		Logger.Write(string.Format(Atlas.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
 		// Ensure the lists are initialized.
 		policyObj.FileRules ??= [];
@@ -210,7 +216,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			FileAttrib newFileAttrib = new(id: FileAttribID)
 			{
-				FriendlyName = GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("WHQLFilePublisherRuleTypeFriendlyName"),
 				MinimumFileVersion = whqlFilePublisherData.FileVersion?.ToString()
 			};
 
@@ -266,13 +272,13 @@ internal static class NewWHQLFilePublisherLevelRules
 				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
-				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+				if (whqlFilePublisherData.SiSigningScenario is SSType.UserMode)
 				{
 					umciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: signerID, exceptAllowRule: null));
 					policyObj.CiSigners.Add(new CiSigner(signerID: signerID));
 				}
 				// For Kernel-Mode files
-				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+				else if (whqlFilePublisherData.SiSigningScenario is SSType.KernelMode)
 				{
 					kmciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: signerID, exceptAllowRule: null));
 				}

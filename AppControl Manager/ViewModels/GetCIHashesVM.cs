@@ -18,9 +18,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using AppControlManager.Main;
-using AppControlManager.Others;
 using AppControlManager.Pages;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -36,7 +35,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 
 	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;
 
-	internal ObservableCollection<HashCardItem> HashItems { get; } = [];
+	internal readonly ObservableCollection<HashCardItem> HashItems = [];
 
 	internal HashCardItem? SelectedHashItem { get; set => SP(ref field, value); }
 
@@ -52,7 +51,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))
 		{
 			e.AcceptedOperation = DataPackageOperation.Copy;
-			e.DragUIOverride.Caption = GlobalVars.GetStr("DragAndDropHintGetHashesCaption");
+			e.DragUIOverride.Caption = Atlas.GetStr("DragAndDropHintGetHashesCaption");
 			e.DragUIOverride.IsCaptionVisible = true;
 			e.DragUIOverride.IsContentVisible = true;
 		}
@@ -244,7 +243,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 			await PublishUserActivityAsync(
 				LaunchProtocolActions.FileHashes,
 				selectedFile,
-				GlobalVars.GetStr("UserActivityNameForFileHashes"));
+				Atlas.GetStr("UserActivityNameForFileHashes"));
 		}
 		catch (Exception ex)
 		{
@@ -264,7 +263,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	{
 		try
 		{
-			selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+			selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.AnyFilePickerFilter);
 			await Calculate();
 		}
 		catch (Exception ex)
@@ -328,7 +327,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		{
 			ClipboardManagement.CopyText(SelectedHashItem.HashValue);
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("HashCopiedToClipboard"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("HashCopiedToClipboard"));
 		}
 	}
 

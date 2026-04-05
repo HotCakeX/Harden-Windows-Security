@@ -43,7 +43,7 @@ internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCo
 		ViewModel.SelectedPolicyLightAnimatedIconVisibility = visibility;
 
 		ViewModelProvider.SidebarVM.AssignActionPacks(
-			actionPack1: (LightUp1, GlobalVars.GetStr("SimulationNavItem/Content"))
+			actionPack1: (LightUp1, Atlas.GetStr("SimulationNavItem/Content"))
 			);
 	}
 
@@ -62,6 +62,6 @@ internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCo
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SimulationPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SimulationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation");
 }

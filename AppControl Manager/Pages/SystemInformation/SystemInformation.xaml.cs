@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
+	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	internal SystemInformation()
 	{
@@ -65,6 +65,6 @@ internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeade
 		}
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SystemInformationPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SystemInformationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information");
 }

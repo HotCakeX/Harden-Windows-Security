@@ -17,10 +17,10 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.Main;
 
@@ -45,23 +45,23 @@ internal static class AppIDTagging
 	/// Creationg explicit Allow rules for them improves system performance.
 	/// </summary>
 	private static readonly List<FileIdentity> AppIDTaggingFileTypeExceptions = [
-		new(){FilePath = "*.sys", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.com", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.dll", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.ocx", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.rll", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.mst", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.msi", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.js", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.vbs", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.ps1", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.appx", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.bin", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.bat", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.hxs", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.mui", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.lex", SISigningScenario = SiPolicyIntel.SSType.UserMode},
-		new(){FilePath = "*.mof", SISigningScenario = SiPolicyIntel.SSType.UserMode}
+		new(){FilePath = "*.sys", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.com", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.dll", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.ocx", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.rll", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.mst", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.msi", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.js", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.vbs", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.ps1", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.appx", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.bin", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.bat", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.hxs", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.mui", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.lex", SISigningScenario = SSType.UserMode},
+		new(){FilePath = "*.mof", SISigningScenario = SSType.UserMode}
 		];
 
 	/// <summary>

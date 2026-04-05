@@ -15,9 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.IntelGathering;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -51,7 +50,7 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 		string key = (string)((MenuFlyoutItem)sender).Tag;
 
 		// Look up the mapping in the FileIdentity dictionary
-		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out var mapping))
+		if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out var mapping))
 		{
 			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);
 		}

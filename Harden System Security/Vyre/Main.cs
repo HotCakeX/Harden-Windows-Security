@@ -353,7 +353,7 @@ internal static class AuthRootProcessor
 			return inputBytes;
 		}
 
-		throw new InvalidDataException(GlobalVars.GetStr("InputFileIsNeitherCABNorSTLError"));
+		throw new InvalidDataException(Atlas.GetStr("InputFileIsNeitherCABNorSTLError"));
 	}
 
 	/// <summary>
@@ -375,7 +375,7 @@ internal static class AuthRootProcessor
 
 			if (extractedFileCount > 1)
 			{
-				throw new InvalidDataException(GlobalVars.GetStr("CABFileContainsMoreThanOneFileError"));
+				throw new InvalidDataException(Atlas.GetStr("CABFileContainsMoreThanOneFileError"));
 			}
 
 			// Check if this looks like an STL file by checking the file extension or content
@@ -390,12 +390,12 @@ internal static class AuthRootProcessor
 
 		if (extractedStlBytes == null)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("NoSTLFileFoundInCABError"));
+			throw new InvalidDataException(Atlas.GetStr("NoSTLFileFoundInCABError"));
 		}
 
 		if (extractedFileCount == 0)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("CABFileEmptyError"));
+			throw new InvalidDataException(Atlas.GetStr("CABFileEmptyError"));
 		}
 
 		return extractedStlBytes;
@@ -428,7 +428,7 @@ internal static class AuthRootProcessor
 
 				if ((int)response.StatusCode is 301 or 302 or 303 or 307 or 308)
 				{
-					Uri? location = response.Headers.Location ?? throw new HttpRequestException(GlobalVars.GetStr("RedirectResponseMissingLocationError"));
+					Uri? location = response.Headers.Location ?? throw new HttpRequestException(Atlas.GetStr("RedirectResponseMissingLocationError"));
 					currentUri = location.IsAbsoluteUri ? location : new Uri(currentUri, location);
 					continue;
 				}
@@ -437,7 +437,7 @@ internal static class AuthRootProcessor
 				return response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
 			}
 
-			throw new HttpRequestException(GlobalVars.GetStr("TooManyRedirectsError"));
+			throw new HttpRequestException(Atlas.GetStr("TooManyRedirectsError"));
 		}
 		else
 		{
@@ -516,7 +516,7 @@ internal static class AuthRootProcessor
 		}
 		catch (CryptographicException ex)
 		{
-			throw new CryptographicException(GlobalVars.GetStr("SignatureVerificationFailedError"), ex);
+			throw new CryptographicException(Atlas.GetStr("SignatureVerificationFailedError"), ex);
 		}
 
 		// AuthRoot CTL releases have exactly one signer.
@@ -526,7 +526,7 @@ internal static class AuthRootProcessor
 		}
 
 		SignerInfo signer = signedCms.SignerInfos[0];
-		X509Certificate2 signingCert = signer.Certificate ?? throw new InvalidDataException(GlobalVars.GetStr("SignerCertificateNotPresentError"));
+		X509Certificate2 signingCert = signer.Certificate ?? throw new InvalidDataException(Atlas.GetStr("SignerCertificateNotPresentError"));
 
 		// Build a chain rooted in the provided CA certificate to validate the signer.
 		ValidateSignerChain(signingCert, signedCms.Certificates, caCertificate);
@@ -604,7 +604,7 @@ internal static class AuthRootProcessor
 		if (root == null ||
 			!root.Thumbprint.Equals(caCert.Thumbprint, StringComparison.OrdinalIgnoreCase))
 		{
-			throw new CryptographicException(GlobalVars.GetStr("SigningChainRootMismatchError"));
+			throw new CryptographicException(Atlas.GetStr("SigningChainRootMismatchError"));
 		}
 	}
 
@@ -620,7 +620,7 @@ internal static class AuthRootProcessor
 
 		if (topReader.HasData)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("UnexpectedTrailingDataCTLError"));
+			throw new InvalidDataException(Atlas.GetStr("UnexpectedTrailingDataCTLError"));
 		}
 
 		// Local accumulators for immutable header construction.
@@ -643,7 +643,7 @@ internal static class AuthRootProcessor
 			}
 			catch (OverflowException)
 			{
-				throw new InvalidDataException(GlobalVars.GetStr("VersionIntegerOutOfRangeError"));
+				throw new InvalidDataException(Atlas.GetStr("VersionIntegerOutOfRangeError"));
 			}
 			if (versionParsed != 0 && versionParsed != 1)
 			{
@@ -655,13 +655,13 @@ internal static class AuthRootProcessor
 		// Usage: outer SEQUENCE containing the usage OBJECT IDENTIFIER (root list signer OID).
 		if (!ctlSeq.HasData)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("MissingUsageSequenceError"));
+			throw new InvalidDataException(Atlas.GetStr("MissingUsageSequenceError"));
 		}
 		AsnReader usageSequence = ctlSeq.ReadSequence();
 		string usageOid = usageSequence.ReadObjectIdentifier();
 		if (usageSequence.HasData)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("UnexpectedTrailingDataUsageSequenceError"));
+			throw new InvalidDataException(Atlas.GetStr("UnexpectedTrailingDataUsageSequenceError"));
 		}
 		string usageOidLocal = usageOid;
 		string usageFriendlyNameLocal = UsageFriendlyNames.TryGetValue(usageOid, out string? uf) ? uf : string.Empty;
@@ -686,7 +686,7 @@ internal static class AuthRootProcessor
 		// Mandatory ThisUpdate – generation time of the CTL.
 		if (!ctlSeq.HasData)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("MissingThisUpdateError"));
+			throw new InvalidDataException(Atlas.GetStr("MissingThisUpdateError"));
 		}
 		DateTime thisUpdate = ParseAsnTime(ctlSeq);
 		thisUpdateUtcLocal = thisUpdate;
@@ -704,7 +704,7 @@ internal static class AuthRootProcessor
 		// AlgorithmIdentifier
 		if (!ctlSeq.HasData)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("MissingAlgorithmIdentifierError"));
+			throw new InvalidDataException(Atlas.GetStr("MissingAlgorithmIdentifierError"));
 		}
 		AsnReader algSeq = ctlSeq.ReadSequence();
 		string algOid = algSeq.ReadObjectIdentifier();
@@ -773,7 +773,7 @@ internal static class AuthRootProcessor
 
 				if (trustedSubjectSeq.HasData)
 				{
-					throw new InvalidDataException(GlobalVars.GetStr("UnexpectedTrailingDataTrustedSubjectError"));
+					throw new InvalidDataException(Atlas.GetStr("UnexpectedTrailingDataTrustedSubjectError"));
 				}
 
 				// Convert raw attribute bag into structured Subject with validation.
@@ -797,7 +797,7 @@ internal static class AuthRootProcessor
 		// Any trailing data at this point indicates malformed / unexpected content.
 		if (ctlSeq.HasData)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("UnexpectedTrailingDataCTLElementsError"));
+			throw new InvalidDataException(Atlas.GetStr("UnexpectedTrailingDataCTLElementsError"));
 		}
 
 		int entryCountLocal = subjects.Count;
@@ -928,7 +928,7 @@ internal static class AuthRootProcessor
 		// Enforce required identifiers (reject invalid subjects).
 		if (string.IsNullOrEmpty(friendlyName))
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("SubjectMissingFriendlyNameError"));
+			throw new InvalidDataException(Atlas.GetStr("SubjectMissingFriendlyNameError"));
 		}
 		if (string.IsNullOrEmpty(sha256Fingerprint))
 		{
@@ -965,7 +965,7 @@ internal static class AuthRootProcessor
 		AsnReader innerSeq = seqReader.ReadSequence();
 		if (seqReader.HasData)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("UnexpectedTrailingDataEKUSequenceError"));
+			throw new InvalidDataException(Atlas.GetStr("UnexpectedTrailingDataEKUSequenceError"));
 		}
 		while (innerSeq.HasData)
 		{
@@ -989,7 +989,7 @@ internal static class AuthRootProcessor
 		}
 		catch (ArgumentOutOfRangeException ex)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("InvalidFILETIMEError"), ex);
+			throw new InvalidDataException(Atlas.GetStr("InvalidFILETIMEError"), ex);
 		}
 	}
 
@@ -1043,12 +1043,12 @@ internal static class AuthRootProcessor
 		int start = pem.IndexOf(begin, StringComparison.OrdinalIgnoreCase);
 		if (start < 0)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("BEGINCertificateMarkerNotFoundError"));
+			throw new InvalidDataException(Atlas.GetStr("BEGINCertificateMarkerNotFoundError"));
 		}
 		int endIdx = pem.IndexOf(end, start, StringComparison.OrdinalIgnoreCase);
 		if (endIdx < 0)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("ENDCertificateMarkerNotFoundError"));
+			throw new InvalidDataException(Atlas.GetStr("ENDCertificateMarkerNotFoundError"));
 		}
 
 		int base64Start = start + begin.Length;
@@ -1071,7 +1071,7 @@ internal static class AuthRootProcessor
 		}
 		catch (FormatException ex)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("InvalidBase64ContentError"), ex);
+			throw new InvalidDataException(Atlas.GetStr("InvalidBase64ContentError"), ex);
 		}
 	}
 
@@ -1120,8 +1120,8 @@ internal static class AuthRootProcessor
 	/// </summary>
 	private readonly struct RawAttribute(string oid, List<byte[]> values)
 	{
-		internal string Oid { get; } = oid;
-		internal List<byte[]> Values { get; } = values;
+		internal string Oid => oid;
+		internal List<byte[]> Values => values;
 	}
 
 	/// <summary>
@@ -1310,7 +1310,7 @@ internal static partial class CabinetArchiveExtractor
 			string sanitizedName = SanitizeRelativePath(cabinetEntry.Name);
 			if (string.IsNullOrWhiteSpace(sanitizedName))
 			{
-				Logger.Write(GlobalVars.GetStr("EmptyEntryNameSkippingMessage"));
+				Logger.Write(Atlas.GetStr("EmptyEntryNameSkippingMessage"));
 				return;
 			}
 

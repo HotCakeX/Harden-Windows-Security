@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.2.250604.1+b02a3ee244
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile star.json
-//       
+//
 //       Input file:
 //           star.json (85594 bytes created 22:16+03:00 Jul 24 2025)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //
@@ -110,7 +110,7 @@ namespace AnimatedVisuals
         {
             diagnostics = null;
 
-            var res = 
+            var res =
                 new Star_AnimatedVisual(
                     compositor
                     );

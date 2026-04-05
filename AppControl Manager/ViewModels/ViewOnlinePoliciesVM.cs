@@ -100,7 +100,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];
 
 	// The Column Manager Composition
-	internal ListViewColumnManager<CiPolicyInfo> ColumnManager { get; }
+	internal readonly ListViewColumnManager<CiPolicyInfo> ColumnManager;
 
 	/// <summary>
 	/// Event handler for the UI button.
@@ -146,7 +146,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 						if (policyResult.Item2 is null)
 						{
 							throw new InvalidOperationException(
-								GlobalVars.GetStr("IntunePolicyDeserializedButEmptyMessage"));
+								Atlas.GetStr("IntunePolicyDeserializedButEmptyMessage"));
 						}
 
 						if (policyResult.Item2.PolicyOptions is not null)
@@ -171,7 +171,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 								catch (Exception ex)
 								{
 									Logger.Write(string.Format(
-										GlobalVars.GetStr("ErrorParsingRuleOptionMessage"),
+										Atlas.GetStr("ErrorParsingRuleOptionMessage"),
 										item2,
 										ex.Message));
 
@@ -395,7 +395,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.GetStr("IntunePolicyObjectIdNullMessage"));
+					Atlas.GetStr("IntunePolicyObjectIdNullMessage"));
 			}
 
 			// Check if it is a Managed Installer policy and call the appropriate delete method

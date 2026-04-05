@@ -39,7 +39,7 @@ internal static unsafe class Relaunch
 			if (hr == -2147023673) // ERROR_CANCELLED (0x800704C7)
 			{
 				Logger.Write(
-					GlobalVars.GetStr("ElevationRequestCancelledByUserMessage")
+					Atlas.GetStr("ElevationRequestCancelledByUserMessage")
 				);
 				return false;
 			}
@@ -53,7 +53,7 @@ internal static unsafe class Relaunch
 
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.GetStr("ActivationManagerFailedWithHRESULTMessage"),
+					Atlas.GetStr("ActivationManagerFailedWithHRESULTMessage"),
 					(uint)hr
 				)
 			);

@@ -280,13 +280,12 @@
                         </StackPanel>
                     </Border>
 
-                    <TextBox PlaceholderText="Search in the data..."
+                    <TextBox x:Uid="SearchBoxTextBox"
                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                              Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
                              VerticalAlignment="Center"
-                             VerticalContentAlignment="Center"
-                             ToolTipService.ToolTip="Search the data" />
+                             VerticalContentAlignment="Center" />
 
                     <!-- Columns Selection Button -->
                     <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
@@ -388,6 +387,27 @@
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
+
+                                <MenuFlyoutSubItem x:Uid="AddToPolicyMenuFlyoutSubItem">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE710;" />
+                                    </MenuFlyoutSubItem.Icon>
+                                    <MenuFlyoutSubItem.Items>
+
+                                        <MenuFlyoutItem x:Uid="AllowMenuFlyoutSubItem" Click="{x:Bind vm:ViewModelProvider.SimulationVM.AllowSelectedItemsInPolicy}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8FB;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="DenyMenuFlyoutSubItem" Click="{x:Bind vm:ViewModelProvider.SimulationVM.DenySelectedItemsInPolicy}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xECE4;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyoutSubItem.Items>
+
+                                </MenuFlyoutSubItem>
 
                                 <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind vm:ViewModelProvider.SimulationVM.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>

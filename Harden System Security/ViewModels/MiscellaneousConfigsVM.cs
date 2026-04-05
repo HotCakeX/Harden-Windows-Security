@@ -21,7 +21,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using CommonCore.GroupPolicy;
-using CommonCore.Interop;
 using CommonCore.SecurityPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -37,9 +36,9 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 	}
@@ -73,14 +72,14 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		List<MUnit> output = [];
 
 		{
-			string OldCustomEventViewsPath = Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
-			string NewCustomEventViewsPath = Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "HardenSystemSecurity");
+			string OldCustomEventViewsPath = Path.Combine(Atlas.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
+			string NewCustomEventViewsPath = Path.Combine(Atlas.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "HardenSystemSecurity");
 			string SourceDirectory = Path.Combine(AppContext.BaseDirectory, "Resources", "EventViewerCustomViews");
 
 			// Create custom event viewer views
 			output.Add(new(
 				category: Categories.MiscellaneousConfigurations,
-				name: GlobalVars.GetSecurityStr("CreateCustomEventViewerViews-Miscellaneous"),
+				name: Atlas.GetSecurityStr("CreateCustomEventViewerViews-Miscellaneous"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
@@ -142,7 +141,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		// Secure SSH Client MACs
 		output.Add(new(
 				category: Categories.MiscellaneousConfigurations,
-				name: GlobalVars.GetSecurityStr("SecureSSHMACs-Miscellaneous"),
+				name: Atlas.GetSecurityStr("SecureSSHMACs-Miscellaneous"),
 				applyStrategy: new DefaultApply(SSHConfigurations.SecureMACs),
 				verifyStrategy: new DefaultVerify(SSHConfigurations.TestSecureMACs),
 				removeStrategy: new DefaultRemove(SSHConfigurations.RemoveSecureMACs),
@@ -163,7 +162,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 			// For tracking Lock screen unlocks and locks
 			output.Add(new(
 				category: Categories.MiscellaneousConfigurations,
-				name: GlobalVars.GetSecurityStr("EnableOtherLogonLogOffAudit-Miscellaneous"),
+				name: Atlas.GetSecurityStr("EnableOtherLogonLogOffAudit-Miscellaneous"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
@@ -226,7 +225,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		// Show .url file extension
 		output.Add(new(
 				category: Categories.MiscellaneousConfigurations,
-				name: GlobalVars.GetSecurityStr("DisplayURLFileExtension-Miscellaneous"),
+				name: Atlas.GetSecurityStr("DisplayURLFileExtension-Miscellaneous"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
@@ -259,7 +258,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		// Show .lnk file extension
 		output.Add(new(
 				category: Categories.MiscellaneousConfigurations,
-				name: GlobalVars.GetSecurityStr("DisplayLNKFileExtension-Miscellaneous"),
+				name: Atlas.GetSecurityStr("DisplayLNKFileExtension-Miscellaneous"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
@@ -290,7 +289,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		// Show .pif file extension
 		output.Add(new(
 				category: Categories.MiscellaneousConfigurations,
-				name: GlobalVars.GetSecurityStr("DisplayPIFFileExtension-Miscellaneous"),
+				name: Atlas.GetSecurityStr("DisplayPIFFileExtension-Miscellaneous"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
@@ -319,7 +318,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		// Disable WebClient Service
 		output.Add(new(
 				category: Categories.MiscellaneousConfigurations,
-				name: GlobalVars.GetSecurityStr("DisableWebClientService-Miscellaneous"),
+				name: Atlas.GetSecurityStr("DisableWebClientService-Miscellaneous"),
 
 				applyStrategy: new DefaultApply(() =>
 				{

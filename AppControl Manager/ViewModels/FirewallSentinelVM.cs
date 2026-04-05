@@ -25,13 +25,13 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
+using CommonCore.IntelGathering;
 using CommonCore.SecurityPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -50,14 +50,14 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
 
-		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("ExpandPinnedPolicyButton/Content"));
+		FilesAndFoldersCancellableButton = new(Atlas.GetStr("ExpandPinnedPolicyButton/Content"));
 
-		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("ExpandPinnedPolicyButton/Content"));
+		PatternBasedFileRuleCancellableButton = new(Atlas.GetStr("ExpandPinnedPolicyButton/Content"));
 
 		// Initialize the column manager for the Blocked Packets ListView
 		FirewallColumnManager = new ListViewColumnManager<FirewallEvent>(
 		[
-			new("TimeCreated", GlobalVars.GetStr("TimeCreatedHeader/Text"), x => x.TimeCreated?.ToString(), useRawHeader: true),
+			new("TimeCreated", Atlas.GetStr("TimeCreatedHeader/Text"), x => x.TimeCreated?.ToString(), useRawHeader: true),
 			new("Application", "Application", x => x.Application, useRawHeader: true),
 			new("Direction", "Direction", x => x.Direction, useRawHeader: true),
 			new("Protocol", "Protocol", x => x.Protocol, useRawHeader: true),
@@ -519,7 +519,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 			}
 
 			// Remove the pinned policy
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
 			{
 				PinnedPolicy = null;
 			});
@@ -642,16 +642,16 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 				// Add the AppID Tagging policy for outbound rules
 				// Allows App Control policies to authorize user-mode executables that carry our tag
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{AppIDTagFirewallRuleName}" outbound allow "{AppIDTagFirewallRuleDescription}" --appid "{AppIDTagTouse}" """));
+				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{AppIDTagFirewallRuleName}" outbound allow "{AppIDTagFirewallRuleDescription}" --appid "{AppIDTagTouse}" """));
 
 				// Add System to outbound allow rule
 				// Required because AppID Tags only apply to User-Mode executables and System is kernel-mode and doesn't apply to it.
 				// Without this, things such as ping commands don't work.
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "Allow SYSTEM process" outbound allow "Allows System Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "System" """));
+				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "Allow SYSTEM process" outbound allow "Allows System Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "System" """));
 
 				// Add Svchost.exe outbound allow rule
 				// Without this, installation from the Microsoft Store for apps that require service installation, such as Harden System Security, fail.
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "Allow Svhost process" outbound allow "Allows Service Host Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "%SystemRoot%\system32\svchost.exe" """));
+				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "Allow Svhost process" outbound allow "Allows Service Host Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "%SystemRoot%\system32\svchost.exe" """));
 
 				#region Group Policies
 
@@ -720,7 +720,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				// Pin the policy in the UI
-				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+				_ = Atlas.AppDispatcher.TryEnqueue(() =>
 				{
 					PinnedPolicy = policy;
 				});
@@ -769,7 +769,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 			if (SP(ref field, value))
 			{
 				// Save the ID of the pinned policy to the settings. If null, empty string will be saved.
-				GlobalVars.Settings.FirewallSentinelPinnedPolicyID = value?.PolicyID ?? string.Empty;
+				Atlas.Settings.FirewallSentinelPinnedPolicyID = value?.PolicyID ?? string.Empty;
 
 				// Update helper properties for UI binding
 				OnPropertyChanged(nameof(IsPolicyPinned));
@@ -849,10 +849,10 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		}
 
 		// Try to restore the pinned policy from the library if it hasn't been found yet
-		if (PinnedPolicy is null && !string.IsNullOrEmpty(GlobalVars.Settings.FirewallSentinelPinnedPolicyID))
+		if (PinnedPolicy is null && !string.IsNullOrEmpty(Atlas.Settings.FirewallSentinelPinnedPolicyID))
 		{
 			PolicyFileRepresent? matchedPolicy = source.FirstOrDefault(p =>
-				string.Equals(p.PolicyID, GlobalVars.Settings.FirewallSentinelPinnedPolicyID, StringComparison.OrdinalIgnoreCase));
+				string.Equals(p.PolicyID, Atlas.Settings.FirewallSentinelPinnedPolicyID, StringComparison.OrdinalIgnoreCase));
 
 			if (matchedPolicy is not null)
 			{
@@ -937,7 +937,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		{
 			if (SP(ref field, value))
 			{
-				FilesAndFoldersScalabilityButtonContent = GlobalVars.GetStr("Scalability") + field;
+				FilesAndFoldersScalabilityButtonContent = Atlas.GetStr("Scalability") + field;
 			}
 		}
 	} = 2;
@@ -945,7 +945,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The content of the button that has the RadialGauge inside it.
 	/// </summary>
-	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("Scalability") + "2";
+	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("Scalability") + "2";
 
 	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -969,7 +969,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFilesButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.ExecutablesPickerFilter);
 
 		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -995,7 +995,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void OpenInPolicyEditor_FilesAndFolders() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(PinnedPolicy);
 
-	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(PinnedPolicy);
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await PolicyFileRepresent.OpenInDefaultFileHandler(PinnedPolicy);
 
 	/// <summary>
 	/// Main button's event handler for files and folders rules creation.
@@ -1017,7 +1017,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 		if (filesAndFoldersFilePaths.Count is 0 && filesAndFoldersFolderPaths.Count is 0)
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoFilesOrFoldersSelected"), GlobalVars.GetStr("SelectFilesOrFoldersTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("NoFilesOrFoldersSelected"), Atlas.GetStr("SelectFilesOrFoldersTitle"));
 			return;
 		}
 
@@ -1032,7 +1032,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 			FilesAndFoldersElementsAreEnabled = false;
 
 			FilesAndFoldersInfoBar.WriteInfo(string.Format(
-				GlobalVars.GetStr("FindingAllAppControlFilesMessage"),
+				Atlas.GetStr("FindingAllAppControlFilesMessage"),
 				filesAndFoldersFilePaths.Count,
 				filesAndFoldersFolderPaths.Count
 			));
@@ -1053,8 +1053,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
 						FilesAndFoldersInfoBar.WriteInfo(
-							GlobalVars.GetStr("NoCompatibleFilesDetectedSubtitle"),
-							GlobalVars.GetStr("NoCompatibleFilesTitle"));
+							Atlas.GetStr("NoCompatibleFilesDetectedSubtitle"),
+							Atlas.GetStr("NoCompatibleFilesTitle"));
 
 						errorsOccurred = true;
 						return;
@@ -1063,7 +1063,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					FilesAndFoldersInfoBar.WriteInfo(string.Format(
-					GlobalVars.GetStr("ScanningTotalAppControlFilesMessage"),
+					Atlas.GetStr("ScanningTotalAppControlFilesMessage"),
 					DetectedFilesInSelectedDirectories.Item2));
 
 					// Scan all of the detected files from the user selected directories
@@ -1075,7 +1075,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompletedCreatingSupplementalPolicyMessage"));
+					FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("ScanCompletedCreatingSupplementalPolicyMessage"));
 				}
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
@@ -1103,7 +1103,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				// If user selected to deploy the policy
 				if (FilesAndFoldersDeployButton)
 				{
-					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(PinnedPolicy.PolicyObj));
 				}
@@ -1112,13 +1112,13 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (FilesAndFoldersCancellableButton.wasCancelled)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
@@ -1168,7 +1168,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	internal void CertificatesBrowseForCertsButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.CertificatePickerFilter);
 
 		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -1200,8 +1200,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 		if (CertificatesBasedCertFilePaths.Count is 0)
 		{
-			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectCertificatesSubtitle"),
-				GlobalVars.GetStr("SelectCertificatesTitle"));
+			CertificatesBasedInfoBar.WriteWarning(Atlas.GetStr("SelectCertificatesSubtitle"),
+				Atlas.GetStr("SelectCertificatesTitle"));
 			return;
 		}
 
@@ -1210,7 +1210,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 			CertificatesBasedElementsAreEnabled = false;
 
 			CertificatesBasedInfoBar.WriteInfo(string.Format(
-				GlobalVars.GetStr("CreatingCertificatesPolicyMessage"),
+				Atlas.GetStr("CreatingCertificatesPolicyMessage"),
 				CertificatesBasedCertFilePaths.Count
 			));
 
@@ -1227,13 +1227,13 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 					certificateResults.Add(new CertificateSignerCreator(
 					   CertificateHelper.GetTBSCertificate(CertObject),
 						CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
-						 SiPolicyIntel.SSType.UserMode // Only User Mode for App ID Tagging.
+						 SSType.UserMode // Only User Mode for App ID Tagging.
 					));
 				}
 
 				if (certificateResults.Count == 0)
 				{
-					CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
+					CertificatesBasedInfoBar.WriteWarning(Atlas.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
 					errorsOccurred = true;
 					return;
 				}
@@ -1253,7 +1253,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				// If user selected to deploy the policy
 				if (CertificatesBasedDeployButton)
 				{
-					CertificatesBasedInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					CertificatesBasedInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(PinnedPolicy.PolicyObj));
 				}
@@ -1261,7 +1261,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			CertificatesBasedInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			CertificatesBasedInfoBar.WriteError(ex, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 			errorsOccurred = true;
 		}
 		finally
@@ -1284,7 +1284,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void OpenInPolicyEditor_Certificates() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(PinnedPolicy);
 
-	internal async void OpenInDefaultFileHandler_Certificates() => await OpenInDefaultFileHandler(PinnedPolicy);
+	internal async void OpenInDefaultFileHandler_Certificates() => await PolicyFileRepresent.OpenInDefaultFileHandler(PinnedPolicy);
 
 	#endregion
 
@@ -1339,8 +1339,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 		if (string.IsNullOrWhiteSpace(SupplementalPolicyCustomPatternBasedCustomPatternTextBox))
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("EnterCustomPatternSubtitle"),
-				GlobalVars.GetStr("EnterCustomPatternTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("EnterCustomPatternSubtitle"),
+				Atlas.GetStr("EnterCustomPatternTitle"));
 			return;
 		}
 
@@ -1354,7 +1354,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		{
 			CustomFilePathRulesElementsAreEnabled = false;
 
-			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPatternBasedFileRuleMessage"));
+			CustomFilePathRulesInfoBar.WriteInfo(Atlas.GetStr("CreatingPatternBasedFileRuleMessage"));
 
 			CustomFilePathRulesInfoBar.IsClosable = false;
 
@@ -1385,7 +1385,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					CustomFilePathRulesInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(PinnedPolicy.PolicyObj));
 				}
@@ -1393,13 +1393,13 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (PatternBasedFileRuleCancellableButton.wasCancelled)
 			{
-				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
@@ -1433,7 +1433,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(PinnedPolicy);
 
-	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(PinnedPolicy);
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await PolicyFileRepresent.OpenInDefaultFileHandler(PinnedPolicy);
 
 	#endregion
 
@@ -1456,7 +1456,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Manages columns for the Firewall logs ListView.
 	/// </summary>
-	internal ListViewColumnManager<FirewallEvent> FirewallColumnManager { get; }
+	internal readonly ListViewColumnManager<FirewallEvent> FirewallColumnManager;
 
 	internal string? BlockedPacketsSearchBoxText
 	{
@@ -1590,7 +1590,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	private static readonly FrozenDictionary<string, (string Label, Func<FirewallEvent, object?> Getter)> FirewallEventsColumnMappings = new Dictionary<string, (string Label, Func<FirewallEvent, object?> Getter)>()
 			{
-				{ "TimeCreated", (GlobalVars.GetStr("TimeCreatedHeader/Text"), x => x.TimeCreated) },
+				{ "TimeCreated", (Atlas.GetStr("TimeCreatedHeader/Text"), x => x.TimeCreated) },
 				{ "Application", ("Application", x => x.Application) },
 				{ "Direction", ("Direction", x => x.Direction) },
 				{ "Protocol", ("Protocol", x => x.Protocol) },
@@ -1705,7 +1705,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		}
 	}
 
-	internal string RealTimeMonitoringButtonText => IsRealTimeMonitoring ? GlobalVars.GetStr("StopLiveMonitor") : GlobalVars.GetStr("StartLiveMonitor");
+	internal string RealTimeMonitoringButtonText => IsRealTimeMonitoring ? Atlas.GetStr("StopLiveMonitor") : Atlas.GetStr("StartLiveMonitor");
 	internal string RealTimeMonitoringButtonIcon => IsRealTimeMonitoring ? "\uE71A" : "\uE768"; // Stop / Play icons
 
 	/// <summary>
@@ -1723,7 +1723,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 				GetFirewallLogs.StartRealTimeMonitoring(IsResolveDestinationAddressesEnabled, (fwEvent) =>
 				{
-					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+					_ = Atlas.AppDispatcher.TryEnqueue(() =>
 					{
 						// Add to the main storage
 						AllBlockedPackets.Add(fwEvent);

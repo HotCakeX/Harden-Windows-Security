@@ -22,7 +22,7 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class UpdatePageCustomMSIXPath : Page
 {
-	private ViewModels.UpdateVM ViewModel { get; } = ViewModels.ViewModelProvider.UpdateVM;
+	private ViewModels.UpdateVM ViewModel => ViewModels.ViewModelProvider.UpdateVM;
 
 	internal UpdatePageCustomMSIXPath()
 	{

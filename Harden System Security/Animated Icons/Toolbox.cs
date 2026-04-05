@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.2.250604.1+b02a3ee244
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile toolbox.json
-//       
+//
 //       Input file:
 //           toolbox.json (132098 bytes created 16:36+03:00 Jul 27 2025)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //

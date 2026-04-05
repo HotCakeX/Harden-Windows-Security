@@ -36,7 +36,7 @@ internal static class CiPolicyHandler
 		if (policyObj.SupplementalPolicySigners?.Count > 0)
 		{
 			Logger.Write(
-				GlobalVars.GetStr("RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage")
+				Atlas.GetStr("RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage")
 			);
 
 			// Store SignerIds to remove

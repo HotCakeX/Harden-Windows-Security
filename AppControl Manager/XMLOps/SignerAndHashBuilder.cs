@@ -18,8 +18,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using AppControlManager.IntelGathering;
 using AppControlManager.Others;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -108,7 +108,7 @@ internal static class SignerAndHashBuilder
 		HashSet<string> customPatternBasedFileRules = [];
 		List<FileIdentity> fileNameData = [];
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerDataSeparationStartMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerDataSeparationStartMessage"));
 
 		// Data separation based on the level
 		switch (level)
@@ -117,7 +117,7 @@ internal static class SignerAndHashBuilder
 			case ScanLevels.Hash:
 				{
 
-					Logger.Write(GlobalVars.GetStr("BuildSignerHashLevelMessage"));
+					Logger.Write(Atlas.GetStr("BuildSignerHashLevelMessage"));
 
 					if (data is not null)
 					{
@@ -134,7 +134,7 @@ internal static class SignerAndHashBuilder
 					if (data is not null)
 					{
 
-						Logger.Write(GlobalVars.GetStr("BuildSignerPublisherHashLevelsMessage"));
+						Logger.Write(Atlas.GetStr("BuildSignerPublisherHashLevelsMessage"));
 
 						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
 						{
@@ -161,7 +161,7 @@ internal static class SignerAndHashBuilder
 
 						// Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is Auto or FilePublisher
 
-						Logger.Write(GlobalVars.GetStr("BuildSignerFilePublisherLevelsMessage"));
+						Logger.Write(Atlas.GetStr("BuildSignerFilePublisherLevelsMessage"));
 
 						// Loop over each data
 						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
@@ -187,7 +187,7 @@ internal static class SignerAndHashBuilder
 									}
 									else
 									{
-										Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerPublisherToHashMessage"), item.FilePath));
+										Logger.Write(string.Format(Atlas.GetStr("BuildSignerPublisherToHashMessage"), item.FilePath));
 										// Add the current signed data to Unsigned data array so that Hash rules will be created for it instead
 										unsignedData.Add(item);
 									}
@@ -215,7 +215,7 @@ internal static class SignerAndHashBuilder
 
 						// Detect and separate WHQLFilePublisher, FilePublisher, Publisher and Hash (Unsigned) data
 
-						Logger.Write(GlobalVars.GetStr("BuildSignerWHQLFilePublisherLevelsMessage"));
+						Logger.Write(Atlas.GetStr("BuildSignerWHQLFilePublisherLevelsMessage"));
 
 						// Loop over each data
 						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
@@ -243,7 +243,7 @@ internal static class SignerAndHashBuilder
 									}
 									else
 									{
-										Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerPublisherToHashMessage"), item.FilePath));
+										Logger.Write(string.Format(Atlas.GetStr("BuildSignerPublisherToHashMessage"), item.FilePath));
 										// Add the current signed data to Unsigned data array so that Hash rules will be created for it instead
 										unsignedData.Add(item);
 									}
@@ -340,17 +340,17 @@ internal static class SignerAndHashBuilder
 				break;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerWHQLFilePublisherRulesCountMessage"), signedWHQLFilePublisherData.Count));
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerFilePublisherRulesCountMessage"), signedFilePublisherData.Count));
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerPublisherRulesCountMessage"), signedPublisherData.Count));
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerHashRulesCountMessage"), unsignedData.Count));
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerFilePathRulesCountMessage"), filePathData.Count));
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerWildCardFilePathRulesCountMessage"), wildCardFilePathData.Count));
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerPFNRulesCountMessage"), PFNs.Count));
-		Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerFileNameRulesCountMessage"), fileNameData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerWHQLFilePublisherRulesCountMessage"), signedWHQLFilePublisherData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerFilePublisherRulesCountMessage"), signedFilePublisherData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerPublisherRulesCountMessage"), signedPublisherData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerHashRulesCountMessage"), unsignedData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerFilePathRulesCountMessage"), filePathData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerWildCardFilePathRulesCountMessage"), wildCardFilePathData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerPFNRulesCountMessage"), PFNs.Count));
+		Logger.Write(string.Format(Atlas.GetStr("BuildSignerFileNameRulesCountMessage"), fileNameData.Count));
 
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingWHQLFilePublisherMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingWHQLFilePublisherMessage"));
 
 		foreach (FileIdentity signedData in CollectionsMarshal.AsSpan(signedWHQLFilePublisherData))
 		{
@@ -387,7 +387,7 @@ internal static class SignerAndHashBuilder
 
 				if (string.IsNullOrWhiteSpace(corDataValue.IssuerTBSHash) && !string.IsNullOrWhiteSpace(corDataValue.PublisherTBSHash))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
+					Logger.Write(string.Format(Atlas.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
 
 					currentCorData = new CertificateDetailsCreator(
 						corDataValue.PublisherTBSHash,
@@ -415,7 +415,7 @@ internal static class SignerAndHashBuilder
 			whqlFilePublisherSigners.Add(currentWHQLFilePublisherSigner);
 		}
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingFilePublisherMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingFilePublisherMessage"));
 
 		foreach (FileIdentity signedData in CollectionsMarshal.AsSpan(signedFilePublisherData))
 		{
@@ -447,7 +447,7 @@ internal static class SignerAndHashBuilder
 
 				if (string.IsNullOrWhiteSpace(corDataValue.IssuerTBSHash) && !string.IsNullOrWhiteSpace(corDataValue.PublisherTBSHash))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
+					Logger.Write(string.Format(Atlas.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
 
 					currentCorData = new CertificateDetailsCreator(
 						corDataValue.PublisherTBSHash,
@@ -476,7 +476,7 @@ internal static class SignerAndHashBuilder
 		}
 
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingPublisherMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingPublisherMessage"));
 
 		foreach (FileIdentity signedData in CollectionsMarshal.AsSpan(signedPublisherData))
 		{
@@ -503,7 +503,7 @@ internal static class SignerAndHashBuilder
 
 				if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
+					Logger.Write(string.Format(Atlas.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
 
 					// Create a new CertificateDetailsCreator object with the retrieved and used values
 					currentCorData = new CertificateDetailsCreator(
@@ -533,13 +533,13 @@ internal static class SignerAndHashBuilder
 		}
 
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingUnsignedHashMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingUnsignedHashMessage"));
 
 		foreach (FileIdentity hashData in CollectionsMarshal.AsSpan(unsignedData))
 		{
 			if (string.IsNullOrWhiteSpace(hashData.SHA256Hash) || string.IsNullOrWhiteSpace(hashData.SHA1Hash) || string.IsNullOrWhiteSpace(hashData.FilePath))
 			{
-				Logger.Write(GlobalVars.GetStr("BuildSignerNullPropertiesMessage"));
+				Logger.Write(Atlas.GetStr("BuildSignerNullPropertiesMessage"));
 				continue;
 			}
 
@@ -552,7 +552,7 @@ internal static class SignerAndHashBuilder
 			));
 		}
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingFilePathMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingFilePathMessage"));
 
 		foreach (FileIdentity item in CollectionsMarshal.AsSpan(filePathData))
 		{
@@ -566,7 +566,7 @@ internal static class SignerAndHashBuilder
 			}
 		}
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingWildCardFilePathMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingWildCardFilePathMessage"));
 
 		foreach (string item in wildCardFilePathData)
 		{
@@ -578,11 +578,11 @@ internal static class SignerAndHashBuilder
 			filePaths.Add(new FilePathCreator(
 				wildcardPath,
 				"0.0.0.0", // Minimum version of all files allowed by path
-				SiPolicyIntel.SSType.UserMode
+				SSType.UserMode
 				));
 		}
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingCustomPatternMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingCustomPatternMessage"));
 
 		foreach (string item in customPatternBasedFileRules)
 		{
@@ -591,22 +591,22 @@ internal static class SignerAndHashBuilder
 			filePaths.Add(new FilePathCreator(
 				item,
 				"0.0.0.0", // Minimum version of all files allowed by path
-				SiPolicyIntel.SSType.UserMode
+				SSType.UserMode
 				));
 		}
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingPFNMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingPFNMessage"));
 
 		foreach (string item in CollectionsMarshal.AsSpan(PFNs))
 		{
 			pfnRules.Add(new PFNRuleCreator(
 				item,
 				"0.0.0.0", // Minimum version of the app allowed by PFN
-				SiPolicyIntel.SSType.UserMode
+				SSType.UserMode
 				));
 		}
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerProcessingFileNameMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerProcessingFileNameMessage"));
 
 		foreach (FileIdentity item in CollectionsMarshal.AsSpan(fileNameData))
 		{
@@ -620,7 +620,7 @@ internal static class SignerAndHashBuilder
 				));
 		}
 
-		Logger.Write(GlobalVars.GetStr("BuildSignerCompletedMessage"));
+		Logger.Write(Atlas.GetStr("BuildSignerCompletedMessage"));
 
 		return new FileBasedInfoPackage(whqlFilePublisherSigners, filePublisherSigners, publisherSigners, completeHashes, filePaths, pfnRules, fileNameRules);
 	}

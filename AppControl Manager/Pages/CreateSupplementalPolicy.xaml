@@ -12,6 +12,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:CommonCore="using:CommonCore"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Page.Resources>
@@ -732,7 +733,7 @@
                             <ComboBox IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
                                       SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                                       SelectedIndex="0"
-                                      ItemsSource="{x:Bind vm:ViewModelBase.ScanLevelsSource}"
+                                      ItemsSource="{x:Bind CommonCore:ViewModelBase.ScanLevelsSource}"
                                       x:Uid="ScanLevelComboBox"
                                       ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 

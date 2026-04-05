@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <UserControl
-    x:Class="HardenSystemSecurity.CustomUIElements.HomePageCarousel.AnimatedImage"
+    x:Class="AppControlManager.CustomUIElements.HomePageCarousel.AnimatedImage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Unloaded="{x:Bind AnimatedImage_Unloaded}">

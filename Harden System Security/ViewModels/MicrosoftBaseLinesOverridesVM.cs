@@ -34,9 +34,9 @@ internal sealed partial class MicrosoftBaseLinesOverridesVM : MUnitListViewModel
 		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 	}
@@ -54,7 +54,7 @@ internal sealed partial class MicrosoftBaseLinesOverridesVM : MUnitListViewModel
 
 			temp.Add(new(
 				category: Categories.MSFTSecBaselines_OptionalOverrides,
-				name: GlobalVars.GetSecurityStr("SeDenyRemoteInteractiveLogonRight-OptionalOverrides"),
+				name: Atlas.GetSecurityStr("SeDenyRemoteInteractiveLogonRight-OptionalOverrides"),
 
 				applyStrategy: new DefaultApply(() =>
 				{

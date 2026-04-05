@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.Others;
 
@@ -30,7 +31,7 @@ internal sealed class WHQLFilePublisherSignerCreator(
 	string? fileName,
 	string? authenticodeSHA256,
 	string? authenticodeSHA1,
-	SiPolicyIntel.SSType siSigningScenario,
+	SSType siSigningScenario,
 	string? opus)
 {
 	internal List<CertificateDetailsCreator> CertificateDetails => certificateDetails;
@@ -43,6 +44,6 @@ internal sealed class WHQLFilePublisherSignerCreator(
 	internal string? FileName => fileName;
 	internal string? AuthenticodeSHA256 => authenticodeSHA256;
 	internal string? AuthenticodeSHA1 => authenticodeSHA1;
-	internal SiPolicyIntel.SSType SiSigningScenario => siSigningScenario;
+	internal SSType SiSigningScenario => siSigningScenario;
 	internal string? Opus => opus;
 }

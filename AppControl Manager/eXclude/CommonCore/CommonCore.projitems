@@ -17,7 +17,6 @@
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Atlas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CIManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DISM\Types.cs" />
@@ -33,7 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes_ExploitMitigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ComJsonDeserializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\FirewallRule.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Atlas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GroupInfoListForPackagedAppView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\HashMismatchInCertificateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\HTTPHandler.cs" />
@@ -54,6 +53,49 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\GetAppsList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\ShutDownInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\ListViewColumnManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\ListViewHelper-Shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\ListViewHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CatRootScanner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CertCNFetcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CertificateHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\ChainElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\ChainPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CiFileHash.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CILogIntel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CodeIntegrityHashes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CodeIntegrityHashesV2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\CodeIntegrityInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\DriveLetterMapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\EventAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\ExFileInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileIdentity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileIdentityComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileIdentityECCBasedHashSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileIdentityOrigin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileIdentitySignatureBasedHashSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileIdentityTimeBasedHashSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileSignerInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FileSignerInfoComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\FirewallEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\GetCertificateDetails.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\GetEventLogsData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\GetExtendedFileAttrib.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\GetFirewallLogs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\GetMDEAdvancedHuntingLogsData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\GetOpusData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\KernelModeDrivers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\KernelUserVerdict.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\LocalFilesScan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\MDEAdvancedHuntingData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\OptimizeMDECSVData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\ScanLevels.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\SignatureStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntelGathering\SSType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\CryptoAPI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\DataModels.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RedundantAssetDetection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolKits\Segmented.cs" />
@@ -119,7 +161,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Others\MeowOpener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\FileAccessCheck.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\FileDialogHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars_WINUI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Atlas_WINUI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ReLaunch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\InfoBarSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ProcessStarter.cs" />

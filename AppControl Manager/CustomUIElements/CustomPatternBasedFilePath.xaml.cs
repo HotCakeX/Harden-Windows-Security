@@ -32,31 +32,31 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialogV2
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\Windows\\*",
-			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription1")
+			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription1")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "D:\\EnterpriseApps\\MyApp\\*",
-			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription2")
+			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription2")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "*\\Bing.exe",
-			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription3")
+			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription3")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\*\\CCMCACHE\\*\\7z????-x64.exe",
-			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription4")
+			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription4")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\Users\\UserName\\AppData\\Local\\Temp\\????????-????-????-????-????????????.tmp.node",
-			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription5")
+			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription5")
 		});
 	}
 

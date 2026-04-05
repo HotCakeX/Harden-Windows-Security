@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.2.250604.1+b02a3ee244
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile ChocolateBar.json
-//       
+//
 //       Input file:
 //           ChocolateBar.json (272339 bytes created 13:57+03:00 Aug 22 2025)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //

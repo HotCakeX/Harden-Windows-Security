@@ -20,13 +20,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommonCore.IncrementalCollection;
+using CommonCore.IntelGathering;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -135,7 +135,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
 	// The Column Manager Composition
-	internal ListViewColumnManager<FileIdentity> ColumnManager { get; }
+	internal readonly ListViewColumnManager<FileIdentity> ColumnManager;
 
 	// Variables to hold the data supplied by the UI elements
 	internal string? BasePolicyGUID { get; set => SPT(ref field, value); }
@@ -203,7 +203,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 
 	internal bool OnlyIncludeSelectedItemsToggleButton { get; set => SP(ref field, value); }
 
-	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("CreatePolicyForSelectedBase");
+	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("CreatePolicyForSelectedBase");
 
 	internal int SelectedCreationMethod
 	{
@@ -213,10 +213,10 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 			{
 				CreatePolicyButtonContent = field switch
 				{
-					0 => GlobalVars.GetStr("AddLogsToSelectedPolicyMessage"),
-					1 => GlobalVars.GetStr("CreatePolicyForSelectedBase"),
-					2 => GlobalVars.GetStr("CreatePolicyForBaseGUIDMessage"),
-					_ => GlobalVars.GetStr("DefaultCreatePolicy")
+					0 => Atlas.GetStr("AddLogsToSelectedPolicyMessage"),
+					1 => Atlas.GetStr("CreatePolicyForSelectedBase"),
+					2 => Atlas.GetStr("CreatePolicyForBaseGUIDMessage"),
+					_ => Atlas.GetStr("DefaultCreatePolicy")
 				};
 			}
 		}
@@ -296,7 +296,7 @@ DeviceEvents
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings.Value);
 		}
 	}
 
@@ -325,7 +325,7 @@ DeviceEvents
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -333,7 +333,7 @@ DeviceEvents
 				PolicyToAddLogsTo = new(policyObj) { FilePath = selectedFile };
 
 				Logger.Write(string.Format(
-				GlobalVars.GetStr("SelectedFileToAddLogsToMessage"),
+				Atlas.GetStr("SelectedFileToAddLogsToMessage"),
 				selectedFile));
 			}
 		}
@@ -350,7 +350,7 @@ DeviceEvents
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -358,7 +358,7 @@ DeviceEvents
 				BasePolicyXMLFile = new(policyObj) { FilePath = selectedFile };
 
 				Logger.Write(string.Format(
-				GlobalVars.GetStr("SelectedBasePolicyFileMessage"),
+				Atlas.GetStr("SelectedBasePolicyFileMessage"),
 				selectedFile));
 			}
 		}
@@ -376,7 +376,7 @@ DeviceEvents
 	{
 		if (!Guid.TryParse(BasePolicyGUID, out _))
 		{
-			throw new ArgumentException(GlobalVars.GetStr("InvalidGuidMessage"));
+			throw new ArgumentException(Atlas.GetStr("InvalidGuidMessage"));
 		}
 	}
 
@@ -464,7 +464,7 @@ DeviceEvents
 
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("ScanningMDEAdvancedHuntingCsvLogs"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("ScanningMDEAdvancedHuntingCsvLogs"));
 
 			// Clear the FileIdentities before getting and showing the new ones
 			FileIdentities.Clear();
@@ -481,7 +481,7 @@ DeviceEvents
 				if (MDEAdvancedHuntingLogs.Count == 0)
 				{
 					throw new InvalidOperationException(
-						GlobalVars.GetStr("NoMDEAdvancedHuntingLogProvided")
+						Atlas.GetStr("NoMDEAdvancedHuntingLogProvided")
 					);
 				}
 
@@ -501,7 +501,7 @@ DeviceEvents
 
 				if (Output.Count == 0)
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs"));
+					throw new InvalidOperationException(Atlas.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs"));
 				}
 
 				// Store all of the data in the List
@@ -521,7 +521,7 @@ DeviceEvents
 		catch (Exception ex)
 		{
 			error = true;
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorScanningMDEAdvancedHuntingCsvLogs"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorScanningMDEAdvancedHuntingCsvLogs"));
 		}
 		finally
 		{
@@ -533,7 +533,7 @@ DeviceEvents
 
 			if (!error)
 			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
+				MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
 			}
 
 			MainInfoBar.IsClosable = true;
@@ -573,14 +573,14 @@ DeviceEvents
 			if (FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.GetStr("NoLogsErrorMessage")
+					Atlas.GetStr("NoLogsErrorMessage")
 				);
 			}
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.GetStr("NoPolicyCreationOptionSelectedErrorMessage")
+					Atlas.GetStr("NoPolicyCreationOptionSelectedErrorMessage")
 				);
 			}
 
@@ -595,7 +595,7 @@ DeviceEvents
 			if (OnlyIncludeSelectedItemsToggleButton && lv?.SelectedItems.Count > 0)
 			{
 				MainInfoBar.WriteInfo(string.Format(
-					GlobalVars.GetStr("CreatingSupplementalPolicyForFilesMessage"),
+					Atlas.GetStr("CreatingSupplementalPolicyForFilesMessage"),
 					lv.SelectedItems.Count
 				));
 
@@ -614,7 +614,7 @@ DeviceEvents
 				SelectedLogs = AllFileIdentities;
 
 				MainInfoBar.WriteInfo(string.Format(
-					GlobalVars.GetStr("CreatingSupplementalPolicyForFilesMessage"),
+					Atlas.GetStr("CreatingSupplementalPolicyForFilesMessage"),
 					AllFileIdentities.Count
 				));
 			}
@@ -668,7 +668,7 @@ DeviceEvents
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.GetStr("NoPolicySelectedToAddLogsMessage")
+									Atlas.GetStr("NoPolicySelectedToAddLogsMessage")
 								);
 							}
 
@@ -685,7 +685,7 @@ DeviceEvents
 									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
 
 									PolicyNameTextBox = string.Format(
-										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatMDEAH"),
+										Atlas.GetStr("DefaultSupplementalPolicyNameFormatMDEAH"),
 										formattedDate
 									);
 								}
@@ -717,7 +717,7 @@ DeviceEvents
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.GetStr("NoPolicyFileSelectedToAssociateErrorMessage")
+									Atlas.GetStr("NoPolicyFileSelectedToAssociateErrorMessage")
 								);
 							}
 
@@ -734,7 +734,7 @@ DeviceEvents
 									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
 
 									PolicyNameTextBox = string.Format(
-										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatMDEAH"),
+										Atlas.GetStr("DefaultSupplementalPolicyNameFormatMDEAH"),
 										formattedDate
 									);
 								}
@@ -769,7 +769,7 @@ DeviceEvents
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.GetStr("NoBasePolicyGuidProvidedMessage")
+									Atlas.GetStr("NoBasePolicyGuidProvidedMessage")
 								);
 							}
 
@@ -786,7 +786,7 @@ DeviceEvents
 		catch (Exception ex)
 		{
 			Error = true;
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorCreatingSupplementalPolicyMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorCreatingSupplementalPolicyMessage"));
 		}
 		finally
 		{
@@ -801,7 +801,7 @@ DeviceEvents
 			if (!Error)
 			{
 				MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
+					Atlas.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
 					PolicyNameTextBox
 				));
 
@@ -815,7 +815,7 @@ DeviceEvents
 	/// </summary>
 	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(FinalSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(FinalSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_Internal() => await PolicyFileRepresent.OpenInDefaultFileHandler(FinalSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for the button that retrieves the logs
@@ -828,7 +828,7 @@ DeviceEvents
 
 		MainInfoBar.IsClosable = false;
 
-		MainInfoBar.WriteInfo(GlobalVars.GetStr("RetrievingMDEAdvancedHuntingDataMessage"));
+		MainInfoBar.WriteInfo(Atlas.GetStr("RetrievingMDEAdvancedHuntingDataMessage"));
 
 		MDEAdvancedHuntingDataRootObject? root = null;
 
@@ -847,24 +847,24 @@ DeviceEvents
 
 				if (root is null)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("NoLogsRetrievedMessage"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("NoLogsRetrievedMessage"));
 					return;
 				}
 
 				if (root.Results.Count is 0)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("ZeroLogsRetrievedMessage"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("ZeroLogsRetrievedMessage"));
 					return;
 				}
 
 				MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.GetStr("SuccessfullyRetrievedLogsFromCloudMessage"),
+					Atlas.GetStr("SuccessfullyRetrievedLogsFromCloudMessage"),
 					root.Results.Count
 				));
 
 				Logger.Write(
 					string.Format(
-						GlobalVars.GetStr("DeserializationCompleteNumberOfRecordsMessage"),
+						Atlas.GetStr("DeserializationCompleteNumberOfRecordsMessage"),
 						root.Results.Count
 					)
 				);
@@ -889,7 +889,7 @@ DeviceEvents
 
 					if (Output.Count is 0)
 					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("NoActionableLogsFoundMessage"));
+						MainInfoBar.WriteWarning(Atlas.GetStr("NoActionableLogsFoundMessage"));
 					}
 
 					// Store all of the data in the List
@@ -907,7 +907,7 @@ DeviceEvents
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorRetrievingMDEAdvancedHuntingLogsMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorRetrievingMDEAdvancedHuntingLogsMessage"));
 		}
 		finally
 		{
@@ -932,7 +932,7 @@ DeviceEvents
 	{
 		if (sender is Button button && button.Tag is string key)
 		{
-			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					keySelector: mapping.Getter,

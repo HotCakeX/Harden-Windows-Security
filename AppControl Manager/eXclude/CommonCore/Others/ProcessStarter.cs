@@ -60,7 +60,7 @@ internal static class ProcessStarter
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
+					Atlas.GetStr("CommandFailedWithExitCodeErrorMessage"),
 					command,
 					arguments,
 					process.ExitCode,
@@ -167,7 +167,7 @@ internal static class ProcessStarter
 #if DEBUG
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
+						Atlas.GetStr("CommandFailedWithExitCodeErrorMessage"),
 						command,
 						arguments,
 						exitCode,
@@ -178,7 +178,7 @@ internal static class ProcessStarter
 				// In release builds, omit command and arguments from error message for security.
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
+						Atlas.GetStr("CommandFailedWithExitCodeErrorMessage"),
 						string.Empty,
 						string.Empty,
 						exitCode,
@@ -202,7 +202,7 @@ internal static class ProcessStarter
 #if DEBUG
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
+					Atlas.GetStr("CommandFailedWithExitCodeErrorMessage"),
 					command,
 					arguments,
 					process.ExitCode,
@@ -213,7 +213,7 @@ internal static class ProcessStarter
 			// In release builds, omit command and arguments from error message for security.
 			throw new InvalidOperationException(
 							string.Format(
-								GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
+								Atlas.GetStr("CommandFailedWithExitCodeErrorMessage"),
 								string.Empty,
 								string.Empty,
 								process.ExitCode,

@@ -25,7 +25,6 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.ViewModels;
@@ -119,7 +118,7 @@ internal static class MUnitDependencyRegistry
 		ref List<MUnitDependency>? listRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_dependencies, primaryMUnitId, out _);
 		listRef ??= [];
 		listRef.Add(new(dependentMUnitId, type, timing));
-		Logger.Write(string.Format(GlobalVars.GetStr("JSONDependencyRegistered"), primaryMUnitId, dependentMUnitId, type, timing));
+		Logger.Write(string.Format(Atlas.GetStr("JSONDependencyRegistered"), primaryMUnitId, dependentMUnitId, type, timing));
 	}
 
 	/// <summary>
@@ -172,7 +171,7 @@ internal sealed class GroupPolicyApply(RegistryPolicyEntry policy) : IApplyGroup
 	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own: we bulk-invoke ApplyPolicies instead.
-	public void Apply() => throw new InvalidOperationException(GlobalVars.GetStr("GroupPolicyApplyBulkInvokeError"));
+	public void Apply() => throw new InvalidOperationException(Atlas.GetStr("GroupPolicyApplyBulkInvokeError"));
 }
 
 /// <summary>
@@ -195,7 +194,7 @@ internal sealed class RegistryApply(RegistryPolicyEntry policy) : IApplyRegistry
 	public RegistryPolicyEntry Policy => policy;
 
 	// This will never be called on its own: we bulk-invoke ApplyPolicies instead.
-	public void Apply() => throw new InvalidOperationException(GlobalVars.GetStr("RegistryApplyBulkInvokeError"));
+	public void Apply() => throw new InvalidOperationException(Atlas.GetStr("RegistryApplyBulkInvokeError"));
 }
 
 /// <summary>
@@ -280,7 +279,7 @@ internal sealed class GroupPolicyVerify(RegistryPolicyEntry policy) : IVerifyGro
 
 	// This will never be called on its own.
 	public bool Verify() =>
-		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
+		throw new InvalidOperationException(Atlas.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
 }
 
 /// <summary>
@@ -304,7 +303,7 @@ internal sealed class RegistryVerify(RegistryPolicyEntry policy) : IVerifyRegist
 
 	// This will never be called on its own.
 	public bool Verify() =>
-		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
+		throw new InvalidOperationException(Atlas.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
 }
 
 /// <summary>
@@ -352,7 +351,7 @@ internal sealed class GroupPolicyRemove(RegistryPolicyEntry policy) : IRemoveGro
 
 	// This will never be called on its own.
 	public void Remove() =>
-		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
+		throw new InvalidOperationException(Atlas.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
 }
 
 /// <summary>
@@ -376,7 +375,7 @@ internal sealed class RegistryRemove(RegistryPolicyEntry policy) : IRemoveRegist
 
 	// This will never be called on its own.
 	public void Remove() =>
-		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
+		throw new InvalidOperationException(Atlas.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
 }
 
 /// <summary>
@@ -537,7 +536,7 @@ internal static class SpecializedStrategiesRegistry
 
 				string command = $"get {wmiNamespace} {wmiClass} {wmiProperty}"; // Remove double quotes as some like SmartAppControlState get it coming from ComManager service
 
-				string rawResult = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command).Trim();
+				string rawResult = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, command).Trim();
 				string result;
 
 				// Attempt to interpret the output as a JSON string first to properly handle escaped characters (like backslashes in paths).
@@ -683,7 +682,7 @@ internal sealed partial class MUnit(
 			if (SP(ref field, value))
 			{
 				// Force immediate UI update on the correct thread
-				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+				_ = Atlas.AppDispatcher.TryEnqueue(() =>
 				{
 					OnPropertyChanged(nameof(StatusState));
 				});
@@ -849,7 +848,7 @@ internal sealed partial class MUnit(
 							cancellationToken?.ThrowIfCancellationRequested();
 
 							strategy.Apply();
-							Logger.Write(string.Format(GlobalVars.GetStr("SpecializedApplySuccess"), timing, policy.KeyName, policy.ValueName));
+							Logger.Write(string.Format(Atlas.GetStr("SpecializedApplySuccess"), timing, policy.KeyName, policy.ValueName));
 						}
 					}
 				}
@@ -862,7 +861,7 @@ internal sealed partial class MUnit(
 							cancellationToken?.ThrowIfCancellationRequested();
 
 							strategy.Remove();
-							Logger.Write(string.Format(GlobalVars.GetStr("SpecializedRemoveSuccess"), timing, policy.KeyName, policy.ValueName));
+							Logger.Write(string.Format(Atlas.GetStr("SpecializedRemoveSuccess"), timing, policy.KeyName, policy.ValueName));
 						}
 					}
 				}
@@ -870,7 +869,7 @@ internal sealed partial class MUnit(
 			catch (Exception ex)
 			{
 				if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorInSpecializedStrategy"), operation, timing, policy.KeyName, policy.ValueName));
+				Logger.Write(string.Format(Atlas.GetStr("ErrorInSpecializedStrategy"), operation, timing, policy.KeyName, policy.ValueName));
 				throw;
 			}
 		}
@@ -922,14 +921,14 @@ internal sealed partial class MUnit(
 				// Cycle detection
 				if (!visitedForCycleDetection.Add(dependencyId))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencyCycleDetected"), dependencyId));
+					Logger.Write(string.Format(Atlas.GetStr("DependencyCycleDetected"), dependencyId));
 					continue;
 				}
 
 				// Skip if already in the original batch
 				if (processedIds.Contains(dependencyId))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencySkip"), dependencyId));
+					Logger.Write(string.Format(Atlas.GetStr("DependencySkip"), dependencyId));
 					continue;
 				}
 
@@ -954,11 +953,11 @@ internal sealed partial class MUnit(
 
 					totalDependencies++;
 					_ = processedIds.Add(dependencyId);
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencyResolved"), mUnit.ID, dependencyId, operation, timing));
+					Logger.Write(string.Format(Atlas.GetStr("DependencyResolved"), mUnit.ID, dependencyId, operation, timing));
 				}
 				else
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DependencyNotFound"), dependencyId, mUnit.ID));
+					Logger.Write(string.Format(Atlas.GetStr("DependencyNotFound"), dependencyId, mUnit.ID));
 				}
 			}
 		}
@@ -967,7 +966,7 @@ internal sealed partial class MUnit(
 			return;
 
 		string resourceKey = timing == ExecutionTiming.Before ? "ProcessingBeforeDependencies" : "ProcessingAfterDependencies";
-		Logger.Write(string.Format(GlobalVars.GetStr(resourceKey), totalDependencies, operation));
+		Logger.Write(string.Format(Atlas.GetStr(resourceKey), totalDependencies, operation));
 
 		if (groupPolicyDeps.Count > 0)
 		{
@@ -1295,14 +1294,14 @@ internal sealed partial class MUnit(
 			{
 				// Pass the specific policy entry so the strategy knows exactly what values to expect
 				bool fallbackResult = fallbackStrategy.Verify(policy);
-				Logger.Write(string.Format(GlobalVars.GetStr("FallbackVerifyResult"), policy.KeyName, policy.ValueName, fallbackResult ? GlobalVars.GetStr("SUCCESS") : GlobalVars.GetStr("FAILED")));
+				Logger.Write(string.Format(Atlas.GetStr("FallbackVerifyResult"), policy.KeyName, policy.ValueName, fallbackResult ? Atlas.GetStr("SUCCESS") : Atlas.GetStr("FAILED")));
 
 				return fallbackResult;
 			}
 			catch (Exception ex)
 			{
 				if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorInFallbackVerification"), policy.KeyName, policy.ValueName, ex.Message));
+				Logger.Write(string.Format(Atlas.GetStr("ErrorInFallbackVerification"), policy.KeyName, policy.ValueName, ex.Message));
 				throw;
 			}
 		}
@@ -1348,7 +1347,7 @@ internal sealed partial class MUnit(
 		catch (Exception ex)
 		{
 			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-			Logger.Write(string.Format(GlobalVars.GetStr("ErrorProcessingRegularMUnit"), mUnit.Name));
+			Logger.Write(string.Format(Atlas.GetStr("ErrorProcessingRegularMUnit"), mUnit.Name));
 			throw;
 		}
 	}
@@ -1375,10 +1374,10 @@ internal sealed partial class MUnit(
 
 				string operationText = operation switch
 				{
-					MUnitOperation.Apply => GlobalVars.GetStr("ApplyingSecurityMeasures"),
-					MUnitOperation.Remove => GlobalVars.GetStr("RemovingSecurityMeasures"),
-					MUnitOperation.Verify => GlobalVars.GetStr("VerifyingSecurityMeasures"),
-					_ => GlobalVars.GetStr("ProcessingSecurityMeasures")
+					MUnitOperation.Apply => Atlas.GetStr("ApplyingSecurityMeasures"),
+					MUnitOperation.Remove => Atlas.GetStr("RemovingSecurityMeasures"),
+					MUnitOperation.Verify => Atlas.GetStr("VerifyingSecurityMeasures"),
+					_ => Atlas.GetStr("ProcessingSecurityMeasures")
 				};
 				viewModel.MainInfoBar.WriteInfo(string.Format(operationText, mUnits.Count));
 
@@ -1442,10 +1441,10 @@ internal sealed partial class MUnit(
 
 				string operationText2 = operation switch
 				{
-					MUnitOperation.Apply => GlobalVars.GetStr("SuccessfullyAppliedSecurityMeasures"),
-					MUnitOperation.Remove => GlobalVars.GetStr("SuccessfullyRemovedSecurityMeasures"),
-					MUnitOperation.Verify => GlobalVars.GetStr("SuccessfullyVerifiedSecurityMeasures"),
-					_ => GlobalVars.GetStr("SuccessfullyProcessedSecurityMeasures")
+					MUnitOperation.Apply => Atlas.GetStr("SuccessfullyAppliedSecurityMeasures"),
+					MUnitOperation.Remove => Atlas.GetStr("SuccessfullyRemovedSecurityMeasures"),
+					MUnitOperation.Verify => Atlas.GetStr("SuccessfullyVerifiedSecurityMeasures"),
+					_ => Atlas.GetStr("SuccessfullyProcessedSecurityMeasures")
 				};
 				viewModel.MainInfoBar.WriteSuccess(string.Format(operationText2, mUnits.Count));
 			}
@@ -1476,7 +1475,7 @@ internal sealed partial class MUnit(
 		try
 		{
 			// Load the policies from the JSON file
-			List<RegistryPolicyEntry> policies = RegistryPolicyEntry.LoadWithFriendlyNameKeyResolve(jsonConfigPath) ?? throw new InvalidOperationException(string.Format(GlobalVars.GetStr("CouldNotLoadPoliciesFromPath"), jsonConfigPath));
+			List<RegistryPolicyEntry> policies = RegistryPolicyEntry.LoadWithFriendlyNameKeyResolve(jsonConfigPath) ?? throw new InvalidOperationException(string.Format(Atlas.GetStr("CouldNotLoadPoliciesFromPath"), jsonConfigPath));
 
 			foreach (RegistryPolicyEntry entry in policies)
 			{
@@ -1517,7 +1516,7 @@ internal sealed partial class MUnit(
 				}
 				else
 				{
-					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("InvalidSource"), entry.Source));
+					throw new InvalidOperationException(string.Format(Atlas.GetStr("InvalidSource"), entry.Source));
 				}
 
 				temp.Add(mUnit);
@@ -1526,7 +1525,7 @@ internal sealed partial class MUnit(
 		catch (Exception ex)
 		{
 			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-			Logger.Write(string.Format(GlobalVars.GetStr("ErrorCreatingMUnitsForCategory"), category, ex.Message));
+			Logger.Write(string.Format(Atlas.GetStr("ErrorCreatingMUnitsForCategory"), category, ex.Message));
 			throw;
 		}
 

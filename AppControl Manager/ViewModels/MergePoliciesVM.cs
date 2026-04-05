@@ -54,13 +54,13 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 		if (MainPolicy is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("MergePolicies_SelectMainPolicySubtitle"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("MergePolicies_SelectMainPolicySubtitle"));
 			return;
 		}
 
 		if (OtherPolicies.Count is 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("MergePolicies_SelectOtherPoliciesSubtitle"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("MergePolicies_SelectOtherPoliciesSubtitle"));
 			return;
 		}
 
@@ -71,7 +71,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("MergePolicies_MergingMessage"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("MergePolicies_MergingMessage"));
 
 			await Task.Run(() =>
 			{
@@ -99,7 +99,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 				// If user chose to deploy the policy after merge
 				if (ShouldDeploy)
 				{
-					MainInfoBar.WriteInfo(GlobalVars.GetStr("MergePolicies_DeployingMessage"));
+					MainInfoBar.WriteInfo(Atlas.GetStr("MergePolicies_DeployingMessage"));
 
 					PreDeploymentChecks.CheckForSignatureConflict(MainPolicy.PolicyObj);
 
@@ -111,11 +111,11 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 				}
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("MergePolicies_SuccessMessage"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("MergePolicies_SuccessMessage"));
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("MergePolicies_ErrorMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("MergePolicies_ErrorMessage"));
 		}
 		finally
 		{
@@ -133,7 +133,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -158,7 +158,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	{
 		try
 		{
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			foreach (string item in selectedFiles)
 			{
@@ -225,7 +225,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	{
 		try
 		{
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.MultiAppControlPolicyPickerFilter);
 
 			foreach (string file in selectedFiles)
 			{
@@ -278,7 +278,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 				}
 			});
 
-			AdvancedFeaturesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessMsgConvertingPoliciesToAppIDTagging"));
+			AdvancedFeaturesInfoBar.WriteSuccess(Atlas.GetStr("SuccessMsgConvertingPoliciesToAppIDTagging"));
 		}
 		catch (Exception ex)
 		{
@@ -321,7 +321,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	{
 		try
 		{
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.MultiAppControlPolicyPickerFilter);
 
 			foreach (string file in selectedFiles)
 			{
@@ -389,7 +389,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 				}
 			});
 
-			AdvancedFeaturesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessMsgSigningScenarioRemoval"));
+			AdvancedFeaturesInfoBar.WriteSuccess(Atlas.GetStr("SuccessMsgSigningScenarioRemoval"));
 		}
 		catch (Exception ex)
 		{

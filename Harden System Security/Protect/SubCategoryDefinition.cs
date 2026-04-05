@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using Microsoft.UI.Xaml;
 

@@ -16,8 +16,6 @@
 //
 
 using System.Threading;
-using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Windows.Storage;
@@ -373,7 +371,7 @@ internal sealed partial class Main : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, field ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
+				WindowDisplayAffinity.SetWindowDisplayAffinity(Atlas.hWnd, field ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
 
 				SaveValue(nameof(ScreenShield), field);
 			}

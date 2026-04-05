@@ -39,7 +39,7 @@ internal static class FileDialogHelper
 	// Location where File/Folder picker dialog will be opened
 	// It is only the directory where the first dialog will be opened in, it will then be replaced by the directory
 	// That user browses to to pick a single file/directory
-	private static string DirectoryToOpen = App.IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory)!;
+	private static string DirectoryToOpen = App.IsElevated ? Atlas.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory)!;
 
 	/// <summary>
 	/// Opens a file picker dialog to select a single file.
@@ -110,7 +110,7 @@ internal static class FileDialogHelper
 			try
 			{
 				// Display the dialog to the user.
-				fileOpenDialog->Show(new HWND(GlobalVars.hWnd)); // Pass the parent window handle.
+				fileOpenDialog->Show(new HWND(Atlas.hWnd)); // Pass the parent window handle.
 			}
 			catch (Exception e)
 			{
@@ -242,7 +242,7 @@ internal static class FileDialogHelper
 		try
 		{
 			// Show the dialog
-			fileOpenDialog->Show(new HWND(GlobalVars.hWnd));
+			fileOpenDialog->Show(new HWND(Atlas.hWnd));
 		}
 		catch (Exception e)
 		{
@@ -372,7 +372,7 @@ internal static class FileDialogHelper
 		try
 		{
 			// Show the dialog
-			fileOpenDialog->Show(new HWND(GlobalVars.hWnd));
+			fileOpenDialog->Show(new HWND(Atlas.hWnd));
 		}
 		catch (Exception e)
 		{
@@ -467,7 +467,7 @@ internal static class FileDialogHelper
 		try
 		{
 			// Show the dialog
-			fileOpenDialog->Show(new HWND(GlobalVars.hWnd));
+			fileOpenDialog->Show(new HWND(Atlas.hWnd));
 		}
 		catch (Exception e)
 		{

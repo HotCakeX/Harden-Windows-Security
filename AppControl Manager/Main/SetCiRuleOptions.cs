@@ -270,13 +270,13 @@ internal static class CiRuleOptions
 		foreach (OptionType option in toAdd)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("AddingRuleOptionMessage"),
+				Atlas.GetStr("AddingRuleOptionMessage"),
 				option));
 		}
 		foreach (OptionType option in toRemove)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("RemovingRuleOptionMessage"),
+				Atlas.GetStr("RemovingRuleOptionMessage"),
 				option));
 		}
 		#endregion

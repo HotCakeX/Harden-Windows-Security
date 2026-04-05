@@ -173,7 +173,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				// Get USB History Count
 				List<UsbDeviceInfo> usbDevices = GetUsbDevices();
-				UsbDeviceCountText = string.Format(GlobalVars.GetStr("TotalUSBDevices"), usbDevices.Count);
+				UsbDeviceCountText = string.Format(Atlas.GetStr("TotalUSBDevices"), usbDevices.Count);
 			}
 			catch (Exception ex)
 			{
@@ -210,7 +210,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
-				UserKindText = GlobalVars.IsElevated ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
+				UserKindText = Atlas.IsElevated ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
 			}
 			catch (Exception ex)
 			{
@@ -344,7 +344,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		int msIntoMinute = now.Second * 1000 + now.Millisecond;
 		TimeSpan due = TimeSpan.FromMilliseconds(60000 - msIntoMinute);
 
-		_clockTimer = GlobalVars.AppDispatcher.CreateTimer();
+		_clockTimer = Atlas.AppDispatcher.CreateTimer();
 		_clockTimer.IsRepeating = false; // one-shot to align to the next minute
 		_clockTimer.Interval = due;
 		_clockTimer.Tick += OnClockInitialTick;
@@ -361,7 +361,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		AppRamText = GetAppPrivateWorkingSetBytes_Native();
 		UpdateStorageTemperature();
 
-		_appRamTimer = GlobalVars.AppDispatcher.CreateTimer();
+		_appRamTimer = Atlas.AppDispatcher.CreateTimer();
 		_appRamTimer.IsRepeating = true; // repeating update
 		_appRamTimer.Interval = TimeSpan.FromSeconds(2);
 		_appRamTimer.Tick += OnAppRamTick;
@@ -376,7 +376,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		// Set initial value
 		OpenPortsText = GetOpenPortsString();
 
-		_portsTimer = GlobalVars.AppDispatcher.CreateTimer();
+		_portsTimer = Atlas.AppDispatcher.CreateTimer();
 		_portsTimer.IsRepeating = true;
 		_portsTimer.Interval = TimeSpan.FromSeconds(4);
 		_portsTimer.Tick += OnOpenPortsTick;
@@ -1400,9 +1400,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				using ContentDialogV2 errorDialog = new()
 				{
-					Title = GlobalVars.GetStr("AppElevationNoticeTitle"),
-					Content = GlobalVars.GetStr("NeedAdminToRenamePCMsg"),
-					CloseButtonText = GlobalVars.GetStr("OK"),
+					Title = Atlas.GetStr("AppElevationNoticeTitle"),
+					Content = Atlas.GetStr("NeedAdminToRenamePCMsg"),
+					CloseButtonText = Atlas.GetStr("OK"),
 					DefaultButton = ContentDialogButton.Close
 				};
 				_ = await errorDialog.ShowAsync();
@@ -1412,8 +1412,8 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			// The input dialog
 			TextBox nameInput = new()
 			{
-				Header = GlobalVars.GetStr("NewComputerName"),
-				PlaceholderText = GlobalVars.GetStr("EnterNewName"),
+				Header = Atlas.GetStr("NewComputerName"),
+				PlaceholderText = Atlas.GetStr("EnterNewName"),
 				Text = ComputerNameText ?? string.Empty,
 				HorizontalAlignment = HorizontalAlignment.Stretch
 			};
@@ -1424,7 +1424,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 				Children =
 			{
 				new TextBlock {
-					Text = GlobalVars.GetStr("EnterANameForThisPCMsg"),
+					Text = Atlas.GetStr("EnterANameForThisPCMsg"),
 					TextWrapping = TextWrapping.Wrap
 				},
 				nameInput
@@ -1433,10 +1433,10 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			using ContentDialogV2 renameDialog = new()
 			{
-				Title = GlobalVars.GetStr("RenameComputer"),
+				Title = Atlas.GetStr("RenameComputer"),
 				Content = contentPanel,
-				PrimaryButtonText = GlobalVars.GetStr("Rename"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("Rename"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Primary
 			};
 
@@ -1460,9 +1460,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 				{
 					using ContentDialogV2 successDialog = new()
 					{
-						Title = GlobalVars.GetStr("SuccessText"),
-						Content = string.Format(GlobalVars.GetStr("SuccessfullyRenamedPCTo"), newName),
-						CloseButtonText = GlobalVars.GetStr("OK"),
+						Title = Atlas.GetStr("SuccessText"),
+						Content = string.Format(Atlas.GetStr("SuccessfullyRenamedPCTo"), newName),
+						CloseButtonText = Atlas.GetStr("OK"),
 						DefaultButton = ContentDialogButton.Close
 					};
 					_ = await successDialog.ShowAsync();
@@ -1472,9 +1472,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 					int errorCode = Marshal.GetLastPInvokeError();
 					using ContentDialogV2 failDialog = new()
 					{
-						Title = GlobalVars.GetStr("ErrorTitle"),
-						Content = string.Format(GlobalVars.GetStr("FailedToRenamePCError"), errorCode),
-						CloseButtonText = GlobalVars.GetStr("OK"),
+						Title = Atlas.GetStr("ErrorTitle"),
+						Content = string.Format(Atlas.GetStr("FailedToRenamePCError"), errorCode),
+						CloseButtonText = Atlas.GetStr("OK"),
 						DefaultButton = ContentDialogButton.Close
 					};
 					_ = await failDialog.ShowAsync();
@@ -1561,9 +1561,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			using ContentDialogV2 gpuDialog = new()
 			{
-				Title = GlobalVars.GetStr("GPUDetails"),
+				Title = Atlas.GetStr("GPUDetails"),
 				Content = scrollViewer,
-				CloseButtonText = GlobalVars.GetStr("OK"),
+				CloseButtonText = Atlas.GetStr("OK"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -1688,7 +1688,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				Title = "Activation Details",
 				Content = scrollViewer,
-				CloseButtonText = GlobalVars.GetStr("OK"),
+				CloseButtonText = Atlas.GetStr("OK"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -1792,7 +1792,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			if (devices.Count == 0)
 			{
-				contentPanel.Children.Add(new TextBlock { Text = GlobalVars.GetStr("NoUSBDeviceFound") });
+				contentPanel.Children.Add(new TextBlock { Text = Atlas.GetStr("NoUSBDeviceFound") });
 			}
 			else
 			{
@@ -1830,9 +1830,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			using ContentDialogV2 usbDialog = new()
 			{
-				Title = GlobalVars.GetStr("USBDeviceHistory/Text"),
+				Title = Atlas.GetStr("USBDeviceHistory/Text"),
 				Content = scrollViewer,
-				CloseButtonText = GlobalVars.GetStr("OK"),
+				CloseButtonText = Atlas.GetStr("OK"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -2340,6 +2340,24 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	}
 
 	#endregion
+
+	/// <summary>
+	/// When the Uptime tile is clicked on the page.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal async void OnUptimeClick(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			using SystemShutdownInfoDialog dialog = new();
+			_ = await dialog.ShowAsync();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
 
 	public void Dispose()
 	{

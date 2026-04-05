@@ -46,7 +46,7 @@
             <TextBox x:Name="SearchBox"
                      HorizontalAlignment="Center"
                      Header="Search"
-                     PlaceholderText="Search ports, IPs, states, or protocols..." 
+                     PlaceholderText="Search ports, IPs, states, or protocols..."
                      TextChanged="{x:Bind ApplyFilterAndSort}"
                      VerticalAlignment="Center"/>
 
@@ -62,7 +62,7 @@
 
             <!-- Auto Refresh Toggle -->
             <ToggleSwitch x:Name="AutoRefreshToggle"
-                          HorizontalAlignment="Center"                          
+                          HorizontalAlignment="Center"
                           Header="Auto Refresh"
                           IsOn="True"
                           VerticalAlignment="Center"

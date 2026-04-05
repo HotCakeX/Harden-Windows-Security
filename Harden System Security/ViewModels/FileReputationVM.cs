@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using HardenSystemSecurity.Helpers;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel.DataTransfer;
@@ -61,7 +60,7 @@ internal sealed partial class FileReputationVM : ViewModelBase
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))
 		{
 			e.AcceptedOperation = DataPackageOperation.Copy;
-			e.DragUIOverride.Caption = GlobalVars.GetStr("DragAndDropHintFileReputationCaption");
+			e.DragUIOverride.Caption = Atlas.GetStr("DragAndDropHintFileReputationCaption");
 			e.DragUIOverride.IsCaptionVisible = true;
 			e.DragUIOverride.IsContentVisible = true;
 		}
@@ -130,7 +129,7 @@ internal sealed partial class FileReputationVM : ViewModelBase
 	/// </summary>
 	internal async void BrowseForFile()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 		if (string.IsNullOrEmpty(selectedFile))
 		{

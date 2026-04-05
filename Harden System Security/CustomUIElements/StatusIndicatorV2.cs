@@ -258,9 +258,9 @@ internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable, IExp
 
 			string statusText = Status switch
 			{
-				StatusState.Applied => GlobalVars.GetStr("AppliedText"),
-				StatusState.NotApplied => GlobalVars.GetStr("NotAppliedText"),
-				_ => GlobalVars.GetStr("NAText")
+				StatusState.Applied => Atlas.GetStr("AppliedText"),
+				StatusState.NotApplied => Atlas.GetStr("NotAppliedText"),
+				_ => Atlas.GetStr("NAText")
 			};
 
 			// Ensure long localized strings are never cut off by setting MinWidth accordingly.
@@ -330,9 +330,9 @@ internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable, IExp
 	{
 		string tooltipText = Status switch
 		{
-			StatusState.Applied => GlobalVars.GetStr("StatusAppliedText"),
-			StatusState.NotApplied => GlobalVars.GetStr("StatusNotAppliedText"),
-			_ => GlobalVars.GetStr("StatusUndeterminedText")
+			StatusState.Applied => Atlas.GetStr("StatusAppliedText"),
+			StatusState.NotApplied => Atlas.GetStr("StatusNotAppliedText"),
+			_ => Atlas.GetStr("StatusUndeterminedText")
 		};
 
 		ToolTipService.SetToolTip(this, tooltipText);

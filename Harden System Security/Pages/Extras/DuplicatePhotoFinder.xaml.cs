@@ -33,6 +33,6 @@ internal sealed partial class DuplicatePhotoFinder : Page, CommonCore.UI.IPageHe
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DuplicatePhotosFinderPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DuplicatePhotosFinderPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Duplicate-Photo-Finder");
 }

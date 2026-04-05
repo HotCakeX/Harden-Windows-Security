@@ -21,7 +21,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.Traverse;
@@ -35,12 +34,12 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	internal Microsoft365AppsSecurityBaselineVM()
 	{
 		// Initialize cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		// To adjust the initial width of the columns, giving them nice paddings.
-		_ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
+		_ = Atlas.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 		// Enrich the data to improve detection rate by ensuring specialized strategies are registered.
 		SpecializedStrategiesRegistry.RegisterWmiSpecializedVerificationsOnceFromFile();
@@ -109,17 +108,17 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Initialization details for the Apply All button
 	/// </summary>
-	internal AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; }
+	internal readonly AnimatedCancellableButtonInitializer ApplyAllCancellableButton;
 
 	/// <summary>
 	/// Initialization details for the Remove All button
 	/// </summary>
-	internal AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; }
+	internal readonly AnimatedCancellableButtonInitializer RemoveAllCancellableButton;
 
 	/// <summary>
 	/// Initialization details for the Verify All button
 	/// </summary>
-	internal AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; }
+	internal readonly AnimatedCancellableButtonInitializer VerifyAllCancellableButton;
 
 	#region ListView
 
@@ -132,11 +131,11 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SourceHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("StatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CurrentValueHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExpectedValueHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("FriendlyNameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("SourceHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("StatusHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(Atlas.GetStr("CurrentValueHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(Atlas.GetStr("ExpectedValueHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (VerificationResult item in VerificationResults)
@@ -150,7 +149,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		// Set the column width properties.
 		ColumnWidth1 = new(maxWidth1);
 		ColumnWidth2 = new(maxWidth2);
-		ColumnWidth3 = new(ListViewHelper.MeasureText(GlobalVars.GetStr("NotAppliedText"), maxWidth3) + 60); // Using the same string as the one StatusIndicatorV2 uses, the longer one.
+		ColumnWidth3 = new(ListViewHelper.MeasureText(Atlas.GetStr("NotAppliedText"), maxWidth3) + 60); // Using the same string as the one StatusIndicatorV2 uses, the longer one.
 		ColumnWidth4 = new(maxWidth4);
 		ColumnWidth5 = new(maxWidth5);
 	}
@@ -216,6 +215,9 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			// restore horizontal scroll position
 			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
+
+		// Adjust column widths after search
+		CalculateColumnWidths();
 	}
 
 	#endregion
@@ -275,7 +277,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingMicrosoft365AppsSecurityBaseline"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("ApplyingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
 			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
@@ -287,7 +289,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 				MSBaseline.Action.Apply,
 				cancellationToken: ApplyAllCancellableButton.Cts?.Token);
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("Microsoft365AppsSecurityBaselineAppliedSuccessfully"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("Microsoft365AppsSecurityBaselineAppliedSuccessfully"));
 
 			await VerifyInternal();
 		}
@@ -299,7 +301,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (ApplyAllCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("ApplyOperationCancelledByUser"));
 			}
 
 			ApplyAllCancellableButton.End();
@@ -369,7 +371,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingMicrosoft365AppsSecurityBaseline"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("RemovingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
 			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
@@ -381,7 +383,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 				MSBaseline.Action.Remove,
 				cancellationToken: RemoveAllCancellableButton.Cts?.Token);
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("Microsoft365AppsSecurityBaselineRemovedSuccessfully"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("Microsoft365AppsSecurityBaselineRemovedSuccessfully"));
 
 			await VerifyInternal();
 		}
@@ -393,7 +395,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (RemoveAllCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("RemoveOperationCancelledByUser"));
 			}
 
 			RemoveAllCancellableButton.End();
@@ -420,7 +422,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingMicrosoft365AppsSecurityBaseline"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("VerifyingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
 			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
@@ -430,7 +432,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
 				sourceUri,
 				MSBaseline.Action.Verify,
-				cancellationToken: VerifyAllCancellableButton.Cts?.Token) ?? throw new InvalidOperationException(GlobalVars.GetStr("NoResultsReturnedFromVerificationProcess"));
+				cancellationToken: VerifyAllCancellableButton.Cts?.Token) ?? throw new InvalidOperationException(Atlas.GetStr("NoResultsReturnedFromVerificationProcess"));
 
 			// Clear existing results
 			AllVerificationResults.Clear();
@@ -443,7 +445,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			CalculateColumnWidths();
 
 			int compliantCount = results.Count(r => r.IsCompliant);
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("VerificationCompletedCompliantPolicies"), compliantCount, results.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("VerificationCompletedCompliantPolicies"), compliantCount, results.Count));
 
 		}
 		catch (Exception ex)
@@ -454,7 +456,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (VerifyAllCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("VerifyOperationCancelledByUser"));
 			}
 
 			VerifyAllCancellableButton.End();
@@ -482,7 +484,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	{
 		try
 		{
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Generator.GetFileName());
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, Generator.GetFileName());
 
 			if (savePath is null)
 				return;
@@ -500,7 +502,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 				MContainerJsonContext.SerializeSingle(container, savePath);
 
-				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), results.Count, savePath));
+				MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedVerificationResults"), results.Count, savePath));
 			});
 		}
 		catch (Exception ex)
@@ -545,7 +547,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// </summary>
 	internal void CustomBaselineFilePathButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ZIPFilePickerFilter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.ZIPFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{

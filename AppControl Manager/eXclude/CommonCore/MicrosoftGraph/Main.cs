@@ -84,7 +84,7 @@ internal static class Main
 	/// Helper method for WithParentActivityOrWindow that returns the window handle.
 	/// </summary>
 	/// <returns></returns>
-	private static nint GetWindowHandle() => GlobalVars.hWnd;
+	private static nint GetWindowHandle() => Atlas.hWnd;
 
 	#endregion
 
@@ -220,7 +220,7 @@ internal static class Main
 		account.AuthResult = refreshedResult;
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("SuccessfullyRefreshedMSGraphTokenMsg"),
+			Atlas.GetStr("SuccessfullyRefreshedMSGraphTokenMsg"),
 			account.Username));
 
 		return refreshedResult.AccessToken;
@@ -286,20 +286,20 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			output = await response.Content.ReadAsStringAsync();
-			Logger.Write(GlobalVars.GetStr("MDEAdvancedHuntingQuerySuccessfulMessage"));
+			Logger.Write(Atlas.GetStr("MDEAdvancedHuntingQuerySuccessfulMessage"));
 
 			return output;
 		}
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("FailedToRunMDEAdvancedHuntingQueryMessage"),
+				Atlas.GetStr("FailedToRunMDEAdvancedHuntingQueryMessage"),
 				response.StatusCode));
 
 			string errorContent = await response.Content.ReadAsStringAsync();
 
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("ErrorDetailsMessage"),
+				Atlas.GetStr("ErrorDetailsMessage"),
 				errorContent));
 		}
 	}
@@ -361,7 +361,7 @@ DeviceEvents
 				}
 				else
 				{
-					Logger.Write(GlobalVars.GetStr("NoGroupsFoundInResponseMessage"));
+					Logger.Write(Atlas.GetStr("NoGroupsFoundInResponseMessage"));
 				}
 
 				// Follow pagination if present
@@ -370,19 +370,19 @@ DeviceEvents
 			else
 			{
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("FailedToFetchGroupsMessage"),
+					Atlas.GetStr("FailedToFetchGroupsMessage"),
 					response.StatusCode));
 
 				string errorContent = await response.Content.ReadAsStringAsync();
 
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.GetStr("ErrorDetailsMessage"),
+					Atlas.GetStr("ErrorDetailsMessage"),
 					errorContent));
 			}
 		}
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("SuccessfullyFetchedGroupsMessage"),
+			Atlas.GetStr("SuccessfullyFetchedGroupsMessage"),
 			output.Count));
 
 		return output;
@@ -402,7 +402,7 @@ DeviceEvents
 		bool error = false;
 
 		// Capture the specific user choice regarding cache at sign in time
-		bool useCache = GlobalVars.Settings.CacheAuthenticationTokensLocally;
+		bool useCache = Atlas.Settings.CacheAuthenticationTokensLocally;
 
 		AuthenticatedAccounts? newAccount = null;
 
@@ -431,14 +431,14 @@ DeviceEvents
 					}
 				default:
 					throw new InvalidOperationException(
-						GlobalVars.GetStr("InvalidSignInMethodUsedMessage"));
+						Atlas.GetStr("InvalidSignInMethodUsedMessage"));
 			}
 		}
 		catch (OperationCanceledException)
 		{
 			error = true;
 			throw new OperationCanceledException(
-				GlobalVars.GetStr("SignInOperationCanceledByCallerMessage"));
+				Atlas.GetStr("SignInOperationCanceledByCallerMessage"));
 		}
 		finally
 		{
@@ -474,7 +474,7 @@ DeviceEvents
 				if (possibleDuplicate is not null)
 				{
 					Logger.Write(string.Format(
-						GlobalVars.GetStr("DuplicateAccountReplacedMessage"),
+						Atlas.GetStr("DuplicateAccountReplacedMessage"),
 						authResult.Account.Username));
 
 					_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(possibleDuplicate);
@@ -501,7 +501,7 @@ DeviceEvents
 		await SaveAccountsMetadataAsync();
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("SignedOutAccountMessage"),
+			Atlas.GetStr("SignedOutAccountMessage"),
 			account.Username));
 	}
 
@@ -526,7 +526,7 @@ DeviceEvents
 		if (policyBytes.Length > maxPolicySize)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("CipPolicyFileSizeExceedsLimitMessage"),
+				Atlas.GetStr("CipPolicyFileSizeExceedsLimitMessage"),
 				policyName,
 				maxPolicySize,
 				policyBytes.Length));
@@ -542,7 +542,7 @@ DeviceEvents
 		string? intunePolicyId = await CreateCustomIntunePolicy(accessToken, base64String, policyName, policyObj.PolicyID, descriptionText, account.Environment);
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("PolicyCreatedMessage"),
+			Atlas.GetStr("PolicyCreatedMessage"),
 			intunePolicyId));
 
 		if (groupIds.Count > 0 && intunePolicyId is not null)
@@ -597,7 +597,7 @@ DeviceEvents
 			{
 				string responseContent = await response.Content.ReadAsStringAsync();
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("PolicyAssignedSuccessfullyToGroupMessage"),
+					Atlas.GetStr("PolicyAssignedSuccessfullyToGroupMessage"),
 					groupId));
 				Logger.Write(responseContent);
 			}
@@ -606,12 +606,12 @@ DeviceEvents
 				string errorContent = await response.Content.ReadAsStringAsync();
 
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("FailedToAssignPolicyToGroupMessage"),
+					Atlas.GetStr("FailedToAssignPolicyToGroupMessage"),
 					groupId,
 					response.StatusCode));
 
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.GetStr("ErrorDetailsForGroupMessage"),
+					Atlas.GetStr("ErrorDetailsForGroupMessage"),
 					groupId,
 					errorContent));
 			}
@@ -682,7 +682,7 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			string responseContent = await response.Content.ReadAsStringAsync();
-			Logger.Write(GlobalVars.GetStr("CustomPolicyCreatedSuccessMessage"));
+			Logger.Write(Atlas.GetStr("CustomPolicyCreatedSuccessMessage"));
 			Logger.Write(responseContent);
 
 			// Extract the policy ID from the response
@@ -693,13 +693,13 @@ DeviceEvents
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("FailedToCreateCustomPolicyMessage"),
+				Atlas.GetStr("FailedToCreateCustomPolicyMessage"),
 				response.StatusCode));
 
 			string errorContent = await response.Content.ReadAsStringAsync();
 
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("ErrorDetailsMessage"),
+				Atlas.GetStr("ErrorDetailsMessage"),
 				errorContent));
 		}
 	}
@@ -817,13 +817,13 @@ DeviceEvents
 			if (!response.IsSuccessStatusCode)
 			{
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
+					Atlas.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
 					response.StatusCode));
 
 				string errorContentFailed = await response.Content.ReadAsStringAsync();
 
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.GetStr("ErrorDetailsMessage"),
+					Atlas.GetStr("ErrorDetailsMessage"),
 					errorContentFailed));
 			}
 
@@ -873,7 +873,7 @@ DeviceEvents
 		}
 
 		// Log after all pages processed.
-		Logger.Write(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
+		Logger.Write(Atlas.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
 
 		// Return aggregated response.
 		return new DeviceConfigurationPoliciesResponse(
@@ -915,14 +915,14 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("PolicyDeletedSuccessfullyMessage"),
+				Atlas.GetStr("PolicyDeletedSuccessfullyMessage"),
 				policyId));
 		}
 		else
 		{
 			string errorContent = await response.Content.ReadAsStringAsync();
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("FailedToDeletePolicyExceptionMessage"),
+				Atlas.GetStr("FailedToDeletePolicyExceptionMessage"),
 				policyId,
 				response.StatusCode,
 				errorContent));
@@ -951,7 +951,7 @@ DeviceEvents
 
 		if (string.IsNullOrWhiteSpace(displayName))
 		{
-			throw new ArgumentException(GlobalVars.GetStr("GroupDisplayNameEmptyError"), nameof(displayName));
+			throw new ArgumentException(Atlas.GetStr("GroupDisplayNameEmptyError"), nameof(displayName));
 		}
 
 		// Obtain a valid access token (silent refresh if needed)
@@ -1007,7 +1007,7 @@ DeviceEvents
 				? cdtEl.GetDateTime() : DateTime.UtcNow;
 
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("SuccessfullyCreatedGroupMessage"),
+				Atlas.GetStr("SuccessfullyCreatedGroupMessage"),
 				dn,
 				desc,
 				id,
@@ -1019,7 +1019,7 @@ DeviceEvents
 			string errorContent = await response.Content.ReadAsStringAsync();
 
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("FailedCreatingGroupError"),
+				Atlas.GetStr("FailedCreatingGroupError"),
 				response.StatusCode,
 				errorContent));
 
@@ -1105,10 +1105,10 @@ DeviceEvents
 			{
 				string errorContent = await response.Content.ReadAsStringAsync();
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
+					Atlas.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
 					response.StatusCode));
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.GetStr("ErrorDetailsMessage"),
+					Atlas.GetStr("ErrorDetailsMessage"),
 					errorContent));
 			}
 
@@ -1132,7 +1132,7 @@ DeviceEvents
 				: string.Empty;
 		}
 
-		Logger.Write(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
+		Logger.Write(Atlas.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
 		return allPolicies;
 	}
 
@@ -1178,7 +1178,7 @@ DeviceEvents
 
 		if (response.IsSuccessStatusCode)
 		{
-			Logger.Write(GlobalVars.GetStr("CustomPolicyCreatedSuccessMessage"));
+			Logger.Write(Atlas.GetStr("CustomPolicyCreatedSuccessMessage"));
 			Logger.Write(responseContent);
 
 			// Extract ID from response
@@ -1192,11 +1192,11 @@ DeviceEvents
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("FailedToCreateCustomPolicyMessage"),
+				Atlas.GetStr("FailedToCreateCustomPolicyMessage"),
 				response.StatusCode));
 
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("ErrorDetailsMessage"),
+				Atlas.GetStr("ErrorDetailsMessage"),
 				responseContent));
 		}
 
@@ -1260,7 +1260,7 @@ DeviceEvents
 		{
 			Logger.Write($"Failed to assign configuration policy {policyId} - {response.StatusCode}");
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("ErrorDetailsMessage"),
+				Atlas.GetStr("ErrorDetailsMessage"),
 				responseContent));
 		}
 	}
@@ -1298,7 +1298,7 @@ DeviceEvents
 			string errorContent = await response.Content.ReadAsStringAsync();
 			Logger.Write($"Failed to delete configuration policy {policyId} - {response.StatusCode}");
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("ErrorDetailsMessage"),
+				Atlas.GetStr("ErrorDetailsMessage"),
 				errorContent));
 		}
 	}
@@ -1335,10 +1335,10 @@ DeviceEvents
 			{
 				string errorContent = await response.Content.ReadAsStringAsync();
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
+					Atlas.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
 					response.StatusCode));
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.GetStr("ErrorDetailsMessage"),
+					Atlas.GetStr("ErrorDetailsMessage"),
 					errorContent));
 			}
 

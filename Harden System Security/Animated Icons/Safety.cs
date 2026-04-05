@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.1.240821.1+077322fa26
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile safety.json
-//       
+//
 //       Input file:
 //           safety.json (41787 bytes created 20:53+03:00 Jul 7 2025)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //
@@ -110,7 +110,7 @@ namespace AnimatedVisuals
         {
             diagnostics = null;
 
-            var res = 
+            var res =
                 new Safety_AnimatedVisual(
                     compositor
                     );
@@ -234,7 +234,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // - - - Shape tree root for layer: shield 
+            // - - - Shape tree root for layer: shield
             // - - ShapeGroup: down
             CanvasGeometry Geometry_0()
             {
@@ -255,7 +255,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // - - - Shape tree root for layer: shield 
+            // - - - Shape tree root for layer: shield
             // - - ShapeGroup: up
             CanvasGeometry Geometry_1()
             {
@@ -276,35 +276,35 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: down
             CompositionColorBrush ColorBrush_AlmostBlueViolet_FF6C18FF()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0x6C, 0x18, 0xFF));
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: up
             CompositionColorBrush ColorBrush_AlmostMediumBlue_FF2000C4()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0x20, 0x00, 0xC4));
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: down
             CompositionPathGeometry PathGeometry_0()
             {
                 return _c.CreatePathGeometry(new CompositionPath(Geometry_0()));
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: up
             CompositionPathGeometry PathGeometry_1()
             {
                 return _c.CreatePathGeometry(new CompositionPath(Geometry_1()));
             }
 
-            // Shape tree root for layer: shield 
+            // Shape tree root for layer: shield
             // Path 1
             CompositionSpriteShape SpriteShape_0()
             {
@@ -315,7 +315,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Shape tree root for layer: shield 
+            // Shape tree root for layer: shield
             // Path 1
             CompositionSpriteShape SpriteShape_1()
             {
@@ -394,7 +394,7 @@ namespace AnimatedVisuals
                     : _cubicBezierEasingFunction_7;
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: down
             // Rotation
             ScalarKeyFrameAnimation RotationAngleInDegreesScalarAnimation_0_to_0_0()
@@ -416,7 +416,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: up
             // Rotation
             ScalarKeyFrameAnimation RotationAngleInDegreesScalarAnimation_0_to_0_1()
@@ -467,7 +467,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: down
             // Scale
             Vector2KeyFrameAnimation ScaleVector2Animation_0()
@@ -489,7 +489,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // - Shape tree root for layer: shield 
+            // - Shape tree root for layer: shield
             // ShapeGroup: up
             // Scale
             Vector2KeyFrameAnimation ScaleVector2Animation_1()

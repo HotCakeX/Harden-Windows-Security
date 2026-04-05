@@ -24,7 +24,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class LinkPreview : Page
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
+	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	internal string PreviewUrl
 	{
@@ -33,7 +33,7 @@ internal sealed partial class LinkPreview : Page
 			if (!string.Equals(field, value, StringComparison.OrdinalIgnoreCase))
 			{
 				field = value;
-				_ = GlobalVars.AppDispatcher.TryEnqueue(() => { LinkPreviewWebView2.Source = new(value); });
+				_ = Atlas.AppDispatcher.TryEnqueue(() => { LinkPreviewWebView2.Source = new(value); });
 			}
 		}
 	} = "https://bing.com";

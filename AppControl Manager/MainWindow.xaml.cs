@@ -102,11 +102,11 @@ internal sealed partial class MainWindow : Window
 
 		RootGridPub = RootGrid;
 
-		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the global vars
-		GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the Atlas
+		Atlas.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
 		// Set the window display affinity upon window creation to exclude it from capture if ScreenShield is enabled, otherwise set it to
-		WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, ViewModel.AppSettings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
+		WindowDisplayAffinity.SetWindowDisplayAffinity(Atlas.hWnd, ViewModel.AppSettings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
 
 		// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
 		// Make title bar Mica
@@ -141,10 +141,10 @@ internal sealed partial class MainWindow : Window
 		AppWindow.Closing += AppWindow_Closing;
 
 		// Set the initial background setting based on the user's settings
-		OnNavigationBackgroundChanged(null, new(GlobalVars.Settings.NavViewBackground));
+		OnNavigationBackgroundChanged(null, new(Atlas.Settings.NavViewBackground));
 
 		// Set the initial App Theme based on the user's settings
-		OnAppThemeChanged(null, new(GlobalVars.Settings.AppTheme));
+		OnAppThemeChanged(null, new(Atlas.Settings.AppTheme));
 
 #if APP_CONTROL_MANAGER
 
@@ -177,7 +177,7 @@ internal sealed partial class MainWindow : Window
 	/// <param name="sourceElement">The UIElement that starts the animation.</param>
 	internal static void TriggerTransferIconAnimationStatic(UIElement sourceElement)
 	{
-		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+		_ = Atlas.AppDispatcher.TryEnqueue(() =>
 		{
 			((MainWindow)App.MainWindow!).TriggerTransferIconAnimation(sourceElement);
 		});
@@ -267,7 +267,7 @@ internal sealed partial class MainWindow : Window
 	//This is already retrieved by m_AppWindow in the class, keeping it just in case
 	private static AppWindow GetAppWindowForCurrentWindow()
 	{
-		WindowId windowId = Win32Interop.GetWindowIdFromWindow(GlobalVars.hWnd);
+		WindowId windowId = Win32Interop.GetWindowIdFromWindow(Atlas.hWnd);
 		return AppWindow.GetFromWindowId(windowId);
 	}
 	*/
@@ -368,7 +368,7 @@ internal sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Light;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(Atlas.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 #if APP_CONTROL_MANAGER
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -392,7 +392,7 @@ internal sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Dark;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(Atlas.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 #if APP_CONTROL_MANAGER
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -420,7 +420,7 @@ internal sealed partial class MainWindow : Window
 					if (currentColorMode is ElementTheme.Dark)
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(Atlas.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 #if APP_CONTROL_MANAGER
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -440,7 +440,7 @@ internal sealed partial class MainWindow : Window
 					else
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(GlobalVars.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(Atlas.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 #if APP_CONTROL_MANAGER
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -508,273 +508,273 @@ internal sealed partial class MainWindow : Window
 			// Create a new Resource Loader after changing the language of the app
 			Microsoft.Windows.ApplicationModel.Resources.ResourceLoader resourceLoader = new();
 
-			// Assign it to the Rizz in GlobalVars so any subsequent calls to it will receive the new strings
-			GlobalVars.Rizz = resourceLoader;
+			// Assign it to the Rizz in Atlas so any subsequent calls to it will receive the new strings
+			Atlas.Rizz = resourceLoader;
 
 			// Rebuild the dictionaries related to UI elements
 			// Anything else that will be added in the future that will store texts related to UI elements on the Window itself from the resw file will have to be updated as well.
 			ViewModel.RebuildBreadcrumbMappings();
 			ViewModel.RebuildNavigationPageToItemContentMapForSearch();
 
-			HomeNavItem.Content = GlobalVars.GetStr("HomeNavItem/Content");
-			AutomationProperties.SetHelpText(HomeNavItem, GlobalVars.GetStr("HomeNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(HomeNavItem, GlobalVars.GetStr("HomeNavItem/ToolTipService/ToolTip"));
+			HomeNavItem.Content = Atlas.GetStr("HomeNavItem/Content");
+			AutomationProperties.SetHelpText(HomeNavItem, Atlas.GetStr("HomeNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(HomeNavItem, Atlas.GetStr("HomeNavItem/ToolTipService/ToolTip"));
 
-			GitHubDocsNavItem.Content = GlobalVars.GetStr("GitHubDocsNavItem/Content");
-			AutomationProperties.SetHelpText(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/ToolTipService/ToolTip"));
+			GitHubDocsNavItem.Content = Atlas.GetStr("GitHubDocsNavItem/Content");
+			AutomationProperties.SetHelpText(GitHubDocsNavItem, Atlas.GetStr("GitHubDocsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GitHubDocsNavItem, Atlas.GetStr("GitHubDocsNavItem/ToolTipService/ToolTip"));
 
-			LogsNavItem.Content = GlobalVars.GetStr("LogsNavItem/Content");
-			AutomationProperties.SetHelpText(LogsNavItem, GlobalVars.GetStr("LogsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(LogsNavItem, GlobalVars.GetStr("LogsNavItem/ToolTipService/ToolTip"));
+			LogsNavItem.Content = Atlas.GetStr("LogsNavItem/Content");
+			AutomationProperties.SetHelpText(LogsNavItem, Atlas.GetStr("LogsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(LogsNavItem, Atlas.GetStr("LogsNavItem/ToolTipService/ToolTip"));
 
-			UpdateNavItem.Content = GlobalVars.GetStr("UpdateNavItem/Content");
-			AutomationProperties.SetHelpText(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip"));
+			UpdateNavItem.Content = Atlas.GetStr("UpdateNavItem/Content");
+			AutomationProperties.SetHelpText(UpdateNavItem, Atlas.GetStr("UpdateNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(UpdateNavItem, Atlas.GetStr("UpdateNavItem/ToolTipService/ToolTip"));
 
 #if HARDEN_SYSTEM_SECURITY
 
-			TitleBarSearchBox.PlaceholderText = GlobalVars.GetStr("MainSearchAutoSuggestBox/PlaceholderText");
-			AutomationProperties.SetHelpText(TitleBarSearchBox, GlobalVars.GetStr("MainSearchAutoSuggestBox/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(TitleBarSearchBox, GlobalVars.GetStr("MainSearchAutoSuggestBox/ToolTipService/ToolTip"));
+			TitleBarSearchBox.PlaceholderText = Atlas.GetStr("MainSearchAutoSuggestBox/PlaceholderText");
+			AutomationProperties.SetHelpText(TitleBarSearchBox, Atlas.GetStr("MainSearchAutoSuggestBox/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(TitleBarSearchBox, Atlas.GetStr("MainSearchAutoSuggestBox/ToolTipService/ToolTip"));
 
 			// Main navigation items for Harden System Security
-			ProtectNavigationViewItemHeader.Content = GlobalVars.GetStr("ProtectNavigationViewItemHeader/Content");
+			ProtectNavigationViewItemHeader.Content = Atlas.GetStr("ProtectNavigationViewItemHeader/Content");
 
-			ProtectNavItem.Content = GlobalVars.GetStr("ProtectNavigationViewItem/Content");
-			AutomationProperties.SetHelpText(ProtectNavItem, GlobalVars.GetStr("ProtectNavigationViewItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ProtectNavItem, GlobalVars.GetStr("ProtectNavigationViewItem/ToolTipService/ToolTip"));
+			ProtectNavItem.Content = Atlas.GetStr("ProtectNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(ProtectNavItem, Atlas.GetStr("ProtectNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ProtectNavItem, Atlas.GetStr("ProtectNavigationViewItem/ToolTipService/ToolTip"));
 
-			MicrosoftDefenderNavItem.Content = GlobalVars.GetStr("MicrosoftDefenderNavItem/Content");
-			AutomationProperties.SetHelpText(MicrosoftDefenderNavItem, GlobalVars.GetStr("MicrosoftDefenderNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MicrosoftDefenderNavItem, GlobalVars.GetStr("MicrosoftDefenderNavItem/ToolTipService/ToolTip"));
+			MicrosoftDefenderNavItem.Content = Atlas.GetStr("MicrosoftDefenderNavItem/Content");
+			AutomationProperties.SetHelpText(MicrosoftDefenderNavItem, Atlas.GetStr("MicrosoftDefenderNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MicrosoftDefenderNavItem, Atlas.GetStr("MicrosoftDefenderNavItem/ToolTipService/ToolTip"));
 
-			ASRNavItem.Content = GlobalVars.GetStr("ASRNavItem/Content");
-			AutomationProperties.SetHelpText(ASRNavItem, GlobalVars.GetStr("ASRNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ASRNavItem, GlobalVars.GetStr("ASRNavItem/ToolTipService/ToolTip"));
+			ASRNavItem.Content = Atlas.GetStr("ASRNavItem/Content");
+			AutomationProperties.SetHelpText(ASRNavItem, Atlas.GetStr("ASRNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ASRNavItem, Atlas.GetStr("ASRNavItem/ToolTipService/ToolTip"));
 
-			BitLockerNavItem.Content = GlobalVars.GetStr("BitLockerNavItem/Content");
-			AutomationProperties.SetHelpText(BitLockerNavItem, GlobalVars.GetStr("BitLockerNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(BitLockerNavItem, GlobalVars.GetStr("BitLockerNavItem/ToolTipService/ToolTip"));
+			BitLockerNavItem.Content = Atlas.GetStr("BitLockerNavItem/Content");
+			AutomationProperties.SetHelpText(BitLockerNavItem, Atlas.GetStr("BitLockerNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(BitLockerNavItem, Atlas.GetStr("BitLockerNavItem/ToolTipService/ToolTip"));
 
-			TLSSecurityNavItem.Content = GlobalVars.GetStr("TLSSecurityNavItem/Content");
-			AutomationProperties.SetHelpText(TLSSecurityNavItem, GlobalVars.GetStr("TLSSecurityNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(TLSSecurityNavItem, GlobalVars.GetStr("TLSSecurityNavItem/ToolTipService/ToolTip"));
+			TLSSecurityNavItem.Content = Atlas.GetStr("TLSSecurityNavItem/Content");
+			AutomationProperties.SetHelpText(TLSSecurityNavItem, Atlas.GetStr("TLSSecurityNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(TLSSecurityNavItem, Atlas.GetStr("TLSSecurityNavItem/ToolTipService/ToolTip"));
 
-			LockScreenNavItem.Content = GlobalVars.GetStr("LockScreenNavItem/Content");
-			AutomationProperties.SetHelpText(LockScreenNavItem, GlobalVars.GetStr("LockScreenNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(LockScreenNavItem, GlobalVars.GetStr("LockScreenNavItem/ToolTipService/ToolTip"));
+			LockScreenNavItem.Content = Atlas.GetStr("LockScreenNavItem/Content");
+			AutomationProperties.SetHelpText(LockScreenNavItem, Atlas.GetStr("LockScreenNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(LockScreenNavItem, Atlas.GetStr("LockScreenNavItem/ToolTipService/ToolTip"));
 
-			UACNavItem.Content = GlobalVars.GetStr("UACNavItem/Content");
-			AutomationProperties.SetHelpText(UACNavItem, GlobalVars.GetStr("UACNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(UACNavItem, GlobalVars.GetStr("UACNavItem/ToolTipService/ToolTip"));
+			UACNavItem.Content = Atlas.GetStr("UACNavItem/Content");
+			AutomationProperties.SetHelpText(UACNavItem, Atlas.GetStr("UACNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(UACNavItem, Atlas.GetStr("UACNavItem/ToolTipService/ToolTip"));
 
-			DeviceGuardNavItem.Content = GlobalVars.GetStr("DeviceGuardNavItem/Content");
-			AutomationProperties.SetHelpText(DeviceGuardNavItem, GlobalVars.GetStr("DeviceGuardNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(DeviceGuardNavItem, GlobalVars.GetStr("DeviceGuardNavItem/ToolTipService/ToolTip"));
+			DeviceGuardNavItem.Content = Atlas.GetStr("DeviceGuardNavItem/Content");
+			AutomationProperties.SetHelpText(DeviceGuardNavItem, Atlas.GetStr("DeviceGuardNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(DeviceGuardNavItem, Atlas.GetStr("DeviceGuardNavItem/ToolTipService/ToolTip"));
 
-			WindowsFirewallNavItem.Content = GlobalVars.GetStr("WindowsFirewallNavItem/Content");
-			AutomationProperties.SetHelpText(WindowsFirewallNavItem, GlobalVars.GetStr("WindowsFirewallNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(WindowsFirewallNavItem, GlobalVars.GetStr("WindowsFirewallNavItem/ToolTipService/ToolTip"));
+			WindowsFirewallNavItem.Content = Atlas.GetStr("WindowsFirewallNavItem/Content");
+			AutomationProperties.SetHelpText(WindowsFirewallNavItem, Atlas.GetStr("WindowsFirewallNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(WindowsFirewallNavItem, Atlas.GetStr("WindowsFirewallNavItem/ToolTipService/ToolTip"));
 
-			OptionalWindowsFeaturesNavItem.Content = GlobalVars.GetStr("OptionalWindowsFeaturesNavItem/Content");
-			AutomationProperties.SetHelpText(OptionalWindowsFeaturesNavItem, GlobalVars.GetStr("OptionalWindowsFeaturesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(OptionalWindowsFeaturesNavItem, GlobalVars.GetStr("OptionalWindowsFeaturesNavItem/ToolTipService/ToolTip"));
+			OptionalWindowsFeaturesNavItem.Content = Atlas.GetStr("OptionalWindowsFeaturesNavItem/Content");
+			AutomationProperties.SetHelpText(OptionalWindowsFeaturesNavItem, Atlas.GetStr("OptionalWindowsFeaturesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(OptionalWindowsFeaturesNavItem, Atlas.GetStr("OptionalWindowsFeaturesNavItem/ToolTipService/ToolTip"));
 
-			WindowsNetworkingNavItem.Content = GlobalVars.GetStr("WindowsNetworkingNavItem/Content");
-			AutomationProperties.SetHelpText(WindowsNetworkingNavItem, GlobalVars.GetStr("WindowsNetworkingNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(WindowsNetworkingNavItem, GlobalVars.GetStr("WindowsNetworkingNavItem/ToolTipService/ToolTip"));
+			WindowsNetworkingNavItem.Content = Atlas.GetStr("WindowsNetworkingNavItem/Content");
+			AutomationProperties.SetHelpText(WindowsNetworkingNavItem, Atlas.GetStr("WindowsNetworkingNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(WindowsNetworkingNavItem, Atlas.GetStr("WindowsNetworkingNavItem/ToolTipService/ToolTip"));
 
-			MiscellaneousNavItem.Content = GlobalVars.GetStr("MiscellaneousNavItem/Content");
-			AutomationProperties.SetHelpText(MiscellaneousNavItem, GlobalVars.GetStr("MiscellaneousNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MiscellaneousNavItem, GlobalVars.GetStr("MiscellaneousNavItem/ToolTipService/ToolTip"));
+			MiscellaneousNavItem.Content = Atlas.GetStr("MiscellaneousNavItem/Content");
+			AutomationProperties.SetHelpText(MiscellaneousNavItem, Atlas.GetStr("MiscellaneousNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MiscellaneousNavItem, Atlas.GetStr("MiscellaneousNavItem/ToolTipService/ToolTip"));
 
-			WindowsUpdateNavItem.Content = GlobalVars.GetStr("WindowsUpdateNavItem/Content");
-			AutomationProperties.SetHelpText(WindowsUpdateNavItem, GlobalVars.GetStr("WindowsUpdateNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(WindowsUpdateNavItem, GlobalVars.GetStr("WindowsUpdateNavItem/ToolTipService/ToolTip"));
+			WindowsUpdateNavItem.Content = Atlas.GetStr("WindowsUpdateNavItem/Content");
+			AutomationProperties.SetHelpText(WindowsUpdateNavItem, Atlas.GetStr("WindowsUpdateNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(WindowsUpdateNavItem, Atlas.GetStr("WindowsUpdateNavItem/ToolTipService/ToolTip"));
 
-			EdgeBrowserNavItem.Content = GlobalVars.GetStr("EdgeBrowserNavItem/Content");
-			AutomationProperties.SetHelpText(EdgeBrowserNavItem, GlobalVars.GetStr("EdgeBrowserNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(EdgeBrowserNavItem, GlobalVars.GetStr("EdgeBrowserNavItem/ToolTipService/ToolTip"));
+			EdgeBrowserNavItem.Content = Atlas.GetStr("EdgeBrowserNavItem/Content");
+			AutomationProperties.SetHelpText(EdgeBrowserNavItem, Atlas.GetStr("EdgeBrowserNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(EdgeBrowserNavItem, Atlas.GetStr("EdgeBrowserNavItem/ToolTipService/ToolTip"));
 
-			CertificatesNavItem.Content = GlobalVars.GetStr("CertificatesNavItem/Content");
-			AutomationProperties.SetHelpText(CertificatesNavItem, GlobalVars.GetStr("CertificatesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CertificatesNavItem, GlobalVars.GetStr("CertificatesNavItem/ToolTipService/ToolTip"));
+			CertificatesNavItem.Content = Atlas.GetStr("CertificatesNavItem/Content");
+			AutomationProperties.SetHelpText(CertificatesNavItem, Atlas.GetStr("CertificatesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CertificatesNavItem, Atlas.GetStr("CertificatesNavItem/ToolTipService/ToolTip"));
 
-			CountryIPBlockingNavItem.Content = GlobalVars.GetStr("CountryIPBlockingNavItem/Content");
-			AutomationProperties.SetHelpText(CountryIPBlockingNavItem, GlobalVars.GetStr("CountryIPBlockingNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CountryIPBlockingNavItem, GlobalVars.GetStr("CountryIPBlockingNavItem/ToolTipService/ToolTip"));
+			CountryIPBlockingNavItem.Content = Atlas.GetStr("CountryIPBlockingNavItem/Content");
+			AutomationProperties.SetHelpText(CountryIPBlockingNavItem, Atlas.GetStr("CountryIPBlockingNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CountryIPBlockingNavItem, Atlas.GetStr("CountryIPBlockingNavItem/ToolTipService/ToolTip"));
 
-			NonAdminCommandsNavItem.Content = GlobalVars.GetStr("NonAdminCommandsNavItem/Content");
-			AutomationProperties.SetHelpText(NonAdminCommandsNavItem, GlobalVars.GetStr("NonAdminCommandsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(NonAdminCommandsNavItem, GlobalVars.GetStr("NonAdminCommandsNavItem/ToolTipService/ToolTip"));
+			NonAdminCommandsNavItem.Content = Atlas.GetStr("NonAdminCommandsNavItem/Content");
+			AutomationProperties.SetHelpText(NonAdminCommandsNavItem, Atlas.GetStr("NonAdminCommandsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(NonAdminCommandsNavItem, Atlas.GetStr("NonAdminCommandsNavItem/ToolTipService/ToolTip"));
 
-			InstalledAppsManagementNavItem.Content = GlobalVars.GetStr("InstalledAppsManagementNavItem/Content");
-			AutomationProperties.SetHelpText(InstalledAppsManagementNavItem, GlobalVars.GetStr("InstalledAppsManagementNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(InstalledAppsManagementNavItem, GlobalVars.GetStr("InstalledAppsManagementNavItem/ToolTipService/ToolTip"));
+			InstalledAppsManagementNavItem.Content = Atlas.GetStr("InstalledAppsManagementNavItem/Content");
+			AutomationProperties.SetHelpText(InstalledAppsManagementNavItem, Atlas.GetStr("InstalledAppsManagementNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(InstalledAppsManagementNavItem, Atlas.GetStr("InstalledAppsManagementNavItem/ToolTipService/ToolTip"));
 
-			FileReputationNavItem.Content = GlobalVars.GetStr("FileReputationNavItem/Content");
-			AutomationProperties.SetHelpText(FileReputationNavItem, GlobalVars.GetStr("FileReputationNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(FileReputationNavItem, GlobalVars.GetStr("FileReputationNavItem/ToolTipService/ToolTip"));
+			FileReputationNavItem.Content = Atlas.GetStr("FileReputationNavItem/Content");
+			AutomationProperties.SetHelpText(FileReputationNavItem, Atlas.GetStr("FileReputationNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(FileReputationNavItem, Atlas.GetStr("FileReputationNavItem/ToolTipService/ToolTip"));
 
-			GroupPolicyEditorNavItem.Content = GlobalVars.GetStr("GroupPolicyEditorNavItem/Content");
-			AutomationProperties.SetHelpText(GroupPolicyEditorNavItem, GlobalVars.GetStr("GroupPolicyEditorNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GroupPolicyEditorNavItem, GlobalVars.GetStr("GroupPolicyEditorNavItem/ToolTipService/ToolTip"));
+			GroupPolicyEditorNavItem.Content = Atlas.GetStr("GroupPolicyEditorNavItem/Content");
+			AutomationProperties.SetHelpText(GroupPolicyEditorNavItem, Atlas.GetStr("GroupPolicyEditorNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GroupPolicyEditorNavItem, Atlas.GetStr("GroupPolicyEditorNavItem/ToolTipService/ToolTip"));
 
-			DocumentationNavigationViewItemHeader.Content = GlobalVars.GetStr("DocumentationNavigationViewItemHeader/Content");
+			DocumentationNavigationViewItemHeader.Content = Atlas.GetStr("DocumentationNavigationViewItemHeader/Content");
 
-			SidebarTextBlock.Text = GlobalVars.GetStr("SidebarTextBlock/Text");
+			SidebarTextBlock.Text = Atlas.GetStr("SidebarTextBlock/Text");
 
-			SidebarMainCaptionTextBlock.Text = GlobalVars.GetStr("SidebarMainCaptionTextBlock/Text");
+			SidebarMainCaptionTextBlock.Text = Atlas.GetStr("SidebarMainCaptionTextBlock/Text");
 
-			SidebarHelpHyperlinkTextBlock.Text = GlobalVars.GetStr("SidebarHelpHyperlinkTextBlock/Text");
+			SidebarHelpHyperlinkTextBlock.Text = Atlas.GetStr("SidebarHelpHyperlinkTextBlock/Text");
 
-			MicrosoftSecurityBaselineNavItem.Content = GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content");
-			AutomationProperties.SetHelpText(MicrosoftSecurityBaselineNavItem, GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MicrosoftSecurityBaselineNavItem, GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/ToolTipService/ToolTip"));
+			MicrosoftSecurityBaselineNavItem.Content = Atlas.GetStr("MicrosoftSecurityBaselineNavItem/Content");
+			AutomationProperties.SetHelpText(MicrosoftSecurityBaselineNavItem, Atlas.GetStr("MicrosoftSecurityBaselineNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MicrosoftSecurityBaselineNavItem, Atlas.GetStr("MicrosoftSecurityBaselineNavItem/ToolTipService/ToolTip"));
 
-			MicrosoftBaseLinesOverridesNavItem.Content = GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content");
-			AutomationProperties.SetHelpText(MicrosoftBaseLinesOverridesNavItem, GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MicrosoftBaseLinesOverridesNavItem, GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/ToolTipService/ToolTip"));
+			MicrosoftBaseLinesOverridesNavItem.Content = Atlas.GetStr("MicrosoftBaseLinesOverridesNavItem/Content");
+			AutomationProperties.SetHelpText(MicrosoftBaseLinesOverridesNavItem, Atlas.GetStr("MicrosoftBaseLinesOverridesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MicrosoftBaseLinesOverridesNavItem, Atlas.GetStr("MicrosoftBaseLinesOverridesNavItem/ToolTipService/ToolTip"));
 
-			Microsoft365AppsSecurityBaselineNavItem.Content = GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
-			AutomationProperties.SetHelpText(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/ToolTipService/ToolTip"));
+			Microsoft365AppsSecurityBaselineNavItem.Content = Atlas.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
+			AutomationProperties.SetHelpText(Microsoft365AppsSecurityBaselineNavItem, Atlas.GetStr("Microsoft365AppsSecurityBaselineNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(Microsoft365AppsSecurityBaselineNavItem, Atlas.GetStr("Microsoft365AppsSecurityBaselineNavItem/ToolTipService/ToolTip"));
 
-			AuditPoliciesNavItem.Content = GlobalVars.GetStr("AuditPoliciesNavItem/Content");
-			AutomationProperties.SetHelpText(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/ToolTipService/ToolTip"));
+			AuditPoliciesNavItem.Content = Atlas.GetStr("AuditPoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(AuditPoliciesNavItem, Atlas.GetStr("AuditPoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(AuditPoliciesNavItem, Atlas.GetStr("AuditPoliciesNavItem/ToolTipService/ToolTip"));
 
-			CBOMNavItem.Content = GlobalVars.GetStr("CBOMNavItem/Content");
-			AutomationProperties.SetHelpText(CBOMNavItem, GlobalVars.GetStr("CBOMNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CBOMNavItem, GlobalVars.GetStr("CBOMNavItem/ToolTipService/ToolTip"));
+			CBOMNavItem.Content = Atlas.GetStr("CBOMNavItem/Content");
+			AutomationProperties.SetHelpText(CBOMNavItem, Atlas.GetStr("CBOMNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CBOMNavItem, Atlas.GetStr("CBOMNavItem/ToolTipService/ToolTip"));
 
-			IntuneNavItem.Content = GlobalVars.GetStr("IntuneNavItem/Content");
-			AutomationProperties.SetHelpText(IntuneNavItem, GlobalVars.GetStr("IntuneNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(IntuneNavItem, GlobalVars.GetStr("IntuneNavItem/ToolTipService/ToolTip"));
+			IntuneNavItem.Content = Atlas.GetStr("IntuneNavItem/Content");
+			AutomationProperties.SetHelpText(IntuneNavItem, Atlas.GetStr("IntuneNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(IntuneNavItem, Atlas.GetStr("IntuneNavItem/ToolTipService/ToolTip"));
 
-			CSPNavItem.Content = GlobalVars.GetStr("CSPNavItem/Content");
-			AutomationProperties.SetHelpText(CSPNavItem, GlobalVars.GetStr("CSPNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CSPNavItem, GlobalVars.GetStr("CSPNavItem/ToolTipService/ToolTip"));
+			CSPNavItem.Content = Atlas.GetStr("CSPNavItem/Content");
+			AutomationProperties.SetHelpText(CSPNavItem, Atlas.GetStr("CSPNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CSPNavItem, Atlas.GetStr("CSPNavItem/ToolTipService/ToolTip"));
 
-			ExtraFeaturesNavigationViewItemHeader.Content = GlobalVars.GetStr("ExtraFeaturesNavigationViewItemHeader/Content");
+			ExtraFeaturesNavigationViewItemHeader.Content = Atlas.GetStr("ExtraFeaturesNavigationViewItemHeader/Content");
 
-			ExtrasNavigationViewItem.Content = GlobalVars.GetStr("ExtrasNavigationViewItem/Content");
-			AutomationProperties.SetHelpText(ExtrasNavigationViewItem, GlobalVars.GetStr("ExtrasNavigationViewItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ExtrasNavigationViewItem, GlobalVars.GetStr("ExtrasNavigationViewItem/ToolTipService/ToolTip"));
+			ExtrasNavigationViewItem.Content = Atlas.GetStr("ExtrasNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(ExtrasNavigationViewItem, Atlas.GetStr("ExtrasNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ExtrasNavigationViewItem, Atlas.GetStr("ExtrasNavigationViewItem/ToolTipService/ToolTip"));
 
-			DuplicatePhotosFinderNavigationViewItem.Content = GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
-			AutomationProperties.SetHelpText(DuplicatePhotosFinderNavigationViewItem, GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(DuplicatePhotosFinderNavigationViewItem, GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/ToolTipService/ToolTip"));
+			DuplicatePhotosFinderNavigationViewItem.Content = Atlas.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(DuplicatePhotosFinderNavigationViewItem, Atlas.GetStr("DuplicatePhotosFinderNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(DuplicatePhotosFinderNavigationViewItem, Atlas.GetStr("DuplicatePhotosFinderNavigationViewItem/ToolTipService/ToolTip"));
 
-			EXIFManagerNavigationViewItem.Content = GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content");
-			AutomationProperties.SetHelpText(EXIFManagerNavigationViewItem, GlobalVars.GetStr("EXIFManagerNavigationViewItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(EXIFManagerNavigationViewItem, GlobalVars.GetStr("EXIFManagerNavigationViewItem/ToolTipService/ToolTip"));
+			EXIFManagerNavigationViewItem.Content = Atlas.GetStr("EXIFManagerNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(EXIFManagerNavigationViewItem, Atlas.GetStr("EXIFManagerNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(EXIFManagerNavigationViewItem, Atlas.GetStr("EXIFManagerNavigationViewItem/ToolTipService/ToolTip"));
 
-			ServiceManagerNavItem.Content = GlobalVars.GetStr("ServiceManagerNavItem/Content");
-			AutomationProperties.SetHelpText(ServiceManagerNavItem, GlobalVars.GetStr("ServiceManagerNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ServiceManagerNavItem, GlobalVars.GetStr("ServiceManagerNavItem/ToolTipService/ToolTip"));
+			ServiceManagerNavItem.Content = Atlas.GetStr("ServiceManagerNavItem/Content");
+			AutomationProperties.SetHelpText(ServiceManagerNavItem, Atlas.GetStr("ServiceManagerNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ServiceManagerNavItem, Atlas.GetStr("ServiceManagerNavItem/ToolTipService/ToolTip"));
 
 #endif
 
 #if APP_CONTROL_MANAGER
 			CustomUIElements.CustomPatternBasedFilePath.PopulateFilePathPatternExamplesCollection();
 
-			CreationNavigationViewItemHeader.Content = GlobalVars.GetStr("CreationNavigationViewItemHeader/Content");
+			CreationNavigationViewItemHeader.Content = Atlas.GetStr("CreationNavigationViewItemHeader/Content");
 
-			CreatePolicyNavItem.Content = GlobalVars.GetStr("CreatePolicyNavItem/Content");
-			AutomationProperties.SetHelpText(CreatePolicyNavItem, GlobalVars.GetStr("CreatePolicyNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreatePolicyNavItem, GlobalVars.GetStr("CreatePolicyNavItem/ToolTipService/ToolTip"));
+			CreatePolicyNavItem.Content = Atlas.GetStr("CreatePolicyNavItem/Content");
+			AutomationProperties.SetHelpText(CreatePolicyNavItem, Atlas.GetStr("CreatePolicyNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreatePolicyNavItem, Atlas.GetStr("CreatePolicyNavItem/ToolTipService/ToolTip"));
 
-			CreateSupplementalPolicyNavItem.Content = GlobalVars.GetStr("CreateSupplementalPolicyNavItem/Content");
-			AutomationProperties.SetHelpText(CreateSupplementalPolicyNavItem, GlobalVars.GetStr("CreateSupplementalPolicyNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreateSupplementalPolicyNavItem, GlobalVars.GetStr("CreateSupplementalPolicyNavItem/ToolTipService/ToolTip"));
+			CreateSupplementalPolicyNavItem.Content = Atlas.GetStr("CreateSupplementalPolicyNavItem/Content");
+			AutomationProperties.SetHelpText(CreateSupplementalPolicyNavItem, Atlas.GetStr("CreateSupplementalPolicyNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreateSupplementalPolicyNavItem, Atlas.GetStr("CreateSupplementalPolicyNavItem/ToolTipService/ToolTip"));
 
-			CreateDenyPolicyNavItem.Content = GlobalVars.GetStr("CreateDenyPolicyNavItem/Content");
-			AutomationProperties.SetHelpText(CreateDenyPolicyNavItem, GlobalVars.GetStr("CreateDenyPolicyNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreateDenyPolicyNavItem, GlobalVars.GetStr("CreateDenyPolicyNavItem/ToolTipService/ToolTip"));
+			CreateDenyPolicyNavItem.Content = Atlas.GetStr("CreateDenyPolicyNavItem/Content");
+			AutomationProperties.SetHelpText(CreateDenyPolicyNavItem, Atlas.GetStr("CreateDenyPolicyNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreateDenyPolicyNavItem, Atlas.GetStr("CreateDenyPolicyNavItem/ToolTipService/ToolTip"));
 
-			CertificatesNavigationViewItemHeader.Content = GlobalVars.GetStr("CertificatesNavigationViewItemHeader/Content");
+			CertificatesNavigationViewItemHeader.Content = Atlas.GetStr("CertificatesNavigationViewItemHeader/Content");
 
-			BuildNewCertificateNavItem.Content = GlobalVars.GetStr("BuildNewCertificateNavItem/Content");
-			AutomationProperties.SetHelpText(BuildNewCertificateNavItem, GlobalVars.GetStr("BuildNewCertificateNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(BuildNewCertificateNavItem, GlobalVars.GetStr("BuildNewCertificateNavItem/ToolTipService/ToolTip"));
+			BuildNewCertificateNavItem.Content = Atlas.GetStr("BuildNewCertificateNavItem/Content");
+			AutomationProperties.SetHelpText(BuildNewCertificateNavItem, Atlas.GetStr("BuildNewCertificateNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(BuildNewCertificateNavItem, Atlas.GetStr("BuildNewCertificateNavItem/ToolTipService/ToolTip"));
 
-			ViewFileCertificatesNavItem.Content = GlobalVars.GetStr("ViewFileCertificatesNavItem/Content");
-			AutomationProperties.SetHelpText(ViewFileCertificatesNavItem, GlobalVars.GetStr("ViewFileCertificatesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ViewFileCertificatesNavItem, GlobalVars.GetStr("ViewFileCertificatesNavItem/ToolTipService/ToolTip"));
+			ViewFileCertificatesNavItem.Content = Atlas.GetStr("ViewFileCertificatesNavItem/Content");
+			AutomationProperties.SetHelpText(ViewFileCertificatesNavItem, Atlas.GetStr("ViewFileCertificatesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ViewFileCertificatesNavItem, Atlas.GetStr("ViewFileCertificatesNavItem/ToolTipService/ToolTip"));
 
-			LogsProcessingNavigationViewItemHeader.Content = GlobalVars.GetStr("LogsProcessingNavigationViewItemHeader/Content");
+			LogsProcessingNavigationViewItemHeader.Content = Atlas.GetStr("LogsProcessingNavigationViewItemHeader/Content");
 
-			CreatePolicyFromEventLogsNavItem.Content = GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/Content");
-			AutomationProperties.SetHelpText(CreatePolicyFromEventLogsNavItem, GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreatePolicyFromEventLogsNavItem, GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/ToolTipService/ToolTip"));
+			CreatePolicyFromEventLogsNavItem.Content = Atlas.GetStr("CreatePolicyFromEventLogsNavItem/Content");
+			AutomationProperties.SetHelpText(CreatePolicyFromEventLogsNavItem, Atlas.GetStr("CreatePolicyFromEventLogsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreatePolicyFromEventLogsNavItem, Atlas.GetStr("CreatePolicyFromEventLogsNavItem/ToolTipService/ToolTip"));
 
-			CreatePolicyFromMDEAHNavItem.Content = GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/Content");
-			AutomationProperties.SetHelpText(CreatePolicyFromMDEAHNavItem, GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreatePolicyFromMDEAHNavItem, GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/ToolTipService/ToolTip"));
+			CreatePolicyFromMDEAHNavItem.Content = Atlas.GetStr("CreatePolicyFromMDEAHNavItem/Content");
+			AutomationProperties.SetHelpText(CreatePolicyFromMDEAHNavItem, Atlas.GetStr("CreatePolicyFromMDEAHNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreatePolicyFromMDEAHNavItem, Atlas.GetStr("CreatePolicyFromMDEAHNavItem/ToolTipService/ToolTip"));
 
-			TacticalNavigationViewItemHeader.Content = GlobalVars.GetStr("TacticalNavigationViewItemHeader/Content");
+			TacticalNavigationViewItemHeader.Content = Atlas.GetStr("TacticalNavigationViewItemHeader/Content");
 
-			AllowNewAppsNavItem.Content = GlobalVars.GetStr("AllowNewAppsNavItem/Content");
-			AutomationProperties.SetHelpText(AllowNewAppsNavItem, GlobalVars.GetStr("AllowNewAppsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(AllowNewAppsNavItem, GlobalVars.GetStr("AllowNewAppsNavItem/ToolTipService/ToolTip"));
+			AllowNewAppsNavItem.Content = Atlas.GetStr("AllowNewAppsNavItem/Content");
+			AutomationProperties.SetHelpText(AllowNewAppsNavItem, Atlas.GetStr("AllowNewAppsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(AllowNewAppsNavItem, Atlas.GetStr("AllowNewAppsNavItem/ToolTipService/ToolTip"));
 
-			PolicyEditorNavItem.Content = GlobalVars.GetStr("PolicyEditorNavItem/Content");
+			PolicyEditorNavItem.Content = Atlas.GetStr("PolicyEditorNavItem/Content");
 
-			SimulationNavItem.Content = GlobalVars.GetStr("SimulationNavItem/Content");
-			AutomationProperties.SetHelpText(SimulationNavItem, GlobalVars.GetStr("SimulationNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SimulationNavItem, GlobalVars.GetStr("SimulationNavItem/ToolTipService/ToolTip"));
+			SimulationNavItem.Content = Atlas.GetStr("SimulationNavItem/Content");
+			AutomationProperties.SetHelpText(SimulationNavItem, Atlas.GetStr("SimulationNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SimulationNavItem, Atlas.GetStr("SimulationNavItem/ToolTipService/ToolTip"));
 
-			InfoGatheringNavigationViewItemHeader.Content = GlobalVars.GetStr("InfoGatheringNavigationViewItemHeader/Content");
+			InfoGatheringNavigationViewItemHeader.Content = Atlas.GetStr("InfoGatheringNavigationViewItemHeader/Content");
 
-			SystemInformationNavItem.Content = GlobalVars.GetStr("SystemInformationNavItem/Content");
-			AutomationProperties.SetHelpText(SystemInformationNavItem, GlobalVars.GetStr("SystemInformationNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SystemInformationNavItem, GlobalVars.GetStr("SystemInformationNavItem/ToolTipService/ToolTip"));
+			SystemInformationNavItem.Content = Atlas.GetStr("SystemInformationNavItem/Content");
+			AutomationProperties.SetHelpText(SystemInformationNavItem, Atlas.GetStr("SystemInformationNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SystemInformationNavItem, Atlas.GetStr("SystemInformationNavItem/ToolTipService/ToolTip"));
 
-			GetCodeIntegrityHashesNavItem.Content = GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/Content");
-			AutomationProperties.SetHelpText(GetCodeIntegrityHashesNavItem, GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GetCodeIntegrityHashesNavItem, GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/ToolTipService/ToolTip"));
+			GetCodeIntegrityHashesNavItem.Content = Atlas.GetStr("GetCodeIntegrityHashesNavItem/Content");
+			AutomationProperties.SetHelpText(GetCodeIntegrityHashesNavItem, Atlas.GetStr("GetCodeIntegrityHashesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GetCodeIntegrityHashesNavItem, Atlas.GetStr("GetCodeIntegrityHashesNavItem/ToolTipService/ToolTip"));
 
-			GetSecurePolicySettingsNavItem.Content = GlobalVars.GetStr("GetSecurePolicySettingsNavItem/Content");
-			AutomationProperties.SetHelpText(GetSecurePolicySettingsNavItem, GlobalVars.GetStr("GetSecurePolicySettingsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GetSecurePolicySettingsNavItem, GlobalVars.GetStr("GetSecurePolicySettingsNavItem/ToolTipService/ToolTip"));
+			GetSecurePolicySettingsNavItem.Content = Atlas.GetStr("GetSecurePolicySettingsNavItem/Content");
+			AutomationProperties.SetHelpText(GetSecurePolicySettingsNavItem, Atlas.GetStr("GetSecurePolicySettingsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GetSecurePolicySettingsNavItem, Atlas.GetStr("GetSecurePolicySettingsNavItem/ToolTipService/ToolTip"));
 
-			PolicyManagementNavigationViewItemHeader.Content = GlobalVars.GetStr("PolicyManagementNavigationViewItemHeader/Content");
+			PolicyManagementNavigationViewItemHeader.Content = Atlas.GetStr("PolicyManagementNavigationViewItemHeader/Content");
 
-			ConfigurePolicyRuleOptionsNavItem.Content = GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/Content");
-			AutomationProperties.SetHelpText(ConfigurePolicyRuleOptionsNavItem, GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ConfigurePolicyRuleOptionsNavItem, GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/ToolTipService/ToolTip"));
+			ConfigurePolicyRuleOptionsNavItem.Content = Atlas.GetStr("ConfigurePolicyRuleOptionsNavItem/Content");
+			AutomationProperties.SetHelpText(ConfigurePolicyRuleOptionsNavItem, Atlas.GetStr("ConfigurePolicyRuleOptionsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ConfigurePolicyRuleOptionsNavItem, Atlas.GetStr("ConfigurePolicyRuleOptionsNavItem/ToolTipService/ToolTip"));
 
-			MergePoliciesNavItem.Content = GlobalVars.GetStr("MergePoliciesNavItem/Content");
-			AutomationProperties.SetHelpText(MergePoliciesNavItem, GlobalVars.GetStr("MergePoliciesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MergePoliciesNavItem, GlobalVars.GetStr("MergePoliciesNavItem/ToolTipService/ToolTip"));
+			MergePoliciesNavItem.Content = Atlas.GetStr("MergePoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(MergePoliciesNavItem, Atlas.GetStr("MergePoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MergePoliciesNavItem, Atlas.GetStr("MergePoliciesNavItem/ToolTipService/ToolTip"));
 
-			DeploymentNavItem.Content = GlobalVars.GetStr("DeploymentNavItem/Content");
-			AutomationProperties.SetHelpText(DeploymentNavItem, GlobalVars.GetStr("DeploymentNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(DeploymentNavItem, GlobalVars.GetStr("DeploymentNavItem/ToolTipService/ToolTip"));
+			DeploymentNavItem.Content = Atlas.GetStr("DeploymentNavItem/Content");
+			AutomationProperties.SetHelpText(DeploymentNavItem, Atlas.GetStr("DeploymentNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(DeploymentNavItem, Atlas.GetStr("DeploymentNavItem/ToolTipService/ToolTip"));
 
-			ValidatePoliciesNavItem.Content = GlobalVars.GetStr("ValidatePoliciesNavItem/Content");
-			AutomationProperties.SetHelpText(ValidatePoliciesNavItem, GlobalVars.GetStr("ValidatePoliciesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ValidatePoliciesNavItem, GlobalVars.GetStr("ValidatePoliciesNavItem/ToolTipService/ToolTip"));
+			ValidatePoliciesNavItem.Content = Atlas.GetStr("ValidatePoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(ValidatePoliciesNavItem, Atlas.GetStr("ValidatePoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ValidatePoliciesNavItem, Atlas.GetStr("ValidatePoliciesNavItem/ToolTipService/ToolTip"));
 
-			SidebarPoliciesLibraryTextBlock.Text = GlobalVars.GetStr("SidebarPoliciesLibraryTextBlock/Text");
+			SidebarPoliciesLibraryTextBlock.Text = Atlas.GetStr("SidebarPoliciesLibraryTextBlock/Text");
 
-			OpenConfigDirectoryButtonText.Text = GlobalVars.GetStr("OpenConfigDirectoryButtonText/Text");
+			OpenConfigDirectoryButtonText.Text = Atlas.GetStr("OpenConfigDirectoryButtonText/Text");
 
-			MSFTDocsNavItem.Content = GlobalVars.GetStr("MSFTDocsNavItem/Content");
-			AutomationProperties.SetHelpText(MSFTDocsNavItem, GlobalVars.GetStr("MSFTDocsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MSFTDocsNavItem, GlobalVars.GetStr("MSFTDocsNavItem/ToolTipService/ToolTip"));
+			MSFTDocsNavItem.Content = Atlas.GetStr("MSFTDocsNavItem/Content");
+			AutomationProperties.SetHelpText(MSFTDocsNavItem, Atlas.GetStr("MSFTDocsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MSFTDocsNavItem, Atlas.GetStr("MSFTDocsNavItem/ToolTipService/ToolTip"));
 
-			AutomationProperties.SetHelpText(OpenConfigDirectoryButton, GlobalVars.GetStr("OpenConfigDirectoryButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(OpenConfigDirectoryButton, GlobalVars.GetStr("OpenConfigDirectoryButton/ToolTipService/ToolTip"));
+			AutomationProperties.SetHelpText(OpenConfigDirectoryButton, Atlas.GetStr("OpenConfigDirectoryButton/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(OpenConfigDirectoryButton, Atlas.GetStr("OpenConfigDirectoryButton/ToolTipService/ToolTip"));
 
-			PersistentPoliciesLibraryToggleSwitch.OnContent = GlobalVars.GetStr("ToggleSwitchGeneral/OnContent");
-			PersistentPoliciesLibraryToggleSwitch.OffContent = GlobalVars.GetStr("ToggleSwitchGeneral/OffContent");
+			PersistentPoliciesLibraryToggleSwitch.OnContent = Atlas.GetStr("ToggleSwitchGeneral/OnContent");
+			PersistentPoliciesLibraryToggleSwitch.OffContent = Atlas.GetStr("ToggleSwitchGeneral/OffContent");
 
-			FirewallSentinelNavItem.Content = GlobalVars.GetStr("FirewallSentinelNavItem/Content");
-			AutomationProperties.SetHelpText(FirewallSentinelNavItem, GlobalVars.GetStr("FirewallSentinelNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(FirewallSentinelNavItem, GlobalVars.GetStr("FirewallSentinelNavItem/ToolTipService/ToolTip"));
+			FirewallSentinelNavItem.Content = Atlas.GetStr("FirewallSentinelNavItem/Content");
+			AutomationProperties.SetHelpText(FirewallSentinelNavItem, Atlas.GetStr("FirewallSentinelNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(FirewallSentinelNavItem, Atlas.GetStr("FirewallSentinelNavItem/ToolTipService/ToolTip"));
 
 #endif
 
@@ -1264,8 +1264,8 @@ internal sealed partial class MainWindow : Window
 	{
 		string fileName = $"{policyContext.PolicyIdentifier}.xml";
 
-		string? savePath = await GlobalVars.AppDispatcher.EnqueueAsync(() =>
-			 FileDialogHelper.ShowSaveFileDialog(GlobalVars.XMLFilePickerFilter, fileName)
+		string? savePath = await Atlas.AppDispatcher.EnqueueAsync(() =>
+			 FileDialogHelper.ShowSaveFileDialog(Atlas.XMLFilePickerFilter, fileName)
 		);
 
 		if (savePath is null)
@@ -1288,8 +1288,8 @@ internal sealed partial class MainWindow : Window
 	{
 		string fileName = $"{policyContext.PolicyIdentifier}.cip";
 
-		string? savePath = await GlobalVars.AppDispatcher.EnqueueAsync(() =>
-			FileDialogHelper.ShowSaveFileDialog(GlobalVars.CIPFilesPickerFilter, fileName)
+		string? savePath = await Atlas.AppDispatcher.EnqueueAsync(() =>
+			FileDialogHelper.ShowSaveFileDialog(Atlas.CIPFilesPickerFilter, fileName)
 		);
 
 		if (savePath is null)
@@ -1521,7 +1521,7 @@ internal sealed partial class MainWindow : Window
 		if (e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
 		{
 			e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
-			e.DragUIOverride.Caption = GlobalVars.GetStr("AddPoliciesMenuFlyoutSubItem/Text");
+			e.DragUIOverride.Caption = Atlas.GetStr("AddPoliciesMenuFlyoutSubItem/Text");
 		}
 	}
 
@@ -1580,7 +1580,7 @@ internal sealed partial class MainWindow : Window
 		{
 			ViewModel.SidebarElementsAreEnabled = false;
 
-			await ViewModels.ViewModelBase.OpenFileInDefaultFileHandler(ViewModel.GetSidebarPoliciesLibraryCacheLocation());
+			await ViewModelBase.OpenFileInDefaultFileHandler(ViewModel.GetSidebarPoliciesLibraryCacheLocation());
 		}
 		catch (Exception ex)
 		{
@@ -1601,7 +1601,7 @@ internal sealed partial class MainWindow : Window
 		{
 			ViewModel.SidebarElementsAreEnabled = false;
 
-			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
+			List<string> selectedFilePaths = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.MultiAppControlPolicyPickerFilter);
 			await AddPoliciesFromPaths(selectedFilePaths);
 		}
 		catch (Exception ex)
@@ -1679,7 +1679,7 @@ internal sealed partial class MainWindow : Window
 	/// </summary>
 	private static void ContextSwitchAction()
 	{
-		if (GlobalVars.IsElevated)
+		if (Atlas.IsElevated)
 		{
 			// If the app alias is not enabled in the OS, this call still succeeds but the OS will display an error message saying the executable cannot be found.
 #if APP_CONTROL_MANAGER
@@ -1692,7 +1692,7 @@ internal sealed partial class MainWindow : Window
 		}
 		else
 		{
-			if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, null))
+			if (Relaunch.RelaunchAppElevated(Atlas.AUMID, null))
 			{
 				Application.Current.Exit();
 			}
@@ -1708,15 +1708,15 @@ internal sealed partial class MainWindow : Window
 		{
 			using AppControlManager.CustomUIElements.ContentDialogV2 confirmCloseDialog = new()
 			{
-				Title = GlobalVars.GetStr("ConfirmExitTitle"),
+				Title = Atlas.GetStr("ConfirmExitTitle"),
 #if APP_CONTROL_MANAGER
 				// if there is no policy in the Policies library in the Sidebar or if there is but Persistence is enabled
-				Content = (ViewModel.SidebarPoliciesLibrary.Count == 0 || GlobalVars.Settings.PersistentPoliciesLibrary) ? GlobalVars.GetStr("ConfirmExitMsg") : GlobalVars.GetStr("ConfirmExitForUnsavedPoliciesMsg"),
+				Content = (ViewModel.SidebarPoliciesLibrary.Count == 0 || Atlas.Settings.PersistentPoliciesLibrary) ? Atlas.GetStr("ConfirmExitMsg") : Atlas.GetStr("ConfirmExitForUnsavedPoliciesMsg"),
 #else
-				Content = GlobalVars.GetStr("ConfirmExitMsg"),
+				Content = Atlas.GetStr("ConfirmExitMsg"),
 #endif
-				PrimaryButtonText = GlobalVars.GetStr("Yes"),
-				CloseButtonText = GlobalVars.GetStr("No"),
+				PrimaryButtonText = Atlas.GetStr("Yes"),
+				CloseButtonText = Atlas.GetStr("No"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -1775,7 +1775,7 @@ internal sealed partial class MainWindow : Window
 		ElevationContextSwitchButtonTeachingTip.IsOpen = true;
 
 	// Subtitle text for the UI's TeachingTip
-	private readonly string ElevationContextSwitchButtonTeachingTipSubtitle = GlobalVars.GetStr(GlobalVars.IsElevated ? "ElevationContextSwitchButtonTeachingTipSubtitleElevated" : "ElevationContextSwitchButtonTeachingTipSubtitleUnelevated");
+	private readonly string ElevationContextSwitchButtonTeachingTipSubtitle = Atlas.GetStr(Atlas.IsElevated ? "ElevationContextSwitchButtonTeachingTipSubtitleElevated" : "ElevationContextSwitchButtonTeachingTipSubtitleUnelevated");
 
 	private void ElevationContextSwitchButton_Click(object sender, RoutedEventArgs e) =>
 		ElevationContextSwitchButtonTeachingTip.IsOpen = true;

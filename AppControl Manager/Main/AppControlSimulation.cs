@@ -24,10 +24,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
 using AppControlManager.XMLOps;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.Main;
 
@@ -88,7 +88,7 @@ internal static class AppControlSimulation
 		threadsCount = Math.Max((ushort)1, threadsCount);
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("RunningAppControlSimulationMessage"),
+			Atlas.GetStr("RunningAppControlSimulationMessage"),
 			threadsCount));
 
 		// Get the signer information from the policy
@@ -96,7 +96,7 @@ internal static class AppControlSimulation
 
 		#region Region FilePath Rule Checking
 
-		Logger.Write(GlobalVars.GetStr("CheckingFilePathRulesMessage"));
+		Logger.Write(Atlas.GetStr("CheckingFilePathRulesMessage"));
 
 		HashSet<string> FilePathRules = XmlFilePathExtractor.GetFilePaths(policyObj);
 
@@ -114,15 +114,15 @@ internal static class AppControlSimulation
 		}
 		else
 		{
-			Logger.Write(GlobalVars.GetStr("SkippingSecurityCatalogsMessage"));
+			Logger.Write(Atlas.GetStr("SkippingSecurityCatalogsMessage"));
 		}
 
-		Logger.Write(GlobalVars.GetStr("GettingHashValuesOfFileRulesMessage"));
+		Logger.Write(Atlas.GetStr("GettingHashValuesOfFileRulesMessage"));
 
 		// All Hash values of all the file rules based on hash in the supplied xml policy file
 		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(policyObj);
 
-		Logger.Write(GlobalVars.GetStr("GettingSupportedFilePathsMessage"));
+		Logger.Write(Atlas.GetStr("GettingSupportedFilePathsMessage"));
 
 		(IEnumerable<string>, int) CollectedFiles = FileUtility.GetFilesFast(
 			folderPaths,
@@ -133,10 +133,10 @@ internal static class AppControlSimulation
 		if (CollectedFiles.Item2 == 0)
 		{
 			throw new NoValidFilesSelectedException(
-				GlobalVars.GetStr("NoValidFilesSelectedMessage"));
+				Atlas.GetStr("NoValidFilesSelectedMessage"));
 		}
 
-		Logger.Write(GlobalVars.GetStr("LoopingThroughSupportedFilesMessage"));
+		Logger.Write(Atlas.GetStr("LoopingThroughSupportedFilesMessage"));
 
 		// The counter variable to track processed files
 		int processedFilesCount = 0;
@@ -153,7 +153,7 @@ internal static class AppControlSimulation
 
 		if (PreDeploymentChecks.CheckForAllowAll(policyObj))
 		{
-			Logger.Write(GlobalVars.GetStr("PolicyAllowsAllFilesMessage"));
+			Logger.Write(Atlas.GetStr("PolicyAllowsAllFilesMessage"));
 
 			_ = FinalSimulationResults.TryAdd("HasAllowAllRule", new SimulationOutput(
 				null,
@@ -196,7 +196,7 @@ internal static class AppControlSimulation
 					progressReporter.Report(percentageToUse);
 
 					// Update the taskbar progress
-					CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
+					CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(Atlas.hWnd, (ulong)percentageToUse, 100);
 
 				}, null, 0, 2000) : null;
 
@@ -518,7 +518,7 @@ internal static class AppControlSimulation
 		finally
 		{
 			// Clear the taskbar progress
-			CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
+			CommonCore.Taskbar.TaskBarProgress.UpdateTaskbarProgress(Atlas.hWnd, 0, 0);
 		}
 
 		return FinalSimulationResults;

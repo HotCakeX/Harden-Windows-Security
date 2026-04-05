@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -35,11 +36,11 @@ internal static class NewFilePathRules
 	{
 		if (data.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoFilePathRulesDetectedAllowMessage"));
+			Logger.Write(Atlas.GetStr("NoFilePathRulesDetectedAllowMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
+		Logger.Write(string.Format(Atlas.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
 
 		// Ensure the lists are initialized.
 		policyObj.FileRules ??= [];
@@ -59,7 +60,7 @@ internal static class NewFilePathRules
 			// Create a new Allow FilePath rule
 			Allow newAllowRule = new(id: allowRuleID)
 			{
-				FriendlyName = GlobalVars.GetStr("FilePathRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("FilePathRuleTypeFriendlyName"),
 				MinimumFileVersion = item.MinimumFileVersion,
 				FilePath = item.FilePath
 			};
@@ -67,13 +68,13 @@ internal static class NewFilePathRules
 			policyObj.FileRules.Add(newAllowRule);
 
 			// For User-Mode files only as FilePath rules are not applicable to Kernel-Mode drivers
-			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+			if (item.SiSigningScenario is SSType.UserMode)
 			{
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowRuleID));
 			}
 			else
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("KernelModeFilePathRuleWarningMessage"), item.FilePath));
+				Logger.Write(string.Format(Atlas.GetStr("KernelModeFilePathRuleWarningMessage"), item.FilePath));
 			}
 		}
 
@@ -91,11 +92,11 @@ internal static class NewFilePathRules
 	{
 		if (data.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoFilePathRulesDetectedDenyMessage"));
+			Logger.Write(Atlas.GetStr("NoFilePathRulesDetectedDenyMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
+		Logger.Write(string.Format(Atlas.GetStr("FilePathRulesToAddMessage"), data.Count, "SiPolicy Object"));
 
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
@@ -115,20 +116,20 @@ internal static class NewFilePathRules
 			// Create a new Deny FilePath rule
 			Deny newDenyRule = new(id: denyRuleID)
 			{
-				FriendlyName = GlobalVars.GetStr("FilePathRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("FilePathRuleTypeFriendlyName"),
 				FilePath = item.FilePath
 			};
 
 			policyObj.FileRules.Add(newDenyRule);
 
 			// For User-Mode files
-			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+			if (item.SiSigningScenario is SSType.UserMode)
 			{
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyRuleID));
 			}
 			else
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("KernelModeFilePathRuleWarningMessage"), item.FilePath));
+				Logger.Write(string.Format(Atlas.GetStr("KernelModeFilePathRuleWarningMessage"), item.FilePath));
 			}
 		}
 

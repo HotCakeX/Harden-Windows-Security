@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AnimatedVisuals;
-using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -58,230 +57,230 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.Protect)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("ProtectNavigationViewItem/Content")],
+			titles: [Atlas.GetStr("ProtectNavigationViewItem/Content")],
 			pages: [typeof(Pages.Protect)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Logs)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("LogsNavItem/Content")],
+			titles: [Atlas.GetStr("LogsNavItem/Content")],
 			pages: [typeof(Pages.Logs)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePage)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("UpdateNavItem/Content"), GlobalVars.GetStr("UpdatePageCustomMSIXPath")],
+			titles: [Atlas.GetStr("UpdateNavItem/Content"), Atlas.GetStr("UpdatePageCustomMSIXPath")],
 			pages: [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("UpdateNavItem/Content"), GlobalVars.GetStr("UpdatePageCustomMSIXPath")],
+			titles: [Atlas.GetStr("UpdateNavItem/Content"), Atlas.GetStr("UpdatePageCustomMSIXPath")],
 			pages: [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("GitHubDocsNavItem/Content")],
+			titles: [Atlas.GetStr("GitHubDocsNavItem/Content")],
 			pages: [typeof(Pages.GitHubDocumentation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Settings)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("SettingsNavItem/Content")],
+			titles: [Atlas.GetStr("SettingsNavItem/Content")],
 			pages: [typeof(Pages.Settings)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.GroupPolicyEditor)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("GroupPolicyEditorNavItem/Content")],
+			titles: [Atlas.GetStr("GroupPolicyEditorNavItem/Content")],
 			pages: [typeof(Pages.GroupPolicyEditor)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.MicrosoftDefender)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("MicrosoftDefenderNavItem/Content")],
+			titles: [Atlas.GetStr("MicrosoftDefenderNavItem/Content")],
 			pages: [typeof(Pages.Protects.MicrosoftDefender)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.ASR)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("ASRNavItem/Content")],
+			titles: [Atlas.GetStr("ASRNavItem/Content")],
 			pages: [typeof(Pages.Protects.ASR)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.BitLocker)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("BitLockerNavItem/Content")],
+			titles: [Atlas.GetStr("BitLockerNavItem/Content")],
 			pages: [typeof(Pages.Protects.BitLocker)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.TLS)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("TLSSecurityNavItem/Content")],
+			titles: [Atlas.GetStr("TLSSecurityNavItem/Content")],
 			pages: [typeof(Pages.Protects.TLS)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.LockScreen)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("LockScreenNavItem/Content")],
+			titles: [Atlas.GetStr("LockScreenNavItem/Content")],
 			pages: [typeof(Pages.Protects.LockScreen)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.UAC)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("UACNavItem/Content")],
+			titles: [Atlas.GetStr("UACNavItem/Content")],
 			pages: [typeof(Pages.Protects.UAC)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.DeviceGuard)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DeviceGuardNavItem/Content")],
+			titles: [Atlas.GetStr("DeviceGuardNavItem/Content")],
 			pages: [typeof(Pages.Protects.DeviceGuard)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.WindowsFirewall)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("WindowsFirewallNavItem/Content")],
+			titles: [Atlas.GetStr("WindowsFirewallNavItem/Content")],
 			pages: [typeof(Pages.Protects.WindowsFirewall)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.OptionalWindowsFeatures)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("OptionalWindowsFeaturesNavItem/Content")],
+			titles: [Atlas.GetStr("OptionalWindowsFeaturesNavItem/Content")],
 			pages: [typeof(Pages.Protects.OptionalWindowsFeatures)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.WindowsNetworking)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("WindowsNetworkingNavItem/Content")],
+			titles: [Atlas.GetStr("WindowsNetworkingNavItem/Content")],
 			pages: [typeof(Pages.Protects.WindowsNetworking)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.MiscellaneousConfigs)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("MiscellaneousNavItem/Content")],
+			titles: [Atlas.GetStr("MiscellaneousNavItem/Content")],
 			pages: [typeof(Pages.Protects.MiscellaneousConfigs)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.WindowsUpdate)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("WindowsUpdateNavItem/Content")],
+			titles: [Atlas.GetStr("WindowsUpdateNavItem/Content")],
 			pages: [typeof(Pages.Protects.WindowsUpdate)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.Edge)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("EdgeBrowserNavItem/Content")],
+			titles: [Atlas.GetStr("EdgeBrowserNavItem/Content")],
 			pages: [typeof(Pages.Protects.Edge)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.CertificateChecking)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CertificatesNavItem/Content")],
+			titles: [Atlas.GetStr("CertificatesNavItem/Content")],
 			pages: [typeof(Pages.Protects.CertificateChecking)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.NonAdmin)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("NonAdminCommandsNavItem/Content")],
+			titles: [Atlas.GetStr("NonAdminCommandsNavItem/Content")],
 			pages: [typeof(Pages.Protects.NonAdmin)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.FileReputation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("FileReputationNavItem/Content")],
+			titles: [Atlas.GetStr("FileReputationNavItem/Content")],
 			pages: [typeof(Pages.FileReputation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.InstalledAppsManagement)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("InstalledAppsManagementNavItem/Content")],
+			titles: [Atlas.GetStr("InstalledAppsManagementNavItem/Content")],
 			pages: [typeof(Pages.InstalledAppsManagement)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.MicrosoftSecurityBaseline)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content")],
+			titles: [Atlas.GetStr("MicrosoftSecurityBaselineNavItem/Content")],
 			pages: [typeof(Pages.Protects.MicrosoftSecurityBaseline)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content")],
+			titles: [Atlas.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content")],
 			pages: [typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.MicrosoftBaseLinesOverrides)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")],
+			titles: [Atlas.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")],
 			pages: [typeof(Pages.Protects.MicrosoftBaseLinesOverrides)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Protects.CountryIPBlocking)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CountryIPBlockingNavItem/Content")],
+			titles: [Atlas.GetStr("CountryIPBlockingNavItem/Content")],
 			pages: [typeof(Pages.Protects.CountryIPBlocking)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.AuditPolicies)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("AuditPoliciesNavItem/Content")],
+			titles: [Atlas.GetStr("AuditPoliciesNavItem/Content")],
 			pages: [typeof(Pages.AuditPolicies)]
 		);
 
 		breadCrumbMappingsV2[typeof(AppControlManager.Pages.Home)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("HomeNavItem/Content")],
+			titles: [Atlas.GetStr("HomeNavItem/Content")],
 			pages: [typeof(AppControlManager.Pages.Home)]
 		);
 
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.CryptographicBillOfMaterials)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CBOMNavItem/Content")],
+			titles: [Atlas.GetStr("CBOMNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.CryptographicBillOfMaterials)]
 		);
 
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Intune)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("IntuneNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			titles: [Atlas.GetStr("IntuneNavItem/Content"), Atlas.GetStr("IntuneDeploymentDetailsNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(AppControlManager.Pages.IntuneDeploymentDetails)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("IntuneNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			titles: [Atlas.GetStr("IntuneNavItem/Content"), Atlas.GetStr("IntuneDeploymentDetailsNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.CSP)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CSPNavItem/Content")],
+			titles: [Atlas.GetStr("CSPNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.CSP)]
 		);
 
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content")],
+			titles: [Atlas.GetStr("DuplicatePhotosFinderNavigationViewItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder)]
 		);
 
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content")],
+			titles: [Atlas.GetStr("EXIFManagerNavigationViewItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)]
 		);
 
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ServiceManager)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("ServiceManagerNavItem/Content")],
+			titles: [Atlas.GetStr("ServiceManagerNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.ServiceManager)]
 		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	internal readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(GlobalVars.GetStr("HomeNavItem/Content"), typeof(AppControlManager.Pages.Home))];
+	internal readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(Atlas.GetStr("HomeNavItem/Content"), typeof(AppControlManager.Pages.Home))];
 
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
@@ -336,42 +335,42 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	{
 		NavigationPageToItemContentMapForSearch.Clear();
 
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protect)] = GlobalVars.GetStr("ProtectNavigationViewItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Logs)] = GlobalVars.GetStr("LogsNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePage)] = GlobalVars.GetStr("UpdateNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.GitHubDocumentation)] = GlobalVars.GetStr("GitHubDocsNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Settings)] = GlobalVars.GetStr("SettingsNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.GroupPolicyEditor)] = GlobalVars.GetStr("GroupPolicyEditorNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftDefender)] = GlobalVars.GetStr("MicrosoftDefenderNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.ASR)] = GlobalVars.GetStr("ASRNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.BitLocker)] = GlobalVars.GetStr("BitLockerNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.TLS)] = GlobalVars.GetStr("TLSSecurityNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.LockScreen)] = GlobalVars.GetStr("LockScreenNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.UAC)] = GlobalVars.GetStr("UACNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.DeviceGuard)] = GlobalVars.GetStr("DeviceGuardNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsFirewall)] = GlobalVars.GetStr("WindowsFirewallNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.OptionalWindowsFeatures)] = GlobalVars.GetStr("OptionalWindowsFeaturesNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsNetworking)] = GlobalVars.GetStr("WindowsNetworkingNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MiscellaneousConfigs)] = GlobalVars.GetStr("MiscellaneousNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsUpdate)] = GlobalVars.GetStr("WindowsUpdateNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.Edge)] = GlobalVars.GetStr("EdgeBrowserNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.CertificateChecking)] = GlobalVars.GetStr("CertificatesNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.CountryIPBlocking)] = GlobalVars.GetStr("CountryIPBlockingNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.NonAdmin)] = GlobalVars.GetStr("NonAdminCommandsNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.FileReputation)] = GlobalVars.GetStr("FileReputationNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.InstalledAppsManagement)] = GlobalVars.GetStr("InstalledAppsManagementNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftSecurityBaseline)] = GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)] = GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftBaseLinesOverrides)] = GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.AuditPolicies)] = GlobalVars.GetStr("AuditPoliciesNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.Home)] = GlobalVars.GetStr("HomeNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.CryptographicBillOfMaterials)] = GlobalVars.GetStr("CBOMNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Intune)] = GlobalVars.GetStr("IntuneNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.CSP)] = GlobalVars.GetStr("CSPNavItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePageCustomMSIXPath)] = GlobalVars.GetStr("UpdatePageCustomMSIXPath");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DuplicatePhotoFinder)] = GlobalVars.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.EXIFManager)] = GlobalVars.GetStr("EXIFManagerNavigationViewItem/Content");
-		NavigationPageToItemContentMapForSearch[typeof(Pages.ServiceManager)] = GlobalVars.GetStr("ServiceManagerNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protect)] = Atlas.GetStr("ProtectNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Logs)] = Atlas.GetStr("LogsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePage)] = Atlas.GetStr("UpdateNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.GitHubDocumentation)] = Atlas.GetStr("GitHubDocsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Settings)] = Atlas.GetStr("SettingsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.GroupPolicyEditor)] = Atlas.GetStr("GroupPolicyEditorNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftDefender)] = Atlas.GetStr("MicrosoftDefenderNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.ASR)] = Atlas.GetStr("ASRNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.BitLocker)] = Atlas.GetStr("BitLockerNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.TLS)] = Atlas.GetStr("TLSSecurityNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.LockScreen)] = Atlas.GetStr("LockScreenNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.UAC)] = Atlas.GetStr("UACNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.DeviceGuard)] = Atlas.GetStr("DeviceGuardNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsFirewall)] = Atlas.GetStr("WindowsFirewallNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.OptionalWindowsFeatures)] = Atlas.GetStr("OptionalWindowsFeaturesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsNetworking)] = Atlas.GetStr("WindowsNetworkingNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MiscellaneousConfigs)] = Atlas.GetStr("MiscellaneousNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsUpdate)] = Atlas.GetStr("WindowsUpdateNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.Edge)] = Atlas.GetStr("EdgeBrowserNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.CertificateChecking)] = Atlas.GetStr("CertificatesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.CountryIPBlocking)] = Atlas.GetStr("CountryIPBlockingNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.NonAdmin)] = Atlas.GetStr("NonAdminCommandsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.FileReputation)] = Atlas.GetStr("FileReputationNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.InstalledAppsManagement)] = Atlas.GetStr("InstalledAppsManagementNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftSecurityBaseline)] = Atlas.GetStr("MicrosoftSecurityBaselineNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)] = Atlas.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftBaseLinesOverrides)] = Atlas.GetStr("MicrosoftBaseLinesOverridesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.AuditPolicies)] = Atlas.GetStr("AuditPoliciesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.Home)] = Atlas.GetStr("HomeNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.CryptographicBillOfMaterials)] = Atlas.GetStr("CBOMNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Intune)] = Atlas.GetStr("IntuneNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.CSP)] = Atlas.GetStr("CSPNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePageCustomMSIXPath)] = Atlas.GetStr("UpdatePageCustomMSIXPath");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DuplicatePhotoFinder)] = Atlas.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.EXIFManager)] = Atlas.GetStr("EXIFManagerNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.ServiceManager)] = Atlas.GetStr("ServiceManagerNavItem/Content");
 	}
 
 	/// <summary>
@@ -717,7 +716,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Whether the button for configuring nested virtualizations on Sidebar is enabled.
 	/// </summary>
-	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = GlobalVars.IsElevated;
+	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
 
 	internal async void EnableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(true);
 	internal async void DisableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(false);
@@ -731,7 +730,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{
 			IsHyperVNestedVirtualizationButtonEnabled = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("ConfiguringNestedVirtualizationForAllHyperVVMs"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("ConfiguringNestedVirtualizationForAllHyperVVMs"));
 
 			await Task.Run(() =>
 			{
@@ -739,15 +738,15 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					? "Virtualization ExposeVirtualizationExtensions --all --enable true"
 					: "Virtualization ExposeVirtualizationExtensions --all --enable false";
 
-				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, command));
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("NestedVirtSuccessFormat"), enable ? GlobalVars.GetStr("EnabledLowercase") : GlobalVars.GetStr("DisabledLowercase")));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("NestedVirtSuccessFormat"), enable ? Atlas.GetStr("EnabledLowercase") : Atlas.GetStr("DisabledLowercase")));
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs"));
 		}
 		finally
 		{
@@ -771,7 +770,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 			await Task.Run(CommonCore.Power.PowerPlan.EnableUltimateScheme);
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("UltimatePerfPlanEnabledAndActive"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("UltimatePerfPlanEnabledAndActive"));
 		}
 		catch (Exception ex)
 		{
@@ -794,7 +793,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 			await Task.Run(CommonCore.Power.PowerPlan.DeleteUltimateSchemes);
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("UltimatePerfPlanDisabledAndRemoved"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("UltimatePerfPlanDisabledAndRemoved"));
 		}
 		catch (Exception ex)
 		{
@@ -806,7 +805,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 	}
 
-	internal bool IsCheckForAllAppUpdatesButtonEnabled { get; set => SP(ref field, value); } = GlobalVars.IsElevated;
+	internal bool IsCheckForAllAppUpdatesButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
 
 	/// <summary>
 	/// Event handler for the UI button.
@@ -823,14 +822,14 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{
 			IsCheckForAllAppUpdatesButtonEnabled = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForMicrosoftStoreAppUpdates"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("CheckingForMicrosoftStoreAppUpdates"));
 
 			await Task.Run(() =>
 			{
-				MainInfoBar.WriteInfo(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "do root\\cimv2\\mdm\\dmmap MDM_EnterpriseModernAppManagement_AppManagement01 UpdateScanMethod"));
+				MainInfoBar.WriteInfo(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "do root\\cimv2\\mdm\\dmmap MDM_EnterpriseModernAppManagement_AppManagement01 UpdateScanMethod"));
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCheckedForMicrosoftStoreAppUpdates"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCheckedForMicrosoftStoreAppUpdates"));
 		}
 		catch (Exception ex)
 		{

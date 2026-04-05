@@ -37,7 +37,7 @@ internal static class SupplementalForSelf
 		SiPolicy.SiPolicy policyObj = SwapDetails(basePolicyID);
 
 
-		Logger.Write(string.Format(GlobalVars.GetStr("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
+		Logger.Write(string.Format(Atlas.GetStr("LogCheckingDeploymentStatusSupplemental"), Atlas.AppControlManagerSpecialPolicyName));
 
 		// Get all the deployed supplemental policies to see if our policy is among them
 
@@ -46,17 +46,17 @@ internal static class SupplementalForSelf
 		// Get all of the supplemental policies deployed on the system
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicyNoFilter = CiToolHelper.GetPolicies(false, false, true);
 
-		IEnumerable<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase));
+		IEnumerable<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, Atlas.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase));
 
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy = [.. CurrentlyDeployedSupplementalPolicy1stFilter.Where(policy => string.Equals(policy.BasePolicyID, trimmedBasePolicyID, StringComparison.OrdinalIgnoreCase))];
 
 		if (CurrentlyDeployedSupplementalPolicy.Count > 0)
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("LogSupplementalPolicyAlreadyDeployed"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
+			Logger.Write(string.Format(Atlas.GetStr("LogSupplementalPolicyAlreadyDeployed"), Atlas.AppControlManagerSpecialPolicyName, basePolicyID));
 		}
 		else
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("LogSupplementalPolicyNotDeployedDeploying"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
+			Logger.Write(string.Format(Atlas.GetStr("LogSupplementalPolicyNotDeployedDeploying"), Atlas.AppControlManagerSpecialPolicyName, basePolicyID));
 
 			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 		}
@@ -73,7 +73,7 @@ internal static class SupplementalForSelf
 	{
 		SiPolicy.SiPolicy policyObj = SwapDetails(basePolicyID);
 
-		Logger.Write(string.Format(GlobalVars.GetStr("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
+		Logger.Write(string.Format(Atlas.GetStr("LogCheckingDeploymentStatusSupplemental"), Atlas.AppControlManagerSpecialPolicyName));
 
 		// Get all the deployed supplemental policies to see if our policy is among them
 
@@ -83,7 +83,7 @@ internal static class SupplementalForSelf
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicyNoFilter = CiToolHelper.GetPolicies(false, false, true);
 
 		// Filter based on their name
-		IEnumerable<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase));
+		IEnumerable<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, Atlas.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase));
 
 		// Only keep unsigned policies that have the same BasePolicyID as the one we are deploying
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy = [.. CurrentlyDeployedSupplementalPolicy1stFilter.Where(policy => string.Equals(policy.BasePolicyID, trimmedBasePolicyID, StringComparison.OrdinalIgnoreCase) && !policy.IsSignedPolicy)];
@@ -92,7 +92,7 @@ internal static class SupplementalForSelf
 		{
 			foreach (CiPolicyInfo item in CollectionsMarshal.AsSpan(CurrentlyDeployedSupplementalPolicy))
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("LogRemovingUnsignedSupplementalForSigned"), item.PolicyID, item.FriendlyName));
+				Logger.Write(string.Format(Atlas.GetStr("LogRemovingUnsignedSupplementalForSigned"), item.PolicyID, item.FriendlyName));
 				CiToolHelper.RemovePolicy(item.PolicyID);
 			}
 		}
@@ -139,7 +139,7 @@ internal static class SupplementalForSelf
 	private static SiPolicy.SiPolicy SwapDetails(string basePolicyID)
 	{
 		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(Atlas.AppControlManagerSpecialPolicyPath, null);
 
 		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
 
@@ -163,7 +163,7 @@ internal static class SupplementalForSelf
 		throw new InvalidOperationException("Required allow directive absent. Supplemental binding withheld.");
 
 		// Replace the placeholder value in the policy file with the app's real PFN.
-		appControlAllowRule.PackageFamilyName = GlobalVars.PFN;
+		appControlAllowRule.PackageFamilyName = Atlas.PFN;
 
 		#endregion
 

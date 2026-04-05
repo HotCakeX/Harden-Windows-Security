@@ -135,6 +135,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<ServiceManagerVM> _serviceManagerVM = new(() =>
 		new ServiceManagerVM(), false);
 
+	private static readonly Lazy<SystemShutdownInfoDialogVM> _systemShutdownInfoDialogVM = new(() =>
+		new SystemShutdownInfoDialogVM(), false);
+
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
 	internal static MainWindowVM MainWindowVM => _mainWindowVM.Value;
@@ -173,7 +176,7 @@ internal static class ViewModelProvider
 	internal static DuplicatePhotoFinderVM DuplicatePhotoFinderVM => _duplicateImageFinderVM.Value;
 	internal static EXIFManagerVM EXIFManagerVM => _eXIFManagerVM.Value;
 	internal static ServiceManagerVM ServiceManagerVM => _serviceManagerVM.Value;
-
+	internal static SystemShutdownInfoDialogVM SystemShutdownInfoDialogVM => _systemShutdownInfoDialogVM.Value;
 
 	/// <summary>
 	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>

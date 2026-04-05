@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.Others;
 

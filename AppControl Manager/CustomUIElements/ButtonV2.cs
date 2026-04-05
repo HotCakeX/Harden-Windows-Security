@@ -133,7 +133,7 @@ internal sealed partial class ButtonV2 : Button
 
 		if (hasContent)
 		{
-			Content = GlobalVars.GetStr("SelectedText"); // Change text to "Selected" (localized) when active; otherwise restore original content
+			Content = Atlas.GetStr("SelectedText"); // Change text to "Selected" (localized) when active; otherwise restore original content
 
 			// Without this dispatcher, due to pages not having navigation page, sometimes the shadow will not be re-applied when we navigate away to another page and then navigate back
 			_ = DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>

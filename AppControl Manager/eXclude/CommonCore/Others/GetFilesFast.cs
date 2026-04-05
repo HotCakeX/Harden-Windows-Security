@@ -331,7 +331,7 @@ internal static class FileUtility
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.GetStr("FileEnumerationDurationMessage"),
+				Atlas.GetStr("FileEnumerationDurationMessage"),
 				elapsedTime.Hours,
 				elapsedTime.Minutes,
 				elapsedTime.Seconds

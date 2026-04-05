@@ -11,6 +11,7 @@
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:CC="using:CommonCore.Others"
+    xmlns:CommonCore="using:CommonCore"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
     Title="AppControl Manager">
 
@@ -433,7 +434,7 @@
                                             BorderThickness="1"
                                             CornerRadius="15"
                                             Shadow="{StaticResource SharedShadow}"
-                                            AllowDrop="{x:Bind vm:ViewModelBase.IsNotElevated}"
+                                            AllowDrop="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                                             DragOver="{x:Bind OnSidebarDragOver}"
                                             Drop="{x:Bind OnSidebarDrop}">
 

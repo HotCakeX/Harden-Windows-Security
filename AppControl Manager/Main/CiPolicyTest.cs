@@ -32,20 +32,20 @@ internal static class CiPolicyTest
 	internal static void TestCiPolicy(string xmlFilePath)
 	{
 		// Get the Code Integrity Schema file path
-		string schemaPath = GlobalVars.CISchemaPath;
+		string schemaPath = Atlas.CISchemaPath;
 
 		// Make sure the schema file exists
 		if (!File.Exists(schemaPath))
 		{
-			schemaPath = string.IsNullOrEmpty(GlobalVars.Settings.CiPolicySchemaPath) || !File.Exists(GlobalVars.Settings.CiPolicySchemaPath)
-				? throw new FileNotFoundException(GlobalVars.GetStr("CISchemaNotFound"), schemaPath)
-				: GlobalVars.Settings.CiPolicySchemaPath;
+			schemaPath = string.IsNullOrEmpty(Atlas.Settings.CiPolicySchemaPath) || !File.Exists(Atlas.Settings.CiPolicySchemaPath)
+				? throw new FileNotFoundException(Atlas.GetStr("CISchemaNotFound"), schemaPath)
+				: Atlas.Settings.CiPolicySchemaPath;
 		}
 
 		// Make sure the input XML file exists
 		if (!File.Exists(xmlFilePath))
 		{
-			throw new FileNotFoundException(GlobalVars.GetStr("FileNotExists"), xmlFilePath);
+			throw new FileNotFoundException(Atlas.GetStr("FileNotExists"), xmlFilePath);
 		}
 
 		// Validate XML file against schema
@@ -67,7 +67,7 @@ internal static class CiPolicyTest
 		{
 			throw new XmlSchemaValidationException(
 				string.Format(
-					GlobalVars.GetStr("XmlValidationErrorMessage"),
+					Atlas.GetStr("XmlValidationErrorMessage"),
 					xmlFilePath,
 					args.Message));
 		};

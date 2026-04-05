@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.SimulationMethods;
 
@@ -36,11 +37,6 @@ internal static class GetSignerInfo
 				"03", "04", "05", "06", "07", "09", "0A", "0E", "0G", "0H", "0I"
 			}, StringComparer.OrdinalIgnoreCase
 	);
-
-	/// <summary>
-	/// WHQL EKU Hex value
-	/// </summary>
-	private const string WHQLEkuHex = "010A2B0601040182370A0305";
 
 	/// <summary>
 	/// Parses an App Control policy and returns its Signers.
@@ -329,7 +325,7 @@ internal static class GetSignerInfo
 					if (EKUAndValuesCorrelation.TryGetValue(EkuID, out string? EkuValue))
 					{
 						// Check if the current EKU of the signer is WHQL
-						if (string.Equals(EkuValue, WHQLEkuHex, StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(EkuValue, XMLOps.NewWHQLFilePublisherLevelRules.EKUValue, StringComparison.OrdinalIgnoreCase))
 						{
 							IsWHQL = true;
 						}

@@ -33,7 +33,6 @@ using Windows.System;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.Others;
-using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 
@@ -69,7 +68,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// <summary>
 	/// Content of the main update button
 	/// </summary>
-	internal string UpdateButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
+	internal string UpdateButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("UpdateNavItem/ToolTipService/ToolTip");
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -79,7 +78,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 	internal bool WhatsNewInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal Visibility RatingsSectionVisibility { get; set => SP(ref field, value); } = GlobalVars.PackageSource is 1 ? Visibility.Visible : Visibility.Collapsed;
+	internal Visibility RatingsSectionVisibility { get; set => SP(ref field, value); } = Atlas.PackageSource is 1 ? Visibility.Visible : Visibility.Collapsed;
 
 	#endregion
 
@@ -92,29 +91,29 @@ internal sealed partial class UpdateVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 
-			if (GlobalVars.PackageSource is 1)
+			if (Atlas.PackageSource is 1)
 			{
-				MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdateStore"));
+				MainInfoBar.WriteInfo(Atlas.GetStr("CheckingForUpdateStore"));
 
 				UpdateCheckResponse UpCheckResult = await AppUpdate.CheckStore();
 
 				if (UpCheckResult.IsNewVersionAvailable)
 				{
-					MainInfoBar.WriteInfo(GlobalVars.GetStr("NewUpdateIsAvailableStore"));
+					MainInfoBar.WriteInfo(Atlas.GetStr("NewUpdateIsAvailableStore"));
 
 					// https://learn.microsoft.com/windows/apps/develop/launch/launch-store-app#opening-to-a-specific-product
-					Uri uri = new($"ms-windows-store://pdp/?ProductId={GlobalVars.StoreProductID}&mode=mini");
+					Uri uri = new($"ms-windows-store://pdp/?ProductId={Atlas.StoreProductID}&mode=mini");
 
 					bool launched = await Launcher.LaunchUriAsync(uri);
 
 					if (!launched)
 					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("ProblemOpeningMSStore"));
+						MainInfoBar.WriteWarning(Atlas.GetStr("ProblemOpeningMSStore"));
 					}
 				}
 				else
 				{
-					MainInfoBar.WriteSuccess(GlobalVars.GetStr("TheAppIsUpToDate"));
+					MainInfoBar.WriteSuccess(Atlas.GetStr("TheAppIsUpToDate"));
 				}
 			}
 			else
@@ -125,7 +124,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 				try
 				{
-					MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdate"));
+					MainInfoBar.WriteInfo(Atlas.GetStr("CheckingForUpdate"));
 
 					// Check for update asynchronously
 					UpdateCheckResponse updateCheckResult = await Task.Run(AppUpdate.CheckGitHub);
@@ -133,17 +132,17 @@ internal sealed partial class UpdateVM : ViewModelBase
 					// If a new version is available
 					if (updateCheckResult.IsNewVersionAvailable)
 					{
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("VersionComparison") + GlobalVars.currentAppVersion + GlobalVars.GetStr("WhileOnlineVersion") + updateCheckResult.OnlineVersion + GlobalVars.GetStr("UpdatingApplication"));
+						MainInfoBar.WriteInfo(Atlas.GetStr("VersionComparison") + Atlas.currentAppVersion + Atlas.GetStr("WhileOnlineVersion") + updateCheckResult.OnlineVersion + Atlas.GetStr("UpdatingApplication"));
 
 						WhatsNewInfoBarIsOpen = true;
 
 						// store the latest MSIXBundle version download link after retrieving it from GitHub text file
-						Uri onlineDownloadURL = new(await SecHttpClient.Instance.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
+						Uri onlineDownloadURL = new(await SecHttpClient.Instance.GetStringAsync(Atlas.AppUpdateDownloadLinkURL));
 
 						// Location of the MSIXBundle package where it will be saved after downloading it from GitHub
 						string AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadingPackage"));
+						MainInfoBar.WriteInfo(Atlas.GetStr("DownloadingPackage"));
 
 						ProgressBarIsIndeterminate = false;
 
@@ -202,21 +201,21 @@ internal sealed partial class UpdateVM : ViewModelBase
 							}
 						}
 
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadSuccess") + AppControlManagerSavePath);
+						MainInfoBar.WriteInfo(Atlas.GetStr("DownloadSuccess") + AppControlManagerSavePath);
 
 						ProgressBarIsIndeterminate = true;
 
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadsFinished"));
+						MainInfoBar.WriteInfo(Atlas.GetStr("DownloadsFinished"));
 
 						await InstallAppPackage(AppControlManagerSavePath, UseHardenedInstallationProcess, MainInfoBar);
 
-						MainInfoBar.WriteSuccess(GlobalVars.GetStr("UpdateSuccess"));
+						MainInfoBar.WriteSuccess(Atlas.GetStr("UpdateSuccess"));
 
-						UpdateButtonContent = GlobalVars.GetStr("UpdatesInstalled");
+						UpdateButtonContent = Atlas.GetStr("UpdatesInstalled");
 					}
 					else
 					{
-						MainInfoBar.WriteSuccess(GlobalVars.GetStr("AlreadyUpdated"));
+						MainInfoBar.WriteSuccess(Atlas.GetStr("AlreadyUpdated"));
 					}
 				}
 				catch
@@ -233,7 +232,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("UpdateCheckError"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("UpdateCheckError"));
 		}
 		finally
 		{
@@ -251,13 +250,13 @@ internal sealed partial class UpdateVM : ViewModelBase
 		try
 		{
 			// https://learn.microsoft.com/windows/apps/develop/launch/launch-store-app#opening-to-a-specific-product
-			Uri uri = new($"ms-windows-store://review/?ProductId={GlobalVars.StoreProductID}");
+			Uri uri = new($"ms-windows-store://review/?ProductId={Atlas.StoreProductID}");
 
 			bool launched = await Launcher.LaunchUriAsync(uri);
 
 			if (!launched)
 			{
-				Logger.Write(GlobalVars.GetStr("FailedToOpenRating"));
+				Logger.Write(Atlas.GetStr("FailedToOpenRating"));
 			}
 		}
 		catch (Exception ex)
@@ -285,7 +284,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 		try
 		{
-			ASROutput = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, comCommand);
+			ASROutput = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, comCommand);
 
 			// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
 			if (!string.IsNullOrWhiteSpace(ASROutput))
@@ -313,18 +312,18 @@ internal sealed partial class UpdateVM : ViewModelBase
 						// Wrap them with double quotes and separate them with a space
 						string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(item => $"\"{item}\""));
 
-						_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $@"wmi stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
+						_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $@"wmi stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
 					}
 				}
 			}
 		}
 		catch (JsonException Jex)
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("ASRRulesDeserializationFailedMessage"), ASROutput, Jex.Message));
+			Logger.Write(string.Format(Atlas.GetStr("ASRRulesDeserializationFailedMessage"), ASROutput, Jex.Message));
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(GlobalVars.GetStr("ASRError") + ex.Message);
+			Logger.Write(Atlas.GetStr("ASRError") + ex.Message);
 		}
 	}
 
@@ -348,11 +347,11 @@ internal sealed partial class UpdateVM : ViewModelBase
 			string path3 = Path.Combine(AppControlInstallFolder, "CppInterop", "ComManager.exe");
 
 			// Adding the extra executables included in the package so they will be allowed to run as well
-			_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{path3}\" ");
+			_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{path3}\" ");
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(GlobalVars.GetStr("ASRAddError") + ex.Message);
+			Logger.Write(Atlas.GetStr("ASRAddError") + ex.Message);
 		}
 	}
 

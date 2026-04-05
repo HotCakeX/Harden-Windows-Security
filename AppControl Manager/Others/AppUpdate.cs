@@ -50,10 +50,10 @@ internal static class AppUpdate
 	/// </summary>
 	internal static UpdateCheckResponse CheckGitHub()
 	{
-		string versionsResponse = SecHttpClient.Instance.GetStringAsync(GlobalVars.AppVersionLinkURL).GetAwaiter().GetResult().Trim();
+		string versionsResponse = SecHttpClient.Instance.GetStringAsync(Atlas.AppVersionLinkURL).GetAwaiter().GetResult().Trim();
 
 		Version onlineAvailableVersion = new(versionsResponse);
-		bool isUpdateAvailable = onlineAvailableVersion > GlobalVars.currentAppVersion;
+		bool isUpdateAvailable = onlineAvailableVersion > Atlas.currentAppVersion;
 
 		// Raise the UpdateAvailable event if there are subscribers
 		UpdateAvailable?.Invoke(
@@ -66,12 +66,12 @@ internal static class AppUpdate
 		{
 			// Set the text for the button in the update page
 			ViewModelProvider.UpdateVM.UpdateButtonContent = string.Format(
-				GlobalVars.GetStr("InstallVersionMessage"),
+				Atlas.GetStr("InstallVersionMessage"),
 				onlineAvailableVersion);
 		}
 		else
 		{
-			Logger.Write(GlobalVars.GetStr("TheAppIsUpToDate"));
+			Logger.Write(Atlas.GetStr("TheAppIsUpToDate"));
 		}
 
 		return new UpdateCheckResponse(
@@ -89,7 +89,7 @@ internal static class AppUpdate
 		_StoreContext = StoreContext.GetDefault();
 
 		// Initialize the dialog using wrapper function for IInitializeWithWindow
-		WinRT.Interop.InitializeWithWindow.Initialize(_StoreContext, GlobalVars.hWnd);
+		WinRT.Interop.InitializeWithWindow.Initialize(_StoreContext, Atlas.hWnd);
 
 		// Find any available updates to the currently running package
 		IReadOnlyList<StorePackageUpdate> updates = await _StoreContext.GetAppAndOptionalStorePackageUpdatesAsync();
@@ -101,7 +101,7 @@ internal static class AppUpdate
 
 		if (updates.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("TheAppIsUpToDate"));
+			Logger.Write(Atlas.GetStr("TheAppIsUpToDate"));
 		}
 		else
 		{
@@ -114,7 +114,7 @@ internal static class AppUpdate
 			);
 
 			// Set the text for the button in the update page
-			ViewModelProvider.UpdateVM.UpdateButtonContent = GlobalVars.GetStr("InstallLatestVer");
+			ViewModelProvider.UpdateVM.UpdateButtonContent = Atlas.GetStr("InstallLatestVer");
 		}
 
 		return new UpdateCheckResponse(
@@ -132,9 +132,9 @@ internal static class AppUpdate
 		{
 			try
 			{
-				if (GlobalVars.Settings.AutoCheckForUpdateAtStartup)
+				if (Atlas.Settings.AutoCheckForUpdateAtStartup)
 				{
-					_ = GlobalVars.PackageSource is 0 ? CheckGitHub() : await CheckStore();
+					_ = Atlas.PackageSource is 0 ? CheckGitHub() : await CheckStore();
 				}
 			}
 			catch (Exception ex)

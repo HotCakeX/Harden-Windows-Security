@@ -20,6 +20,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -36,11 +37,11 @@ internal static class NewPublisherLevelRules
 	{
 		if (publisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoPublisherSignersDetectedAllowMessage"));
+			Logger.Write(Atlas.GetStr("NoPublisherSignersDetectedAllowMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
+		Logger.Write(string.Format(Atlas.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
 
 		// Ensure the lists are initialized.
 		policyObj.Signers ??= [];
@@ -75,13 +76,13 @@ internal static class NewPublisherLevelRules
 				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
-				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+				if (publisherData.SiSigningScenario is SSType.UserMode)
 				{
 					umciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
 					policyObj.CiSigners.Add(new CiSigner(signerID: SignerID));
 				}
 				// For Kernel-Mode files
-				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+				else if (publisherData.SiSigningScenario is SSType.KernelMode)
 				{
 					kmciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
 				}
@@ -102,11 +103,11 @@ internal static class NewPublisherLevelRules
 	{
 		if (publisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoPublisherSignersDetectedDenyMessage"));
+			Logger.Write(Atlas.GetStr("NoPublisherSignersDetectedDenyMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
+		Logger.Write(string.Format(Atlas.GetStr("PublisherSignersToAddMessage"), publisherSigners.Count, "SiPolicy Object"));
 
 		// Ensure the lists initialized.
 		policyObj.Signers ??= [];
@@ -141,13 +142,13 @@ internal static class NewPublisherLevelRules
 				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
-				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+				if (publisherData.SiSigningScenario is SSType.UserMode)
 				{
 					umciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: SignerID, exceptAllowRule: null));
 					policyObj.CiSigners.Add(new CiSigner(signerID: SignerID));
 				}
 				// For Kernel-Mode files
-				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+				else if (publisherData.SiSigningScenario is SSType.KernelMode)
 				{
 					kmciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: SignerID, exceptAllowRule: null));
 				}

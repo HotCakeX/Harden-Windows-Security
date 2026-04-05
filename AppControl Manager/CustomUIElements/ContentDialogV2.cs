@@ -94,10 +94,10 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? TransparentBrush;
 			BorderThickness = BorderThick;
 			XamlRoot = App.MainWindow?.Content.XamlRoot;
-			RequestedTheme = Enum.TryParse<ElementTheme>(GlobalVars.Settings.AppTheme, true, out ElementTheme theme) ? theme : ElementTheme.Default; // Using TryParse because "System" is among the strings too.
+			RequestedTheme = Enum.TryParse<ElementTheme>(Atlas.Settings.AppTheme, true, out ElementTheme theme) ? theme : ElementTheme.Default; // Using TryParse because "System" is among the strings too.
 			CornerRadius = DialogCorner;
 			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"];
-			FlowDirection = Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection);
+			FlowDirection = Enum.Parse<FlowDirection>(Atlas.Settings.ApplicationGlobalFlowDirection);
 
 			// https://github.com/microsoft/microsoft-ui-xaml/issues/424
 			Resources["ContentDialogMaxWidth"] = 2000;

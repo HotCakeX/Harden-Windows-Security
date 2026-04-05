@@ -15,6 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using CommonCore.IntelGathering;
+
 namespace AppControlManager.Others;
 
 internal static class PolicyFileSigningStatusDetection
@@ -25,12 +27,12 @@ internal static class PolicyFileSigningStatusDetection
 	/// </summary>
 	/// <param name="policyXMLPath">Path to the policy XML file.</param>
 	/// <returns>IsSigned if either signer collection is non-empty; otherwise IsUnsigned.</returns>
-	internal static IntelGathering.SignatureStatus Check(string policyXMLPath)
+	internal static SignatureStatus Check(string policyXMLPath)
 	{
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(policyXMLPath, null);
 
 		return (policyObj.SupplementalPolicySigners?.Count > 0 || policyObj.UpdatePolicySigners?.Count > 0)
-			? IntelGathering.SignatureStatus.IsSigned
-			: IntelGathering.SignatureStatus.IsUnsigned;
+			? SignatureStatus.IsSigned
+			: SignatureStatus.IsUnsigned;
 	}
 }

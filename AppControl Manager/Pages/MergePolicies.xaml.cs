@@ -46,10 +46,10 @@ internal sealed partial class MergePolicies : Page, IAnimatedIconsManager, Commo
 		ViewModel.SigningScenarioRemovalPolicyLightAnimatedIconVisibility = visibility;
 
 		ViewModelProvider.SidebarVM.AssignActionPacks(
-			actionPack1: (LightUp1, GlobalVars.GetStr("MainPolicy")),
-			actionPack2: (LightUp2, GlobalVars.GetStr("OtherPolicies")),
-			actionPack3: (LightUp3, GlobalVars.GetStr("ConvertPoliciesToAppIDTaggingSettingsCard/Header")),
-			actionPack4: (LightUp4, GlobalVars.GetStr("RemoveSigningScenarioFeatureSettingsCard/Header"))
+			actionPack1: (LightUp1, Atlas.GetStr("MainPolicy")),
+			actionPack2: (LightUp2, Atlas.GetStr("OtherPolicies")),
+			actionPack3: (LightUp3, Atlas.GetStr("ConvertPoliciesToAppIDTaggingSettingsCard/Header")),
+			actionPack4: (LightUp4, Atlas.GetStr("RemoveSigningScenarioFeatureSettingsCard/Header"))
 		);
 	}
 
@@ -98,7 +98,7 @@ internal sealed partial class MergePolicies : Page, IAnimatedIconsManager, Commo
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MergePoliciesPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MergePoliciesPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies");
 
 }

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.SiPolicyIntel;
 
@@ -86,7 +87,7 @@ internal static class FileAttribDeDuplication
 		{
 			if (!signerDictionary.TryAdd(signer.ID, signer))
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("DuplicateSignerIdMessage"), signer.ID));
+				Logger.Write(string.Format(Atlas.GetStr("DuplicateSignerIdMessage"), signer.ID));
 			}
 		}
 

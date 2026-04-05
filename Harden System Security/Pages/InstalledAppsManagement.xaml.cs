@@ -32,6 +32,6 @@ internal sealed partial class InstalledAppsManagement : Page, CommonCore.UI.IPag
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("InstalledAppsManagementPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("InstalledAppsManagementPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps");
 }

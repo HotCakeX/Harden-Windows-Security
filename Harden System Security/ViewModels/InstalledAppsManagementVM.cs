@@ -22,8 +22,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
@@ -398,15 +396,15 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			if (targetApp is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("CouldNotDetermineWhichAppToUninstall"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppToUninstall"));
 				return;
 			}
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("StartingUninstallationOfApp"), targetApp.DisplayName));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingUninstallationOfApp"), targetApp.DisplayName));
 
 			// Show success only if no errors
 			if (!await UninstallApp(targetApp))
-				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyUninstalledApp"), targetApp.DisplayName));
+				MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyUninstalledApp"), targetApp.DisplayName));
 		}
 		catch (Exception ex)
 		{
@@ -428,7 +426,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		if (AppsListItemsSourceSelectedItems.Count == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoAppsSelectedForUninstallation"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("NoAppsSelectedForUninstallation"));
 			return;
 		}
 
@@ -440,7 +438,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("StartingUninstallationOfMultipleApps"), appsToUninstall.Count));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingUninstallationOfMultipleApps"), appsToUninstall.Count));
 
 			bool error = false;
 
@@ -453,7 +451,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			// Show success only if no errors
 			if (!error)
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("AllAppsSuccessfullyUninstalled"));
+				MainInfoBar.WriteSuccess(Atlas.GetStr("AllAppsSuccessfullyUninstalled"));
 		}
 		catch (Exception ex)
 		{
@@ -498,7 +496,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 					error = true;
 
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
 
 					if (deploymentOperation.ErrorCode is UnauthorizedAccessException)
 					{
@@ -508,23 +506,23 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				else if (deploymentOperation.Status is AsyncStatus.Canceled)
 				{
 					error = true;
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalCanceled"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("RemovalCanceled"));
 				}
 				else if (deploymentOperation.Status is AsyncStatus.Completed)
 				{
 					error = false;
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AppSuccessfullyRemoved"), package.FullName));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AppSuccessfullyRemoved"), package.FullName));
 				}
 				else
 				{
 					error = true;
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalStatusUnknown"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("RemovalStatusUnknown"));
 				}
 			});
 		}
 		catch (UnauthorizedAccessException)
 		{
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("TryingToRemoveAppForCurrentUserOnly"), package.FullName));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("TryingToRemoveAppForCurrentUserOnly"), package.FullName));
 
 			await Task.Run(async () =>
 			{
@@ -546,22 +544,22 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 					DeploymentResult deploymentResult = deploymentOperation.GetResults();
 
 					error = true;
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
 				}
 				else if (deploymentOperation.Status is AsyncStatus.Canceled)
 				{
 					error = true;
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalCanceled"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("RemovalCanceled"));
 				}
 				else if (deploymentOperation.Status is AsyncStatus.Completed)
 				{
 					error = false;
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AppSuccessfullyRemoved"), package.FullName));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AppSuccessfullyRemoved"), package.FullName));
 				}
 				else
 				{
 					error = true;
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalStatusUnknown"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("RemovalStatusUnknown"));
 				}
 			});
 		}
@@ -605,27 +603,27 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			if (targetApp is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("CouldNotDetermineWhichAppLocationToOpen"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppLocationToOpen"));
 				return;
 			}
 
 			if (string.IsNullOrWhiteSpace(targetApp.InstallLocation))
 			{
-				MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("NoInstallationLocationAvailable"), targetApp.DisplayName));
+				MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("NoInstallationLocationAvailable"), targetApp.DisplayName));
 				return;
 			}
 
 			// Check if the directory exists
 			if (!Directory.Exists(targetApp.InstallLocation))
 			{
-				MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("InstallationLocationDoesNotExist"), targetApp.InstallLocation));
+				MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("InstallationLocationDoesNotExist"), targetApp.InstallLocation));
 				return;
 			}
 
 			// Open the folder in File Explorer
 			await OpenFileInDefaultFileHandler(targetApp.InstallLocation);
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("OpenedInstallationLocation"), targetApp.DisplayName));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("OpenedInstallationLocation"), targetApp.DisplayName));
 		}
 		catch (Exception ex)
 		{
@@ -669,7 +667,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			if (targetApp is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("CouldNotDetermineWhichAppDetailsToCopy"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppDetailsToCopy"));
 				return;
 			}
 
@@ -696,7 +694,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		{
 			if (AppsListItemsSourceBackingList.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoInstalledAppsForExport"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoInstalledAppsForExport"));
 				return;
 			}
 
@@ -715,14 +713,14 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			if (itemsToExport.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoInstalledAppsForExport"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoInstalledAppsForExport"));
 				return;
 			}
 
 			DateTime now = DateTime.Now;
 			string defaultFileName = $"Installed Apps {now:yyyy-MM-dd_HH-mm-ss}.json";
 
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, defaultFileName);
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, defaultFileName);
 			if (string.IsNullOrWhiteSpace(savePath))
 			{
 				return;
@@ -734,7 +732,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				File.WriteAllText(savePath, json, Encoding.UTF8);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedInstalledApps"), itemsToExport.Count, savePath));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedInstalledApps"), itemsToExport.Count, savePath));
 		}
 		catch (Exception ex)
 		{

@@ -43,7 +43,7 @@ internal static class Manager
 		using RegistryKey subKey = baseRegistryKey.OpenSubKey(package.KeyName, true) ?? baseRegistryKey.CreateSubKey(package.KeyName);
 
 		if (package.RegValue is null)
-			throw new InvalidOperationException(GlobalVars.GetStr("RegistryKeyDidNotHaveRegValue"));
+			throw new InvalidOperationException(Atlas.GetStr("RegistryKeyDidNotHaveRegValue"));
 
 		if (package.policyAction is PolicyAction.Apply)
 		{
@@ -69,7 +69,7 @@ internal static class Manager
 		}
 		else
 		{
-			throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidActionSpecified"), package.policyAction));
+			throw new ArgumentException(string.Format(Atlas.GetStr("InvalidActionSpecified"), package.policyAction));
 		}
 	}
 
@@ -137,7 +137,7 @@ internal static class Manager
 			RegistryValueType.REG_MULTI_SZ
 				=> string.Join(Separator, (string[])rawValue),
 
-			_ => throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"))
+			_ => throw new ArgumentException(Atlas.GetStr("InvalidRegistryValueType"))
 		};
 	}
 
@@ -154,11 +154,11 @@ internal static class Manager
 			try
 			{
 				EditRegistry(policy);
-				appliedEntries.Add(string.Format(GlobalVars.GetStr("AppliedRegistryEntry"), policy.Hive, policy.KeyName, policy.ValueName));
+				appliedEntries.Add(string.Format(Atlas.GetStr("AppliedRegistryEntry"), policy.Hive, policy.KeyName, policy.ValueName));
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorApplyingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
+				Logger.Write(string.Format(Atlas.GetStr("ErrorApplyingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
 			}
 		}
 
@@ -167,7 +167,7 @@ internal static class Manager
 			Logger.Write(appliedEntry);
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("RegistryApplicationComplete"), appliedEntries.Count, policies.Count));
+		Logger.Write(string.Format(Atlas.GetStr("RegistryApplicationComplete"), appliedEntries.Count, policies.Count));
 	}
 
 	/// <summary>
@@ -204,12 +204,12 @@ internal static class Manager
 
 				EditRegistry(removePolicy);
 
-				string action = policy.DefaultRegValue is null ? GlobalVars.GetStr("RemovedRegistryEntry") : GlobalVars.GetStr("ResetToDefaultRegistryEntry");
-				removedEntries.Add(string.Format(GlobalVars.GetStr("RemovedRegistryEntryFormat"), action, policy.Hive, policy.KeyName, policy.ValueName));
+				string action = policy.DefaultRegValue is null ? Atlas.GetStr("RemovedRegistryEntry") : Atlas.GetStr("ResetToDefaultRegistryEntry");
+				removedEntries.Add(string.Format(Atlas.GetStr("RemovedRegistryEntryFormat"), action, policy.Hive, policy.KeyName, policy.ValueName));
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorRemovingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
+				Logger.Write(string.Format(Atlas.GetStr("ErrorRemovingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
 			}
 		}
 
@@ -218,7 +218,7 @@ internal static class Manager
 			Logger.Write(removedEntry);
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("RegistryRemovalComplete"), removedEntries.Count, policies.Count));
+		Logger.Write(string.Format(Atlas.GetStr("RegistryRemovalComplete"), removedEntries.Count, policies.Count));
 	}
 
 	/// <summary>
@@ -244,17 +244,17 @@ internal static class Manager
 
 				verificationResults[policy] = isVerified;
 				Logger.Write(isVerified ?
-					string.Format(GlobalVars.GetStr("VerifyRegistryMatch"), policy.Hive, policy.KeyName, policy.ValueName) :
-					string.Format(GlobalVars.GetStr("VerifyRegistryMismatch"), policy.Hive, policy.KeyName, policy.ValueName));
+					string.Format(Atlas.GetStr("VerifyRegistryMatch"), policy.Hive, policy.KeyName, policy.ValueName) :
+					string.Format(Atlas.GetStr("VerifyRegistryMismatch"), policy.Hive, policy.KeyName, policy.ValueName));
 			}
 			catch (Exception ex)
 			{
 				verificationResults[policy] = false;
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorVerifyingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
+				Logger.Write(string.Format(Atlas.GetStr("ErrorVerifyingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
 			}
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("RegistryVerificationComplete"), verificationResults.Count(kvp => kvp.Value), policies.Count));
+		Logger.Write(string.Format(Atlas.GetStr("RegistryVerificationComplete"), verificationResults.Count(kvp => kvp.Value), policies.Count));
 		return verificationResults;
 	}
 
@@ -324,7 +324,7 @@ internal static class Manager
 			Hive.HKLM => Registry.LocalMachine,
 			Hive.HKCU => Registry.CurrentUser,
 			Hive.HKCR => Registry.ClassesRoot,
-			_ => throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidRegistryBaseKey"), hive))
+			_ => throw new ArgumentException(string.Format(Atlas.GetStr("InvalidRegistryBaseKey"), hive))
 		};
 	}
 
@@ -375,7 +375,7 @@ internal static class Manager
 			case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
 			default:
 				{
-					throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"));
+					throw new ArgumentException(Atlas.GetStr("InvalidRegistryValueType"));
 				}
 		}
 	}

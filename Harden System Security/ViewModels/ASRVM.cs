@@ -26,7 +26,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
@@ -229,20 +228,20 @@ internal sealed partial class ASRVM : ViewModelBase
 		Dictionary<string, ASRRuleState> output = [];
 
 		// Get ASR rule IDs from the system
-		string? idsJson = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Ids");
+		string? idsJson = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Ids");
 
 		if (string.IsNullOrEmpty(idsJson))
 		{
-			Logger.Write(GlobalVars.GetStr("FailedToRetrieveASRRuleIDs"));
+			Logger.Write(Atlas.GetStr("FailedToRetrieveASRRuleIDs"));
 			return output;
 		}
 
 		// Get ASR rule actions from the system
-		string? actionsJson = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Actions");
+		string? actionsJson = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Actions");
 
 		if (string.IsNullOrEmpty(actionsJson))
 		{
-			Logger.Write(GlobalVars.GetStr("FailedToRetrieveASRRuleActions"));
+			Logger.Write(Atlas.GetStr("FailedToRetrieveASRRuleActions"));
 			return output;
 		}
 
@@ -252,13 +251,13 @@ internal sealed partial class ASRVM : ViewModelBase
 
 		if (ids == null || actions == null)
 		{
-			Logger.Write(GlobalVars.GetStr("FailedToParseASRRulesData"));
+			Logger.Write(Atlas.GetStr("FailedToParseASRRulesData"));
 			return output;
 		}
 
 		if (ids.Length != actions.Length)
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("MismatchBetweenIDsAndActionsCount"), ids.Length, actions.Length));
+			Logger.Write(string.Format(Atlas.GetStr("MismatchBetweenIDsAndActionsCount"), ids.Length, actions.Length));
 			return output;
 		}
 
@@ -279,7 +278,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			output[id] = state;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyRetrievedASRRuleStates"), output.Count));
+		Logger.Write(string.Format(Atlas.GetStr("SuccessfullyRetrievedASRRuleStates"), output.Count));
 
 		return output;
 	}
@@ -326,7 +325,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("AppliedASRRuleWithState"), entry.PolicyEntry.FriendlyName, entry.State));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("AppliedASRRuleWithState"), entry.PolicyEntry.FriendlyName, entry.State));
 		}
 		catch (Exception ex)
 		{
@@ -383,7 +382,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("AppliedASRRulesSuccessfully"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("AppliedASRRulesSuccessfully"));
 		}
 		catch (Exception ex)
 		{
@@ -412,7 +411,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				entry.State = ASRRuleState.NotConfigured;
 			}
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("RemovedASRRulesSuccessfully"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("RemovedASRRulesSuccessfully"));
 		}
 		catch (Exception ex)
 		{
@@ -460,11 +459,11 @@ internal sealed partial class ASRVM : ViewModelBase
 				}
 			}
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("RetrievedSystemStatesAndUpdatedASRRules"), updatedRules));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("RetrievedSystemStatesAndUpdatedASRRules"), updatedRules));
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("FailedToVerifyASRRules"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("FailedToVerifyASRRules"));
 		}
 		finally
 		{
@@ -515,7 +514,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				}
 			}
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyAppliedRecommendedValuesASRRules"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyAppliedRecommendedValuesASRRules"));
 		}
 		catch (Exception ex)
 		{
@@ -581,7 +580,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Generator.GetFileName());
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, Generator.GetFileName());
 
 			if (saveLocation is null)
 				return;
@@ -600,7 +599,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				MContainerJsonContext.SerializeSingle(container, saveLocation);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedASRRules"), AllASRRules.Count, saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedASRRules"), AllASRRules.Count, saveLocation));
 		}
 		catch (Exception ex)
 		{
@@ -672,7 +671,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					RegistryPolicyParser.RemovePoliciesFromSystem(ASRPolicyFromJSON, GroupPolicyContext.Machine);
 				}, cancellationToken);
 
-				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+				_ = Atlas.AppDispatcher.TryEnqueue(() =>
 				{
 					// Set UI states to NotConfigured.
 					foreach (ASRRuleEntry runtimeEntry in AllASRRules)
@@ -729,7 +728,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					{
 						appliedCount++;
 						parentNeeded = true;
-						_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+						_ = Atlas.AppDispatcher.TryEnqueue(() =>
 						{
 							runtimeEntry.State = desiredState;
 						});
@@ -738,7 +737,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					{
 						// Full sync explicit reset.
 						resetCount++;
-						_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+						_ = Atlas.AppDispatcher.TryEnqueue(() =>
 						{
 							runtimeEntry.State = ASRRuleState.NotConfigured;
 						});

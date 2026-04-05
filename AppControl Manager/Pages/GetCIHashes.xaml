@@ -6,13 +6,13 @@
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:local="using:AppControlManager.Pages"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:vm="using:AppControlManager.ViewModels"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
         <!-- drag & drop support -->
-        <ScrollViewer AllowDrop="{x:Bind vm:ViewModelBase.IsNotElevated}"
+        <ScrollViewer AllowDrop="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                       DragOver="{x:Bind ViewModel.OnDragOver}"
                       Drop="{x:Bind ViewModel.OnDrop}">
             <Grid>
@@ -97,7 +97,7 @@
 
                         <!-- Drag and drop hint -->
                         <TextBlock x:Uid="DragAndDropHint"
-                                   Visibility="{x:Bind vm:ViewModelBase.IsNotElevated}"
+                                   Visibility="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                                    VerticalAlignment="Center"
                                    Opacity="0.7"
                                    FontStyle="Italic" />

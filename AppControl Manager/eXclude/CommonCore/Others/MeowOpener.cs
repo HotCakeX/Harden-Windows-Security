@@ -45,7 +45,7 @@ internal static class MeowParser
 			if (status != 0)
 			{
 				// If the context is not acquired
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("BCryptOpenAlgorithmProviderFailedMessage"), status));
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("BCryptOpenAlgorithmProviderFailedMessage"), status));
 			}
 
 			// Opens the catalog file and gets a handle to the catalog context.
@@ -55,7 +55,7 @@ internal static class MeowParser
 			{
 				// If the handle is not obtained, capture the error code.
 				int error = Marshal.GetLastPInvokeError();
-				Logger.Write(string.Format(GlobalVars.GetStr("CryptCATOpenFailedMessage"), error));
+				Logger.Write(string.Format(Atlas.GetStr("CryptCATOpenFailedMessage"), error));
 			}
 
 			// Iterates through the catalog members.
@@ -85,7 +85,7 @@ internal static class MeowParser
 				if (closeStatus != 0)
 				{
 					// Log the error if closing the handle failed.
-					Logger.Write(string.Format(GlobalVars.GetStr("BCryptCloseAlgorithmProviderFailedMessage"), closeStatus));
+					Logger.Write(string.Format(Atlas.GetStr("BCryptCloseAlgorithmProviderFailedMessage"), closeStatus));
 				}
 			}
 

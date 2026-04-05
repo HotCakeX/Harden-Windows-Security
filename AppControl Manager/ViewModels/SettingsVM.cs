@@ -23,14 +23,13 @@ using Microsoft.UI.Dispatching;
 using CommonCore.AppSettings;
 
 #if HARDEN_SYSTEM_SECURITY
-using AppControlManager.ViewModels;
 using HardenSystemSecurity.WindowComponents;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 
 #if APP_CONTROL_MANAGER
 using System.Collections.ObjectModel;
-using AppControlManager.IntelGathering;
+using CommonCore.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.WindowComponents;
 using System.Threading.Tasks;
@@ -82,10 +81,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				GlobalVars.Settings.ApplicationGlobalFlowDirection = field ? "LeftToRight" : "RightToLeft";
+				Atlas.Settings.ApplicationGlobalFlowDirection = field ? "LeftToRight" : "RightToLeft";
 			}
 		}
-	} = string.Equals(GlobalVars.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase);
+	} = string.Equals(Atlas.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase);
 
 	private enum NavViewLocation
 	{
@@ -104,7 +103,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				// Raise the global OnNavigationViewLocationChanged event
 				NavigationViewLocationManager.OnNavigationViewLocationChanged(x);
 
-				GlobalVars.Settings.NavViewPaneDisplayMode = x;
+				Atlas.Settings.NavViewPaneDisplayMode = x;
 			}
 		}
 	}
@@ -147,7 +146,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				string x = SupportedLanguagesReverse[field];
 
 				ApplicationLanguages.PrimaryLanguageOverride = x;
-				GlobalVars.Settings.ApplicationGlobalLanguage = x;
+				Atlas.Settings.ApplicationGlobalLanguage = x;
 
 				// Get reference to the MainWindow and refresh the localized content
 				if (App.MainWindow is MainWindow mainWindow)
@@ -159,7 +158,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				ViewModelProvider.NavigationService.RefreshSettingsPage();
 			}
 		}
-	} = SupportedLanguages.TryGetValue(GlobalVars.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;
+	} = SupportedLanguages.TryGetValue(Atlas.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;
 
 	/// <summary>
 	/// Language Selection ComboBox ItemsSource
@@ -187,10 +186,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 				// Raise the global BackgroundChanged event
 				AppThemeManager.OnAppThemeChanged(AppThemesReverse[field]);
 
-				GlobalVars.Settings.AppTheme = AppThemesReverse[field];
+				Atlas.Settings.AppTheme = AppThemesReverse[field];
 			}
 		}
-	} = AppThemes.TryGetValue(GlobalVars.Settings.AppTheme, out int x) ? x : 0;
+	} = AppThemes.TryGetValue(Atlas.Settings.AppTheme, out int x) ? x : 0;
 
 	private static readonly Dictionary<string, int> IconsStyles = new(StringComparer.OrdinalIgnoreCase)
 	{
@@ -215,15 +214,15 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 				ViewModelProvider.MainWindowVM.OnIconsStylesChanged(x);
 
-				GlobalVars.Settings.IconsStyle = x;
+				Atlas.Settings.IconsStyle = x;
 			}
 		}
-	} = IconsStyles.TryGetValue(GlobalVars.Settings.IconsStyle, out int x) ? x : 2;
+	} = IconsStyles.TryGetValue(Atlas.Settings.IconsStyle, out int x) ? x : 2;
 
 	/// <summary>
 	/// Set the version in the settings card to the current app version
 	/// </summary>
-	internal readonly string VersionTextBlockText = $"Version {GlobalVars.currentAppVersion}";
+	internal readonly string VersionTextBlockText = $"Version {Atlas.currentAppVersion}";
 
 	/// <summary>
 	/// Set the year for the copyright section
@@ -240,7 +239,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		MainWindowVM.SetCaptionButtonsFlowDirection(((ToggleSwitch)sender).IsOn ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
 		// Needs to run via Dispatcher, otherwise the 1st double-click on the UI elements register as pass-through, meaning they will resize the window as if we clicked on an empty area on the TitleBar.
-		_ = GlobalVars.AppDispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+		_ = Atlas.AppDispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
 		{
 			// Get reference to the MainWindow and refresh the localized content
 			if (App.MainWindow is MainWindow mainWindow)
@@ -262,10 +261,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForCISchemaPath()
 	{
-		string? path = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XSDFilePickerFilter);
+		string? path = FileDialogHelper.ShowFilePickerDialog(Atlas.XSDFilePickerFilter);
 
 		if (path is not null)
-			GlobalVars.Settings.CiPolicySchemaPath = path;
+			Atlas.Settings.CiPolicySchemaPath = path;
 	}
 
 	internal string? CertificatePathTextBox { get; set => SP(ref field, value); }
@@ -405,7 +404,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	internal void BrowseButton_CertificatePath_Click()
 	{
-		CertificatePathTextBox = FileDialogHelper.ShowFilePickerDialog(GlobalVars.CertificatePickerFilter);
+		CertificatePathTextBox = FileDialogHelper.ShowFilePickerDialog(Atlas.CertificatePickerFilter);
 	}
 
 	#endregion

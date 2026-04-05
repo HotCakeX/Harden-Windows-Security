@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.1.240821.1+077322fa26
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile StarBlack.json
-//       
+//
 //       Input file:
 //           StarBlack.json (52099 bytes created 15:26+02:00 Nov 17 2024)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //
@@ -112,7 +112,7 @@ namespace AnimatedVisuals
         {
             diagnostics = null;
 
-            var res = 
+            var res =
                 new StarBlack_AnimatedVisual(
                     compositor
                     );
@@ -259,7 +259,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // - - - Shape tree root for layer: star 
+            // - - - Shape tree root for layer: star
             // - - ShapeGroup: Group 1 Offset:<25, 25.05>
             CanvasGeometry Geometry_1()
             {
@@ -387,7 +387,7 @@ namespace AnimatedVisuals
                 return _c.CreatePathGeometry(new CompositionPath(Geometry_0()));
             }
 
-            // - Shape tree root for layer: star 
+            // - Shape tree root for layer: star
             // ShapeGroup: Group 1 Offset:<25, 25.05>
             CompositionPathGeometry PathGeometry_1()
             {
@@ -414,7 +414,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Shape tree root for layer: star 
+            // Shape tree root for layer: star
             // ShapeGroup: Group 1 Offset:<25, 25.05>
             CompositionSpriteShape SpriteShape_1()
             {

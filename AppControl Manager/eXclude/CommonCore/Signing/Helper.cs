@@ -31,7 +31,7 @@ internal static class Helper
 	{
 		if (string.IsNullOrWhiteSpace(subjectNameFragment))
 		{
-			Logger.Write(GlobalVars.GetStr("SubjectNameFragmentEmpty"));
+			Logger.Write(Atlas.GetStr("SubjectNameFragmentEmpty"));
 			return null;
 		}
 
@@ -57,11 +57,11 @@ internal static class Helper
 				X509Certificate2Collection certificates = store.Certificates;
 				if (certificates.Count == 0)
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("NoCertificatesFoundInStore"), store.Location, store.Name));
+					Logger.Write(string.Format(Atlas.GetStr("NoCertificatesFoundInStore"), store.Location, store.Name));
 					continue;
 				}
 
-				Logger.Write(string.Format(GlobalVars.GetStr("SearchingCertificatesInStore"), certificates.Count, store.Location, store.Name, subjectNameFragment, targetCN));
+				Logger.Write(string.Format(Atlas.GetStr("SearchingCertificatesInStore"), certificates.Count, store.Location, store.Name, subjectNameFragment, targetCN));
 
 				foreach (X509Certificate2 cert in certificates)
 				{
@@ -83,8 +83,8 @@ internal static class Helper
 
 					if (!subjectMatch) continue;
 
-					Logger.Write(string.Format(GlobalVars.GetStr("FoundCertificateWithMatchingSubject"), cert.Subject, cert.Thumbprint));
-					Logger.Write(string.Format(GlobalVars.GetStr("SignatureAlgorithmInfo"), cert.SignatureAlgorithm.FriendlyName, cert.SignatureAlgorithm.Value));
+					Logger.Write(string.Format(Atlas.GetStr("FoundCertificateWithMatchingSubject"), cert.Subject, cert.Thumbprint));
+					Logger.Write(string.Format(Atlas.GetStr("SignatureAlgorithmInfo"), cert.SignatureAlgorithm.FriendlyName, cert.SignatureAlgorithm.Value));
 
 					bool isCodeSigning = false;
 					foreach (X509Extension extension in cert.Extensions)
@@ -96,7 +96,7 @@ internal static class Helper
 								if (string.Equals(oid.Value, Structure.CodeSigningOID, StringComparison.OrdinalIgnoreCase))
 								{
 									isCodeSigning = true;
-									Logger.Write(GlobalVars.GetStr("CertificateHasCodeSigningEKU"));
+									Logger.Write(Atlas.GetStr("CertificateHasCodeSigningEKU"));
 									break;
 								}
 							}
@@ -105,22 +105,22 @@ internal static class Helper
 						if (isCodeSigning) break;
 					}
 
-					if (!isCodeSigning) Logger.Write(GlobalVars.GetStr("CertificateDoesNotHaveCodeSigningEKU"));
+					if (!isCodeSigning) Logger.Write(Atlas.GetStr("CertificateDoesNotHaveCodeSigningEKU"));
 
 					if (cert.HasPrivateKey && isCodeSigning)
 					{
-						Logger.Write(string.Format(GlobalVars.GetStr("SuitableCodeSigningCertificateFound"), cert.Subject, store.Location, store.Name, cert.Thumbprint));
+						Logger.Write(string.Format(Atlas.GetStr("SuitableCodeSigningCertificateFound"), cert.Subject, store.Location, store.Name, cert.Thumbprint));
 						return cert;
 					}
 				}
 			}
 			catch (CryptographicException ex)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("CryptographicErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
+				Logger.Write(string.Format(Atlas.GetStr("CryptographicErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("GeneralErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
+				Logger.Write(string.Format(Atlas.GetStr("GeneralErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
 			}
 			finally
 			{
@@ -128,7 +128,7 @@ internal static class Helper
 			}
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("NoSuitableCodeSigningCertificateFound"), subjectNameFragment));
+		Logger.Write(string.Format(Atlas.GetStr("NoSuitableCodeSigningCertificateFound"), subjectNameFragment));
 		return null;
 	}
 }

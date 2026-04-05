@@ -29,7 +29,7 @@ internal static class JumpListMgr
 	{
 		if (!JumpList.IsSupported())
 		{
-			Logger.Write(GlobalVars.GetStr("JumpListNotSupportedMessage"));
+			Logger.Write(Atlas.GetStr("JumpListNotSupportedMessage"));
 			return;
 		}
 

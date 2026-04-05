@@ -39,6 +39,6 @@ internal sealed partial class Settings : Page, CommonCore.UI.IPageHeaderProvider
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SettingsPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SettingsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

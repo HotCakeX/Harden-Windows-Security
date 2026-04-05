@@ -85,7 +85,7 @@ internal static class CategoryProcessorFactory
 	private sealed class MicrosoftSecurityBaselineOverridesProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.MSFTSecBaselines_OptionalOverrides;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaselineOverrides");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MSFTSecBaselineOverrides");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MicrosoftBaseLinesOverridesVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -96,7 +96,7 @@ internal static class CategoryProcessorFactory
 	private sealed class MicrosoftDefenderProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.MicrosoftDefender;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTDefender");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MSFTDefender");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MicrosoftDefenderVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -107,7 +107,7 @@ internal static class CategoryProcessorFactory
 	private sealed class BitLockerSettingsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.BitLockerSettings;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_BitLocker");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_BitLocker");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.BitLockerVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -118,7 +118,7 @@ internal static class CategoryProcessorFactory
 	private sealed class TLSSecurityProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.TLSSecurity;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_TLS");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_TLS");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.TLSVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -129,7 +129,7 @@ internal static class CategoryProcessorFactory
 	private sealed class LockScreenProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.LockScreen;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_LockScreen");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_LockScreen");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.LockScreenVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -140,7 +140,7 @@ internal static class CategoryProcessorFactory
 	private sealed class UserAccountControlProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.UserAccountControl;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_UAC");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_UAC");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.UACVM;
 
 		// Use the ViewModel's CreateAllMUnits so both JSON and programmatic MUnits
@@ -151,7 +151,7 @@ internal static class CategoryProcessorFactory
 	private sealed class DeviceGuardProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.DeviceGuard;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_DeviceGuard");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_DeviceGuard");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.DeviceGuardVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -162,7 +162,7 @@ internal static class CategoryProcessorFactory
 	private sealed class WindowsFirewallProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.WindowsFirewall;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_WindowsFirewall");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_WindowsFirewall");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsFirewallVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -173,7 +173,7 @@ internal static class CategoryProcessorFactory
 	private sealed class WindowsNetworkingProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.WindowsNetworking;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_WindowsNetworking");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_WindowsNetworking");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsNetworkingVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -184,7 +184,7 @@ internal static class CategoryProcessorFactory
 	private sealed class MiscellaneousConfigurationsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.MiscellaneousConfigurations;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MiscellaneousConfig");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MiscellaneousConfig");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MiscellaneousConfigsVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -195,7 +195,7 @@ internal static class CategoryProcessorFactory
 	private sealed class WindowsUpdateConfigurationsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.WindowsUpdateConfigurations;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_WindowsUpdate");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_WindowsUpdate");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsUpdateVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -206,7 +206,7 @@ internal static class CategoryProcessorFactory
 	private sealed class EdgeBrowserConfigurationsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.EdgeBrowserConfigurations;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_Edge");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_Edge");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.EdgeVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -217,7 +217,7 @@ internal static class CategoryProcessorFactory
 	private sealed class NonAdminCommandsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.NonAdminCommands;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_NonAdmin");
+		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_NonAdmin");
 		protected override IMUnitListViewModel ViewModel => ViewModelProvider.NonAdminVM;
 
 		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
@@ -232,7 +232,7 @@ internal static class CategoryProcessorFactory
 	private sealed class MicrosoftSecurityBaselineProcessor : ICategoryProcessor
 	{
 		public Categories Category => Categories.MicrosoftSecurityBaseline;
-		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline");
+		public string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MSFTSecBaseline");
 
 		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
@@ -253,7 +253,7 @@ internal static class CategoryProcessorFactory
 	private sealed class Microsoft365AppsSecurityBaselineProcessor : ICategoryProcessor
 	{
 		public Categories Category => Categories.Microsoft365AppsSecurityBaseline;
-		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline");
+		public string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MSFT365AppsSecBaseline");
 
 		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
@@ -276,7 +276,7 @@ internal static class CategoryProcessorFactory
 	private sealed class OptionalWindowsFeaturesProcessor : ICategoryProcessor
 	{
 		public Categories Category => Categories.OptionalWindowsFeatures;
-		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures");
+		public string CategoryDisplayName => Atlas.GetStr("ProtectCategory_OptionalWinFeatures");
 
 		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
@@ -312,7 +312,7 @@ internal static class CategoryProcessorFactory
 	private sealed class AttackSurfaceReductionRulesProcessor : ICategoryProcessor
 	{
 		public Categories Category => Categories.AttackSurfaceReductionRules;
-		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_ASRRules");
+		public string CategoryDisplayName => Atlas.GetStr("ProtectCategory_ASRRules");
 
 		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
@@ -458,7 +458,7 @@ internal static class CategoryProcessorFactory
 	private sealed class CountryIPBlockingProcessor : ICategoryProcessor
 	{
 		public Categories Category => Categories.CountryIPBlocking;
-		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_CountryIPBlock");
+		public string CategoryDisplayName => Atlas.GetStr("ProtectCategory_CountryIPBlock");
 
 		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{

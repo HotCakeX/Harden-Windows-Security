@@ -22,7 +22,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using CommonCore.Interop;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -369,7 +368,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 
 		List<OpenPortItem> newItems = query.ToList();
 
-		// Smart Merge so that updating elements sequentially directly on the list ensures that the List View 
+		// Smart Merge so that updating elements sequentially directly on the list ensures that the List View
 		// active selection and visual scrolling location do not flicker or jump to the top automatically.
 		for (int i = 0; i < newItems.Count; i++)
 		{

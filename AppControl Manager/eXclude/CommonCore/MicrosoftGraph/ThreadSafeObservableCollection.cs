@@ -98,9 +98,9 @@ internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T
 	// Ensure CollectionChanged is marshalled to the UI thread.
 	protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
 	{
-		if (!GlobalVars.AppDispatcher.HasThreadAccess)
+		if (!Atlas.AppDispatcher.HasThreadAccess)
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() => base.OnCollectionChanged(e));
+			_ = Atlas.AppDispatcher.TryEnqueue(() => base.OnCollectionChanged(e));
 		}
 		else
 		{
@@ -111,9 +111,9 @@ internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T
 	// Ensure PropertyChanged is marshalled to the UI thread.
 	protected override void OnPropertyChanged(PropertyChangedEventArgs e)
 	{
-		if (!GlobalVars.AppDispatcher.HasThreadAccess)
+		if (!Atlas.AppDispatcher.HasThreadAccess)
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() => base.OnPropertyChanged(e));
+			_ = Atlas.AppDispatcher.TryEnqueue(() => base.OnPropertyChanged(e));
 		}
 		else
 		{

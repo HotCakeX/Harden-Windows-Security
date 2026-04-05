@@ -47,8 +47,8 @@ internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 			// Check if all fields are filled
 			if (string.IsNullOrWhiteSpace(Provider) || string.IsNullOrWhiteSpace(Key) || string.IsNullOrWhiteSpace(ValueName))
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("GetSecurePolicySettings_FillAllFields"),
-					GlobalVars.GetStr("GetSecurePolicySettings_InputRequired"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("GetSecurePolicySettings_FillAllFields"),
+					Atlas.GetStr("GetSecurePolicySettings_InputRequired"));
 				return;
 			}
 
@@ -57,13 +57,13 @@ internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 
 			if (result.StatusCode is not 0)
 			{
-				MainInfoBar.WriteInfo(GlobalVars.GetStr("GetSecurePolicySettings_NoPolicyMessage"),
-					GlobalVars.GetStr("GetSecurePolicySettings_PolicyNotFound"));
+				MainInfoBar.WriteInfo(Atlas.GetStr("GetSecurePolicySettings_NoPolicyMessage"),
+					Atlas.GetStr("GetSecurePolicySettings_PolicyNotFound"));
 			}
 			else
 			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("GetSecurePolicySettings_PolicyFoundMessage"),
-					GlobalVars.GetStr("GetSecurePolicySettings_PolicyFound"));
+				MainInfoBar.WriteSuccess(Atlas.GetStr("GetSecurePolicySettings_PolicyFoundMessage"),
+					Atlas.GetStr("GetSecurePolicySettings_PolicyFound"));
 			}
 
 			// Populate result fields

@@ -34,7 +34,7 @@ internal static class NewPFNLevelRules
 	{
 		if (PFNData.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoPackageFamilyNamesDetectedAllowMessage"));
+			Logger.Write(Atlas.GetStr("NoPackageFamilyNamesDetectedAllowMessage"));
 			return siPolicy;
 		}
 
@@ -53,7 +53,7 @@ internal static class NewPFNLevelRules
 			// Create new PackageFamilyName rule
 			Allow newPFNRule = new(id: ID)
 			{
-				FriendlyName = GlobalVars.GetStr("AllowingPackagedAppFriendlyName"),
+				FriendlyName = Atlas.GetStr("AllowingPackagedAppFriendlyName"),
 				MinimumFileVersion = PFN.MinimumFileVersion,
 				PackageFamilyName = PFN.PackageFamilyName
 			};
@@ -79,7 +79,7 @@ internal static class NewPFNLevelRules
 	{
 		if (PFNData.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoPackageFamilyNamesDetectedDenyMessage"));
+			Logger.Write(Atlas.GetStr("NoPackageFamilyNamesDetectedDenyMessage"));
 			return siPolicy;
 		}
 
@@ -98,7 +98,7 @@ internal static class NewPFNLevelRules
 			// Create new PackageFamilyName rule
 			Deny newPFNRule = new(id: ID)
 			{
-				FriendlyName = GlobalVars.GetStr("DenyingPackagedAppFriendlyName"),
+				FriendlyName = Atlas.GetStr("DenyingPackagedAppFriendlyName"),
 				MinimumFileVersion = PFN.MinimumFileVersion,
 				PackageFamilyName = PFN.PackageFamilyName
 			};

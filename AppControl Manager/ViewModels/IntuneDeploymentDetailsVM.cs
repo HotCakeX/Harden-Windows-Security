@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -33,7 +32,7 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 {
-	internal IntuneDeploymentDetailsVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
+	internal IntuneDeploymentDetailsVM() => _ = Atlas.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 
 	internal readonly InfoBarSettings MainInfoBar = new();
@@ -66,7 +65,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Stores current sorting state (column + direction).
 	/// </summary>
-	private ListViewHelper.SortState SortState { get; } = new();
+	private readonly ListViewHelper.SortState SortState = new();
 
 	#region LISTVIEW IMPLEMENTATIONS - COLUMN WIDTHS
 
@@ -80,11 +79,11 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("GroupNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("GroupIDHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("GroupDescriptionHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("GroupSecurityIdentifierHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("GroupCreatedDateTimeHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("GroupNameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("GroupIDHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("GroupDescriptionHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(Atlas.GetStr("GroupSecurityIdentifierHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(Atlas.GetStr("GroupCreatedDateTimeHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (IntuneGroupItemListView item in GroupNamesCollection)
@@ -166,11 +165,11 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<IntuneGroupItemListView, object?> Getter)> IntuneGroupPropertyMappings =
 		new Dictionary<string, (string Label, Func<IntuneGroupItemListView, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			["GroupName"] = (GlobalVars.GetStr("GroupNameHeader/Text"), g => g.GroupName),
-			["GroupID"] = (GlobalVars.GetStr("GroupIDHeader/Text"), g => g.GroupID),
-			["Description"] = (GlobalVars.GetStr("GroupDescriptionHeader/Text"), g => g.Description),
-			["SecurityIdentifier"] = (GlobalVars.GetStr("GroupSecurityIdentifierHeader/Text"), g => g.SecurityIdentifier),
-			["CreatedDateTime"] = (GlobalVars.GetStr("GroupCreatedDateTimeHeader/Text"), g => g.CreatedDateTime)
+			["GroupName"] = (Atlas.GetStr("GroupNameHeader/Text"), g => g.GroupName),
+			["GroupID"] = (Atlas.GetStr("GroupIDHeader/Text"), g => g.GroupID),
+			["Description"] = (Atlas.GetStr("GroupDescriptionHeader/Text"), g => g.Description),
+			["SecurityIdentifier"] = (Atlas.GetStr("GroupSecurityIdentifierHeader/Text"), g => g.SecurityIdentifier),
+			["CreatedDateTime"] = (Atlas.GetStr("GroupCreatedDateTimeHeader/Text"), g => g.CreatedDateTime)
 		}.ToFrozenDictionary();
 
 	#endregion
@@ -193,7 +192,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	{
 		if (TargetAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -315,7 +314,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
 			string fileName = $"AppControlManager_IntuneGroupsData_Export_{formattedDateTime}.json";
 
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, fileName);
 
 			if (savePath is null)
 				return;
@@ -435,7 +434,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	{
 		if (TargetAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -443,13 +442,13 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 		{
 			TextBox nameBox = new()
 			{
-				PlaceholderText = GlobalVars.GetStr("PFNDisplayNameLabelText"),
+				PlaceholderText = Atlas.GetStr("PFNDisplayNameLabelText"),
 				Width = 320
 			};
 
 			TextBox descriptionBox = new()
 			{
-				PlaceholderText = GlobalVars.GetStr("GroupDescriptionHeader/Text"),
+				PlaceholderText = Atlas.GetStr("GroupDescriptionHeader/Text"),
 				AcceptsReturn = true,
 				TextWrapping = TextWrapping.Wrap,
 				Width = 320,
@@ -468,17 +467,17 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			{
 				Spacing = 12
 			};
-			panel.Children.Add(new TextBlock { Text = GlobalVars.GetStr("ProvideNewGroupDetails") });
+			panel.Children.Add(new TextBlock { Text = Atlas.GetStr("ProvideNewGroupDetails") });
 			panel.Children.Add(nameBox);
 			panel.Children.Add(descriptionBox);
-			panel.Children.Add(new TextBlock { Text = GlobalVars.GetStr("GroupType") });
+			panel.Children.Add(new TextBlock { Text = Atlas.GetStr("GroupType") });
 			panel.Children.Add(typeCombo);
 
 			using CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("CreateGroupButton/Content"),
-				PrimaryButtonText = GlobalVars.GetStr("CreateTextBlock/Text"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				Title = Atlas.GetStr("CreateGroupButton/Content"),
+				PrimaryButtonText = Atlas.GetStr("CreateTextBlock/Text"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Primary,
 				Content = panel
 			};
@@ -528,7 +527,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 		if (TargetAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -543,12 +542,12 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			int count = lv.SelectedItems.Count;
 			string firstName = (lv.SelectedItems[0] as IntuneGroupItemListView)?.GroupName ?? string.Empty;
 			string summaryText = count == 1
-				? string.Format(GlobalVars.GetStr("DeleteGroupDialogIntroSingle"), firstName)
-				: string.Format(GlobalVars.GetStr("DeleteGroupDialogIntroMultiple"), count);
+				? string.Format(Atlas.GetStr("DeleteGroupDialogIntroSingle"), firstName)
+				: string.Format(Atlas.GetStr("DeleteGroupDialogIntroMultiple"), count);
 
 			TextBlock warning = new()
 			{
-				Text = GlobalVars.GetStr("DeleteGroupDialogWarning"),
+				Text = Atlas.GetStr("DeleteGroupDialogWarning"),
 				TextWrapping = TextWrapping.Wrap,
 				Width = 360
 			};
@@ -562,9 +561,9 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 			using CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("DeleteGroupDialogTitle"),
-				PrimaryButtonText = GlobalVars.GetStr("DeleteCertificateDialogPrimaryButton"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				Title = Atlas.GetStr("DeleteGroupDialogTitle"),
+				PrimaryButtonText = Atlas.GetStr("DeleteCertificateDialogPrimaryButton"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Close,
 				Content = panel
 			};
@@ -586,14 +585,14 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 					await CommonCore.MicrosoftGraph.Main.DeleteGroup(TargetAccount, grp.GroupID);
 
 					MainInfoBar.WriteInfo(string.Format(
-						GlobalVars.GetStr("SuccessfullyDeletedGroupMessage"),
+						Atlas.GetStr("SuccessfullyDeletedGroupMessage"),
 						grp.GroupName,
 						grp.GroupID));
 				}
 				catch (Exception ex)
 				{
 					MainInfoBar.WriteError(ex, string.Format(
-						GlobalVars.GetStr("DeleteGroupDeletionErrorLogTemplate"),
+						Atlas.GetStr("DeleteGroupDeletionErrorLogTemplate"),
 						grp.GroupID,
 						ex.Message));
 				}
@@ -635,7 +634,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	{
 		if (TargetAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -645,11 +644,11 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 			using CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("WarningTitle"),
-				PrimaryButtonText = GlobalVars.GetStr("CreateTextBlock/Text"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				Title = Atlas.GetStr("WarningTitle"),
+				PrimaryButtonText = Atlas.GetStr("CreateTextBlock/Text"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Primary,
-				Content = GlobalVars.GetStr("ConfirmationTextForDummyGroupsCreation")
+				Content = Atlas.GetStr("ConfirmationTextForDummyGroupsCreation")
 			};
 
 			ContentDialogResult result = await dialog.ShowAsync();

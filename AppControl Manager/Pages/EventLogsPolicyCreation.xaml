@@ -6,8 +6,8 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:intelgathering="using:AppControlManager.IntelGathering"
-    xmlns:vm="using:AppControlManager.ViewModels"
+    xmlns:intelgathering="using:CommonCore.IntelGathering"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -511,7 +511,7 @@
                               IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                               SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                               SelectedIndex="0"
-                              ItemsSource="{x:Bind vm:ViewModelBase.ScanLevelsSourceForLogs}"
+                              ItemsSource="{x:Bind CommonCore:ViewModelBase.ScanLevelsSourceForLogs}"
                               ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 
                     <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
@@ -649,6 +649,15 @@
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
+
+                                <MenuFlyoutItem x:Uid="OpenInFileExplorer" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM._OpenInFileExplorer}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="O" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM._OpenInFileExplorerShortCut}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xEC50;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ListViewFlyoutMenuDelete_Click}">
                                     <MenuFlyoutItem.Icon>

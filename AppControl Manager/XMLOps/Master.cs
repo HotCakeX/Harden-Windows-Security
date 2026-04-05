@@ -34,7 +34,7 @@ internal static class Master
 		SiPolicyIntel.Authorization authorization,
 		bool noAllowAllWildCards = false)
 	{
-		Logger.Write(GlobalVars.GetStr("MergingRulesMessage"));
+		Logger.Write(Atlas.GetStr("MergingRulesMessage"));
 
 		// Grab a copy of an empty policy object for data insertion
 		SiPolicy.SiPolicy policyObj = CustomPolicyCreator.CreateEmpty();
@@ -67,7 +67,7 @@ internal static class Master
 			}
 			else
 			{
-				SiPolicy.SiPolicy allowAllPolicyObj = Management.Initialize(GlobalVars.AllowAllTemplatePolicyPath, null);
+				SiPolicy.SiPolicy allowAllPolicyObj = Management.Initialize(Atlas.AllowAllTemplatePolicyPath, null);
 
 				// Merge the policy with the AllowAll XML policy since this is a Deny policy type
 				policyObj = Merger.Merge(policyObj, [allowAllPolicyObj]);

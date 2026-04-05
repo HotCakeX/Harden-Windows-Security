@@ -7091,4 +7091,32 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Relaunch</value>
   </data>
+  <!--NEW-->
+  <data name="AddToPolicyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Add to Policy</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add the selected items to the Application Control policy that you selected by creating rules for them.</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add the selected items to the Application Control policy that you selected by creating rules for them.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Allow</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create Allow rules for the selected items and add them to the selected policy.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create Allow rules for the selected items and add them to the selected policy.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Deny</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create Deny rules for the selected items and add them to the selected policy.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create Deny rules for the selected items and add them to the selected policy.</value>
+  </data>
 </root>

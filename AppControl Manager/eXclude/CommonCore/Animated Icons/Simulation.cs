@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.1.240821.1+077322fa26
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile Simulation.json
-//       
+//
 //       Input file:
 //           Simulation.json (29001 bytes created 17:52+02:00 Nov 17 2024)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //
@@ -110,7 +110,7 @@ namespace AnimatedVisuals
         {
             diagnostics = null;
 
-            var res = 
+            var res =
                 new Simulation_AnimatedVisual(
                     compositor
                     );

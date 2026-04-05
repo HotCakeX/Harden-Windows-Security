@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class MicrosoftDocumentation : Page
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
+	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	internal MicrosoftDocumentation()
 	{

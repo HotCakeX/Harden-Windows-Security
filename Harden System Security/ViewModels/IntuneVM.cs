@@ -37,7 +37,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
 		// Initialize column widths so headers have padding initially.
-		_ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
+		_ = Atlas.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 		// Load policy files from the hardening directory
 		LoadHardeningPolicyFiles();
@@ -101,25 +101,25 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 
 	private void CalculateColumnWidths()
 	{
-		double maxWidth1 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("NameHeader/Text"));
-		double maxWidth2 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("DescriptionHeader/Text"));
-		double maxWidth3 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("PlatformsHeader/Text"));
-		double maxWidth4 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("TechnologiesHeader/Text"));
-		double maxWidth5 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("SettingCountHeader/Text"));
-		double maxWidth6 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("CreatedHeader/Text"));
-		double maxWidth7 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("ModifiedHeader/Text"));
-		double maxWidth8 = AppControlManager.Others.ListViewHelper.MeasureText(GlobalVars.GetStr("IDHeader/Text"));
+		double maxWidth1 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("NameHeader/Text"));
+		double maxWidth2 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("DescriptionHeader/Text"));
+		double maxWidth3 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("PlatformsHeader/Text"));
+		double maxWidth4 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("TechnologiesHeader/Text"));
+		double maxWidth5 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("SettingCountHeader/Text"));
+		double maxWidth6 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("CreatedHeader/Text"));
+		double maxWidth7 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("ModifiedHeader/Text"));
+		double maxWidth8 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("IDHeader/Text"));
 
 		foreach (DeviceManagementConfigurationPolicy item in Policies)
 		{
-			maxWidth1 = AppControlManager.Others.ListViewHelper.MeasureText(item.Name, maxWidth1);
-			maxWidth2 = AppControlManager.Others.ListViewHelper.MeasureText(item.Description, maxWidth2);
-			maxWidth3 = AppControlManager.Others.ListViewHelper.MeasureText(item.Platforms, maxWidth3);
-			maxWidth4 = AppControlManager.Others.ListViewHelper.MeasureText(item.Technologies, maxWidth4);
-			maxWidth5 = AppControlManager.Others.ListViewHelper.MeasureText(item.SettingCount?.ToString(), maxWidth5);
-			maxWidth6 = AppControlManager.Others.ListViewHelper.MeasureText(item.CreatedDateTime?.ToString(), maxWidth6);
-			maxWidth7 = AppControlManager.Others.ListViewHelper.MeasureText(item.LastModifiedDateTime?.ToString(), maxWidth7);
-			maxWidth8 = AppControlManager.Others.ListViewHelper.MeasureText(item.Id, maxWidth8);
+			maxWidth1 = CommonCore.Others.ListViewHelper.MeasureText(item.Name, maxWidth1);
+			maxWidth2 = CommonCore.Others.ListViewHelper.MeasureText(item.Description, maxWidth2);
+			maxWidth3 = CommonCore.Others.ListViewHelper.MeasureText(item.Platforms, maxWidth3);
+			maxWidth4 = CommonCore.Others.ListViewHelper.MeasureText(item.Technologies, maxWidth4);
+			maxWidth5 = CommonCore.Others.ListViewHelper.MeasureText(item.SettingCount?.ToString(), maxWidth5);
+			maxWidth6 = CommonCore.Others.ListViewHelper.MeasureText(item.CreatedDateTime?.ToString(), maxWidth6);
+			maxWidth7 = CommonCore.Others.ListViewHelper.MeasureText(item.LastModifiedDateTime?.ToString(), maxWidth7);
+			maxWidth8 = CommonCore.Others.ListViewHelper.MeasureText(item.Id, maxWidth8);
 		}
 
 		ColumnWidth1 = new(maxWidth1);
@@ -147,7 +147,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	private void ApplyFilters()
 	{
 		Microsoft.UI.Xaml.Controls.ScrollViewer? sv =
-			AppControlManager.Others.ListViewHelper.GetScrollViewerFromCache(AppControlManager.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
+			CommonCore.Others.ListViewHelper.GetScrollViewerFromCache(CommonCore.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
 		double? savedHorizontal = sv?.HorizontalOffset;
 
 		string? term = SearchKeyword?.Trim();
@@ -202,7 +202,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	{
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -223,7 +223,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			CalculateColumnWidths();
 			SearchKeyword = null;
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
 		}
 		catch (Exception ex)
 		{
@@ -256,7 +256,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			PolicyFiles.Clear();
 
 			// Only files directly within the directory, no recursion.
-			string[] files = Directory.GetFiles(CommonCore.Others.GlobalVars.HardeningPoliciesPath, "*.json", SearchOption.TopDirectoryOnly);
+			string[] files = Directory.GetFiles(Atlas.HardeningPoliciesPath, "*.json", SearchOption.TopDirectoryOnly);
 
 			foreach (string path in files)
 			{
@@ -283,7 +283,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	{
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -343,7 +343,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	{
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -387,14 +387,14 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	private static readonly FrozenDictionary<string, (string Label, Func<DeviceManagementConfigurationPolicy, object?> Getter)> DeviceManagementConfigurationPolicyPropertyMappings =
 		new Dictionary<string, (string Label, Func<DeviceManagementConfigurationPolicy, object?> Getter)>
 		{
-			{ "Name", (GlobalVars.GetStr("NameHeader/Text"), p => p.Name) },
-			{ "Description", (GlobalVars.GetStr("DescriptionHeader/Text"), p => p.Description) },
-			{ "Platforms", (GlobalVars.GetStr("PlatformsHeader/Text"), p => p.Platforms) },
-			{ "Technologies", (GlobalVars.GetStr("TechnologiesHeader/Text"), p => p.Technologies) },
-			{ "SettingCount", (GlobalVars.GetStr("SettingCountHeader/Text"), p => p.SettingCount) },
-			{ "CreatedDateTime", (GlobalVars.GetStr("CreatedHeader/Text"), p => p.CreatedDateTime) },
-			{ "LastModifiedDateTime", (GlobalVars.GetStr("ModifiedHeader/Text"), p => p.LastModifiedDateTime) },
-			{ "Id", (GlobalVars.GetStr("IDHeader/Text"), p => p.Id) }
+			{ "Name", (Atlas.GetStr("NameHeader/Text"), p => p.Name) },
+			{ "Description", (Atlas.GetStr("DescriptionHeader/Text"), p => p.Description) },
+			{ "Platforms", (Atlas.GetStr("PlatformsHeader/Text"), p => p.Platforms) },
+			{ "Technologies", (Atlas.GetStr("TechnologiesHeader/Text"), p => p.Technologies) },
+			{ "SettingCount", (Atlas.GetStr("SettingCountHeader/Text"), p => p.SettingCount) },
+			{ "CreatedDateTime", (Atlas.GetStr("CreatedHeader/Text"), p => p.CreatedDateTime) },
+			{ "LastModifiedDateTime", (Atlas.GetStr("ModifiedHeader/Text"), p => p.LastModifiedDateTime) },
+			{ "Id", (Atlas.GetStr("IDHeader/Text"), p => p.Id) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -402,12 +402,12 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// </summary>
 	internal void CopySelectedPolicies_Click()
 	{
-		ListView? lv = AppControlManager.Others.ListViewHelper.GetListViewFromCache(AppControlManager.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
+		ListView? lv = CommonCore.Others.ListViewHelper.GetListViewFromCache(CommonCore.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
 
 		if (lv is null || lv.SelectedItems.Count == 0)
 			return;
 
-		AppControlManager.Others.ListViewHelper.ConvertRowToText<DeviceManagementConfigurationPolicy>(lv.SelectedItems.Cast<object>().ToList(), DeviceManagementConfigurationPolicyPropertyMappings);
+		CommonCore.Others.ListViewHelper.ConvertRowToText<DeviceManagementConfigurationPolicy>(lv.SelectedItems.Cast<object>().ToList(), DeviceManagementConfigurationPolicyPropertyMappings);
 	}
 
 	/// <summary>
@@ -420,14 +420,14 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		if (sender is not MenuFlyoutItem mfi || mfi.Tag is not string key)
 			return;
 
-		ListView? lv = AppControlManager.Others.ListViewHelper.GetListViewFromCache(AppControlManager.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
+		ListView? lv = CommonCore.Others.ListViewHelper.GetListViewFromCache(CommonCore.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
 
 		if (lv is null)
 			return;
 
 		if (DeviceManagementConfigurationPolicyPropertyMappings.TryGetValue(key, out (string Label, Func<DeviceManagementConfigurationPolicy, object?> Getter) map))
 		{
-			AppControlManager.Others.ListViewHelper.CopyToClipboard<DeviceManagementConfigurationPolicy>(ci => map.Getter(ci)?.ToString(), lv);
+			CommonCore.Others.ListViewHelper.CopyToClipboard<DeviceManagementConfigurationPolicy>(ci => map.Getter(ci)?.ToString(), lv);
 		}
 	}
 

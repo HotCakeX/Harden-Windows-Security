@@ -16,6 +16,7 @@
 //
 
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.SiPolicyIntel;
 

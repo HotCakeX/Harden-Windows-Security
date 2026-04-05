@@ -123,7 +123,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void BrowseAndValidate()
 	{
-		SelectedPolicyPath = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		SelectedPolicyPath = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 		if (SelectedPolicyPath is null) return;
 		await ValidateLogic();
 	}
@@ -150,11 +150,11 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			if (string.IsNullOrWhiteSpace(SelectedPolicyPath) && !File.Exists(SelectedPolicyPath))
 			{
 				SelectedPolicyPath = null;
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAppControlPolicyFirstMessage"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("SelectAppControlPolicyFirstMessage"));
 				return;
 			}
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("Validating"), GlobalVars.GetStr("CurrentStatusInfoBar/Title"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("Validating"), Atlas.GetStr("CurrentStatusInfoBar/Title"));
 
 			double CIPSize = 0;
 			bool IsValid = false;
@@ -188,32 +188,32 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 			if (IsValid)
 			{
-				string msg = GlobalVars.GetStr("IsValid") + SelectedPolicyPath;
+				string msg = Atlas.GetStr("IsValid") + SelectedPolicyPath;
 
 				if (Level4Test)
 				{
-					msg += $"\n{GlobalVars.GetStr("CIPFileSize")}: {CIPSize} KB";
+					msg += $"\n{Atlas.GetStr("CIPFileSize")}: {CIPSize} KB";
 
 					if (CIPSize < 350)
 					{
-						msg += $"\n{GlobalVars.GetStr("SuitableForIntuneDeployment")}";
+						msg += $"\n{Atlas.GetStr("SuitableForIntuneDeployment")}";
 					}
 					else
 					{
-						msg += $"\n{GlobalVars.GetStr("ReduceSizeForIntuneDeployment")}";
+						msg += $"\n{Atlas.GetStr("ReduceSizeForIntuneDeployment")}";
 					}
 				}
 
-				MainInfoBar.WriteSuccess(msg, GlobalVars.GetStr("Valid"));
+				MainInfoBar.WriteSuccess(msg, Atlas.GetStr("Valid"));
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("IsNotValid") + SelectedPolicyPath, GlobalVars.GetStr("Invalid"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("IsNotValid") + SelectedPolicyPath, Atlas.GetStr("Invalid"));
 			}
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, null, GlobalVars.GetStr("Invalid"));
+			MainInfoBar.WriteError(ex, null, Atlas.GetStr("Invalid"));
 		}
 		finally
 		{

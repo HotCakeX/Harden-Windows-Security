@@ -15,9 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.IntelGathering;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -47,7 +46,7 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		// Attempt to retrieve the property mapping using the Tag as the key.
-		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
+		if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
 		{
 			// Explicitly specifying FileIdentity type as TElement
 			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);

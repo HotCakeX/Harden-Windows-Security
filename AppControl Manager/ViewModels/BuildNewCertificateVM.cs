@@ -88,7 +88,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 			{
 				if (field > 2)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("AlgoNotSupportedByCIWarning"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("AlgoNotSupportedByCIWarning"));
 				}
 				else
 				{
@@ -107,8 +107,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 		if (string.IsNullOrEmpty(CommonName) || string.IsNullOrEmpty(Password))
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("ProvideCNOrPassErrorMsg"),
-				GlobalVars.GetStr("ProvideCNOrPassErrorTitle"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("ProvideCNOrPassErrorMsg"),
+				Atlas.GetStr("ProvideCNOrPassErrorTitle"));
 			return;
 		}
 
@@ -121,8 +121,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			ElementsAreEnabled = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("BuildingCertificate"),
-				GlobalVars.GetStr("ProcessingTitle"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("BuildingCertificate"),
+				Atlas.GetStr("ProcessingTitle"));
 
 			await Task.Run(() =>
 			{
@@ -139,8 +139,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("CertificateBuildError"),
-				GlobalVars.GetStr("ErrorTitle"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("CertificateBuildError"),
+				Atlas.GetStr("ErrorTitle"));
 			ErrorsOccurred = true;
 		}
 		finally
@@ -149,8 +149,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			if (!ErrorsOccurred)
 			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("CertificateBuildSuccess") + generatedCertThumbPrint + "'",
-					GlobalVars.GetStr("SuccessText"));
+				MainInfoBar.WriteSuccess(Atlas.GetStr("CertificateBuildSuccess") + generatedCertThumbPrint + "'",
+					Atlas.GetStr("SuccessText"));
 
 				CopyInfoBarToClipboardButtonVisibility = Visibility.Visible;
 			}

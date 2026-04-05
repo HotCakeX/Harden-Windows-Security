@@ -25,7 +25,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 #if HARDEN_SYSTEM_SECURITY
-using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 
@@ -35,7 +34,7 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class LogsVM : ViewModelBase, IDisposable
 {
-	private const string LogFilePattern = $"{GlobalVars.AppName}_Logs_*.txt";
+	private const string LogFilePattern = $"{Atlas.AppName}_Logs_*.txt";
 	internal static readonly char[] LineSeparators = ['\r', '\n'];
 	private const int PageSize = 50;
 
@@ -155,7 +154,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		try
 		{
 			// Get files matching the pattern
-			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(GlobalVars.LogsDirectory, LogFilePattern)
+			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(Atlas.LogsDirectory, LogFilePattern)
 				.Select(static f => new FileInfo(f))
 				.OrderByDescending(static f => f.CreationTime);
 
@@ -429,7 +428,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			await OpenFileInDefaultFileHandler(GlobalVars.LogsDirectory);
+			await OpenFileInDefaultFileHandler(Atlas.LogsDirectory);
 		}
 		catch (Exception ex)
 		{

@@ -29,28 +29,30 @@ internal static class FileAccessCheck
 	private const uint FILE_SHARE_WRITE = 0x00000002;
 	private const uint OPEN_EXISTING = 3;
 
+	private const uint GENERIC_READ_WRITE = GENERIC_READ | GENERIC_WRITE;
+	private const uint FILE_SHARE_READ_WRITE = FILE_SHARE_READ | FILE_SHARE_WRITE;
+
 	/// <summary>
 	/// Checks if the file can be opened with both read and write permissions using native API.
 	/// </summary>
 	/// <param name="filePath">The full path to the file.</param>
 	/// <returns>True if the file is accessible for modification; otherwise, false.</returns>
-	internal static bool IsFileAccessibleForWrite(string filePath)
+	internal static bool IsFileAccessible(string filePath, bool readAndWrite)
 	{
-		// Open with read + write access, sharing read & write.
 		IntPtr handle = NativeMethods.CreateFileW(
 			filePath,
-			GENERIC_READ | GENERIC_WRITE,          // Desired access
-			FILE_SHARE_READ | FILE_SHARE_WRITE,    // Share mode
-			IntPtr.Zero,                           // Security attributes
-			OPEN_EXISTING,                         // Creation disposition
-			0,                                     // Flags & attributes (none special)
-			IntPtr.Zero);                          // Template
+			readAndWrite ? GENERIC_READ_WRITE : GENERIC_READ,       // Desired access
+			readAndWrite ? FILE_SHARE_READ_WRITE : FILE_SHARE_READ, // Share mode
+			IntPtr.Zero,                                            // Security attributes
+			OPEN_EXISTING,                                          // Creation disposition
+			0,                                                      // Flags & attributes (none special)
+			IntPtr.Zero);                                           // Template
 
 		if (handle == NativeMethods.INVALID_HANDLE_VALUE)
 		{
 			Logger.Write(
 				string.Format(
-					GlobalVars.GetStr("FileRequiresElevatedPermissionsMessage"),
+					Atlas.GetStr("FileRequiresElevatedPermissionsMessage"),
 					filePath
 				)
 			);

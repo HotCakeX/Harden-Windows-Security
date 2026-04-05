@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using AppControlManager.Others;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.ViewModels;
 
@@ -41,9 +41,9 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 	/// <returns></returns>
 	private static string? GetPolicyStatus(object? status) => status switch
 	{
-		0L => GlobalVars.GetStr("NotRunningOrDisabled"),
-		1L => GlobalVars.GetStr("AuditMode"),
-		2L => GlobalVars.GetStr("EnforcedMode"),
+		0L => Atlas.GetStr("NotRunningOrDisabled"),
+		1L => Atlas.GetStr("AuditMode"),
+		2L => Atlas.GetStr("EnforcedMode"),
 		_ => null
 	};
 
@@ -69,7 +69,7 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 			// Get the Application Control Status
 			await Task.Run(async () =>
 			{
-				string result = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, command) ?? throw new InvalidOperationException($"No output were returned from {GlobalVars.ComManagerProcessPath}");
+				string result = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, command) ?? throw new InvalidOperationException($"No output were returned from {Atlas.ComManagerProcessPath}");
 				List<Dictionary<string, object?>> deserializedData = ComJsonDeserializer.DeserializeInstances(result);
 				Dictionary<string, object?>? processedData = deserializedData.FirstOrDefault();
 				if (processedData is not null)

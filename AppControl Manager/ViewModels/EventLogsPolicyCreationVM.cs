@@ -20,12 +20,12 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommonCore.IncrementalCollection;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -82,7 +82,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
 	// The Column Manager Composition
-	internal ListViewColumnManager<FileIdentity> ColumnManager { get; }
+	internal readonly ListViewColumnManager<FileIdentity> ColumnManager;
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -154,7 +154,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal void CalculateColumnWidths() => ColumnManager.CalculateColumnWidths(FileIdentities);
 
-	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("CreatePolicyForSelectedBase");
+	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("CreatePolicyForSelectedBase");
 
 	internal int SelectedCreationMethod
 	{
@@ -164,10 +164,10 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			{
 				CreatePolicyButtonContent = field switch
 				{
-					0 => GlobalVars.GetStr("AddLogsToSelectedPolicyMessage"),
-					1 => GlobalVars.GetStr("CreatePolicyForSelectedBase"),
-					2 => GlobalVars.GetStr("CreatePolicyForBaseGUIDMessage"),
-					_ => GlobalVars.GetStr("DefaultCreatePolicy")
+					0 => Atlas.GetStr("AddLogsToSelectedPolicyMessage"),
+					1 => Atlas.GetStr("CreatePolicyForSelectedBase"),
+					2 => Atlas.GetStr("CreatePolicyForBaseGUIDMessage"),
+					_ => Atlas.GetStr("DefaultCreatePolicy")
 				};
 			}
 		}
@@ -258,7 +258,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings.Value);
 		}
 	}
 
@@ -269,14 +269,14 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(FinalSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(FinalSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_Internal() => await PolicyFileRepresent.OpenInDefaultFileHandler(FinalSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
 	/// </summary>
 	internal void SelectCodeIntegrityEVTXFiles_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.EVTXPickerFilter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.EVTXPickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -285,7 +285,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			// Log the selection with a localized message
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("SelectedCodeIntegrityEvtxForScanning"),
+				Atlas.GetStr("SelectedCodeIntegrityEvtxForScanning"),
 				selectedFile
 			));
 		}
@@ -296,7 +296,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal void SelectAppLockerEVTXFiles_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.EVTXPickerFilter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.EVTXPickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -305,7 +305,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			// Log the selection with a localized message
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("SelectedAppLockerEvtxForScanning"),
+				Atlas.GetStr("SelectedAppLockerEvtxForScanning"),
 				selectedFile
 			));
 		}
@@ -318,7 +318,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -326,7 +326,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				PolicyToAddLogsTo = new(policyObj) { FilePath = selectedFile };
 
 				Logger.Write(string.Format(
-				GlobalVars.GetStr("SelectedFileToAddLogsToMessage"),
+				Atlas.GetStr("SelectedFileToAddLogsToMessage"),
 				selectedFile));
 			}
 		}
@@ -343,7 +343,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -351,7 +351,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				BasePolicyXMLFile = new(policyObj) { FilePath = selectedFile };
 
 				Logger.Write(string.Format(
-				GlobalVars.GetStr("SelectedBasePolicyFileMessage"),
+				Atlas.GetStr("SelectedBasePolicyFileMessage"),
 				selectedFile));
 			}
 		}
@@ -370,7 +370,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		if (!Guid.TryParse(BasePolicyGUID, out _))
 		{
-			throw new ArgumentException(GlobalVars.GetStr("InvalidGuidMessage"));
+			throw new ArgumentException(Atlas.GetStr("InvalidGuidMessage"));
 		}
 	}
 
@@ -392,7 +392,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			ClearDataButton_Click();
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("ScanningEventLogsMessage"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("ScanningEventLogsMessage"));
 
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRingIsActive = true;
@@ -416,13 +416,13 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			await Task.Run(CalculateColumnWidths);
 
 			MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.GetStr("ScanCompleteLogsFoundMessage"),
+					Atlas.GetStr("ScanCompleteLogsFoundMessage"),
 					AllFileIdentities.Count
 				));
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringLogsScanMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorDuringLogsScanMessage"));
 		}
 		finally
 		{
@@ -463,18 +463,18 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("ProcessingLogsMessage"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("ProcessingLogsMessage"));
 
 			if (FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.GetStr("NoLogsUseScanButtonMessage"));
+					Atlas.GetStr("NoLogsUseScanButtonMessage"));
 			}
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.GetStr("MustSelectOptionMessage"));
+					Atlas.GetStr("MustSelectOptionMessage"));
 			}
 
 			// All of the File Identities that will be used to put in the policy XML file
@@ -548,7 +548,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.GetStr("NoPolicySelectedToAddLogsMessage"));
+									Atlas.GetStr("NoPolicySelectedToAddLogsMessage"));
 							}
 
 							break;
@@ -563,7 +563,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
 
 									PolicyNameTextBox = string.Format(
-										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatEventLogs"),
+										Atlas.GetStr("DefaultSupplementalPolicyNameFormatEventLogs"),
 										formattedDate
 									);
 								}
@@ -594,7 +594,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.GetStr("NoPolicyFileSelectedToAssociateErrorMessage"));
+									Atlas.GetStr("NoPolicyFileSelectedToAssociateErrorMessage"));
 							}
 
 							break;
@@ -609,7 +609,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 									string formattedDate = DateTime.Now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
 
 									PolicyNameTextBox = string.Format(
-										GlobalVars.GetStr("DefaultSupplementalPolicyNameFormatEventLogs"),
+										Atlas.GetStr("DefaultSupplementalPolicyNameFormatEventLogs"),
 										formattedDate
 									);
 								}
@@ -643,7 +643,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.GetStr("NoBasePolicyGuidProvidedMessage"));
+									Atlas.GetStr("NoBasePolicyGuidProvidedMessage"));
 							}
 
 							break;
@@ -655,13 +655,13 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				}
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessProcessedLogsMessage"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessProcessedLogsMessage"));
 
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorProcessingLogsMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorProcessingLogsMessage"));
 		}
 		finally
 		{
@@ -690,7 +690,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		if (sender is Button button && button.Tag is string key)
 		{
-			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					keySelector: mapping.Getter,
@@ -754,10 +754,10 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			// Create and configure the ContentDialog.
 			using CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("OSCodeIntegrityLogsDeletionContentDialogTitle"),
-				Content = GlobalVars.GetStr("OSLogsDeletionContentDialogMsg"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("OK"),
+				Title = Atlas.GetStr("OSCodeIntegrityLogsDeletionContentDialogTitle"),
+				Content = Atlas.GetStr("OSLogsDeletionContentDialogMsg"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("OK"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -768,7 +768,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				return;
 
 			await ClearAppControlEventLogs(0);
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("ClearOSCodeIntegrityLogsSuccessMsg"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("ClearOSCodeIntegrityLogsSuccessMsg"));
 		}
 		catch (Exception ex)
 		{
@@ -789,10 +789,10 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			// Create and configure the ContentDialog.
 			using CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("OSAppLockerLogsDeletionContentDialogTitle"),
-				Content = GlobalVars.GetStr("OSLogsDeletionContentDialogMsg"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("OK"),
+				Title = Atlas.GetStr("OSAppLockerLogsDeletionContentDialogTitle"),
+				Content = Atlas.GetStr("OSLogsDeletionContentDialogMsg"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("OK"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -803,7 +803,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				return;
 
 			await ClearAppControlEventLogs(1);
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("ClearOSAppLockerLogsSuccessMsg"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("ClearOSAppLockerLogsSuccessMsg"));
 		}
 		catch (Exception ex)
 		{
@@ -813,5 +813,12 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		{
 			AreElementsEnabled = true;
 		}
+	}
+
+	internal void _OpenInFileExplorer() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.Event_Logs);
+	internal void _OpenInFileExplorerShortCut(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorer();
+		args.Handled = true;
 	}
 }

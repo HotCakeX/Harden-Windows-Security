@@ -230,13 +230,13 @@ internal sealed partial class IncrementalCollection<T>(
 		}
 
 		// Clear UI items immediately on the UI thread
-		if (GlobalVars.AppDispatcher.HasThreadAccess)
+		if (Atlas.AppDispatcher.HasThreadAccess)
 		{
 			Clear();
 		}
 		else
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(Clear);
+			_ = Atlas.AppDispatcher.TryEnqueue(Clear);
 		}
 
 		// Clear all internal data structures with aggressive memory management

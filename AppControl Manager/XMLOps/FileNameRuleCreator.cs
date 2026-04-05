@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.SiPolicyIntel;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 

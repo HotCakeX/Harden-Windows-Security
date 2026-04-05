@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 

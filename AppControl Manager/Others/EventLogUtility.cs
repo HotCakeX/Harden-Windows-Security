@@ -19,7 +19,6 @@ using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Threading;
-using AppControlManager.ViewModels;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
@@ -82,7 +81,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 
 		// Read and calculate initial size
 		ulong initialBytes = ReadMaxSizeBytes();
-		_ = GlobalVars.AppDispatcher.TryEnqueue(() => MaxSizeMB = initialBytes / 1024d / 1024d);
+		_ = Atlas.AppDispatcher.TryEnqueue(() => MaxSizeMB = initialBytes / 1024d / 1024d);
 
 		// Prepare for change notifications
 		_regHandle = _regKey.Handle;
@@ -110,7 +109,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 		// Read and calculate updated size
 		ulong newBytes = ReadMaxSizeBytes();
 		double newMegabytes = newBytes / 1024d / 1024d;
-		_ = GlobalVars.AppDispatcher.TryEnqueue(() => MaxSizeMB = newMegabytes);
+		_ = Atlas.AppDispatcher.TryEnqueue(() => MaxSizeMB = newMegabytes);
 
 		ReArmNotification();
 	}
@@ -204,9 +203,9 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// <param name="logSize">Size of the Code Integrity Operational Event Log (in MB)</param>
 	internal static void SetLogSize(double logSize = 0)
 	{
-		if (!GlobalVars.IsElevated) return;
+		if (!Atlas.IsElevated) return;
 
-		Logger.Write(GlobalVars.GetStr("SettingCodeIntegrityLogSizeMessageOnly"));
+		Logger.Write(Atlas.GetStr("SettingCodeIntegrityLogSizeMessageOnly"));
 
 		try
 		{
@@ -223,7 +222,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				// Only increase by 1MB if there's less than 1MB free and under 10MB max
 				if ((currentLogMaxSize - currentLogFileSize) < (1L * 1024 * 1024) && currentLogMaxSize <= (10L * 1024 * 1024))
 				{
-					Logger.Write(GlobalVars.GetStr("IncreasingCodeIntegrityLogSizeMessage"));
+					Logger.Write(Atlas.GetStr("IncreasingCodeIntegrityLogSizeMessage"));
 					logConfig.MaximumSizeInBytes = SafeAdd(currentLogMaxSize, 1L * 1024 * 1024);
 					logConfig.IsEnabled = true;
 					logConfig.SaveChanges();
@@ -244,7 +243,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				{
 					Logger.Write(
 						string.Format(
-							GlobalVars.GetStr("SettingCodeIntegrityLogSizeMessage"),
+							Atlas.GetStr("SettingCodeIntegrityLogSizeMessage"),
 							bytesToSet / (1024d * 1024d)
 						)
 					);
@@ -256,7 +255,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				else
 				{
 					Logger.Write(
-						GlobalVars.GetStr("ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage")
+						Atlas.GetStr("ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage")
 					);
 				}
 			}

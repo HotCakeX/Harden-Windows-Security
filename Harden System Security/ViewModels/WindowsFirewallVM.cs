@@ -43,13 +43,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
-		_ = GlobalVars.AppDispatcher.TryEnqueue(ComputeColumnWidths);
+		_ = Atlas.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -65,16 +65,16 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			temp.Add(new(
 				category: Categories.WindowsFirewall,
-				name: GlobalVars.GetSecurityStr("mDNSInboundBlocking-WindowsFirewall"),
+				name: Atlas.GetSecurityStr("mDNSInboundBlocking-WindowsFirewall"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "firewallmdns set false");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallmdns set false");
 				}),
 
 				verifyStrategy: new DefaultVerify(() =>
 				{
-					string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "firewallmdns status");
+					string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallmdns status");
 
 					if (bool.TryParse(result, out bool actualResult))
 					{
@@ -86,7 +86,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 				removeStrategy: new DefaultRemove(() =>
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "firewallmdns set true");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallmdns set true");
 				}),
 
 				url: "https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777",
@@ -102,16 +102,16 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			temp.Add(new(
 				category: Categories.WindowsFirewall,
-				name: GlobalVars.GetSecurityStr("SetAllNetworkLocationsPublic-WindowsFirewall"),
+				name: Atlas.GetSecurityStr("SetAllNetworkLocationsPublic-WindowsFirewall"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "networkprofiles set 0");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "networkprofiles set 0");
 				}),
 
 				verifyStrategy: new DefaultVerify(() =>
 				{
-					string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "networkprofiles status");
+					string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "networkprofiles status");
 
 					if (bool.TryParse(result, out bool actualResult))
 					{
@@ -123,7 +123,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 				removeStrategy: new DefaultRemove(() =>
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "networkprofiles set 1");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "networkprofiles set 1");
 				}),
 
 				url: "https://support.microsoft.com/en-us/windows/make-a-wi-fi-network-public-or-private-in-windows-0460117d-8d3e-a7ac-f003-7a0da607448d",
@@ -194,9 +194,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// </summary>
 	private void ComputeColumnWidths()
 	{
-		double w1 = ListViewHelper.MeasureText(GlobalVars.GetStr("NameHeader/Text"));
-		double w2 = ListViewHelper.MeasureText(GlobalVars.GetStr("DirectionHeader/Text"));
-		double w3 = ListViewHelper.MeasureText(GlobalVars.GetStr("ActionHeader/Text"));
+		double w1 = ListViewHelper.MeasureText(Atlas.GetStr("NameHeader/Text"));
+		double w2 = ListViewHelper.MeasureText(Atlas.GetStr("DirectionHeader/Text"));
+		double w3 = ListViewHelper.MeasureText(Atlas.GetStr("ActionHeader/Text"));
 
 		foreach (FirewallRule v in FirewallRules)
 		{
@@ -250,7 +250,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		{
 			ManagementUIIsEnabled = false;
 
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.ExecutablesPickerFilter);
 
 			if (selectedFiles.Count > 0)
 			{
@@ -289,7 +289,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				// Get all of the .exe files in the folders user selected.
 				(IEnumerable<string>, int) detectedCatFiles = FileUtility.GetFilesFast(selectedDirectories, null, [".exe"]);
 
-				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+				_ = Atlas.AppDispatcher.TryEnqueue(() =>
 				{
 					foreach (string item in detectedCatFiles.Item1)
 					{
@@ -327,7 +327,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (SelectedFiles.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("WindowsFirewallNoFilesSelectedWarningMessage"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("WindowsFirewallNoFilesSelectedWarningMessage"));
 				return;
 			}
 
@@ -341,20 +341,20 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 					string action = FirewallActionBlock ? "block" : "allow";
 					string store = FirewallStoreGPO ? "localhost" : "PersistentStore";
 
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("WindowsFirewallCreateRuleForMessage"), file));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("WindowsFirewallCreateRuleForMessage"), file));
 
 					if (FirewallDirectionInbound)
 					{
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound {action} "{ruleNameInbound}" --program "{file}" --store "{store}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound {action} "{ruleNameInbound}" --program "{file}" --store "{store}" """));
 					}
 					else if (FirewallDirectionOutbound)
 					{
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound {action} "{ruleNameOutbound}" --program "{file}" --store "{store}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound {action} "{ruleNameOutbound}" --program "{file}" --store "{store}" """));
 					}
 					else if (FirewallDirectionBoth)
 					{
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound {action} "{ruleNameInbound}" --program "{file}" --store "{store}" """));
-						Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound {action} "{ruleNameOutbound}" --program "{file}" --store "{store}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound {action} "{ruleNameInbound}" --program "{file}" --store "{store}" """));
+						Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound {action} "{ruleNameOutbound}" --program "{file}" --store "{store}" """));
 					}
 				}
 
@@ -364,7 +364,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			await RetrieveFirewallRules_internal();
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("WindowsFirewallRulesCreatedSuccessMessage"), SelectedFiles.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("WindowsFirewallRulesCreatedSuccessMessage"), SelectedFiles.Count));
 		}
 		catch (Exception ex)
 		{
@@ -438,10 +438,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 					string ruleNameInbound = $"BlockingDualUseProgram-{file}-Inbound";
 					string ruleNameOutbound = $"BlockingDualUseProgram-{file}-Outbound";
 
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("WindowsFirewallCreateRuleForMessage"), file));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("WindowsFirewallCreateRuleForMessage"), file));
 
-					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound block "{ruleNameInbound}" --program "{file}" """));
-					Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound block "{ruleNameOutbound}" --program "{file}" """));
+					Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{ruleNameInbound}" inbound block "{ruleNameInbound}" --program "{file}" """));
+					Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{ruleNameOutbound}" outbound block "{ruleNameOutbound}" --program "{file}" """));
 				}
 
 				// Update policies to take effect immediately
@@ -450,7 +450,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			await RetrieveFirewallRules_internal();
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("WindowsFirewallRulesCreatedSuccessMessage"), DualUsePrograms.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("WindowsFirewallRulesCreatedSuccessMessage"), DualUsePrograms.Count));
 		}
 		catch (Exception ex)
 		{
@@ -483,7 +483,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			await Task.Run(() =>
 			{
-				string rulesOutput = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "firewallprogramlist");
+				string rulesOutput = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallprogramlist");
 
 				firewallRules = JsonSerializer.Deserialize(rulesOutput, FirewallRuleJSONContext.Default.ListFirewallRule);
 			});
@@ -495,7 +495,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 				ComputeColumnWidths();
 
-				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyRetrievedFirewallRulesMessage"), FirewallRules.Count));
+				MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyRetrievedFirewallRulesMessage"), FirewallRules.Count));
 			}
 		}
 		catch (Exception ex)
@@ -513,7 +513,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// </summary>
 	private static void DeleteFirewallRule(string ruleName)
 	{
-		Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"""firewalldelete "{ruleName}" """));
+		Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewalldelete "{ruleName}" """));
 	}
 
 	#region Search
@@ -569,9 +569,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<FirewallRule, object?> Getter)> _firewallRuleMappings =
 		new Dictionary<string, (string Label, Func<FirewallRule, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "DisplayString", (GlobalVars.GetStr("NameHeader/Text"),      r => r.DisplayString) },
-			{ "Direction",    (GlobalVars.GetStr("DirectionHeader/Text"), r => r.Direction) },
-			{ "Action",       (GlobalVars.GetStr("ActionHeader/Text"),    r => r.Action) }
+			{ "DisplayString", (Atlas.GetStr("NameHeader/Text"),      r => r.DisplayString) },
+			{ "Direction",    (Atlas.GetStr("DirectionHeader/Text"), r => r.Direction) },
+			{ "Action",       (Atlas.GetStr("ActionHeader/Text"),    r => r.Action) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -739,13 +739,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (string.IsNullOrEmpty(saveLocation))
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			await Task.Run(() => Firewall.ExportFirewallPolicy(saveLocation, isGpo));
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("FirewallExportSuccess"), isGpo ? "GPO" : "Local", saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("FirewallExportSuccess"), isGpo ? "GPO" : "Local", saveLocation));
 		}
 		catch (Exception ex)
 		{
@@ -784,16 +784,16 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (string.IsNullOrEmpty(fileLocation))
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = isGpo ? GlobalVars.GetStr("ImportGPOFirewallRulesTitle") : GlobalVars.GetStr("ImportLocalFirewallRulesTitle"),
-				Content = string.Format(GlobalVars.GetStr("ImportFirewallRulesWarning"), Path.GetFileName(fileLocation)),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("ImportButtonText"),
+				Title = isGpo ? Atlas.GetStr("ImportGPOFirewallRulesTitle") : Atlas.GetStr("ImportLocalFirewallRulesTitle"),
+				Content = string.Format(Atlas.GetStr("ImportFirewallRulesWarning"), Path.GetFileName(fileLocation)),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("ImportButtonText"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -801,13 +801,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (result is not ContentDialogResult.Primary)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			await Task.Run(() => Firewall.ImportFirewallPolicy(fileLocation, isGpo));
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("FirewallImportSuccess"), isGpo ? "GPO" : "Local"));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("FirewallImportSuccess"), isGpo ? "GPO" : "Local"));
 		}
 		catch (Exception ex)
 		{
@@ -832,10 +832,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("RestoreLocalFirewallRulesTitle"),
-				Content = GlobalVars.GetStr("RestoreLocalFirewallRulesWarning"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("RestoreDefaultsButtonText"),
+				Title = Atlas.GetStr("RestoreLocalFirewallRulesTitle"),
+				Content = Atlas.GetStr("RestoreLocalFirewallRulesWarning"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("RestoreDefaultsButtonText"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -843,13 +843,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (result is not ContentDialogResult.Primary)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			await Task.Run(Firewall.RestoreDefaultFirewallPolicy);
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("FirewallRestoreSuccess"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("FirewallRestoreSuccess"));
 		}
 		catch (Exception ex)
 		{
@@ -874,10 +874,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("DeleteAllLocalFirewallRulesTitle"),
-				Content = GlobalVars.GetStr("DeleteAllLocalFirewallRulesWarning"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("DeleteAllButtonText"),
+				Title = Atlas.GetStr("DeleteAllLocalFirewallRulesTitle"),
+				Content = Atlas.GetStr("DeleteAllLocalFirewallRulesWarning"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("DeleteAllButtonText"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -885,13 +885,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (result is not ContentDialogResult.Primary)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			await Task.Run(() => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.LOCAL));
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("FirewallDeleteSuccess"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("FirewallDeleteSuccess"));
 		}
 		catch (Exception ex)
 		{
@@ -916,10 +916,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("DeleteAllGPOFirewallRulesTitle"),
-				Content = GlobalVars.GetStr("DeleteAllGPOFirewallRulesWarning"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("DeleteAllButtonText"),
+				Title = Atlas.GetStr("DeleteAllGPOFirewallRulesTitle"),
+				Content = Atlas.GetStr("DeleteAllGPOFirewallRulesWarning"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("DeleteAllButtonText"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -927,13 +927,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			if (result is not ContentDialogResult.Primary)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			await Task.Run(() => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.GPO));
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("FirewallDeleteSuccess"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("FirewallDeleteSuccess"));
 		}
 		catch (Exception ex)
 		{

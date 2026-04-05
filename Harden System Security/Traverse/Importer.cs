@@ -116,7 +116,7 @@ internal static class Importer
 				return;
 
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("ImportOperationBeginApplyCountMsg"),
+				Atlas.GetStr("ImportOperationBeginApplyCountMsg"),
 				applyByCategory.Count, totalMeasuresToApply)
 				);
 
@@ -165,7 +165,7 @@ internal static class Importer
 				IMUnitListViewModel viewModel = ResolveViewModel(kvp.Key);
 
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("ImportOperationIndividualApplyOperationMsg"),
+					Atlas.GetStr("ImportOperationIndividualApplyOperationMsg"),
 					finalApplyList.Count, kvp.Key)
 					);
 
@@ -180,7 +180,7 @@ internal static class Importer
 			if (synchronizeExact)
 			{
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("ImportOperationBeginRemoveCountMsg"),
+					Atlas.GetStr("ImportOperationBeginRemoveCountMsg"),
 					removeByCategory.Count, totalMeasuresToRemove)
 					);
 
@@ -218,7 +218,7 @@ internal static class Importer
 					IMUnitListViewModel viewModel = ResolveViewModel(kvp.Key);
 
 					Logger.Write(string.Format(
-						GlobalVars.GetStr("ImportOperationIndividualRemoveOperationMsg"),
+						Atlas.GetStr("ImportOperationIndividualRemoveOperationMsg"),
 						finalRemoveList.Count, kvp.Key)
 						);
 
@@ -233,7 +233,7 @@ internal static class Importer
 		}, cancellationToken);
 
 		if (Logger.CliRequested)
-			Logger.Write(GlobalVars.GetStr("SystemStateRestorationFinishedMsg"));
+			Logger.Write(Atlas.GetStr("SystemStateRestorationFinishedMsg"));
 	}
 
 	/// <summary>

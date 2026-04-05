@@ -219,23 +219,22 @@
 	<ItemGroup>
 
 		<!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
-		<PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.251219" />
-		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
-		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.3.260402-preview2" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.83.3" />
 		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.83.3" />
 		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.83.3" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.5" />
 		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.5" />
 
 		<!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
-		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.251219" />
-		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
-		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.3.260402-preview2" />
 		<PackageReference Include="CommunityToolkit.Common" Version="8.4.2" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.17.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
@@ -243,20 +242,15 @@
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
 		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.4" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.53" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25122902" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260222000" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.260125001" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.260317003" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.251231004" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260224000" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2141" />
-		<PackageReference Include="System.Numerics.Tensors" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260316102">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.5" />
 
 	</ItemGroup>
 

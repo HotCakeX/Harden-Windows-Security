@@ -15,9 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.IntelGathering;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -44,7 +43,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		// Attempt to retrieve the property mapping using the Tag as the key.
-		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
+		if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
 		{
 			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);
 		}
@@ -54,7 +53,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 	{
 		if (sender is Button button && button.Tag is string key)
 		{
-			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					keySelector: mapping.Getter,
@@ -79,6 +78,6 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 		args.Handled = true;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("StrictKernelModePolicyScanResultsPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("StrictKernelModePolicyScanResultsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

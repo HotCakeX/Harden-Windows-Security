@@ -20,7 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AppControlManager.IntelGathering;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.Main;
 
@@ -87,12 +87,12 @@ internal sealed partial class UserConfiguration(
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.GetStr("CertificateCommonNameInvalidErrorMessage"),
+						Atlas.GetStr("CertificateCommonNameInvalidErrorMessage"),
 						CertificateCommonName));
 			}
 		}
 
-		Logger.Write(GlobalVars.GetStr("ReadingUserConfigurationsFileMessage"));
+		Logger.Write(Atlas.GetStr("ReadingUserConfigurationsFileMessage"));
 		UserConfiguration UserConfiguration = ReadUserConfiguration();
 
 		// Modify the properties based on the input
@@ -147,7 +147,7 @@ internal sealed partial class UserConfiguration(
 		// Write the updated configuration back to the JSON file
 		WriteUserConfiguration(currentConfig);
 
-		Logger.Write(GlobalVars.GetStr("SpecifiedPropertiesRemovedAndSetToNullMessage"));
+		Logger.Write(Atlas.GetStr("SpecifiedPropertiesRemovedAndSetToNullMessage"));
 	}
 
 	private static UserConfiguration ReadUserConfiguration()
@@ -155,29 +155,29 @@ internal sealed partial class UserConfiguration(
 		try
 		{
 			// Create the AppControl Manager folder in Program Files if it doesn't exist
-			if (!Directory.Exists(GlobalVars.UserConfigDir))
+			if (!Directory.Exists(Atlas.UserConfigDir))
 			{
-				_ = Directory.CreateDirectory(GlobalVars.UserConfigDir);
-				Logger.Write(GlobalVars.GetStr("AppControlManagerFolderCreatedMessage"));
+				_ = Directory.CreateDirectory(Atlas.UserConfigDir);
+				Logger.Write(Atlas.GetStr("AppControlManagerFolderCreatedMessage"));
 			}
 
 			// Create User configuration folder in the AppControl Manager folder if it doesn't already exist
-			string UserConfigDir = Path.Combine(GlobalVars.UserConfigDir, "UserConfigurations");
+			string UserConfigDir = Path.Combine(Atlas.UserConfigDir, "UserConfigurations");
 			if (!Directory.Exists(UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(UserConfigDir);
-				Logger.Write(GlobalVars.GetStr("AppControlManagerFolderCreatedMessage"));
+				Logger.Write(Atlas.GetStr("AppControlManagerFolderCreatedMessage"));
 			}
 
 			// Read the JSON file
-			string json = File.ReadAllText(GlobalVars.UserConfigJson);
+			string json = File.ReadAllText(Atlas.UserConfigJson);
 			return ParseJson(json);
 		}
 		catch (Exception ex)
 		{
 			// Log the error if JSON is corrupted or any other error occurs
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("ErrorReadingUserConfigMessage"),
+				Atlas.GetStr("ErrorReadingUserConfigMessage"),
 				ex.Message));
 
 			// Create a new configuration with default values and write it to the file
@@ -266,8 +266,8 @@ internal sealed partial class UserConfiguration(
 		string jsonString = JsonSerializer.Serialize(userConfiguration, UserConfigurationContext.Default.UserConfiguration);
 
 		// Write the JSON string to the file
-		File.WriteAllText(GlobalVars.UserConfigJson, jsonString);
-		Logger.Write(GlobalVars.GetStr("UserConfigurationsFileUpdatedSuccessfullyMessage"));
+		File.WriteAllText(Atlas.UserConfigJson, jsonString);
+		Logger.Write(Atlas.GetStr("UserConfigurationsFileUpdatedSuccessfullyMessage"));
 	}
 
 	/// <summary>
@@ -290,7 +290,7 @@ internal sealed partial class UserConfiguration(
 		WriteUserConfiguration(currentConfig);
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage"),
+			Atlas.GetStr("KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage"),
 			key,
 			value));
 	}
@@ -335,13 +335,13 @@ internal sealed partial class UserConfiguration(
 			WriteUserConfiguration(currentConfig);
 
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("KeyRemovedFromSignedPolicyStage1RemovalTimesMessage"),
+				Atlas.GetStr("KeyRemovedFromSignedPolicyStage1RemovalTimesMessage"),
 				key));
 		}
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("KeyNotFoundInSignedPolicyStage1RemovalTimesMessage"),
+				Atlas.GetStr("KeyNotFoundInSignedPolicyStage1RemovalTimesMessage"),
 				key));
 		}
 	}

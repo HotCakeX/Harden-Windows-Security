@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -166,10 +165,7 @@ internal sealed partial class ListViewV2 : ListView
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void OnUnloaded(object? sender, RoutedEventArgs e)
-	{
-		ListViewHelper.Unregister(RegistryKey, this);
-	}
+	private void OnUnloaded(object? sender, RoutedEventArgs e) => ListViewHelper.Unregister(RegistryKey, this);
 
 	/// <summary>
 	/// Suppresses the SelectionChanged handler from performing smooth centering

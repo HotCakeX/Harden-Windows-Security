@@ -120,7 +120,7 @@ internal sealed class MContainer(
 
 	[JsonPropertyName("AppVersion")]
 	[JsonPropertyOrder(3)]
-	public string AppVersion => GlobalVars.currentAppVersion.ToString();
+	public string AppVersion => Atlas.currentAppVersion.ToString();
 
 	[JsonInclude]
 	[JsonPropertyName("Total")]

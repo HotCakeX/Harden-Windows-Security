@@ -26,6 +26,8 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.XMLOps;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -77,7 +79,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// <summary>
 	/// The Column Manager Composition
 	/// </summary>
-	internal ListViewColumnManager<SimulationOutput> ColumnManager { get; }
+	internal readonly ListViewColumnManager<SimulationOutput> ColumnManager;
 
 	/// <summary>
 	/// For selected file paths
@@ -126,7 +128,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				ScalabilityButtonContent = GlobalVars.GetStr("Scalability") + field;
+				ScalabilityButtonContent = Atlas.GetStr("Scalability") + field;
 			}
 		}
 	} = 2;
@@ -134,7 +136,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// <summary>
 	/// The content of the button that has the RadialGauge inside it.
 	/// </summary>
-	internal string ScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("Scalability") + "2";
+	internal string ScalabilityButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("Scalability") + "2";
 
 	/// <summary>
 	/// Whether the Simulation should scan and take into account the security catalogs.
@@ -203,21 +205,21 @@ internal sealed partial class SimulationVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<SimulationOutput, object?> Getter)> SimulationOutputPropertyMappings
 		= new Dictionary<string, (string Label, Func<SimulationOutput, object?> Getter)>
 		{
-			{ "Path",                                  (GlobalVars.GetStr("PathHeader/Text") + ": ",                                so => so.Path) },
-			{ "Source",                                (GlobalVars.GetStr("SourceHeader/Text") + ": ",                              so => so.Source) },
-			{ "IsAuthorized",                          (GlobalVars.GetStr("IsAuthorizedHeader/Text") + ": ",                        so => so.IsAuthorized) },
-			{ "SignerID",                              (GlobalVars.GetStr("SignerIDHeader/Text") + ": ",                            so => so.SignerID) },
-			{ "SignerName",                            (GlobalVars.GetStr("SignerNameHeader/Text") + ": ",                          so => so.SignerName) },
-			{ "SignerCertRoot",                        (GlobalVars.GetStr("SignerCertRootHeader/Text") + ": ",                      so => so.SignerCertRoot) },
-			{ "SignerCertPublisher",                   (GlobalVars.GetStr("SignerCertPublisherHeader/Text") + ": ",                 so => so.SignerCertPublisher) },
-			{ "SignerScope",                           (GlobalVars.GetStr("SignerScopeHeader/Text") + ": ",                         so => so.SignerScope) },
-			{ "MatchCriteria",                         (GlobalVars.GetStr("MatchCriteriaHeader/Text") + ": ",                       so => so.MatchCriteria) },
-			{ "SpecificFileNameLevelMatchCriteria",    (GlobalVars.GetStr("SpecificFileNameLevelMatchCriteriaHeader/Text") + ": ",  so => so.SpecificFileNameLevelMatchCriteria) },
-			{ "CertSubjectCN",                         (GlobalVars.GetStr("CertSubjectCNHeader/Text") + ": ",                       so => so.CertSubjectCN) },
-			{ "CertIssuerCN",                          (GlobalVars.GetStr("CertIssuerCNHeader/Text") + ": ",                        so => so.CertIssuerCN) },
-			{ "CertNotAfter",                          (GlobalVars.GetStr("CertNotAfterHeader/Text") + ": ",                        so => so.CertNotAfter) },
-			{ "CertTBSValue",                          (GlobalVars.GetStr("CertTBSValueHeader/Text") + ": ",                        so => so.CertTBSValue) },
-			{ "FilePath",                              (GlobalVars.GetStr("FilePathHeader/Text") + ": ",                            so => so.FilePath) }
+			{ "Path",                                  (Atlas.GetStr("PathHeader/Text") + ": ",                                so => so.Path) },
+			{ "Source",                                (Atlas.GetStr("SourceHeader/Text") + ": ",                              so => so.Source) },
+			{ "IsAuthorized",                          (Atlas.GetStr("IsAuthorizedHeader/Text") + ": ",                        so => so.IsAuthorized) },
+			{ "SignerID",                              (Atlas.GetStr("SignerIDHeader/Text") + ": ",                            so => so.SignerID) },
+			{ "SignerName",                            (Atlas.GetStr("SignerNameHeader/Text") + ": ",                          so => so.SignerName) },
+			{ "SignerCertRoot",                        (Atlas.GetStr("SignerCertRootHeader/Text") + ": ",                      so => so.SignerCertRoot) },
+			{ "SignerCertPublisher",                   (Atlas.GetStr("SignerCertPublisherHeader/Text") + ": ",                 so => so.SignerCertPublisher) },
+			{ "SignerScope",                           (Atlas.GetStr("SignerScopeHeader/Text") + ": ",                         so => so.SignerScope) },
+			{ "MatchCriteria",                         (Atlas.GetStr("MatchCriteriaHeader/Text") + ": ",                       so => so.MatchCriteria) },
+			{ "SpecificFileNameLevelMatchCriteria",    (Atlas.GetStr("SpecificFileNameLevelMatchCriteriaHeader/Text") + ": ",  so => so.SpecificFileNameLevelMatchCriteria) },
+			{ "CertSubjectCN",                         (Atlas.GetStr("CertSubjectCNHeader/Text") + ": ",                       so => so.CertSubjectCN) },
+			{ "CertIssuerCN",                          (Atlas.GetStr("CertIssuerCNHeader/Text") + ": ",                        so => so.CertIssuerCN) },
+			{ "CertNotAfter",                          (Atlas.GetStr("CertNotAfterHeader/Text") + ": ",                        so => so.CertNotAfter) },
+			{ "CertTBSValue",                          (Atlas.GetStr("CertTBSValueHeader/Text") + ": ",                        so => so.CertTBSValue) },
+			{ "FilePath",                              (Atlas.GetStr("FilePathHeader/Text") + ": ",                            so => so.FilePath) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -285,7 +287,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	{
 		if (SelectedPolicy is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectExistingXmlPolicyFileMessage"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectExistingXmlPolicyFileMessage"));
 			return;
 		}
 
@@ -297,7 +299,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("PerformingSimulationMessage"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("PerformingSimulationMessage"));
 
 			// Run the simulation
 			ConcurrentDictionary<string, SimulationOutput> result = await Task.Run(() =>
@@ -337,13 +339,13 @@ internal sealed partial class SimulationVM : ViewModelBase
 		catch (Exception ex)
 		{
 			error = true;
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringSimulationMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorDuringSimulationMessage"));
 		}
 		finally
 		{
 			if (!error)
 			{
-				MainInfoBar.WriteSuccess(GlobalVars.GetStr("SimulationCompletedSuccessfullyMessage"));
+				MainInfoBar.WriteSuccess(Atlas.GetStr("SimulationCompletedSuccessfullyMessage"));
 			}
 
 			AreElementsEnabled = true;
@@ -358,13 +360,13 @@ internal sealed partial class SimulationVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
 				SiPolicy.SiPolicy policyObj = await Task.Run(() => Management.Initialize(selectedFile, null));
 
-				SelectedPolicy = new(policyObj);
+				SelectedPolicy = new(policyObj) { FilePath = selectedFile };
 			}
 		}
 		catch (Exception ex)
@@ -378,7 +380,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal void SelectFilesButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 		foreach (string item in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -438,7 +440,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	{
 		if (AllSimulationOutputs.Count is 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoSimulationOutputToExport"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("NoSimulationOutputToExport"));
 			return;
 		}
 
@@ -448,7 +450,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
 			string fileName = $"AppControlManager_Simulation_Export_{formattedDateTime}.json";
 
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, fileName);
 
 			if (savePath is null)
 				return;
@@ -459,7 +461,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 				savePath += ".json";
 			}
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("ExportingToJSONMsg"));
 
 			List<SimulationOutput> dataToExport = [];
 
@@ -474,12 +476,93 @@ internal sealed partial class SimulationVM : ViewModelBase
 				File.WriteAllText(savePath, jsonString);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedDataToJSON"), dataToExport.Count, savePath));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedDataToJSON"), dataToExport.Count, savePath));
 
 		}
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	#endregion
+
+	#region Adding rules to the policy
+
+	internal async void AllowSelectedItemsInPolicy(object sender, RoutedEventArgs e) => await AddSelectedItemsToPolicy(SiPolicyIntel.Authorization.Allow, sender);
+
+	internal async void DenySelectedItemsInPolicy(object sender, RoutedEventArgs e) => await AddSelectedItemsToPolicy(SiPolicyIntel.Authorization.Deny, sender);
+
+	private async Task AddSelectedItemsToPolicy(SiPolicyIntel.Authorization authorization, object sender)
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
+
+		if (lv is null || lv.SelectedItems.Count == 0 || SelectedPolicy is null) return;
+
+		if (SelectedPolicy.PolicyObj.PolicyType is PolicyType.SupplementalPolicy && authorization is SiPolicyIntel.Authorization.Deny)
+		{
+			MainInfoBar.WriteWarning("You cannot create Deny rules in a Supplemental policy.");
+			return;
+		}
+
+		try
+		{
+			AreElementsEnabled = false;
+			MainInfoBar.IsClosable = false;
+
+			List<string> collectedFilePaths = new(lv.SelectedItems.Count);
+
+			foreach (object item in lv.SelectedItems)
+			{
+				if (item is SimulationOutput result)
+				{
+					if (result.FilePath is not null)
+					{
+						collectedFilePaths.Add(result.FilePath);
+					}
+				}
+			}
+
+			await Task.Run(() =>
+			{
+				// Scan all of the files among the selected simulation output results
+				IEnumerable<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(
+					(collectedFilePaths, collectedFilePaths.Count),
+					(ushort)ScalabilityRadialGaugeValue,
+					ProgressRingValueProgress,
+					null);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: ScanLevels.WHQLFilePublisher, folderPaths: null);
+
+				// Create a new SiPolicy object with the data package. Do not merge allow all rule because we want to only deny certain files in the policy.
+				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, authorization, noAllowAllWildCards: true);
+
+				// Merge the new supplemental policy with the user selected policy - user selected policy is the main one in the merge operation
+				SelectedPolicy.PolicyObj = Merger.Merge(SelectedPolicy.PolicyObj, [policyObj]);
+
+				// Save the results back to the user-selected policy file if provided.
+				if (SelectedPolicy.FilePath is not null)
+				{
+					Management.SavePolicyToFile(SelectedPolicy.PolicyObj, SelectedPolicy.FilePath);
+				}
+
+				// Assign the created policy to the Sidebar
+				ViewModelProvider.MainWindowVM.AssignToSidebar(SelectedPolicy);
+
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			});
+
+			MainInfoBar.WriteSuccess($"Successfully {(authorization is SiPolicyIntel.Authorization.Allow ? "Allowed" : "Denied")} {collectedFilePaths.Count} files in the selected policy.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

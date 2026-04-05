@@ -23,7 +23,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -229,7 +228,7 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 				TextWrapping = TextWrapping.Wrap
 			},
 			PrimaryButtonText = "Remove All Metadata",
-			CloseButtonText = GlobalVars.GetStr("Cancel"),
+			CloseButtonText = Atlas.GetStr("Cancel"),
 			DefaultButton = ContentDialogButton.Close
 		};
 
@@ -368,7 +367,7 @@ internal sealed partial class MetadataCategory(string categoryId, string display
 		}
 	} = true;
 
-	internal ObservableCollection<MetadataTag> Tags { get; } = [];
+	internal readonly ObservableCollection<MetadataTag> Tags = [];
 }
 
 internal sealed partial class MetadataContext

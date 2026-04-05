@@ -15,11 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.IntelGathering;
-using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -53,8 +52,8 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 		ViewModel.LightAnimatedIconVisibility = visibility;
 
 		ViewModelProvider.SidebarVM.AssignActionPacks(
-			actionPack1: (LightUp1, GlobalVars.GetStr("AddToPolicySegmentedItem/Content")),
-			actionPack2: (LightUp2, GlobalVars.GetStr("BasePolicyFileSegmentedItem/Content"))
+			actionPack1: (LightUp1, Atlas.GetStr("AddToPolicySegmentedItem/Content")),
+			actionPack2: (LightUp2, Atlas.GetStr("BasePolicyFileSegmentedItem/Content"))
 		);
 	}
 
@@ -115,7 +114,7 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		// Attempt to retrieve the property mapping using the Tag as the key.
-		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
+		if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
 		{
 			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);
 		}
@@ -181,7 +180,7 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 		}
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MDEAHPolicyCreationPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MDEAHPolicyCreationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting");
 }
 

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 
 namespace CommonCore.Others;
@@ -33,21 +32,21 @@ internal sealed partial class InfoBarSettings : ViewModelBase
 
 	internal void WriteInfo(string Msg, string? title = null)
 	{
-		if (GlobalVars.AppDispatcher.HasThreadAccess)
+		if (Atlas.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
-			Title = title ?? GlobalVars.GetStr("Status");
+			Title = title ?? Atlas.GetStr("Status");
 			Severity = InfoBarSeverity.Informational;
 			IsClosable = false;
 		}
 		else
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;
-				Title = title ?? GlobalVars.GetStr("Status");
+				Title = title ?? Atlas.GetStr("Status");
 				Severity = InfoBarSeverity.Informational;
 				IsClosable = false;
 			});
@@ -57,21 +56,21 @@ internal sealed partial class InfoBarSettings : ViewModelBase
 
 	internal void WriteWarning(string Msg, string? title = null)
 	{
-		if (GlobalVars.AppDispatcher.HasThreadAccess)
+		if (Atlas.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
-			Title = title ?? GlobalVars.GetStr("WarningTitle");
+			Title = title ?? Atlas.GetStr("WarningTitle");
 			Severity = InfoBarSeverity.Warning;
 			IsClosable = true;
 		}
 		else
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;
-				Title = title ?? GlobalVars.GetStr("WarningTitle");
+				Title = title ?? Atlas.GetStr("WarningTitle");
 				Severity = InfoBarSeverity.Warning;
 				IsClosable = true;
 			});
@@ -82,21 +81,21 @@ internal sealed partial class InfoBarSettings : ViewModelBase
 
 	internal void WriteError(Exception ex, string? Msg = null, string? title = null)
 	{
-		if (GlobalVars.AppDispatcher.HasThreadAccess)
+		if (Atlas.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg is not null ? CreateProperString(Msg) + ex.Message : ex.Message;
-			Title = title ?? GlobalVars.GetStr("ErrorTitle");
+			Title = title ?? Atlas.GetStr("ErrorTitle");
 			Severity = InfoBarSeverity.Error;
 			IsClosable = true;
 		}
 		else
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg is not null ? CreateProperString(Msg) + ex.Message : ex.Message;
-				Title = title ?? GlobalVars.GetStr("ErrorTitle");
+				Title = title ?? Atlas.GetStr("ErrorTitle");
 				Severity = InfoBarSeverity.Error;
 				IsClosable = true;
 			});
@@ -106,21 +105,21 @@ internal sealed partial class InfoBarSettings : ViewModelBase
 
 	internal void WriteSuccess(string Msg, string? title = null)
 	{
-		if (GlobalVars.AppDispatcher.HasThreadAccess)
+		if (Atlas.AppDispatcher.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
-			Title = title ?? GlobalVars.GetStr("SuccessText");
+			Title = title ?? Atlas.GetStr("SuccessText");
 			Severity = InfoBarSeverity.Success;
 			IsClosable = true;
 		}
 		else
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;
-				Title = title ?? GlobalVars.GetStr("SuccessText");
+				Title = title ?? Atlas.GetStr("SuccessText");
 				Severity = InfoBarSeverity.Success;
 				IsClosable = true;
 			});

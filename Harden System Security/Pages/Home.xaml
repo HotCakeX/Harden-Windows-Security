@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:customUI="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"
+    xmlns:customUI="using:AppControlManager.CustomUIElements.HomePageCarousel"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     Loaded="{x:Bind OnInitialLoaded}"
     Unloaded="{x:Bind OnUnloadedDisposeResources}"
@@ -285,12 +285,21 @@
                         </Button>
 
                         <!-- UPTIME -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                        <Button Style="{StaticResource CardButtonStyle}" Click="{x:Bind ViewModel.OnUptimeClick}">
                             <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
+
+                                <!-- Clickable Indicator -->
+                                <FontIcon Grid.Row="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          FontSize="12"
+                                          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                          Glyph="&#xE76C;" />
+
                                 <StackPanel Style="{StaticResource CardHeaderStackStyle}">
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE81C;"/>
@@ -301,7 +310,7 @@
                                            Style="{StaticResource CardBodyTextStyle}"
                                            Text="{x:Bind ViewModel.UptimeText, Mode=OneWay}"/>
                             </Grid>
-                        </Border>
+                        </Button>
 
                         <!-- Last Boot Time -->
                         <Border Style="{StaticResource OverviewCardBorderStyle}">

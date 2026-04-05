@@ -23,7 +23,7 @@ namespace AppControlManager.CustomUIElements;
 
 internal sealed partial class CustomPoliciesLibraryCacheLocationManagerDialog : ContentDialogV2, INPCImplant
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
+	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	internal CustomPoliciesLibraryCacheLocationManagerDialog() => InitializeComponent();
 
@@ -69,7 +69,7 @@ internal sealed partial class CustomPoliciesLibraryCacheLocationManagerDialog : 
 		}
 	}
 
-	private async void Open() => await ViewModels.ViewModelBase.OpenFileInDefaultFileHandler(AppSettings.CustomSidebarPoliciesLibraryCacheLocation);
+	private async void Open() => await ViewModelBase.OpenFileInDefaultFileHandler(AppSettings.CustomSidebarPoliciesLibraryCacheLocation);
 
 	private bool AreElementsEnabled
 	{

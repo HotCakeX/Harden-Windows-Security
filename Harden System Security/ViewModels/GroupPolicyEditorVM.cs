@@ -25,7 +25,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
 using CommonCore.SecurityPolicy;
@@ -40,7 +39,7 @@ namespace HardenSystemSecurity.ViewModels;
 internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 {
 	// To adjust the initial width of the columns, giving them nice paddings.
-	internal GroupPolicyEditorVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
+	internal GroupPolicyEditorVM() => _ = Atlas.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 	/// <summary>
 	/// The main InfoBar for this VM.
@@ -74,14 +73,14 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("KeynameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("ValueNameHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("ValueHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CategoryHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("SubCategoryHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyActionHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("SizeHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("KeynameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("ValueNameHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("ValueHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(Atlas.GetStr("CategoryHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(Atlas.GetStr("SubCategoryHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(Atlas.GetStr("PolicyActionHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(Atlas.GetStr("FriendlyNameHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(Atlas.GetStr("SizeHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (RegistryPolicyEntry item in Policies)
@@ -192,14 +191,14 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<RegistryPolicyEntry, object?> Getter)> RegistryPolicyEntryPropertyMappings
 		= new Dictionary<string, (string Label, Func<RegistryPolicyEntry, object?> Getter)>
 		{
-			{ "KeyName",        (GlobalVars.GetStr("KeynameHeader/Text") + ": ",        rpe => rpe.KeyName) },
-			{ "ValueName",      (GlobalVars.GetStr("ValueNameHeader/Text") + ": ",      rpe => rpe.ValueName) },
-			{ "Value",          (GlobalVars.GetStr("ValueHeader/Text") + ": ",          rpe => rpe.ValueDisplay) },
-			{ "Category",       (GlobalVars.GetStr("CategoryHeader/Text") + ": ",       rpe => rpe.Category) },
-			{ "SubCategory",    (GlobalVars.GetStr("SubCategoryHeader/Text") + ": ",    rpe => rpe.SubCategory) },
-			{ "PolicyAction",   (GlobalVars.GetStr("PolicyActionHeader/Text") + ": ",   rpe => rpe.policyAction) },
-			{ "FriendlyName",   (GlobalVars.GetStr("FriendlyNameHeader/Text") + ": ",   rpe => rpe.FriendlyName) },
-			{ "Size",           (GlobalVars.GetStr("SizeHeader/Text") + ": ",           rpe => rpe.Size) }
+			{ "KeyName",        (Atlas.GetStr("KeynameHeader/Text") + ": ",        rpe => rpe.KeyName) },
+			{ "ValueName",      (Atlas.GetStr("ValueNameHeader/Text") + ": ",      rpe => rpe.ValueName) },
+			{ "Value",          (Atlas.GetStr("ValueHeader/Text") + ": ",          rpe => rpe.ValueDisplay) },
+			{ "Category",       (Atlas.GetStr("CategoryHeader/Text") + ": ",       rpe => rpe.Category) },
+			{ "SubCategory",    (Atlas.GetStr("SubCategoryHeader/Text") + ": ",    rpe => rpe.SubCategory) },
+			{ "PolicyAction",   (Atlas.GetStr("PolicyActionHeader/Text") + ": ",   rpe => rpe.policyAction) },
+			{ "FriendlyName",   (Atlas.GetStr("FriendlyNameHeader/Text") + ": ",   rpe => rpe.FriendlyName) },
+			{ "Size",           (Atlas.GetStr("SizeHeader/Text") + ": ",           rpe => rpe.Size) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -327,7 +326,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			{
 				Title = "Edit Policy Value",
 				PrimaryButtonText = "Save",
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Primary,
 				Content = contentPanel,
 				IsPrimaryButtonEnabled = true // Initially true, updated by validation logic immediately
@@ -801,7 +800,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForPolicy_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.JSONAndPOLPickerFilter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.JSONAndPOLPickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -866,7 +865,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					// Retrieve friendly names
 					AdmxAdmlParser.PopulateFriendlyNames(policy);
 
-					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						Policies.AddRange(policy);
 						AllPolicies.AddRange(policy);
@@ -879,7 +878,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					// Retrieve friendly names
 					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
 
-					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						Policies.AddRange(policy.Entries);
 						AllPolicies.AddRange(policy.Entries);
@@ -887,13 +886,13 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				}
 				else
 				{
-					throw new NotSupportedException(string.Format(GlobalVars.GetStr("UnsupportedFileTypeError"), fileExtension));
+					throw new NotSupportedException(string.Format(Atlas.GetStr("UnsupportedFileTypeError"), fileExtension));
 				}
 
 			});
 
 			CalculateColumnWidths();
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("GroupPolicyDataLoadedSuccess"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("GroupPolicyDataLoadedSuccess"));
 		}
 		catch (Exception ex)
 		{
@@ -960,7 +959,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	internal void BrowseForMainPolFile()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.POLPickerFilter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.POLPickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -970,7 +969,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	internal void PickPOLFiles()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.POLPickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.POLPickerFilter);
 
 		if (selectedFiles.Count > 0)
 		{
@@ -985,7 +984,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		if (SelectedMainPOLFileForMerge is null || SelectedOtherPOLFilesForMerge.Count == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectMainAndOtherPOLFilesWarning"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectMainAndOtherPOLFilesWarning"));
 			return;
 		}
 
@@ -1005,11 +1004,11 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				}
 
 				// Log summary statistics
-				Logger.Write(GlobalVars.GetStr("MergeSummaryHeader"));
-				Logger.Write(string.Format(GlobalVars.GetStr("TotalOperationsLog"), result.Operations.Count));
-				Logger.Write(string.Format(GlobalVars.GetStr("AddedEntriesLog"), result.Operations.Count(op => op.OperationType == OperationType.Added)));
-				Logger.Write(string.Format(GlobalVars.GetStr("ReplacedEntries"), result.Operations.Count(op => op.OperationType == OperationType.Replaced)));
-				Logger.Write(string.Format(GlobalVars.GetStr("TotalEntriesInMergedFileLog"), result.MergedFile.Entries.Count));
+				Logger.Write(Atlas.GetStr("MergeSummaryHeader"));
+				Logger.Write(string.Format(Atlas.GetStr("TotalOperationsLog"), result.Operations.Count));
+				Logger.Write(string.Format(Atlas.GetStr("AddedEntriesLog"), result.Operations.Count(op => op.OperationType == OperationType.Added)));
+				Logger.Write(string.Format(Atlas.GetStr("ReplacedEntries"), result.Operations.Count(op => op.OperationType == OperationType.Replaced)));
+				Logger.Write(string.Format(Atlas.GetStr("TotalEntriesInMergedFileLog"), result.MergedFile.Entries.Count));
 
 				RegistryPolicyFile newPolFile = new(
 					signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
@@ -1019,7 +1018,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				RegistryPolicyParser.WriteFile(SelectedMainPOLFileForMerge, newPolFile);
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("POLFilesMergedSuccess"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("POLFilesMergedSuccess"));
 		}
 		catch (Exception ex)
 		{
@@ -1044,7 +1043,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	internal void PickPOLFilesForJSONConversion()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.POLPickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.POLPickerFilter);
 
 		if (selectedFiles.Count > 0)
 		{
@@ -1069,7 +1068,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		if (SelectedPOLFilesForConversionToJSON.Count == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAtLeastOnePOLFileWarning"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectAtLeastOnePOLFileWarning"));
 			return;
 		}
 
@@ -1089,7 +1088,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					string? saveLoc = OutputDirForJsonFilesAfterConversion is null
 						? Path.Combine(
-							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
+							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".json")
 						: Path.Combine(
 							OutputDirForJsonFilesAfterConversion,
@@ -1106,7 +1105,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					RegistryPolicyEntry.Save(saveLoc, policy.Entries);
 
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("POLFilesConvertedToJSONSuccess"), saveLoc));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("POLFilesConvertedToJSONSuccess"), saveLoc));
 				}
 			});
 		}
@@ -1143,7 +1142,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	internal void PickJSONFilesForPOLConversion()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.JSONPickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.JSONPickerFilter);
 
 		if (selectedFiles.Count > 0)
 		{
@@ -1158,7 +1157,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		if (SelectedJSONFilesForConversionToPol.Count == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAtLeastOneJSONFileWarning"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectAtLeastOneJSONFileWarning"));
 			return;
 		}
 
@@ -1180,14 +1179,14 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					string? saveLoc = OutputDirForPOLFilesAfterConversion is null
 						? Path.Combine(
-							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
+							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".pol")
 						: Path.Combine(
 							OutputDirForPOLFilesAfterConversion,
 							Path.GetFileNameWithoutExtension(item) + ".pol");
 					RegistryPolicyParser.WriteFile(saveLoc, newPolicyFile);
 
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("JSONFileConvertedToPOLSuccess"), saveLoc));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("JSONFileConvertedToPOLSuccess"), saveLoc));
 				}
 			});
 		}
@@ -1214,7 +1213,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	internal void PickSecurityINFFilesForJSONConversion()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.SecurityINFPickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.SecurityINFPickerFilter);
 
 		if (selectedFiles.Count > 0)
 		{
@@ -1239,7 +1238,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		if (SelectedSecurityINFFilesForConversionToJSON.Count == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAtLeastOneSecurityINFFileWarning"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectAtLeastOneSecurityINFFileWarning"));
 			return;
 		}
 
@@ -1256,14 +1255,14 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					string? saveLoc = OutputDirForSecurityINFToJSONConversion is null
 						? Path.Combine(
-							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
+							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".json")
 						: Path.Combine(
 							OutputDirForSecurityINFToJSONConversion,
 							Path.GetFileNameWithoutExtension(item) + ".json");
 					RegistryPolicyEntry.Save(saveLoc, policies);
 
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SecurityINFFileConvertedToJSONSuccess"), saveLoc));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SecurityINFFileConvertedToJSONSuccess"), saveLoc));
 				}
 			});
 		}
@@ -1298,7 +1297,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 			await DataDump.DumpSystemSecurityPoliciesData(saveLocation);
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SecurityPolicyReportSavedSuccess"), saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SecurityPolicyReportSavedSuccess"), saveLocation));
 		}
 		catch (Exception ex)
 		{

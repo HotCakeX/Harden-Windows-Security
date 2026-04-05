@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -68,13 +69,13 @@ internal static class NewCertificateSignerRules
 			policyObj.Signers.Add(newSigner);
 
 			// For User-Mode files
-			if (signer.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+			if (signer.SiSigningScenario is SSType.UserMode)
 			{
 				umciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
 				policyObj.CiSigners.Add(new CiSigner(signerID: SignerID));
 			}
 			// For Kernel-Mode files - they don't need CI Signers
-			else if (signer.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+			else if (signer.SiSigningScenario is SSType.KernelMode)
 			{
 				kmciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: SignerID, exceptDenyRule: null));
 			}

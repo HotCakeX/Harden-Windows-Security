@@ -27,7 +27,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.DISM;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
@@ -143,7 +142,7 @@ internal sealed partial class DismServiceClient : IDisposable
 							if (!success)
 							{
 								int error = Marshal.GetLastPInvokeError();
-								LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToCreateProcessWin32Error"), error), LogTypeIntel.Error);
+								LogReceived?.Invoke(string.Format(Atlas.GetStr("FailedToCreateProcessWin32Error"), error), LogTypeIntel.Error);
 								return false;
 							}
 
@@ -187,7 +186,7 @@ internal sealed partial class DismServiceClient : IDisposable
 		}
 		catch (Exception ex)
 		{
-			LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToStartService"), ex.Message), LogTypeIntel.Error);
+			LogReceived?.Invoke(string.Format(Atlas.GetStr("FailedToStartService"), ex.Message), LogTypeIntel.Error);
 			Dispose();
 			return false;
 		}
@@ -394,7 +393,7 @@ internal sealed partial class DismServiceClient : IDisposable
 			if (response == Response.Error)
 			{
 				string errorMessage = ReadString();
-				LogReceived?.Invoke(string.Format(GlobalVars.GetStr("ServiceError"), errorMessage), LogTypeIntel.Error);
+				LogReceived?.Invoke(string.Format(Atlas.GetStr("ServiceError"), errorMessage), LogTypeIntel.Error);
 			}
 
 			return response;
@@ -634,22 +633,22 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 
 	private static string GetStateDisplayName(DismPackageFeatureState state) => state switch
 	{
-		DismPackageFeatureState.DismStateNotPresent => GlobalVars.GetStr("NotPresentState"),
-		DismPackageFeatureState.DismStateUninstallPending => GlobalVars.GetStr("UninstallPendingState"),
-		DismPackageFeatureState.DismStateStaged => GlobalVars.GetStr("StagedState"),
-		DismPackageFeatureState.DismStateRemoved => GlobalVars.GetStr("RemovedState"),
-		DismPackageFeatureState.DismStateInstalled => GlobalVars.GetStr("InstalledState"),
-		DismPackageFeatureState.DismStateInstallPending => GlobalVars.GetStr("InstallPendingState"),
-		DismPackageFeatureState.DismStateSuperseded => GlobalVars.GetStr("SupersededState"),
-		DismPackageFeatureState.DismStatePartiallyInstalled => GlobalVars.GetStr("PartiallyInstalledState"),
-		_ => GlobalVars.GetStr("UnknownState")
+		DismPackageFeatureState.DismStateNotPresent => Atlas.GetStr("NotPresentState"),
+		DismPackageFeatureState.DismStateUninstallPending => Atlas.GetStr("UninstallPendingState"),
+		DismPackageFeatureState.DismStateStaged => Atlas.GetStr("StagedState"),
+		DismPackageFeatureState.DismStateRemoved => Atlas.GetStr("RemovedState"),
+		DismPackageFeatureState.DismStateInstalled => Atlas.GetStr("InstalledState"),
+		DismPackageFeatureState.DismStateInstallPending => Atlas.GetStr("InstallPendingState"),
+		DismPackageFeatureState.DismStateSuperseded => Atlas.GetStr("SupersededState"),
+		DismPackageFeatureState.DismStatePartiallyInstalled => Atlas.GetStr("PartiallyInstalledState"),
+		_ => Atlas.GetStr("UnknownState")
 	};
 
 	[JsonInclude]
 	internal string StateDisplayName => GetStateDisplayName(State);
 
 	[JsonInclude]
-	internal string TypeDisplayName => Type == DISMResultType.Feature ? GlobalVars.GetStr("FeatureType") : GlobalVars.GetStr("CapabilityType");
+	internal string TypeDisplayName => Type == DISMResultType.Feature ? Atlas.GetStr("FeatureType") : Atlas.GetStr("CapabilityType");
 
 	[JsonIgnore]
 	internal OptionalWindowsFeaturesVM ParentVM => parentVM;
@@ -715,9 +714,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	internal OptionalWindowsFeaturesVM()
 	{
 		// Initialize the animated cancellable buttons
-		ApplyCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("ApplyRecommendedConfigurations"));
-		VerifyCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("VerifyRecommendedConfigurations"));
-		RemoveCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("RemoveRecommendedConfigurations"));
+		ApplyCancellableButton = new AnimatedCancellableButtonInitializer(Atlas.GetStr("ApplyRecommendedConfigurations"));
+		VerifyCancellableButton = new AnimatedCancellableButtonInitializer(Atlas.GetStr("VerifyRecommendedConfigurations"));
+		RemoveCancellableButton = new AnimatedCancellableButtonInitializer(Atlas.GetStr("RemoveRecommendedConfigurations"));
 
 		UpdateFilteredItems();
 
@@ -727,17 +726,17 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Initialization details for the Apply Security Hardening button
 	/// </summary>
-	internal AnimatedCancellableButtonInitializer ApplyCancellableButton { get; }
+	internal readonly AnimatedCancellableButtonInitializer ApplyCancellableButton;
 
 	/// <summary>
 	/// Initialization details for the Verify Security Hardening button
 	/// </summary>
-	internal AnimatedCancellableButtonInitializer VerifyCancellableButton { get; }
+	internal readonly AnimatedCancellableButtonInitializer VerifyCancellableButton;
 
 	/// <summary>
 	/// Initialization details for the Remove Security Hardening button
 	/// </summary>
-	internal AnimatedCancellableButtonInitializer RemoveCancellableButton { get; }
+	internal readonly AnimatedCancellableButtonInitializer RemoveCancellableButton;
 
 	/// <summary>
 	/// The main InfoBar for this VM.
@@ -898,8 +897,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 		// Publish grouped collection for the XAML CollectionViewSource
 		GroupedFilteredDISMItems.Clear();
-		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(RecommendedItems, GlobalVars.GetStr("RecommendedProtectionPresetComboBoxItemText")));
-		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(NetworkAdapterItems, GlobalVars.GetStr("NetworkAdapters/Text")));
+		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(RecommendedItems, Atlas.GetStr("RecommendedProtectionPresetComboBoxItemText")));
+		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(NetworkAdapterItems, Atlas.GetStr("NetworkAdapters/Text")));
 		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(OtherItems, "Others"));
 
 		// Update filtered counts
@@ -1030,7 +1029,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Subscribe to item-specific progress updates
 			_dismServiceClient.ItemProgressUpdated += async (itemName, current, total) =>
 			{
-				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+				await Atlas.AppDispatcher.EnqueueAsync(() =>
 				{
 					// Update the item's progress
 					DISMOutputEntry? entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, itemName, StringComparison.OrdinalIgnoreCase));
@@ -1063,7 +1062,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			};
 
 			if (!await _dismServiceClient.StartServiceAsync(DismServiceClient.DISMServiceLocationInPackage))
-				throw new InvalidOperationException(GlobalVars.GetStr("FailedToStartDISMServiceAdministrator"));
+				throw new InvalidOperationException(Atlas.GetStr("FailedToStartDISMServiceAdministrator"));
 
 			DismStartedSuccessfully = true;
 		}
@@ -1103,7 +1102,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			UpdateFilteredItems();
 			SelectedItemsCount = ItemsSourceSelectedItems.Count;
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyLoadedWindowsFeaturesCapabilities"), results.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyLoadedWindowsFeaturesCapabilities"), results.Count));
 		}
 		catch (Exception ex)
 		{
@@ -1127,7 +1126,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			_currentOperationType = "Enabling";
 
 			// Disable buttons and search, but set processing state for the specific item
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = false;
 				entry.IsProcessing = true;
@@ -1160,33 +1159,33 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 					? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 					: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+				await Atlas.AppDispatcher.EnqueueAsync(() =>
 				{
 					if (updatedResults.Count > 0)
 					{
 						// Update the state based on the actual current state from DISM
 						entry.State = updatedResults[0].State;
-						MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+						MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyEnabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 					}
 					else
 					{
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("CouldNotVerifyStateAfterEnabling"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("CouldNotVerifyStateAfterEnabling"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 					}
 				});
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+				MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 			}
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, string.Format(GlobalVars.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+			MainInfoBar.WriteError(ex, string.Format(Atlas.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 		}
 		finally
 		{
 			// Always reset processing state and re-enable buttons and search
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				entry.IsProcessing = false;
 				entry.ProgressCurrent = 0;
@@ -1209,7 +1208,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			_currentOperationType = "Disabling";
 
 			// Disable buttons and search, but set processing state for the specific item
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = false;
 				entry.IsProcessing = true;
@@ -1242,33 +1241,33 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 					? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 					: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+				await Atlas.AppDispatcher.EnqueueAsync(() =>
 				{
 					if (updatedResults.Count > 0)
 					{
 						// Update the state based on the actual current state from DISM
 						entry.State = updatedResults[0].State;
-						MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyDisabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+						MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyDisabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 					}
 					else
 					{
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("CouldNotVerifyStateAfterDisabling"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("CouldNotVerifyStateAfterDisabling"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 					}
 				});
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+				MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 			}
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, string.Format(GlobalVars.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+			MainInfoBar.WriteError(ex, string.Format(Atlas.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 		}
 		finally
 		{
 			// Always reset processing state and re-enable buttons and search
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				entry.IsProcessing = false;
 				entry.ProgressCurrent = 0;
@@ -1286,7 +1285,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		if (ItemsSourceSelectedItems.Count == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoItemsSelectedForEnable"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("NoItemsSelectedForEnable"));
 			return;
 		}
 
@@ -1305,7 +1304,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			int failureCount = 0;
 			List<string> failedItems = [];
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("StartingBulkEnableOperation"), ItemsSourceSelectedItems.Count));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingBulkEnableOperation"), ItemsSourceSelectedItems.Count));
 
 			await Task.Run(async () =>
 			{
@@ -1313,7 +1312,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				{
 					try
 					{
-						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+						await Atlas.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = true;
 							entry.ProgressCurrent = 0;
@@ -1340,7 +1339,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 								? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 								: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+							await Atlas.AppDispatcher.EnqueueAsync(() =>
 							{
 								if (updatedResults.Count > 0)
 								{
@@ -1349,24 +1348,24 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							});
 
 							successCount++;
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("SuccessfullyEnabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 						else
 						{
 							failureCount++;
 							failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 					}
 					catch (Exception ex)
 					{
 						failureCount++;
 						failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}");
+						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}");
 					}
 					finally
 					{
-						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+						await Atlas.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = false;
 							entry.ProgressCurrent = 0;
@@ -1377,19 +1376,19 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			});
 
 			// Show final results
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyEnabledAllSelectedItems"), successCount));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyEnabledAllSelectedItems"), successCount));
 				}
 				else if (successCount == 0)
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableAllSelectedItems"), failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableAllSelectedItems"), failureCount));
 				}
 				else
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("BulkEnableCompleted"), successCount, failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("BulkEnableCompleted"), successCount, failureCount));
 				}
 
 				if (failedItems.Count > 0)
@@ -1399,13 +1398,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringBulkEnableOperation"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorDuringBulkEnableOperation"));
 		}
 		finally
 		{
@@ -1421,7 +1420,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		if (ItemsSourceSelectedItems.Count == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoItemsSelectedForDisable"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("NoItemsSelectedForDisable"));
 			return;
 		}
 
@@ -1440,7 +1439,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			int failureCount = 0;
 			List<string> failedItems = [];
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("StartingBulkDisableOperation"), ItemsSourceSelectedItems.Count));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingBulkDisableOperation"), ItemsSourceSelectedItems.Count));
 
 			await Task.Run(async () =>
 			{
@@ -1448,7 +1447,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				{
 					try
 					{
-						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+						await Atlas.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = true;
 							entry.ProgressCurrent = 0;
@@ -1475,7 +1474,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
 								? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
 								: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+							await Atlas.AppDispatcher.EnqueueAsync(() =>
 							{
 								if (updatedResults.Count > 0)
 								{
@@ -1484,24 +1483,24 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							});
 
 							successCount++;
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyDisabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("SuccessfullyDisabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 						else
 						{
 							failureCount++;
 							failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
+							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 					}
 					catch (Exception ex)
 					{
 						failureCount++;
 						failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}");
+						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}");
 					}
 					finally
 					{
-						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+						await Atlas.AppDispatcher.EnqueueAsync(() =>
 						{
 							entry.IsProcessing = false;
 							entry.ProgressCurrent = 0;
@@ -1512,19 +1511,19 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			});
 
 			// Show final results
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyDisabledAllSelectedItems"), successCount));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyDisabledAllSelectedItems"), successCount));
 				}
 				else if (successCount == 0)
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToDisableAllSelectedItems"), failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToDisableAllSelectedItems"), failureCount));
 				}
 				else
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("BulkDisableCompleted"), successCount, failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("BulkDisableCompleted"), successCount, failureCount));
 				}
 
 				if (failedItems.Count > 0)
@@ -1534,13 +1533,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringBulkDisableOperation"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorDuringBulkDisableOperation"));
 		}
 		finally
 		{
@@ -1832,7 +1831,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			ApplyCancellableButton.Begin();
 
-			await GlobalVars.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
+			await Atlas.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 			// Set operation type for progress logging
 			_currentOperationType = "Applying Recommended Configurations";
@@ -1841,7 +1840,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			int failureCount = 0;
 			List<string> failedItems = [];
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("StartingWithOptionalWindowsFeatures"), SecurityHardeningConfigs.Count));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingWithOptionalWindowsFeatures"), SecurityHardeningConfigs.Count));
 
 			await Task.Run(async () =>
 			{
@@ -1861,7 +1860,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 					// Try to find the corresponding list item (if present) and show its progress (initially indeterminate)
 					DISMOutputEntry? entry = null;
-					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
 						if (entry != null)
@@ -1884,14 +1883,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							successCount++;
 							string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enabled" : "disabled";
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 						else
 						{
 							failureCount++;
 							string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enable" : "disable";
 							failedItems.Add($"{config.Type}: {config.Name}");
-							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 					}
 					catch (Exception ex)
@@ -1899,14 +1898,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						failureCount++;
 						string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enabling" : "disabling";
 						failedItems.Add($"{config.Type}: {config.Name}");
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
+						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
 					}
 					finally
 					{
 						// Always collapse the item's progress once this config is done
 						if (entry != null)
 						{
-							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+							await Atlas.AppDispatcher.EnqueueAsync(() =>
 							{
 								entry.IsProcessing = false;
 								entry.ProgressCurrent = 0;
@@ -1919,19 +1918,19 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			ApplyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyAppliedSecurityHardening"), successCount));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyAppliedSecurityHardening"), successCount));
 				}
 				else if (successCount == 0)
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToApplySecurityHardening"), failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToApplySecurityHardening"), failureCount));
 				}
 				else
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("SecurityHardeningCompleted"), successCount, failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("SecurityHardeningCompleted"), successCount, failureCount));
 				}
 
 				if (failedItems.Count > 0)
@@ -1941,13 +1940,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
 		catch (Exception ex)
 		{
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				HandleExceptions(ex, ref errorsOccurred, ref ApplyCancellableButton.wasCancelled, MainInfoBar);
 			});
@@ -1956,9 +1955,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			if (ApplyCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("ApplyOperationCancelledByUser"));
 			}
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
 				ApplyCancellableButton.End();
@@ -1977,7 +1976,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		bool errorsOccurred = false;
 
 		VerifyCancellableButton.Begin();
-		await GlobalVars.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
+		await Atlas.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 		// Track which UI entries we mark as "processing" so we can reliably unmark them
 		HashSet<string> targetNames = SecurityHardeningConfigs
@@ -1997,10 +1996,10 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			int incorrectCount = 0;
 			List<string> incorrectItems = [];
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("VerifyingSecurityHardeningState"), SecurityHardeningConfigs.Count));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("VerifyingSecurityHardeningState"), SecurityHardeningConfigs.Count));
 
 			// Mark all recommended items present in the ListView as "in progress" with indeterminate bars
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				foreach (DISMOutputEntry entry in AllItems)
 				{
@@ -2095,15 +2094,15 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			// Show verification results
 			bool allCorrect = incorrectCount == 0;
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (allCorrect)
 				{
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SecurityHardeningVerificationPassed"), correctCount));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SecurityHardeningVerificationPassed"), correctCount));
 				}
 				else
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("SecurityHardeningVerificationCompleted"), correctCount, incorrectCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("SecurityHardeningVerificationCompleted"), correctCount, incorrectCount));
 
 					if (incorrectItems.Count > 0)
 					{
@@ -2112,7 +2111,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							incorrectItemsList += $" and {incorrectItems.Count - 3} more...";
 						}
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("IncorrectItems"), incorrectItemsList));
+						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("IncorrectItems"), incorrectItemsList));
 					}
 				}
 			});
@@ -2121,7 +2120,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		}
 		catch (Exception ex)
 		{
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				HandleExceptions(ex, ref errorsOccurred, ref VerifyCancellableButton.wasCancelled, MainInfoBar);
 			});
@@ -2130,7 +2129,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		finally
 		{
 			// Unmark all recommended items as "processing"
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				foreach (DISMOutputEntry entry in AllItems)
 				{
@@ -2145,9 +2144,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			if (VerifyCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("VerifyOperationCancelledByUser"));
 			}
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
 				VerifyCancellableButton.End();
@@ -2166,7 +2165,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		bool errorsOccurred = false;
 
 		RemoveCancellableButton.Begin();
-		await GlobalVars.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
+		await Atlas.AppDispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 		try
 		{
@@ -2181,7 +2180,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			int failureCount = 0;
 			List<string> failedItems = [];
 
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingSecurityHardening"), SecurityHardeningConfigs.Count));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingSecurityHardening"), SecurityHardeningConfigs.Count));
 
 			await Task.Run(async () =>
 			{
@@ -2203,7 +2202,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 					// Try to find the corresponding list item (if present) and show its progress (initially indeterminate)
 					DISMOutputEntry? entry = null;
-					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
 						if (entry != null)
@@ -2226,14 +2225,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							successCount++;
 							string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restored" : "removed";
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 						else
 						{
 							failureCount++;
 							string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restore" : "remove";
 							failedItems.Add($"{config.Type}: {config.Name}");
-							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 					}
 					catch (Exception ex)
@@ -2241,14 +2240,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						failureCount++;
 						string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restoring" : "removing";
 						failedItems.Add($"{config.Type}: {config.Name}");
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
+						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
 					}
 					finally
 					{
 						// Always collapse the item's progress once this config is done
 						if (entry != null)
 						{
-							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+							await Atlas.AppDispatcher.EnqueueAsync(() =>
 							{
 								entry.IsProcessing = false;
 								entry.ProgressCurrent = 0;
@@ -2262,19 +2261,19 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			RemoveCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 			// Show final results
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				if (failureCount == 0)
 				{
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyRemovedSecurityHardening"), successCount));
+					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyRemovedSecurityHardening"), successCount));
 				}
 				else if (successCount == 0)
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToRemoveSecurityHardening"), failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToRemoveSecurityHardening"), failureCount));
 				}
 				else
 				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("SecurityHardeningRemovalCompleted"), successCount, failureCount));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("SecurityHardeningRemovalCompleted"), successCount, failureCount));
 				}
 
 				if (failedItems.Count > 0)
@@ -2284,7 +2283,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
+					MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
@@ -2296,9 +2295,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			if (RemoveCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("RemoveOperationCancelledByUser"));
 			}
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
 				RemoveCancellableButton.End();
@@ -2353,7 +2352,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("ErrorDisposingDISMServiceClient"), ex.Message), LogTypeIntel.Error);
+			Logger.Write(string.Format(Atlas.GetStr("ErrorDisposingDISMServiceClient"), ex.Message), LogTypeIntel.Error);
 		}
 	}
 
@@ -2520,7 +2519,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			if (AllItems.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoOptionalFeaturesAvailableForExport"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoOptionalFeaturesAvailableForExport"));
 				return;
 			}
 
@@ -2541,7 +2540,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedOptionalFeatures"), AllItems.Count, saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedOptionalFeatures"), AllItems.Count, saveLocation));
 		}
 		catch (Exception ex)
 		{

@@ -57,7 +57,7 @@ internal static class FileTrustChecker
 
 			if (hModule == IntPtr.Zero)
 			{
-				throw new FileNotFoundException(GlobalVars.GetStr("MpClientDllNotFound"));
+				throw new FileNotFoundException(Atlas.GetStr("MpClientDllNotFound"));
 			}
 
 			// Get the function address of 'MpQueryFileTrustByHandle2'
@@ -65,7 +65,7 @@ internal static class FileTrustChecker
 
 			if (procAddress == IntPtr.Zero)
 			{
-				throw new InvalidOperationException(GlobalVars.GetStr("MpQueryFileTrustByHandle2NotFound"));
+				throw new InvalidOperationException(Atlas.GetStr("MpQueryFileTrustByHandle2NotFound"));
 			}
 
 			// Open the file and get its handle
@@ -75,7 +75,7 @@ internal static class FileTrustChecker
 			if (fileHandle == new IntPtr(-1))
 			{
 				int error = Marshal.GetLastPInvokeError();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorOpeningHandleToFile"), filePath, error));
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorOpeningHandleToFile"), filePath, error));
 			}
 
 			// Query the file's trust score using the function pointer and the file handle
@@ -99,12 +99,12 @@ internal static class FileTrustChecker
 				{
 					MpFileTrustExtraInfo extraInfo = *(MpFileTrustExtraInfo*)extraInfoPtr;
 
-					Logger.Write(string.Format(GlobalVars.GetStr("ExtraInfoFileReputationCheck"), extraInfo.First, extraInfo.Second, extraInfo.DataSize, extraInfo.Data), LogTypeIntel.Information);
+					Logger.Write(string.Format(Atlas.GetStr("ExtraInfoFileReputationCheck"), extraInfo.First, extraInfo.Second, extraInfo.DataSize, extraInfo.Data), LogTypeIntel.Information);
 				}
 			}
 			else
 			{
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQueryReputation"), result));
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToQueryReputation"), result));
 			}
 
 			return new FileTrustResult(
@@ -142,12 +142,12 @@ internal static class FileTrustChecker
 	// Map the trust score to a reputation string
 	internal static string GetReputation(TrustScore score) => score switch
 	{
-		TrustScore.HighTrust => GlobalVars.GetStr("HighTrust"),
-		TrustScore.Good => GlobalVars.GetStr("GoodTrust"),
-		TrustScore.Unknown => GlobalVars.GetStr("UnavailableOrUnknown"),
-		TrustScore.PotentiallyUnwantedApplication => GlobalVars.GetStr("PotentiallyUnwantedApplication"),
-		TrustScore.Malicious => GlobalVars.GetStr("Malicious"),
-		_ => string.Format(GlobalVars.GetStr("UnrecognizedScore"), (int)score)
+		TrustScore.HighTrust => Atlas.GetStr("HighTrust"),
+		TrustScore.Good => Atlas.GetStr("GoodTrust"),
+		TrustScore.Unknown => Atlas.GetStr("UnavailableOrUnknown"),
+		TrustScore.PotentiallyUnwantedApplication => Atlas.GetStr("PotentiallyUnwantedApplication"),
+		TrustScore.Malicious => Atlas.GetStr("Malicious"),
+		_ => string.Format(Atlas.GetStr("UnrecognizedScore"), (int)score)
 	};
 
 	// Smart App Control when set in Eval or On state takes control of the file reputation verification, otherwise it's up to the SmartScreen to do it

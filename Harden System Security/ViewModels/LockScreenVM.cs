@@ -32,9 +32,9 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 	}
@@ -64,7 +64,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 
 		temp.Add(new(
 			category: Categories.LockScreen,
-			name: GlobalVars.GetSecurityStr("LockoutBadCount-LockScreen"),
+			name: Atlas.GetSecurityStr("LockoutBadCount-LockScreen"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -99,7 +99,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 
 		temp.Add(new(
 			category: Categories.LockScreen,
-			name: GlobalVars.GetSecurityStr("ResetLockoutCount-LockScreen"),
+			name: Atlas.GetSecurityStr("ResetLockoutCount-LockScreen"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -134,7 +134,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 
 		temp.Add(new(
 			category: Categories.LockScreen,
-			name: GlobalVars.GetSecurityStr("LockoutDuration-LockScreen"),
+			name: Atlas.GetSecurityStr("LockoutDuration-LockScreen"),
 
 			applyStrategy: new DefaultApply(() =>
 			{

@@ -156,7 +156,7 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 							items: g,
 							key: g.Key);
 
-				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+				_ = Atlas.AppDispatcher.TryEnqueue(() =>
 				{
 					// Set backing field first so the control sees populated data when ItemsSource changes
 					viewModel.ListViewItemsSourceBackingField = new(query);

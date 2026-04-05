@@ -18,16 +18,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommonCore.IncrementalCollection;
+using CommonCore.IntelGathering;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -44,11 +43,11 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	{
 		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
 
-		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
+		FilesAndFoldersCancellableButton = new(Atlas.GetStr("CreateDenyPolicyButton/Content"));
 
-		PFNBasedCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
+		PFNBasedCancellableButton = new(Atlas.GetStr("CreateDenyPolicyButton/Content"));
 
-		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
+		PatternBasedFileRuleCancellableButton = new(Atlas.GetStr("CreateDenyPolicyButton/Content"));
 
 		LVController = new(
 			applyWidthCallback: (index, width) =>
@@ -154,7 +153,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		{
 			if (SP(ref field, value))
 			{
-				FilesAndFoldersScalabilityButtonContent = GlobalVars.GetStr("Scalability") + field;
+				FilesAndFoldersScalabilityButtonContent = Atlas.GetStr("Scalability") + field;
 			}
 		}
 	} = 2;
@@ -162,7 +161,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The content of the button that has the RadialGauge inside it.
 	/// </summary>
-	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("Scalability") + "2";
+	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("Scalability") + "2";
 
 
 	// Column width dependency properties
@@ -234,16 +233,16 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		// Check validation conditions but do NOT set button state until all checks pass
 		if (filesAndFoldersFilePaths.Count == 0 && filesAndFoldersFolderPaths.Count == 0)
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoFilesOrFoldersSelected"),
-				GlobalVars.GetStr("SelectFilesOrFoldersTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("NoFilesOrFoldersSelected"),
+				Atlas.GetStr("SelectFilesOrFoldersTitle"));
 
 			return;
 		}
 
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(filesAndFoldersDenyPolicyName))
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
-				GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"),
+				Atlas.GetStr("ChoosePolicyNameTitle"));
 
 			return;
 		}
@@ -253,7 +252,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
@@ -271,7 +270,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 			FilesAndFoldersInfoBar.IsClosable = false;
 
-			FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("SelectedFilesAndFolders") + filesAndFoldersFilePaths.Count + GlobalVars.GetStr("FilesAnd") + filesAndFoldersFolderPaths.Count + GlobalVars.GetStr("Folders"));
+			FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("SelectedFilesAndFolders") + filesAndFoldersFilePaths.Count + Atlas.GetStr("FilesAnd") + filesAndFoldersFolderPaths.Count + Atlas.GetStr("Folders"));
 
 			await Task.Run(async () =>
 			{
@@ -292,12 +291,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
 						errorsOccurred = true;
-						FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoCompatibleFilesDetected"),
-							GlobalVars.GetStr("NoCompatibleFilesTitle"));
+						FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("NoCompatibleFilesDetected"),
+							Atlas.GetStr("NoCompatibleFilesTitle"));
 						return;
 					}
 
-					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanningFiles") + DetectedFilesInSelectedDirectories.Item2 + GlobalVars.GetStr("AppControlCompatibleFiles"));
+					FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("ScanningFiles") + DetectedFilesInSelectedDirectories.Item2 + Atlas.GetStr("AppControlCompatibleFiles"));
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -321,7 +320,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						// Creating incremental collection by passing the source List.
 						HighPerfIncrementalCollection<FileIdentity> incrementalCollection = new(LVController.FullSource);
@@ -341,7 +340,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 						LVController.NotifyFullSourceChanged();
 					});
 
-					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompleted"));
+					FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("ScanCompleted"));
 				}
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
@@ -395,7 +394,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
-					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FilesAndFoldersDenyPolicyPath.PolicyObj));
 				}
@@ -403,23 +402,23 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (FilesAndFoldersCancellableButton.wasCancelled)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.GetStr("DenyPolicyCreatedSuccessfully") + filesAndFoldersDenyPolicyName + "'");
+					FilesAndFoldersInfoBar.WriteSuccess(Atlas.GetStr("DenyPolicyCreatedSuccessfully") + filesAndFoldersDenyPolicyName + "'");
 				}
 				else
 				{
-					FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					FilesAndFoldersInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
@@ -438,7 +437,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFilesButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -482,7 +481,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void OpenInPolicyEditor_FilesAndFolders() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FilesAndFoldersDenyPolicyPath);
 
-	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersDenyPolicyPath);
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await PolicyFileRepresent.OpenInDefaultFileHandler(_FilesAndFoldersDenyPolicyPath);
 
 	/// <summary>
 	/// Exports data to JSON.
@@ -634,7 +633,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		if (lv is null) return;
 
 		int selectedCount = lv.SelectedItems.Count;
-		PFNBasedSelectedItemsCount = string.Format(GlobalVars.GetStr("SelectedAppsCount"), selectedCount);
+		PFNBasedSelectedItemsCount = string.Format(Atlas.GetStr("SelectedAppsCount"), selectedCount);
 
 		PFNBasedAppsListItemsSourceSelectedItems = new(lv.SelectedItems);
 	}
@@ -677,15 +676,15 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 		if (PFNBasedAppsListItemsSourceSelectedItems.Count is 0)
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.GetStr("NoAppSelectedForDenyPolicy"),
+			PFNInfoBar.WriteWarning(Atlas.GetStr("NoAppSelectedForDenyPolicy"),
 				"PFN based policy");
 			return;
 		}
 
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(PFNBasedDenyPolicyName))
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
-				GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			PFNInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"),
+				Atlas.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -694,7 +693,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				PFNInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				PFNInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
@@ -712,7 +711,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 			PFNInfoBar.IsClosable = false;
 
-			PFNInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPFNBasedDenyPolicy"));
+			PFNInfoBar.WriteInfo(Atlas.GetStr("CreatingPFNBasedDenyPolicy"));
 
 			PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -784,7 +783,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				// If user selected to deploy the policy
 				if (PFNBasedShouldDeploy)
 				{
-					PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					PFNInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_PFNDenyPolicyPath.PolicyObj));
 				}
@@ -792,23 +791,23 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, GlobalVars.GetStr("ErrorOccurredScanningDrivers"));
+			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, Atlas.GetStr("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
 			if (PFNBasedCancellableButton.wasCancelled)
 			{
-				PFNInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				PFNInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("DenyPolicyCreated"));
+					PFNInfoBar.WriteSuccess(Atlas.GetStr("DenyPolicyCreated"));
 				}
 				else
 				{
-					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					PFNInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				PFNInfoBarActionButtonVisibility = Visibility.Visible;
@@ -832,7 +831,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void OpenInPolicyEditor_PFN() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_PFNDenyPolicyPath);
 
-	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNDenyPolicyPath);
+	internal async void OpenInDefaultFileHandler_PFN() => await PolicyFileRepresent.OpenInDefaultFileHandler(_PFNDenyPolicyPath);
 
 	/// <summary>
 	/// Event handler for copying app details to clipboard from the context menu.
@@ -993,15 +992,15 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 		if (string.IsNullOrWhiteSpace(DenyPolicyCustomPatternBasedCustomPatternTextBox))
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("EnterCustomPatternSubtitle"),
-				GlobalVars.GetStr("EnterCustomPatternTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("EnterCustomPatternSubtitle"),
+				Atlas.GetStr("EnterCustomPatternTitle"));
 			return;
 		}
 
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedDenyPolicyName))
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
-				GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"),
+				Atlas.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -1010,7 +1009,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
@@ -1028,7 +1027,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 			CustomFilePathRulesInfoBar.IsClosable = false;
 
-			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPatternBasedFilePathRuleDenyPolicyMessage"));
+			CustomFilePathRulesInfoBar.WriteInfo(Atlas.GetStr("CreatingPatternBasedFilePathRuleDenyPolicyMessage"));
 
 			PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -1085,7 +1084,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					CustomFilePathRulesInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_CustomPatternBasedFileRuleDenyPolicyPath.PolicyObj));
 				}
@@ -1093,23 +1092,23 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (PatternBasedFileRuleCancellableButton.wasCancelled)
 			{
-				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage"));
+					CustomFilePathRulesInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage"));
 				}
 				else
 				{
-					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					CustomFilePathRulesInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
@@ -1152,7 +1151,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_CustomPatternBasedFileRuleDenyPolicyPath);
 
-	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleDenyPolicyPath);
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await PolicyFileRepresent.OpenInDefaultFileHandler(_CustomPatternBasedFileRuleDenyPolicyPath);
 
 	#endregion
 
@@ -1173,11 +1172,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Controls the visibility of all of the elements related to browsing for base policy file.
 	/// </summary>
-	internal Visibility BasePolicyElementsVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Visible;
-
+	internal Visibility BasePolicyElementsVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
 	/// <summary>
 	/// The mode of operation for the Deny creation page.
@@ -1207,7 +1202,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{

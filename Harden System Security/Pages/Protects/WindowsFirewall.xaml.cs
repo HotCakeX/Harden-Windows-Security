@@ -42,12 +42,12 @@ internal sealed partial class WindowsFirewall : Page, CommonCore.UI.IPageHeaderP
 		base.OnNavigatedFrom(e);
 
 		// Dispose all descendants that explicitly opted out of automatic disposal.
-		AppControlManager.ViewModels.ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
+		ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
 
 		// Finally dispose the list control itself.
 		SecurityMeasuresList.Dispose();
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("WindowsFirewallPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("WindowsFirewallPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall");
 }

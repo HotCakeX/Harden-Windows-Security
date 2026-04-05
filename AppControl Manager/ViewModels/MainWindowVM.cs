@@ -142,182 +142,182 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 
 		breadCrumbMappingsV2[typeof(Pages.CreatePolicy)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreatePolicyNavItem/Content")],
+			titles: [Atlas.GetStr("CreatePolicyNavItem/Content")],
 			pages: [typeof(Pages.CreatePolicy)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.GetCIHashes)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/Content")],
+			titles: [Atlas.GetStr("GetCodeIntegrityHashesNavItem/Content")],
 			pages: [typeof(Pages.GetCIHashes)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("GitHubDocsNavItem/Content")],
+			titles: [Atlas.GetStr("GitHubDocsNavItem/Content")],
 			pages: [typeof(Pages.GitHubDocumentation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.MicrosoftDocumentation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("MSFTDocsNavItem/Content")],
+			titles: [Atlas.GetStr("MSFTDocsNavItem/Content")],
 			pages: [typeof(Pages.MicrosoftDocumentation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.GetSecurePolicySettings)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("GetSecurePolicySettingsNavItem/Content")],
+			titles: [Atlas.GetStr("GetSecurePolicySettingsNavItem/Content")],
 			pages: [typeof(Pages.GetSecurePolicySettings)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Settings)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("SettingsNavItemContent")],
+			titles: [Atlas.GetStr("SettingsNavItemContent")],
 			pages: [typeof(Pages.Settings)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.SystemInformation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("SystemInformationNavItem/Content")],
+			titles: [Atlas.GetStr("SystemInformationNavItem/Content")],
 			pages: [typeof(Pages.SystemInformation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.ConfigurePolicyRuleOptions)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/Content")],
+			titles: [Atlas.GetStr("ConfigurePolicyRuleOptionsNavItem/Content")],
 			pages: [typeof(Pages.ConfigurePolicyRuleOptions)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Logs)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("LogsNavItem/Content")],
+			titles: [Atlas.GetStr("LogsNavItem/Content")],
 			pages: [typeof(Pages.Logs)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Simulation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("SimulationNavItem/Content")],
+			titles: [Atlas.GetStr("SimulationNavItem/Content")],
 			pages: [typeof(Pages.Simulation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePage)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("UpdateNavItem/Content"), GlobalVars.GetStr("UpdatePageCustomMSIXPath")],
+			titles: [Atlas.GetStr("UpdateNavItem/Content"), Atlas.GetStr("UpdatePageCustomMSIXPath")],
 			pages: [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("UpdateNavItem/Content"), GlobalVars.GetStr("UpdatePageCustomMSIXPath")],
+			titles: [Atlas.GetStr("UpdateNavItem/Content"), Atlas.GetStr("UpdatePageCustomMSIXPath")],
 			pages: [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.DeploymentPage)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItemContent")],
+			titles: [Atlas.GetStr("DeploymentNavItem/Content"), Atlas.GetStr("IntuneDeploymentDetailsNavItemContent")],
 			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.IntuneDeploymentDetails)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItemContent")],
+			titles: [Atlas.GetStr("DeploymentNavItem/Content"), Atlas.GetStr("IntuneDeploymentDetailsNavItemContent")],
 			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/Content")],
+			titles: [Atlas.GetStr("CreatePolicyFromEventLogsNavItem/Content")],
 			pages: [typeof(Pages.EventLogsPolicyCreation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.MDEAHPolicyCreation)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/Content")],
+			titles: [Atlas.GetStr("CreatePolicyFromMDEAHNavItem/Content")],
 			pages: [typeof(Pages.MDEAHPolicyCreation)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.AllowNewApps)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("AllowNewAppsNavItem/Content")],
+			titles: [Atlas.GetStr("AllowNewAppsNavItem/Content")],
 			pages: [typeof(Pages.AllowNewApps)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.BuildNewCertificate)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("BuildNewCertificateNavItem/Content")],
+			titles: [Atlas.GetStr("BuildNewCertificateNavItem/Content")],
 			pages: [typeof(Pages.BuildNewCertificate)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.MergePolicies)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("MergePoliciesNavItem/Content")],
+			titles: [Atlas.GetStr("MergePoliciesNavItem/Content")],
 			pages: [typeof(Pages.MergePolicies)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.CreateSupplementalPolicy)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreateSupplementalPolicyNavItem/Content"), GlobalVars.GetStr("ScanResults")],
+			titles: [Atlas.GetStr("CreateSupplementalPolicyNavItem/Content"), Atlas.GetStr("ScanResults")],
 			pages: [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreateSupplementalPolicyNavItem/Content"), GlobalVars.GetStr("ScanResults")],
+			titles: [Atlas.GetStr("CreateSupplementalPolicyNavItem/Content"), Atlas.GetStr("ScanResults")],
 			pages: [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.StrictKernelPolicyScanResults)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreateSupplementalPolicyNavItem/Content"), GlobalVars.GetStr("ScanResults")],
+			titles: [Atlas.GetStr("CreateSupplementalPolicyNavItem/Content"), Atlas.GetStr("ScanResults")],
 			pages: [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.StrictKernelPolicyScanResults)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.CreateDenyPolicy)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreateDenyPolicyNavItem/Content"), GlobalVars.GetStr("ScanResults")],
+			titles: [Atlas.GetStr("CreateDenyPolicyNavItem/Content"), Atlas.GetStr("ScanResults")],
 			pages: [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("CreateDenyPolicyNavItem/Content"), GlobalVars.GetStr("ScanResults")],
+			titles: [Atlas.GetStr("CreateDenyPolicyNavItem/Content"), Atlas.GetStr("ScanResults")],
 			pages: [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.ValidatePolicy)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("ValidatePoliciesNavItem/Content")],
+			titles: [Atlas.GetStr("ValidatePoliciesNavItem/Content")],
 			pages: [typeof(Pages.ValidatePolicy)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.ViewFileCertificates)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("ViewFileCertificatesNavItem/Content")],
+			titles: [Atlas.GetStr("ViewFileCertificatesNavItem/Content")],
 			pages: [typeof(Pages.ViewFileCertificates)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.PolicyEditor)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("PolicyEditorNavItem/Content")],
+			titles: [Atlas.GetStr("PolicyEditorNavItem/Content")],
 			pages: [typeof(Pages.PolicyEditor)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.Home)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("HomeNavItem/Content")],
+			titles: [Atlas.GetStr("HomeNavItem/Content")],
 			pages: [typeof(Pages.Home)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.FirewallSentinel)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("FirewallSentinelNavItem/Content")],
+			titles: [Atlas.GetStr("FirewallSentinelNavItem/Content")],
 			pages: [typeof(Pages.FirewallSentinel)]
 		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	internal readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(GlobalVars.GetStr("HomeNavItem/Content"), typeof(Pages.Home))];
+	internal readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(Atlas.GetStr("HomeNavItem/Content"), typeof(Pages.Home))];
 
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
@@ -361,34 +361,34 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	{
 		NavigationPageToItemContentMapForSearch.Clear();
 
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CreatePolicyNavItem/Content")] = typeof(Pages.CreatePolicy);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CreateSupplementalPolicyNavItem/Content")] = typeof(Pages.CreateSupplementalPolicy);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ScanResults")] = typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ScanResults")] = typeof(Pages.StrictKernelPolicyScanResults);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CreateDenyPolicyNavItem/Content")] = typeof(Pages.CreateDenyPolicy);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ScanResults")] = typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("BuildNewCertificateNavItem/Content")] = typeof(Pages.BuildNewCertificate);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ViewFileCertificatesNavItem/Content")] = typeof(Pages.ViewFileCertificates);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/Content")] = typeof(Pages.EventLogsPolicyCreation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/Content")] = typeof(Pages.MDEAHPolicyCreation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("AllowNewAppsNavItem/Content")] = typeof(Pages.AllowNewApps);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/Content")] = typeof(Pages.GetCIHashes);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MSFTDocsNavItem/Content")] = typeof(Pages.MicrosoftDocumentation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GetSecurePolicySettingsNavItem/Content")] = typeof(Pages.GetSecurePolicySettings);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("SettingsNavItemContent")] = typeof(Pages.Settings);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("SystemInformationNavItem/Content")] = typeof(Pages.SystemInformation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/Content")] = typeof(Pages.ConfigurePolicyRuleOptions);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("LogsNavItem/Content")] = typeof(Pages.Logs);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("SimulationNavItem/Content")] = typeof(Pages.Simulation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("DeploymentNavItem/Content")] = typeof(Pages.DeploymentPage);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MergePoliciesNavItem/Content")] = typeof(Pages.MergePolicies);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ValidatePoliciesNavItem/Content")] = typeof(Pages.ValidatePolicy);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("HomeNavItem/Content")] = typeof(Pages.Home);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("FirewallSentinelNavItem/Content")] = typeof(Pages.FirewallSentinel);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("CreatePolicyNavItem/Content")] = typeof(Pages.CreatePolicy);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("CreateSupplementalPolicyNavItem/Content")] = typeof(Pages.CreateSupplementalPolicy);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ScanResults")] = typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ScanResults")] = typeof(Pages.StrictKernelPolicyScanResults);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("CreateDenyPolicyNavItem/Content")] = typeof(Pages.CreateDenyPolicy);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ScanResults")] = typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("BuildNewCertificateNavItem/Content")] = typeof(Pages.BuildNewCertificate);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ViewFileCertificatesNavItem/Content")] = typeof(Pages.ViewFileCertificates);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("CreatePolicyFromEventLogsNavItem/Content")] = typeof(Pages.EventLogsPolicyCreation);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("CreatePolicyFromMDEAHNavItem/Content")] = typeof(Pages.MDEAHPolicyCreation);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("AllowNewAppsNavItem/Content")] = typeof(Pages.AllowNewApps);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("GetCodeIntegrityHashesNavItem/Content")] = typeof(Pages.GetCIHashes);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("MSFTDocsNavItem/Content")] = typeof(Pages.MicrosoftDocumentation);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("GetSecurePolicySettingsNavItem/Content")] = typeof(Pages.GetSecurePolicySettings);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("SettingsNavItemContent")] = typeof(Pages.Settings);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("SystemInformationNavItem/Content")] = typeof(Pages.SystemInformation);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ConfigurePolicyRuleOptionsNavItem/Content")] = typeof(Pages.ConfigurePolicyRuleOptions);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("LogsNavItem/Content")] = typeof(Pages.Logs);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("SimulationNavItem/Content")] = typeof(Pages.Simulation);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("DeploymentNavItem/Content")] = typeof(Pages.DeploymentPage);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("MergePoliciesNavItem/Content")] = typeof(Pages.MergePolicies);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ValidatePoliciesNavItem/Content")] = typeof(Pages.ValidatePolicy);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("HomeNavItem/Content")] = typeof(Pages.Home);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("FirewallSentinelNavItem/Content")] = typeof(Pages.FirewallSentinel);
 	}
 
 	/// <summary>
@@ -416,11 +416,11 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		UpdateSystemBackDrop();
 
 		// Subscribe to encryption setting changes
-		GlobalVars.Settings.EncryptPoliciesLibraryChanged += (s, e) => OnEncryptPoliciesLibraryChanged(e);
+		Atlas.Settings.EncryptPoliciesLibraryChanged += (s, e) => OnEncryptPoliciesLibraryChanged(e);
 
 		// If the App is installed from the Microsoft Store source
 		// Then make the update page available for non-elevated usage.
-		if (GlobalVars.PackageSource is 1)
+		if (Atlas.PackageSource is 1)
 			UnelevatedPages.Add(typeof(Pages.UpdatePage));
 
 		// Fire and forget since this runs at startup and we can't let it slow us down
@@ -438,7 +438,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 				await PoliciesLibraryCacheLock.WaitAsync();
 				try
 				{
-					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						// Make sure the sidebar library is cleared first
 						SidebarPoliciesLibrary.Clear();
@@ -544,7 +544,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 								UniqueObjID = Guid.Parse(uniqueID)
 							};
 
-							await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+							await Atlas.AppDispatcher.EnqueueAsync(() =>
 							{
 								SidebarPoliciesLibrary.Add(policyToAdd);
 							});
@@ -578,9 +578,9 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation))
+			if (!string.IsNullOrEmpty(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation))
 			{
-				DirectoryInfo customDirPath = Directory.CreateDirectory(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation);
+				DirectoryInfo customDirPath = Directory.CreateDirectory(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation);
 
 				return customDirPath.FullName;
 			}
@@ -603,9 +603,9 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			await Task.Run(() =>
 			{
 				// We can only proceed if there is a user-defined location in the first place.
-				if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation))
+				if (!string.IsNullOrEmpty(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation))
 				{
-					DirectoryInfo customDirPath = Directory.CreateDirectory(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation);
+					DirectoryInfo customDirPath = Directory.CreateDirectory(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation);
 
 					// Enumerate all files in the default cache directory
 					IEnumerable<string> files = Directory.EnumerateFiles(DefaultSidebarPoliciesLibraryCache);
@@ -637,10 +637,10 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			await Task.Run(() =>
 			{
 				// The user-defined directory must exist so we can move files from it. We shouldn't try to create the directory.
-				if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation) && Directory.Exists(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation))
+				if (!string.IsNullOrEmpty(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation) && Directory.Exists(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation))
 				{
 					// Enumerate all files in the custom user-defined cache directory
-					IEnumerable<string> files = Directory.EnumerateFiles(GlobalVars.Settings.CustomSidebarPoliciesLibraryCacheLocation);
+					IEnumerable<string> files = Directory.EnumerateFiles(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation);
 					foreach (string file in files)
 					{
 						string fileName = Path.GetFileName(file);
@@ -821,7 +821,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		await PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
-			_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
 			{
 				SidebarPoliciesLibrary.Add(policy);
 			});

@@ -30,6 +30,6 @@ internal sealed partial class ServiceManager : Page, CommonCore.UI.IPageHeaderPr
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ServiceManagerPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ServiceManagerPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Service-Manager");
 }

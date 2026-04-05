@@ -81,14 +81,14 @@ internal static class AppWindowBorderCustomization
 
 		IsStarted = true;
 
-		GlobalVars.Settings.IsAnimatedRainbowEnabled = true;
+		Atlas.Settings.IsAnimatedRainbowEnabled = true;
 
 		// Initialize timing and hue state.
 		LastTimestamp = Stopwatch.GetTimestamp();
 		Hue = 0f;
 
 		// Create a fresh timer (previous one, if any, would have been cleaned in Stop).
-		Timer = GlobalVars.AppDispatcher.CreateTimer();
+		Timer = Atlas.AppDispatcher.CreateTimer();
 		Timer.IsRepeating = true;
 
 		// Attach the single stored handler.
@@ -162,7 +162,7 @@ internal static class AppWindowBorderCustomization
 
 		IsStarted = false;
 
-		GlobalVars.Settings.IsAnimatedRainbowEnabled = false;
+		Atlas.Settings.IsAnimatedRainbowEnabled = false;
 	}
 
 	/// <summary>
@@ -249,7 +249,7 @@ internal static class AppWindowBorderCustomization
 		#endregion
 
 		// Main Apply
-		int result = NativeMethods.DwmSetWindowAttribute(GlobalVars.hWnd, DWMWA_BORDER_COLOR, ref computedBorderColor, sizeof(uint));
+		int result = NativeMethods.DwmSetWindowAttribute(Atlas.hWnd, DWMWA_BORDER_COLOR, ref computedBorderColor, sizeof(uint));
 		if (result != 0)
 		{
 			// If setting the border color failed, stop the timer to avoid further errors.
@@ -274,12 +274,12 @@ internal static class AppWindowBorderCustomization
 		{
 			uint color = (uint)((b << 16) | (g << 8) | r); // COLORREF 0x00BBGGRR
 
-			int result = NativeMethods.DwmSetWindowAttribute(GlobalVars.hWnd, DWMWA_BORDER_COLOR, ref color, sizeof(uint));
+			int result = NativeMethods.DwmSetWindowAttribute(Atlas.hWnd, DWMWA_BORDER_COLOR, ref color, sizeof(uint));
 			if (result != 0)
 				Logger.Write($"Failed to set static window border color. DwmSetWindowAttribute returned: {result}", LogTypeIntel.Error);
 
 			// Save the color as hex in the App settings.
-			GlobalVars.Settings.CustomAppWindowsBorder = RGBHEX.ToHex(r, g, b);
+			Atlas.Settings.CustomAppWindowsBorder = RGBHEX.ToHex(r, g, b);
 		}
 		catch (Exception ex)
 		{
@@ -295,12 +295,12 @@ internal static class AppWindowBorderCustomization
 		try
 		{
 			uint color = 0;
-			int result = NativeMethods.DwmSetWindowAttribute(GlobalVars.hWnd, DWMWA_BORDER_COLOR, ref color, sizeof(uint));
+			int result = NativeMethods.DwmSetWindowAttribute(Atlas.hWnd, DWMWA_BORDER_COLOR, ref color, sizeof(uint));
 			if (result != 0)
 				Logger.Write($"Failed to reset window border color. DwmSetWindowAttribute returned: {result}", LogTypeIntel.Error);
 
 			// Clear any saved color for app window's border in the App settings.
-			GlobalVars.Settings.CustomAppWindowsBorder = string.Empty;
+			Atlas.Settings.CustomAppWindowsBorder = string.Empty;
 		}
 		catch (Exception ex)
 		{

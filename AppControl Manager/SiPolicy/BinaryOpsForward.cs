@@ -129,7 +129,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException(GlobalVars.GetStr("FileRuleHasInvalidTypeMessage"));
+				throw new InvalidOperationException(Atlas.GetStr("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -161,7 +161,7 @@ internal static partial class BinaryOpsForward
 					if (!mapMacroId2Value.TryGetValue(token, out string? value))
 						throw new InvalidOperationException(
 							string.Format(
-								GlobalVars.GetStr("MacroNotDefinedMessage"),
+								Atlas.GetStr("MacroNotDefinedMessage"),
 								token,
 								strs));
 
@@ -172,7 +172,7 @@ internal static partial class BinaryOpsForward
 			if (count == 0)
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.GetStr("NoMacroFoundMessage"),
+						Atlas.GetStr("NoMacroFoundMessage"),
 						strs));
 
 			BodyWriter.Write(count);
@@ -264,7 +264,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException(GlobalVars.GetStr("FileRuleHasInvalidTypeMessage"));
+				throw new InvalidOperationException(Atlas.GetStr("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -294,7 +294,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException(GlobalVars.GetStr("FileRuleHasInvalidTypeMessage"));
+				throw new InvalidOperationException(Atlas.GetStr("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -336,7 +336,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException(GlobalVars.GetStr("FileRuleHasInvalidTypeMessage"));
+				throw new InvalidOperationException(Atlas.GetStr("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -360,7 +360,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException(GlobalVars.GetStr("FileRuleHasInvalidTypeMessage"));
+				throw new InvalidOperationException(Atlas.GetStr("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -390,7 +390,7 @@ internal static partial class BinaryOpsForward
 				{
 					throw new InvalidOperationException(
 						string.Format(
-							GlobalVars.GetStr("SignerCertEkuReferenceError"),
+							Atlas.GetStr("SignerCertEkuReferenceError"),
 							signerData.ID,
 							signerData.CertEKU[certEkuIndex].ID));
 				}
@@ -442,7 +442,7 @@ internal static partial class BinaryOpsForward
 				{
 					throw new InvalidOperationException(
 						string.Format(
-							GlobalVars.GetStr("SignerFileAttribRefNotFoundError"),
+							Atlas.GetStr("SignerFileAttribRefNotFoundError"),
 							signerData.ID,
 							signerData.FileAttribRef[(int)fileAttribRefIndex].RuleID));
 				}
@@ -451,7 +451,7 @@ internal static partial class BinaryOpsForward
 				{
 					throw new InvalidOperationException(
 						string.Format(
-							GlobalVars.GetStr("FileAttribRefTypeInvalidError"),
+							Atlas.GetStr("FileAttribRefTypeInvalidError"),
 							signerData.FileAttribRef[(int)fileAttribRefIndex].RuleID));
 				}
 
@@ -524,7 +524,7 @@ internal static partial class BinaryOpsForward
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.GetStr("AllowedSignersSignerIdNotFoundMessage"),
+						Atlas.GetStr("AllowedSignersSignerIdNotFoundMessage"),
 						signer.SignerId,
 						signerIndex));
 			}
@@ -546,7 +546,7 @@ internal static partial class BinaryOpsForward
 					{
 						throw new InvalidOperationException(
 							string.Format(
-								GlobalVars.GetStr("AllowedSignersDenyRuleNotFoundMessage"),
+								Atlas.GetStr("AllowedSignersDenyRuleNotFoundMessage"),
 								exceptionRule.DenyRuleID,
 								signer.SignerId,
 								denyRuleCounter));
@@ -556,7 +556,7 @@ internal static partial class BinaryOpsForward
 					{
 						throw new InvalidOperationException(
 							string.Format(
-								GlobalVars.GetStr("AllowedSignersExceptDenyRuleTypeInvalidMessage"),
+								Atlas.GetStr("AllowedSignersExceptDenyRuleTypeInvalidMessage"),
 								foundDenyRuleIndex,
 								exceptionRule.DenyRuleID));
 					}
@@ -589,7 +589,7 @@ internal static partial class BinaryOpsForward
 			if (!signerIdToIndexMap.TryGetValue(currentSignerId, out uint foundSignerIndex))
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.GetStr("DeniedSignersSignerIdNotFoundMessage"),
+						Atlas.GetStr("DeniedSignersSignerIdNotFoundMessage"),
 						currentSignerId,
 						signerIndex));
 
@@ -613,7 +613,7 @@ internal static partial class BinaryOpsForward
 					{
 						throw new InvalidOperationException(
 							string.Format(
-								GlobalVars.GetStr("DeniedSignersExceptAllowRuleNotFoundMessage"),
+								Atlas.GetStr("DeniedSignersExceptAllowRuleNotFoundMessage"),
 								currentAllowRuleId,
 								currentSignerId,
 								allowRuleIndex));
@@ -625,7 +625,7 @@ internal static partial class BinaryOpsForward
 						string actualType = referencedRule?.GetType().Name ?? "null";
 						throw new InvalidOperationException(
 							string.Format(
-								GlobalVars.GetStr("DeniedSignersExceptAllowRuleTypeInvalidMessage"),
+								Atlas.GetStr("DeniedSignersExceptAllowRuleTypeInvalidMessage"),
 								foundAllowRuleIndex,
 								currentAllowRuleId,
 								actualType));
@@ -762,7 +762,7 @@ internal static partial class BinaryOpsForward
 			null => Tag,
 			{ Value: [string rawValue] } => bool.Parse(rawValue) ? (byte)1 : (byte)0,
 			_ => throw new InvalidOperationException(
-				GlobalVars.GetStr("BoolAppSettingMultipleValuesError"))
+				Atlas.GetStr("BoolAppSettingMultipleValuesError"))
 		};
 
 		BodyWriter.Write(valueByte);
@@ -779,7 +779,7 @@ internal static partial class BinaryOpsForward
 			null => null,
 			{ Value: [string single] } => single,
 			_ => throw new InvalidOperationException(
-				GlobalVars.GetStr("StringAppSettingMultipleValuesError"))
+				Atlas.GetStr("StringAppSettingMultipleValuesError"))
 		};
 
 		WriteOptionalStringValue(rawValue, BodyWriter);
@@ -815,7 +815,7 @@ internal static partial class BinaryOpsForward
 
 					throw new InvalidOperationException(
 						string.Format(
-							GlobalVars.GetStr("AppSettingsMissingDefinitionsMessage"),
+							Atlas.GetStr("AppSettingsMissingDefinitionsMessage"),
 							missingDefinitions));
 				}
 			}
@@ -846,7 +846,7 @@ internal static partial class BinaryOpsForward
 					default:
 						throw new InvalidOperationException(
 							string.Format(
-								GlobalVars.GetStr("AppSettingsUnknownSettingTypeMessage"),
+								Atlas.GetStr("AppSettingsUnknownSettingTypeMessage"),
 								currentDefinitionInLoop.Type));
 				}
 

@@ -26,8 +26,8 @@ namespace CommonCore.GroupPolicy;
 
 internal static class RegistryPolicyParser
 {
-	internal static readonly string LocalPolicyMachineFilePath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "GroupPolicy", "Machine", "Registry.pol");
-	internal static readonly string LocalPolicyUserFilePath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "GroupPolicy", "User", "Registry.pol");
+	internal static readonly string LocalPolicyMachineFilePath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "GroupPolicy", "Machine", "Registry.pol");
+	internal static readonly string LocalPolicyUserFilePath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "GroupPolicy", "User", "Registry.pol");
 
 	/// <summary>
 	/// Lock to synchronize access to the policy file operations.
@@ -101,7 +101,7 @@ internal static class RegistryPolicyParser
 	internal static RegistryPolicyFile ParseFile(string filePath)
 	{
 		if (!File.Exists(filePath))
-			throw new FileNotFoundException(string.Format(GlobalVars.GetStr("FileNotFoundPath"), filePath));
+			throw new FileNotFoundException(string.Format(Atlas.GetStr("FileNotFoundPath"), filePath));
 
 		return ExecuteWithRetry(() =>
 		{
@@ -116,13 +116,13 @@ internal static class RegistryPolicyParser
 
 		// Read header
 		if (stream.Length < 8)
-			throw new InvalidDataException(GlobalVars.GetStr("FileTooSmallForValidHeader"));
+			throw new InvalidDataException(Atlas.GetStr("FileTooSmallForValidHeader"));
 
 		uint signature = reader.ReadUInt32();
 		uint version = reader.ReadUInt32();
 
 		if (signature != RegistryPolicyFile.REGISTRY_FILE_SIGNATURE)
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("InvalidSignatureExpected"), signature, RegistryPolicyFile.REGISTRY_FILE_SIGNATURE));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("InvalidSignatureExpected"), signature, RegistryPolicyFile.REGISTRY_FILE_SIGNATURE));
 
 		List<RegistryPolicyEntry> entries = [];
 
@@ -142,7 +142,7 @@ internal static class RegistryPolicyParser
 			}
 			catch (Exception ex)
 			{
-				throw new InvalidDataException(string.Format(GlobalVars.GetStr("ErrorReadingEntryAtPosition"), stream.Position, ex.Message), ex);
+				throw new InvalidDataException(string.Format(Atlas.GetStr("ErrorReadingEntryAtPosition"), stream.Position, ex.Message), ex);
 			}
 		}
 
@@ -163,7 +163,7 @@ internal static class RegistryPolicyParser
 		// Read opening bracket '[' (should be '[' in Unicode)
 		ushort openingBracket = reader.ReadUInt16();
 		if (openingBracket != 0x005B) // '[' in Unicode
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedOpeningBracketAtStartOfEntry"), openingBracket));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("ExpectedOpeningBracketAtStartOfEntry"), openingBracket));
 
 		// Read key name (null-terminated Unicode string)
 		string keyName = ReadUnicodeString(reader);
@@ -171,7 +171,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter (should be ';' in Unicode)
 		ushort delimiter1 = reader.ReadUInt16();
 		if (delimiter1 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterKeyName"), delimiter1));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("ExpectedSemicolonDelimiterAfterKeyName"), delimiter1));
 
 		// Read value name (null-terminated Unicode string)
 		string valueName = ReadUnicodeString(reader);
@@ -179,7 +179,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter
 		ushort delimiter2 = reader.ReadUInt16();
 		if (delimiter2 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterValueName"), delimiter2));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("ExpectedSemicolonDelimiterAfterValueName"), delimiter2));
 
 		// Read type (4 bytes)
 		RegistryValueType type = (RegistryValueType)reader.ReadUInt32();
@@ -187,7 +187,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter
 		ushort delimiter3 = reader.ReadUInt16();
 		if (delimiter3 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterType"), delimiter3));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("ExpectedSemicolonDelimiterAfterType"), delimiter3));
 
 		// Read size (4 bytes)
 		uint size = reader.ReadUInt32();
@@ -195,7 +195,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter
 		ushort delimiter4 = reader.ReadUInt16();
 		if (delimiter4 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterSize"), delimiter4));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("ExpectedSemicolonDelimiterAfterSize"), delimiter4));
 
 		// Read data
 		byte[] data;
@@ -203,7 +203,7 @@ internal static class RegistryPolicyParser
 		{
 			data = reader.ReadBytes((int)size);
 			if (data.Length != size)
-				throw new InvalidDataException(string.Format(GlobalVars.GetStr("CouldNotReadBytesOfData"), size, data.Length));
+				throw new InvalidDataException(string.Format(Atlas.GetStr("CouldNotReadBytesOfData"), size, data.Length));
 		}
 		else
 		{
@@ -213,7 +213,7 @@ internal static class RegistryPolicyParser
 		// Read closing bracket ']' (should be ']' in Unicode)
 		ushort closingBracket = reader.ReadUInt16();
 		if (closingBracket != 0x005D) // ']' in Unicode
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedClosingBracketAfterData"), closingBracket));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("ExpectedClosingBracketAfterData"), closingBracket));
 
 		return new RegistryPolicyEntry(source: Source.GroupPolicy, keyName: keyName, valueName: valueName, type: type, size: size, data: data, hive: Hive.HKLM, id: POLOriginatedID);
 	}
@@ -225,7 +225,7 @@ internal static class RegistryPolicyParser
 		while (true)
 		{
 			if (reader.BaseStream.Position + 2 > reader.BaseStream.Length)
-				throw new EndOfStreamException(GlobalVars.GetStr("UnexpectedEndOfStreamReadingUnicodeString"));
+				throw new EndOfStreamException(Atlas.GetStr("UnexpectedEndOfStreamReadingUnicodeString"));
 
 			ushort ch = reader.ReadUInt16();
 			if (ch == 0) // Null terminator
@@ -348,7 +348,7 @@ internal static class RegistryPolicyParser
 	internal static MergeResult MergePolicyFilesWithReport(RegistryPolicyFile mainPolicyFile, params RegistryPolicyFile[] otherPolicyFiles)
 	{
 		if (otherPolicyFiles.Length == 0)
-			throw new ArgumentException(GlobalVars.GetStr("AtLeastOneOtherPolicyFileMustBeProvided"), nameof(otherPolicyFiles));
+			throw new ArgumentException(Atlas.GetStr("AtLeastOneOtherPolicyFileMustBeProvided"), nameof(otherPolicyFiles));
 
 		CSEMgr.RegisterCSEGuids();
 
@@ -417,10 +417,10 @@ internal static class RegistryPolicyParser
 	internal static MergeResult MergePolicyFilesWithReport(string mainPolicyFilePath, params string[] otherPolicyFilePaths)
 	{
 		if (string.IsNullOrWhiteSpace(mainPolicyFilePath))
-			throw new ArgumentException(GlobalVars.GetStr("MainPolicyFilePathCannotBeNullOrEmpty"), nameof(mainPolicyFilePath));
+			throw new ArgumentException(Atlas.GetStr("MainPolicyFilePathCannotBeNullOrEmpty"), nameof(mainPolicyFilePath));
 
 		if (otherPolicyFilePaths.Length == 0)
-			throw new ArgumentException(GlobalVars.GetStr("AtLeastOneOtherPolicyFilePathMustBeProvided"), nameof(otherPolicyFilePaths));
+			throw new ArgumentException(Atlas.GetStr("AtLeastOneOtherPolicyFilePathMustBeProvided"), nameof(otherPolicyFilePaths));
 
 		// Parse the main policy file
 		RegistryPolicyFile mainPolicyFile = ParseFile(mainPolicyFilePath);
@@ -430,7 +430,7 @@ internal static class RegistryPolicyParser
 		for (int i = 0; i < otherPolicyFilePaths.Length; i++)
 		{
 			if (string.IsNullOrWhiteSpace(otherPolicyFilePaths[i]))
-				throw new ArgumentException(string.Format(GlobalVars.GetStr("PolicyFilePathAtIndexCannotBeNullOrEmpty"), i), nameof(otherPolicyFilePaths));
+				throw new ArgumentException(string.Format(Atlas.GetStr("PolicyFilePathAtIndexCannotBeNullOrEmpty"), i), nameof(otherPolicyFilePaths));
 
 			otherPolicyFiles[i] = ParseFile(otherPolicyFilePaths[i]);
 		}
@@ -455,7 +455,7 @@ internal static class RegistryPolicyParser
 
 				// Read the current system policies
 				RegistryPolicyFile policyFile = ParseFile(PolicyContextFilePath);
-				Logger.Write(string.Format(GlobalVars.GetStr("LoadedExistingPolicyFileWithEntries"), policyFile.Entries.Count));
+				Logger.Write(string.Format(Atlas.GetStr("LoadedExistingPolicyFileWithEntries"), policyFile.Entries.Count));
 
 				// Dictionary to store entries with KeyName+ValueName as the key for uniqueness
 				Dictionary<string, RegistryPolicyEntry> mergedEntries = new(StringComparer.OrdinalIgnoreCase);
@@ -510,9 +510,9 @@ internal static class RegistryPolicyParser
 					Logger.Write(operation.ToString());
 				}
 
-				Logger.Write(string.Format(GlobalVars.GetStr("TotalOperationsLog"), operations.Count));
-				Logger.Write(string.Format(GlobalVars.GetStr("AddedEntriesLog"), operations.Count(op => op.OperationType == OperationType.Added)));
-				Logger.Write(string.Format(GlobalVars.GetStr("ReplacedEntries"), operations.Count(op => op.OperationType == OperationType.Replaced)));
+				Logger.Write(string.Format(Atlas.GetStr("TotalOperationsLog"), operations.Count));
+				Logger.Write(string.Format(Atlas.GetStr("AddedEntriesLog"), operations.Count(op => op.OperationType == OperationType.Added)));
+				Logger.Write(string.Format(Atlas.GetStr("ReplacedEntries"), operations.Count(op => op.OperationType == OperationType.Replaced)));
 
 				RefreshPolicies.Refresh();
 			}
@@ -544,7 +544,7 @@ internal static class RegistryPolicyParser
 			// Check if the policy file exists
 			if (!File.Exists(PolicyContextFilePath))
 			{
-				Logger.Write(GlobalVars.GetStr("PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified"));
+				Logger.Write(Atlas.GetStr("PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified"));
 
 				// Mark all policies as unverified since the file doesn't exist
 				foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
@@ -552,7 +552,7 @@ internal static class RegistryPolicyParser
 					verificationResults[policy] = (false, null);
 				}
 
-				Logger.Write(string.Format(GlobalVars.GetStr("VerificationCompletePolicyFileDoesNotExist"), policies.Count));
+				Logger.Write(string.Format(Atlas.GetStr("VerificationCompletePolicyFileDoesNotExist"), policies.Count));
 				return verificationResults;
 			}
 
@@ -579,18 +579,18 @@ internal static class RegistryPolicyParser
 					verificationResults[policy] = (isEquivalent, systemPolicy);
 
 					Logger.Write(isEquivalent ?
-						string.Format(GlobalVars.GetStr("VerifyPolicyMatch"), policy.KeyName, policy.ValueName) :
-						string.Format(GlobalVars.GetStr("VerifyPolicyMismatch"), policy.KeyName, policy.ValueName));
+						string.Format(Atlas.GetStr("VerifyPolicyMatch"), policy.KeyName, policy.ValueName) :
+						string.Format(Atlas.GetStr("VerifyPolicyMismatch"), policy.KeyName, policy.ValueName));
 				}
 				else
 				{
 					// Policy doesn't exist in system
 					verificationResults[policy] = (false, null);
-					Logger.Write(string.Format(GlobalVars.GetStr("VerifyPolicyNotFound"), policy.KeyName, policy.ValueName));
+					Logger.Write(string.Format(Atlas.GetStr("VerifyPolicyNotFound"), policy.KeyName, policy.ValueName));
 				}
 			}
 
-			Logger.Write(string.Format(GlobalVars.GetStr("VerificationCompletePoliciesMatch"), verificationResults.Count(kvp => kvp.Value.IsCompliant), policies.Count));
+			Logger.Write(string.Format(Atlas.GetStr("VerificationCompletePoliciesMatch"), verificationResults.Count(kvp => kvp.Value.IsCompliant), policies.Count));
 		}
 		catch (Exception ex)
 		{
@@ -621,7 +621,7 @@ internal static class RegistryPolicyParser
 
 				if (!File.Exists(PolicyContextFilePath))
 				{
-					Logger.Write(GlobalVars.GetStr("PolicyFileDoesNotExistNothingToRemove"));
+					Logger.Write(Atlas.GetStr("PolicyFileDoesNotExistNothingToRemove"));
 					return;
 				}
 
@@ -682,7 +682,7 @@ internal static class RegistryPolicyParser
 
 		foreach (string removedEntry in CollectionsMarshal.AsSpan(removedEntries))
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("RemovedPolicyEntry"), removedEntry));
+			Logger.Write(string.Format(Atlas.GetStr("RemovedPolicyEntry"), removedEntry));
 		}
 
 		if (string.Equals(polFilePath, LocalPolicyUserFilePath, StringComparison.OrdinalIgnoreCase) ||
@@ -692,7 +692,7 @@ internal static class RegistryPolicyParser
 			RefreshPolicies.Refresh();
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("PolicyRemovalComplete"), removedEntries.Count));
+		Logger.Write(string.Format(Atlas.GetStr("PolicyRemovalComplete"), removedEntries.Count));
 
 	}
 }

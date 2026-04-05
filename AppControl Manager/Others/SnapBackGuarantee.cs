@@ -21,7 +21,7 @@ namespace AppControlManager.Others;
 
 internal static class SnapBackGuarantee
 {
-	private static readonly string savePath = Path.Combine(GlobalVars.UserConfigDir, "EnforcedModeSnapBack.cmd");
+	private static readonly string savePath = Path.Combine(Atlas.UserConfigDir, "EnforcedModeSnapBack.cmd");
 
 	/// <summary>
 	/// A method that arms the system with a snapback guarantee in case of a reboot during the base policy enforcement process.
@@ -38,7 +38,7 @@ internal static class SnapBackGuarantee
 		}
 
 		Logger.Write(
-			   GlobalVars.GetStr("CreatingScheduledTaskForSnapBackGuaranteeMessage")
+			   Atlas.GetStr("CreatingScheduledTaskForSnapBackGuaranteeMessage")
 		   );
 
 		const string command = """
@@ -50,7 +50,7 @@ internal static class SnapBackGuarantee
 scheduledtasks --name "EnforcedModeSnapBack" --exe "cmd.exe" --arg "{command}" --description "Created by AppControl Manager - Allow New Apps page - Ensures that the enforced mode policy will be deployed in case of a sudden power loss or system restart" --author "AppControl Manager" --logon 2 --runlevel 1 --sid "S-1-5-18" --allowstartifonbatteries --dontstopifgoingonbatteries --startwhenavailable --restartcount 2 --restartinterval PT3M --priority 0 --trigger "type=logon;" --useunifiedschedulingengine true --executiontimelimit PT4M --multipleinstancespolicy 2 --allowhardterminate 1 --hidden
 """;
 
-		_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, args);
+		_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, args);
 
 
 		// Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
@@ -82,7 +82,7 @@ del ""%~f0""
 scheduledtasks --delete --name EnforcedModeSnapBack
 """;
 
-		_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, arg);
+		_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, arg);
 
 		if (Path.Exists(savePath))
 		{

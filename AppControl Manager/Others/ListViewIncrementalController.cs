@@ -21,9 +21,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
+using CommonCore.IntelGathering;
 using CommonCore.ToolKits;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -162,7 +161,7 @@ internal sealed partial class ListViewIncrementalController(
 		// If AutoResize is ON, reset the off-mode check and schedule a layout update.
 		// If AutoResize is OFF, the schedule will trigger the one-time full scan if needed.
 		// Using ScheduleWidthRecalc ensures the ItemsStackPanel has time to layout before we probe indices.
-		if (GlobalVars.Settings.AutoResizeListViewColumns)
+		if (Atlas.Settings.AutoResizeListViewColumns)
 		{
 			_offModeFullCalcDone = false;
 		}
@@ -211,7 +210,7 @@ internal sealed partial class ListViewIncrementalController(
 		// Initialize a single, reusable debounce timer
 		if (_searchDebounceTimer is null)
 		{
-			_searchDebounceTimer = GlobalVars.AppDispatcher.CreateTimer();
+			_searchDebounceTimer = Atlas.AppDispatcher.CreateTimer();
 			_searchDebounceTimer.IsRepeating = false;
 			_searchDebounceTimer.Tick += (s, e) =>
 			{
@@ -289,7 +288,7 @@ internal sealed partial class ListViewIncrementalController(
 				((CustomUIElements.ListViewV2)ListViewRef).SuppressSelectionChanged(2);
 
 			// Sort via incremental-aware path (keeps full source sorted; reorders filtered subset in-place).
-			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				await SortColumnIncrementalAsync(
 					keySelector: mapping.Getter,
@@ -302,7 +301,7 @@ internal sealed partial class ListViewIncrementalController(
 			}
 
 			// After the sort the leading items changed; recompute widths on debounce if auto-resize is enabled.
-			if (GlobalVars.Settings.AutoResizeListViewColumns)
+			if (Atlas.Settings.AutoResizeListViewColumns)
 			{
 				ScheduleWidthRecalc();
 			}
@@ -349,7 +348,7 @@ internal sealed partial class ListViewIncrementalController(
 			return;
 
 		// Let the UI process the collection change and realize/recycle containers, then anchor to the very first item.
-		await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+		await Atlas.AppDispatcher.EnqueueAsync(() =>
 		{
 			try
 			{
@@ -359,7 +358,7 @@ internal sealed partial class ListViewIncrementalController(
 		});
 
 		// Clamp again to ensure vertical remains at the very top after the ScrollIntoView operation.
-		await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+		await Atlas.AppDispatcher.EnqueueAsync(() =>
 		{
 			if (ScrollViewerRef is null) return;
 
@@ -376,7 +375,7 @@ internal sealed partial class ListViewIncrementalController(
 		if (ListViewRef is not null && ListViewRef.SelectedItems.Count > 0)
 		{
 			// Convert selected row(s) into text via property mappings and place into clipboard.
-			ListViewHelper.ConvertRowToText(ListViewRef.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
+			ListViewHelper.ConvertRowToText(ListViewRef.SelectedItems, ListViewHelper.FileIdentityPropertyMappings.Value);
 		}
 	}
 
@@ -405,7 +404,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		// While the user is scrolling (intermediate), debounce recomputations to avoid excessive layout passes.
 		// When auto-resize is disabled, never recompute on scroll.
-		if (GlobalVars.Settings.AutoResizeListViewColumns)
+		if (Atlas.Settings.AutoResizeListViewColumns)
 			ScheduleWidthRecalc();
 	}
 
@@ -413,7 +412,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		// Virtualization/realization changed (new rows realized). Debounce column width recalculation.
 		// When auto-resize is disabled, never recompute on realization.
-		if (GlobalVars.Settings.AutoResizeListViewColumns)
+		if (Atlas.Settings.AutoResizeListViewColumns)
 			ScheduleWidthRecalc();
 	}
 
@@ -436,7 +435,7 @@ internal sealed partial class ListViewIncrementalController(
 	{
 		if (_recalcTimer is not null) return;
 
-		_recalcTimer = GlobalVars.AppDispatcher.CreateTimer();
+		_recalcTimer = Atlas.AppDispatcher.CreateTimer();
 		_recalcTimer.IsRepeating = false;
 		_recalcTimer.Interval = TimeSpan.FromMilliseconds(20);
 		_recalcTimer.Tick += (s, e) =>
@@ -463,7 +462,7 @@ internal sealed partial class ListViewIncrementalController(
 		// 1. If AutoResize is Disabled:
 		// Check if we have already performed the "one-time full dataset" measurement for this specific instance activation.
 		// If we haven't, do it now (and mark it done). If we have, exit immediately.
-		if (!GlobalVars.Settings.AutoResizeListViewColumns)
+		if (!Atlas.Settings.AutoResizeListViewColumns)
 		{
 			if (!_offModeFullCalcDone && FullSource.Count > 0)
 			{
@@ -483,7 +482,7 @@ internal sealed partial class ListViewIncrementalController(
 		double[] headerWidths = new double[columnCount];
 		for (int i = 0; i < columnCount; i++)
 		{
-			string headerText = GlobalVars.GetStr(headerResourceKeys[i]);
+			string headerText = Atlas.GetStr(headerResourceKeys[i]);
 			headerWidths[i] = ListViewHelper.MeasureText(headerText);
 		}
 
@@ -531,7 +530,7 @@ internal sealed partial class ListViewIncrementalController(
 				for (int c = 0; c < columnCount; c++)
 				{
 					string propertyKey = columnPropertyKeys[c];
-					if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(propertyKey, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+					if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(propertyKey, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 					{
 						object? raw = mapping.Getter(fi);
 						string? cell = raw?.ToString();
@@ -597,7 +596,7 @@ internal sealed partial class ListViewIncrementalController(
 		for (int i = 0; i < columnCount; i++)
 		{
 			// Ensure we respect header minimums
-			string headerText = GlobalVars.GetStr(headerResourceKeys[i]);
+			string headerText = Atlas.GetStr(headerResourceKeys[i]);
 			double headerMin = ListViewHelper.MeasureText(headerText);
 
 			double current = i < currentWidths.Count ? currentWidths[i] : 0;
@@ -613,7 +612,7 @@ internal sealed partial class ListViewIncrementalController(
 			for (int c = 0; c < columnCount; c++)
 			{
 				string propertyKey = columnPropertyKeys[c];
-				if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(propertyKey, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+				if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(propertyKey, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 				{
 					object? raw = mapping.Getter(fi);
 					string? cell = raw?.ToString();
@@ -643,7 +642,7 @@ internal sealed partial class ListViewIncrementalController(
 		double[] headerWidths = new double[columnPropertyKeys.Length];
 		for (int i = 0; i < columnPropertyKeys.Length; i++)
 		{
-			string headerText = GlobalVars.GetStr(headerResourceKeys[i]);
+			string headerText = Atlas.GetStr(headerResourceKeys[i]);
 			headerWidths[i] = ListViewHelper.MeasureText(headerText);
 		}
 
@@ -832,7 +831,7 @@ internal sealed partial class ListViewIncrementalController(
 		string key = (string)((MenuFlyoutItem)sender).Tag;
 
 		// Copy a single mapped cell from the selected item.
-		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+		if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 		{
 			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), ListViewRef);
 		}

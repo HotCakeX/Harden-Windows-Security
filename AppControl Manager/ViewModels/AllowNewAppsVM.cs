@@ -22,7 +22,6 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
@@ -30,6 +29,7 @@ using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommonCore.IncrementalCollection;
+using CommonCore.IntelGathering;
 using CommonCore.ToolKits;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -407,7 +407,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS FOR EVENT LOGS
 
 	// Manager for the Event Logs Columns
-	internal ListViewColumnManager<FileIdentity> EventLogsColumnManager { get; }
+	internal readonly ListViewColumnManager<FileIdentity> EventLogsColumnManager;
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -423,7 +423,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS FOR LOCAL FILES
 
 	// Manager for the Local Files Columns
-	internal ListViewColumnManager<FileIdentity> LocalFilesColumnManager { get; }
+	internal readonly ListViewColumnManager<FileIdentity> LocalFilesColumnManager;
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -461,7 +461,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(FinalSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(FinalSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_Internal() => await PolicyFileRepresent.OpenInDefaultFileHandler(FinalSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for the clear button in the base policy selection button.
@@ -486,7 +486,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			Step3InfoBar.IsClosable = false;
 
-			Step3InfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyFromLogsOrScans"));
+			Step3InfoBar.WriteInfo(Atlas.GetStr("CreatingPolicyFromLogsOrScans"));
 
 			// Store every item for the Local File Scans ListView in the list
 			foreach (FileIdentity item in CollectionsMarshal.AsSpan(LocalFilesAllFileIdentities))
@@ -503,7 +503,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// If there are no logs to create a Supplemental policy with
 			if (fileIdentities.Count is 0)
 			{
-				Step3InfoBar.WriteWarning(GlobalVars.GetStr("NoLogsOrFilesForSupplementalPolicy"));
+				Step3InfoBar.WriteWarning(Atlas.GetStr("NoLogsOrFilesForSupplementalPolicy"));
 				return;
 			}
 
@@ -560,7 +560,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 			});
 
-			Step3InfoBar.WriteSuccess(DeployPolicy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedPolicy") : GlobalVars.GetStr("SuccessfullyCreatedPolicy"));
+			Step3InfoBar.WriteSuccess(DeployPolicy ? Atlas.GetStr("SuccessfullyCreatedAndDeployedPolicy") : Atlas.GetStr("SuccessfullyCreatedPolicy"));
 
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 		}
@@ -587,7 +587,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrWhiteSpace(selectedFile))
 			{
@@ -602,7 +602,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 				else
 				{
-					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SelectedItemNotValidXmlFilePath"), selectedFile));
+					throw new InvalidOperationException(string.Format(Atlas.GetStr("SelectedItemNotValidXmlFilePath"), selectedFile));
 				}
 			}
 		}
@@ -652,7 +652,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings.Value);
 		}
 	}
 
@@ -749,7 +749,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings.Value);
 		}
 	}
 
@@ -840,25 +840,25 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			Step1InfoBar.IsClosable = false;
 
-			Step1InfoBar.WriteInfo(GlobalVars.GetStr("Starting"));
+			Step1InfoBar.WriteInfo(Atlas.GetStr("Starting"));
 
 			// Ensure the text box for policy file name is filled
 			if (string.IsNullOrWhiteSpace(selectedSupplementalPolicyName))
 			{
-				throw new InvalidOperationException(GlobalVars.GetStr("ErrorSelectSupplementalPolicyName"));
+				throw new InvalidOperationException(Atlas.GetStr("ErrorSelectSupplementalPolicyName"));
 			}
 
 			// Ensure user selected a policy file
 			if (selectedBasePolicy is null)
 			{
-				throw new InvalidOperationException(GlobalVars.GetStr("ErrorSelectXMLPolicyFile"));
+				throw new InvalidOperationException(Atlas.GetStr("ErrorSelectXMLPolicyFile"));
 			}
 
 			await Task.Run(() =>
 			{
 				if (selectedBasePolicy.PolicyObj.PolicyType is not PolicyType.BasePolicy)
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("ErrorPolicyMustBeBase") + selectedBasePolicy.PolicyObj.PolicyType);
+					throw new InvalidOperationException(Atlas.GetStr("ErrorPolicyMustBeBase") + selectedBasePolicy.PolicyObj.PolicyType);
 				}
 
 				// Get all deployed base policies
@@ -873,7 +873,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Make sure the selected policy is deployed on the system
 				if (!CurrentlyDeployedBasePolicyIDs.Any(id => string.Equals(id, trimmedPolicyID, StringComparison.OrdinalIgnoreCase)))
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("ErrorPolicyNotDeployed"));
+					throw new InvalidOperationException(Atlas.GetStr("ErrorPolicyNotDeployed"));
 				}
 
 				// If the policy doesn't have any rule options or it doesn't have the EnabledUnsignedSystemIntegrityPolicy rule option then it is signed
@@ -882,7 +882,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			if (_IsSignedPolicy)
 			{
-				Logger.Write(GlobalVars.GetStr("SignedPolicyDetected"));
+				Logger.Write(Atlas.GetStr("SignedPolicyDetected"));
 
 				#region Signing Details acquisition
 
@@ -913,9 +913,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				byte[] AuditModeCIP = [];
 
 				// Make sure it stays unique because we don't want any other command to remove or overwrite it
-				EnforcedModeCIPPath = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7():N}.cip");
+				EnforcedModeCIPPath = Path.Combine(Atlas.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7():N}.cip");
 
-				Step1InfoBar.WriteInfo(GlobalVars.GetStr("DeployingInAuditWait"));
+				Step1InfoBar.WriteInfo(Atlas.GetStr("DeployingInAuditWait"));
 
 				// If the policy is Unsigned
 				if (!_IsSignedPolicy)
@@ -946,15 +946,15 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					File.WriteAllBytes(EnforcedModeCIPPath, cipBytesEnforced);
 				}
 
-				Logger.Write(GlobalVars.GetStr("CreatingSnapBackGuarantee"));
+				Logger.Write(Atlas.GetStr("CreatingSnapBackGuarantee"));
 				SnapBackGuarantee.Create(EnforcedModeCIPPath);
 
 #if !DEBUG
-				Logger.Write(GlobalVars.GetStr("DeployingAuditModePolicy"));
+				Logger.Write(Atlas.GetStr("DeployingAuditModePolicy"));
 				CiToolHelper.UpdatePolicy(AuditModeCIP);
 #endif
 
-				Logger.Write(GlobalVars.GetStr("BasePolicyRedeployedInAuditMode"));
+				Logger.Write(Atlas.GetStr("BasePolicyRedeployedInAuditMode"));
 
 				EventLogUtility.SetLogSize(EventLogsUtil.MaxSizeMB);
 			});
@@ -1018,13 +1018,13 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Deploy the base policy in enforced mode before proceeding with scans
 				if (EnforcedModeCIPPath is null)
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("ErrorEnforcedModeCIPNotFound"));
+					throw new InvalidOperationException(Atlas.GetStr("ErrorEnforcedModeCIPNotFound"));
 				}
 
-				Step2InfoBar.WriteInfo(GlobalVars.GetStr("DeployingEnforceMode"));
+				Step2InfoBar.WriteInfo(Atlas.GetStr("DeployingEnforceMode"));
 
 #if !DEBUG
-				Logger.Write(GlobalVars.GetStr("DeployingEnforceMode"));
+				Logger.Write(Atlas.GetStr("DeployingEnforceMode"));
 				CiToolHelper.UpdatePolicy(await File.ReadAllBytesAsync(EnforcedModeCIPPath));
 #endif
 
@@ -1037,7 +1037,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Check if user selected directories to be scanned
 				if (selectedDirectoriesToScan.Count > 0)
 				{
-					Step2InfoBar.WriteInfo(GlobalVars.GetStr("ScanningSelectedDirectories"));
+					Step2InfoBar.WriteInfo(Atlas.GetStr("ScanningSelectedDirectories"));
 
 					// Set the progress ring to no longer be indeterminate since file scan will take control of its value
 					Step2ProgressRingIsIndeterminate = false;
@@ -1048,7 +1048,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					// If any App Control compatible files were found in the user selected directories
 					if (DetectedFilesInSelectedDirectories.Item2 > 0)
 					{
-						Step2InfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ScanningNFilesFoundInSelectedDirectories"), DetectedFilesInSelectedDirectories.Item2));
+						Step2InfoBar.WriteInfo(string.Format(Atlas.GetStr("ScanningNFilesFoundInSelectedDirectories"), DetectedFilesInSelectedDirectories.Item2));
 
 						// Set the progress ring to no longer be indeterminate since file scan will take control of its value
 						Step2ProgressRingIsIndeterminate = false;
@@ -1063,7 +1063,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 						LocalFilesAllFileIdentities.Clear();
 						LocalFilesAllFileIdentities.AddRange(LocalFilesResults);
 
-						await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+						await Atlas.AppDispatcher.EnqueueAsync(() =>
 						{
 							// Add the results of the Files/Directories scans to the ObservableCollection
 							LocalFilesFileIdentities = new(LocalFilesResults);
@@ -1074,7 +1074,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 			});
 
-			Step2InfoBar.WriteInfo(GlobalVars.GetStr("ScanningEventLogs"));
+			Step2InfoBar.WriteInfo(Atlas.GetStr("ScanningEventLogs"));
 
 			// Log scanning doesn't produce determinate real time progress so setting it as indeterminate
 			Step2ProgressRingIsIndeterminate = true;
@@ -1094,7 +1094,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 #endif
 
-			Step2InfoBar.WriteInfo(string.Format(GlobalVars.GetStr("NLogsGeneratedDuringAuditPhase"), Output.Count));
+			Step2InfoBar.WriteInfo(string.Format(Atlas.GetStr("NLogsGeneratedDuringAuditPhase"), Output.Count));
 
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count > 0)
@@ -1103,7 +1103,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				EventLogsAllFileIdentities.Clear();
 				EventLogsAllFileIdentities.AddRange(Output);
 
-				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+				await Atlas.AppDispatcher.EnqueueAsync(() =>
 				{
 					EventLogsFileIdentities.Clear();
 
@@ -1159,7 +1159,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			Step1InfoBar.IsClosable = false;
 
-			Step1InfoBar.WriteInfo(GlobalVars.GetStr("Resetting"));
+			Step1InfoBar.WriteInfo(Atlas.GetStr("Resetting"));
 
 			// Hide the action button for InfoBar in Step 3 that offers to open the supplemental policy in the Policy Editor
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -1198,7 +1198,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				if (Path.Exists(EnforcedModeCIPPath))
 				{
 #if !DEBUG
-					Logger.Write(GlobalVars.GetStr("DeployingEnforceModeCuzReset"));
+					Logger.Write(Atlas.GetStr("DeployingEnforceModeCuzReset"));
 					CiToolHelper.UpdatePolicy(File.ReadAllBytes(EnforcedModeCIPPath));
 #endif
 					// Delete the enforced mode CIP file from the user config directory after deploying it
@@ -1209,7 +1209,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				SnapBackGuarantee.Remove();
 			});
 
-			Step1InfoBar.WriteSuccess(GlobalVars.GetStr("ResetSuccessful"));
+			Step1InfoBar.WriteSuccess(Atlas.GetStr("ResetSuccessful"));
 		}
 		catch (Exception ex)
 		{
@@ -1258,7 +1258,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		if (sender is Button button && button.Tag is string key)
 		{
 			// Look up the mapping in the reusable property mappings dictionary.
-			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					keySelector: mapping.Getter,
@@ -1277,7 +1277,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		if (sender is Button button && button.Tag is string key)
 		{
 			// Look up the mapping using the key.
-			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 						keySelector: mapping.Getter,

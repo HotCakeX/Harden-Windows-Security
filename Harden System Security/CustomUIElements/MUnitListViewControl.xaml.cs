@@ -21,7 +21,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -41,7 +40,7 @@ namespace AppControlManager.CustomUIElements;
 /// </summary>
 internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
+	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	internal MUnitListViewControl() => InitializeComponent();
 
@@ -619,7 +618,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingAllSecurityMeasures"));
+			ViewModel.MainInfoBar.WriteInfo(Atlas.GetStr("ApplyingAllSecurityMeasures"));
 
 			List<MUnit> allMUnits = [];
 			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
@@ -644,11 +643,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			if (ViewModel.ApplyAllCancellableButton.wasCancelled)
 			{
-				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
+				ViewModel.MainInfoBar.WriteWarning(Atlas.GetStr("ApplyOperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.GetStr("ApplyingAllSecurityMeasuresSuccessful"));
+				ViewModel.MainInfoBar.WriteSuccess(Atlas.GetStr("ApplyingAllSecurityMeasuresSuccessful"));
 			}
 
 			ViewModel.ApplyAllCancellableButton.End();
@@ -691,7 +690,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingAllSecurityMeasures"));
+			ViewModel.MainInfoBar.WriteInfo(Atlas.GetStr("RemovingAllSecurityMeasures"));
 
 			List<MUnit> allMUnits = [];
 			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
@@ -714,11 +713,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			if (ViewModel.RemoveAllCancellableButton.wasCancelled)
 			{
-				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+				ViewModel.MainInfoBar.WriteWarning(Atlas.GetStr("RemoveOperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.GetStr("RemovingAllSecurityMeasuresSuccessful"));
+				ViewModel.MainInfoBar.WriteSuccess(Atlas.GetStr("RemovingAllSecurityMeasuresSuccessful"));
 			}
 
 			ViewModel.RemoveAllCancellableButton.End();
@@ -772,7 +771,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingAllSecurityMeasures"));
+			ViewModel.MainInfoBar.WriteInfo(Atlas.GetStr("VerifyingAllSecurityMeasures"));
 
 			List<MUnit> allMUnits = [];
 			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
@@ -795,11 +794,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			if (ViewModel.VerifyAllCancellableButton.wasCancelled)
 			{
-				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
+				ViewModel.MainInfoBar.WriteWarning(Atlas.GetStr("VerifyOperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.GetStr("VerifyingAllSecurityMeasuresSuccessful"));
+				ViewModel.MainInfoBar.WriteSuccess(Atlas.GetStr("VerifyingAllSecurityMeasuresSuccessful"));
 			}
 
 			ViewModel.VerifyAllCancellableButton.End();
@@ -1117,7 +1116,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			ViewModel.ElementsAreEnabled = false;
 			ViewModel.MainInfoBar.IsClosable = false;
 
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Generator.GetFileName());
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, Generator.GetFileName());
 			if (string.IsNullOrEmpty(savePath))
 				return;
 
@@ -1133,7 +1132,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 				MContainerJsonContext.SerializeSingle(container, savePath);
 			});
 
-			ViewModel.MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), Items.Count, savePath));
+			ViewModel.MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedVerificationResults"), Items.Count, savePath));
 		}
 		catch (Exception ex)
 		{

@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.SiPolicy;
 

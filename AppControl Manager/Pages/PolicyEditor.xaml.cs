@@ -38,6 +38,6 @@ internal sealed partial class PolicyEditor : Page, CommonCore.UI.IPageHeaderProv
 		_DiamondButton = DiamondButton;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("PolicyEditorPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("PolicyEditorPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor");
 }

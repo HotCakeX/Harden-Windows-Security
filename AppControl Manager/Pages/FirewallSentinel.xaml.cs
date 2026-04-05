@@ -42,7 +42,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("FirewallSentinelPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("FirewallSentinelPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Firewall-Sentinel");
 
 	#region Neon Border Animation Logic

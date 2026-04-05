@@ -3,7 +3,7 @@
     x:Class="AppControlManager.Pages.PolicyEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:VM="using:AppControlManager.ViewModels"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:PolicyEditor="using:AppControlManager.PolicyEditor"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -157,7 +157,7 @@
         <TabView VerticalAlignment="Stretch"
                  IsAddTabButtonVisible="False"
                  Grid.Row="2" TabWidthMode="SizeToContent"
-                 CanReorderTabs="{x:Bind VM:ViewModelBase.IsNotElevated}">
+                 CanReorderTabs="{x:Bind CommonCore:ViewModelBase.IsNotElevated}">
             <!--
             <TabView.Resources>
                 <SolidColorBrush x:Key="TabViewBackground" Color="{ThemeResource SystemAccentColorLight2}"/>
@@ -253,9 +253,9 @@
 
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_FileBasedRules"
                                              Grid.Row="1"
-                                             AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
-                                             CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
-                                             CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                             AllowDrop="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
+                                             CanDragItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
+                                             CanReorderItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                                              IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              SelectionMode="Extended"
                                              ItemsSource="{x:Bind ViewModel.FileRulesCollection, Mode=OneWay}">
@@ -424,9 +424,9 @@
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_SignatureBasedRules"
                                              Grid.Row="1"
                                              SelectionMode="Extended"
-                                             AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
-                                             CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
-                                             CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                             AllowDrop="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
+                                             CanDragItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
+                                             CanReorderItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                                              IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
 
@@ -679,10 +679,10 @@
 
                                         </StackPanel>
 
-                                        <ListView AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                        <ListView AllowDrop="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                                                   Grid.Row="1"
-                                                  CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
-                                                  CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                                  CanDragItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
+                                                  CanReorderItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                                                   IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                                   SelectionMode="Single"
                                                   Height="300"
@@ -864,9 +864,9 @@
                                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                       BorderThickness="1"
                                       Padding="0"
-                                      AllowDrop="{x:Bind VM:ViewModelBase.IsNotElevated}"
-                                      CanDragItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
-                                      CanReorderItems="{x:Bind VM:ViewModelBase.IsNotElevated}"
+                                      AllowDrop="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
+                                      CanDragItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
+                                      CanReorderItems="{x:Bind CommonCore:ViewModelBase.IsNotElevated}"
                                       ItemsSource="{x:Bind ViewModel.PolicySettingsCollection}"
                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                                       ScrollViewer.HorizontalScrollBarVisibility="Auto"

@@ -42,12 +42,12 @@ internal sealed partial class MicrosoftDefender : Page, CommonCore.UI.IPageHeade
 		base.OnNavigatedFrom(e);
 
 		// Dispose all descendants that explicitly opted out of automatic disposal.
-		AppControlManager.ViewModels.ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
+		ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
 
 		// Finally dispose the list control itself.
 		SecurityMeasuresList.Dispose();
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MicrosoftDefenderPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MicrosoftDefenderPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender");
 }

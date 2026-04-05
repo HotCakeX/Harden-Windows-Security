@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.SiPolicyIntel;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.SiPolicy;
 
@@ -301,7 +302,7 @@ internal static partial class Merger
 			{
 				if (!signerDictionary.TryAdd(signer.ID, signer))
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("DuplicateSignerIdMessage"), signer.ID));
+					Logger.Write(string.Format(Atlas.GetStr("DuplicateSignerIdMessage"), signer.ID));
 				}
 			}
 

@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -35,11 +36,11 @@ internal static class NewFileNameLevelRules
 	{
 		if (fileNameData.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoFileNameDetectedAllowMessage"));
+			Logger.Write(Atlas.GetStr("NoFileNameDetectedAllowMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FileNameRulesToAddMessage"), fileNameData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("FileNameRulesToAddMessage"), fileNameData.Count));
 
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
@@ -57,7 +58,7 @@ internal static class NewFileNameLevelRules
 
 			Allow newFileAttrib = new(id: allowID)
 			{
-				FriendlyName = GlobalVars.GetStr("FileNameRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("FileNameRuleTypeFriendlyName"),
 				MinimumFileVersion = fileNameItem.FileVersion?.ToString()
 			};
 
@@ -82,13 +83,13 @@ internal static class NewFileNameLevelRules
 
 
 			// For User-Mode files
-			if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+			if (fileNameItem.SiSigningScenario is SSType.UserMode)
 			{
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowID));
 			}
 
 			// For Kernel-Mode files
-			else if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+			else if (fileNameItem.SiSigningScenario is SSType.KernelMode)
 			{
 				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: allowID));
 			}
@@ -102,11 +103,11 @@ internal static class NewFileNameLevelRules
 	{
 		if (fileNameData.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoFileNameDetectedDenyMessage"));
+			Logger.Write(Atlas.GetStr("NoFileNameDetectedDenyMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FileNameRulesToAddMessage"), fileNameData.Count));
+		Logger.Write(string.Format(Atlas.GetStr("FileNameRulesToAddMessage"), fileNameData.Count));
 
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
@@ -124,7 +125,7 @@ internal static class NewFileNameLevelRules
 
 			Deny newFileAttrib = new(id: denyID)
 			{
-				FriendlyName = GlobalVars.GetStr("FileNameRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("FileNameRuleTypeFriendlyName"),
 				MinimumFileVersion = fileNameItem.FileVersion?.ToString()
 			};
 
@@ -149,13 +150,13 @@ internal static class NewFileNameLevelRules
 
 
 			// For User-Mode files
-			if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+			if (fileNameItem.SiSigningScenario is SSType.UserMode)
 			{
 				umciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyID));
 			}
 
 			// For Kernel-Mode files
-			else if (fileNameItem.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+			else if (fileNameItem.SiSigningScenario is SSType.KernelMode)
 			{
 				kmciScenario.ProductSigners.FileRulesRef.FileRuleRef.Add(new FileRuleRef(ruleID: denyID));
 			}

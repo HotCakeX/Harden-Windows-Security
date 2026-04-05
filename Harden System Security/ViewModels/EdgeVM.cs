@@ -33,9 +33,9 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 	}

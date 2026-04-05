@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:intelgathering="using:AppControlManager.IntelGathering"
+    xmlns:intelgathering="using:CommonCore.IntelGathering"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 

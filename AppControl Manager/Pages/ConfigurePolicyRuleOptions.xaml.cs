@@ -43,7 +43,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		ViewModelProvider.SidebarVM.AssignActionPacks(
-			actionPack1: (LightUp1, GlobalVars.GetStr("ConfigurePolicyRuleOptions_ButtonContent")));
+			actionPack1: (LightUp1, Atlas.GetStr("ConfigurePolicyRuleOptions_ButtonContent")));
 	}
 
 	/// <summary>
@@ -70,6 +70,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ConfigurePolicyRuleOptionsPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ConfigurePolicyRuleOptionsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options");
 }

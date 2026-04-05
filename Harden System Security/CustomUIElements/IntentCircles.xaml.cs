@@ -76,12 +76,12 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	];
 
 	private static readonly string[] TitleCache = [
-		GlobalVars.GetStr("DeviceUsageIntent-Development-Title"), // 0
-		GlobalVars.GetStr("DeviceUsageIntent-Gaming-Title"), // 1
-		GlobalVars.GetStr("DeviceUsageIntent-School-Title"), // 2
-		GlobalVars.GetStr("DeviceUsageIntent-Business-Title"), // 3
-		GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"), // 4
-		GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title") // 5
+		Atlas.GetStr("DeviceUsageIntent-Development-Title"), // 0
+		Atlas.GetStr("DeviceUsageIntent-Gaming-Title"), // 1
+		Atlas.GetStr("DeviceUsageIntent-School-Title"), // 2
+		Atlas.GetStr("DeviceUsageIntent-Business-Title"), // 3
+		Atlas.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"), // 4
+		Atlas.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title") // 5
 		];
 
 	// State for layout animation

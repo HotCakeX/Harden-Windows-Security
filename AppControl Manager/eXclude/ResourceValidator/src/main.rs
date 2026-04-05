@@ -129,7 +129,7 @@ fn main() -> Result<()> {
         .collect();
 
     // Step 3: Scan C# files for resource key usage
-    // Look for `GlobalVars.GetStr("KEY")` calls in all .cs files to see which keys are used
+    // Look for `Atlas.GetStr("KEY")` calls in all .cs files to see which keys are used
     let used_keys: HashSet<String> = scan_cs_for_getstring(&cs_dir, &csproj_file, &define_constants)
         .with_context(|| format!("Failed to scan C# files in {:?}", cs_dir))?;
 
@@ -150,17 +150,17 @@ fn main() -> Result<()> {
 
     // If any keys are missing, report them and exit with an error code
     if !missing.is_empty() {
-        eprintln!("Error: Found GlobalVars.GetStr keys not in resx:");
+        eprintln!("Error: Found Atlas.GetStr keys not in resx:");
         for key in missing {
             eprintln!("  - {}", key); // List each missing key
         }
         exit(1);
     }
 
-    println!("All GlobalVars.GetStr keys are valid.");
+    println!("All Atlas.GetStr keys are valid.");
 
     // Step 4.5: Detect unused keys in English resource file
-    // Find keys that are neither used by GlobalVars.GetStr nor referenced by x:Uid in XAML
+    // Find keys that are neither used by Atlas.GetStr nor referenced by x:Uid in XAML
     let xaml_used_keys: HashSet<String> = scan_xaml_for_xuid_keys(&cs_dir)
         .with_context(|| format!("Failed to scan XAML files for x:Uid keys in {:?}", cs_dir))?;
 
@@ -592,17 +592,17 @@ fn update_single_cs_file(
     // Replace each old key's GetStr call with the new key in the processed content
     let mut modified_content: String = content.clone();
     for old in old_keys {
-        // Match `GlobalVars.GetStr("old_key")` with optional whitespace
+        // Match `Atlas.GetStr("old_key")` with optional whitespace
         let call_pattern: String = format!(
-            r#"GlobalVars\.GetStr\s*\(\s*"{}"\s*\)"#,
+            r#"Atlas\.GetStr\s*\(\s*"{}"\s*\)"#,
             regex::escape(old)
         );
         let call_re: Regex = Regex::new(&call_pattern)
             .with_context(|| format!("Invalid regex for updating key `{}`", old))?;
-        let replacement: String = format!(r#"GlobalVars.GetStr("{}")"#, new_key);
+        let replacement: String = format!(r#"Atlas.GetStr("{}")"#, new_key);
 
         // Only replace if the old key would be considered valid in the processed content
-        if processed_content.contains(&format!(r#"GlobalVars.GetStr("{}""#, old)) {
+        if processed_content.contains(&format!(r#"Atlas.GetStr("{}""#, old)) {
             modified_content = call_re
                 .replace_all(&modified_content, replacement.as_str())
                 .to_string();
@@ -796,14 +796,14 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
     })
 }
 
-/// Scans all .cs files under a directory for `GlobalVars.GetStr("KEY")` calls
+/// Scans all .cs files under a directory for `Atlas.GetStr("KEY")` calls
 fn scan_cs_for_getstring(
     root: &PathBuf,
     csproj_file: &PathBuf,
     define_constants: &HashSet<String>,
 ) -> Result<HashSet<String>> {
     // Regex to match GetStr calls and capture the key
-    let pattern = Regex::new(r#"GlobalVars\.GetStr\s*\(\s*"(?P<key>[^"]+)"\s*\)"#)
+    let pattern = Regex::new(r#"Atlas\.GetStr\s*\(\s*"(?P<key>[^"]+)"\s*\)"#)
         .expect("Failed to compile regex");
 
     let mut keys: HashSet<String> = HashSet::new(); // Collect unique keys

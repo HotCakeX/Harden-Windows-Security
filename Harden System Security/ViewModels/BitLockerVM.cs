@@ -23,7 +23,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
 using HardenSystemSecurity.BitLocker;
@@ -43,13 +42,13 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
-		_ = GlobalVars.AppDispatcher.TryEnqueue(ComputeColumnWidths);
+		_ = Atlas.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -98,7 +97,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		{
 			if (ApplyAllCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("ApplyOperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
@@ -212,18 +211,18 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<BitLockerVolume, object?> Getter)> _volumeMappings =
 		new Dictionary<string, (string Label, Func<BitLockerVolume, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "MountPoint",           (GlobalVars.GetStr("MountPointHeader/Text"),           v => v.MountPoint) },
-			{ "ProtectionStatus",     (GlobalVars.GetStr("ProtectionStatusHeader/Text"),     v => v.ProtectionStatus) },
-			{ "ConversionStatus",     (GlobalVars.GetStr("ConversionStatusHeader/Text"),     v => v.ConversionStatus) },
-			{ "EncryptionMethod",     (GlobalVars.GetStr("EncryptionMethodHeader/Text"),     v => v.EncryptionMethod) },
-			{ "EncryptionPercentage", (GlobalVars.GetStr("EncryptionPercentageHeader/Text"), v => v.EncryptionPercentage) },
-			{ "WipePercentage",       (GlobalVars.GetStr("WipePercentageHeader/Text"),       v => v.WipePercentage) },
-			{ "AutoUnlockEnabled",    (GlobalVars.GetStr("AutoUnlockEnabledHeader/Text"),    v => v.AutoUnlockEnabled) },
-			{ "AutoUnlockKeyStored",  (GlobalVars.GetStr("AutoUnlockKeyStoredHeader/Text"),  v => v.AutoUnlockKeyStored) },
-			{ "VolumeType",           (GlobalVars.GetStr("VolumeTypeHeader/Text"),           v => v.VolumeType) },
-			{ "CapacityGB",           (GlobalVars.GetStr("CapacityGBHeader/Text"),           v => v.CapacityGB) },
-			{ "FileSystemType",       (GlobalVars.GetStr("FileSystemTypeHeader/Text"),       v => v.FileSystemType) },
-			{ "FriendlyName",         (GlobalVars.GetStr("FriendlyNameHeader/Text"),         v => v.FriendlyName) }
+			{ "MountPoint",           (Atlas.GetStr("MountPointHeader/Text"),           v => v.MountPoint) },
+			{ "ProtectionStatus",     (Atlas.GetStr("ProtectionStatusHeader/Text"),     v => v.ProtectionStatus) },
+			{ "ConversionStatus",     (Atlas.GetStr("ConversionStatusHeader/Text"),     v => v.ConversionStatus) },
+			{ "EncryptionMethod",     (Atlas.GetStr("EncryptionMethodHeader/Text"),     v => v.EncryptionMethod) },
+			{ "EncryptionPercentage", (Atlas.GetStr("EncryptionPercentageHeader/Text"), v => v.EncryptionPercentage) },
+			{ "WipePercentage",       (Atlas.GetStr("WipePercentageHeader/Text"),       v => v.WipePercentage) },
+			{ "AutoUnlockEnabled",    (Atlas.GetStr("AutoUnlockEnabledHeader/Text"),    v => v.AutoUnlockEnabled) },
+			{ "AutoUnlockKeyStored",  (Atlas.GetStr("AutoUnlockKeyStoredHeader/Text"),  v => v.AutoUnlockKeyStored) },
+			{ "VolumeType",           (Atlas.GetStr("VolumeTypeHeader/Text"),           v => v.VolumeType) },
+			{ "CapacityGB",           (Atlas.GetStr("CapacityGBHeader/Text"),           v => v.CapacityGB) },
+			{ "FileSystemType",       (Atlas.GetStr("FileSystemTypeHeader/Text"),       v => v.FileSystemType) },
+			{ "FriendlyName",         (Atlas.GetStr("FriendlyNameHeader/Text"),         v => v.FriendlyName) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -232,13 +231,13 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<KeyProtector, object?> Getter)> KeyProtectorPropertyMappings =
 		new Dictionary<string, (string Label, Func<KeyProtector, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			["Type"] = (GlobalVars.GetStr("Type/Text"), kp => kp.Type),
-			["ID"] = (GlobalVars.GetStr("ID/Text"), kp => kp.ID),
-			["AutoUnlock"] = (GlobalVars.GetStr("AutoUnlock/Text"), kp => kp.AutoUnlockProtector),
-			["KeyFileName"] = (GlobalVars.GetStr("FileName/Text"), kp => kp.KeyFileName),
-			["RecoveryPassword"] = (GlobalVars.GetStr("RecoveryPassword/Text"), kp => kp.RecoveryPassword),
-			["KeyCertificateType"] = (GlobalVars.GetStr("CertificateType/Text"), kp => kp.KeyCertificateType),
-			["Thumbprint"] = (GlobalVars.GetStr("Thumbprint/Text"), kp => kp.Thumbprint)
+			["Type"] = (Atlas.GetStr("Type/Text"), kp => kp.Type),
+			["ID"] = (Atlas.GetStr("ID/Text"), kp => kp.ID),
+			["AutoUnlock"] = (Atlas.GetStr("AutoUnlock/Text"), kp => kp.AutoUnlockProtector),
+			["KeyFileName"] = (Atlas.GetStr("FileName/Text"), kp => kp.KeyFileName),
+			["RecoveryPassword"] = (Atlas.GetStr("RecoveryPassword/Text"), kp => kp.RecoveryPassword),
+			["KeyCertificateType"] = (Atlas.GetStr("CertificateType/Text"), kp => kp.KeyCertificateType),
+			["Thumbprint"] = (Atlas.GetStr("Thumbprint/Text"), kp => kp.Thumbprint)
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -251,11 +250,11 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			BitLockerUiEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("RetrievingBitLockerVolumesEllipsis"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("RetrievingBitLockerVolumesEllipsis"));
 
 			await GetVolumes();
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("LoadedBitLockerVolumesCount"), BitLockerVolumes.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("LoadedBitLockerVolumesCount"), BitLockerVolumes.Count));
 		}
 		catch (Exception ex)
 		{
@@ -279,14 +278,14 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		BitLockerVolume[] volumes = await Task.Run(() =>
 		{
 			const string command = "bitlocker list all";
-			string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command)
-				?? throw new InvalidOperationException(string.Format(GlobalVars.GetStr("NoOutputReturnedFromPath"), GlobalVars.ComManagerProcessPath));
+			string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, command)
+				?? throw new InvalidOperationException(string.Format(Atlas.GetStr("NoOutputReturnedFromPath"), Atlas.ComManagerProcessPath));
 			return JsonSerializer.Deserialize(result, BitLockerJsonContext.Default.BitLockerVolumeArray)!;
 		});
 
 		if (volumes.Length == 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumesDetected"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumesDetected"));
 			return;
 		}
 
@@ -444,18 +443,18 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// </summary>
 	private void ComputeColumnWidths()
 	{
-		double w1 = ListViewHelper.MeasureText(GlobalVars.GetStr("MountPointHeader/Text"));
-		double w2 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProtectionStatusHeader/Text"));
-		double w3 = ListViewHelper.MeasureText(GlobalVars.GetStr("ConversionStatusHeader/Text"));
-		double w4 = ListViewHelper.MeasureText(GlobalVars.GetStr("EncryptionMethodHeader/Text"));
-		double w5 = ListViewHelper.MeasureText(GlobalVars.GetStr("EncryptionPercentageHeader/Text"));
-		double w6 = ListViewHelper.MeasureText(GlobalVars.GetStr("WipePercentageHeader/Text"));
-		double w7 = ListViewHelper.MeasureText(GlobalVars.GetStr("AutoUnlockEnabledHeader/Text"));
-		double w8 = ListViewHelper.MeasureText(GlobalVars.GetStr("AutoUnlockKeyStoredHeader/Text"));
-		double w9 = ListViewHelper.MeasureText(GlobalVars.GetStr("VolumeTypeHeader/Text"));
-		double w10 = ListViewHelper.MeasureText(GlobalVars.GetStr("CapacityGBHeader/Text"));
-		double w11 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileSystemTypeHeader/Text"));
-		double w12 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
+		double w1 = ListViewHelper.MeasureText(Atlas.GetStr("MountPointHeader/Text"));
+		double w2 = ListViewHelper.MeasureText(Atlas.GetStr("ProtectionStatusHeader/Text"));
+		double w3 = ListViewHelper.MeasureText(Atlas.GetStr("ConversionStatusHeader/Text"));
+		double w4 = ListViewHelper.MeasureText(Atlas.GetStr("EncryptionMethodHeader/Text"));
+		double w5 = ListViewHelper.MeasureText(Atlas.GetStr("EncryptionPercentageHeader/Text"));
+		double w6 = ListViewHelper.MeasureText(Atlas.GetStr("WipePercentageHeader/Text"));
+		double w7 = ListViewHelper.MeasureText(Atlas.GetStr("AutoUnlockEnabledHeader/Text"));
+		double w8 = ListViewHelper.MeasureText(Atlas.GetStr("AutoUnlockKeyStoredHeader/Text"));
+		double w9 = ListViewHelper.MeasureText(Atlas.GetStr("VolumeTypeHeader/Text"));
+		double w10 = ListViewHelper.MeasureText(Atlas.GetStr("CapacityGBHeader/Text"));
+		double w11 = ListViewHelper.MeasureText(Atlas.GetStr("FileSystemTypeHeader/Text"));
+		double w12 = ListViewHelper.MeasureText(Atlas.GetStr("FriendlyNameHeader/Text"));
 
 		foreach (BitLockerVolume v in AllBitLockerVolumes)
 		{
@@ -517,19 +516,19 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			BitLockerVolume? volume = AllBitLockerVolumes.FirstOrDefault(v => v.KeyProtectors is not null && v.KeyProtectors.Contains(keyProtector));
 			if (volume is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("ParentVolumeForKeyProtectorNotFound"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("ParentVolumeForKeyProtectorNotFound"));
 				return;
 			}
 
 			BitLockerUiEnabled = false;
 			MainInfoBar.IsClosable = false;
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingKeyProtectorFromVolume"), keyProtector.ID, volume.MountPoint));
+			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingKeyProtectorFromVolume"), keyProtector.ID, volume.MountPoint));
 
 			// Don't throw if KeyProtector is bound to the volume and keeping it unlocked.
 			// Instead the message will be logged.
 			string command = $"bitlocker removekp \"{volume.MountPoint}\" \"{keyProtector.ID}\" true";
 
-			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, Atlas.ComManagerProcessPath, command));
 
 			// Refresh the volume list to reflect changes.
 			await GetVolumes();
@@ -537,11 +536,11 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			// If user tried to remove ExternalKey key protector and if the volume only has 1 key protector of type External Key
 			if (keyProtector.Type is KeyProtectorType.ExternalKey && (volume.KeyProtectors.Count(x => x.Type is KeyProtectorType.ExternalKey) == 1))
 			{
-				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("ExternalKeyRemovalConditionalSuccess"), keyProtector.ID, volume.MountPoint));
+				MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("ExternalKeyRemovalConditionalSuccess"), keyProtector.ID, volume.MountPoint));
 			}
 			else
 			{
-				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyRemovedKeyProtector"), keyProtector.Type, keyProtector.ID, volume.MountPoint));
+				MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyRemovedKeyProtector"), keyProtector.Type, keyProtector.ID, volume.MountPoint));
 			}
 		}
 		catch (Exception ex)
@@ -562,7 +561,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	{
 		if (SelectedBitLockerVolume is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumeSelected"));
 			return;
 		}
 
@@ -577,7 +576,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			// Ensure primary button was selected
 			if (result is ContentDialogResult.Primary)
 			{
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddingItemToAnotherMsg"), customDialog.SelectedKeyProtectorType, SelectedBitLockerVolume.MountPoint));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AddingItemToAnotherMsg"), customDialog.SelectedKeyProtectorType, SelectedBitLockerVolume.MountPoint));
 
 				string command = string.Empty;
 
@@ -592,7 +591,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 					case KeyProtectorType.TpmPin:
 						{
 							if (string.IsNullOrWhiteSpace(customDialog.PIN))
-								throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+								throw new InvalidOperationException(Atlas.GetStr("NoPINEnteredError"));
 
 							command = $"bitlocker addtpm+pin \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.PIN}\"";
 
@@ -601,7 +600,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 					case KeyProtectorType.TpmStartupKey:
 						{
 							if (customDialog.SelectedRemovableDrive is null)
-								throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+								throw new InvalidOperationException(Atlas.GetStr("NoRemovableDriveSelectedError"));
 
 							command = $"bitlocker addtpm+startup \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\"";
 
@@ -610,10 +609,10 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 					case KeyProtectorType.TpmPinStartupKey:
 						{
 							if (customDialog.SelectedRemovableDrive is null)
-								throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+								throw new InvalidOperationException(Atlas.GetStr("NoRemovableDriveSelectedError"));
 
 							if (string.IsNullOrWhiteSpace(customDialog.PIN))
-								throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+								throw new InvalidOperationException(Atlas.GetStr("NoPINEnteredError"));
 
 							command = $"bitlocker addtpm+pin+startup \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\" \"{customDialog.PIN}\"";
 
@@ -622,7 +621,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 					case KeyProtectorType.ExternalKey:
 						{
 							if (customDialog.SelectedRemovableDrive is null)
-								throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+								throw new InvalidOperationException(Atlas.GetStr("NoRemovableDriveSelectedError"));
 
 							command = $"bitlocker addstartupkey \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\"";
 
@@ -637,7 +636,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 					case KeyProtectorType.Password:
 						{
 							if (customDialog.Password is null)
-								throw new InvalidOperationException(GlobalVars.GetStr("NoPasswordProvidedError"));
+								throw new InvalidOperationException(Atlas.GetStr("NoPasswordProvidedError"));
 
 							command = $"bitlocker addpass \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.Password}\"";
 
@@ -663,7 +662,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 						return;
 				}
 
-				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, Atlas.ComManagerProcessPath, command));
 
 				// Refresh the volume list to reflect changes.
 				await GetVolumes();
@@ -679,7 +678,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 		}
@@ -698,7 +697,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		{
 			if (SelectedBitLockerVolume is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumeSelected"));
 				return;
 			}
 
@@ -707,7 +706,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			if (SelectedBitLockerVolume.VolumeType is VolumeType.FixedDisk &&
 				OSDrive.ConversionStatus is not ConversionStatus.FullyEncrypted)
 			{
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("OSDriveNotEncryptedForFixedDriveEncryptionError"), OSDrive.ConversionStatus, OSDrive.EncryptionPercentage));
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("OSDriveNotEncryptedForFixedDriveEncryptionError"), OSDrive.ConversionStatus, OSDrive.EncryptionPercentage));
 			}
 
 			BitLockerUiEnabled = false;
@@ -738,7 +737,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 							{
 								if (string.IsNullOrWhiteSpace(customDialog.PIN))
 								{
-									throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+									throw new InvalidOperationException(Atlas.GetStr("NoPINEnteredError"));
 								}
 
 								command = $"bitlocker enableos \"{SelectedBitLockerVolume.MountPoint}\" normal \"{customDialog.PIN}\" - \"{FreePlusUsedSpaceEncryption}\" \"{AllowDowngradeOSDriveEncryptionLevel}\"";
@@ -747,12 +746,12 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 							{
 								if (string.IsNullOrWhiteSpace(customDialog.PIN))
 								{
-									throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+									throw new InvalidOperationException(Atlas.GetStr("NoPINEnteredError"));
 								}
 
 								if (customDialog.SelectedRemovableDrive is null)
 								{
-									throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+									throw new InvalidOperationException(Atlas.GetStr("NoRemovableDriveSelectedError"));
 								}
 
 								command = $"bitlocker enableos \"{SelectedBitLockerVolume.MountPoint}\" enhanced \"{customDialog.PIN}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\" \"{FreePlusUsedSpaceEncryption}\" \"{AllowDowngradeOSDriveEncryptionLevel}\"";
@@ -770,7 +769,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 						{
 							if (string.IsNullOrWhiteSpace(customDialog.Password))
 							{
-								throw new InvalidOperationException(GlobalVars.GetStr("NoPasswordProvidedError"));
+								throw new InvalidOperationException(Atlas.GetStr("NoPasswordProvidedError"));
 							}
 
 							command = $"bitlocker enableremovable \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.Password}\" \"{FreePlusUsedSpaceEncryption}\"";
@@ -782,7 +781,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 						break;
 				}
 
-				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, Atlas.ComManagerProcessPath, command));
 
 				// Refresh the volume list to reflect changes.
 				await GetVolumes();
@@ -795,7 +794,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 		}
@@ -819,7 +818,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		{
 			if (SelectedBitLockerVolume is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumeSelected"));
 				return;
 			}
 
@@ -828,10 +827,10 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = string.Format(GlobalVars.GetStr("BitLockerDecryptingSelectedVolumeTitle"), SelectedBitLockerVolume.MountPoint),
-				Content = GlobalVars.GetStr("BitLockerDecryptingSelectedVolumeBody"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("DecryptMenuFlyoutItem/Text"),
+				Title = string.Format(Atlas.GetStr("BitLockerDecryptingSelectedVolumeTitle"), SelectedBitLockerVolume.MountPoint),
+				Content = Atlas.GetStr("BitLockerDecryptingSelectedVolumeBody"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("DecryptMenuFlyoutItem/Text"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -840,13 +839,13 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 			if (result is not ContentDialogResult.Primary)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			string command = $"bitlocker disable \"{SelectedBitLockerVolume.MountPoint}\"";
 
-			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, Atlas.ComManagerProcessPath, command));
 
 			// Refresh the volume list to reflect changes.
 			await GetVolumes();
@@ -874,7 +873,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		{
 			if (SelectedBitLockerVolume is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumeSelected"));
 				return;
 			}
 
@@ -892,7 +891,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			{
 				string command = $"bitlocker suspend \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.RestartCount}\"";
 
-				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, Atlas.ComManagerProcessPath, command));
 
 				// Refresh the volume list to reflect changes.
 				await GetVolumes();
@@ -902,7 +901,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 		}
@@ -926,7 +925,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		{
 			if (SelectedBitLockerVolume is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumeSelected"));
 				return;
 			}
 
@@ -935,10 +934,10 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = string.Format(GlobalVars.GetStr("BitLockerResumeSelectedVolumeTitle"), SelectedBitLockerVolume.MountPoint),
-				Content = GlobalVars.GetStr("BitLockerResumeSelectedVolumeBody"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
-				PrimaryButtonText = GlobalVars.GetStr("ResumeMenuFlyoutItem/Text"),
+				Title = string.Format(Atlas.GetStr("BitLockerResumeSelectedVolumeTitle"), SelectedBitLockerVolume.MountPoint),
+				Content = Atlas.GetStr("BitLockerResumeSelectedVolumeBody"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("ResumeMenuFlyoutItem/Text"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -947,13 +946,13 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 			if (result is not ContentDialogResult.Primary)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
 			string command = $"bitlocker enablekps \"{SelectedBitLockerVolume.MountPoint}\"";
 
-			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, Atlas.ComManagerProcessPath, command));
 
 			// Refresh the volume list to reflect changes.
 			await GetVolumes();
@@ -983,7 +982,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			if (AllBitLockerVolumes.Count == 0)
 			{
 				// No data to export
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumesDetected"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumesDetected"));
 				return;
 			}
 
@@ -997,7 +996,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 			if (saveLocation is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 				return;
 			}
 
@@ -1011,7 +1010,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				File.WriteAllText(saveLocation, json, System.Text.Encoding.UTF8);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("BitLockerSuccessExportMsg"), volumes.Length, saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("BitLockerSuccessExportMsg"), volumes.Length, saveLocation));
 
 			// it will show/hide warning for bitlocker recovery in the Microsoft Defender.
 			// Setting it to 1 shows it, setting it to 0 hides it.

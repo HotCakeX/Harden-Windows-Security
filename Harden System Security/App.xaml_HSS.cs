@@ -93,7 +93,7 @@ public sealed partial class App : Application
 
 				if (activatedEventArgs.Kind is ExtendedActivationKind.File)
 				{
-					Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
+					Logger.Write(Atlas.GetStr("FileActivationDetectedMessage"));
 
 					if (activatedEventArgs.Data is IFileActivatedEventArgs fileActivatedArgs)
 					{
@@ -104,7 +104,7 @@ public sealed partial class App : Application
 								if (item.Path is not null && File.Exists(item.Path))
 								{
 									// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-									requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(item.Path);
+									requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: item.Path, readAndWrite: true);
 
 									// Store ephemeral activation context
 									_activationFilePath = item.Path;
@@ -116,12 +116,12 @@ public sealed partial class App : Application
 						}
 						else
 						{
-							Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
+							Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
 						}
 					}
 					else
 					{
-						Logger.Write(GlobalVars.GetStr("FileActivationNoArgumentsMessage"));
+						Logger.Write(Atlas.GetStr("FileActivationNoArgumentsMessage"));
 					}
 				}
 				else
@@ -141,24 +141,24 @@ public sealed partial class App : Application
 
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
-		if (!GlobalVars.IsElevated && (GlobalVars.Settings.PromptForElevationOnStartup || requireAdminPrivilege))
+		if (!Atlas.IsElevated && (Atlas.Settings.PromptForElevationOnStartup || requireAdminPrivilege))
 		{
 			// Build passthrough arguments so the elevated instance can reconstruct intent.
-			if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, BuildRelaunchArguments()))
+			if (Relaunch.RelaunchAppElevated(Atlas.AUMID, BuildRelaunchArguments()))
 			{
 				// Exit the process
 				Environment.Exit(0);
 			}
 			else if (requireAdminPrivilege)
 			{
-				Logger.Write(GlobalVars.GetStr("ElevationRequiredButDeniedMessage"));
+				Logger.Write(Atlas.GetStr("ElevationRequiredButDeniedMessage"));
 
 				// Exit the process anyway since admin privileges were required but user didn't successfully elevate
 				Environment.Exit(0);
 			}
 			else
 			{
-				Logger.Write(GlobalVars.GetStr("ElevationDeniedMessage"));
+				Logger.Write(Atlas.GetStr("ElevationDeniedMessage"));
 			}
 		}
 
@@ -271,10 +271,10 @@ public sealed partial class App : Application
 
 		MainWindow = new MainWindow();
 
-		MainWindowVM.SetCaptionButtonsFlowDirection(Enum.Parse<FlowDirection>(GlobalVars.Settings.ApplicationGlobalFlowDirection));
+		MainWindowVM.SetCaptionButtonsFlowDirection(Enum.Parse<FlowDirection>(Atlas.Settings.ApplicationGlobalFlowDirection));
 
 		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
-		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(GlobalVars.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
+		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Atlas.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
 		MainWindow.Closed += Window_Closed;  // Assign event handler for the window closed
 		MainWindow.Activate();
 
@@ -286,7 +286,7 @@ public sealed partial class App : Application
 		// File activation path (opened via File Explorer or protocol that yielded File activation)
 		if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
 		{
-			Logger.Write(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("FileActivationLaunchMessage"), _activationFilePath));
+			Logger.Write(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("FileActivationLaunchMessage"), _activationFilePath));
 
 			try
 			{
@@ -309,7 +309,7 @@ public sealed partial class App : Application
 		// CLI handoff path: elevated relaunch or direct CLI launch with --file=
 		else if (!string.IsNullOrWhiteSpace(_activationFilePath))
 		{
-			Logger.Write(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("FileActivationLaunchMessage"), _activationFilePath));
+			Logger.Write(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("FileActivationLaunchMessage"), _activationFilePath));
 
 			try
 			{
@@ -347,14 +347,14 @@ public sealed partial class App : Application
 		#endregion
 
 		// If the user has enabled animated rainbow border for the app window, start it
-		if (GlobalVars.Settings.IsAnimatedRainbowEnabled)
+		if (Atlas.Settings.IsAnimatedRainbowEnabled)
 		{
 			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
 		}
 		// If the user has set a custom color for the app window border, apply it
-		else if (!string.IsNullOrEmpty(GlobalVars.Settings.CustomAppWindowsBorder))
+		else if (!string.IsNullOrEmpty(Atlas.Settings.CustomAppWindowsBorder))
 		{
-			if (RGBHEX.ToRGB(GlobalVars.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
+			if (RGBHEX.ToRGB(Atlas.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
 				CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
 		}
 
@@ -528,11 +528,11 @@ public sealed partial class App : Application
 						_activationFilePath = filePath;
 
 						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-						requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(filePath);
+						requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true);
 					}
 					else
 					{
-						Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
+						Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
 					}
 				}
 			}

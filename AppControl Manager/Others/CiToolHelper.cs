@@ -51,7 +51,7 @@ internal static class CiToolHelper
 			if (!ulong.TryParse(number, out ulong num))
 			{
 				throw new FormatException(
-					GlobalVars.GetStr("InputStringNotValidUInt64Message"));
+					Atlas.GetStr("InputStringNotValidUInt64Message"));
 			}
 
 			// Split the 64-bit integer into four 16-bit segments for the version parts
@@ -66,7 +66,7 @@ internal static class CiToolHelper
 		catch (Exception ex)
 		{
 			// Handle errors by printing an error message and returning a default version of 0.0.0.0
-			Logger.Write(GlobalVars.GetStr("ErrorConvertingNumberToVersionMessage"));
+			Logger.Write(Atlas.GetStr("ErrorConvertingNumberToVersionMessage"));
 			Logger.Write(ex);
 
 			return new Version(0, 0, 0, 0);
@@ -98,7 +98,7 @@ internal static class CiToolHelper
 
 		// Start the process and capture the output
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
+			Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -109,7 +109,7 @@ internal static class CiToolHelper
 		if (process.ExitCode != 0)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("CommandExecutionFailedMessage"),
+				Atlas.GetStr("CommandExecutionFailedMessage"),
 				process.ExitCode));
 		}
 
@@ -168,7 +168,7 @@ internal static class CiToolHelper
 		if (string.IsNullOrWhiteSpace(policyId))
 		{
 			throw new ArgumentException(
-				GlobalVars.GetStr("PolicyIdCannotBeNullOrEmptyMessage"),
+				Atlas.GetStr("PolicyIdCannotBeNullOrEmptyMessage"),
 				nameof(policyId)
 			);
 		}
@@ -177,7 +177,7 @@ internal static class CiToolHelper
 		// They will be added automatically later by the method
 		policyId = policyId.Trim('"', '{', '}');
 
-		if (GlobalVars.Settings.UseV2CIManagement)
+		if (Atlas.Settings.UseV2CIManagement)
 		{
 			Logger.Write("Using alternative method for removing policy");
 			CIManager.RemovePolicyByID(policyId);
@@ -196,7 +196,7 @@ internal static class CiToolHelper
 
 		// Start the process and capture the output
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
+			Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -208,7 +208,7 @@ internal static class CiToolHelper
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
+					Atlas.GetStr("CommandExecutionFailedWithOutputMessage"),
 					process.ExitCode,
 					jsonOutput
 				)
@@ -234,7 +234,7 @@ internal static class CiToolHelper
 			// They will be added automatically later by the method
 			string ID = policyId.Trim('"', '{', '}');
 
-			if (GlobalVars.Settings.UseV2CIManagement)
+			if (Atlas.Settings.UseV2CIManagement)
 			{
 				Logger.Write("Using alternative method for removing policy");
 				CIManager.RemovePolicyByID(policyId);
@@ -253,7 +253,7 @@ internal static class CiToolHelper
 
 			// Start the process and capture the output
 			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-				GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
+				Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 			// Read all output as a string
 			string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -265,7 +265,7 @@ internal static class CiToolHelper
 			{
 				throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
+					Atlas.GetStr("CommandExecutionFailedWithOutputMessage"),
 					process.ExitCode,
 					jsonOutput
 					)
@@ -288,7 +288,7 @@ internal static class CiToolHelper
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void UpdatePolicy(ReadOnlySpan<byte> policyBytes)
 	{
-		if (GlobalVars.Settings.UseV2CIManagement)
+		if (Atlas.Settings.UseV2CIManagement)
 		{
 			Logger.Write("Using alternative method for deploying policy");
 			CIManager.Add(policyBytes);
@@ -313,7 +313,7 @@ internal static class CiToolHelper
 
 			// Start the process and capture the output
 			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-				GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
+				Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 			// Read all output as a string
 			string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -325,7 +325,7 @@ internal static class CiToolHelper
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
+						Atlas.GetStr("CommandExecutionFailedWithOutputMessage"),
 						process.ExitCode,
 						jsonOutput
 						)
@@ -357,7 +357,7 @@ internal static class CiToolHelper
 
 		// Start the process and capture the output
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
+			Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -369,7 +369,7 @@ internal static class CiToolHelper
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
+					Atlas.GetStr("CommandExecutionFailedWithOutputMessage"),
 					process.ExitCode,
 					jsonOutput
 					)

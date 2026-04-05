@@ -10,6 +10,7 @@
     xmlns:GP="using:CommonCore.GroupPolicy"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    Loaded="{x:Bind ViewModel.Page_Loaded}"
     Unloaded="{x:Bind ViewModel.Page_Unloaded}"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -631,9 +632,9 @@
                VerticalAlignment="Center"
                HorizontalOffset="-100"
                PlacementTarget="{x:Bind ProtectPageVerifySelectedButton}">
-            
+
             <Border Padding="24"
-                    CornerRadius="20" 
+                    CornerRadius="20"
                     Width="320"
                     BorderThickness="2"
                     ui:Effects.Shadow="{StaticResource BorderShadow}">

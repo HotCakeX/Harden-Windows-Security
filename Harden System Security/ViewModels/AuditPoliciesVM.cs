@@ -22,8 +22,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
 using CommonCore.SecurityPolicy;
 using CommonCore.ToolKits;
@@ -35,7 +33,7 @@ namespace HardenSystemSecurity.ViewModels;
 internal sealed partial class AuditPoliciesVM : ViewModelBase
 {
 	// To adjust the initial width of the columns, giving them nice paddings.
-	internal AuditPoliciesVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
+	internal AuditPoliciesVM() => _ = Atlas.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 	/// <summary>
 	/// The main InfoBar for this VM.
@@ -66,11 +64,11 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("CategoryHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SubcategoryHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("AuditSettingHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CategoryGUIDHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("SubcategoryGUIDHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("CategoryHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("SubcategoryHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("AuditSettingHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(Atlas.GetStr("CategoryGUIDHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(Atlas.GetStr("SubcategoryGUIDHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (AuditPolicyInfo item in AuditPolicies)
@@ -172,11 +170,11 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<AuditPolicyInfo, object?> Getter)> AuditPolicyInfoPropertyMappings
 		= new Dictionary<string, (string Label, Func<AuditPolicyInfo, object?> Getter)>
 		{
-			{ "CategoryName",            (GlobalVars.GetStr("CategoryHeader/Text"),           ape => ape.CategoryName) },
-			{ "SubcategoryName",         (GlobalVars.GetStr("SubcategoryHeader/Text"),        ape => ape.SubcategoryName) },
-			{ "AuditSettingDescription", (GlobalVars.GetStr("AuditSettingHeader/Text"),       ape => ape.AuditSettingDescription) },
-			{ "CategoryGuid",            (GlobalVars.GetStr("CategoryGUIDHeader/Text"),       ape => ape.CategoryGuid) },
-			{ "SubcategoryGuid",         (GlobalVars.GetStr("SubcategoryGUIDHeader/Text"),    ape => ape.SubcategoryGuid) }
+			{ "CategoryName",            (Atlas.GetStr("CategoryHeader/Text"),           ape => ape.CategoryName) },
+			{ "SubcategoryName",         (Atlas.GetStr("SubcategoryHeader/Text"),        ape => ape.SubcategoryName) },
+			{ "AuditSettingDescription", (Atlas.GetStr("AuditSettingHeader/Text"),       ape => ape.AuditSettingDescription) },
+			{ "CategoryGuid",            (Atlas.GetStr("CategoryGUIDHeader/Text"),       ape => ape.CategoryGuid) },
+			{ "SubcategoryGuid",         (Atlas.GetStr("SubcategoryGUIDHeader/Text"),    ape => ape.SubcategoryGuid) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -251,7 +249,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		{
 			if (AuditPolicies.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoAuditPoliciesAvailable"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoAuditPoliciesAvailable"));
 				return;
 			}
 
@@ -274,7 +272,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedAuditPolicies"), policiesToExport.Count, saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedAuditPolicies"), policiesToExport.Count, saveLocation));
 		}
 		catch (Exception ex)
 		{
@@ -299,7 +297,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			string? selectedFilePath = FileDialogHelper.ShowFilePickerDialog(GlobalVars.JSONPickerFilter);
+			string? selectedFilePath = FileDialogHelper.ShowFilePickerDialog(Atlas.JSONPickerFilter);
 
 			if (selectedFilePath is null)
 				return;
@@ -312,7 +310,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 
 			if (importedPolicies is null || importedPolicies.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoAuditPoliciesAvailableToImport"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoAuditPoliciesAvailableToImport"));
 				return;
 			}
 
@@ -341,7 +339,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 
 			if (policiesToApply.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoAuditPoliciesApplicableInJSON"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoAuditPoliciesApplicableInJSON"));
 				return;
 			}
 
@@ -351,7 +349,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 				AuditPolicyManager.SetAuditPolicies(policiesToApply.ToArray());
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyImportedAuditPolicies"), policiesToApply.Count, selectedFilePath));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyImportedAuditPolicies"), policiesToApply.Count, selectedFilePath));
 
 			// Refresh the list view to show the updated policies
 			await RetrieveAuditPoliciesPrivate();
@@ -398,10 +396,10 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 					AuditPolicyManager.SetAuditPolicies([auditPolicyStruct]);
 
 					// Commit the changes
-					await GlobalVars.AppDispatcher.EnqueueAsync(auditPolicy.CommitChanges);
+					await Atlas.AppDispatcher.EnqueueAsync(auditPolicy.CommitChanges);
 				});
 
-				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("AuditPolicyAppliedSuccess"), auditPolicy.SubcategoryName, auditPolicy.AuditSettingDescription));
+				MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("AuditPolicyAppliedSuccess"), auditPolicy.SubcategoryName, auditPolicy.AuditSettingDescription));
 			}
 			catch (Exception ex)
 			{
@@ -454,7 +452,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			AllAuditPolicies.AddRange(allAuditPolicies);
 
 			CalculateColumnWidths();
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("AuditPoliciesLoadedSuccess"), AuditPolicies.Count));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("AuditPoliciesLoadedSuccess"), AuditPolicies.Count));
 		}
 		catch (Exception ex)
 		{

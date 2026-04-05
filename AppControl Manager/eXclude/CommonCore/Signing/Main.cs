@@ -43,7 +43,7 @@ internal static class Main
 			"1.2.840.10045.4.3.3" => "2.16.840.1.101.3.4.2.2", // SHA-2 384
 			"1.2.840.10045.4.3.4" => "2.16.840.1.101.3.4.2.3", // SHA-2 512
 
-			_ => throw new NotSupportedException(string.Format(GlobalVars.GetStr("UnsupportedCertificateSignatureAlgorithmForHashOID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
+			_ => throw new NotSupportedException(string.Format(Atlas.GetStr("UnsupportedCertificateSignatureAlgorithmForHashOID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
 		};
 	}
 
@@ -74,7 +74,7 @@ internal static class Main
 			// ecdsa-with-SHA512
 			"1.2.840.10045.4.3.4" => Structure.CALG_SHA_512,
 
-			_ => throw new NotSupportedException(string.Format(GlobalVars.GetStr("UnsupportedCertificateSignatureAlgorithmForALGID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
+			_ => throw new NotSupportedException(string.Format(Atlas.GetStr("UnsupportedCertificateSignatureAlgorithmForALGID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
 		};
 	}
 
@@ -94,7 +94,7 @@ internal static class Main
 			throw new InvalidOperationException("No certificate was found");
 
 		if (!signingCertificate.HasPrivateKey)
-			throw new InvalidOperationException(GlobalVars.GetStr("CertificateMustHavePrivateKey"));
+			throw new InvalidOperationException(Atlas.GetStr("CertificateMustHavePrivateKey"));
 
 		// Create ContentInfo with the specified content type OID and file content
 		ContentInfo contentInfo = new(new Oid(Structure.CodeIntegrityOID), fileContent);
@@ -240,7 +240,7 @@ internal static class Main
 		ArgumentNullException.ThrowIfNull(signingCertificate);
 
 		if (!signingCertificate.HasPrivateKey)
-			throw new ArgumentException(GlobalVars.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
+			throw new ArgumentException(Atlas.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
 
 		IntPtr pSignerFileInfo = IntPtr.Zero;
 		IntPtr pSignerSubjectInfo = IntPtr.Zero;
@@ -340,14 +340,14 @@ internal static class Main
 
 			if (hr != Structure.S_OK) // S_OK is 0
 			{
-				string errorMessage = string.Format(GlobalVars.GetStr("SignerSignEx3Failed"), hr);
+				string errorMessage = string.Format(Atlas.GetStr("SignerSignEx3Failed"), hr);
 
 				if (hr == Structure.ERROR_BAD_FORMAT_HRESULT)
-					errorMessage += GlobalVars.GetStr("ErrorBadFormat");
+					errorMessage += Atlas.GetStr("ErrorBadFormat");
 				else if (hr == Structure.ERROR_FILE_NOT_FOUND_HRESULT)
-					errorMessage += GlobalVars.GetStr("ErrorFileNotFound");
+					errorMessage += Atlas.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
-					errorMessage += GlobalVars.GetStr("ErrorInvalidArg");
+					errorMessage += Atlas.GetStr("ErrorInvalidArg");
 
 				throw new Win32Exception(hr, errorMessage);
 			}
@@ -394,7 +394,7 @@ internal static class Main
 		ArgumentNullException.ThrowIfNull(signingCertificate);
 
 		if (!signingCertificate.HasPrivateKey)
-			throw new ArgumentException(GlobalVars.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
+			throw new ArgumentException(Atlas.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
 
 		IntPtr pSignerFileInfo = IntPtr.Zero;
 		IntPtr pSignerSubjectInfo = IntPtr.Zero;
@@ -516,14 +516,14 @@ internal static class Main
 
 			if (hr != Structure.S_OK)
 			{
-				string errorMessage = string.Format(GlobalVars.GetStr("SignerSignEx3Failed"), hr);
+				string errorMessage = string.Format(Atlas.GetStr("SignerSignEx3Failed"), hr);
 
 				if (hr == Structure.ERROR_BAD_FORMAT_HRESULT)
-					errorMessage += GlobalVars.GetStr("ErrorBadFormat");
+					errorMessage += Atlas.GetStr("ErrorBadFormat");
 				else if (hr == Structure.ERROR_FILE_NOT_FOUND_HRESULT)
-					errorMessage += GlobalVars.GetStr("ErrorFileNotFound");
+					errorMessage += Atlas.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
-					errorMessage += GlobalVars.GetStr("ErrorInvalidArg");
+					errorMessage += Atlas.GetStr("ErrorInvalidArg");
 
 				throw new Win32Exception(hr, errorMessage);
 			}
@@ -584,7 +584,7 @@ internal static class Main
 		}
 		catch (Win32Exception w32Ex)
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
+			Logger.Write(string.Format(Atlas.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
 
 			throw;
 		}
@@ -608,7 +608,7 @@ internal static class Main
 		}
 		catch (Win32Exception w32Ex)
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
+			Logger.Write(string.Format(Atlas.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
 
 			throw;
 		}

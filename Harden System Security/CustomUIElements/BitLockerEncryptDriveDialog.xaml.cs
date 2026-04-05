@@ -22,7 +22,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.ViewModels;
 using HardenSystemSecurity.BitLocker;
 using Microsoft.UI.Xaml.Controls;
 
@@ -131,8 +130,8 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 			BitLockerVolume[] volumes = await Task.Run(() =>
 			{
 				const string command = "bitlocker list all";
-				string result = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, command)
-					?? throw new InvalidOperationException(string.Format(GlobalVars.GetStr("NoOutputReturnedFromPath"), GlobalVars.ComManagerProcessPath));
+				string result = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, command)
+					?? throw new InvalidOperationException(string.Format(Atlas.GetStr("NoOutputReturnedFromPath"), Atlas.ComManagerProcessPath));
 				return JsonSerializer.Deserialize(result, BitLockerJsonContext.Default.BitLockerVolumeArray)!;
 			});
 
@@ -140,7 +139,7 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 
 			if (volumes.Length == 0)
 			{
-				Logger.Write(GlobalVars.GetStr("NoBitLockerVolumesDetected"));
+				Logger.Write(Atlas.GetStr("NoBitLockerVolumesDetected"));
 				return;
 			}
 

@@ -22,13 +22,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommonCore.IncrementalCollection;
+using CommonCore.IntelGathering;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -87,7 +87,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		// Run header-only pass once during VM construction so headers are sized before any data loads.
 		LVController.InitializeHeaderOnlyColumnWidths();
 
-		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
+		FilesAndFoldersCancellableButton = new(Atlas.GetStr("CreateSupplementalPolicyButton/Content"));
 
 		// Initialize the column manager with specific definitions for Strict Kernel Mode page
 		StrictKernelModeColumnManager = new ListViewColumnManager<FileIdentity>(
@@ -116,9 +116,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		// Passing the current list (even if empty) initializes defaults.
 		StrictKernelModeColumnManager.CalculateColumnWidths(StrictKernelModeScanResults);
 
-		PFNBasedCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
+		PFNBasedCancellableButton = new(Atlas.GetStr("CreateSupplementalPolicyButton/Content"));
 
-		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
+		PatternBasedFileRuleCancellableButton = new(Atlas.GetStr("CreateSupplementalPolicyButton/Content"));
 	}
 
 	internal Visibility FilesAndFoldersBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -219,7 +219,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (SP(ref field, value))
 			{
-				FilesAndFoldersScalabilityButtonContent = GlobalVars.GetStr("Scalability") + field;
+				FilesAndFoldersScalabilityButtonContent = Atlas.GetStr("Scalability") + field;
 			}
 		}
 	} = 2;
@@ -227,7 +227,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The content of the button that has the RadialGauge inside it.
 	/// </summary>
-	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("Scalability") + "2";
+	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("Scalability") + "2";
 
 	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -257,7 +257,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFilesButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -287,7 +287,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			FilesAndFoldersElementsAreEnabled = false;
 
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -325,7 +325,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal async void OpenInPolicyEditor_FilesAndFolders() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalFilesAndFoldersSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FinalFilesAndFoldersSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await PolicyFileRepresent.OpenInDefaultFileHandler(_FinalFilesAndFoldersSupplementalPolicy);
 
 	/// <summary>
 	/// Main button's event handler for files and folders Supplemental policy creation
@@ -344,7 +344,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 		if (filesAndFoldersFilePaths.Count is 0 && filesAndFoldersFolderPaths.Count is 0)
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoFilesOrFoldersSelected"), GlobalVars.GetStr("SelectFilesOrFoldersTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("NoFilesOrFoldersSelected"), Atlas.GetStr("SelectFilesOrFoldersTitle"));
 			return;
 		}
 
@@ -353,20 +353,20 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (FilesAndFoldersBasePolicy is null)
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"), GlobalVars.GetStr("SelectBasePolicyTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("SelectBasePolicySubtitle"), Atlas.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(FilesAndFoldersSupplementalPolicyName))
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"), GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"), Atlas.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -381,7 +381,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			FilesAndFoldersElementsAreEnabled = false;
 
 			FilesAndFoldersInfoBar.WriteInfo(string.Format(
-				GlobalVars.GetStr("FindingAllAppControlFilesMessage"),
+				Atlas.GetStr("FindingAllAppControlFilesMessage"),
 				filesAndFoldersFilePaths.Count,
 				filesAndFoldersFolderPaths.Count
 			));
@@ -402,8 +402,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
 						FilesAndFoldersInfoBar.WriteInfo(
-							GlobalVars.GetStr("NoCompatibleFilesDetectedSubtitle"),
-							GlobalVars.GetStr("NoCompatibleFilesTitle"));
+							Atlas.GetStr("NoCompatibleFilesDetectedSubtitle"),
+							Atlas.GetStr("NoCompatibleFilesTitle"));
 
 						errorsOccurred = true;
 						return;
@@ -412,7 +412,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					FilesAndFoldersInfoBar.WriteInfo(string.Format(
-					GlobalVars.GetStr("ScanningTotalAppControlFilesMessage"),
+					Atlas.GetStr("ScanningTotalAppControlFilesMessage"),
 					DetectedFilesInSelectedDirectories.Item2));
 
 					// Scan all of the detected files from the user selected directories
@@ -436,7 +436,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						// Creating incremental collection by passing the source List.
 						HighPerfIncrementalCollection<FileIdentity> incrementalCollection = new(LVController.FullSource);
@@ -458,7 +458,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 						LVController.NotifyFullSourceChanged();
 					});
 
-					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompletedCreatingSupplementalPolicyMessage"));
+					FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("ScanCompletedCreatingSupplementalPolicyMessage"));
 				}
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
@@ -502,7 +502,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.FilePath || FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.WildCardFolderPath)
 					{
 						Logger.Write(string.Format(
-							GlobalVars.GetStr("SelectedScanLevelMessage"),
+							Atlas.GetStr("SelectedScanLevelMessage"),
 							FilesAndFoldersScanLevelComboBoxSelectedItem.FriendlyName
 						));
 
@@ -533,7 +533,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If user selected to deploy the policy
 				if (FilesAndFoldersDeployButton)
 				{
-					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					FilesAndFoldersInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalFilesAndFoldersSupplementalPolicy.PolicyObj));
 				}
@@ -542,25 +542,25 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (FilesAndFoldersCancellableButton.wasCancelled)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
 					FilesAndFoldersInfoBar.WriteSuccess(string.Format(
-					GlobalVars.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
+					Atlas.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
 					FilesAndFoldersSupplementalPolicyName));
 				}
 				else
 				{
-					FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					FilesAndFoldersInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
@@ -746,7 +746,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal void CertificatesBrowseForCertsButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.CertificatePickerFilter);
 
 		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -763,7 +763,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			CertificatesBasedElementsAreEnabled = false;
 
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -803,8 +803,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 		if (CertificatesBasedCertFilePaths.Count is 0)
 		{
-			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectCertificatesSubtitle"),
-				GlobalVars.GetStr("SelectCertificatesTitle"));
+			CertificatesBasedInfoBar.WriteWarning(Atlas.GetStr("SelectCertificatesSubtitle"),
+				Atlas.GetStr("SelectCertificatesTitle"));
 			return;
 		}
 
@@ -813,23 +813,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
-				GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				CertificatesBasedInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"),
+				Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (CertificatesBasedBasePolicy is null)
 		{
-			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
-				GlobalVars.GetStr("SelectBasePolicyTitle"));
+			CertificatesBasedInfoBar.WriteWarning(Atlas.GetStr("SelectBasePolicySubtitle"),
+				Atlas.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(CertificatesBasedSupplementalPolicyName))
 		{
-			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
-				GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			CertificatesBasedInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"),
+				Atlas.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -840,7 +840,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			CertificatesBasedElementsAreEnabled = false;
 
 			CertificatesBasedInfoBar.WriteInfo(string.Format(
-				GlobalVars.GetStr("CreatingCertificatesPolicyMessage"),
+				Atlas.GetStr("CreatingCertificatesPolicyMessage"),
 				CertificatesBasedCertFilePaths.Count
 			));
 
@@ -857,13 +857,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					certificateResults.Add(new CertificateSignerCreator(
 					   CertificateHelper.GetTBSCertificate(CertObject),
 						CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
-						signingScenario ? SiPolicyIntel.SSType.UserMode : SiPolicyIntel.SSType.KernelMode // By default it's set to User-Mode in XAML/UI
+						signingScenario ? SSType.UserMode : SSType.KernelMode // By default it's set to User-Mode in XAML/UI
 					));
 				}
 
 				if (certificateResults.Count == 0)
 				{
-					CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
+					CertificatesBasedInfoBar.WriteWarning(Atlas.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
 					errorsOccurred = true;
 					return;
 				}
@@ -913,7 +913,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If user selected to deploy the policy
 				if (CertificatesBasedDeployButton)
 				{
-					CertificatesBasedInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					CertificatesBasedInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalCertificatesSupplementalPolicy.PolicyObj));
 				}
@@ -921,7 +921,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 		catch (Exception ex)
 		{
-			CertificatesBasedInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			CertificatesBasedInfoBar.WriteError(ex, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 			errorsOccurred = true;
 		}
 		finally
@@ -931,12 +931,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
 					CertificatesBasedInfoBar.WriteSuccess(string.Format(
-					GlobalVars.GetStr("SuccessfullyCreatedCertificatePolicyMessage"),
+					Atlas.GetStr("SuccessfullyCreatedCertificatePolicyMessage"),
 					CertificatesBasedSupplementalPolicyName));
 				}
 				else
 				{
-					CertificatesBasedInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					CertificatesBasedInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				CertificatesInfoBarActionButtonVisibility = Visibility.Visible;
@@ -959,7 +959,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal async void OpenInPolicyEditor_Certificates() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalCertificatesSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_Certificates() => await OpenInDefaultFileHandler(_FinalCertificatesSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_Certificates() => await PolicyFileRepresent.OpenInDefaultFileHandler(_FinalCertificatesSupplementalPolicy);
 
 	#endregion
 
@@ -1013,15 +1013,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				ISGInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				ISGInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (ISGBasedBasePolicy is null)
 		{
-			ISGInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
-				GlobalVars.GetStr("SelectBasePolicyTitle"));
+			ISGInfoBar.WriteWarning(Atlas.GetStr("SelectBasePolicySubtitle"),
+				Atlas.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
@@ -1031,7 +1031,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			ISGElementsAreEnabled = false;
 
-			ISGInfoBar.WriteInfo(GlobalVars.GetStr("CreatingISGBasedSupplementalPolicyMessage"));
+			ISGInfoBar.WriteInfo(Atlas.GetStr("CreatingISGBasedSupplementalPolicyMessage"));
 
 			await Task.Run(async () =>
 			{
@@ -1054,7 +1054,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				else
 				{
 					// Instantiate the supplemental policy
-					finalPolicyObj = Management.Initialize(GlobalVars.ISGOnlySupplementalPolicyPath, null);
+					finalPolicyObj = Management.Initialize(Atlas.ISGOnlySupplementalPolicyPath, null);
 
 					PolicySettingsManager.SetPolicyName(finalPolicyObj, ISGBasedSupplementalPolicyName);
 
@@ -1076,7 +1076,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If the policy is to be deployed
 				if (ISGBasedDeployButton)
 				{
-					ISGInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					ISGInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					// Prepare the ISG services
 					await ConfigureISGServices.Configure();
@@ -1088,7 +1088,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 		catch (Exception ex)
 		{
-			ISGInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			ISGInfoBar.WriteError(ex, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 			errorsOccurred = true;
 		}
 		finally
@@ -1097,11 +1097,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			{
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					ISGInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedISGBasedSupplementalPolicyMessage"));
+					ISGInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedISGBasedSupplementalPolicyMessage"));
 				}
 				else
 				{
-					ISGInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					ISGInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				ISGInfoBarActionButtonVisibility = Visibility.Visible;
@@ -1122,7 +1122,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			ISGElementsAreEnabled = false;
 
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -1151,7 +1151,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal async void OpenInPolicyEditor_ISG() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalISGSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_ISG() => await OpenInDefaultFileHandler(_FinalISGSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_ISG() => await PolicyFileRepresent.OpenInDefaultFileHandler(_FinalISGSupplementalPolicy);
 
 	#endregion
 
@@ -1169,7 +1169,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	#region LISTVIEW IMPLEMENTATIONS Strict Kernel Mode
 
 	// The Column Manager Composition
-	internal ListViewColumnManager<FileIdentity> StrictKernelModeColumnManager { get; }
+	internal readonly ListViewColumnManager<FileIdentity> StrictKernelModeColumnManager;
 
 	#endregion
 
@@ -1219,7 +1219,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			StrictKernelModeElementsAreEnabled = false;
 
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -1259,7 +1259,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			StrictKernelModeElementsAreEnabled = false;
 
 			StrictKernelModeInfoBar.IsClosable = false;
-			StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("ScanningSystemForEvents"));
+			StrictKernelModeInfoBar.WriteInfo(Atlas.GetStr("ScanningSystemForEvents"));
 			StrictKernelModeSettingsExpanderIsExpanded = true;
 
 			// Clear variables responsible for the ListView
@@ -1278,24 +1278,24 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					DateTime lastRebootTime = DateTime.Now - TimeSpan.FromMilliseconds(Environment.TickCount64);
 
 					// Signed kernel-mode files that were run after last reboot
-					Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= lastRebootTime && fileIdentity.SISigningScenario is SiPolicyIntel.SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
+					Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= lastRebootTime && fileIdentity.SISigningScenario is SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
 				}
 				else
 				{
 					// Signed kernel-mode files
-					Output = [.. Output.Where(fileIdentity => fileIdentity.SISigningScenario is SiPolicyIntel.SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
+					Output = [.. Output.Where(fileIdentity => fileIdentity.SISigningScenario is SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
 				}
 			});
 
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count is 0)
 			{
-				StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("NoLogsGeneratedDuringAuditPhase"));
+				StrictKernelModeInfoBar.WriteWarning(Atlas.GetStr("NoLogsGeneratedDuringAuditPhase"));
 				ErrorsOccurred = true;
 				return;
 			}
 
-			StrictKernelModeInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("GeneratedLogsDuringAuditPhase"), Output.Count));
+			StrictKernelModeInfoBar.WriteInfo(string.Format(Atlas.GetStr("GeneratedLogsDuringAuditPhase"), Output.Count));
 
 			// Add the event logs to the List
 			StrictKernelModeScanResultsList.AddRange(Output);
@@ -1311,7 +1311,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredWhileScanningSystem"));
+			StrictKernelModeInfoBar.WriteError(ex, Atlas.GetStr("ErrorOccurredWhileScanningSystem"));
 		}
 		finally
 		{
@@ -1319,7 +1319,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			if (!ErrorsOccurred)
 			{
-				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyScannedSystemForEvents"));
+				StrictKernelModeInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyScannedSystemForEvents"));
 			}
 
 			StrictKernelModeInfoBar.IsClosable = true;
@@ -1338,16 +1338,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 		if (StrictKernelModeScanResults.Count is 0)
 		{
-			StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("StrictKernelModeTeachingTipSubtitleNoItems"),
-				GlobalVars.GetStr("StrictKernelModeTeachingTipTitle"));
+			StrictKernelModeInfoBar.WriteWarning(Atlas.GetStr("StrictKernelModeTeachingTipSubtitleNoItems"),
+				Atlas.GetStr("StrictKernelModeTeachingTipTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(StrictKernelModePolicyName))
 		{
-			StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
-				GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			StrictKernelModeInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"),
+				Atlas.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -1356,15 +1356,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				StrictKernelModeInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (StrictKernelModeBasePolicy is null)
 		{
-			StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
-				GlobalVars.GetStr("SelectBasePolicyTitle"));
+			StrictKernelModeInfoBar.WriteWarning(Atlas.GetStr("SelectBasePolicySubtitle"),
+				Atlas.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
@@ -1379,7 +1379,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			StrictKernelModeInfoBar.IsClosable = false;
 
 			StrictKernelModeInfoBar.WriteInfo(string.Format(
-				GlobalVars.GetStr("CreatingStrictKernelModePolicyMessage"),
+				Atlas.GetStr("CreatingStrictKernelModePolicyMessage"),
 				StrictKernelModeScanResults.Count
 			));
 
@@ -1437,7 +1437,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If user selected to deploy the policy
 				if (StrictKernelModeShouldDeploy)
 				{
-					StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					StrictKernelModeInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalStrictKernelModeSupplementalPolicy.PolicyObj));
 				}
@@ -1446,7 +1446,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			StrictKernelModeInfoBar.WriteError(ex, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
@@ -1456,11 +1456,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedStrictKernelModePolicyMessage"));
+					StrictKernelModeInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedStrictKernelModePolicyMessage"));
 				}
 				else
 				{
-					StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					StrictKernelModeInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 			}
 
@@ -1485,7 +1485,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			StrictKernelModeInfoBar.IsClosable = false;
 
-			StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("ScanningSystemForDrivers"));
+			StrictKernelModeInfoBar.WriteInfo(Atlas.GetStr("ScanningSystemForDrivers"));
 
 			StrictKernelModeSettingsExpanderIsExpanded = true;
 
@@ -1498,7 +1498,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// Since there can be more than one folder due to localizations such as en-US then from each of the folders, the bootres.dll.mui file is added
 
 				// Define the directory path
-				string directoryPath = Path.Combine(GlobalVars.SystemDrive, "Windows", "Boot", "Resources");
+				string directoryPath = Path.Combine(Atlas.SystemDrive, "Windows", "Boot", "Resources");
 
 				// Iterate through each directory in the specified path
 				foreach (string directory in Directory.GetDirectories(directoryPath))
@@ -1507,7 +1507,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					kernelModeDriversList.Add(Path.Combine(directory, "bootres.dll.mui"));
 				}
 
-				string sys32Dir = new(Path.Combine(GlobalVars.SystemDrive, "Windows", "System32"));
+				string sys32Dir = new(Path.Combine(Atlas.SystemDrive, "Windows", "System32"));
 
 				(IEnumerable<string>, int) filesOutput = FileUtility.GetFilesFast(new[] { sys32Dir }, null, [".dll", ".sys"]);
 
@@ -1517,12 +1517,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			if (kernelModeDriversList.Count is 0)
 			{
-				StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("NoKernelModeDriversDetected"));
+				StrictKernelModeInfoBar.WriteWarning(Atlas.GetStr("NoKernelModeDriversDetected"));
 				ErrorsOccurred = true;
 				return;
 			}
 
-			StrictKernelModeInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ScanningKernelModeFilesCount"), kernelModeDriversList.Count));
+			StrictKernelModeInfoBar.WriteInfo(string.Format(Atlas.GetStr("ScanningKernelModeFilesCount"), kernelModeDriversList.Count));
 
 			IEnumerable<FileIdentity> LocalFilesResults = [];
 
@@ -1535,7 +1535,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					DriverAutoDetectionProgressRingValueProgress);
 
 				// Only keep the signed kernel-mode files
-				LocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is SiPolicyIntel.SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
+				LocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
 
 				StrictKernelModeScanResultsList.Clear();
 
@@ -1551,13 +1551,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredScanningDrivers"));
+			StrictKernelModeInfoBar.WriteError(ex, Atlas.GetStr("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
 			if (!ErrorsOccurred)
 			{
-				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyScannedSystemForDrivers"));
+				StrictKernelModeInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyScannedSystemForDrivers"));
 			}
 
 			StrictKernelModeElementsAreEnabled = true;
@@ -1571,7 +1571,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal async void OpenInPolicyEditor_StrictKernelMode() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalStrictKernelModeSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await OpenInDefaultFileHandler(_FinalStrictKernelModeSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await PolicyFileRepresent.OpenInDefaultFileHandler(_FinalStrictKernelModeSupplementalPolicy);
 
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -1584,7 +1584,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings.Value);
 		}
 	}
 
@@ -1820,7 +1820,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		if (lv is null) return;
 
 		int selectedCount = lv.SelectedItems.Count;
-		PFNBasedSelectedItemsCount = string.Format(GlobalVars.GetStr("SelectedAppsCount"), selectedCount);
+		PFNBasedSelectedItemsCount = string.Format(Atlas.GetStr("SelectedAppsCount"), selectedCount);
 
 		PFNBasedAppsListItemsSourceSelectedItems = new(lv.SelectedItems);
 	}
@@ -1861,7 +1861,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			PFNElementsAreEnabled = false;
 
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -1896,16 +1896,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 		if (PFNBasedAppsListItemsSourceSelectedItems.Count is 0)
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.GetStr("PFNBasedSupplementalPolicySubtitle"),
-				GlobalVars.GetStr("PFNBasedSupplementalPolicyTitle"));
+			PFNInfoBar.WriteWarning(Atlas.GetStr("PFNBasedSupplementalPolicySubtitle"),
+				Atlas.GetStr("PFNBasedSupplementalPolicyTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(PFNBasedSupplementalPolicyName))
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
-				GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			PFNInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"),
+				Atlas.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -1914,15 +1914,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				PFNInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				PFNInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (PFNBasePolicy is null)
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
-				GlobalVars.GetStr("SelectBasePolicyTitle"));
+			PFNInfoBar.WriteWarning(Atlas.GetStr("SelectBasePolicySubtitle"),
+				Atlas.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
@@ -1939,7 +1939,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 			PFNInfoBar.IsClosable = false;
 
-			PFNInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPFNSupplementalPolicyMessage"));
+			PFNInfoBar.WriteInfo(Atlas.GetStr("CreatingPFNSupplementalPolicyMessage"));
 
 			PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -2015,7 +2015,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If user selected to deploy the policy
 				if (PFNBasedShouldDeploy)
 				{
-					PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					PFNInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -2025,23 +2025,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, GlobalVars.GetStr("ErrorOccurredScanningDrivers"));
+			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, Atlas.GetStr("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
 			if (PFNBasedCancellableButton.wasCancelled)
 			{
-				PFNInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				PFNInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPFNSupplementalPolicyMessage"));
+					PFNInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedPFNSupplementalPolicyMessage"));
 				}
 				else
 				{
-					PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					PFNInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				PFNInfoBarActionButtonVisibility = Visibility.Visible;
@@ -2060,7 +2060,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal async void OpenInPolicyEditor_PFN() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalPFNSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_FinalPFNSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_PFN() => await PolicyFileRepresent.OpenInDefaultFileHandler(_FinalPFNSupplementalPolicy);
 
 	/// <summary>
 	/// Event handler for copying app details to clipboard from the context menu.
@@ -2229,7 +2229,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			CustomFilePathRulesElementsAreEnabled = false;
 
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -2269,30 +2269,30 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (CustomPatternBasedFileRuleBasedBasePolicy is null)
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
-				GlobalVars.GetStr("SelectBasePolicyTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("SelectBasePolicySubtitle"),
+				Atlas.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(SupplementalPolicyCustomPatternBasedCustomPatternTextBox))
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("EnterCustomPatternSubtitle"),
-				GlobalVars.GetStr("EnterCustomPatternTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("EnterCustomPatternSubtitle"),
+				Atlas.GetStr("EnterCustomPatternTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedSupplementalPolicyName))
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
-				GlobalVars.GetStr("ChoosePolicyNameTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("ChoosePolicyNameSubtitle"),
+				Atlas.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -2307,7 +2307,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		{
 			CustomFilePathRulesElementsAreEnabled = false;
 
-			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPatternBasedFileRuleMessage"));
+			CustomFilePathRulesInfoBar.WriteInfo(Atlas.GetStr("CreatingPatternBasedFileRuleMessage"));
 
 			CustomFilePathRulesInfoBar.IsClosable = false;
 
@@ -2370,7 +2370,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-					CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
+					CustomFilePathRulesInfoBar.WriteInfo(Atlas.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(_FinalCustomPatternBasedFileRuleSupplementalPolicy.PolicyObj));
 				}
@@ -2378,23 +2378,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, Atlas.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (PatternBasedFileRuleCancellableButton.wasCancelled)
 			{
-				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
+				CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
 				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPatternBasedFileRuleMessage"));
+					CustomFilePathRulesInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedPatternBasedFileRuleMessage"));
 				}
 				else
 				{
-					CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
+					CustomFilePathRulesInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyUpdatedSelectedPolicyMessage"));
 				}
 
 				CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
@@ -2425,7 +2425,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_FinalCustomPatternBasedFileRuleSupplementalPolicy);
 
-	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_FinalCustomPatternBasedFileRuleSupplementalPolicy);
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await PolicyFileRepresent.OpenInDefaultFileHandler(_FinalCustomPatternBasedFileRuleSupplementalPolicy);
 
 	#endregion
 
@@ -2474,7 +2474,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{

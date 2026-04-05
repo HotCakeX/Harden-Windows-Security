@@ -33,7 +33,6 @@ using Windows.Foundation;
 using Windows.Graphics;
 
 #if HARDEN_SYSTEM_SECURITY
-using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 #if APP_CONTROL_MANAGER
@@ -95,7 +94,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				UpdateSystemBackDrop();
 			}
 		}
-	} = (int)Enum.Parse<BackDropComboBoxItems>(GlobalVars.Settings.BackDropBackground);
+	} = (int)Enum.Parse<BackDropComboBoxItems>(Atlas.Settings.BackDropBackground);
 
 	/// <summary>
 	/// Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind BaseAlt.
@@ -108,7 +107,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// The state of the OpenConfigDirectoryButton button which is on the Sidebar
 	/// </summary>
-	internal bool OpenConfigDirectoryButtonState { get; set => SP(ref field, value); } = GlobalVars.IsElevated;
+	internal bool OpenConfigDirectoryButtonState { get; set => SP(ref field, value); } = Atlas.IsElevated;
 
 	/// <summary>
 	/// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
@@ -152,7 +151,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
 	{
 		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
-		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+		_ = Atlas.AppDispatcher.TryEnqueue(() =>
 		{
 			// Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
 			InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
@@ -167,7 +166,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	{
 		_ = Process.Start(new ProcessStartInfo
 		{
-			FileName = GlobalVars.UserConfigDir,
+			FileName = Atlas.UserConfigDir,
 			UseShellExecute = true
 		});
 	}
@@ -201,7 +200,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 
 		// Save the selected option (using the enum's name)
-		GlobalVars.Settings.BackDropBackground = selection.ToString();
+		Atlas.Settings.BackDropBackground = selection.ToString();
 	}
 
 	/// <summary>
@@ -246,7 +245,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <param name="flowD">The Flow Direction to set.</param>
 	internal static void SetCaptionButtonsFlowDirection(FlowDirection flowD)
 	{
-		IntPtr exStyle = NativeMethods.GetWindowLongPtrW(GlobalVars.hWnd, GWL_EXSTYLE);
+		IntPtr exStyle = NativeMethods.GetWindowLongPtrW(Atlas.hWnd, GWL_EXSTYLE);
 
 		if (flowD is FlowDirection.LeftToRight)
 		{
@@ -257,7 +256,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			exStyle |= WS_EX_LAYOUTRTL;
 		}
 
-		_ = NativeMethods.SetWindowLongPtrW(GlobalVars.hWnd, GWL_EXSTYLE, exStyle);
+		_ = NativeMethods.SetWindowLongPtrW(Atlas.hWnd, GWL_EXSTYLE, exStyle);
 	}
 
 	/// <summary>
@@ -266,7 +265,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static bool IsWindowRTL()
 	{
-		IntPtr exStyle = NativeMethods.GetWindowLongPtrW(GlobalVars.hWnd, GWL_EXSTYLE);
+		IntPtr exStyle = NativeMethods.GetWindowLongPtrW(Atlas.hWnd, GWL_EXSTYLE);
 		return (exStyle.ToInt32() & WS_EX_LAYOUTRTL) != 0;
 	}
 

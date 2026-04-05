@@ -22,7 +22,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -1105,7 +1104,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 				if (success)
 				{
-					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+					_ = Atlas.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitStartTypeChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Start Type for {svm.Item.ServiceName}.");
@@ -1133,7 +1132,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 					TextWrapping = TextWrapping.Wrap
 				},
 				PrimaryButtonText = "Yes, I'm Sure.",
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -1163,7 +1162,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 				if (ModifyServiceConfig(svm.Item.ServiceName, newServiceType, NativeMethods.SERVICE_NO_CHANGE, NativeMethods.SERVICE_NO_CHANGE))
 				{
-					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+					_ = Atlas.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitServiceTypeChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Service Type for {svm.Item.ServiceName}.");
@@ -1187,7 +1186,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				uint newErrorControl = (uint)svm.SelectedErrorControlIndex;
 				if (ModifyServiceConfig(svm.Item.ServiceName, NativeMethods.SERVICE_NO_CHANGE, NativeMethods.SERVICE_NO_CHANGE, newErrorControl))
 				{
-					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+					_ = Atlas.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitErrorControlChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Error Control for {svm.Item.ServiceName}.");
@@ -1217,7 +1216,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 					TextWrapping = TextWrapping.Wrap
 				},
 				PrimaryButtonText = "Yes, I'm Sure.",
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -1235,7 +1234,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			{
 				if (SetLaunchProtected(svm.Item.ServiceName, newLaunchProtected))
 				{
-					_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+					_ = Atlas.AppDispatcher.TryEnqueue(() =>
 					{
 						svm.CommitLaunchProtectedChange();
 						MainInfoBar.WriteSuccess($"Successfully updated Launch Protected for {svm.Item.ServiceName}.");
@@ -1318,7 +1317,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 					TextWrapping = TextWrapping.Wrap
 				},
 				PrimaryButtonText = "Delete",
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -1350,7 +1349,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 						{
 							if (NativeMethods.DeleteService(hService))
 							{
-								_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+								_ = Atlas.AppDispatcher.TryEnqueue(() =>
 								{
 									MainInfoBar.WriteSuccess($"Successfully deleted service {svm.Item.ServiceName}.");
 									RefreshList();
@@ -1400,7 +1399,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	private void RefreshList()
 	{
 		Thread.Sleep(500);
-		_ = GlobalVars.AppDispatcher.TryEnqueue(LoadServices_Click);
+		_ = Atlas.AppDispatcher.TryEnqueue(LoadServices_Click);
 	}
 
 	internal async void StartService_Click(object sender, RoutedEventArgs e)
@@ -1443,6 +1442,13 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 				}
 			});
 		}
+	}
+
+	internal async void LoadServicesButton_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	{
+		// Set the focus to the LoadServices button when the page loads and if the services haven't been retrieved yet.
+		if (AllServices.Count == 0)
+			_ = await FocusManager.TryFocusAsync((Button)sender, Microsoft.UI.Xaml.FocusState.Keyboard);
 	}
 }
 

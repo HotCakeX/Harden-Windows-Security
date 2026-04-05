@@ -32,6 +32,6 @@ internal sealed partial class WindowsNetworking : Page, CommonCore.UI.IPageHeade
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("WindowsNetworkingPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("WindowsNetworkingPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Networking");
 }

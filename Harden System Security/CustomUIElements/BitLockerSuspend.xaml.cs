@@ -17,13 +17,12 @@
 
 using System.ComponentModel;
 using AppControlManager.CustomUIElements;
-using AppControlManager.ViewModels;
 
 namespace HardenSystemSecurity.CustomUIElements;
 
 internal sealed partial class BitLockerSuspend : ContentDialogV2, INPCImplant
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
+	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	internal BitLockerSuspend() => InitializeComponent();
 

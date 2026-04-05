@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.1.240821.1+077322fa26
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile Validate.json
-//       
+//
 //       Input file:
 //           Validate.json (144665 bytes created 10:21+02:00 Jan 3 2025)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //
@@ -254,7 +254,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - - Shape tree root for layer: Frame 
+			// - - - Shape tree root for layer: Frame
 			// - -  Offset:<-0.25, -0.25>
 			CanvasGeometry Geometry_0()
 			{
@@ -299,7 +299,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - - Shape tree root for layer: File 
+			// - - - Shape tree root for layer: File
 			// - -  Offset:<10.416, 6.4160004>
 			CanvasGeometry Geometry_1()
 			{
@@ -319,7 +319,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - - Shape tree root for layer: File 
+			// - - - Shape tree root for layer: File
 			// - -  Offset:<10.416, 6.4160004>
 			CanvasGeometry Geometry_2()
 			{
@@ -388,7 +388,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - - Opacity for layer: Red File 
+			// - - - Opacity for layer: Red File
 			// - -  Offset:<10.448999, 6.450001>
 			CanvasGeometry Geometry_6()
 			{
@@ -409,7 +409,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - - Opacity for layer: Red File 
+			// - - - Opacity for layer: Red File
 			// - -  Offset:<10.448999, 6.450001>
 			CanvasGeometry Geometry_7()
 			{
@@ -444,7 +444,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - - - Opacity for layer: Line 
+			// - - - - Opacity for layer: Line
 			// - - ShapeGroup: Group 1 Offset:<24.25, 1.584>
 			CanvasGeometry Geometry_9()
 			{
@@ -463,7 +463,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Opacity for layer: Red File 
+			// - Opacity for layer: Red File
 			// Offset:<10.448999, 6.450001>
 			CompositionColorBrush ColorBrush_AlmostDarkSalmon_FFEE9A9A()
 			{
@@ -477,21 +477,21 @@ namespace AnimatedVisuals
 					: _colorBrush_AlmostLightCoral_FFE47373;
 			}
 
-			// - Shape tree root for layer: File 
+			// - Shape tree root for layer: File
 			// Offset:<10.416, 6.4160004>
 			CompositionColorBrush ColorBrush_AlmostLightCyan_FFE0F5FD()
 			{
 				return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xE0, 0xF5, 0xFD));
 			}
 
-			// - Shape tree root for layer: File 
+			// - Shape tree root for layer: File
 			// Offset:<10.416, 6.4160004>
 			CompositionColorBrush ColorBrush_AlmostLightSkyBlue_FF90C9F8()
 			{
 				return _c.CreateColorBrush(Color.FromArgb(0xFF, 0x90, 0xC9, 0xF8));
 			}
 
-			// - - Opacity for layer: Line 
+			// - - Opacity for layer: Line
 			// ShapeGroup: Group 1 Offset:<24.25, 1.584>
 			CompositionColorBrush ColorBrush_AlmostOrangeRed_FFFF3C00()
 			{
@@ -505,7 +505,7 @@ namespace AnimatedVisuals
 					: _colorBrush_AlmostPaleGreen_FF9FFFA2;
 			}
 
-			// - Opacity for layer: Red File 
+			// - Opacity for layer: Red File
 			// Offset:<10.448999, 6.450001>
 			CompositionColorBrush ColorBrush_AlmostPink_FFFFCDD2()
 			{
@@ -519,7 +519,7 @@ namespace AnimatedVisuals
 					: _colorBrush_AlmostRoyalBlue_FF1876D2;
 			}
 
-			// - Shape tree root for layer: Frame 
+			// - Shape tree root for layer: Frame
 			// Offset:<-0.25, -0.25>
 			CompositionColorBrush ColorBrush_AlmostSilver_FFAFBDC5()
 			{
@@ -589,21 +589,21 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Shape tree root for layer: Frame 
+			// - Shape tree root for layer: Frame
 			// Offset:<-0.25, -0.25>
 			CompositionPathGeometry PathGeometry_0()
 			{
 				return _c.CreatePathGeometry(new CompositionPath(Geometry_0()));
 			}
 
-			// - Shape tree root for layer: File 
+			// - Shape tree root for layer: File
 			// Offset:<10.416, 6.4160004>
 			CompositionPathGeometry PathGeometry_1()
 			{
 				return _c.CreatePathGeometry(new CompositionPath(Geometry_1()));
 			}
 
-			// - Shape tree root for layer: File 
+			// - Shape tree root for layer: File
 			// Offset:<10.416, 6.4160004>
 			CompositionPathGeometry PathGeometry_2()
 			{
@@ -624,14 +624,14 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Opacity for layer: Red File 
+			// - Opacity for layer: Red File
 			// Offset:<10.448999, 6.450001>
 			CompositionPathGeometry PathGeometry_5()
 			{
 				return _c.CreatePathGeometry(new CompositionPath(Geometry_6()));
 			}
 
-			// - Opacity for layer: Red File 
+			// - Opacity for layer: Red File
 			// Offset:<10.448999, 6.450001>
 			CompositionPathGeometry PathGeometry_6()
 			{
@@ -645,14 +645,14 @@ namespace AnimatedVisuals
 					: _pathGeometry_7;
 			}
 
-			// - - Opacity for layer: Line 
+			// - - Opacity for layer: Line
 			// ShapeGroup: Group 1 Offset:<24.25, 1.584>
 			CompositionPathGeometry PathGeometry_8()
 			{
 				return _c.CreatePathGeometry(new CompositionPath(Geometry_9()));
 			}
 
-			// Shape tree root for layer: Frame 
+			// Shape tree root for layer: Frame
 			// ShapeGroup: Group 1 Offset:<24.25, 24.25>
 			CompositionSpriteShape SpriteShape_00()
 			{
@@ -662,7 +662,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Shape tree root for layer: File 
+			// Shape tree root for layer: File
 			// Path 1
 			CompositionSpriteShape SpriteShape_01()
 			{
@@ -672,7 +672,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Shape tree root for layer: File 
+			// Shape tree root for layer: File
 			// Path 1
 			CompositionSpriteShape SpriteShape_02()
 			{
@@ -682,7 +682,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Shape tree root for layer: File 
+			// Shape tree root for layer: File
 			// Path 1
 			CompositionSpriteShape SpriteShape_03()
 			{
@@ -692,7 +692,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Shape tree root for layer: File 
+			// Shape tree root for layer: File
 			// Path 1
 			CompositionSpriteShape SpriteShape_04()
 			{
@@ -702,7 +702,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Shape tree root for layer: File 
+			// Shape tree root for layer: File
 			// Path 1
 			CompositionSpriteShape SpriteShape_05()
 			{
@@ -722,7 +722,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Opacity for layer: Red File 
+			// Opacity for layer: Red File
 			// Path 1
 			CompositionSpriteShape SpriteShape_07()
 			{
@@ -732,7 +732,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Opacity for layer: Red File 
+			// Opacity for layer: Red File
 			// Path 1
 			CompositionSpriteShape SpriteShape_08()
 			{
@@ -742,7 +742,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Opacity for layer: Red File 
+			// Opacity for layer: Red File
 			// Path 1
 			CompositionSpriteShape SpriteShape_09()
 			{
@@ -752,7 +752,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Opacity for layer: Red File 
+			// Opacity for layer: Red File
 			// Path 1
 			CompositionSpriteShape SpriteShape_10()
 			{
@@ -762,7 +762,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Opacity for layer: Red File 
+			// Opacity for layer: Red File
 			// Path 1
 			CompositionSpriteShape SpriteShape_11()
 			{
@@ -782,7 +782,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Opacity for layer: Line 
+			// - Opacity for layer: Line
 			// Path 1
 			CompositionSpriteShape SpriteShape_13()
 			{
@@ -927,7 +927,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// Opacity for layer: Line 
+			// Opacity for layer: Line
 			// Layer opacity animation
 			ScalarKeyFrameAnimation OpacityScalarAnimation_0_to_0()
 			{
@@ -1055,7 +1055,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Opacity for layer: Line 
+			// - Opacity for layer: Line
 			// Offset
 			Vector2KeyFrameAnimation OffsetVector2Animation()
 			{
@@ -1072,7 +1072,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Opacity for layer: Line 
+			// - Opacity for layer: Line
 			// Scale
 			Vector2KeyFrameAnimation ScaleVector2Animation()
 			{

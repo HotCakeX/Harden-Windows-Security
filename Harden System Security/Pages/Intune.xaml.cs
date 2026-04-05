@@ -31,6 +31,6 @@ internal sealed partial class Intune : Page, CommonCore.UI.IPageHeaderProvider
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("IntunePageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("IntunePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security");
 }

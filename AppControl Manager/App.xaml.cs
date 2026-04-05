@@ -65,13 +65,13 @@ public sealed partial class App : Application
 		InitializeComponent();
 
 		// Capture the dispatcher queue as early as possible.
-		GlobalVars.AppDispatcher = DispatcherQueue.GetForCurrentThread();
+		Atlas.AppDispatcher = DispatcherQueue.GetForCurrentThread();
 
 		// Set the language of the application to the user's preferred language
-		ApplicationLanguages.PrimaryLanguageOverride = GlobalVars.Settings.ApplicationGlobalLanguage;
+		ApplicationLanguages.PrimaryLanguageOverride = Atlas.Settings.ApplicationGlobalLanguage;
 
 		// Initialize logging system
-		Logger.Configure(logsDirectory: GlobalVars.LogsDirectory, appName: GlobalVars.AppName);
+		Logger.Configure(logsDirectory: Atlas.LogsDirectory, appName: Atlas.AppName);
 
 		// to handle unhandled exceptions
 		UnhandledException += App_UnhandledException;
@@ -84,7 +84,7 @@ public sealed partial class App : Application
 		// Subscribe to UnobservedTaskException events
 		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-		Logger.Write(string.Format(GlobalVars.GetStr("AppStartupMessage"), Environment.Version));
+		Logger.Write(string.Format(Atlas.GetStr("AppStartupMessage"), Environment.Version));
 
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
 		Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
@@ -103,8 +103,8 @@ public sealed partial class App : Application
 		try
 		{
 			// Check for the SoundSetting in the local settings
-			ElementSoundPlayer.State = GlobalVars.Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
-			ElementSoundPlayer.SpatialAudioMode = GlobalVars.Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
+			ElementSoundPlayer.State = Atlas.Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
+			ElementSoundPlayer.SpatialAudioMode = Atlas.Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
 		}
 		catch (Exception ex)
 		{
@@ -214,20 +214,20 @@ public sealed partial class App : Application
 				SizeInt32 size = MainWindow.AppWindow.Size;
 
 				// Save to window width and height to the app settings
-				GlobalVars.Settings.MainWindowWidth = size.Width;
-				GlobalVars.Settings.MainWindowHeight = size.Height;
+				Atlas.Settings.MainWindowWidth = size.Width;
+				Atlas.Settings.MainWindowHeight = size.Height;
 
 				WINDOWPLACEMENT windowPlacement = new();
 
 				// Check if the window is maximized
-				_ = NativeMethods.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+				_ = NativeMethods.GetWindowPlacement(Atlas.hWnd, ref windowPlacement);
 
 				// Save the maximized status of the window before closing to the app settings
-				GlobalVars.Settings.MainWindowIsMaximized = windowPlacement.showCmd is ShowWindowCommands.SW_SHOWMAXIMIZED;
+				Atlas.Settings.MainWindowIsMaximized = windowPlacement.showCmd is ShowWindowCommands.SW_SHOWMAXIMIZED;
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("WindowSizeSaveErrorMessage"), ex.Message));
+				Logger.Write(string.Format(Atlas.GetStr("WindowSizeSaveErrorMessage"), ex.Message));
 			}
 		}
 
@@ -255,9 +255,9 @@ public sealed partial class App : Application
 				{
 					using AppControlManager.CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
-						Title = GlobalVars.GetStr("ErrorDialogTitle"),
-						Content = string.Format(GlobalVars.GetStr("ErrorDialogContent"), ex.Message),
-						CloseButtonText = GlobalVars.GetStr("OK"),
+						Title = Atlas.GetStr("ErrorDialogTitle"),
+						Content = string.Format(Atlas.GetStr("ErrorDialogContent"), ex.Message),
+						CloseButtonText = Atlas.GetStr("OK"),
 					};
 
 					// Show the dialog

@@ -95,6 +95,7 @@
 
                     <!-- Load Services -->
                     <Button Style="{StaticResource AccentButtonStyle}"
+                            Loaded="{x:Bind ViewModel.LoadServicesButton_Loaded}"
                             VerticalAlignment="Center"
                             x:Uid="LoadServicesButton"
                             Click="{x:Bind ViewModel.LoadServices_Click}"

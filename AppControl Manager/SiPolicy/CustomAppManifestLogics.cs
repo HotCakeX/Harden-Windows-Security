@@ -41,33 +41,33 @@ internal static class CustomAppManifestLogics
 		{
 			XmlDocument xmlDoc = new();
 			xmlDoc.Load(filePath);
-			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
+			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(Atlas.GetStr("InvalidXmlMissingRootElementValidationError"));
 		}
 		else if (stream != null)
 		{
 			XmlDocument xmlDoc = new();
 			xmlDoc.Load(stream);
-			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
+			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(Atlas.GetStr("InvalidXmlMissingRootElementValidationError"));
 		}
 		else
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("NoFilePathOrStreamProvidedValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("NoFilePathOrStreamProvidedValidationError"));
 		}
 
 		if (!string.Equals(root.LocalName, "AppManifest", StringComparison.OrdinalIgnoreCase) ||
 			!string.Equals(root.NamespaceURI, NamespaceUri, StringComparison.OrdinalIgnoreCase))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("InvalidXmlRootElementNamespaceValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("InvalidXmlRootElementNamespaceValidationError"));
 		}
 
 		if (!root.HasAttribute("Id"))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("AppManifestMissingIdAttributeValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("AppManifestMissingIdAttributeValidationError"));
 		}
 		string id = root.GetAttribute("Id");
 		if (string.IsNullOrEmpty(id))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("AppManifestEmptyIdAttributeValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("AppManifestEmptyIdAttributeValidationError"));
 		}
 
 		List<SettingDefinition> settings = [];
@@ -88,17 +88,17 @@ internal static class CustomAppManifestLogics
 	{
 		if (!elem.HasAttribute("Name"))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionMissingNameAttributeValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("SettingDefinitionMissingNameAttributeValidationError"));
 		}
 		string name = elem.GetAttribute("Name");
 		if (string.IsNullOrEmpty(name))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionEmptyNameAttributeValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("SettingDefinitionEmptyNameAttributeValidationError"));
 		}
 
 		if (!elem.HasAttribute("Type"))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionMissingTypeAttributeValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("SettingDefinitionMissingTypeAttributeValidationError"));
 		}
 		string typeStr = elem.GetAttribute("Type");
 		if (!Enum.TryParse(typeStr, out SettingType type))
@@ -108,7 +108,7 @@ internal static class CustomAppManifestLogics
 
 		if (!elem.HasAttribute("IgnoreAuditPolicies"))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionMissingIgnoreAuditPoliciesAttributeValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("SettingDefinitionMissingIgnoreAuditPoliciesAttributeValidationError"));
 		}
 		string ignoreAuditPoliciesStr = elem.GetAttribute("IgnoreAuditPolicies");
 		if (!bool.TryParse(ignoreAuditPoliciesStr, out bool ignoreAuditPolicies))
@@ -134,12 +134,12 @@ internal static class CustomAppManifestLogics
 	{
 		if (manifest is null)
 		{
-			throw new ArgumentNullException(nameof(manifest), GlobalVars.GetStr("AppManifestObjectNullValidationError"));
+			throw new ArgumentNullException(nameof(manifest), Atlas.GetStr("AppManifestObjectNullValidationError"));
 		}
 
 		if (string.IsNullOrEmpty(manifest.Id))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("AppManifestPropertyIdNullOrEmptyValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("AppManifestPropertyIdNullOrEmptyValidationError"));
 		}
 
 		XmlDocument xmlDoc = new();
@@ -155,7 +155,7 @@ internal static class CustomAppManifestLogics
 		{
 			if (string.IsNullOrEmpty(setting.Name))
 			{
-				throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionPropertyNameNullOrEmptyValidationError"));
+				throw new InvalidOperationException(Atlas.GetStr("SettingDefinitionPropertyNameNullOrEmptyValidationError"));
 			}
 
 			XmlElement settingElem = xmlDoc.CreateElement("SettingDefinition", NamespaceUri);

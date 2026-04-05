@@ -55,7 +55,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
 
-namespace HardenSystemSecurity.CustomUIElements.HomePageCarousel;
+namespace AppControlManager.CustomUIElements.HomePageCarousel;
 
 internal sealed partial class HeaderCarousel : UserControl
 {

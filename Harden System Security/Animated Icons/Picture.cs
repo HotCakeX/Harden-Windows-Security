@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.2.250604.1+b02a3ee244
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile picture.json
-//       
+//
 //       Input file:
 //           picture.json (77514 bytes created 13:51+02:00 Feb 19 2026)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //
@@ -110,7 +110,7 @@ namespace AnimatedVisuals
         {
             diagnostics = null;
 
-            var res = 
+            var res =
                 new Picture_AnimatedVisual(
                     compositor
                     );

@@ -21,7 +21,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -118,7 +117,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 
 	internal void BrowseFiles_Click(object sender, RoutedEventArgs e)
 	{
-		List<string> files = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> files = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 		foreach (string file in CollectionsMarshal.AsSpan(files))
 		{
 			SelectedFiles.Add(file);
@@ -272,7 +271,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 					TextWrapping = TextWrapping.Wrap
 				},
 				PrimaryButtonText = "Delete Original",
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Close
 			};
 
@@ -403,7 +402,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 					Title = "Confirm Group Deletion",
 					Content = contentPanel,
 					PrimaryButtonText = "Delete All",
-					CloseButtonText = GlobalVars.GetStr("Cancel"),
+					CloseButtonText = Atlas.GetStr("Cancel"),
 					DefaultButton = ContentDialogButton.Close
 				};
 
@@ -494,7 +493,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 				Title = "Confirm Deletion",
 				Content = "Are you sure you want to delete all duplicate photos? This action cannot be undone.",
 				PrimaryButtonText = "Yes, Delete All",
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Close
 			};
 

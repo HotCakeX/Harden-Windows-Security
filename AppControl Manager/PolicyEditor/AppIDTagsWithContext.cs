@@ -16,6 +16,7 @@
 //
 
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.PolicyEditor;
 
@@ -24,8 +25,8 @@ namespace AppControlManager.PolicyEditor;
 /// </summary>
 /// <param name="context"></param>
 /// <param name="appIDTag"></param>
-internal sealed class AppIDTagsWithContext(SiPolicyIntel.SSType context, AppIDTag appIDTag)
+internal sealed class AppIDTagsWithContext(SSType context, AppIDTag appIDTag)
 {
-	internal SiPolicyIntel.SSType Context => context;
+	internal SSType Context => context;
 	internal AppIDTag AppIDTag => appIDTag;
 }

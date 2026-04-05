@@ -17,8 +17,8 @@
 
 using System.Security.Cryptography.X509Certificates;
 using AppControlManager.Main;
-using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.SiPolicyIntel;
 

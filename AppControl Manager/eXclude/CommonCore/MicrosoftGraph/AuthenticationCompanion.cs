@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using Microsoft.Identity.Client;
 using Microsoft.UI.Xaml;
 
@@ -253,7 +252,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 			CancelAndDisposeCts();
 
-			_InfoBar.WriteInfo(GlobalVars.GetStr("SignInProcessCancelledMessage"));
+			_InfoBar.WriteInfo(Atlas.GetStr("SignInProcessCancelledMessage"));
 		}
 		finally
 		{
@@ -275,7 +274,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			{
 				await Main.SignOut(ListViewSelectedAccount);
 
-				_InfoBar.WriteInfo(GlobalVars.GetStr("SuccessfullyLoggedOutSelectedAccountMessage"));
+				_InfoBar.WriteInfo(Atlas.GetStr("SuccessfullyLoggedOutSelectedAccountMessage"));
 			}
 		}
 		finally
@@ -296,7 +295,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		if (CurrentActiveAccount is not null)
 		{
 			_InfoBar.WriteSuccess(string.Format(
-				GlobalVars.GetStr("SuccessfullySetActiveAccountMessage"),
+				Atlas.GetStr("SuccessfullySetActiveAccountMessage"),
 				CurrentActiveAccount.Username));
 		}
 	}
@@ -392,7 +391,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		{
 			SignInButtonState = false;
 
-			_InfoBar.WriteInfo(GlobalVars.GetStr("SigningIntoMSGraphMessage"));
+			_InfoBar.WriteInfo(Atlas.GetStr("SigningIntoMSGraphMessage"));
 
 			(bool, AuthenticatedAccounts?) signInResult = await Main.SignIn(
 				AuthenticationContextComboBoxSelectedItem,
@@ -404,21 +403,21 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			{
 				CurrentActiveAccount = signInResult.Item2;
 
-				_InfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullySignedIntoMSGraphMessage"));
+				_InfoBar.WriteSuccess(Atlas.GetStr("SuccessfullySignedIntoMSGraphMessage"));
 			}
 		}
 		catch (OperationCanceledException)
 		{
-			_InfoBar.WriteWarning(GlobalVars.GetStr("SignInProcessCancelledByUserMessage"));
+			_InfoBar.WriteWarning(Atlas.GetStr("SignInProcessCancelledByUserMessage"));
 		}
 		// Specifically for WAM
 		catch (MsalClientException ex) when (string.Equals(ex.ErrorCode, "authentication_canceled", StringComparison.OrdinalIgnoreCase))
 		{
-			_InfoBar.WriteWarning(GlobalVars.GetStr("SignInProcessCancelledByUserMessage"));
+			_InfoBar.WriteWarning(Atlas.GetStr("SignInProcessCancelledByUserMessage"));
 		}
 		catch (Exception ex)
 		{
-			_InfoBar.WriteError(ex, GlobalVars.GetStr("ErrorSigningIntoMSGraphMessage"));
+			_InfoBar.WriteError(ex, Atlas.GetStr("ErrorSigningIntoMSGraphMessage"));
 		}
 		finally
 		{

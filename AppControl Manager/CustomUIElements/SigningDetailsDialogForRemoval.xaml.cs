@@ -19,9 +19,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
+using AppControlManager.SiPolicyIntel;
 using AppControlManager.ViewModels;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -254,7 +255,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			// Disable UI elements during verification
 			DisableUIElements();
 
-			VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("VerifyButtonText");
+			VerifyButtonContentTextBlock.Text = Atlas.GetStr("VerifyButtonText");
 
 			VerifyButtonProgressRing.Visibility = Visibility.Visible;
 
@@ -267,19 +268,19 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (string.IsNullOrWhiteSpace(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.GetStr("PleaseSelectCertificateFileMessage"));
+				ShowTeachingTip(Atlas.GetStr("PleaseSelectCertificateFileMessage"));
 				return;
 			}
 
 			if (!File.Exists(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.GetStr("CertificateFilePathNotExistMessage"));
+				ShowTeachingTip(Atlas.GetStr("CertificateFilePathNotExistMessage"));
 				return;
 			}
 
 			if (!string.Equals(Path.GetExtension(CertFilePathTextBox.Text), ".cer", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip(GlobalVars.GetStr("CertificateExtensionInvalidMessage"));
+				ShowTeachingTip(Atlas.GetStr("CertificateExtensionInvalidMessage"));
 				return;
 			}
 
@@ -289,13 +290,13 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (string.IsNullOrWhiteSpace(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.GetStr("PleaseSelectCertificateCommonNameMessage"));
+				ShowTeachingTip(Atlas.GetStr("PleaseSelectCertificateCommonNameMessage"));
 				return;
 			}
 
 			if (!CertCommonNames.Contains(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.GetStr("CertificateCommonNameNotFoundMessage"));
+				ShowTeachingTip(Atlas.GetStr("CertificateCommonNameNotFoundMessage"));
 				return;
 			}
 
@@ -312,13 +313,13 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 				if (!File.Exists(XMLPolicyFileTextBox.Text))
 				{
-					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyFilePathNotExistMessage"));
+					ShowTeachingTip(Atlas.GetStr("XmlPolicyFilePathNotExistMessage"));
 					return;
 				}
 
 				if (!string.Equals(Path.GetExtension(XMLPolicyFileTextBox.Text), ".xml", StringComparison.OrdinalIgnoreCase))
 				{
-					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyExtensionInvalidMessage"));
+					ShowTeachingTip(Atlas.GetStr("XmlPolicyExtensionInvalidMessage"));
 					return;
 				}
 
@@ -340,19 +341,19 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 				if (possibleDeployedPolicy is null)
 				{
-					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotDeployedMessage"));
+					ShowTeachingTip(Atlas.GetStr("XmlPolicyNotDeployedMessage"));
 					return;
 				}
 
 				if (!string.Equals(policyObject.PolicyID, $"{{{policyIDBeingRemoved}}}", StringComparison.OrdinalIgnoreCase))
 				{
-					ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotBeingRemovedMessage"));
+					ShowTeachingTip(Atlas.GetStr("XmlPolicyNotBeingRemovedMessage"));
 					return;
 				}
 
 				if (policyObject.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
 				{
-					ShowTeachingTip(GlobalVars.GetStr("SupplementalPoliciesRemovalMessage"));
+					ShowTeachingTip(Atlas.GetStr("SupplementalPoliciesRemovalMessage"));
 					return;
 				}
 
@@ -367,7 +368,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 				if (!certIsUpdatePolicySigner)
 				{
-					ShowTeachingTip(GlobalVars.GetStr("CertificateNotInPolicyRemovalMessage"));
+					ShowTeachingTip(Atlas.GetStr("CertificateNotInPolicyRemovalMessage"));
 					return;
 				}
 
@@ -451,7 +452,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			}
 			else
 			{
-				VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("VerificationSuccessfulText");
+				VerifyButtonContentTextBlock.Text = Atlas.GetStr("VerificationSuccessfulText");
 			}
 
 			VerificationRunning = false;
@@ -463,7 +464,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// </summary>
 	private void CertFileBrowseButton_Click()
 	{
-		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.CertificatePickerFilter);
+		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(Atlas.CertificatePickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFiles))
 		{
@@ -477,7 +478,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// </summary>
 	private void XMLPolicyFileBrowseButton_Click()
 	{
-		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFiles))
 		{

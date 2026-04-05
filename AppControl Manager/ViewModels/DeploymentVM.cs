@@ -43,10 +43,10 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
-		if (GlobalVars.IsOlderThan24H2)
+		if (Atlas.IsOlderThan24H2)
 		{
 			DeploySignedXMLButtonIsEnabled = false;
-			DeploySignedXMLButtonContentTextBlock = GlobalVars.GetStr("RequiresWindows1124H2");
+			DeploySignedXMLButtonContentTextBlock = Atlas.GetStr("RequiresWindows1124H2");
 		}
 		else
 		{
@@ -67,7 +67,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	internal Visibility UnsignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility SignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = GlobalVars.GetStr("LocalDeploymentActive");
+	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = Atlas.GetStr("LocalDeploymentActive");
 
 	#region Visual State Properties
 
@@ -80,8 +80,8 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	internal string DeploymentModeIcon { get; set => SP(ref field, value); } = "\uE770"; // Default Local
 
 	// Properties for "Local Only" features - Always Orange Gradient
-	internal Brush LocalOnlyBorderBrush { get; }
-	internal Brush LocalOnlyHeaderForeground { get; }
+	internal readonly Brush LocalOnlyBorderBrush;
+	internal readonly Brush LocalOnlyHeaderForeground;
 
 	#endregion
 
@@ -109,7 +109,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// </summary>
 	internal bool AreOnlineFeaturesEnabled { get; set => SP(ref field, value); }
 
-	internal string DeploySignedXMLButtonContentTextBlock { get; set => SP(ref field, value); } = GlobalVars.GetStr("ButtonContentDeploy");
+	internal string DeploySignedXMLButtonContentTextBlock { get; set => SP(ref field, value); } = Atlas.GetStr("ButtonContentDeploy");
 	internal string DeploySignedXMLButtonFontIcon { get; set => SP(ref field, value); } = "\uE8B6";
 
 	internal bool SignOnlyNoDeployToggleSwitch
@@ -118,7 +118,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		{
 			if (SP(ref field, value))
 			{
-				DeploySignedXMLButtonContentTextBlock = field ? GlobalVars.GetStr("ButtonContentSignOnly") : GlobalVars.GetStr("ButtonContentDeploy");
+				DeploySignedXMLButtonContentTextBlock = field ? Atlas.GetStr("ButtonContentSignOnly") : Atlas.GetStr("ButtonContentDeploy");
 
 				DeploySignedXMLButtonFontIcon = field ? "\uF572" : "\uE8B6";
 			}
@@ -147,7 +147,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		try
 		{
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			foreach (string file in selectedFiles)
 			{
@@ -167,7 +167,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// </summary>
 	internal void BrowseForCIPBinaryFilesButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CIPFilesPickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.CIPFilesPickerFilter);
 
 		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -197,7 +197,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		try
 		{
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			foreach (string file in selectedFiles)
 			{
@@ -217,7 +217,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// </summary>
 	internal void BrowseForXMLPolicesButton_Click()
 	{
-		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 		foreach (string file in CollectionsMarshal.AsSpan(selectedFiles))
 		{
@@ -234,7 +234,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		// Enable the options if a valid value is set as Active Account
 		DeployToIntune = on;
 		AreOnlineFeaturesEnabled = on;
-		LocalOnlineStatusText = on ? GlobalVars.GetStr("CloudDeploymentActive") : GlobalVars.GetStr("LocalDeploymentActive");
+		LocalOnlineStatusText = on ? Atlas.GetStr("CloudDeploymentActive") : Atlas.GetStr("LocalDeploymentActive");
 
 		// Update Visuals for obvious distinction
 		if (on)
@@ -303,7 +303,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		if (FilesForUnsignedDeployment.Count is 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectUnsignedXMLFilesToDeployWarningMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectUnsignedXMLFilesToDeployWarningMsg"));
 			return;
 		}
 
@@ -312,7 +312,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			// Disable the UI elements
 			AreElementsEnabled = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + FilesForUnsignedDeployment.Count + GlobalVars.GetStr("UnsignedXMLFiles"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("DeployingXMLFiles") + FilesForUnsignedDeployment.Count + Atlas.GetStr("UnsignedXMLFiles"));
 
 			MainInfoBar.IsClosable = false;
 
@@ -326,10 +326,10 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				{
 					if (!file.PolicyObj.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SignedPolicyError"), file));
+						throw new InvalidOperationException(string.Format(Atlas.GetStr("SignedPolicyError"), file));
 					}
 
-					MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFile") + file + "'");
+					MainInfoBar.WriteInfo(Atlas.GetStr("DeployingXMLFile") + file + "'");
 
 					if (DeployToIntune)
 					{
@@ -349,14 +349,14 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				}
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("DeploymentSuccess"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("DeploymentSuccess"));
 
 			// Clear the lists at the end if no errors occurred
 			FilesForUnsignedDeployment.Clear();
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("DeploymentError"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("DeploymentError"));
 		}
 		finally
 		{
@@ -380,7 +380,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
@@ -423,7 +423,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		if (FilesForSignedDeployment.Count is 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectXMLFilesToSignAndDeployWarningMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectXMLFilesToSignAndDeployWarningMsg"));
 			return;
 		}
 
@@ -459,7 +459,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + FilesForSignedDeployment.Count + GlobalVars.GetStr("SignedXMLFiles"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("DeployingXMLFiles") + FilesForSignedDeployment.Count + Atlas.GetStr("SignedXMLFiles"));
 
 			MainProgressBarVisibility = Visibility.Visible;
 
@@ -469,7 +469,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				// Convert and then deploy each XML file
 				foreach (PolicyFileRepresent file in FilesForSignedDeployment)
 				{
-					MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitch ? GlobalVars.GetStr("CurrentlySigningXMLFile") : GlobalVars.GetStr("DeployingXMLFile")) + file + "'");
+					MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitch ? Atlas.GetStr("CurrentlySigningXMLFile") : Atlas.GetStr("DeployingXMLFile")) + file + "'");
 
 					// Add certificate's details to the policy
 					file.PolicyObj = AddSigningDetails.Add(file.PolicyObj, CertPath);
@@ -495,7 +495,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 					// If the SignOnlyNoDeployToggleSwitch is on, don't deploy the policy, only create signed CIP
 					if (SignOnlyNoDeployToggleSwitch)
 					{
-						await File.WriteAllBytesAsync(Path.Combine(GlobalVars.UserConfigDir, $"{file.PolicyIdentifier}.CIP"), cipContent);
+						await File.WriteAllBytesAsync(Path.Combine(Atlas.UserConfigDir, $"{file.PolicyIdentifier}.CIP"), cipContent);
 					}
 					else
 					{
@@ -514,7 +514,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 							if (possibleAlreadyDeployedUnsignedVersion is not null)
 							{
-								Logger.Write(GlobalVars.GetStr("PolicyConflictMessage") + possibleAlreadyDeployedUnsignedVersion.PolicyID + GlobalVars.GetStr("RemovingPolicy"));
+								Logger.Write(Atlas.GetStr("PolicyConflictMessage") + possibleAlreadyDeployedUnsignedVersion.PolicyID + Atlas.GetStr("RemovingPolicy"));
 
 								CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID);
 							}
@@ -530,14 +530,14 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				}
 			});
 
-			MainInfoBar.WriteSuccess(SignOnlyNoDeployToggleSwitch ? GlobalVars.GetStr("SuccessfullyCreatedSignedCIPFiles") : GlobalVars.GetStr("SignedDeploymentSuccess"));
+			MainInfoBar.WriteSuccess(SignOnlyNoDeployToggleSwitch ? Atlas.GetStr("SuccessfullyCreatedSignedCIPFiles") : Atlas.GetStr("SignedDeploymentSuccess"));
 
 			// Clear the lists at the end if no errors occurred
 			FilesForSignedDeployment.Clear();
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("DeploymentError"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("DeploymentError"));
 		}
 		finally
 		{
@@ -557,7 +557,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		if (CIPFiles.Count is 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectCIPFilesToDeployWarningMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectCIPFilesToDeployWarningMsg"));
 			return;
 		}
 
@@ -566,7 +566,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			AreElementsEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFiles") + CIPFiles.Count + GlobalVars.GetStr("CIPFiles"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("DeployingXMLFiles") + CIPFiles.Count + Atlas.GetStr("CIPFiles"));
 
 			MainProgressBarVisibility = Visibility.Visible;
 
@@ -575,7 +575,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			{
 				foreach (string file in CIPFiles)
 				{
-					MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingCIPFile") + file + "'");
+					MainInfoBar.WriteInfo(Atlas.GetStr("DeployingCIPFile") + file + "'");
 
 					// Convert the CIP to a SiPolicy object
 					SiPolicy.SiPolicy policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(file);
@@ -592,14 +592,14 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				}
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("CIPDeploymentSuccess"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("CIPDeploymentSuccess"));
 
 			// Clear the list at the end if no errors occurred
 			CIPFiles.Clear();
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("DeploymentError"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("DeploymentError"));
 		}
 		finally
 		{
@@ -628,7 +628,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		if (XMLFilesToConvertToCIP.Count is 0)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectXMLFilesToDeployWarningMsg"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectXMLFilesToDeployWarningMsg"));
 			return;
 		}
 
@@ -644,11 +644,11 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				foreach (string file in XMLFilesToConvertToCIP)
 				{
 					MainInfoBar.WriteInfo(string.Format(
-						GlobalVars.GetStr("ConvertingFileToCIPMessage"),
+						Atlas.GetStr("ConvertingFileToCIPMessage"),
 						file
 					));
 
-					string XMLSavePath = Path.Combine(GlobalVars.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP");
+					string XMLSavePath = Path.Combine(Atlas.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP");
 
 					if (File.Exists(XMLSavePath))
 					{
@@ -660,11 +660,11 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				}
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyConvertedXMLFilesToCIPMessage"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyConvertedXMLFilesToCIPMessage"));
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorConvertingXMLToCIPMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorConvertingXMLToCIPMessage"));
 		}
 		finally
 		{

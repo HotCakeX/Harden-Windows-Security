@@ -15,8 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AppControlManager.XMLOps;
+using Windows.System;
 
 namespace AppControlManager.SiPolicy;
 
@@ -24,7 +27,7 @@ namespace AppControlManager.SiPolicy;
 /// This type represents a <see cref="SiPolicy.SiPolicy"/> object for representation in different parts of the app and UI.
 /// </summary>
 /// <param name="policyObj"></param>
-internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFileRepresentKind kind = PolicyFileRepresentKind.XML) : ViewModels.ViewModelBase
+internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFileRepresentKind kind = PolicyFileRepresentKind.XML) : ViewModelBase
 {
 	/// <summary>
 	/// The main policy object.
@@ -80,13 +83,35 @@ internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFile
 	/// <summary>
 	/// Determines whether the policy is Signed or Unsigned.
 	/// </summary>
-	internal string SigningStatus => PolicyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy) ? GlobalVars.GetStr("Unsigned") : GlobalVars.GetStr("Signed");
+	internal string SigningStatus => PolicyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy) ? Atlas.GetStr("Unsigned") : Atlas.GetStr("Signed");
 
 	/// <summary>
 	/// This is required so ListBox can show the string representation directly for displaying purposes.
 	/// </summary>
 	/// <returns></returns>
 	public override string ToString() => PolicyIdentifier;
+
+	/// <summary>
+	/// Accepts a policy file representation, offers a save dialog so user can save it somewhere,
+	/// Then opens the file in the default file handler in the OS.
+	/// </summary>
+	/// <param name="policy"></param>
+	internal static async Task OpenInDefaultFileHandler(PolicyFileRepresent? policy)
+	{
+		try
+		{
+			if (policy is null) return;
+
+			string? savePath = Path.Exists(policy.FilePath) ? policy.FilePath : await MainWindow.ExecuteSaveAsXML(policy);
+
+			if (savePath is not null)
+				_ = await Launcher.LaunchUriAsync(new(savePath));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
 }
 
 internal enum PolicyFileRepresentKind

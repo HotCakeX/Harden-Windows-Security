@@ -33,6 +33,6 @@ internal sealed partial class ViewFileCertificates : Page, CommonCore.UI.IPageHe
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ViewFileCertificatesPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ViewFileCertificatesPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates");
 }

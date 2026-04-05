@@ -70,7 +70,7 @@ internal sealed partial class AuditPolicyInfo(
 			{
 				field = value;
 
-				_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+				_ = Atlas.AppDispatcher.TryEnqueue(() =>
 				{
 					OnPropertyChanged(nameof(AuditSettingDescription));
 					OnPropertyChanged(nameof(SelectedAuditSettingIndex));
@@ -96,7 +96,7 @@ internal sealed partial class AuditPolicyInfo(
 	internal void CommitChanges()
 	{
 		OriginalAuditingInformation = AuditingInformation;
-		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+		_ = Atlas.AppDispatcher.TryEnqueue(() =>
 		{
 			OnPropertyChanged(nameof(HasPendingChanges));
 		});
@@ -136,11 +136,11 @@ internal sealed partial class AuditPolicyInfo(
 	{
 		return auditingInformation switch
 		{
-			0 => GlobalVars.GetStr("NoAuditingText"),
-			1 => GlobalVars.GetStr("SuccessText"),
-			2 => GlobalVars.GetStr("FailureText"),
-			3 => GlobalVars.GetStr("SuccessAndFailureText"),
-			_ => GlobalVars.GetStr("UnknownState")
+			0 => Atlas.GetStr("NoAuditingText"),
+			1 => Atlas.GetStr("SuccessText"),
+			2 => Atlas.GetStr("FailureText"),
+			3 => Atlas.GetStr("SuccessAndFailureText"),
+			_ => Atlas.GetStr("UnknownState")
 		};
 	}
 
@@ -229,7 +229,7 @@ internal static class AuditPrivilegeHelper
 			if (!opened)
 			{
 				int error = Marshal.GetLastPInvokeError();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("OpenProcessTokenFailedError"), error));
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("OpenProcessTokenFailedError"), error));
 			}
 
 			try
@@ -256,7 +256,7 @@ internal static class AuditPrivilegeHelper
 		if (!lookup)
 		{
 			int errLookup = Marshal.GetLastPInvokeError();
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("LookupPrivilegeValueFailedError"), privilegeName, errLookup));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("LookupPrivilegeValueFailedError"), privilegeName, errLookup));
 		}
 
 		TOKEN_PRIVILEGES tp = new()
@@ -275,12 +275,12 @@ internal static class AuditPrivilegeHelper
 
 		if (!adjusted)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AdjustTokenPrivilegesFailedError"), privilegeName, adjustError));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("AdjustTokenPrivilegesFailedError"), privilegeName, adjustError));
 		}
 
 		if (adjustError == 1300) // ERROR_NOT_ALL_ASSIGNED
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("PrivilegeNotAssignedError"), privilegeName));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("PrivilegeNotAssignedError"), privilegeName));
 		}
 	}
 }
@@ -315,7 +315,7 @@ internal static class AuditPolicyManager
 		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
 		{
 			int error = Marshal.GetLastPInvokeError();
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), error));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToEnumerateAuditCategoriesError"), error));
 		}
 
 		try
@@ -357,7 +357,7 @@ internal static class AuditPolicyManager
 			NativeMethods.AuditFree(categoriesPtr);
 		}
 
-		throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToGetCategoryIdForSubCategoryError"), subcategoryGuid));
+		throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToGetCategoryIdForSubCategoryError"), subcategoryGuid));
 	}
 
 	/// <summary>
@@ -374,7 +374,7 @@ internal static class AuditPolicyManager
 		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
 		{
 			int error = Marshal.GetLastPInvokeError();
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), error));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToEnumerateAuditCategoriesError"), error));
 		}
 
 		try
@@ -411,7 +411,7 @@ internal static class AuditPolicyManager
 
 			if (allSubCategories.Count == 0)
 			{
-				throw new InvalidOperationException(GlobalVars.GetStr("NoAuditSubcategoriesFoundError"));
+				throw new InvalidOperationException(Atlas.GetStr("NoAuditSubcategoriesFoundError"));
 			}
 
 			// Query audit policies for all subcategories in smaller batches to avoid API limits
@@ -432,12 +432,12 @@ internal static class AuditPolicyManager
 					if (!NativeMethods.AuditQuerySystemPolicy(batchGuidsPtr, (uint)currentBatchSize, out IntPtr auditPolicyPtr))
 					{
 						int error = Marshal.GetLastPInvokeError();
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQueryAuditSystemPolicyBatchError"), batchStart, error));
+						throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToQueryAuditSystemPolicyBatchError"), batchStart, error));
 					}
 
 					if (auditPolicyPtr == IntPtr.Zero)
 					{
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AuditQuerySystemPolicyReturnedNullBatchError"), batchStart));
+						throw new InvalidOperationException(string.Format(Atlas.GetStr("AuditQuerySystemPolicyReturnedNullBatchError"), batchStart));
 					}
 
 					try
@@ -474,7 +474,7 @@ internal static class AuditPolicyManager
 			NativeMethods.AuditFree(categoriesPtr);
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("RetrievedAuditPoliciesForSubcategoriesMessage"), auditPolicies.Count));
+		Logger.Write(string.Format(Atlas.GetStr("RetrievedAuditPoliciesForSubcategoriesMessage"), auditPolicies.Count));
 		return auditPolicies;
 	}
 
@@ -507,12 +507,12 @@ internal static class AuditPolicyManager
 			if (!NativeMethods.AuditQuerySystemPolicy(guidsPtr, (uint)subcategoryGuids.Length, out IntPtr auditPolicyPtr))
 			{
 				int error = Marshal.GetLastPInvokeError();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQuerySpecificAuditPoliciesError"), error));
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToQuerySpecificAuditPoliciesError"), error));
 			}
 
 			if (auditPolicyPtr == IntPtr.Zero)
 			{
-				throw new InvalidOperationException(GlobalVars.GetStr("AuditQuerySystemPolicyReturnedNullSpecificError"));
+				throw new InvalidOperationException(Atlas.GetStr("AuditQuerySystemPolicyReturnedNullSpecificError"));
 			}
 
 			try
@@ -534,7 +534,7 @@ internal static class AuditPolicyManager
 			Marshal.FreeHGlobal(guidsPtr);
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("RetrievedAuditPoliciesForSpecificSubcategoriesMessage"), results.Count));
+		Logger.Write(string.Format(Atlas.GetStr("RetrievedAuditPoliciesForSpecificSubcategoriesMessage"), results.Count));
 		return results;
 	}
 
@@ -549,13 +549,13 @@ internal static class AuditPolicyManager
 	private static List<CsvAuditPolicyEntry> ParseAuditPolicyCsv(string csvFilePath)
 	{
 		if (!File.Exists(csvFilePath))
-			throw new FileNotFoundException(string.Format(GlobalVars.GetStr("CsvFileNotFoundError"), csvFilePath));
+			throw new FileNotFoundException(string.Format(Atlas.GetStr("CsvFileNotFoundError"), csvFilePath));
 
 		List<CsvAuditPolicyEntry> entries = [];
 		string[] lines = File.ReadAllLines(csvFilePath, Encoding.UTF8);
 
 		if (lines.Length < 2)
-			throw new InvalidDataException(GlobalVars.GetStr("CsvFileMustContainHeaderAndDataError"));
+			throw new InvalidDataException(Atlas.GetStr("CsvFileMustContainHeaderAndDataError"));
 
 		// Skip header row (index 0)
 		for (int i = 1; i < lines.Length; i++)
@@ -574,16 +574,16 @@ internal static class AuditPolicyManager
 			}
 			catch (Exception ex)
 			{
-				throw new InvalidDataException(string.Format(GlobalVars.GetStr("ErrorParsingCsvLineError"), i + 1, ex.Message), ex);
+				throw new InvalidDataException(string.Format(Atlas.GetStr("ErrorParsingCsvLineError"), i + 1, ex.Message), ex);
 			}
 		}
 
 		if (entries.Count == 0)
 		{
-			throw new InvalidDataException(GlobalVars.GetStr("NoValidAuditPolicyEntriesFoundError"));
+			throw new InvalidDataException(Atlas.GetStr("NoValidAuditPolicyEntriesFoundError"));
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("ParsedAuditPolicyEntriesFromCsvMessage"), entries.Count));
+		Logger.Write(string.Format(Atlas.GetStr("ParsedAuditPolicyEntriesFromCsvMessage"), entries.Count));
 		return entries;
 	}
 
@@ -602,7 +602,7 @@ internal static class AuditPolicyManager
 		// Apply the audit policies
 		SetAuditPolicies(ConvertCSVEntriesToAuditPolicyInfo(csvEntries));
 
-		Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyAppliedAuditPoliciesFromCsvMessage"), csvEntries.Count));
+		Logger.Write(string.Format(Atlas.GetStr("SuccessfullyAppliedAuditPoliciesFromCsvMessage"), csvEntries.Count));
 	}
 
 	internal static AUDIT_POLICY_INFORMATION[] ConvertCSVEntriesToAuditPolicyInfo(List<CsvAuditPolicyEntry> entries)
@@ -693,7 +693,7 @@ internal static class AuditPolicyManager
 			if (!ok)
 			{
 				int error = Marshal.GetLastPInvokeError();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToApplyAuditPolicyToSystemError"), error));
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToApplyAuditPolicyToSystemError"), error));
 			}
 		}
 		finally
@@ -715,7 +715,7 @@ internal static class AuditPolicyManager
 
 		if (parts.Length < 7)
 		{
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineExpectedColumnsError"), lineNumber, parts.Length));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("CsvLineExpectedColumnsError"), lineNumber, parts.Length));
 		}
 
 		// Extract relevant columns:
@@ -731,19 +731,19 @@ internal static class AuditPolicyManager
 		guidString = guidString.Trim('{', '}');
 		if (!Guid.TryParse(guidString, CultureInfo.InvariantCulture, out Guid subcategoryGuid))
 		{
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineInvalidGuidFormatError"), lineNumber, guidString));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("CsvLineInvalidGuidFormatError"), lineNumber, guidString));
 		}
 
 		// Parse setting value
 		if (!uint.TryParse(settingValueString, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint settingValue))
 		{
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineInvalidSettingValueError"), lineNumber, settingValueString));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("CsvLineInvalidSettingValueError"), lineNumber, settingValueString));
 		}
 
 		// Validate setting value range (0-3)
 		if (settingValue > 3)
 		{
-			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineSettingValueOutOfRangeError"), lineNumber, settingValue));
+			throw new InvalidDataException(string.Format(Atlas.GetStr("CsvLineSettingValueOutOfRangeError"), lineNumber, settingValue));
 		}
 
 		return new CsvAuditPolicyEntry(

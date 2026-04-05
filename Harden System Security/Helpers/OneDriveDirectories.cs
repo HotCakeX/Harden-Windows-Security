@@ -34,7 +34,7 @@ internal static class OneDriveDirectories
 		List<string> directoriesList = [];
 
 		// Combine system drive with "Users" to get the path to the Users directory
-		string usersPath = Path.Combine(GlobalVars.SystemDrive, "Users");
+		string usersPath = Path.Combine(Atlas.SystemDrive, "Users");
 
 		// catch to prevent unnecessary exception
 		if (!Directory.Exists(usersPath))

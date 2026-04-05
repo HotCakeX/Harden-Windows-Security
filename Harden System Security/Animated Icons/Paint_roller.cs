@@ -4,13 +4,13 @@
 //
 //       LottieGen version:
 //           8.2.250604.1+b02a3ee244
-//       
+//
 //       Command:
 //           LottieGen -Language CSharp -Public -WinUIVersion 3.0 -InputFile paint-roller.json
-//       
+//
 //       Input file:
 //           paint-roller.json (166385 bytes created 8:16+02:00 Feb 22 2026)
-//       
+//
 //       LottieGen source:
 //           http://aka.ms/Lottie
 //
@@ -441,7 +441,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - - - Shape tree root for layer: Color 
+			// - - - - Shape tree root for layer: Color
 			// - - ShapeGroup: Group 1 Offset:<3.25, 3.25>
 			CanvasGeometry Geometry_7()
 			{
@@ -468,7 +468,7 @@ namespace AnimatedVisuals
 			}
 
 			// - - - Layer aggregator
-			// - Transforms: Handle 2 
+			// - Transforms: Handle 2
 			// ShapeGroup: Group 1 Offset:<14, 14>
 			CompositionColorBrush ColorBrush_AlmostDimGray_FF536D79()
 			{
@@ -482,7 +482,7 @@ namespace AnimatedVisuals
 				return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xC1, 0x06));
 			}
 
-			// - - Shape tree root for layer: Color 
+			// - - Shape tree root for layer: Color
 			// ShapeGroup: Group 1 Offset:<3.25, 3.25>
 			CompositionColorBrush ColorBrush_AlmostKhaki_FFFFCC80()
 			{
@@ -663,7 +663,7 @@ namespace AnimatedVisuals
 			}
 
 			// - - - Layer aggregator
-			// - Transforms: Handle 2 
+			// - Transforms: Handle 2
 			// ShapeGroup: Group 1 Offset:<14, 14>
 			CompositionPathGeometry PathGeometry_0()
 			{
@@ -697,7 +697,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - - Shape tree root for layer: Color 
+			// - - Shape tree root for layer: Color
 			// ShapeGroup: Group 1 Offset:<3.25, 3.25>
 			CompositionPathGeometry PathGeometry_4()
 			{
@@ -705,7 +705,7 @@ namespace AnimatedVisuals
 			}
 
 			// - - Layer aggregator
-			// Transforms: Handle 2 
+			// Transforms: Handle 2
 			// Path 1
 			CompositionSpriteShape SpriteShape_0()
 			{
@@ -722,7 +722,7 @@ namespace AnimatedVisuals
 			}
 
 			// - - Layer aggregator
-			// Transforms: Roller 
+			// Transforms: Roller
 			// Path 1
 			CompositionSpriteShape SpriteShape_1()
 			{
@@ -765,7 +765,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Shape tree root for layer: Color 
+			// - Shape tree root for layer: Color
 			// Path 1
 			CompositionSpriteShape SpriteShape_5()
 			{
@@ -905,7 +905,7 @@ namespace AnimatedVisuals
 			}
 
 			// - - - - Layer aggregator
-			// - - Transforms: Handle 2 
+			// - - Transforms: Handle 2
 			// - ShapeGroup: Group 1 Offset:<14, 14>
 			// Path
 			PathKeyFrameAnimation PathKeyFrameAnimation_0()
@@ -1046,7 +1046,7 @@ namespace AnimatedVisuals
 			}
 
 			// - - Layer aggregator
-			// Transforms: Handle 2 
+			// Transforms: Handle 2
 			// Offset
 			Vector2KeyFrameAnimation OffsetVector2Animation_0()
 			{
@@ -1128,7 +1128,7 @@ namespace AnimatedVisuals
 				return result;
 			}
 
-			// - Shape tree root for layer: Color 
+			// - Shape tree root for layer: Color
 			// Offset
 			Vector2KeyFrameAnimation OffsetVector2Animation_5()
 			{

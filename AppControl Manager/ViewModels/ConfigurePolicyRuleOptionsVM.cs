@@ -82,7 +82,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.XMLFilePickerFilter);
 
 			if (!string.IsNullOrWhiteSpace(selectedFile))
 			{
@@ -113,7 +113,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 		{
 			if (SelectedPolicy is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeRetrievingOptions"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyFileBeforeRetrievingOptions"));
 				return;
 			}
 
@@ -165,7 +165,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 			if (SelectedPolicy is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeAddingOptions"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyFileBeforeAddingOptions"));
 				return;
 			}
 
@@ -194,7 +194,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 				{
 					if (!SelectedPolicy.PolicyObj.Rules.Any(x => x.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("TeachingTipSubtitlePolicyRequiresSigning"));
+						MainInfoBar.WriteWarning(Atlas.GetStr("TeachingTipSubtitlePolicyRequiresSigning"));
 						return;
 					}
 
@@ -229,7 +229,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 			if (SelectedPolicy is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeSettingTemplate"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyFileBeforeSettingTemplate"));
 				return;
 			}
 
@@ -290,7 +290,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeRetrievingOptions"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyFileBeforeRetrievingOptions"));
 				return;
 			}
 		}
@@ -398,29 +398,29 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// </summary>
 	internal readonly Dictionary<string, string> RuleOptions = new()
 	{
-		{ "Enabled:UMCI", GlobalVars.GetStr("RuleOption_EnabledUMCI") },
-		{ "Enabled:Boot Menu Protection", GlobalVars.GetStr("RuleOption_EnabledBootMenuProtection") },
-		{ "Required:WHQL", GlobalVars.GetStr("RuleOption_RequiredWHQL") },
-		{ "Enabled:Audit Mode", GlobalVars.GetStr("RuleOption_EnabledAuditMode") },
-		{ "Disabled:Flight Signing", GlobalVars.GetStr("RuleOption_DisabledFlightSigning") },
-		{ "Enabled:Inherit Default Policy", GlobalVars.GetStr("RuleOption_EnabledInheritDefaultPolicy") },
-		{ "Enabled:Unsigned System Integrity Policy", GlobalVars.GetStr("RuleOption_EnabledUnsignedSystemIntegrityPolicy") },
-		{ "Required:EV Signers", GlobalVars.GetStr("RuleOption_EnabledBootMenuProtection") },
-		{ "Enabled:Advanced Boot Options Menu", GlobalVars.GetStr("RuleOption_EnabledAdvancedBootOptionsMenu") },
-		{ "Enabled:Boot Audit On Failure", GlobalVars.GetStr("RuleOption_EnabledBootAuditOnFailure") },
-		{ "Disabled:Script Enforcement", GlobalVars.GetStr("RuleOption_DisabledScriptEnforcement") },
-		{ "Required:Enforce Store Applications", GlobalVars.GetStr("RuleOption_RequiredEnforceStoreApplications") },
-		{ "Enabled:Managed Installer", GlobalVars.GetStr("RuleOption_EnabledManagedInstaller") },
-		{ "Enabled:Intelligent Security Graph Authorization", GlobalVars.GetStr("RuleOption_EnabledIntelligentSecurityGraphAuthorization") },
-		{ "Enabled:Invalidate EAs on Reboot", GlobalVars.GetStr("RuleOption_EnabledInvalidateEAsOnReboot") },
-		{ "Enabled:Update Policy No Reboot", GlobalVars.GetStr("RuleOption_EnabledUpdatePolicyNoReboot") },
-		{ "Enabled:Allow Supplemental Policies", GlobalVars.GetStr("RuleOption_EnabledAllowSupplementalPolicies") },
-		{ "Disabled:Runtime FilePath Rule Protection", GlobalVars.GetStr("RuleOption_DisabledRuntimeFilePathRuleProtection") },
-		{ "Enabled:Dynamic Code Security",GlobalVars.GetStr("RuleOption_EnabledDynamicCodeSecurity") },
-		{ "Enabled:Revoked Expired As Unsigned", GlobalVars.GetStr("RuleOption_EnabledRevokedExpiredAsUnsigned") },
-		{ "Enabled:Developer Mode Dynamic Code Trust", GlobalVars.GetStr("RuleOption_EnabledDeveloperModeDynamicCodeTrust") },
-		{ "Enabled:Secure Setting Policy", GlobalVars.GetStr("RuleOption_EnabledSecureSettingPolicy") },
-		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.GetStr("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
+		{ "Enabled:UMCI", Atlas.GetStr("RuleOption_EnabledUMCI") },
+		{ "Enabled:Boot Menu Protection", Atlas.GetStr("RuleOption_EnabledBootMenuProtection") },
+		{ "Required:WHQL", Atlas.GetStr("RuleOption_RequiredWHQL") },
+		{ "Enabled:Audit Mode", Atlas.GetStr("RuleOption_EnabledAuditMode") },
+		{ "Disabled:Flight Signing", Atlas.GetStr("RuleOption_DisabledFlightSigning") },
+		{ "Enabled:Inherit Default Policy", Atlas.GetStr("RuleOption_EnabledInheritDefaultPolicy") },
+		{ "Enabled:Unsigned System Integrity Policy", Atlas.GetStr("RuleOption_EnabledUnsignedSystemIntegrityPolicy") },
+		{ "Required:EV Signers", Atlas.GetStr("RuleOption_EnabledBootMenuProtection") },
+		{ "Enabled:Advanced Boot Options Menu", Atlas.GetStr("RuleOption_EnabledAdvancedBootOptionsMenu") },
+		{ "Enabled:Boot Audit On Failure", Atlas.GetStr("RuleOption_EnabledBootAuditOnFailure") },
+		{ "Disabled:Script Enforcement", Atlas.GetStr("RuleOption_DisabledScriptEnforcement") },
+		{ "Required:Enforce Store Applications", Atlas.GetStr("RuleOption_RequiredEnforceStoreApplications") },
+		{ "Enabled:Managed Installer", Atlas.GetStr("RuleOption_EnabledManagedInstaller") },
+		{ "Enabled:Intelligent Security Graph Authorization", Atlas.GetStr("RuleOption_EnabledIntelligentSecurityGraphAuthorization") },
+		{ "Enabled:Invalidate EAs on Reboot", Atlas.GetStr("RuleOption_EnabledInvalidateEAsOnReboot") },
+		{ "Enabled:Update Policy No Reboot", Atlas.GetStr("RuleOption_EnabledUpdatePolicyNoReboot") },
+		{ "Enabled:Allow Supplemental Policies", Atlas.GetStr("RuleOption_EnabledAllowSupplementalPolicies") },
+		{ "Disabled:Runtime FilePath Rule Protection", Atlas.GetStr("RuleOption_DisabledRuntimeFilePathRuleProtection") },
+		{ "Enabled:Dynamic Code Security",Atlas.GetStr("RuleOption_EnabledDynamicCodeSecurity") },
+		{ "Enabled:Revoked Expired As Unsigned", Atlas.GetStr("RuleOption_EnabledRevokedExpiredAsUnsigned") },
+		{ "Enabled:Developer Mode Dynamic Code Trust", Atlas.GetStr("RuleOption_EnabledDeveloperModeDynamicCodeTrust") },
+		{ "Enabled:Secure Setting Policy", Atlas.GetStr("RuleOption_EnabledSecureSettingPolicy") },
+		{ "Enabled:Conditional Windows Lockdown Policy", Atlas.GetStr("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
 	};
 
 	/// <summary>

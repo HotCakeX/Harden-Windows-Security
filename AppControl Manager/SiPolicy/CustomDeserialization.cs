@@ -44,7 +44,7 @@ internal static class CustomDeserialization
 			xmlDoc.Load(filePath);
 			root = xmlDoc.DocumentElement
 				   ?? throw new InvalidOperationException(
-					   GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
+					   Atlas.GetStr("InvalidXmlMissingRootElementValidationError"));
 
 			// Make sure the policy file is valid
 			CiPolicyTest.TestCiPolicy(filePath);
@@ -54,9 +54,9 @@ internal static class CustomDeserialization
 			root = Xml is not null
 				? Xml.DocumentElement
 				   ?? throw new InvalidOperationException(
-					   GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"))
+					   Atlas.GetStr("InvalidXmlMissingRootElementValidationError"))
 				: throw new InvalidOperationException(
-				GlobalVars.GetStr("FilePathOrXmlRequiredMessage"));
+				Atlas.GetStr("FilePathOrXmlRequiredMessage"));
 		}
 
 		// Friendly Name
@@ -83,7 +83,7 @@ internal static class CustomDeserialization
 
 		if (string.IsNullOrEmpty(policyID) || string.IsNullOrEmpty(basePolicyID))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("NeedBothIDsValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("NeedBothIDsValidationError"));
 		}
 
 		if (
@@ -91,12 +91,12 @@ internal static class CustomDeserialization
 			(policyType is PolicyType.SupplementalPolicy && string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase))
 			)
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("IDsMismatchValidationError"));
+			throw new InvalidOperationException(Atlas.GetStr("IDsMismatchValidationError"));
 		}
 
 		// Deserialize Rules
 		// Make sure it exists even empty
-		XmlElement? rulesElement = root["Rules", GlobalVars.SiPolicyNamespace];
+		XmlElement? rulesElement = root["Rules", Atlas.SiPolicyNamespace];
 		List<RuleType> rules = new(capacity: rulesElement?.ChildNodes.Count ?? 0);
 		HashSet<OptionType> policyRules = new(capacity: rulesElement?.ChildNodes.Count ?? 0);
 		if (rulesElement is not null)
@@ -110,7 +110,7 @@ internal static class CustomDeserialization
 
 					if (!policyRules.Add(opt))
 					{
-						throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateRuleOptionValidationError")}: {opt}");
+						throw new InvalidOperationException($"{Atlas.GetStr("DuplicateRuleOptionValidationError")}: {opt}");
 					}
 
 					rules.Add(new RuleType(item: opt));
@@ -120,7 +120,7 @@ internal static class CustomDeserialization
 
 		if (policyType is PolicyType.SupplementalPolicy && policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies))
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SupplementalPolicyWithInvalidRuleOption"), PolicyType.SupplementalPolicy, OptionType.EnabledAllowSupplementalPolicies, PolicyType.BasePolicy));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("SupplementalPolicyWithInvalidRuleOption"), PolicyType.SupplementalPolicy, OptionType.EnabledAllowSupplementalPolicies, PolicyType.BasePolicy));
 		}
 
 		SiPolicy policy = new(versionEx, platformID, policyID, basePolicyID, rules, policyType)
@@ -138,7 +138,7 @@ internal static class CustomDeserialization
 		};
 
 
-		XmlElement? ekusElement = root["EKUs", GlobalVars.SiPolicyNamespace];
+		XmlElement? ekusElement = root["EKUs", Atlas.SiPolicyNamespace];
 		HashSet<string> EKUIDsCol = new(capacity: ekusElement?.ChildNodes.Count ?? 0);
 		if (ekusElement is not null)
 		{
@@ -160,7 +160,7 @@ internal static class CustomDeserialization
 
 					if (!EKUIDsCol.Add(id))
 					{
-						throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateEKUIDsValidationError")}: {id}");
+						throw new InvalidOperationException($"{Atlas.GetStr("DuplicateEKUIDsValidationError")}: {id}");
 					}
 				}
 			}
@@ -168,7 +168,7 @@ internal static class CustomDeserialization
 
 		// Deserialize FileRules
 		// Make sure it exists even empty
-		XmlElement? fileRulesElement = root["FileRules", GlobalVars.SiPolicyNamespace];
+		XmlElement? fileRulesElement = root["FileRules", Atlas.SiPolicyNamespace];
 
 		policy.FileRules = new(capacity: fileRulesElement?.ChildNodes.Count ?? 0);
 
@@ -205,7 +205,7 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize Signers
-		XmlElement? signersElement = root["Signers", GlobalVars.SiPolicyNamespace];
+		XmlElement? signersElement = root["Signers", Atlas.SiPolicyNamespace];
 		if (signersElement is not null)
 		{
 			HashSet<string> SignersIDsCol = [];
@@ -226,7 +226,7 @@ internal static class CustomDeserialization
 		// Used to store the SigningScenarios IDs to ensure they are unique.
 		HashSet<string> SigningScenariosIDs = [];
 
-		XmlElement? signingScenariosElement = root["SigningScenarios", GlobalVars.SiPolicyNamespace];
+		XmlElement? signingScenariosElement = root["SigningScenarios", Atlas.SiPolicyNamespace];
 		if (signingScenariosElement is not null)
 		{
 			foreach (XmlNode node in signingScenariosElement.ChildNodes)
@@ -239,12 +239,12 @@ internal static class CustomDeserialization
 					{
 						if (signingScenario.Value != 12)
 						{
-							throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyInvalidSigningScenarioID"), PolicyType.AppIDTaggingPolicy, signingScenario.Value));
+							throw new InvalidOperationException(string.Format(Atlas.GetStr("AppIDTaggingPolicyInvalidSigningScenarioID"), PolicyType.AppIDTaggingPolicy, signingScenario.Value));
 						}
 
 						if (signingScenario.AppIDTags is null || signingScenario.AppIDTags.AppIDTag is null || signingScenario.AppIDTags.AppIDTag.Count == 0)
 						{
-							throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyMissingAppIDTags"), PolicyType.AppIDTaggingPolicy));
+							throw new InvalidOperationException(string.Format(Atlas.GetStr("AppIDTaggingPolicyMissingAppIDTags"), PolicyType.AppIDTaggingPolicy));
 						}
 					}
 
@@ -256,7 +256,7 @@ internal static class CustomDeserialization
 		// Deserialize UpdatePolicySigners
 		// Make sure it exists even empty
 		policy.UpdatePolicySigners = [];
-		XmlElement? upsElement = root["UpdatePolicySigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? upsElement = root["UpdatePolicySigners", Atlas.SiPolicyNamespace];
 		if (upsElement is not null)
 		{
 			foreach (XmlNode node in upsElement.ChildNodes)
@@ -271,13 +271,13 @@ internal static class CustomDeserialization
 		// If policy requires to be Signed
 		if (!policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy) && policy.UpdatePolicySigners.Count == 0)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("PolicyNeedsSigningButNoUpdateSigner"), OptionType.EnabledUnsignedSystemIntegrityPolicy));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("PolicyNeedsSigningButNoUpdateSigner"), OptionType.EnabledUnsignedSystemIntegrityPolicy));
 		}
 
 		// Deserialize CiSigners
 		// Make sure it exists even empty
 		policy.CiSigners = [];
-		XmlElement? ciElement = root["CiSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? ciElement = root["CiSigners", Atlas.SiPolicyNamespace];
 		if (ciElement is not null)
 		{
 			foreach (XmlNode node in ciElement.ChildNodes)
@@ -299,7 +299,7 @@ internal static class CustomDeserialization
 		// Deserialize Settings
 		// Make sure it exists even empty
 		policy.Settings = [];
-		XmlElement? settingsElem = root["Settings", GlobalVars.SiPolicyNamespace];
+		XmlElement? settingsElem = root["Settings", Atlas.SiPolicyNamespace];
 		if (settingsElem is not null)
 		{
 			foreach (XmlNode node in settingsElem.ChildNodes)
@@ -313,7 +313,7 @@ internal static class CustomDeserialization
 
 		if (policy.Settings.Count > ushort.MaxValue)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SettingsAndAppIDTagsCountExceeded"), ushort.MaxValue));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("SettingsAndAppIDTagsCountExceeded"), ushort.MaxValue));
 		}
 
 		// Deserialize Macros
@@ -322,7 +322,7 @@ internal static class CustomDeserialization
 
 		HashSet<string> MacrosIDsCol = [];
 
-		XmlElement? macrosElem = root["Macros", GlobalVars.SiPolicyNamespace];
+		XmlElement? macrosElem = root["Macros", Atlas.SiPolicyNamespace];
 		if (macrosElem is not null)
 		{
 			foreach (XmlNode node in macrosElem.ChildNodes)
@@ -336,7 +336,7 @@ internal static class CustomDeserialization
 
 					if (!MacrosIDsCol.Add(macro.Id))
 					{
-						throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateMacroIDsValidationError")}: {macro.Id}");
+						throw new InvalidOperationException($"{Atlas.GetStr("DuplicateMacroIDsValidationError")}: {macro.Id}");
 					}
 				}
 			}
@@ -345,7 +345,7 @@ internal static class CustomDeserialization
 		// Deserialize SupplementalPolicySigners
 		// Make sure it exists even empty
 		policy.SupplementalPolicySigners = [];
-		XmlElement? suppElem = root["SupplementalPolicySigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? suppElem = root["SupplementalPolicySigners", Atlas.SiPolicyNamespace];
 		if (suppElem is not null)
 		{
 			foreach (XmlNode node in suppElem.ChildNodes)
@@ -359,7 +359,7 @@ internal static class CustomDeserialization
 
 		if (policy.PolicyType is PolicyType.SupplementalPolicy && policy.SupplementalPolicySigners.Count != 0)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SupplementalPolicyWithSupplementalSigners"), PolicyType.SupplementalPolicy));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("SupplementalPolicyWithSupplementalSigners"), PolicyType.SupplementalPolicy));
 		}
 
 		// If it's supposed to be a Signed Base policy
@@ -372,13 +372,13 @@ internal static class CustomDeserialization
 				// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/inbox-appcontrol-policies
 				if (!string.Equals(policy.PolicyID, "{5951A96A-E0B5-4D3D-8FB8-3E5B61030784}", StringComparison.OrdinalIgnoreCase))
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("MissingSupPolSignersValidationError"));
+					throw new InvalidOperationException(Atlas.GetStr("MissingSupPolSignersValidationError"));
 				}
 			}
 		}
 
 		// Deserialize AppSettings
-		XmlElement? appSettingsElem = root["AppSettings", GlobalVars.SiPolicyNamespace];
+		XmlElement? appSettingsElem = root["AppSettings", Atlas.SiPolicyNamespace];
 		if (appSettingsElem is not null)
 		{
 			List<AppRoot> apps = [];
@@ -398,7 +398,7 @@ internal static class CustomDeserialization
 	// Helper to get the inner text of an element.
 	private static string GetElementText(XmlElement parent, string localName)
 	{
-		XmlElement? elem = parent[localName, GlobalVars.SiPolicyNamespace];
+		XmlElement? elem = parent[localName, Atlas.SiPolicyNamespace];
 		return elem is not null ? elem.InnerText : string.Empty;
 	}
 
@@ -411,7 +411,7 @@ internal static class CustomDeserialization
 		return Convert.FromHexString(hex);
 	}
 
-	internal static readonly FrozenDictionary<string, OptionType> PolicyRuleOptionsActual = new Dictionary<string, OptionType>
+	internal static readonly FrozenDictionary<string, OptionType> PolicyRuleOptionsActual = new Dictionary<string, OptionType>(StringComparer.Ordinal)
 	{
 		{ "Enabled:UMCI", OptionType.EnabledUMCI },
 		{ "Enabled:Boot Menu Protection", OptionType.EnabledBootMenuProtection },
@@ -507,7 +507,7 @@ internal static class CustomDeserialization
 
 		if (!IDsCollection.Add(allow.ID))
 		{
-			throw new InvalidOperationException($"{GlobalVars.GetStr("AllowRuleDupIDValidationError")}: {allow.ID}");
+			throw new InvalidOperationException($"{Atlas.GetStr("AllowRuleDupIDValidationError")}: {allow.ID}");
 		}
 
 		bool APropertyExists = allow.FileName is not null
@@ -575,7 +575,7 @@ internal static class CustomDeserialization
 		if (!IDsCollection.Add(deny.ID))
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("DenyRuleDupIDValidationError"),
+				Atlas.GetStr("DenyRuleDupIDValidationError"),
 				deny.ID));
 		}
 
@@ -601,14 +601,14 @@ internal static class CustomDeserialization
 			if (APropertyExists)
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.GetStr("DenyRuleHashWithOtherPropsError"),
+					Atlas.GetStr("DenyRuleHashWithOtherPropsError"),
 					deny.ID));
 			}
 		}
 		else if (NoPropertyExists)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("DenyRuleNoPropsError"),
+				Atlas.GetStr("DenyRuleNoPropsError"),
 				deny.ID));
 		}
 
@@ -648,7 +648,7 @@ internal static class CustomDeserialization
 		if (!IDsCollection.Add(fa.ID))
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("FileAttribDupIDValidationError"),
+				Atlas.GetStr("FileAttribDupIDValidationError"),
 				fa.ID));
 		}
 
@@ -674,14 +674,14 @@ internal static class CustomDeserialization
 			if (APropertyExists)
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.GetStr("FileAttribHashWithOtherPropsError"),
+					Atlas.GetStr("FileAttribHashWithOtherPropsError"),
 					fa.ID));
 			}
 		}
 		else if (NoPropertyExists)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("FileAttribNoPropsError"),
+				Atlas.GetStr("FileAttribNoPropsError"),
 				fa.ID));
 		}
 
@@ -720,7 +720,7 @@ internal static class CustomDeserialization
 
 		if (!IDsCollection.Add(fr.ID))
 		{
-			throw new InvalidOperationException($"{GlobalVars.GetStr("FileRuleDupIDValidationError")}: {fr.ID}");
+			throw new InvalidOperationException($"{Atlas.GetStr("FileRuleDupIDValidationError")}: {fr.ID}");
 		}
 
 		return fr;
@@ -733,7 +733,7 @@ internal static class CustomDeserialization
 
 		// Check duplicate ID
 		if (!IDsCollection.Add(id))
-			throw new InvalidOperationException($"{GlobalVars.GetStr("SignerDupIDValidationError")}: {id}");
+			throw new InvalidOperationException($"{Atlas.GetStr("SignerDupIDValidationError")}: {id}");
 
 		// Retrieve Name
 		string name = string.Empty;
@@ -741,8 +741,8 @@ internal static class CustomDeserialization
 			name = elem.GetAttribute("Name");
 
 		// Retrieve CertRoot
-		XmlElement certRootElem = elem["CertRoot", GlobalVars.SiPolicyNamespace] ?? throw new InvalidOperationException(
-			string.Format(GlobalVars.GetStr("SignerNoCertRootError"), id));
+		XmlElement certRootElem = elem["CertRoot", Atlas.SiPolicyNamespace] ?? throw new InvalidOperationException(
+			string.Format(Atlas.GetStr("SignerNoCertRootError"), id));
 
 		CertRoot certRoot = new(
 				type: ConvertStringToCertEnumType(certRootElem.GetAttribute("Type")),
@@ -755,7 +755,7 @@ internal static class CustomDeserialization
 			signer.SignTimeAfter = DateTime.Parse(elem.GetAttribute("SignTimeAfter"), null, DateTimeStyles.RoundtripKind);
 		}
 
-		XmlNodeList certEkuNodes = elem.GetElementsByTagName("CertEKU", GlobalVars.SiPolicyNamespace);
+		XmlNodeList certEkuNodes = elem.GetElementsByTagName("CertEKU", Atlas.SiPolicyNamespace);
 		if (certEkuNodes.Count > 0)
 		{
 			List<CertEKU> ekus = [];
@@ -769,25 +769,25 @@ internal static class CustomDeserialization
 			signer.CertEKU = ekus;
 		}
 
-		XmlElement? certIssuerElem = elem["CertIssuer", GlobalVars.SiPolicyNamespace];
+		XmlElement? certIssuerElem = elem["CertIssuer", Atlas.SiPolicyNamespace];
 		if (certIssuerElem is not null)
 		{
 			signer.CertIssuer = new CertIssuer(value: certIssuerElem.GetAttribute("Value"));
 		}
 
-		XmlElement? certPublisherElem = elem["CertPublisher", GlobalVars.SiPolicyNamespace];
+		XmlElement? certPublisherElem = elem["CertPublisher", Atlas.SiPolicyNamespace];
 		if (certPublisherElem is not null)
 		{
 			signer.CertPublisher = new CertPublisher(value: certPublisherElem.GetAttribute("Value"));
 		}
 
-		XmlElement? certOemIDElem = elem["CertOemID", GlobalVars.SiPolicyNamespace];
+		XmlElement? certOemIDElem = elem["CertOemID", Atlas.SiPolicyNamespace];
 		if (certOemIDElem is not null)
 		{
 			signer.CertOemID = new CertOemID(value: certOemIDElem.GetAttribute("Value"));
 		}
 
-		XmlNodeList farNodes = elem.GetElementsByTagName("FileAttribRef", GlobalVars.SiPolicyNamespace);
+		XmlNodeList farNodes = elem.GetElementsByTagName("FileAttribRef", Atlas.SiPolicyNamespace);
 		if (farNodes.Count > 0)
 		{
 			signer.FileAttribRef = [];
@@ -810,7 +810,7 @@ internal static class CustomDeserialization
 
 		// Check for duplicate ID
 		if (!IDsCollection.Add(id))
-			throw new InvalidOperationException($"{GlobalVars.GetStr("SigningScenarioDupIDValidationError")}: {id}");
+			throw new InvalidOperationException($"{Atlas.GetStr("SigningScenarioDupIDValidationError")}: {id}");
 
 		// Retrieve Value
 		byte value = byte.Parse(elem.GetAttribute("Value"), CultureInfo.InvariantCulture);
@@ -822,7 +822,7 @@ internal static class CustomDeserialization
 		// Retrieve ProductSigners
 		// Default to empty ProductSigners if element is missing
 		ProductSigners productSigners = new();
-		XmlElement? prodSignersElem = elem["ProductSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? prodSignersElem = elem["ProductSigners", Atlas.SiPolicyNamespace];
 		if (prodSignersElem is not null)
 		{
 			productSigners = DeserializeProductSigners(prodSignersElem);
@@ -847,21 +847,21 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize TestSigners
-		XmlElement? testSignersElem = elem["TestSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? testSignersElem = elem["TestSigners", Atlas.SiPolicyNamespace];
 		if (testSignersElem is not null)
 		{
 			scenario.TestSigners = DeserializeTestSigners(testSignersElem);
 		}
 
 		// Deserialize TestSigningSigners
-		XmlElement? testSigningSignersElem = elem["TestSigningSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? testSigningSignersElem = elem["TestSigningSigners", Atlas.SiPolicyNamespace];
 		if (testSigningSignersElem is not null)
 		{
 			scenario.TestSigningSigners = DeserializeTestSigningSigners(testSigningSignersElem);
 		}
 
 		// Deserialize AppIDTags
-		XmlElement? appIDTagsElem = elem["AppIDTags", GlobalVars.SiPolicyNamespace];
+		XmlElement? appIDTagsElem = elem["AppIDTags", Atlas.SiPolicyNamespace];
 		if (appIDTagsElem is not null)
 		{
 			if (scenario.Value != 12)
@@ -878,7 +878,7 @@ internal static class CustomDeserialization
 	private static ProductSigners DeserializeProductSigners(XmlElement elem)
 	{
 		ProductSigners ps = new();
-		XmlElement? allowedElem = elem["AllowedSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? allowedElem = elem["AllowedSigners", Atlas.SiPolicyNamespace];
 		if (allowedElem is not null)
 		{
 			string? workAround = null;
@@ -887,7 +887,7 @@ internal static class CustomDeserialization
 			List<AllowedSigner> asList = [];
 			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
 			{
-				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
+				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", Atlas.SiPolicyNamespace);
 				List<ExceptDenyRule>? rules = null;
 				if (edrNodes.Count > 0)
 				{
@@ -904,7 +904,7 @@ internal static class CustomDeserialization
 			}
 			ps.AllowedSigners = new AllowedSigners(allowedSigner: asList) { Workaround = workAround };
 		}
-		XmlElement? deniedElem = elem["DeniedSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? deniedElem = elem["DeniedSigners", Atlas.SiPolicyNamespace];
 		if (deniedElem is not null)
 		{
 			string? workAround = null;
@@ -913,7 +913,7 @@ internal static class CustomDeserialization
 			List<DeniedSigner> dsList = [];
 			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
 			{
-				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
+				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", Atlas.SiPolicyNamespace);
 				List<ExceptAllowRule>? rules = null;
 				if (earNodes.Count > 0)
 				{
@@ -930,7 +930,7 @@ internal static class CustomDeserialization
 			}
 			ps.DeniedSigners = new DeniedSigners(deniedSigner: dsList) { Workaround = workAround };
 		}
-		XmlElement? fileRulesRefElem = elem["FileRulesRef", GlobalVars.SiPolicyNamespace];
+		XmlElement? fileRulesRefElem = elem["FileRulesRef", Atlas.SiPolicyNamespace];
 		if (fileRulesRefElem is not null)
 		{
 			string? workAround = null;
@@ -949,7 +949,7 @@ internal static class CustomDeserialization
 	private static TestSigners DeserializeTestSigners(XmlElement elem)
 	{
 		TestSigners ts = new();
-		XmlElement? allowedElem = elem["AllowedSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? allowedElem = elem["AllowedSigners", Atlas.SiPolicyNamespace];
 		if (allowedElem is not null)
 		{
 			string? workAround = null;
@@ -958,7 +958,7 @@ internal static class CustomDeserialization
 			List<AllowedSigner> asList = [];
 			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
 			{
-				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
+				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", Atlas.SiPolicyNamespace);
 				List<ExceptDenyRule>? rules = null;
 				if (edrNodes.Count > 0)
 				{
@@ -975,7 +975,7 @@ internal static class CustomDeserialization
 			}
 			ts.AllowedSigners = new AllowedSigners(allowedSigner: asList) { Workaround = workAround };
 		}
-		XmlElement? deniedElem = elem["DeniedSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? deniedElem = elem["DeniedSigners", Atlas.SiPolicyNamespace];
 		if (deniedElem is not null)
 		{
 			string? workAround = null;
@@ -984,7 +984,7 @@ internal static class CustomDeserialization
 			List<DeniedSigner> dsList = [];
 			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
 			{
-				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
+				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", Atlas.SiPolicyNamespace);
 				List<ExceptAllowRule>? rules = null;
 				if (earNodes.Count > 0)
 				{
@@ -1001,7 +1001,7 @@ internal static class CustomDeserialization
 			}
 			ts.DeniedSigners = new DeniedSigners(deniedSigner: dsList) { Workaround = workAround };
 		}
-		XmlElement? fileRulesRefElem = elem["FileRulesRef", GlobalVars.SiPolicyNamespace];
+		XmlElement? fileRulesRefElem = elem["FileRulesRef", Atlas.SiPolicyNamespace];
 		if (fileRulesRefElem is not null)
 		{
 			string? workAround = null;
@@ -1021,7 +1021,7 @@ internal static class CustomDeserialization
 	private static TestSigningSigners DeserializeTestSigningSigners(XmlElement elem)
 	{
 		TestSigningSigners tss = new();
-		XmlElement? allowedElem = elem["AllowedSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? allowedElem = elem["AllowedSigners", Atlas.SiPolicyNamespace];
 		if (allowedElem is not null)
 		{
 			string? workAround = null;
@@ -1030,7 +1030,7 @@ internal static class CustomDeserialization
 			List<AllowedSigner> asList = [];
 			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
 			{
-				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
+				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", Atlas.SiPolicyNamespace);
 				List<ExceptDenyRule>? rules = null;
 				if (edrNodes.Count > 0)
 				{
@@ -1047,7 +1047,7 @@ internal static class CustomDeserialization
 			}
 			tss.AllowedSigners = new AllowedSigners(allowedSigner: asList) { Workaround = workAround };
 		}
-		XmlElement? deniedElem = elem["DeniedSigners", GlobalVars.SiPolicyNamespace];
+		XmlElement? deniedElem = elem["DeniedSigners", Atlas.SiPolicyNamespace];
 		if (deniedElem is not null)
 		{
 			string? workAround = null;
@@ -1056,7 +1056,7 @@ internal static class CustomDeserialization
 			List<DeniedSigner> dsList = [];
 			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
 			{
-				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
+				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", Atlas.SiPolicyNamespace);
 				List<ExceptAllowRule>? rules = null;
 				if (earNodes.Count > 0)
 				{
@@ -1073,7 +1073,7 @@ internal static class CustomDeserialization
 			}
 			tss.DeniedSigners = new DeniedSigners(deniedSigner: dsList) { Workaround = workAround };
 		}
-		XmlElement? fileRulesRefElem = elem["FileRulesRef", GlobalVars.SiPolicyNamespace];
+		XmlElement? fileRulesRefElem = elem["FileRulesRef", Atlas.SiPolicyNamespace];
 		if (fileRulesRefElem is not null)
 		{
 			string? workAround = null;
@@ -1123,26 +1123,26 @@ internal static class CustomDeserialization
 		string key = elem.GetAttribute("Key");
 		string valueName = elem.GetAttribute("ValueName");
 
-		XmlElement valueElem = elem["Value", GlobalVars.SiPolicyNamespace] ?? throw new InvalidOperationException("There is a Setting in the policy that has no Value");
+		XmlElement valueElem = elem["Value", Atlas.SiPolicyNamespace] ?? throw new InvalidOperationException("There is a Setting in the policy that has no Value");
 
-		SettingValueType settingValue = valueElem["Binary", GlobalVars.SiPolicyNamespace] is not null
+		SettingValueType settingValue = valueElem["Binary", Atlas.SiPolicyNamespace] is not null
 			? new SettingValueType(
 				item: ConvertHexStringToByteArray(GetElementText(valueElem, "Binary"))
 			)
-			: valueElem["Boolean", GlobalVars.SiPolicyNamespace] is not null
+			: valueElem["Boolean", Atlas.SiPolicyNamespace] is not null
 				? new SettingValueType(
 				item: bool.Parse(GetElementText(valueElem, "Boolean"))
 			)
-				: valueElem["DWord", GlobalVars.SiPolicyNamespace] is not null
+				: valueElem["DWord", Atlas.SiPolicyNamespace] is not null
 				? new SettingValueType(
 				item: uint.Parse(GetElementText(valueElem, "DWord"), CultureInfo.InvariantCulture)
 			)
-				: valueElem["String", GlobalVars.SiPolicyNamespace] is not null
+				: valueElem["String", Atlas.SiPolicyNamespace] is not null
 				? new SettingValueType(
 				item: GetElementText(valueElem, "String")
 			)
 				: throw new InvalidOperationException(
-				GlobalVars.GetStr("PolicySettingInvalidValueElementMessage"));
+				Atlas.GetStr("PolicySettingInvalidValueElementMessage"));
 
 		return new Setting(settingValue, provider, key, valueName);
 	}
@@ -1197,7 +1197,7 @@ internal static class CustomDeserialization
 		if (!Version.TryParse(minimumVersion, out Version? minVer))
 			throw new ArgumentException(
 				string.Format(
-					GlobalVars.GetStr("ValidateVersionRangeInvalidMinVersionMessage"),
+					Atlas.GetStr("ValidateVersionRangeInvalidMinVersionMessage"),
 					id,
 					minimumVersion),
 				nameof(minimumVersion));
@@ -1205,7 +1205,7 @@ internal static class CustomDeserialization
 		if (!Version.TryParse(maximumVersion, out Version? maxVer))
 			throw new ArgumentException(
 				string.Format(
-					GlobalVars.GetStr("ValidateVersionRangeInvalidMaxVersionMessage"),
+					Atlas.GetStr("ValidateVersionRangeInvalidMaxVersionMessage"),
 					id,
 					maximumVersion),
 				nameof(maximumVersion));
@@ -1216,7 +1216,7 @@ internal static class CustomDeserialization
 				nameof(minimumVersion),
 				minVer,
 				string.Format(
-					GlobalVars.GetStr("ValidateVersionRangeMinGreaterThanMaxMessage"),
+					Atlas.GetStr("ValidateVersionRangeMinGreaterThanMaxMessage"),
 					id,
 					minVer,
 					maxVer));

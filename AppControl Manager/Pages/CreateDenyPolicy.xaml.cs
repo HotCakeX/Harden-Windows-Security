@@ -44,7 +44,7 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 		ViewModel.PolicyFileToMergeWithLightAnimatedIconVisibility = visibility;
 
 		ViewModelProvider.SidebarVM.AssignActionPacks(
-			actionPack1: (LightUp1, GlobalVars.GetStr("PolicyToAddNewRulesTo"))
+			actionPack1: (LightUp1, Atlas.GetStr("PolicyToAddNewRulesTo"))
 		);
 	}
 
@@ -74,6 +74,6 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 		await ShadowExitAnimation.StartAsync((UIElement)sender);
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("CreateDenyPolicyPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Deny-App-Control-Policy");
 }

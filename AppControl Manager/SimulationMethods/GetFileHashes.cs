@@ -47,7 +47,7 @@ internal static partial class GetFileHashes
 			}
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("ReturningNFileRulesBasedOnHashes"), outputHashInfoProcessingString.Count));
+		Logger.Write(string.Format(Atlas.GetStr("ReturningNFileRulesBasedOnHashes"), outputHashInfoProcessingString.Count));
 
 		// Return the output HashSet
 		return outputHashInfoProcessingString;

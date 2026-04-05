@@ -719,12 +719,12 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		{
 			if (ExternalInternalIsCancellingState)
 			{
-				Content = GlobalVars.GetStr("Cancelling");
+				Content = Atlas.GetStr("Cancelling");
 				UpdateButtonStyle(true);
 			}
 			else if (ExternalInternalIsCancelState)
 			{
-				Content = GlobalVars.GetStr("Cancel");
+				Content = Atlas.GetStr("Cancel");
 				UpdateButtonStyle(true);
 			}
 			else
@@ -1064,12 +1064,12 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		{
 			if (_targetCancellingStateAfterFadeOut)
 			{
-				Content = GlobalVars.GetStr("Cancelling");
+				Content = Atlas.GetStr("Cancelling");
 				UpdateButtonStyle(true);
 			}
 			else if (_targetStateAfterFadeOut)
 			{
-				Content = GlobalVars.GetStr("Cancel");
+				Content = Atlas.GetStr("Cancel");
 				UpdateButtonStyle(true);
 			}
 			else

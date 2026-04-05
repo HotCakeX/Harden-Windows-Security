@@ -41,7 +41,7 @@ internal static partial class BasePolicyCreator
 	/// </summary>
 	internal static void SetAutoUpdateDriverBlockRules()
 	{
-		Logger.Write(GlobalVars.GetStr("CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage"));
+		Logger.Write(Atlas.GetStr("CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage"));
 
 		const string command = """
 -NoProfile -WindowStyle Hidden -Command ""try { Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile 'VulnerableDriverBlockList.zip' -ErrorAction Stop } catch { exit 1 };
@@ -61,7 +61,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --arg "{command}" --folder "MSFT Driver Block list update" --description "This scheduled task runs every 7 days to keep the Microsoft Recommended Drivers Block List up to date. It uses Windows PowerShell for execution. It was created by the AppControl Manager application when you used the feature in the 'Create Policy' page." --author "AppControl Manager" --logon 2 --runlevel 1 --sid "S-1-5-18" --allowstartifonbatteries --dontstopifgoingonbatteries --startwhenavailable --restartcount 4 --restartinterval PT6H --priority 4 --runonlyifnetworkavailable --trigger "type=onetime;start={formattedTime};repeat_interval=P7D;execution_time_limit=PT1H;stop_at_duration_end=1;" --useunifiedschedulingengine true --executiontimelimit PT4M --waketorun 0 --multipleinstancespolicy 2 --allowhardterminate 1 --allowdemandstart 1
 """;
 
-		_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, args);
+		_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, args);
 	}
 
 
@@ -104,7 +104,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 				lastUpdated = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
 
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("DriversBlockListLastUpdatedMessage"),
+					Atlas.GetStr("DriversBlockListLastUpdatedMessage"),
 					lastUpdated));
 			}
 
@@ -112,7 +112,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(GlobalVars.GetStr("ErrorRetrievingAdditionalDriverBlockRulesInfoMessage"));
+			Logger.Write(Atlas.GetStr("ErrorRetrievingAdditionalDriverBlockRulesInfoMessage"));
 
 			Logger.Write(ex);
 
@@ -128,10 +128,10 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	internal static PolicyFileRepresent DeployDriversBlockRules()
 	{
 		// Initialize the final destination of the SiPolicy file
-		string SiPolicyFinalDestination = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
+		string SiPolicyFinalDestination = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
 
 		// Download the zip file
-		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL)
+		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(Atlas.MSFTRecommendedDriverBlockRulesURL)
 								 .GetAwaiter().GetResult();
 
 		// Process the zip file in memory
@@ -153,11 +153,11 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		// Extract the SiPolicy file directly to the final destination, overwriting if it exists
 		siPolicyEntry.ExtractToFile(SiPolicyFinalDestination, true);
 
-		Logger.Write(GlobalVars.GetStr("DeployDriversBlockRulesRefreshPoliciesMessage"));
+		Logger.Write(Atlas.GetStr("DeployDriversBlockRulesRefreshPoliciesMessage"));
 
 		CiToolHelper.RefreshPolicy();
 
-		Logger.Write(GlobalVars.GetStr("DeployDriversBlockRulesDeployedMessage"));
+		Logger.Write(Atlas.GetStr("DeployDriversBlockRulesDeployedMessage"));
 
 		return new(Management.Initialize(null, xmlDoc));
 	}
@@ -172,7 +172,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		const string name = "Microsoft Recommended Driver Block Rules";
 
 		// Download the zip file
-		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL)
+		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(Atlas.MSFTRecommendedDriverBlockRulesURL)
 								 .GetAwaiter().GetResult();
 
 		// Process the zip file in memory
@@ -237,9 +237,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			_ = GetBlockRules(deploy);
 
-		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AllowMicrosoftTemplatePolicyPath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(Atlas.AllowMicrosoftTemplatePolicyPath, null);
 
-		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
+		Logger.Write(Atlas.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
 		// Reset PolicyID and BasePolicyID and set a new name
 		policyObj = SetCiPolicyInfo.Set(
@@ -287,7 +287,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 
 		if (deploy)
 		{
-			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
+			Logger.Write(Atlas.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
 			// Deploy the CIP
 			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
@@ -334,9 +334,9 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			_ = GetBlockRules(deploy);
 
-		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.DefaultWindowsTemplatePolicyPath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(Atlas.DefaultWindowsTemplatePolicyPath, null);
 
-		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
+		Logger.Write(Atlas.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
 		// Reset PolicyID and BasePolicyID and set a new name
 		policyObj = SetCiPolicyInfo.Set(
@@ -384,7 +384,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 
 		if (deploy)
 		{
-			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
+			Logger.Write(Atlas.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
 			// Deploy the CIP
 			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
@@ -405,12 +405,12 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		const string policyName = "Microsoft Windows Recommended User Mode BlockList";
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("GettingLatestPolicyFromOfficialRepoMessage"),
+			Atlas.GetStr("GettingLatestPolicyFromOfficialRepoMessage"),
 			policyName));
 
 		// Download the markdown page from GitHub containing the latest Microsoft recommended block rules (User Mode)
 		string msftUserModeBlockRulesAsString = SecHttpClient.Instance
-				.GetStringAsync(GlobalVars.MSFTRecommendedBlockRulesURL)
+				.GetStringAsync(Atlas.MSFTRecommendedBlockRulesURL)
 				.GetAwaiter()
 				.GetResult();
 
@@ -431,7 +431,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			rulesToAdd: [OptionType.EnabledUpdatePolicyNoReboot, OptionType.DisabledScriptEnforcement],
 			rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledAdvancedBootOptionsMenu]);
 
-		Logger.Write(GlobalVars.GetStr("AssigningPolicyNameAndResettingPolicyIDMessage"));
+		Logger.Write(Atlas.GetStr("AssigningPolicyNameAndResettingPolicyIDMessage"));
 
 		// Reset PolicyID and BasePolicyID and set a new name
 		policyObj = SetCiPolicyInfo.Set(policyObj, true, policyName, null);
@@ -439,7 +439,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		if (deploy)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("CheckingIfPolicyIsAlreadyDeployedMessage"),
+				Atlas.GetStr("CheckingIfPolicyIsAlreadyDeployedMessage"),
 				policyName));
 
 			// Getting the list of the deployed base policies whose names match the policyName
@@ -458,7 +458,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 				string CurrentlyDeployedBlockRulesGUID = CurrentlyDeployedBlockRules.First().PolicyID;
 
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("PolicyAlreadyDeployedUpdatingUsingSameGuidMessage"),
+					Atlas.GetStr("PolicyAlreadyDeployedUpdatingUsingSameGuidMessage"),
 					policyName,
 					CurrentlyDeployedBlockRulesGUID));
 
@@ -468,7 +468,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			else
 			{
 				Logger.Write(string.Format(
-					GlobalVars.GetStr("PolicyNotDeployedDeployingNowMessage"),
+					Atlas.GetStr("PolicyNotDeployedDeployingNowMessage"),
 					policyName));
 			}
 
@@ -492,7 +492,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		if (encoded.Length == 0)
 		{
 			throw new InvalidOperationException(
-				GlobalVars.GetStr("NoXmlContentFoundForUserModeBlockRulesErrorMessage"));
+				Atlas.GetStr("NoXmlContentFoundForUserModeBlockRulesErrorMessage"));
 		}
 
 		// Decode HTML entities (&lt;, &gt;, &amp;, etc.) to obtain real XML.
@@ -544,7 +544,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			_ = GetBlockRules(deploy);
 
-		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AllowMicrosoftTemplatePolicyPath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(Atlas.AllowMicrosoftTemplatePolicyPath, null);
 
 		policyObj = CiRuleOptions.Set(
 			policyObj,
@@ -554,7 +554,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
 
-		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
+		Logger.Write(Atlas.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
 		// Reset PolicyID and BasePolicyID and set a new name
 		policyObj = SetCiPolicyInfo.Set(
@@ -581,7 +581,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		{
 			await ConfigureISGServices.Configure();
 
-			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
+			Logger.Write(Atlas.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
 			// Deploy the CIP
 			CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
@@ -629,7 +629,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		if (deploy)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("DeployingStrictKernelModePolicyMessage"),
+				Atlas.GetStr("DeployingStrictKernelModePolicyMessage"),
 				policyObj.PolicyID));
 
 			// Deploy the CIP

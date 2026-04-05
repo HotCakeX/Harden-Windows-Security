@@ -7,7 +7,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:ACMVM="using:AppControlManager.ViewModels"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:helpers="using:HardenSystemSecurity.Helpers"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -27,7 +27,7 @@
                  IsAddTabButtonVisible="False"
                  Grid.Row="1"
                  TabWidthMode="Equal"
-                 CanReorderTabs="{x:Bind ACMVM:ViewModelBase.IsNotElevated}">
+                 CanReorderTabs="{x:Bind CommonCore:ViewModelBase.IsNotElevated}">
 
             <!-- Security Measures Tab -->
             <TabViewItem x:Uid="MicrosoftDefenderSecurityMeasuresTab" IsClosable="False" MinHeight="40">

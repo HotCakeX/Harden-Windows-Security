@@ -31,6 +31,6 @@ internal sealed partial class BuildNewCertificate : Page, CommonCore.UI.IPageHea
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("BuildNewCertificatePageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("BuildNewCertificatePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate");
 }

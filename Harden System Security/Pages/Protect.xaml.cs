@@ -36,7 +36,7 @@ internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 		ViewModel.VerificationResultsPopUp = VerificationResultsPopUp; // Accessing the Popup from VM because if we tie its IsOpen property to TwoWay field in VM then after navigating away and back to the page, making the Popup appear will show 2 Popups on the UI instead which is a bug and this bug applies to TeachingTips as well.
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ProtectPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ProtectPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect");
 
 	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)

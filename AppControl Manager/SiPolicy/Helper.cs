@@ -107,7 +107,7 @@ internal static class Helper
 					Deny d => (0, d.FileName, d.InternalName, d.FileDescription, d.ProductName, d.PackageFamilyName, d.FilePath, d.Hash),
 					Allow a => (1, a.FileName, a.InternalName, a.FileDescription, a.ProductName, a.PackageFamilyName, a.FilePath, a.Hash),
 					FileAttrib f => (2, f.FileName, f.InternalName, f.FileDescription, f.ProductName, f.PackageFamilyName, f.FilePath, f.Hash),
-					_ => throw new InvalidOperationException(GlobalVars.GetStr("EncounteredInvalidFileRule"))
+					_ => throw new InvalidOperationException(Atlas.GetStr("EncounteredInvalidFileRule"))
 				};
 
 		var r1 = DeconstructRule(x);
@@ -191,7 +191,7 @@ internal static class Helper
 			AppIDs = rule.AppIDs,
 			FilePath = rule.FilePath
 		},
-		_ => throw new InvalidOperationException(GlobalVars.GetStr("EncounteredInvalidFileRule"))
+		_ => throw new InvalidOperationException(Atlas.GetStr("EncounteredInvalidFileRule"))
 	};
 
 	/// <summary>
@@ -267,7 +267,7 @@ internal static class Helper
 				// If we are about to parse a segment but we already found 4,
 				// that means this is the 5th segment -> Error.
 				if (segmentsParsed >= MaxSegments)
-					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("MalformedVersionDetected"), version));
+					throw new InvalidOperationException(string.Format(Atlas.GetStr("MalformedVersionDetected"), version));
 
 				// Mark the beginning of this segment
 				char* partStart = ptr;
@@ -284,7 +284,7 @@ internal static class Helper
 				{
 					// Empty segment (e.g., "1..2") is invalid
 					string part = new(partStart, 0, len);
-					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
+					throw new InvalidOperationException(string.Format(Atlas.GetStr("StringFormatIncorrect"), part));
 				}
 
 				uint val = 0;
@@ -302,7 +302,7 @@ internal static class Helper
 					{
 						// Invalid character encountered
 						string part = new(partStart, 0, len);
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
+						throw new InvalidOperationException(string.Format(Atlas.GetStr("StringFormatIncorrect"), part));
 					}
 
 					val = (val * 10) + digit;
@@ -311,7 +311,7 @@ internal static class Helper
 					if (val > 65535)
 					{
 						string part = new(partStart, 0, len);
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
+						throw new InvalidOperationException(string.Format(Atlas.GetStr("StringFormatIncorrect"), part));
 					}
 
 					pDigit++;
@@ -397,7 +397,7 @@ internal static class Helper
 			? File.ReadAllText(Manifest.AbsolutePath)
 			: Manifest.Scheme == Uri.UriSchemeHttp || Manifest.Scheme == Uri.UriSchemeHttps
 				? SecHttpClient.Instance.GetStringAsync(Manifest).GetAwaiter().GetResult()
-				: throw new InvalidOperationException(string.Format(GlobalVars.GetStr("InvalidUrlDetectedForAppManifest"), Manifest.Scheme));
+				: throw new InvalidOperationException(string.Format(Atlas.GetStr("InvalidUrlDetectedForAppManifest"), Manifest.Scheme));
 
 		using MemoryStream xmlStream = new(Encoding.UTF8.GetBytes(content));
 

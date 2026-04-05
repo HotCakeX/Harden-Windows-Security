@@ -6,10 +6,10 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:intelgathering="using:AppControlManager.IntelGathering"
+    xmlns:intelgathering="using:CommonCore.IntelGathering"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:vm="using:AppControlManager.ViewModels"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -598,7 +598,7 @@
                             <ComboBox SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                                       SelectedIndex="0"
                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                      ItemsSource="{x:Bind vm:ViewModelBase.ScanLevelsSourceForLogs}"
+                                      ItemsSource="{x:Bind CommonCore:ViewModelBase.ScanLevelsSourceForLogs}"
                                       x:Uid="ScanLevelComboBox"
                                       ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
 
@@ -629,7 +629,7 @@
 
                     <TextBlock Text="Property Filter:" VerticalAlignment="Center" FontWeight="SemiBold"/>
 
-                    <ComboBox ItemsSource="{x:Bind vm:ViewModelBase.PropertyFilterItems.Value}"
+                    <ComboBox ItemsSource="{x:Bind CommonCore:ViewModelBase.PropertyFilterItems.Value}"
                               SelectedItem="{x:Bind ViewModel.SelectedPropertyFilter, Mode=TwoWay}"
                               MinWidth="200"
                               PlaceholderText="Select a property..."

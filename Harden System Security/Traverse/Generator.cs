@@ -60,7 +60,7 @@ internal static class Generator
 	internal static async Task GenerateTraverseData(string filePath)
 	{
 		if (Logger.CliRequested)
-			Logger.Write(GlobalVars.GetStr("SystemStateReportGenerationBeginsMsg"));
+			Logger.Write(Atlas.GetStr("SystemStateReportGenerationBeginsMsg"));
 
 		// Retrieve the data
 
@@ -214,7 +214,7 @@ internal static class Generator
 			MContainerJsonContext.SerializeSingle(container, filePath);
 
 			if (Logger.CliRequested)
-				Logger.Write(string.Format(GlobalVars.GetStr("SystemStateReportGenerationFinishedMsg"), filePath));
+				Logger.Write(string.Format(Atlas.GetStr("SystemStateReportGenerationFinishedMsg"), filePath));
 		});
 	}
 

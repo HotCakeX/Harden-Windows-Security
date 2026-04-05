@@ -114,7 +114,7 @@ internal sealed class CbomTool
 	internal string Website => "https://github.com/HotCakeX/Harden-Windows-Security";
 
 	[JsonInclude]
-	internal string Version => GlobalVars.currentAppVersion.ToString();
+	internal string Version => Atlas.currentAppVersion.ToString();
 }
 
 /// <summary>

@@ -63,7 +63,7 @@ internal static class BinaryOpsReverse
 			SignedCms signedCms = new();
 			signedCms.Decode(fileBytes);
 
-			Logger.Write(GlobalVars.GetStr("LogCIPFileIsSigned"));
+			Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
 
 			return signedCms.ContentInfo.Content;
 		}
@@ -111,7 +111,7 @@ internal static class BinaryOpsReverse
 		uint bodyOffset = reader.ReadUInt32();
 		if (bodyOffset + 4 > reader.BaseStream.Length)
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("ErrorBodyOffsetInvalid"));
+			throw new InvalidOperationException(Atlas.GetStr("ErrorBodyOffsetInvalid"));
 		}
 
 		SiPolicy policy = new(
@@ -168,7 +168,7 @@ internal static class BinaryOpsReverse
 				0 => new Deny(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
 				1 => new Allow(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
 				2 => new FileAttrib(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
-				_ => throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorUnknownFileRuleType"), type))
+				_ => throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorUnknownFileRuleType"), type))
 			};
 			fileRules[i] = fr;
 		}
@@ -230,7 +230,7 @@ internal static class BinaryOpsReverse
 				1 => reader.ReadUInt32(),
 				2 => ReadCountedAlignedBytes(reader),
 				3 => ReadStringValue(reader),
-				_ => throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorUnknownSettingType"), t))
+				_ => throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorUnknownSettingType"), t))
 			};
 
 			if (prov is null || key is null || valName is null || data is null)
@@ -243,7 +243,7 @@ internal static class BinaryOpsReverse
 		if (version >= 3)
 		{
 			uint tag3 = reader.ReadUInt32();
-			if (tag3 != 3) throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorExpectedV3BlockTagGot"), tag3));
+			if (tag3 != 3) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV3BlockTagGot"), tag3));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				uint maxL = reader.ReadUInt32();
@@ -282,7 +282,7 @@ internal static class BinaryOpsReverse
 		if (version >= 4)
 		{
 			uint tag4 = reader.ReadUInt32();
-			if (tag4 != 4) throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorExpectedV4BlockTagGot"), tag4));
+			if (tag4 != 4) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV4BlockTagGot"), tag4));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				string? internalName = ReadStringValue(reader);
@@ -315,7 +315,7 @@ internal static class BinaryOpsReverse
 		if (version >= 5)
 		{
 			uint tag5 = reader.ReadUInt32();
-			if (tag5 != 5) throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorExpectedV5BlockTagGot"), tag5));
+			if (tag5 != 5) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV5BlockTagGot"), tag5));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				string? pfn = ReadStringValue(reader);
@@ -343,7 +343,7 @@ internal static class BinaryOpsReverse
 		if (version >= 6)
 		{
 			uint tag6 = reader.ReadUInt32();
-			if (tag6 != 6) throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorExpectedV6BlockTagGot"), tag6));
+			if (tag6 != 6) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV6BlockTagGot"), tag6));
 			policy.PolicyID = new Guid(reader.ReadBytes(16)).ToString("B").ToUpperInvariant();
 			policy.BasePolicyID = new Guid(reader.ReadBytes(16)).ToString("B").ToUpperInvariant();
 			policy.PolicyType = (policy.PolicyID == policy.BasePolicyID)
@@ -358,7 +358,7 @@ internal static class BinaryOpsReverse
 		if (version >= 7)
 		{
 			uint tag7 = reader.ReadUInt32();
-			if (tag7 != 7) throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorExpectedV7BlockTagGot"), tag7));
+			if (tag7 != 7) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV7BlockTagGot"), tag7));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				string? filePath = ReadStringValue(reader);
@@ -375,7 +375,7 @@ internal static class BinaryOpsReverse
 		if (version >= 8)
 		{
 			uint tag8 = reader.ReadUInt32();
-			if (tag8 != 8) throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorExpectedV8BlockTagGot"), tag8));
+			if (tag8 != 8) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV8BlockTagGot"), tag8));
 			policy.AppSettings = ParseAppSettings(reader);
 		}
 
@@ -407,7 +407,7 @@ internal static class BinaryOpsReverse
 		uint endTag = reader.ReadUInt32();
 		if (endTag < expectedEndTag)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("WarningReverseConvertingNewerPolicyVersion"), expectedEndTag, endTag));
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("WarningReverseConvertingNewerPolicyVersion"), expectedEndTag, endTag));
 		}
 
 		return policy;

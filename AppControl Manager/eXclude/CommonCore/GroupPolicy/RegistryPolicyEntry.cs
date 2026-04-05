@@ -245,7 +245,7 @@ internal sealed class RegistryPolicyEntry(
 			if (entry.FriendlyName is not null)
 			{
 				// Resolve the resource key to the actual string.
-				entry.FriendlyName = GlobalVars.GetSecurityStr(entry.FriendlyName);
+				entry.FriendlyName = Atlas.GetSecurityStr(entry.FriendlyName);
 			}
 		}
 

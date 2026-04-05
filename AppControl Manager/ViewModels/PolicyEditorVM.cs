@@ -26,6 +26,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
+using CommonCore.IntelGathering;
 using CommonCore.ToolKits;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
@@ -38,8 +39,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	#region Column Managers
 
-	internal ListViewColumnManager<PolicyEditor.FileBasedRulesForListView> FileRulesColumnManager { get; }
-	internal ListViewColumnManager<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesColumnManager { get; }
+	internal readonly ListViewColumnManager<PolicyEditor.FileBasedRulesForListView> FileRulesColumnManager;
+	internal readonly ListViewColumnManager<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesColumnManager;
 
 	// ------------ AppIDTags ------------
 	internal GridLength AppIDTagsColumnWidth1 { get; set => SP(ref field, value); }
@@ -83,7 +84,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		// Initialize preset policy settings
 		PresetPolicySettings = [
 			new(
-			parentViewModel: this,
 			provider: "AllHostIds",
 			key: "AllKeys",
 			value: true,
@@ -260,9 +260,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	private void CalculateAppIDTagsListViewColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("KeyHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("ValueHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("ContextHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("KeyHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("ValueHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("ContextHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (PolicyEditor.AppIDTagsWithContext item in AppIDTagsCollection)
@@ -285,7 +285,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		if (SelectedPolicy is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAppControlPolicyFirstMessage"));
+			MainInfoBar.WriteWarning(Atlas.GetStr("SelectAppControlPolicyFirstMessage"));
 			return;
 		}
 
@@ -293,14 +293,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 		try
 		{
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				MainInfoBar.IsClosable = false;
 
 				ProgressBarVisibility = Visibility.Visible;
 				UIElementsEnabledState = false;
 
-				MainInfoBar.WriteInfo(GlobalVars.GetStr("LoadingPolicyMessage"));
+				MainInfoBar.WriteInfo(Atlas.GetStr("LoadingPolicyMessage"));
 
 				// Clear the class variables
 				ekusToUse = [];
@@ -376,7 +376,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					ref kernelModeAppIDTags);
 			});
 
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				// Process the Allow rules
 				uint _AllowRulesCount = 0;
@@ -647,7 +647,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				if (SelectedPolicy.PolicyObj is not null)
 				{
-					foreach (PolicyEditor.PolicySettings item in CollectionsMarshal.AsSpan(PolicySettingsManager.GetPolicySettings(SelectedPolicy.PolicyObj.Settings, this)))
+					foreach (PolicyEditor.PolicySettings item in CollectionsMarshal.AsSpan(PolicySettingsManager.GetPolicySettings(SelectedPolicy.PolicyObj.Settings)))
 					{
 						PolicySettingsCollection.Add(item);
 					}
@@ -671,7 +671,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			});
 
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				try
 				{
@@ -684,23 +684,23 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			if (SelectedPolicy.FilePath is not null)
 				await PublishUserActivityAsync(LaunchProtocolActions.PolicyEditor,
 					SelectedPolicy.FilePath,
-					GlobalVars.GetStr("UserActivityNameForPolicyEditor"));
+					Atlas.GetStr("UserActivityNameForPolicyEditor"));
 		}
 		catch (Exception ex)
 		{
 			error = true;
-			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorLoadingPolicyFileMessage"));
+			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorLoadingPolicyFileMessage"));
 		}
 		finally
 		{
-			await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				UIElementsEnabledState = true;
 				ProgressBarVisibility = Visibility.Collapsed;
 
 				if (!error)
 				{
-					MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessLoadedPolicyMessage"));
+					MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessLoadedPolicyMessage"));
 				}
 
 				MainInfoBar.IsClosable = true;
@@ -717,7 +717,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (!FileRulesCollection.Remove(item))
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("CouldNotRemoveFileRuleMessage"),
+				Atlas.GetStr("CouldNotRemoveFileRuleMessage"),
 				item.Id));
 		}
 
@@ -733,7 +733,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (!SignatureRulesCollection.Remove(item))
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("CouldNotRemoveSignatureRuleMessage"),
+				Atlas.GetStr("CouldNotRemoveSignatureRuleMessage"),
 				item.Id));
 		}
 
@@ -748,7 +748,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		try
 		{
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.MultiAppControlPolicyPickerFilter);
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.MultiAppControlPolicyPickerFilter);
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -810,7 +810,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 		else
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("OnlyXmlCipSupportedMessage"));
+			throw new InvalidOperationException(Atlas.GetStr("OnlyXmlCipSupportedMessage"));
 		}
 	}
 
@@ -903,7 +903,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			if (SelectedPolicy is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyBeforeLoad"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyBeforeLoad"));
 				return;
 			}
 
@@ -1217,7 +1217,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				if (string.IsNullOrWhiteSpace(PolicyVersionTextBox))
 				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("EnterPolicyVersion"));
+					MainInfoBar.WriteWarning(Atlas.GetStr("EnterPolicyVersion"));
 					return;
 				}
 
@@ -1253,8 +1253,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				if (SelectedPolicy.Kind is not PolicyFileRepresentKind.XML)
 				{
 					// Save it to User Config dir when elevated
-					fileToSaveTheChangesTo = GlobalVars.IsElevated
-						? Path.Combine(GlobalVars.UserConfigDir, $"{SelectedPolicy.FileName}.xml")
+					fileToSaveTheChangesTo = Atlas.IsElevated
+						? Path.Combine(Atlas.UserConfigDir, $"{SelectedPolicy.FileName}.xml")
 						// Save it to the same location file is being read from if non-elevated since we already check if we have write permission in that location
 						: Path.Combine(Path.GetDirectoryName(SelectedPolicy.FilePath)!, $"{SelectedPolicy.FileName}.xml");
 				}
@@ -1381,23 +1381,23 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
-				await GlobalVars.AppDispatcher.EnqueueAsync(async () =>
+				await Atlas.AppDispatcher.EnqueueAsync(async () =>
 				{
 					// Update the Policy Settings again to reflect the newest changes when something is removed from their UI-bound collection.
 					PolicySettingsCollection.Clear();
 
-					foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(_policySettings, this))
+					foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(_policySettings))
 					{
 						PolicySettingsCollection.Add(item);
 					}
 
-					MainInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyEditorSuccessfulSaveMessage"));
+					MainInfoBar.WriteSuccess(Atlas.GetStr("PolicyEditorSuccessfulSaveMessage"));
 
 					if (SelectedPolicy.Kind is not PolicyFileRepresentKind.XML)
 					{
 						using ContentDialogV2 dialog = new()
 						{
-							Title = GlobalVars.GetStr("DialogTitleSuccess"),
+							Title = Atlas.GetStr("DialogTitleSuccess"),
 							Content = new WrapPanel
 							{
 								Orientation = Orientation.Vertical,
@@ -1408,7 +1408,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 								{
 									new TextBlock
 									{
-										Text = SelectedPolicy.Kind is PolicyFileRepresentKind.CIP ? GlobalVars.GetStr("DialogContentCIPConvertedToXML") : GlobalVars.GetStr("DialogContentP7BConvertedToXML"),
+										Text = SelectedPolicy.Kind is PolicyFileRepresentKind.CIP ? Atlas.GetStr("DialogContentCIPConvertedToXML") : Atlas.GetStr("DialogContentP7BConvertedToXML"),
 										HorizontalAlignment = HorizontalAlignment.Center,
 										TextWrapping = TextWrapping.WrapWholeWords
 									},
@@ -1421,7 +1421,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 									}
 								}
 							},
-							CloseButtonText = GlobalVars.GetStr("Ok"),
+							CloseButtonText = Atlas.GetStr("Ok"),
 						};
 
 						_ = await dialog.ShowAsync();
@@ -1480,7 +1480,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		UpdatePolicySignersCount = "• Update Policy Signer Rules count: 0";
 		SupplementalPolicySignersCount = "• Supplemental Policy Signer Rules count: 0";
 
-		MainInfoBar.WriteInfo(GlobalVars.GetStr("AllDataClearedMsg"));
+		MainInfoBar.WriteInfo(Atlas.GetStr("AllDataClearedMsg"));
 		MainInfoBar.IsClosable = true;
 
 		SignatureRulesColumnManager.CalculateColumnWidths(SignatureRulesCollection);
@@ -1689,8 +1689,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			value: string.Empty,
 			valueName: string.Empty,
 			valueStr: string.Empty,
-			type: 0,
-			parentViewModel: this
+			type: 0
 		);
 
 		PolicySettingsCollection.Add(newSetting);
@@ -1710,7 +1709,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 		// Create a copy of the setting so that their properties won't be tied to each other
 		PolicyEditor.PolicySettings newSetting = new(
-			parentViewModel: this,
 			provider: SelectedPresetPolicySetting.Provider,
 			key: SelectedPresetPolicySetting.Key,
 			value: SelectedPresetPolicySetting.Value,

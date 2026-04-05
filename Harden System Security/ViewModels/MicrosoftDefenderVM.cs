@@ -22,7 +22,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
 using HardenSystemSecurity.ExploitMitigation;
@@ -41,14 +40,14 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		MainInfoBar = new();
 
 		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
 		// To size the listview columns with some padding after initial page load.
-		_ = GlobalVars.AppDispatcher.TryEnqueue(ComputeColumnWidths);
+		_ = Atlas.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -127,7 +126,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// Enabling Restore point scan
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("EnablingRestorePointScan-MSDefender"),
+			name: Atlas.GetStr("EnablingRestorePointScan-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -136,7 +135,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint false");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint false");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -146,7 +145,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return false;
 				}
 
-				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference DisableRestorePoint");
+				string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference DisableRestorePoint");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
@@ -163,7 +162,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint true");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint true");
 			}),
 
 			deviceIntents: [
@@ -178,7 +177,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// AllowSwitchToAsyncInspection
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("AllowSwitchToAsyncInspection-MSDefender"),
+			name: Atlas.GetStr("AllowSwitchToAsyncInspection-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -187,7 +186,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection true");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection true");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -197,7 +196,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return false;
 				}
 
-				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AllowSwitchToAsyncInspection");
+				string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AllowSwitchToAsyncInspection");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
@@ -214,7 +213,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection false");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection false");
 			}),
 
 			deviceIntents: [
@@ -226,7 +225,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// EnableConvertWarnToBlock
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("EnableConvertWarnToBlock-MSDefender"),
+			name: Atlas.GetStr("EnableConvertWarnToBlock-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -235,7 +234,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock true");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock true");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -245,7 +244,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return false;
 				}
 
-				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference EnableConvertWarnToBlock");
+				string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference EnableConvertWarnToBlock");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
@@ -262,7 +261,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock false");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock false");
 			}),
 
 			deviceIntents: [
@@ -277,7 +276,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// BruteForceProtectionLocalNetworkBlocking
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("BruteForceProtectionLocalNetworkBlocking-MSDefender"),
+			name: Atlas.GetStr("BruteForceProtectionLocalNetworkBlocking-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -286,7 +285,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking true");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking true");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -296,7 +295,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return false;
 				}
 
-				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference BruteForceProtectionLocalNetworkBlocking");
+				string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference BruteForceProtectionLocalNetworkBlocking");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
@@ -313,7 +312,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking false");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking false");
 			}),
 
 			deviceIntents: [
@@ -328,7 +327,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// Adding OneDrive directories to Controlled Folder Access
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("AddOneDriveDirsToCFA-MSDefender"),
+			name: Atlas.GetStr("AddOneDriveDirsToCFA-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -344,7 +343,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					// Wrap them with double quotes and separate them with a space
 					string oneDriveDirsFinal = string.Join(" ", oneDriveDirs.Select(item => $"\"{item}\""));
 
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Add ControlledFolderAccessProtectedFolders {oneDriveDirsFinal}");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Add ControlledFolderAccessProtectedFolders {oneDriveDirsFinal}");
 				}
 			}),
 			deviceIntents: [
@@ -357,7 +356,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// Enable Mandatory ASLR for System
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("EnableMandatoryASLR-MSDefender"),
+			name: Atlas.GetStr("EnableMandatoryASLR-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -423,7 +422,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// bcdedit.exe /set '{current}' nx AlwaysOn
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("SetNXBit-MSDefender"),
+			name: Atlas.GetStr("SetNXBit-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -434,7 +433,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 				if (newVal != 3)
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("SetNXBitError-MSDefender"));
+					throw new InvalidOperationException(Atlas.GetStr("SetNXBitError-MSDefender"));
 				}
 			}),
 
@@ -453,7 +452,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 				if (newVal != 0)
 				{
-					throw new InvalidOperationException(GlobalVars.GetStr("SetNXBitError-MSDefender"));
+					throw new InvalidOperationException(Atlas.GetStr("SetNXBitError-MSDefender"));
 				}
 			}),
 			deviceIntents: [
@@ -466,7 +465,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// Apply exclusions for Mandatory ASLR
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("ApplyMandatoryASLRExcl-MSDefender"),
+			name: Atlas.GetStr("ApplyMandatoryASLRExcl-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -560,7 +559,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// Beta update channels for the Microsoft Defender
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("BetaUpdateChannels-MSDefender"),
+			name: Atlas.GetStr("BetaUpdateChannels-MSDefender"),
 
 			applyStrategy: new DefaultApply(() =>
 			{
@@ -573,8 +572,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 2");
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 2");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 2");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 2");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -588,8 +587,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return false;
 				}
 
-				string? result1 = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference EngineUpdatesChannel");
-				string? result2 = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference PlatformUpdatesChannel");
+				string? result1 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference EngineUpdatesChannel");
+				string? result2 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference PlatformUpdatesChannel");
 
 				if (string.Equals(result1, "2", StringComparison.OrdinalIgnoreCase) &&
 					string.Equals(result2, "2", StringComparison.OrdinalIgnoreCase))
@@ -609,8 +608,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return;
 				}
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 0");
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 0");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 0");
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 0");
 			}),
 
 			subCategory: SubCategories.MSDefender_BetaUpdateChannelsForDefender,
@@ -628,7 +627,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// Microsoft Defender Sandbox
 		temp.Add(new(
 				category: Categories.MicrosoftDefender,
-				name: GlobalVars.GetStr("EnableMDAVSandboxMode-MSDefender"),
+				name: Atlas.GetStr("EnableMDAVSandboxMode-MSDefender"),
 
 				applyStrategy: new DefaultApply(() =>
 				{
@@ -771,7 +770,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	{
 		try
 		{
-			string output = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath,
+			string output = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath,
 							$"getavailability {wmiNamespace} {className} {propertyName}");
 
 			string token = output is not null ? output.Trim() : string.Empty;
@@ -807,8 +806,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// </summary>
 	private void ComputeColumnWidths()
 	{
-		double w1 = ListViewHelper.MeasureText(GlobalVars.GetStr("TargetHeader/Text"));
-		double w2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SourceHeader/Text"));
+		double w1 = ListViewHelper.MeasureText(Atlas.GetStr("TargetHeader/Text"));
+		double w2 = ListViewHelper.MeasureText(Atlas.GetStr("SourceHeader/Text"));
 
 		foreach (Exclusions v in Exclusions)
 		{
@@ -865,8 +864,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<Exclusions, object?> Getter)> _exclusionsMappings =
 		new Dictionary<string, (string Label, Func<Exclusions, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Target",     (GlobalVars.GetStr("TargetHeader/Text"),  v => v.Target) },
-			{ "Source",     (GlobalVars.GetStr("SourceHeader/Text"),  v => v.SourceFriendlyName) }
+			{ "Target",     (Atlas.GetStr("TargetHeader/Text"),  v => v.Target) },
+			{ "Source",     (Atlas.GetStr("SourceHeader/Text"),  v => v.SourceFriendlyName) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	#region Sort
@@ -966,6 +965,9 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			// restore horizontal scroll position
 			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
+
+		// Adjust column widths after search
+		ComputeColumnWidths();
 	}
 	#endregion
 
@@ -991,7 +993,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			await Task.Run(() =>
 			{
 
-				string results = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference");
+				string results = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference");
 
 				List<Dictionary<string, object?>> DeserializedResults = ComJsonDeserializer.DeserializeInstances(results);
 
@@ -1059,7 +1061,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 			ComputeColumnWidths();
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("RetrievedExclusionsSuccessfullyMsg"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("RetrievedExclusionsSuccessfullyMsg"));
 		}
 		catch (Exception ex)
 		{
@@ -1080,7 +1082,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		{
 			ExclusionsUIIsEnabled = false;
 
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 			if (selectedFiles.Count == 0)
 				return;
@@ -1089,9 +1091,9 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			{
 				foreach (string item in selectedFiles)
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
 
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 
@@ -1127,9 +1129,9 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			{
 				foreach (string item in selectedFiles)
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
 
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 
@@ -1164,10 +1166,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("AddExtensionExclusionText"),
+				Title = Atlas.GetStr("AddExtensionExclusionText"),
 				Content = inputBox,
-				PrimaryButtonText = GlobalVars.GetStr("AddToExclusionsText"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("AddToExclusionsText"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Primary
 			};
 
@@ -1188,10 +1190,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				// Normalize and validate the extension
 				string normalizedExtension = NormalizeExtensionOrThrow(text);
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath,
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath,
 					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionExtension \"{normalizedExtension}\"");
 
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedExtension));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AddedExclusionMsg"), normalizedExtension));
 			});
 
 			await RetrieveAllExclusionsInternal();
@@ -1215,7 +1217,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	{
 		if (string.IsNullOrWhiteSpace(value))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("EnterFileExtensionText"));
+			throw new InvalidOperationException(Atlas.GetStr("EnterFileExtensionText"));
 		}
 
 		string extension = value.Trim();
@@ -1229,14 +1231,14 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		// Must have something after the dot
 		if (extension.Length <= 1)
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("FileExtensionInvalidMsg"));
+			throw new InvalidOperationException(Atlas.GetStr("FileExtensionInvalidMsg"));
 		}
 
 		// Validate characters (no invalid file name characters allowed)
 		char[] invalidChars = Path.GetInvalidFileNameChars();
 		if (extension.IndexOfAny(invalidChars) >= 0)
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("FileExtensionHasInvalidCharsMsg"));
+			throw new InvalidOperationException(Atlas.GetStr("FileExtensionHasInvalidCharsMsg"));
 		}
 
 		// Do not allow directory separators or drive specifiers
@@ -1268,10 +1270,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.GetStr("AddProcessExclusionText"),
+				Title = Atlas.GetStr("AddProcessExclusionText"),
 				Content = inputBox,
-				PrimaryButtonText = GlobalVars.GetStr("AddToExclusionsText"),
-				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = Atlas.GetStr("AddToExclusionsText"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Primary
 			};
 
@@ -1292,10 +1294,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				// Normalize and validate the process name
 				string normalizedProcessName = NormalizeProcessNameOrThrow(text);
 
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath,
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath,
 					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionProcess \"{normalizedProcessName}\"");
 
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedProcessName));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AddedExclusionMsg"), normalizedProcessName));
 			});
 
 			await RetrieveAllExclusionsInternal();
@@ -1318,7 +1320,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	{
 		if (string.IsNullOrWhiteSpace(value))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("EnterProcessNameText"));
+			throw new InvalidOperationException(Atlas.GetStr("EnterProcessNameText"));
 		}
 
 		string input = value.Trim();
@@ -1334,7 +1336,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 		if (string.IsNullOrWhiteSpace(name))
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("ProcessNameInvalidMsg"));
+			throw new InvalidOperationException(Atlas.GetStr("ProcessNameInvalidMsg"));
 		}
 
 		// Ensure it ends with .exe
@@ -1347,7 +1349,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		char[] invalidChars = Path.GetInvalidFileNameChars();
 		if (name.IndexOfAny(invalidChars) >= 0)
 		{
-			throw new InvalidOperationException(GlobalVars.GetStr("ProcessNameHasInvalidCharsMsg"));
+			throw new InvalidOperationException(Atlas.GetStr("ProcessNameHasInvalidCharsMsg"));
 		}
 
 		// Must not contain path separators after normalization
@@ -1370,7 +1372,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		{
 			ExclusionsUIIsEnabled = false;
 
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 			if (selectedFiles.Count == 0)
 				return;
@@ -1379,9 +1381,9 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			{
 				foreach (string item in selectedFiles)
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ControlledFolderAccessAllowedApplications \"{item}\"");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ControlledFolderAccessAllowedApplications \"{item}\"");
 
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 
@@ -1408,7 +1410,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		{
 			ExclusionsUIIsEnabled = false;
 
-			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 			if (selectedFiles.Count == 0)
 				return;
@@ -1417,9 +1419,9 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			{
 				foreach (string item in selectedFiles)
 				{
-					_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{item}\"");
+					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{item}\"");
 
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 
@@ -1469,7 +1471,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			// Perform the removal in background to keep UI responsive
 			await Task.Run(() =>
 			{
-				_ = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath,
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath,
 					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference remove {propertyName} \"{target}\"");
 			});
 

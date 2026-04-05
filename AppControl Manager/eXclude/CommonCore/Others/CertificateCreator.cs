@@ -39,11 +39,11 @@ internal static class CertificateGenerator
 	internal static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize, HashAlgorithmName hashAlgorithm)
 	{
 		// Paths for .cer and .pfx files
-		string cerFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.cer");
-		string pfxFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.pfx");
+		string cerFilePath = Path.Combine(Atlas.UserConfigDir, $"{CommonName}.cer");
+		string pfxFilePath = Path.Combine(Atlas.UserConfigDir, $"{CommonName}.pfx");
 
 		Logger.Write(string.Format(
-			GlobalVars.GetStr("AppControlCertCheckExistingMessage"),
+			Atlas.GetStr("AppControlCertCheckExistingMessage"),
 			CommonName));
 
 		// Check see if there are any certificates in the personal store of User certificates with the selected Common Name
@@ -52,7 +52,7 @@ internal static class CertificateGenerator
 		if (possibleExistingCerts.Count > 0)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.GetStr("AppControlCertExistingCountRemovingMessage"),
+				Atlas.GetStr("AppControlCertExistingCountRemovingMessage"),
 				possibleExistingCerts.Count,
 				CommonName));
 
@@ -295,7 +295,7 @@ internal static class CertificateGenerator
 					// Certificate found with the matching CN, so delete it
 					store.Remove(cert);
 					Logger.Write(string.Format(
-						GlobalVars.GetStr("DeletedCertificateFromStoreMessage"),
+						Atlas.GetStr("DeletedCertificateFromStoreMessage"),
 						subjectName,
 						storeName));
 				}

@@ -50,13 +50,13 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		ViewModel.PolicyFileToMergeWithLightAnimatedIconVisibility = visibility;
 
 		ViewModelProvider.SidebarVM.AssignActionPacks(
-			actionPack1: (LightUp1, GlobalVars.GetStr("FilesAndFoldersSupplementalPolicyLabel")),
-			actionPack2: (LightUp2, GlobalVars.GetStr("CertificatesSupplementalPolicyLabel")),
-			actionPack3: (LightUp3, GlobalVars.GetStr("ISGSupplementalPolicyLabel")),
-			actionPack4: (LightUp4, GlobalVars.GetStr("StrictKernelModeSupplementalPolicyLabel")),
-			actionPack5: (LightUp5, GlobalVars.GetStr("PFNSupplementalPolicyLabel")),
-			actionPack6: (LightUp6, GlobalVars.GetStr("CustomPatternBasedSupplementalPolicyLabel")),
-			actionPack7: (LightUp7, GlobalVars.GetStr("PolicyToAddNewRulesTo"))
+			actionPack1: (LightUp1, Atlas.GetStr("FilesAndFoldersSupplementalPolicyLabel")),
+			actionPack2: (LightUp2, Atlas.GetStr("CertificatesSupplementalPolicyLabel")),
+			actionPack3: (LightUp3, Atlas.GetStr("ISGSupplementalPolicyLabel")),
+			actionPack4: (LightUp4, Atlas.GetStr("StrictKernelModeSupplementalPolicyLabel")),
+			actionPack5: (LightUp5, Atlas.GetStr("PFNSupplementalPolicyLabel")),
+			actionPack6: (LightUp6, Atlas.GetStr("CustomPatternBasedSupplementalPolicyLabel")),
+			actionPack7: (LightUp7, Atlas.GetStr("PolicyToAddNewRulesTo"))
 		);
 	}
 
@@ -175,7 +175,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) =>
 		await ShadowExitAnimation.StartAsync((UIElement)sender);
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateSupplementalPolicyPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("CreateSupplementalPolicyPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy");
 
 }

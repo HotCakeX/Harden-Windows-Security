@@ -179,7 +179,7 @@ internal sealed class NavigationService
 		}
 
 		// If not running as Admin
-		if (!GlobalVars.IsElevated)
+		if (!Atlas.IsElevated)
 		{
 			// If the requested page requires elevation
 			if (!mainWindowVM.UnelevatedPages.Contains(nextNavPageType))
@@ -190,7 +190,7 @@ internal sealed class NavigationService
 				// a TextBlock for the informational text.
 				TextBlock infoText = new()
 				{
-					Text = GlobalVars.GetStr("AppElevationNoticeMain"),
+					Text = Atlas.GetStr("AppElevationNoticeMain"),
 					TextWrapping = TextWrapping.Wrap
 				};
 				panel.Children.Add(infoText);
@@ -198,7 +198,7 @@ internal sealed class NavigationService
 				// a CheckBox for the extra input.
 				CheckBox extraInfoCheckBox = new()
 				{
-					Content = GlobalVars.GetStr("AppElevationNoticeExtraPrompt"),
+					Content = Atlas.GetStr("AppElevationNoticeExtraPrompt"),
 					Margin = new Thickness(0, 12, 0, 0)
 				};
 				panel.Children.Add(extraInfoCheckBox);
@@ -206,10 +206,10 @@ internal sealed class NavigationService
 				// Create and configure the ContentDialog.
 				using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 				{
-					Title = GlobalVars.GetStr("AppElevationNoticeTitle"),
+					Title = Atlas.GetStr("AppElevationNoticeTitle"),
 					Content = panel,
-					CloseButtonText = GlobalVars.GetStr("Cancel"),
-					SecondaryButtonText = GlobalVars.GetStr("AppElevationNoticeRelaunch"),
+					CloseButtonText = Atlas.GetStr("Cancel"),
+					SecondaryButtonText = Atlas.GetStr("AppElevationNoticeRelaunch"),
 					DefaultButton = ContentDialogButton.Secondary
 				};
 
@@ -223,7 +223,7 @@ internal sealed class NavigationService
 
 					if (isChecked)
 					{
-						GlobalVars.Settings.PromptForElevationOnStartup = true;
+						Atlas.Settings.PromptForElevationOnStartup = true;
 					}
 
 					// Attempt to find a tag for the page, only top-level pages that have a tab in MainWindow XAML work
@@ -234,7 +234,7 @@ internal sealed class NavigationService
 					string? navArg = $"--navtag={taggedEntry.Key}";
 
 					// Relaunch elevated with the navigation argument
-					if (Relaunch.RelaunchAppElevated(GlobalVars.AUMID, navArg))
+					if (Relaunch.RelaunchAppElevated(Atlas.AUMID, navArg))
 					{
 						Application.Current.Exit();
 					}
@@ -415,9 +415,9 @@ internal sealed class NavigationService
 		try
 		{
 			// If the window was last maximized then restore it to maximized
-			if (GlobalVars.Settings.MainWindowIsMaximized)
+			if (Atlas.Settings.MainWindowIsMaximized)
 			{
-				Logger.Write(GlobalVars.GetStr("WindowMaximizedMsg"));
+				Logger.Write(Atlas.GetStr("WindowMaximizedMsg"));
 
 				// Set the presenter to maximized
 				presenter.Maximize();
@@ -427,12 +427,12 @@ internal sealed class NavigationService
 
 			// If the previous window size was bigger than 700 pixels width/height use it.
 			// Otherwise let the OS decide.
-			if (GlobalVars.Settings.MainWindowWidth > 700 && GlobalVars.Settings.MainWindowHeight > 700)
+			if (Atlas.Settings.MainWindowWidth > 700 && Atlas.Settings.MainWindowHeight > 700)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("SettingWindowSizeMessage"), GlobalVars.Settings.MainWindowHeight, GlobalVars.Settings.MainWindowWidth));
+				Logger.Write(string.Format(Atlas.GetStr("SettingWindowSizeMessage"), Atlas.Settings.MainWindowHeight, Atlas.Settings.MainWindowWidth));
 
 				// Apply to the current AppWindow
-				m_AppWindow.Resize(new SizeInt32(GlobalVars.Settings.MainWindowWidth, GlobalVars.Settings.MainWindowHeight));
+				m_AppWindow.Resize(new SizeInt32(Atlas.Settings.MainWindowWidth, Atlas.Settings.MainWindowHeight));
 			}
 		}
 		finally

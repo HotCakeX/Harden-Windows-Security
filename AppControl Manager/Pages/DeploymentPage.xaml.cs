@@ -44,8 +44,8 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, Comm
 		ViewModel.SignedXMLFilesLightAnimatedIconVisibility = visibility;
 
 		ViewModelProvider.SidebarVM.AssignActionPacks(
-			actionPack1: (LightUp1, GlobalVars.GetStr("DeployUnsignedPolicy")),
-			actionPack2: (LightUp2, GlobalVars.GetStr("DeploySignedPolicy")));
+			actionPack1: (LightUp1, Atlas.GetStr("DeployUnsignedPolicy")),
+			actionPack2: (LightUp2, Atlas.GetStr("DeploySignedPolicy")));
 	}
 
 	/// <summary>
@@ -73,7 +73,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, Comm
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DeploymentPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DeploymentPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy");
 
 }

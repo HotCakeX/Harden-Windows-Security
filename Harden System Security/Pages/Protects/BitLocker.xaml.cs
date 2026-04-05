@@ -47,7 +47,7 @@ internal sealed partial class BitLocker : Page, CommonCore.UI.IPageHeaderProvide
 		base.OnNavigatedFrom(e);
 
 		// Dispose all descendants that explicitly opted out of automatic disposal.
-		AppControlManager.ViewModels.ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
+		ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
 
 		// Finally dispose the list control itself.
 		SecurityMeasuresList.Dispose();
@@ -187,6 +187,6 @@ internal sealed partial class BitLocker : Page, CommonCore.UI.IPageHeaderProvide
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("BitLockerPageTitle");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("BitLockerPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker");
 }

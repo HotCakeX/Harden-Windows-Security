@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
@@ -36,11 +37,11 @@ internal static class NewFilePublisherLevelRules
 	{
 		if (filePublisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoFilePublisherSignersDetectedAllowMessage"));
+			Logger.Write(Atlas.GetStr("NoFilePublisherSignersDetectedAllowMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FilePublisherSignersToAddMessage"), filePublisherSigners.Count));
+		Logger.Write(string.Format(Atlas.GetStr("FilePublisherSignersToAddMessage"), filePublisherSigners.Count));
 
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
@@ -63,7 +64,7 @@ internal static class NewFilePublisherLevelRules
 
 			FileAttrib newFileAttrib = new(id: FileAttribID)
 			{
-				FriendlyName = GlobalVars.GetStr("FilePublisherRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("FilePublisherRuleTypeFriendlyName"),
 				MinimumFileVersion = filePublisherData.FileVersion?.ToString()
 			};
 
@@ -113,13 +114,13 @@ internal static class NewFilePublisherLevelRules
 				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
-				if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+				if (filePublisherData.SiSigningScenario is SSType.UserMode)
 				{
 					umciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: signerID, exceptDenyRule: null));
 					policyObj.CiSigners.Add(new CiSigner(signerID: signerID));
 				}
 				// For Kernel-Mode files
-				else if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+				else if (filePublisherData.SiSigningScenario is SSType.KernelMode)
 				{
 					kmciScenario.ProductSigners.AllowedSigners.AllowedSigner.Add(new AllowedSigner(signerId: signerID, exceptDenyRule: null));
 				}
@@ -143,11 +144,11 @@ internal static class NewFilePublisherLevelRules
 	{
 		if (filePublisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.GetStr("NoFilePublisherSignersDetectedDenyMessage"));
+			Logger.Write(Atlas.GetStr("NoFilePublisherSignersDetectedDenyMessage"));
 			return policyObj;
 		}
 
-		Logger.Write(string.Format(GlobalVars.GetStr("FilePublisherSignersToAddMessage"), filePublisherSigners.Count));
+		Logger.Write(string.Format(Atlas.GetStr("FilePublisherSignersToAddMessage"), filePublisherSigners.Count));
 
 		// Ensure the lists are Initialized.
 		policyObj.FileRules ??= [];
@@ -170,7 +171,7 @@ internal static class NewFilePublisherLevelRules
 
 			FileAttrib newFileAttrib = new(id: FileAttribID)
 			{
-				FriendlyName = GlobalVars.GetStr("FilePublisherRuleTypeFriendlyName"),
+				FriendlyName = Atlas.GetStr("FilePublisherRuleTypeFriendlyName"),
 				MinimumFileVersion = filePublisherData.FileVersion?.ToString()
 			};
 
@@ -220,13 +221,13 @@ internal static class NewFilePublisherLevelRules
 				policyObj.Signers.Add(newSigner);
 
 				// For User-Mode files
-				if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
+				if (filePublisherData.SiSigningScenario is SSType.UserMode)
 				{
 					umciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: signerID, exceptAllowRule: null));
 					policyObj.CiSigners.Add(new CiSigner(signerID: signerID));
 				}
 				// For Kernel-Mode files
-				else if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
+				else if (filePublisherData.SiSigningScenario is SSType.KernelMode)
 				{
 					kmciScenario.ProductSigners.DeniedSigners.DeniedSigner.Add(new DeniedSigner(signerId: signerID, exceptAllowRule: null));
 				}

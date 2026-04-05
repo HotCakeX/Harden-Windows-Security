@@ -25,7 +25,7 @@ namespace AppControlManager.CustomUIElements;
 
 internal sealed partial class GraphAuthPanel : UserControl
 {
-	private CommonCore.AppSettings.Main AppSettings => GlobalVars.Settings;
+	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	public IGraphAuthHost Host
 	{

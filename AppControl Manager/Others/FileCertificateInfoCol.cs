@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.Others;
 

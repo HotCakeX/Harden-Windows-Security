@@ -119,6 +119,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<FirewallSentinelVM> _firewallSentinelVM = new(() =>
 		new FirewallSentinelVM(), false);
 
+	private static readonly Lazy<SystemShutdownInfoDialogVM> _systemShutdownInfoDialogVM = new(() =>
+		new SystemShutdownInfoDialogVM(), false);
+
 	// Core Dependencies \\
 	internal static EventLogUtility EventLogUtility => _eventLogUtility.Value;
 
@@ -151,6 +154,7 @@ internal static class ViewModelProvider
 	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
 	internal static HomeVM HomeVM => _homeVM.Value;
 	internal static FirewallSentinelVM FirewallSentinelVM => _firewallSentinelVM.Value;
+	internal static SystemShutdownInfoDialogVM SystemShutdownInfoDialogVM => _systemShutdownInfoDialogVM.Value;
 
 
 	/// <summary>

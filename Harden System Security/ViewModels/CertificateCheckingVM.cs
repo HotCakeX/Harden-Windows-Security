@@ -24,8 +24,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommonCore.IncrementalCollection;
 using CommonCore.ToolKits;
 using HardenSystemSecurity.Vyre;
@@ -37,7 +35,7 @@ namespace HardenSystemSecurity.ViewModels;
 internal sealed partial class CertificateCheckingVM : ViewModelBase
 {
 	// Calculate initial column widths
-	internal CertificateCheckingVM() => _ = GlobalVars.AppDispatcher.TryEnqueue(CalculateColumnWidths);
+	internal CertificateCheckingVM() => _ = Atlas.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
 	/// <summary>
 	/// The main InfoBar for this VM.
@@ -108,15 +106,15 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <summary>
 	/// Formatted CTL Header properties for UI display
 	/// </summary>
-	internal string CtlVersion { get; set => SP(ref field, value); } = GlobalVars.GetStr("NAText");
-	internal string CtlUsageOid { get; set => SP(ref field, value); } = GlobalVars.GetStr("NAText");
-	internal string CtlUsageFriendlyName { get; set => SP(ref field, value); } = GlobalVars.GetStr("NAText");
-	internal string CtlSequenceNumber { get; set => SP(ref field, value); } = GlobalVars.GetStr("NAText");
-	internal string CtlThisUpdate { get; set => SP(ref field, value); } = GlobalVars.GetStr("NAText");
-	internal string CtlNextUpdate { get; set => SP(ref field, value); } = GlobalVars.GetStr("EmptyValue");
-	internal string CtlAlgorithmOid { get; set => SP(ref field, value); } = GlobalVars.GetStr("NAText");
-	internal string CtlAlgorithmOidFriendlyName { get; set => SP(ref field, value); } = GlobalVars.GetStr("NAText");
-	internal string CtlAlgorithmParameters { get; set => SP(ref field, value); } = GlobalVars.GetStr("NoCertificateHash");
+	internal string CtlVersion { get; set => SP(ref field, value); } = Atlas.GetStr("NAText");
+	internal string CtlUsageOid { get; set => SP(ref field, value); } = Atlas.GetStr("NAText");
+	internal string CtlUsageFriendlyName { get; set => SP(ref field, value); } = Atlas.GetStr("NAText");
+	internal string CtlSequenceNumber { get; set => SP(ref field, value); } = Atlas.GetStr("NAText");
+	internal string CtlThisUpdate { get; set => SP(ref field, value); } = Atlas.GetStr("NAText");
+	internal string CtlNextUpdate { get; set => SP(ref field, value); } = Atlas.GetStr("EmptyValue");
+	internal string CtlAlgorithmOid { get; set => SP(ref field, value); } = Atlas.GetStr("NAText");
+	internal string CtlAlgorithmOidFriendlyName { get; set => SP(ref field, value); } = Atlas.GetStr("NAText");
+	internal string CtlAlgorithmParameters { get; set => SP(ref field, value); } = Atlas.GetStr("NoCertificateHash");
 	internal string CtlEntryCount { get; set => SP(ref field, value); } = "0";
 
 	/// <summary>
@@ -129,9 +127,9 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			CtlVersion = CurrentCtlHeader.Version.ToString(CultureInfo.InvariantCulture);
 			CtlUsageOid = CurrentCtlHeader.UsageOid;
 			CtlUsageFriendlyName = CurrentCtlHeader.UsageFriendlyName;
-			CtlSequenceNumber = CurrentCtlHeader.SequenceNumberHexLower ?? GlobalVars.GetStr("NAText");
+			CtlSequenceNumber = CurrentCtlHeader.SequenceNumberHexLower ?? Atlas.GetStr("NAText");
 			CtlThisUpdate = CurrentCtlHeader.ThisUpdateUtc.ToLocalTime().ToString("MM/dd/yyyy h:mm tt", CultureInfo.InvariantCulture);
-			CtlNextUpdate = CurrentCtlHeader.NextUpdateUtc?.ToLocalTime().ToString("MM/dd/yyyy h:mm tt", CultureInfo.InvariantCulture) ?? GlobalVars.GetStr("EmptyValue");
+			CtlNextUpdate = CurrentCtlHeader.NextUpdateUtc?.ToLocalTime().ToString("MM/dd/yyyy h:mm tt", CultureInfo.InvariantCulture) ?? Atlas.GetStr("EmptyValue");
 			CtlAlgorithmOid = CurrentCtlHeader.AlgorithmOid;
 			CtlAlgorithmOidFriendlyName = CurrentCtlHeader.AlgorithmOidFriendlyName;
 			CtlAlgorithmParameters = FormatAlgorithmParameters();
@@ -140,15 +138,15 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		else
 		{
 			// Reset to default values when no header is available
-			CtlVersion = GlobalVars.GetStr("NAText");
-			CtlUsageOid = GlobalVars.GetStr("NAText");
-			CtlUsageFriendlyName = GlobalVars.GetStr("NAText");
-			CtlSequenceNumber = GlobalVars.GetStr("NAText");
-			CtlThisUpdate = GlobalVars.GetStr("NAText");
-			CtlNextUpdate = GlobalVars.GetStr("EmptyValue");
-			CtlAlgorithmOid = GlobalVars.GetStr("NAText");
-			CtlAlgorithmOidFriendlyName = GlobalVars.GetStr("NAText");
-			CtlAlgorithmParameters = GlobalVars.GetStr("NoCertificateHash");
+			CtlVersion = Atlas.GetStr("NAText");
+			CtlUsageOid = Atlas.GetStr("NAText");
+			CtlUsageFriendlyName = Atlas.GetStr("NAText");
+			CtlSequenceNumber = Atlas.GetStr("NAText");
+			CtlThisUpdate = Atlas.GetStr("NAText");
+			CtlNextUpdate = Atlas.GetStr("EmptyValue");
+			CtlAlgorithmOid = Atlas.GetStr("NAText");
+			CtlAlgorithmOidFriendlyName = Atlas.GetStr("NAText");
+			CtlAlgorithmParameters = Atlas.GetStr("NoCertificateHash");
 			CtlEntryCount = "0";
 		}
 	}
@@ -159,7 +157,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	private string FormatAlgorithmParameters()
 	{
 		if (CurrentCtlHeader?.DigestAlgorithmParameters is null || CurrentCtlHeader.DigestAlgorithmParameters.Length == 0)
-			return GlobalVars.GetStr("NoCertificateHash");
+			return Atlas.GetStr("NoCertificateHash");
 
 		StringBuilder sb = new(CurrentCtlHeader.DigestAlgorithmParameters.Length * 3);
 		for (int i = 0; i < CurrentCtlHeader.DigestAlgorithmParameters.Length; i++)
@@ -188,13 +186,13 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first
-		double maxStoreLocationWidth = ListViewHelper.MeasureText(GlobalVars.GetStr("StoreLocationHeader/Text"));
-		double maxStoreNameWidth = ListViewHelper.MeasureText(GlobalVars.GetStr("StoreNameHeader/Text"));
-		double maxSubjectWidth = ListViewHelper.MeasureText(GlobalVars.GetStr("SubjectHeader/Text"));
-		double maxIssuerWidth = ListViewHelper.MeasureText(GlobalVars.GetStr("IssuerHeader/Text"));
-		double maxThumbprintWidth = ListViewHelper.MeasureText(GlobalVars.GetStr("ThumbprintHeader/Text"));
-		double maxRootSubjectWidth = ListViewHelper.MeasureText(GlobalVars.GetStr("RootSubjectHeader/Text"));
-		double maxRootSha256Width = ListViewHelper.MeasureText(GlobalVars.GetStr("RootSha256Header/Text"));
+		double maxStoreLocationWidth = ListViewHelper.MeasureText(Atlas.GetStr("StoreLocationHeader/Text"));
+		double maxStoreNameWidth = ListViewHelper.MeasureText(Atlas.GetStr("StoreNameHeader/Text"));
+		double maxSubjectWidth = ListViewHelper.MeasureText(Atlas.GetStr("SubjectHeader/Text"));
+		double maxIssuerWidth = ListViewHelper.MeasureText(Atlas.GetStr("IssuerHeader/Text"));
+		double maxThumbprintWidth = ListViewHelper.MeasureText(Atlas.GetStr("ThumbprintHeader/Text"));
+		double maxRootSubjectWidth = ListViewHelper.MeasureText(Atlas.GetStr("RootSubjectHeader/Text"));
+		double maxRootSha256Width = ListViewHelper.MeasureText(Atlas.GetStr("RootSha256Header/Text"));
 
 		// Iterate over all items to determine the widest string for each column
 		foreach (NonStlRootCert cert in NonStlCertificates)
@@ -265,13 +263,13 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<NonStlRootCert, object?> Getter)> NonStlRootCertPropertyMappings
 		= new Dictionary<string, (string Label, Func<NonStlRootCert, object?> Getter)>
 		{
-			{ "StoreLocation", (GlobalVars.GetStr("StoreLocationHeader/Text"), cert => cert.StoreLocationString) },
-			{ "StoreName", (GlobalVars.GetStr("StoreNameHeader/Text"), cert => cert.StoreNameString) },
-			{ "Subject", (GlobalVars.GetStr("SubjectHeader/Text"), cert => cert.Subject) },
-			{ "Issuer", (GlobalVars.GetStr("IssuerHeader/Text"), cert => cert.Issuer) },
-			{ "Thumbprint", (GlobalVars.GetStr("ThumbprintHeader/Text"), cert => cert.LeafThumbprintSha1) },
-			{ "RootSubject", (GlobalVars.GetStr("RootSubjectHeader/Text"), cert => cert.RootSubject) },
-			{ "RootSha256", (GlobalVars.GetStr("RootSha256Header/Text"), cert => cert.RootSha256Hex) }
+			{ "StoreLocation", (Atlas.GetStr("StoreLocationHeader/Text"), cert => cert.StoreLocationString) },
+			{ "StoreName", (Atlas.GetStr("StoreNameHeader/Text"), cert => cert.StoreNameString) },
+			{ "Subject", (Atlas.GetStr("SubjectHeader/Text"), cert => cert.Subject) },
+			{ "Issuer", (Atlas.GetStr("IssuerHeader/Text"), cert => cert.Issuer) },
+			{ "Thumbprint", (Atlas.GetStr("ThumbprintHeader/Text"), cert => cert.LeafThumbprintSha1) },
+			{ "RootSubject", (Atlas.GetStr("RootSubjectHeader/Text"), cert => cert.RootSubject) },
+			{ "RootSha256", (Atlas.GetStr("RootSha256Header/Text"), cert => cert.RootSha256Hex) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -350,17 +348,17 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 			if (lv.SelectedItem is not NonStlRootCert selectedCert)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("MainInfoBarDeleteCertificateSelectMessage"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("MainInfoBarDeleteCertificateSelectMessage"));
 				return;
 			}
 
 			// Show confirmation dialog
 			using AppControlManager.CustomUIElements.ContentDialogV2 confirmDialog = new()
 			{
-				Title = GlobalVars.GetStr("DeleteCertificateDialogTitle"),
-				Content = string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("DeleteCertificateDialogContent"), selectedCert.Subject, selectedCert.StoreLocationString, selectedCert.StoreNameString, selectedCert.LeafThumbprintSha1),
-				PrimaryButtonText = GlobalVars.GetStr("DeleteCertificateDialogPrimaryButton"),
-				SecondaryButtonText = GlobalVars.GetStr("Cancel"),
+				Title = Atlas.GetStr("DeleteCertificateDialogTitle"),
+				Content = string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("DeleteCertificateDialogContent"), selectedCert.Subject, selectedCert.StoreLocationString, selectedCert.StoreNameString, selectedCert.LeafThumbprintSha1),
+				PrimaryButtonText = Atlas.GetStr("DeleteCertificateDialogPrimaryButton"),
+				SecondaryButtonText = Atlas.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Secondary
 			};
 
@@ -373,7 +371,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			// Parse store location
 			if (!Enum.TryParse(selectedCert.StoreLocationString, out StoreLocation storeLocation))
 			{
-				MainInfoBar.WriteWarning(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("InvalidStoreLocationWarning"), selectedCert.StoreLocationString));
+				MainInfoBar.WriteWarning(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("InvalidStoreLocationWarning"), selectedCert.StoreLocationString));
 				return;
 			}
 
@@ -387,7 +385,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			// Recalculate column widths
 			CalculateColumnWidths();
 
-			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateDeletedSuccessMessage"), selectedCert.StoreLocationString, selectedCert.StoreNameString));
+			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("CertificateDeletedSuccessMessage"), selectedCert.StoreLocationString, selectedCert.StoreNameString));
 		}
 		catch (Exception ex)
 		{
@@ -414,7 +412,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 			if (certificates.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("CertificateNotFoundInStoreWarning"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("CertificateNotFoundInStoreWarning"));
 				return;
 			}
 
@@ -462,7 +460,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			NonStlCertificates.Clear();
 			CurrentCtlHeader = null;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("StartingCertificateAnalysisMessage"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("StartingCertificateAnalysisMessage"));
 
 			await Task.Run(async () =>
 			{
@@ -475,7 +473,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 				DateTime end = DateTime.UtcNow;
 
-				MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("StlFileParsedMessage"), parseResult.Subjects.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
+				MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("StlFileParsedMessage"), parseResult.Subjects.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
 
 				// Build a lookup set of STL root SHA256 fingerprints
 				HashSet<string> stlRootSha256 = AuthRootProcessor.BuildStlRootSha256Set(parseResult.Subjects);
@@ -485,7 +483,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 					AuthRootProcessor.FindCertificatesNotChainingToStlRoots(stlRootSha256, IncludeExpiredCertificates);
 
 				// Update UI on the UI thread
-				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+				await Atlas.AppDispatcher.EnqueueAsync(() =>
 				{
 					// Store CTL header for UI display - this will trigger UpdateCtlHeaderProperties()
 					CurrentCtlHeader = parseResult.Header;
@@ -497,7 +495,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				});
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateAnalysisCompletedMessage"), NonStlCertificates.Count));
+			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("CertificateAnalysisCompletedMessage"), NonStlCertificates.Count));
 		}
 		catch (Exception ex)
 		{
@@ -540,7 +538,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			NonStlCertificates.Clear();
 			CurrentCtlHeader = null;
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("RetrievingAllCertificatesMessage"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("RetrievingAllCertificatesMessage"));
 
 			await Task.Run(async () =>
 			{
@@ -551,7 +549,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				DateTime end = DateTime.UtcNow;
 
 				// Update UI on the UI thread
-				await GlobalVars.AppDispatcher.EnqueueAsync(() =>
+				await Atlas.AppDispatcher.EnqueueAsync(() =>
 				{
 					AllNonStlCertificates.AddRange(allCertificates);
 					NonStlCertificates.AddRange(allCertificates);
@@ -559,10 +557,10 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 					CalculateColumnWidths();
 				});
 
-				MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("RetrievedCertificatesMessage"), allCertificates.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
+				MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("RetrievedCertificatesMessage"), allCertificates.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateRetrievalCompletedMessage"), NonStlCertificates.Count));
+			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("CertificateRetrievalCompletedMessage"), NonStlCertificates.Count));
 		}
 		catch (Exception ex)
 		{
@@ -617,7 +615,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 						// Get root certificate information
 						X509Certificate2? rootCert = TryGetChainRoot(leaf);
-						string rootSubject = rootCert is null ? GlobalVars.GetStr("NoRootCertificate") : rootCert.Subject;
+						string rootSubject = rootCert is null ? Atlas.GetStr("NoRootCertificate") : rootCert.Subject;
 						string rootSha256Hex = ComputeCertSha256Hex(rootCert);
 
 						NonStlRootCert item = new(
@@ -627,7 +625,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 							issuer: leaf.Issuer,
 							leafThumbprintSha1: leafSha1,
 							rootSubject: rootSubject,
-							rootSha256Hex: string.IsNullOrEmpty(rootSha256Hex) ? GlobalVars.GetStr("NoCertificateHash") : rootSha256Hex
+							rootSha256Hex: string.IsNullOrEmpty(rootSha256Hex) ? Atlas.GetStr("NoCertificateHash") : rootSha256Hex
 						);
 						results.Add(item);
 					}
@@ -730,7 +728,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		{
 			if (NonStlCertificates.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificatesAvailableForExport"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoCertificatesAvailableForExport"));
 				return;
 			}
 
@@ -753,7 +751,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedCertificates"), certificatesToExport.Count, saveLocation));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedCertificates"), certificatesToExport.Count, saveLocation));
 		}
 		catch (Exception ex)
 		{

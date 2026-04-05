@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using CommonCore.GroupPolicy;
 using Microsoft.UI.Xaml;
 
@@ -140,7 +139,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 	/// <summary>
 	/// ComboBox's ItemsSource.
 	/// </summary>
-	internal ObservableCollection<CountryData> CountryLists { get; } = [];
+	internal readonly ObservableCollection<CountryData> CountryLists = [];
 
 	/// <summary>
 	/// All countries loaded from JSON (unfiltered)
@@ -179,7 +178,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		}
 
 		// Update UI on the dispatcher thread
-		_ = GlobalVars.AppDispatcher.TryEnqueue(() =>
+		_ = Atlas.AppDispatcher.TryEnqueue(() =>
 		{
 			// Update the observable collection
 			CountryLists.Clear();
@@ -201,7 +200,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			Logger.Write(GlobalVars.GetStr("LoadingCountriesDataMessage"));
+			Logger.Write(Atlas.GetStr("LoadingCountriesDataMessage"));
 
 			await Task.Run(() =>
 			{
@@ -219,7 +218,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				FilterCountries(); // Initial population
 			});
 
-			Logger.Write(string.Format(GlobalVars.GetStr("CountriesLoadedSuccessMessage"), _allCountries.Count));
+			Logger.Write(string.Format(Atlas.GetStr("CountriesLoadedSuccessMessage"), _allCountries.Count));
 		}
 		catch (Exception ex)
 		{
@@ -251,18 +250,18 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				{
 					case 0:
 						{
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
 
-							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
 							break;
 						}
 					case 1:
 						{
 							const string ruleName = "OFAC Sanctioned Countries IP range blocking";
 
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), ruleName));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("CreatingRulesForMessage"), ruleName));
 
-							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt true"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt true"));
 							break;
 						}
 					default: break;
@@ -272,7 +271,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				CSEMgr.RegisterCSEGuids();
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyAddedIPRangeMessage"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyAddedIPRangeMessage"));
 		}
 		catch (Exception ex)
 		{
@@ -304,18 +303,18 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				{
 					case 0:
 						{
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
 
-							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
 							break;
 						}
 					case 1:
 						{
 							const string ruleName = "OFAC Sanctioned Countries IP range blocking";
 
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), ruleName));
+							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingRulesForMessage"), ruleName));
 
-							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt false"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt false"));
 							break;
 						}
 					default: break;
@@ -325,7 +324,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				CSEMgr.RegisterCSEGuids();
 			});
 
-			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyRemovedIPRangeMessage"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyRemovedIPRangeMessage"));
 		}
 		catch (Exception ex)
 		{
@@ -346,7 +345,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		{
 			if (CountrySelectedIndex < 0 || CountrySelectedIndex >= CountryLists.Count)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("PleaseSelectCountryWarning"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("PleaseSelectCountryWarning"));
 				return;
 			}
 
@@ -359,21 +358,21 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				string ruleNameIPv4 = $"{selectedCountry.FriendlyName} IPv4 IP range blocking";
 				string ruleNameIPv6 = $"{selectedCountry.FriendlyName} IPv6 IP range blocking";
 
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv4RulesMessage"), selectedCountry.FriendlyName));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("CreatingIPv4RulesMessage"), selectedCountry.FriendlyName));
 
 				// Add IPv4 rules
-				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} true"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} true"));
 
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv6RulesMessage"), selectedCountry.FriendlyName));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("CreatingIPv6RulesMessage"), selectedCountry.FriendlyName));
 
 				// Add IPv6 rules
-				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} true"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} true"));
 
 				// Update policies to take effect immediately
 				CSEMgr.RegisterCSEGuids();
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyAddedIPBlockingRulesMessage"), selectedCountry.FriendlyName));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyAddedIPBlockingRulesMessage"), selectedCountry.FriendlyName));
 		}
 		catch (Exception ex)
 		{
@@ -394,7 +393,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		{
 			if (CountrySelectedIndex < 0 || CountrySelectedIndex >= CountryLists.Count)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("PleaseSelectCountryWarning"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("PleaseSelectCountryWarning"));
 				return;
 			}
 
@@ -407,21 +406,21 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				string ruleNameIPv4 = $"{selectedCountry.FriendlyName} IPv4 IP range blocking";
 				string ruleNameIPv6 = $"{selectedCountry.FriendlyName} IPv6 IP range blocking";
 
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv4RulesMessage"), selectedCountry.FriendlyName));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingIPv4RulesMessage"), selectedCountry.FriendlyName));
 
 				// Remove IPv4 rules
-				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} false"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} false"));
 
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv6RulesMessage"), selectedCountry.FriendlyName));
+				MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingIPv6RulesMessage"), selectedCountry.FriendlyName));
 
 				// Remove IPv6 rules
-				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} false"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} false"));
 
 				// Update policies to take effect immediately
 				CSEMgr.RegisterCSEGuids();
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyRemovedIPBlockingRulesMessage"), selectedCountry.FriendlyName));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyRemovedIPBlockingRulesMessage"), selectedCountry.FriendlyName));
 		}
 		catch (Exception ex)
 		{

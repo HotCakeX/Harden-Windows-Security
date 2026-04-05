@@ -26,10 +26,8 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
-using AppControlManager.Main;
 using AppControlManager.Others;
-using AppControlManager.SimulationMethods;
+using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
@@ -102,7 +100,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	internal readonly List<FileCertificateInfoCol> FilteredCertificates = [];
 
 	// The Column Manager Composition
-	internal ListViewColumnManager<FileCertificateInfoCol> ColumnManager { get; }
+	internal readonly ListViewColumnManager<FileCertificateInfoCol> ColumnManager;
 
 	/// <summary>
 	/// The file being analyzed for certificates.
@@ -192,29 +190,29 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)> FileCertificateInfoColPropertyMappings
 		= new Dictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)>
 		{
-			{ "SignerNumber",      (GlobalVars.GetStr("SignerNumberHeader/Text") + ": ",      fc => fc.SignerNumber) },
-			{ "Type",              (GlobalVars.GetStr("TypeHeader/Text") + ": ",              fc => fc.Type) },
-			{ "SubjectCN",         (GlobalVars.GetStr("SubjectCommonNameHeader/Text") + ": ", fc => fc.SubjectCN) },
-			{ "IssuerCN",          (GlobalVars.GetStr("IssuerCommonNameHeader/Text") + ": ",  fc => fc.IssuerCN) },
-			{ "NotBefore",         (GlobalVars.GetStr("NotBeforeHeader/Text") + ": ",         fc => fc.NotBefore) },
-			{ "NotAfter",          (GlobalVars.GetStr("NotAfterHeader/Text") + ": ",          fc => fc.NotAfter) },
-			{ "HashingAlgorithm",  (GlobalVars.GetStr("HashingAlgorithmHeader/Text") + ": ",  fc => fc.HashingAlgorithm) },
-			{ "SerialNumber",      (GlobalVars.GetStr("SerialNumberHeader/Text") + ": ",      fc => fc.SerialNumber) },
-			{ "Thumbprint",        (GlobalVars.GetStr("ThumbprintHeader/Text") + ": ",        fc => fc.Thumbprint) },
-			{ "TBSHash",           (GlobalVars.GetStr("TBSHashHeader/Text") + ": ",           fc => fc.TBSHash) },
-			{ "OIDs",              (GlobalVars.GetStr("ExtensionOIDsHeader/Text") + ": ",     fc => fc.OIDs) },
-			{ "Version",           (GlobalVars.GetStr("VersionHeader/Text") + ": ",           fc => fc.Version) },
-			{ "HasPrivateKey",     (GlobalVars.GetStr("HasPrivateKeyHeader/Text") + ": ",     fc => fc.HasPrivateKey) },
-			{ "Archived",          (GlobalVars.GetStr("ArchivedHeader/Text") + ": ",          fc => fc.Archived) },
-			{ "CertificatePolicies",(GlobalVars.GetStr("CertificatePoliciesHeader/Text") + ": ", fc => fc.CertificatePolicies) },
-			{ "AuthorityInformationAccess", (GlobalVars.GetStr("AuthorityInformationAccessHeader/Text") + ": ", fc => fc.AuthorityInformationAccess) },
-			{ "CRLDistributionPoints", (GlobalVars.GetStr("CRLDistributionPointsHeader/Text") + ": ", fc => fc.CRLDistributionPoints) },
-			{ "BasicConstraints",  (GlobalVars.GetStr("BasicConstraintsHeader/Text") + ": ",  fc => fc.BasicConstraints) },
-			{ "KeyUsage",          (GlobalVars.GetStr("KeyUsageHeader/Text") + ": ",          fc => fc.KeyUsage) },
-			{ "AuthorityKeyIdentifier", (GlobalVars.GetStr("AuthorityKeyIdentifierHeader/Text") + ": ", fc => fc.AuthorityKeyIdentifier) },
-			{ "SubjectKeyIdentifier", (GlobalVars.GetStr("SubjectKeyIdentifierHeader/Text") + ": ", fc => fc.SubjectKeyIdentifier) },
-			{ "RawDataLength",     (GlobalVars.GetStr("RawDataLengthHeader/Text") + ": ",     fc => fc.RawDataLength) },
-			{ "PublicKeyLength",   (GlobalVars.GetStr("PublicKeyLengthHeader/Text") + ": ",   fc => fc.PublicKeyLength) }
+			{ "SignerNumber",      (Atlas.GetStr("SignerNumberHeader/Text") + ": ",      fc => fc.SignerNumber) },
+			{ "Type",              (Atlas.GetStr("TypeHeader/Text") + ": ",              fc => fc.Type) },
+			{ "SubjectCN",         (Atlas.GetStr("SubjectCommonNameHeader/Text") + ": ", fc => fc.SubjectCN) },
+			{ "IssuerCN",          (Atlas.GetStr("IssuerCommonNameHeader/Text") + ": ",  fc => fc.IssuerCN) },
+			{ "NotBefore",         (Atlas.GetStr("NotBeforeHeader/Text") + ": ",         fc => fc.NotBefore) },
+			{ "NotAfter",          (Atlas.GetStr("NotAfterHeader/Text") + ": ",          fc => fc.NotAfter) },
+			{ "HashingAlgorithm",  (Atlas.GetStr("HashingAlgorithmHeader/Text") + ": ",  fc => fc.HashingAlgorithm) },
+			{ "SerialNumber",      (Atlas.GetStr("SerialNumberHeader/Text") + ": ",      fc => fc.SerialNumber) },
+			{ "Thumbprint",        (Atlas.GetStr("ThumbprintHeader/Text") + ": ",        fc => fc.Thumbprint) },
+			{ "TBSHash",           (Atlas.GetStr("TBSHashHeader/Text") + ": ",           fc => fc.TBSHash) },
+			{ "OIDs",              (Atlas.GetStr("ExtensionOIDsHeader/Text") + ": ",     fc => fc.OIDs) },
+			{ "Version",           (Atlas.GetStr("VersionHeader/Text") + ": ",           fc => fc.Version) },
+			{ "HasPrivateKey",     (Atlas.GetStr("HasPrivateKeyHeader/Text") + ": ",     fc => fc.HasPrivateKey) },
+			{ "Archived",          (Atlas.GetStr("ArchivedHeader/Text") + ": ",          fc => fc.Archived) },
+			{ "CertificatePolicies",(Atlas.GetStr("CertificatePoliciesHeader/Text") + ": ", fc => fc.CertificatePolicies) },
+			{ "AuthorityInformationAccess", (Atlas.GetStr("AuthorityInformationAccessHeader/Text") + ": ", fc => fc.AuthorityInformationAccess) },
+			{ "CRLDistributionPoints", (Atlas.GetStr("CRLDistributionPointsHeader/Text") + ": ", fc => fc.CRLDistributionPoints) },
+			{ "BasicConstraints",  (Atlas.GetStr("BasicConstraintsHeader/Text") + ": ",  fc => fc.BasicConstraints) },
+			{ "KeyUsage",          (Atlas.GetStr("KeyUsageHeader/Text") + ": ",          fc => fc.KeyUsage) },
+			{ "AuthorityKeyIdentifier", (Atlas.GetStr("AuthorityKeyIdentifierHeader/Text") + ": ", fc => fc.AuthorityKeyIdentifier) },
+			{ "SubjectKeyIdentifier", (Atlas.GetStr("SubjectKeyIdentifierHeader/Text") + ": ", fc => fc.SubjectKeyIdentifier) },
+			{ "RawDataLength",     (Atlas.GetStr("RawDataLengthHeader/Text") + ": ",     fc => fc.RawDataLength) },
+			{ "PublicKeyLength",   (Atlas.GetStr("PublicKeyLengthHeader/Text") + ": ",   fc => fc.PublicKeyLength) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -381,7 +379,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 		try
 		{
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForFileSignatures"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("CheckingForFileSignatures"));
 
 			// Get the file's extension
 			string fileExtension = Path.GetExtension(selectedFile);
@@ -458,7 +456,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 								{
 									Logger.Write(
 										string.Format(
-											GlobalVars.GetStr("FileHasHashMismatchMessage"),
+											Atlas.GetStr("FileHasHashMismatchMessage"),
 											selectedFile
 										)
 									);
@@ -474,7 +472,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 								{
 									Logger.Write(
 										string.Format(
-											GlobalVars.GetStr("FileHasHashMismatchMessage"),
+											Atlas.GetStr("FileHasHashMismatchMessage"),
 											selectedFile
 										)
 									);
@@ -544,11 +542,11 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 			await Task.Run(CalculateColumnWidths);
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("FileCertificatesScanResultMessage"), selectedFile, FilteredCertificates.Count > 0 ? FilteredCertificates.Max(x => x.SignerNumber) : 0, IncludeSecurityCatalogsToggleSwitch ? GlobalVars.GetStr("IncludedText") : GlobalVars.GetStr("NotIncludedText")));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("FileCertificatesScanResultMessage"), selectedFile, FilteredCertificates.Count > 0 ? FilteredCertificates.Max(x => x.SignerNumber) : 0, IncludeSecurityCatalogsToggleSwitch ? Atlas.GetStr("IncludedText") : Atlas.GetStr("NotIncludedText")));
 
 			await PublishUserActivityAsync(LaunchProtocolActions.FileSignature,
 				selectedFile,
-				GlobalVars.GetStr("UserActivityNameForFileSignature"));
+				Atlas.GetStr("UserActivityNameForFileSignature"));
 		}
 		catch (Exception ex)
 		{
@@ -639,7 +637,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	internal async void BrowseForFilesSettingsCard_Click()
 	{
-		selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		selectedFile = FileDialogHelper.ShowFilePickerDialog(Atlas.AnyFilePickerFilter);
 
 		await Fetch();
 	}
@@ -756,7 +754,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))
 		{
 			e.AcceptedOperation = DataPackageOperation.Copy;
-			e.DragUIOverride.Caption = GlobalVars.GetStr("DragAndDropHintViewFileCertificatesCaption");
+			e.DragUIOverride.Caption = Atlas.GetStr("DragAndDropHintViewFileCertificatesCaption");
 			e.DragUIOverride.IsCaptionVisible = true;
 			e.DragUIOverride.IsContentVisible = true;
 		}
@@ -976,7 +974,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
 			string fileName = $"AppControlManager_SignerDataExport_{formattedDateTime}.json";
 
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, fileName);
 
 			if (savePath is null)
 				return;
@@ -987,7 +985,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				savePath += ".json";
 			}
 
-			MainInfoBar.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
+			MainInfoBar.WriteInfo(Atlas.GetStr("ExportingToJSONMsg"));
 
 			await Task.Run(() =>
 			{
@@ -998,7 +996,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				File.WriteAllText(savePath, jsonString);
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedDataToJSON"), FilteredCertificates.Count, savePath));
+			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedDataToJSON"), FilteredCertificates.Count, savePath));
 		}
 		catch (Exception ex)
 		{

@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
+using AppControlManager.SiPolicy;
 using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
@@ -74,7 +75,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			AllowMSFTInfoBar.IsClosable = false;
-			AllowMSFTInfoBar.WriteInfo(GlobalVars.GetStr("CreatingAllowMicrosoftBasePolicy"));
+			AllowMSFTInfoBar.WriteInfo(Atlas.GetStr("CreatingAllowMicrosoftBasePolicy"));
 
 			AllowMicrosoftSettingsIsExpanded = true;
 
@@ -115,7 +116,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Visible;
-			AllowMSFTInfoBar.WriteSuccess(AllowMicrosoftCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedAllowMicrosoftBasePolicy"));
+			AllowMSFTInfoBar.WriteSuccess(AllowMicrosoftCreateAndDeploy ? Atlas.GetStr("SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy") : Atlas.GetStr("SuccessfullyCreatedAllowMicrosoftBasePolicy"));
 		}
 		catch (Exception ex)
 		{
@@ -134,7 +135,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_AllowMicrosoft() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathAllowMicrosoft);
 
-	internal async void OpenInDefaultFileHandler_AllowMicrosoft() => await OpenInDefaultFileHandler(_policyPathAllowMicrosoft);
+	internal async void OpenInDefaultFileHandler_AllowMicrosoft() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathAllowMicrosoft);
 
 	internal async void OpenInConfigurePolicyRuleOptions_AllowMicrosoft() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathAllowMicrosoft);
 
@@ -187,7 +188,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		try
 		{
 			DefaultWinInfoBar.IsClosable = false;
-			DefaultWinInfoBar.WriteInfo(GlobalVars.GetStr("CreatingDefaultWindowsBasePolicy"));
+			DefaultWinInfoBar.WriteInfo(Atlas.GetStr("CreatingDefaultWindowsBasePolicy"));
 
 			DefaultWindowsSettingsIsExpanded = true;
 
@@ -227,7 +228,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			DefaultWindowsInfoBarActionButtonVisibility = Visibility.Visible;
-			DefaultWinInfoBar.WriteSuccess(DefaultWindowsCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedDefaultWindowsBasePolicy"));
+			DefaultWinInfoBar.WriteSuccess(DefaultWindowsCreateAndDeploy ? Atlas.GetStr("SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy") : Atlas.GetStr("SuccessfullyCreatedDefaultWindowsBasePolicy"));
 		}
 		catch (Exception ex)
 		{
@@ -246,7 +247,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_DefaultWindows() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathDefaultWindows);
 
-	internal async void OpenInDefaultFileHandler_DefaultWindows() => await OpenInDefaultFileHandler(_policyPathDefaultWindows);
+	internal async void OpenInDefaultFileHandler_DefaultWindows() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathDefaultWindows);
 
 	internal async void OpenInConfigurePolicyRuleOptions_DefaultWindows() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathDefaultWindows);
 
@@ -298,7 +299,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		try
 		{
 			SignedAndRepInfoBar.IsClosable = false;
-			SignedAndRepInfoBar.WriteInfo(GlobalVars.GetStr("CreatingSignedAndReputableBasePolicy"));
+			SignedAndRepInfoBar.WriteInfo(Atlas.GetStr("CreatingSignedAndReputableBasePolicy"));
 
 			SignedAndReputableSettingsIsExpanded = true;
 
@@ -336,7 +337,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			SignedAndReputableInfoBarActionButtonVisibility = Visibility.Visible;
-			SignedAndRepInfoBar.WriteSuccess(SignedAndReputableCreateAndDeploy ? GlobalVars.GetStr("SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy") : GlobalVars.GetStr("SuccessfullyCreatedSignedAndReputableBasePolicy"));
+			SignedAndRepInfoBar.WriteSuccess(SignedAndReputableCreateAndDeploy ? Atlas.GetStr("SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy") : Atlas.GetStr("SuccessfullyCreatedSignedAndReputableBasePolicy"));
 		}
 		catch (Exception ex)
 		{
@@ -354,7 +355,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_SignedAndReputable() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathSignedAndReputable);
 
-	internal async void OpenInDefaultFileHandler_SignedAndReputable() => await OpenInDefaultFileHandler(_policyPathSignedAndReputable);
+	internal async void OpenInDefaultFileHandler_SignedAndReputable() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathSignedAndReputable);
 
 	internal async void OpenInConfigurePolicyRuleOptions_SignedAndReputable() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathSignedAndReputable);
 
@@ -388,7 +389,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 			KernelModeBlockListInfoBar.IsClosable = false;
-			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("CreatingRecommendedDriverBlockRulesPolicy"));
+			KernelModeBlockListInfoBar.WriteInfo(Atlas.GetStr("CreatingRecommendedDriverBlockRulesPolicy"));
 
 			_policyPathMSFTRecommendedDriverBlockRules = await Task.Run(() =>
 			{
@@ -407,7 +408,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
-			KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedRecommendedDriverBlockRulesPolicy"));
+			KernelModeBlockListInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedRecommendedDriverBlockRulesPolicy"));
 
 			if (!RecommendedDriverBlockRulesCreateAndDeploy)
 			{
@@ -440,15 +441,15 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RecommendedDriverBlockRulesSettingsIsExpanded = true;
 
 			KernelModeBlockListInfoBar.IsClosable = false;
-			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("ConfiguringAutoUpdate"));
+			KernelModeBlockListInfoBar.WriteInfo(Atlas.GetStr("ConfiguringAutoUpdate"));
 
 			await Task.Run(BasePolicyCreator.SetAutoUpdateDriverBlockRules);
 
-			KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("AutoUpdateConfigured"));
+			KernelModeBlockListInfoBar.WriteSuccess(Atlas.GetStr("AutoUpdateConfigured"));
 		}
 		catch (Exception ex)
 		{
-			KernelModeBlockListInfoBar.WriteError(ex, GlobalVars.GetStr("AutoUpdateError"));
+			KernelModeBlockListInfoBar.WriteError(ex, Atlas.GetStr("AutoUpdateError"));
 		}
 		finally
 		{
@@ -462,7 +463,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_RecommendedDriverBlockRules() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathMSFTRecommendedDriverBlockRules);
 
-	internal async void OpenInDefaultFileHandler_RecommendedDriverBlockRules() => await OpenInDefaultFileHandler(_policyPathMSFTRecommendedDriverBlockRules);
+	internal async void OpenInDefaultFileHandler_RecommendedDriverBlockRules() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathMSFTRecommendedDriverBlockRules);
 
 	internal async void OpenInConfigurePolicyRuleOptions_RecommendedDriverBlockRules() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathMSFTRecommendedDriverBlockRules);
 
@@ -500,7 +501,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			UserModeBlockListInfoBar.IsClosable = false;
 
-			UserModeBlockListInfoBar.WriteInfo(GlobalVars.GetStr("CreatingUserModeBlockRules"));
+			UserModeBlockListInfoBar.WriteInfo(Atlas.GetStr("CreatingUserModeBlockRules"));
 
 			_policyPathRecommendedUserModeBlockRules = await Task.Run(() =>
 			{
@@ -513,7 +514,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			RecommendedUserModeBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
-			UserModeBlockListInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedUserModeBlockRules"));
+			UserModeBlockListInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedUserModeBlockRules"));
 		}
 		catch (Exception ex)
 		{
@@ -533,7 +534,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_RecommendedUserModeBlockRules() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathRecommendedUserModeBlockRules);
 
-	internal async void OpenInDefaultFileHandler_RecommendedUserModeBlockRules() => await OpenInDefaultFileHandler(_policyPathRecommendedUserModeBlockRules);
+	internal async void OpenInDefaultFileHandler_RecommendedUserModeBlockRules() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathRecommendedUserModeBlockRules);
 
 	internal async void OpenInConfigurePolicyRuleOptions_RecommendedUserModeBlockRules() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathRecommendedUserModeBlockRules);
 
@@ -570,7 +571,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			StrictKernelModeSectionIsEnabled = false;
 			StrictKernelInfoBar.IsClosable = false;
 
-			StrictKernelInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicy"));
+			StrictKernelInfoBar.WriteInfo(Atlas.GetStr("CreatingPolicy"));
 
 			_policyPathStrictKernelMode = await Task.Run(() =>
 			{
@@ -584,11 +585,11 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
 
-			StrictKernelInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyCreatedSuccessfully"));
+			StrictKernelInfoBar.WriteSuccess(Atlas.GetStr("PolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
-			StrictKernelInfoBar.WriteError(ex, GlobalVars.GetStr("PolicyCreationError"));
+			StrictKernelInfoBar.WriteError(ex, Atlas.GetStr("PolicyCreationError"));
 		}
 		finally
 		{
@@ -602,7 +603,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_StrictKernelModePolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathStrictKernelMode);
 
-	internal async void OpenInDefaultFileHandler_StrictKernelModePolicy() => await OpenInDefaultFileHandler(_policyPathStrictKernelMode);
+	internal async void OpenInDefaultFileHandler_StrictKernelModePolicy() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathStrictKernelMode);
 
 	internal async void OpenInConfigurePolicyRuleOptions_StrictKernelModePolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathStrictKernelMode);
 
@@ -641,7 +642,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RMMBlockingSectionIsEnabled = false;
 			RMMBlockingInfoBar.IsClosable = false;
 
-			RMMBlockingInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyRMMBlocking"));
+			RMMBlockingInfoBar.WriteInfo(Atlas.GetStr("CreatingPolicyRMMBlocking"));
 
 			_policyPathRMMBlocking = await Task.Run(() =>
 			{
@@ -656,7 +657,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			RMMBlockingInfoBarActionButtonVisibility = Visibility.Visible;
 
-			RMMBlockingInfoBar.WriteSuccess(GlobalVars.GetStr("RMMBlockingPolicyCreatedSuccessfully"));
+			RMMBlockingInfoBar.WriteSuccess(Atlas.GetStr("RMMBlockingPolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
@@ -674,7 +675,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_RMMBlockingPolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathRMMBlocking);
 
-	internal async void OpenInDefaultFileHandler_RMMBlockingPolicy() => await OpenInDefaultFileHandler(_policyPathRMMBlocking);
+	internal async void OpenInDefaultFileHandler_RMMBlockingPolicy() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathRMMBlocking);
 
 	internal async void OpenInConfigurePolicyRuleOptions_RMMBlockingPolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathRMMBlocking);
 
@@ -753,7 +754,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			DownloadsDefenseMeasureSectionIsEnabled = false;
 			DownloadsDefenseMeasureInfoBar.IsClosable = false;
 
-			DownloadsDefenseMeasureInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyDownloadsDefenseMeasure"));
+			DownloadsDefenseMeasureInfoBar.WriteInfo(Atlas.GetStr("CreatingPolicyDownloadsDefenseMeasure"));
 
 			_policyPathDownloadsDefenseMeasure = await Task.Run(() =>
 			{
@@ -768,7 +769,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			DownloadsDefenseMeasureInfoBarActionButtonVisibility = Visibility.Visible;
 
-			DownloadsDefenseMeasureInfoBar.WriteSuccess(GlobalVars.GetStr("DownloadsDefenseMeasurePolicyCreatedSuccessfully"));
+			DownloadsDefenseMeasureInfoBar.WriteSuccess(Atlas.GetStr("DownloadsDefenseMeasurePolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
@@ -786,7 +787,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_DownloadsDefenseMeasurePolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathDownloadsDefenseMeasure);
 
-	internal async void OpenInDefaultFileHandler_DownloadsDefenseMeasurePolicy() => await OpenInDefaultFileHandler(_policyPathDownloadsDefenseMeasure);
+	internal async void OpenInDefaultFileHandler_DownloadsDefenseMeasurePolicy() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathDownloadsDefenseMeasure);
 
 	internal async void OpenInConfigurePolicyRuleOptions_DownloadsDefenseMeasurePolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathDownloadsDefenseMeasure);
 
@@ -825,7 +826,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			DangerousScriptHostsBlockingSectionIsEnabled = false;
 			DangerousScriptHostsBlockingInfoBar.IsClosable = false;
 
-			DangerousScriptHostsBlockingInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyDangerousScriptHostsBlocking"));
+			DangerousScriptHostsBlockingInfoBar.WriteInfo(Atlas.GetStr("CreatingPolicyDangerousScriptHostsBlocking"));
 
 			_policyPathDangerousScriptHostsBlocking = await Task.Run(() =>
 			{
@@ -840,7 +841,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			DangerousScriptHostsBlockingInfoBarActionButtonVisibility = Visibility.Visible;
 
-			DangerousScriptHostsBlockingInfoBar.WriteSuccess(GlobalVars.GetStr("DangerousScriptHostsBlockingPolicyCreatedSuccessfully"));
+			DangerousScriptHostsBlockingInfoBar.WriteSuccess(Atlas.GetStr("DangerousScriptHostsBlockingPolicyCreatedSuccessfully"));
 		}
 		catch (Exception ex)
 		{
@@ -858,7 +859,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void OpenInPolicyEditor_DangerousScriptHostsBlockingPolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathDangerousScriptHostsBlocking);
 
-	internal async void OpenInDefaultFileHandler_DangerousScriptHostsBlockingPolicy() => await OpenInDefaultFileHandler(_policyPathDangerousScriptHostsBlocking);
+	internal async void OpenInDefaultFileHandler_DangerousScriptHostsBlockingPolicy() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathDangerousScriptHostsBlocking);
 
 	internal async void OpenInConfigurePolicyRuleOptions_DangerousScriptHostsBlockingPolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathDangerousScriptHostsBlocking);
 

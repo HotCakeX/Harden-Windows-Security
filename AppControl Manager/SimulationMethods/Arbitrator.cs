@@ -20,8 +20,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using AppControlManager.IntelGathering;
 using AppControlManager.Others;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.SimulationMethods;
 
@@ -50,7 +50,7 @@ internal static class Arbitrator
 			// If the signer has any EKUs, try to match it with the file's EKU OIDs
 			if (signer.HasEKU)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("CurrentFileHasNEKUs"), simulationInput.FilePath.FullName, simulationInput.EKUOIDs?.Count));
+				Logger.Write(string.Format(Atlas.GetStr("CurrentFileHasNEKUs"), simulationInput.FilePath.FullName, simulationInput.EKUOIDs?.Count));
 
 				// Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
 				// This is used for all levels, not just WHQL levels
@@ -68,12 +68,12 @@ internal static class Arbitrator
 				// If both the file and signer had EKUs and they matched
 				if (EKUsMatch)
 				{
-					Logger.Write(string.Format(GlobalVars.GetStr("SignerEKUsMatchedFileEKUs"), signer.Name));
+					Logger.Write(string.Format(Atlas.GetStr("SignerEKUsMatchedFileEKUs"), signer.Name));
 
 					// If the signer and file have matching EKUs and the signer is WHQL then start checking for OemID
 					if (signer.IsWHQL)
 					{
-						Logger.Write(string.Format(GlobalVars.GetStr("SignerIsWHQL"), signer.Name));
+						Logger.Write(string.Format(Atlas.GetStr("SignerIsWHQL"), signer.Name));
 
 						// At this point the file is definitely WHQL-Signed
 
@@ -134,7 +134,7 @@ internal static class Arbitrator
 							}
 							catch
 							{
-								Logger.Write(GlobalVars.GetStr("FailedToGetOpusDataCurrentChain"));
+								Logger.Write(Atlas.GetStr("FailedToGetOpusDataCurrentChain"));
 							}
 
 							// Capture the details of the WHQL signers, aka Intermediate certificate(s) of the signer package that had WHQL EKU
@@ -180,7 +180,7 @@ internal static class Arbitrator
 									{
 										if (Attrib.MinimumFileVersion is null)
 										{
-											Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
+											Logger.Write(Atlas.GetStr("MinimumFileVersionNullSkipping"));
 											continue;
 										}
 
@@ -201,7 +201,7 @@ internal static class Arbitrator
 											)
 										{
 											// Excessive logging
-											// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
+											// Logger.Write(string.Format(Atlas.GetStr("SpecificFileNameLevelIs"), keyItem));
 
 											/*
 												If there was a match then assign the keyItem, which is the name of the SpecificFileNameLevel option, to the SpecificFileNameLevelMatchCriteria of the SimulationOutput
@@ -323,7 +323,7 @@ internal static class Arbitrator
 				}
 				else
 				{
-					Logger.Write(GlobalVars.GetStr("SignerHadEKUsButNoMatch"));
+					Logger.Write(Atlas.GetStr("SignerHadEKUsButNoMatch"));
 					// If the signer has EKU but it didn't match with the file's EKU then skip the current signer
 					// as it shouldn't be used for any other levels
 					continue;
@@ -367,7 +367,7 @@ internal static class Arbitrator
 								{
 									if (Attrib.MinimumFileVersion is null)
 									{
-										Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
+										Logger.Write(Atlas.GetStr("MinimumFileVersionNullSkipping"));
 										continue;
 									}
 
@@ -418,7 +418,7 @@ internal static class Arbitrator
 										)
 									{
 										// Excessive logging
-										// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
+										// Logger.Write(string.Format(Atlas.GetStr("SpecificFileNameLevelIs"), keyItem));
 
 										return new SimulationOutput(
 										simulationInput.FilePath.Name,
@@ -575,7 +575,7 @@ internal static class Arbitrator
 						{
 							if (Attrib.MinimumFileVersion is null)
 							{
-								Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
+								Logger.Write(Atlas.GetStr("MinimumFileVersionNullSkipping"));
 								continue;
 							}
 
@@ -629,7 +629,7 @@ internal static class Arbitrator
 								)
 							{
 								// Excessive logging
-								// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
+								// Logger.Write(string.Format(Atlas.GetStr("SpecificFileNameLevelIs"), keyItem));
 
 								return new SimulationOutput(
 									simulationInput.FilePath.Name,

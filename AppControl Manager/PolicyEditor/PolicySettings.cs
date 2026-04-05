@@ -15,12 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.ViewModels;
-
 namespace AppControlManager.PolicyEditor;
 
 internal sealed partial class PolicySettings(
-	PolicyEditorVM parentViewModel,
 	string provider,
 	string key,
 	object value,
@@ -28,11 +25,6 @@ internal sealed partial class PolicySettings(
 	string valueName,
 	int type) : ViewModelBase
 {
-
-	// A property for the parent view model of the Policy Editor page to store a reference to it
-	// so we can access the variables in the View Model class via compiled binding in XAML.
-	internal PolicyEditorVM ParentViewModel => parentViewModel;
-
 	internal string Provider { get; set => SP(ref field, value); } = provider;
 	internal string Key { get; set => SP(ref field, value); } = key;
 	internal object Value { get; set => SP(ref field, value); } = value;

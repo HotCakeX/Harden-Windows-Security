@@ -159,9 +159,8 @@ internal static class PolicySettingsManager
 	/// Gets all of the policy settings and return a custom class of them for Policy Editor.
 	/// </summary>
 	/// <param name="policySettings"></param>
-	/// <param name="VMRef"></param>
 	/// <returns></returns>
-	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(List<Setting>? policySettings, ViewModels.PolicyEditorVM VMRef)
+	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(List<Setting>? policySettings)
 	{
 		List<AppControlManager.PolicyEditor.PolicySettings> output = [];
 
@@ -182,7 +181,6 @@ internal static class PolicySettingsManager
 			try
 			{
 				output.Add(new AppControlManager.PolicyEditor.PolicySettings(
-					parentViewModel: VMRef,
 					provider: item.Provider,
 					key: item.Key,
 					value: item.Value.Item,

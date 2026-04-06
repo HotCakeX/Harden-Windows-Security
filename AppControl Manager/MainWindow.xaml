@@ -527,6 +527,47 @@
                                                                                 </MenuFlyoutItem.Icon>
                                                                             </MenuFlyoutItem>
 
+                                                                            <MenuFlyoutSubItem x:Uid="SetColorMenuFlyoutSubItem">
+                                                                                <MenuFlyoutSubItem.Icon>
+                                                                                    <FontIcon Glyph="&#xE8EC;" />
+                                                                                </MenuFlyoutSubItem.Icon>
+                                                                                <MenuFlyoutItem Text="Lavender" Tag="#FFFF64F7" Click="OnSetPolicyColorClicked" DataContext="{x:Bind}">
+                                                                                    <MenuFlyoutItem.Icon>
+                                                                                        <FontIcon Glyph="&#xE8EC;" Foreground="#FFFF64F7"/>
+                                                                                    </MenuFlyoutItem.Icon>
+                                                                                </MenuFlyoutItem>
+                                                                                <MenuFlyoutItem Text="Teal" Tag="#FF3AFFD9" Click="OnSetPolicyColorClicked" DataContext="{x:Bind}">
+                                                                                    <MenuFlyoutItem.Icon>
+                                                                                        <FontIcon Glyph="&#xE8EC;" Foreground="#FF3AFFD9"/>
+                                                                                    </MenuFlyoutItem.Icon>
+                                                                                </MenuFlyoutItem>
+                                                                                <MenuFlyoutItem Text="Gold" Tag="#FFFFD453" Click="OnSetPolicyColorClicked" DataContext="{x:Bind}">
+                                                                                    <MenuFlyoutItem.Icon>
+                                                                                        <FontIcon Glyph="&#xE8EC;" Foreground="#FFFFD453"/>
+                                                                                    </MenuFlyoutItem.Icon>
+                                                                                </MenuFlyoutItem>
+                                                                                <MenuFlyoutItem Text="Rose" Tag="#FFFF5E91" Click="OnSetPolicyColorClicked" DataContext="{x:Bind}">
+                                                                                    <MenuFlyoutItem.Icon>
+                                                                                        <FontIcon Glyph="&#xE8EC;" Foreground="#FFFF5E91"/>
+                                                                                    </MenuFlyoutItem.Icon>
+                                                                                </MenuFlyoutItem>
+                                                                                <MenuFlyoutItem Text="Aqua" Tag="#FFC0FFF3" Click="OnSetPolicyColorClicked" DataContext="{x:Bind}">
+                                                                                    <MenuFlyoutItem.Icon>
+                                                                                        <FontIcon Glyph="&#xE8EC;" Foreground="#FFC0FFF3"/>
+                                                                                    </MenuFlyoutItem.Icon>
+                                                                                </MenuFlyoutItem>
+                                                                                <MenuFlyoutItem Text="Custom..." Tag="Custom" Click="OnSetPolicyColorClicked" DataContext="{x:Bind}">
+                                                                                    <MenuFlyoutItem.Icon>
+                                                                                        <FontIcon Glyph="&#xE790;"/>
+                                                                                    </MenuFlyoutItem.Icon>
+                                                                                </MenuFlyoutItem>
+                                                                                <MenuFlyoutSeparator />
+                                                                                <MenuFlyoutItem Text="None" Tag="Transparent" Click="OnSetPolicyColorClicked" DataContext="{x:Bind}">
+                                                                                    <MenuFlyoutItem.Icon>
+                                                                                        <FontIcon Glyph="&#xE894;"/>
+                                                                                    </MenuFlyoutItem.Icon>
+                                                                                </MenuFlyoutItem>
+                                                                            </MenuFlyoutSubItem>
                                                                         </MenuFlyout>
                                                                     </Grid.ContextFlyout>
 
@@ -601,6 +642,7 @@
                                                                                     <MenuFlyoutItem HorizontalAlignment="Stretch" Text="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect7Content, Mode=OneWay}" Visibility="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect7Visibility, Mode=OneWay}" Command="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect7Command, Mode=OneWay}" CommandParameter="{x:Bind}" />
 
                                                                                 </MenuFlyoutSubItem>
+
                                                                             </MenuFlyout>
                                                                         </Button.Flyout>
 
@@ -609,6 +651,7 @@
                                                                                 <Grid.ColumnDefinitions>
                                                                                     <ColumnDefinition Width="Auto"/>
                                                                                     <ColumnDefinition Width="*"/>
+                                                                                    <ColumnDefinition Width="Auto"/>
                                                                                 </Grid.ColumnDefinitions>
                                                                                 <FontIcon Glyph="&#xEB51;" FontSize="14" VerticalAlignment="Center" />
                                                                                 <TextBlock Grid.Column="1"
@@ -617,6 +660,13 @@
                                                                                            TextWrapping="NoWrap"
                                                                                            VerticalAlignment="Center"
                                                                                            Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                                                                <!-- The Color Tag Indicator -->
+                                                                                <FontIcon Grid.Column="2"                                                                                          
+                                                                                          Glyph="&#xE8EC;" 
+                                                                                          Foreground="{x:Bind TagColorBrush, Mode=OneWay}"
+                                                                                          Visibility="{x:Bind IsTagVisible, Mode=OneWay}"
+                                                                                          FontSize="14" 
+                                                                                          VerticalAlignment="Center"/>
                                                                             </Grid>
 
                                                                             <Grid ColumnSpacing="5" HorizontalAlignment="Center">

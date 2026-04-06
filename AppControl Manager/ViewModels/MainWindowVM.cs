@@ -19,8 +19,10 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -29,6 +31,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.WindowComponents;
 using CommonCore.ToolKits;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -427,6 +430,35 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		_ = InitialPoliciesLibrarySetup();
 	}
 
+	/// <summary>
+	/// Parses a given hex color code into a Windows.UI.Color object.
+	/// </summary>
+	internal static Windows.UI.Color ParseColor(string hex)
+	{
+		if (string.IsNullOrEmpty(hex)) return Colors.Transparent;
+
+		hex = hex.TrimStart('#');
+		byte a = 255;
+		int offset = 0;
+
+		try
+		{
+			if (hex.Length == 8)
+			{
+				a = Convert.ToByte(hex[..2], 16);
+				offset = 2;
+			}
+			byte r = Convert.ToByte(hex.Substring(offset, 2), 16);
+			byte g = Convert.ToByte(hex.Substring(offset + 2, 2), 16);
+			byte b = Convert.ToByte(hex.Substring(offset + 4, 2), 16);
+			return Windows.UI.Color.FromArgb(a, r, g, b);
+		}
+		catch
+		{
+			return Colors.Transparent;
+		}
+	}
+
 	// Commands that need to run during app startup and when the location of the Policies Library cache changes.
 	internal async Task InitialPoliciesLibrarySetup()
 	{
@@ -444,11 +476,27 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						SidebarPoliciesLibrary.Clear();
 					});
 
+					// Load the color cache before iterating files
+					Dictionary<Guid, string> colorCache = [];
+					string colorCachePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+					if (File.Exists(colorCachePath))
+					{
+						try
+						{
+							string json = await File.ReadAllTextAsync(colorCachePath);
+							colorCache = JsonSerializer.Deserialize(json, PolicyColorsJsonContext.Default.DictionaryGuidString) ?? [];
+						}
+						catch { }
+					}
+
 					// Get all of the files in the cache first
 					IEnumerable<string> currentFiles = Directory.EnumerateFiles(GetSidebarPoliciesLibraryCacheLocation());
 
 					foreach (string file in currentFiles)
 					{
+						// Ignore the cache configuration files
+						if (file.EndsWith(".json", StringComparison.OrdinalIgnoreCase)) continue;
+
 						try
 						{
 							string uniqueID = Path.GetFileNameWithoutExtension(file);
@@ -546,6 +594,18 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 
 							await Atlas.AppDispatcher.EnqueueAsync(() =>
 							{
+								// Ensure Brushes are instantiated only on the UI thread
+								if (colorCache.TryGetValue(policyToAdd.UniqueObjID, out string? colorName) && !string.IsNullOrEmpty(colorName))
+								{
+									Windows.UI.Color parsedColor = ParseColor(colorName);
+
+									if (parsedColor != Colors.Transparent)
+									{
+										policyToAdd.TagColorBrush = new SolidColorBrush(parsedColor);
+										policyToAdd.IsTagVisible = Visibility.Visible;
+									}
+								}
+
 								SidebarPoliciesLibrary.Add(policyToAdd);
 							});
 						}
@@ -564,6 +624,49 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 					_ = PoliciesLibraryCacheLock.Release();
 				}
 			});
+		}
+	}
+
+	/// <summary>
+	/// Persists the selected color tag for a specific policy to the library cache directory.
+	/// </summary>
+	internal async Task UpdatePolicyColorAsync(Guid policyId, string colorName)
+	{
+		await PoliciesLibraryCacheLock.WaitAsync();
+		try
+		{
+			string cachePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+			Dictionary<Guid, string> colorCache = [];
+
+			if (File.Exists(cachePath))
+			{
+				try
+				{
+					string json = await File.ReadAllTextAsync(cachePath);
+					colorCache = JsonSerializer.Deserialize(json, PolicyColorsJsonContext.Default.DictionaryGuidString) ?? [];
+				}
+				catch { }
+			}
+
+			if (string.Equals(colorName, "Transparent", StringComparison.OrdinalIgnoreCase))
+			{
+				_ = colorCache.Remove(policyId);
+			}
+			else
+			{
+				colorCache[policyId] = colorName;
+			}
+
+			string newJson = JsonSerializer.Serialize(colorCache, PolicyColorsJsonContext.Default.DictionaryGuidString);
+			await File.WriteAllTextAsync(cachePath, newJson);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_ = PoliciesLibraryCacheLock.Release();
 		}
 	}
 
@@ -897,6 +1000,8 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 				IEnumerable<string> files = Directory.EnumerateFiles(GetSidebarPoliciesLibraryCacheLocation());
 				foreach (string file in files)
 				{
+					if (file.EndsWith(".json", StringComparison.OrdinalIgnoreCase)) continue;
+
 					try
 					{
 						byte[] currentBytes = File.ReadAllBytes(file);
@@ -1310,4 +1415,31 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 
 	internal Visibility SidebarProgressRingVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
 
+	/// <summary>
+	/// Removes a policy's color from the JSON cache. 
+	/// NOTE: This must be called from within a block that already holds the PoliciesLibraryCacheLock.
+	/// </summary>
+	internal async Task RemoveColorFromCacheInternalAsync(Guid policyId)
+	{
+		string cachePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+		if (File.Exists(cachePath))
+		{
+			try
+			{
+				string json = await File.ReadAllTextAsync(cachePath);
+				Dictionary<Guid, string> colorCache = System.Text.Json.JsonSerializer.Deserialize(json, PolicyColorsJsonContext.Default.DictionaryGuidString) ?? [];
+
+				// If the policy ID existed and was removed, write the updated JSON back to the file
+				if (colorCache.Remove(policyId))
+				{
+					string newJson = System.Text.Json.JsonSerializer.Serialize(colorCache, PolicyColorsJsonContext.Default.DictionaryGuidString);
+					await File.WriteAllTextAsync(cachePath, newJson);
+				}
+			}
+			catch (Exception ex)
+			{
+				MainInfoBar.WriteError(ex, "Error removing color from cache.");
+			}
+		}
+	}
 }

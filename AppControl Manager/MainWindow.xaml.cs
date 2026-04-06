@@ -1343,13 +1343,16 @@ internal sealed partial class MainWindow : Window
 			// If the library should be persistent
 			if (ViewModel.AppSettings.PersistentPoliciesLibrary)
 			{
-				await Task.Run(() =>
+				await Task.Run(async () =>
 				{
 					IEnumerable<string> currentFiles = Directory.EnumerateFiles(ViewModel.GetSidebarPoliciesLibraryCacheLocation(), $"{policyContext.UniqueObjID}.xml", enumerationOptionsForPoliciesLibraryRemoval);
 					foreach (string file in currentFiles)
 					{
 						File.Delete(file);
 					}
+
+					// Clean up the color tag cache to prevent orphaned entries
+					await ViewModel.RemoveColorFromCacheInternalAsync(policyContext.UniqueObjID);
 				});
 			}
 		}
@@ -1412,6 +1415,13 @@ internal sealed partial class MainWindow : Window
 								File.Delete(file);
 							}
 						}
+					}
+
+					// Safely delete the entire color cache file since all policies are cleared
+					string cachePath = Path.Combine(ViewModel.GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+					if (File.Exists(cachePath))
+					{
+						File.Delete(cachePath);
 					}
 				});
 			}
@@ -1506,6 +1516,77 @@ internal sealed partial class MainWindow : Window
 		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
 		{
 			ClipboardManagement.CopyText(policyContext.PolicyObj.BasePolicyID);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for setting the tag color of a policy in the sidebar library.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void OnSetPolicyColorClicked(object sender, RoutedEventArgs e)
+	{
+		if (sender is MenuFlyoutItem { Tag: string colorTag, DataContext: PolicyFileRepresent policyContext })
+		{
+			// For None
+			if (string.Equals(colorTag, "Transparent", StringComparison.OrdinalIgnoreCase))
+			{
+				policyContext.TagColorBrush = new SolidColorBrush(Colors.Transparent);
+				policyContext.IsTagVisible = Visibility.Collapsed;
+				await ViewModel.UpdatePolicyColorAsync(policyContext.UniqueObjID, "Transparent");
+			}
+			// For Custom colors from the picker
+			else if (string.Equals(colorTag, "Custom", StringComparison.OrdinalIgnoreCase))
+			{
+				ColorPicker picker = new()
+				{
+					ColorSpectrumShape = ColorSpectrumShape.Ring,
+					IsMoreButtonVisible = true,
+					IsColorSliderVisible = true,
+					IsColorChannelTextInputVisible = true,
+					IsHexInputVisible = true,
+					IsAlphaEnabled = true,
+					IsAlphaSliderVisible = true,
+					IsAlphaTextInputVisible = true,
+					Opacity = 100,
+					Color = policyContext.TagColorBrush?.Color ?? Colors.White
+				};
+
+				// ScrollViewer for the content
+				ScrollViewer scrollViewer = new()
+				{
+					Content = picker,
+					VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+					HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+					Padding = new Thickness(16, 0, 16, 0)
+				};
+
+				using ContentDialogV2 dialog = new()
+				{
+					Title = "Select Custom Color",
+					Content = scrollViewer,
+					PrimaryButtonText = "Apply",
+					CloseButtonText = "Cancel",
+				};
+
+				if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+				{
+					Windows.UI.Color selectedColor = picker.Color;
+					policyContext.TagColorBrush = new SolidColorBrush(selectedColor);
+					policyContext.IsTagVisible = Visibility.Visible;
+
+					string hexColor = $"#{selectedColor.A:X2}{selectedColor.R:X2}{selectedColor.G:X2}{selectedColor.B:X2}";
+					await ViewModel.UpdatePolicyColorAsync(policyContext.UniqueObjID, hexColor);
+				}
+			}
+			// For the pre-defined colors
+			else
+			{
+				Windows.UI.Color parsedColor = MainWindowVM.ParseColor(colorTag);
+				policyContext.TagColorBrush = new SolidColorBrush(parsedColor);
+				policyContext.IsTagVisible = Visibility.Visible;
+				await ViewModel.UpdatePolicyColorAsync(policyContext.UniqueObjID, colorTag);
+			}
 		}
 	}
 

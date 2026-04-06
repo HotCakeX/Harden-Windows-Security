@@ -7119,4 +7119,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DenyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create Deny rules for the selected items and add them to the selected policy.</value>
   </data>
+  <data name="SetColorMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Set Color</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Set a color to the policy in the library as a way of tagging it.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Set a color to the policy in the library as a way of tagging it.</value>
+  </data>
 </root>

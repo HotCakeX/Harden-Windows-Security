@@ -20,6 +20,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.XMLOps;
 using Windows.System;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace AppControlManager.SiPolicy;
 
@@ -60,6 +64,16 @@ internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFile
 	/// Not always present and only used for certain areas.
 	/// </summary>
 	internal string? FileName { get; set; }
+
+	/// <summary>
+	/// The brush used to display the policy color tag indicator.
+	/// </summary>
+	internal SolidColorBrush? TagColorBrush { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// The visibility of the policy color tag indicator.
+	/// </summary>
+	internal Visibility IsTagVisible { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// Helper method to generate the identifier string.
@@ -120,4 +134,13 @@ internal enum PolicyFileRepresentKind
 	CIP,
 	P7B,
 	BIN
+}
+
+/// <summary>
+/// Source generator context for JSON serialization and deserialization of the Policies Library color tags.
+/// </summary>
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(Dictionary<Guid, string>))]
+internal sealed partial class PolicyColorsJsonContext : JsonSerializerContext
+{
 }

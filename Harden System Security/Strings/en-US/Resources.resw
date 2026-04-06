@@ -5594,4 +5594,47 @@ Thumbprint: {3}</value>
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Relaunch</value>
   </data>
+  <!--NEW-->
+  <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>Optimize</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Optimize the system services by stopping and disabling certain rarely used and safe to disable services in Windows. You can always undo these actions at any time.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Optimize the system services by stopping and disabling certain rarely used and safe to disable services in Windows. You can always undo these actions at any time.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>Recommended Services</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>Stop and Disable all</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Stop and disable all of the recommended services.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Stop and disable all of the recommended services.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>This is used to manage downloaded maps in Windows.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>Disabling this is recommended by Microsoft to improve security.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>Only disable this if you do not use a scanner, digital camera or their image acquisition functions.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>Only disable this if you do not worry about data caps, you don't limit your network usage and you do not use metered networks.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Stop and disable the service.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Stop and disable the service.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>File enumeration took {0} hours and {1} minutes and {2} seconds to complete.</value>
+  </data>
 </root>

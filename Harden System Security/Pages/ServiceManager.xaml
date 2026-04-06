@@ -124,6 +124,69 @@
                             </DataTemplate>
                         </ToggleButton.ContentTemplate>
                     </ToggleButton>
+
+                    <!-- Optimize Services Flyout -->
+                    <Button VerticalAlignment="Center"
+                            x:Uid="OptimizeServicesButton"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xEC4A;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                        <Button.Flyout>
+                            <Flyout Placement="BottomEdgeAlignedLeft">
+                                <Grid Width="380">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" x:Uid="RecommendedServices" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                                    <Button Grid.Row="1" x:Uid="StopAndDisableAllRecommendedServicesButton" HorizontalAlignment="Stretch" Margin="0,0,0,12" Click="{x:Bind ViewModel.DisableAndStopAllRecommendedServices_Click}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                                    <FontIcon Glyph="&#xE71A;" FontSize="14" Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <ScrollViewer Grid.Row="2" MaxHeight="400" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
+                                        <ItemsControl ItemsSource="{x:Bind ViewModel.RecommendedServices, Mode=OneWay}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:RecommendedService">
+                                                    <Border Margin="0,0,0,8" Padding="12" CornerRadius="8" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind DisplayName}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                                                <TextBlock Text="{x:Bind Description}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                            <Button Grid.Column="1" VerticalAlignment="Center" Tag="{x:Bind}" Click="{x:Bind vm:ViewModelProvider.ServiceManagerVM.DisableAndStopRecommendedService_Click}" x:Uid="StopAndDisableServiceButton">
+                                                                <FontIcon Glyph="&#xE71A;" Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                                                            </Button>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+
                 </StackPanel>
             </Border>
 
@@ -354,7 +417,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Column 0: Service Name -->
-                                            <TextBlock Grid.Column="0" Text="{x:Bind Item.ServiceName}" Style="{StaticResource BodyStrongTextBlockStyle}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind Item.ServiceName}"/>
+                                            <TextBlock Grid.Column="0" Text="{x:Bind Item.ServiceName}" Style="{StaticResource BodyStrongTextBlockStyle}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True" ToolTipService.ToolTip="{x:Bind Item.ServiceName}"/>
 
                                             <!-- Column 1: Display Name -->
                                             <TextBlock Grid.Column="1" Text="{x:Bind Item.DisplayName}" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind Item.DisplayName}"/>

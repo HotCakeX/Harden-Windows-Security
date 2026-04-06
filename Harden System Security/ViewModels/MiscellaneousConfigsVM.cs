@@ -322,43 +322,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 
 				applyStrategy: new DefaultApply(() =>
 				{
-					IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
-					if (scManager != IntPtr.Zero)
-					{
-						try
-						{
-							IntPtr hService = NativeMethods.OpenServiceW(scManager, "WebClient", NativeMethods.SERVICE_CHANGE_CONFIG | NativeMethods.SERVICE_STOP);
-							if (hService != IntPtr.Zero)
-							{
-								try
-								{
-									SERVICE_STATUS status = new();
-									_ = NativeMethods.ControlService(hService, NativeMethods.SERVICE_CONTROL_STOP, ref status);
-
-									_ = NativeMethods.ChangeServiceConfigW(
-										hService,
-										NativeMethods.SERVICE_NO_CHANGE,
-										4, // SERVICE_DISABLED
-										NativeMethods.SERVICE_NO_CHANGE,
-										null,
-										null,
-										IntPtr.Zero,
-										IntPtr.Zero,
-										null,
-										null,
-										null);
-								}
-								finally
-								{
-									_ = NativeMethods.CloseServiceHandle(hService);
-								}
-							}
-						}
-						finally
-						{
-							_ = NativeMethods.CloseServiceHandle(scManager);
-						}
-					}
+					ViewModels.ServiceManagerVM.DisableAndStopServices(["WebClient"]);
 				}),
 
 				verifyStrategy: new DefaultVerify(() =>

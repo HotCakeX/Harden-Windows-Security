@@ -30,6 +30,13 @@ using Microsoft.UI.Xaml.Media;
 
 namespace HardenSystemSecurity.ViewModels;
 
+internal sealed class RecommendedService(string serviceName, string displayName, string description)
+{
+	internal string ServiceName => serviceName;
+	internal string DisplayName => displayName;
+	internal string Description => description;
+}
+
 internal sealed partial class ServiceItemViewModel : ViewModelBase
 {
 	internal ServiceItem Item { get; }
@@ -267,7 +274,6 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 {
 	internal ServiceManagerVM() => FilteredServices.CollectionChanged += (s, e) => OnPropertyChanged(nameof(EmptyStatePlaceholderVisibility));
 
-
 	internal readonly InfoBarSettings MainInfoBar = new();
 
 	// Whether the UI elements are enabled or disabled
@@ -306,6 +312,14 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	internal readonly RangedObservableCollection<ServiceItemViewModel> AllServices = [];
 	internal readonly RangedObservableCollection<ServiceItemViewModel> FilteredServices = [];
 	internal readonly RangedObservableCollection<FilterGroupVM> FilterGroups = [];
+
+	internal readonly List<RecommendedService> RecommendedServices =
+	[
+		new("MapsBroker", "Maps Broker", Atlas.GetStr("MapsBrokerServiceDescription")),
+		new("WebClient", "Web Client", Atlas.GetStr("WebClientServiceDescription")),
+		new("StiSvc", "Windows Image acquisition", Atlas.GetStr("StiSvcServiceDescription")),
+		new("DusmSvc", "Data usage restriction", Atlas.GetStr("DusmSvcServiceDescription"))
+	];
 
 	internal Visibility EmptyStatePlaceholderVisibility => FilteredServices.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
@@ -998,7 +1012,6 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
-
 	private bool ModifyServiceConfig(string serviceName, uint serviceType, uint startType, uint errorControl)
 	{
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
@@ -1449,6 +1462,111 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		// Set the focus to the LoadServices button when the page loads and if the services haven't been retrieved yet.
 		if (AllServices.Count == 0)
 			_ = await FocusManager.TryFocusAsync((Button)sender, Microsoft.UI.Xaml.FocusState.Keyboard);
+	}
+
+	internal async void DisableAndStopRecommendedService_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is RecommendedService service)
+		{
+			try
+			{
+				AreElementsEnabled = false;
+
+				await Task.Run(() =>
+				{
+					DisableAndStopServices([service.ServiceName]);
+				});
+
+				MainInfoBar.WriteSuccess($"Successfully disabled and stopped {service.DisplayName}.");
+				RefreshList();
+			}
+			catch (Exception ex)
+			{
+				MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				AreElementsEnabled = true;
+			}
+		}
+	}
+
+	internal async void DisableAndStopAllRecommendedServices_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			AreElementsEnabled = false;
+
+			List<string> list = new(RecommendedServices.Count);
+			foreach (RecommendedService s in RecommendedServices)
+			{
+				list.Add(s.ServiceName);
+			}
+
+			await Task.Run(() =>
+			{
+				DisableAndStopServices(list);
+			});
+
+			MainInfoBar.WriteSuccess("Successfully disabled and stopped all recommended services.");
+			RefreshList();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Disables and stops services.
+	/// </summary>
+	/// <param name="serviceNames">Service names to disable and stop.</param>
+	internal static void DisableAndStopServices(List<string> serviceNames)
+	{
+		foreach (string serviceName in serviceNames)
+		{
+			IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
+			if (scManager != IntPtr.Zero)
+			{
+				try
+				{
+					IntPtr hService = NativeMethods.OpenServiceW(scManager, serviceName, NativeMethods.SERVICE_CHANGE_CONFIG | NativeMethods.SERVICE_STOP);
+					if (hService != IntPtr.Zero)
+					{
+						try
+						{
+							SERVICE_STATUS status = new();
+							_ = NativeMethods.ControlService(hService, NativeMethods.SERVICE_CONTROL_STOP, ref status);
+
+							_ = NativeMethods.ChangeServiceConfigW(
+								hService,
+								NativeMethods.SERVICE_NO_CHANGE,
+								4, // SERVICE_DISABLED
+								NativeMethods.SERVICE_NO_CHANGE,
+								null,
+								null,
+								IntPtr.Zero,
+								IntPtr.Zero,
+								null,
+								null,
+								null);
+						}
+						finally
+						{
+							_ = NativeMethods.CloseServiceHandle(hService);
+						}
+					}
+				}
+				finally
+				{
+					_ = NativeMethods.CloseServiceHandle(scManager);
+				}
+			}
+		}
 	}
 }
 

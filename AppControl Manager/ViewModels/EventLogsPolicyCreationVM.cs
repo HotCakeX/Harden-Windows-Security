@@ -542,6 +542,12 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								// If user selected to deploy the policy
 								if (DeployPolicyToggle)
 								{
+									PreDeploymentChecks.CheckForSignatureConflict(PolicyToAddLogsTo.PolicyObj);
+
+									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
+										SupplementalForSelf.Deploy(PolicyToAddLogsTo.PolicyObj.PolicyID);
+
 									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(PolicyToAddLogsTo.PolicyObj));
 								}
 							}
@@ -588,6 +594,12 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								// If user selected to deploy the policy
 								if (DeployPolicyToggle)
 								{
+									PreDeploymentChecks.CheckForSignatureConflict(policyObj);
+
+									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									if (SupplementalForSelf.IsEligible(policyObj))
+										SupplementalForSelf.Deploy(policyObj.PolicyID);
+
 									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 								}
 							}
@@ -637,6 +649,12 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								// If user selected to deploy the policy
 								if (DeployPolicyToggle)
 								{
+									PreDeploymentChecks.CheckForSignatureConflict(policyObj);
+
+									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									if (SupplementalForSelf.IsEligible(policyObj))
+										SupplementalForSelf.Deploy(policyObj.PolicyID);
+
 									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 								}
 							}

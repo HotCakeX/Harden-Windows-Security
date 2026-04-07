@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -379,11 +380,16 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal void GenerateRandomGUIDButton_Click() => BasePolicyGUID = Guid.CreateVersion7().ToString().ToUpperInvariant();
 
+	private volatile int flag;
 	/// <summary>
 	/// Event handler for the ScanLogs click
 	/// </summary>
 	internal async void ScanLogs_Click()
 	{
+		// Because this is also tied to F5 keyboard accelerator, we want to only run this one at a time.
+		if (Interlocked.Exchange(ref flag, 1) == 1)
+			return;
+
 		try
 		{
 			AreElementsEnabled = false;
@@ -433,6 +439,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			ScanLogsProgressRingVisibility = Visibility.Collapsed;
 
 			MainInfoBar.IsClosable = true;
+
+			_ = Interlocked.Exchange(ref flag, 0);
 		}
 	}
 

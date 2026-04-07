@@ -10,7 +10,12 @@
     xmlns:CommonCore="using:CommonCore"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    KeyboardAcceleratorPlacementMode="Hidden">
+
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="F5" Invoked="{x:Bind ViewModel.ScanLogs_Click}"/>
+    </Page.KeyboardAccelerators>
 
     <Page.Resources>
         <ResourceDictionary>

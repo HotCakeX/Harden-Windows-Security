@@ -1,3 +1,5 @@
 * You can now tag policies in the library with colors to help with easy recognition or categorization of them. You can choose from a pre-defined set of colors or use the color picker to select any color you like.
 
 * Improved policy deployment mechanisms by adding more checks in MDE Advanced Hunting and Event Logs policy creation pages.
+
+* Added F5 as a keyboard shortcut to the Event Logs policy creation page so that when you press it, the logs will be retrieved and it will act as if you pressed the "Scan Logs" button in the page.

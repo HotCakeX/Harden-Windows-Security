@@ -5608,7 +5608,7 @@ Thumbprint: {3}</value>
     <value>Recommended Services</value>
   </data>
   <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
-    <value>Stop and Disable all</value>
+    <value>Stop and disable all</value>
   </data>
   <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Stop and disable all of the recommended services.</value>

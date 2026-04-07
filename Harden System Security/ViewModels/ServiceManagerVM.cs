@@ -1527,12 +1527,12 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	/// <param name="serviceNames">Service names to disable and stop.</param>
 	internal static void DisableAndStopServices(List<string> serviceNames)
 	{
-		foreach (string serviceName in serviceNames)
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
+		if (scManager != IntPtr.Zero)
 		{
-			IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
-			if (scManager != IntPtr.Zero)
+			try
 			{
-				try
+				foreach (string serviceName in CollectionsMarshal.AsSpan(serviceNames))
 				{
 					IntPtr hService = NativeMethods.OpenServiceW(scManager, serviceName, NativeMethods.SERVICE_CHANGE_CONFIG | NativeMethods.SERVICE_STOP);
 					if (hService != IntPtr.Zero)
@@ -1561,10 +1561,10 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 						}
 					}
 				}
-				finally
-				{
-					_ = NativeMethods.CloseServiceHandle(scManager);
-				}
+			}
+			finally
+			{
+				_ = NativeMethods.CloseServiceHandle(scManager);
 			}
 		}
 	}

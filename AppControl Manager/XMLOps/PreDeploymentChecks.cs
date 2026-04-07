@@ -56,7 +56,7 @@ internal static partial class PreDeploymentChecks
 			// Get all of the deployed Base/AppIDTagging and Supplemental policies on the system
 			List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
 
-			// Try to get at least once policy that is Signed and has the same PolicyID as the PolicyID of the Unsigned policy being verified.
+			// Try to get at least one policy that is Signed and has the same PolicyID as the PolicyID of the Unsigned policy being verified.
 			CiPolicyInfo? possibleAlreadyDeployedSignedVersion = policies.
 			FirstOrDefault(x => x.IsSignedPolicy && string.Equals(policyObj.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
 

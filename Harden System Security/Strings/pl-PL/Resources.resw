@@ -5636,4 +5636,82 @@ Odcisk Palca: {3}</value>
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>Wyliczanie plików zajęło {0} godzin, {1} minut i {2} sekund.</value>
   </data>
+    <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>Utwórz dysk startowy z pliku ISO systemu Windows w celu instalacji, uaktualnienia lub odzyskiwania.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>Kreator dysku startowego</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz dysk startowy z pliku ISO systemu Windows w celu instalacji, uaktualnienia lub odzyskiwania. Na tej stronie możesz również wyodrębnić pliki ISO do innej lokalizacji.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz dysk startowy z pliku ISO systemu Windows w celu instalacji, uaktualnienia lub odzyskiwania. Na tej stronie możesz również wyodrębnić pliki ISO do innej lokalizacji.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>Wybierz plik ISO systemu Windows</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>Odśwież dyski</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odśwież listę dostępnych dysków.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odśwież listę dostępnych dysków.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>Wybierz tryb dysku docelowego</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>Ręczny wybór partycji</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>Automatyczne partycjonowanie (Pojedynczy dysk)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>Użyj tego trybu, jeśli dysk jest już poprawnie spartyjonowany. Wybrane partycje zostaną sformatowane.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>Użyj tego trybu, jeśli dysk nie jest poprawnie spartyjonowany.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>Dysk docelowy zostanie całkowicie WYMAZANY i spartyjonowany automatycznie.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>Sformatuj wszelkie pozostałe nieprzydzielone miejsce na wybranym dysku jako trzecią partycję</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sformatuj wszelkie pozostałe nieprzydzielone miejsce na wybranym dysku jako trzecią partycję</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sformatuj wszelkie pozostałe nieprzydzielone miejsce na wybranym dysku jako trzecią partycję</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>System plików trzeciej partycji</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>Utwórz dysk startowy</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozpocznij proces tworzenia dysku startowego.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozpocznij proces tworzenia dysku startowego.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>Wyodrębnianie ISO</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>Wyodrębnij zawartość wybranego pliku ISO do folderu.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>Wyodrębnij zawartość ISO</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozpocznij proces wyodrębniania zawartości wybranego pliku ISO do wybranego folderu.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozpocznij proces wyodrębniania zawartości wybranego pliku ISO do wybranego folderu.</value>
+  </data>
 </root>

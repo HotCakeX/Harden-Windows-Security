@@ -6,7 +6,8 @@
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    KeyboardAcceleratorPlacementMode="Hidden">
+    KeyboardAcceleratorPlacementMode="Hidden"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator Key="F5" Invoked="{x:Bind ViewModel.LoadServices_Accelerator}" />

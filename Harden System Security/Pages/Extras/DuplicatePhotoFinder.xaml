@@ -7,7 +7,8 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:core="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    KeyboardAcceleratorPlacementMode="Hidden">
+    KeyboardAcceleratorPlacementMode="Hidden"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <!--
         KeyboardAcceleratorPlacementMode="Hidden" prevents the system from automatically showing the tooltip

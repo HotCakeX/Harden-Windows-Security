@@ -5594,4 +5594,46 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>إعادة تشغيل</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>تحسين</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتحسين خدمات النظام عن طريق إيقاف وتعطيل بعض الخدمات في Windows التي نادرًا ما تُستخدم والتي يُعد تعطيلها آمنًا. يمكنك دائمًا التراجع عن هذه الإجراءات في أي وقت.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتحسين خدمات النظام عن طريق إيقاف وتعطيل بعض الخدمات في Windows التي نادرًا ما تُستخدم والتي يُعد تعطيلها آمنًا. يمكنك دائمًا التراجع عن هذه الإجراءات في أي وقت.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>الخدمات الموصى بها</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>إيقاف وتعطيل الكل</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إيقاف وتعطيل جميع الخدمات الموصى بها.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إيقاف وتعطيل جميع الخدمات الموصى بها.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>يُستخدم هذا لإدارة الخرائط التي تم تنزيلها في Windows.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>يوصى بتعطيل هذا من قِبل Microsoft لتحسين الأمان.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>لا تقم بتعطيل هذا إلا إذا كنت لا تستخدم ماسحًا ضوئيًا أو كاميرا رقمية أو وظائف الحصول على الصور الخاصة بها.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>لا تقم بتعطيل هذا إلا إذا كنت لا تقلق بشأن حدود البيانات، ولا تقيّد استخدامك للشبكة، ولا تستخدم شبكات محدودة البيانات.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إيقاف وتعطيل الخدمة.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إيقاف وتعطيل الخدمة.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>استغرق حصر الملفات {0} من الساعات و {1} من الدقائق و {2} من الثواني للاكتمال.</value>
+  </data>
 </root>

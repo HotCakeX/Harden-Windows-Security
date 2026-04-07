@@ -1457,11 +1457,11 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
-	internal async void LoadServicesButton_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	internal async void LoadServicesButton_Loaded(object sender, RoutedEventArgs e)
 	{
 		// Set the focus to the LoadServices button when the page loads and if the services haven't been retrieved yet.
 		if (AllServices.Count == 0)
-			_ = await FocusManager.TryFocusAsync((Button)sender, Microsoft.UI.Xaml.FocusState.Keyboard);
+			_ = await FocusManager.TryFocusAsync((Button)sender, FocusState.Keyboard);
 	}
 
 	internal async void DisableAndStopRecommendedService_Click(object sender, RoutedEventArgs e)

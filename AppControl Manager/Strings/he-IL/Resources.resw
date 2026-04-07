@@ -7091,4 +7091,40 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>הפעל מחדש</value>
   </data>
+    <data name="AddToPolicyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>הוסף למדיניות</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף את הפריטים שנבחרו למדיניות בקרת היישומים שבחרת על ידי יצירת כללים עבורם.</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף את הפריטים שנבחרו למדיניות בקרת היישומים שבחרת על ידי יצירת כללים עבורם.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>אפשר</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור כללי אישור עבור הפריטים שנבחרו והוסף אותם למדיניות שנבחרה.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור כללי אישור עבור הפריטים שנבחרו והוסף אותם למדיניות שנבחרה.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>מנע</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור כללי מניעה עבור הפריטים שנבחרו והוסף אותם למדיניות שנבחרה.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור כללי מניעה עבור הפריטים שנבחרו והוסף אותם למדיניות שנבחרה.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>הגדר צבע</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגדר צבע למדיניות בספרייה כאמצעי לתיוג שלה.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדר צבע למדיניות בספרייה כאמצעי לתיוג שלה.</value>
+  </data>
 </root>

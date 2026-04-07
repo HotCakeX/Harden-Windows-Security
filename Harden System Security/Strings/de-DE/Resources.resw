@@ -5594,4 +5594,46 @@ Fingerabdruck: {3}</value>
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Neu starten</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>Optimieren</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Optimieren Sie die Systemdienste, indem Sie bestimmte selten genutzte und sicher zu deaktivierende Dienste in Windows anhalten und deaktivieren. Sie können diese Aktionen jederzeit rückgängig machen.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Optimieren Sie die Systemdienste, indem Sie bestimmte selten genutzte und sicher zu deaktivierende Dienste in Windows anhalten und deaktivieren. Sie können diese Aktionen jederzeit rückgängig machen.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>Empfohlene Dienste</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>Alle anhalten und deaktivieren</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Halten Sie alle empfohlenen Dienste an und deaktivieren Sie sie.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Halten Sie alle empfohlenen Dienste an und deaktivieren Sie sie.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>Dies wird zur Verwaltung heruntergeladener Karten in Windows verwendet.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>Die Deaktivierung wird von Microsoft zur Verbesserung der Sicherheit empfohlen.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>Deaktivieren Sie dies nur, wenn Sie keinen Scanner, keine Digitalkamera oder deren Bildfunktionen verwenden.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>Deaktivieren Sie dies nur, wenn Sie sich keine Sorgen über Datenobergrenzen machen, Ihre Netzwerknutzung nicht einschränken und keine getakteten Verbindungen verwenden.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Halten Sie den Dienst an und deaktivieren Sie ihn.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Halten Sie den Dienst an und deaktivieren Sie ihn.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>Die Dateiaufzählung dauerte {0} Stunden und {1} Minuten und {2} Sekunden.</value>
+  </data>
 </root>

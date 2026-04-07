@@ -5594,4 +5594,46 @@ Empreinte : {3}</value>
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Relancer</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>Optimiser</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Optimisez les services système en arrêtant et en désactivant certains services sous Windows qui sont rarement utilisés et dont la désactivation est sans risque. Vous pouvez toujours annuler ces actions à tout moment.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Optimisez les services système en arrêtant et en désactivant certains services sous Windows qui sont rarement utilisés et dont la désactivation est sans risque. Vous pouvez toujours annuler ces actions à tout moment.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>Services recommandés</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>Tout arrêter et désactiver</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Arrêtez et désactivez tous les services recommandés.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Arrêtez et désactivez tous les services recommandés.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>Ceci est utilisé pour gérer les cartes téléchargées dans Windows.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>La désactivation de ce service est recommandée par Microsoft pour améliorer la sécurité.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>Désactivez cette option uniquement si vous n'utilisez pas de scanner, d'appareil photo numérique ou de fonctions d'acquisition d'images.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>Ne désactivez ce service que si vous ne vous souciez pas des plafonds de données, que vous ne limitez pas votre utilisation du réseau et que vous n'utilisez pas de connexions limitées.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Arrêtez et désactivez le service.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Arrêtez et désactivez le service.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>L'énumération des fichiers a pris {0} heures et {1} minutes et {2} secondes pour se terminer.</value>
+  </data>
 </root>

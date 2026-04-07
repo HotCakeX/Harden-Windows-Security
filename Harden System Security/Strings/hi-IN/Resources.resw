@@ -5594,4 +5594,46 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>पुनरारंभ करें</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>अनुकूलित करें</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows में उन विशिष्ट सेवाओं को रोककर और अक्षम करके सिस्टम सेवाओं को अनुकूलित करें जिनका उपयोग शायद ही कभी होता है और जिन्हें अक्षम करना सुरक्षित है। आप किसी भी समय इन कार्रवाइयों को हमेशा पूर्ववत कर सकते हैं।</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows में उन विशिष्ट सेवाओं को रोककर और अक्षम करके सिस्टम सेवाओं को अनुकूलित करें जिनका उपयोग शायद ही कभी होता है और जिन्हें अक्षम करना सुरक्षित है। आप किसी भी समय इन कार्रवाइयों को हमेशा पूर्ववत कर सकते हैं।</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>अनुशंसित सेवाएँ</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>सभी को रोकें और अक्षम करें</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी अनुशंसित सेवाओं को रोकें और अक्षम करें।</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी अनुशंसित सेवाओं को रोकें और अक्षम करें।</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>इसका उपयोग Windows में डाउनलोड किए गए मानचित्रों को प्रबंधित करने के लिए किया जाता है।</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>सुरक्षा में सुधार के लिए Microsoft द्वारा इसे अक्षम करने की अनुशंसा की जाती है।</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>इसे केवल तभी अक्षम करें यदि आप स्कैनर, डिजिटल कैमरा या उनके छवि अधिग्रहण फ़ंक्शन का उपयोग नहीं करते हैं।</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>इसे केवल तभी अक्षम करें यदि आप डेटा सीमा के बारे में चिंता नहीं करते हैं, आप अपने नेटवर्क उपयोग को सीमित नहीं करते हैं और आप मीटर्ड नेटवर्क का उपयोग नहीं करते हैं।</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सेवा को रोकें और अक्षम करें।</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सेवा को रोकें और अक्षम करें।</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>फ़ाइल गणना को पूरा होने में {0} घंटे और {1} मिनट और {2} सेकंड लगे।</value>
+  </data>
 </root>

@@ -7091,4 +7091,40 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Relancer</value>
   </data>
+    <data name="AddToPolicyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Ajouter à la stratégie</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajoutez les éléments sélectionnés à la stratégie de contrôle d'application que vous avez sélectionnée en créant des règles pour eux.</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajoutez les éléments sélectionnés à la stratégie de contrôle d'application que vous avez sélectionnée en créant des règles pour eux.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Autoriser</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Créez des règles d'autorisation pour les éléments sélectionnés et ajoutez-les à la stratégie sélectionnée.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Créez des règles d'autorisation pour les éléments sélectionnés et ajoutez-les à la stratégie sélectionnée.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Refuser</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Créez des règles de refus pour les éléments sélectionnés et ajoutez-les à la stratégie sélectionnée.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Créez des règles de refus pour les éléments sélectionnés et ajoutez-les à la stratégie sélectionnée.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Définir la couleur</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Définissez une couleur pour la stratégie dans la bibliothèque afin de la baliser.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Définissez une couleur pour la stratégie dans la bibliothèque afin de la baliser.</value>
+  </data>
 </root>

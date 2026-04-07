@@ -7091,7 +7091,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Relaunch</value>
   </data>
-  <!--NEW-->
   <data name="AddToPolicyMenuFlyoutSubItem.Text" xml:space="preserve">
     <value>Add to Policy</value>
   </data>

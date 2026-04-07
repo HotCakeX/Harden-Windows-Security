@@ -7091,4 +7091,40 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Neu starten</value>
   </data>
+    <data name="AddToPolicyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Zur Richtlinie hinzufügen</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Fügen Sie die ausgewählten Elemente zur ausgewählten Richtlinie für die Anwendungssteuerung hinzu, indem Sie Regeln dafür erstellen.</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fügen Sie die ausgewählten Elemente zur ausgewählten Richtlinie für die Anwendungssteuerung hinzu, indem Sie Regeln dafür erstellen.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Zulassen</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erstellen Sie Zulassungsregeln für die ausgewählten Elemente und fügen Sie diese der ausgewählten Richtlinie hinzu.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erstellen Sie Zulassungsregeln für die ausgewählten Elemente und fügen Sie diese der ausgewählten Richtlinie hinzu.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Verweigern</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erstellen Sie Verweigerungsregeln für die ausgewählten Elemente und fügen Sie diese der ausgewählten Richtlinie hinzu.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erstellen Sie Verweigerungsregeln für die ausgewählten Elemente und fügen Sie diese der ausgewählten Richtlinie hinzu.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>Farbe festlegen</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Weisen Sie der Richtlinie in der Bibliothek eine Farbe zu, um sie zu markieren.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Weisen Sie der Richtlinie in der Bibliothek eine Farbe zu, um sie zu markieren.</value>
+  </data>
 </root>

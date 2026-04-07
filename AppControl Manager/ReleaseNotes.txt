@@ -1,11 +1,1 @@
-* Added clickable indicators to the tiles on the home page that are clickable.
-
-* You can now click on the open ports tile on the home page to see all open ports on your system, see which programs are using which port and also view source and destination IP addresses of each port. This can give you advanced overview of active open ports on your system and help you identify any suspicious or unwanted activity.
-
-* When right-clicking on list view entries such as in Supplemental or Deny policy creation results to open the files in File Explorer, you're no longer prompted to launch File Explorer as Admin if the app is running with Standard privileges. Now the only time you'll be prompted to launch File Explorer as Admin is if the file you're trying to open in File Explorer is inaccessible to you.
-
-* AppControl Manager no longer requires Admin privilege to view certificate of files or get hashes of the files that reside in Admin-protected directories and locations because those operations are read-only. This is for Windows context-menu options that appear when you right-click on supported file types in the File Explorer.
-
-* In the Event Logs policy creation page's List View, you can now right-click on each entry and select "open in File Explorer". Naturally, it only works if the file mentioned in the log exists on your system.
-
-* Clicking on the Uptime tile on home page will show you details about past shutdowns, restarts etc., their exact cause, time and more.
+* You can now tag policies in the library with colors to help with easy recognition or categorization of them. You can choose from a pre-defined set of colors or use the color picker to select any color you like.

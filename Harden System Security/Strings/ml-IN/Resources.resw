@@ -5594,4 +5594,46 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>വീണ്ടും സമാരംഭിക്കുക</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>ഒപ്റ്റിമൈസ് ചെയ്യുക</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows-ൽ അപൂർവ്വമായി മാത്രം ഉപയോഗിക്കുന്നതും പ്രവർത്തനരഹിതമാക്കാൻ സുരക്ഷിതവുമായ ചില സേവനങ്ങൾ നിർത്തുകയും പ്രവർത്തനരഹിതമാക്കുകയും ചെയ്തുകൊണ്ട് സിസ്റ്റം സേവനങ്ങൾ ഒപ്റ്റിമൈസ് ചെയ്യുക. നിങ്ങൾക്ക് എപ്പോൾ വേണമെങ്കിലും ഈ പ്രവർത്തനങ്ങൾ പഴയപടിയാക്കാൻ കഴിയും.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows-ൽ അപൂർവ്വമായി മാത്രം ഉപയോഗിക്കുന്നതും പ്രവർത്തനരഹിതമാക്കാൻ സുരക്ഷിതവുമായ ചില സേവനങ്ങൾ നിർത്തുകയും പ്രവർത്തനരഹിതമാക്കുകയും ചെയ്തുകൊണ്ട് സിസ്റ്റം സേവനങ്ങൾ ഒപ്റ്റിമൈസ് ചെയ്യുക. നിങ്ങൾക്ക് എപ്പോൾ വേണമെങ്കിലും ഈ പ്രവർത്തനങ്ങൾ പഴയപടിയാക്കാൻ കഴിയും.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>ശുപാർശ ചെയ്യുന്ന സേവനങ്ങൾ</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>എല്ലാം നിർത്തുക, പ്രവർത്തനരഹിതമാക്കുക</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ശുപാർശ ചെയ്യുന്ന എല്ലാ സേവനങ്ങളും നിർത്തുക, പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ശുപാർശ ചെയ്യുന്ന എല്ലാ സേവനങ്ങളും നിർത്തുക, പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>Windows-ൽ ഡൗൺലോഡ് ചെയ്‌ത മാപ്പുകൾ നിയന്ത്രിക്കാൻ ഇത് ഉപയോഗിക്കുന്നു.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>സുരക്ഷ മെച്ചപ്പെടുത്തുന്നതിന് ഇത് പ്രവർത്തനരഹിതമാക്കാൻ Microsoft ശുപാർശ ചെയ്യുന്നു.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>നിങ്ങൾ സ്കാനർ, ഡിജിറ്റൽ ക്യാമറ അല്ലെങ്കിൽ അവയുടെ ഇമേജ് ഏറ്റെടുക്കൽ പ്രവർത്തനങ്ങൾ ഉപയോഗിക്കുന്നില്ലെങ്കിൽ മാത്രം ഇത് പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>നിങ്ങൾ ഡാറ്റാ പരിധികളെക്കുറിച്ച് വിഷമിക്കുന്നില്ലെങ്കിലും, നിങ്ങളുടെ നെറ്റ്‌വർക്ക് ഉപയോഗം പരിമിതപ്പെടുത്തുന്നില്ലെങ്കിലും മീറ്റേർഡ് നെറ്റ്‌വർക്കുകൾ ഉപയോഗിക്കുന്നില്ലെങ്കിലും മാത്രം ഇത് പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സേവനം നിർത്തുക, പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സേവനം നിർത്തുക, പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>ഫയൽ എണ്ണൽ പൂർത്തിയാക്കാൻ {0} മണിക്കൂറും {1} മിനിറ്റും {2} സെക്കൻഡും എടുത്തു.</value>
+  </data>
 </root>

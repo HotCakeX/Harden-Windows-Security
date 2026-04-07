@@ -5594,4 +5594,46 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>הפעל מחדש</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>אופטימיזציה</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בצע אופטימיזציה לשירותי המערכת על ידי עצירה והשבתה של שירותים מסוימים ב-Windows שנעשה בהם שימוש נדיר ושבטוח להשביתם. תמיד תוכל לבטל פעולות אלו בכל עת.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בצע אופטימיזציה לשירותי המערכת על ידי עצירה והשבתה של שירותים מסוימים ב-Windows שנעשה בהם שימוש נדיר ושבטוח להשביתם. תמיד תוכל לבטל פעולות אלו בכל עת.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>שירותים מומלצים</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>עצור והשבת הכל</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עצור והשבת את כל השירותים המומלצים.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עצור והשבת את כל השירותים המומלצים.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>שירות זה משמש לניהול מפות שהורדו ב-Windows.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>השבתת שירות זה מומלצת על ידי Microsoft כדי לשפר את האבטחה.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>השבת שירות זה רק אם אינך משתמש בסורק, במצלמה דיגיטלית או בפונקציות רכישת התמונות שלהם.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>השבת שירות זה רק אם אינך מודאג ממכסות נתונים, אינך מגביל את השימוש שלך ברשת ואינך משתמש ברשתות לפי שימוש.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עצור והשבת את השירות.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עצור והשבת את השירות.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>ספירת הקבצים ארכה {0} שעות, {1} דקות ו-{2} שניות להשלמתה.</value>
+  </data>
 </root>

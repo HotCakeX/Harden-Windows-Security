@@ -7091,4 +7091,40 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>വീണ്ടും സമാരംഭിക്കുക</value>
   </data>
+    <data name="AddToPolicyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>നയത്തിലേക്ക് ചേർക്കുക</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്ക് നിയമങ്ങൾ സൃഷ്‌ടിച്ച് നിങ്ങൾ തിരഞ്ഞെടുത്ത ആപ്ലിക്കേഷൻ കൺട്രോൾ നയത്തിലേക്ക് അവ ചേർക്കുക.</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്ക് നിയമങ്ങൾ സൃഷ്‌ടിച്ച് നിങ്ങൾ തിരഞ്ഞെടുത്ത ആപ്ലിക്കേഷൻ കൺട്രോൾ നയത്തിലേക്ക് അവ ചേർക്കുക.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>അനുവദിക്കുക</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്കായി അനുമതി നിയമങ്ങൾ സൃഷ്‌ടിക്കുകയും അവ തിരഞ്ഞെടുത്ത നയത്തിലേക്ക് ചേർക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്കായി അനുമതി നിയമങ്ങൾ സൃഷ്‌ടിക്കുകയും അവ തിരഞ്ഞെടുത്ത നയത്തിലേക്ക് ചേർക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>നിരസിക്കുക</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്കായി നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്‌ടിക്കുകയും അവ തിരഞ്ഞെടുത്ത നയത്തിലേക്ക് ചേർക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്കായി നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്‌ടിക്കുകയും അവ തിരഞ്ഞെടുത്ത നയത്തിലേക്ക് ചേർക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>നിറം സജ്ജീകരിക്കുക</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലൈബ്രറിയിലെ നയത്തിന് ടാഗ് ചെയ്യുന്നതിനുള്ള ഒരു മാർഗമായി അതിന് നിറം സജ്ജീകരിക്കുക.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലൈബ്രറിയിലെ നയത്തിന് ടാഗ് ചെയ്യുന്നതിനുള്ള ഒരു മാർഗമായി അതിന് നിറം സജ്ജീകരിക്കുക.</value>
+  </data>
 </root>

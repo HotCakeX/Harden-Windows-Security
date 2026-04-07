@@ -5594,4 +5594,46 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Επανεκκίνηση</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>Βελτιστοποίηση</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Βελτιστοποιήστε τις υπηρεσίες του συστήματος διακόπτοντας και απενεργοποιώντας ορισμένες υπηρεσίες στα Windows που χρησιμοποιούνται σπάνια και είναι ασφαλές να απενεργοποιηθούν. Μπορείτε πάντα να αναιρέσετε αυτές τις ενέργειες ανά πάσα στιγμή.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Βελτιστοποιήστε τις υπηρεσίες του συστήματος διακόπτοντας και απενεργοποιώντας ορισμένες υπηρεσίες στα Windows που χρησιμοποιούνται σπάνια και είναι ασφαλέ�� να απενεργοποιηθούν. Μπορείτε πάντα να αναιρέσετε αυτές τις ενέργειες ανά πάσα στιγμή.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>Προτεινόμενες Υπηρεσίες</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>Διακοπή και απενεργοποίηση όλων</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διακόψτε και απενεργοποιήστε όλες τις προτεινόμενες υπηρεσίες.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διακόψτε και απενεργοποιήστε όλες τις προτεινόμενες υπηρεσίες.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>Αυτό χρησιμοποιείται για τη διαχείριση ληφθέντων χαρτών στα Windows.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>Η απενεργοποίησή του συνιστάται από τη Microsoft για τη βελτίωση της ασφάλειας.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>Απενεργοποιήστε το μόνο εάν δεν χρησιμοποιείτε σαρωτή, ψηφιακή φωτογραφική μηχανή ή τις λειτουργίες λήψης εικόνων τους.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>Απενεργοποιήστε το μόνο εάν δεν ανησυχείτε για τα όρια δεδομένων, δεν περιορίζετε τη χρήση του δικτύου σας και δεν χρησιμοποιείτε συνδέσεις ογκοχρέωσης.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διακόψτε και απενεργοποιήστε την υπηρεσία.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διακόψτε και απενεργοποιήστε την υπηρεσία.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>Η απαρίθμηση των αρχείων χρειάστηκε {0} ώρες και {1} λεπτά και {2} δευτερόλεπτα για να ολοκληρωθεί.</value>
+  </data>
 </root>

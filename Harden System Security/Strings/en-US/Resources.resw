@@ -5594,7 +5594,6 @@ Thumbprint: {3}</value>
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Relaunch</value>
   </data>
-  <!--NEW-->
   <data name="OptimizeServicesButton.Content" xml:space="preserve">
     <value>Optimize</value>
   </data>

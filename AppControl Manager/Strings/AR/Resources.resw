@@ -7091,4 +7091,40 @@
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>إعادة تشغيل</value>
   </data>
+    <data name="AddToPolicyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>إضافة إلى النهج</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أضف العناصر المحددة إلى نهج التحكم في التطبيق الذي حددته عن طريق إنشاء قواعد لها.</value>
+  </data>
+  <data name="AddToPolicyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أضف العناصر المحددة إلى نهج التحكم في التطبيق الذي حددته عن طريق إنشاء قواعد لها.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>سماح</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بإنشاء قواعد السماح للعناصر المحددة وإضافتها إلى النهج المحدد.</value>
+  </data>
+  <data name="AllowMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بإنشاء قواعد السماح للعناصر المحددة وإضافتها إلى النهج المحدد.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بإنشاء قواعد الرفض للعناصر المحددة وإضافتها إلى النهج المحدد.</value>
+  </data>
+  <data name="DenyMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بإنشاء قواعد الرفض للعناصر المحددة وإضافتها إلى النهج المحدد.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.Text" xml:space="preserve">
+    <value>تعيين لون</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عيّن لوناً للنهج في المكتبة كطريقة لتمييزه.</value>
+  </data>
+  <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عيّن لوناً للنهج في المكتبة كطريقة لتمييزه.</value>
+  </data>
 </root>

@@ -5594,4 +5594,46 @@ Odcisk Palca: {3}</value>
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Uruchom ponownie</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>Optymalizuj</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zoptymalizuj usługi systemowe, zatrzymując i wyłączając niektóre rzadko używane usługi w systemie Windows, których wyłączenie jest bezpieczne. W każdej chwili możesz cofnąć te działania.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zoptymalizuj usługi systemowe, zatrzymując i wyłączając niektóre rzadko używane usługi w systemie Windows, których wyłączenie jest bezpieczne. W każdej chwili możesz cofnąć te działania.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>Zalecane usługi</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>Zatrzymaj i wyłącz wszystkie</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zatrzymaj i wyłącz wszystkie zalecane usługi.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zatrzymaj i wyłącz wszystkie zalecane usługi.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>Służy do zarządzania pobranymi mapami w systemie Windows.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>Wyłączenie tej usługi jest zalecane przez firmę Microsoft w celu poprawy bezpieczeństwa.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>Wyłącz tę usługę tylko wtedy, gdy nie korzystasz ze skanera, aparatu cyfrowego ani ich funkcji pozyskiwania obrazów.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>Wyłącz tę usługę tylko wtedy, gdy nie martwisz się o limity danych, nie ograniczasz użycia sieci i nie korzystasz z połączeń taryfowych.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zatrzymaj i wyłącz usługę.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zatrzymaj i wyłącz usługę.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>Wyliczanie plików zajęło {0} godzin, {1} minut i {2} sekund.</value>
+  </data>
 </root>

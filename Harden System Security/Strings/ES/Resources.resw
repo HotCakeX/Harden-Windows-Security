@@ -5594,4 +5594,46 @@ Huella Digital: {3}</value>
   <data name="ElevationContextSwitchButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Reiniciar</value>
   </data>
+    <data name="OptimizeServicesButton.Content" xml:space="preserve">
+    <value>Optimizar</value>
+  </data>
+  <data name="OptimizeServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Optimice los servicios del sistema deteniendo y deshabilitando ciertos servicios en Windows que rara vez se utilizan y que son seguros de deshabilitar. Siempre puede deshacer estas acciones en cualquier momento.</value>
+  </data>
+  <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Optimice los servicios del sistema deteniendo y deshabilitando ciertos servicios en Windows que rara vez se utilizan y que son seguros de deshabilitar. Siempre puede deshacer estas acciones en cualquier momento.</value>
+  </data>
+  <data name="RecommendedServices.Text" xml:space="preserve">
+    <value>Servicios recomendados</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.Content" xml:space="preserve">
+    <value>Detener y deshabilitar todos</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Detenga y deshabilite todos los servicios recomendados.</value>
+  </data>
+  <data name="StopAndDisableAllRecommendedServicesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Detenga y deshabilite todos los servicios recomendados.</value>
+  </data>
+  <data name="MapsBrokerServiceDescription" xml:space="preserve">
+    <value>Esto se utiliza para administrar mapas descargados en Windows.</value>
+  </data>
+  <data name="WebClientServiceDescription" xml:space="preserve">
+    <value>Microsoft recomienda deshabilitar esto para mejorar la seguridad.</value>
+  </data>
+  <data name="StiSvcServiceDescription" xml:space="preserve">
+    <value>Deshabilite esto solo si no utiliza un escáner, cámara digital o sus funciones de adquisición de imágenes.</value>
+  </data>
+  <data name="DusmSvcServiceDescription" xml:space="preserve">
+    <value>Deshabilite esto solo si no le preocupan los límites de datos, no limita el uso de su red y no utiliza conexiones de uso medido.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Detenga y deshabilite el servicio.</value>
+  </data>
+  <data name="StopAndDisableServiceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Detenga y deshabilite el servicio.</value>
+  </data>
+  <data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>La enumeración de archivos tardó {0} horas y {1} minutos y {2} segundos en completarse.</value>
+  </data>
 </root>

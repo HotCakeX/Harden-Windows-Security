@@ -5636,4 +5636,82 @@
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>ספירת הקבצים ארכה {0} שעות, {1} דקות ו-{2} שניות להשלמתה.</value>
   </data>
+    <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>צור כונן אתחול מקובץ ISO של Windows להתקנה, שדרוג או שחזור.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>יוצר כונני אתחול</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור כונן אתחול מקובץ ISO של Windows להתקנה, שדרוג או שחזור. תוכל גם להשתמש בדף זה כדי לחלץ קבצי ISO למיקום אחר.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור כונן אתחול מקובץ ISO של Windows להתקנה, שדרוג או שחזור. תוכל גם להשתמש בדף זה כדי לחלץ קבצי ISO למיקום אחר.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>בחר קובץ ISO של Windows</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>רענן כוננים</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רענן את רשימת הכוננים הזמינים.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רענן את רשימת הכוננים הזמינים.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>בחר מצב כונן יעד</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>בחירת מחיצות ידנית</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>יצירת מחיצות אוטומטית (כונן בודד)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>השתמש במצב זה אם הכונן שלך כבר מחולק למחיצות כראוי. המחיצות שנבחרו יפורמטו.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>השתמש במצב זה אם הכונן שלך אינו מחולק למחיצות כראוי.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>כונן היעד יימחק לחלוטין ויחולק למחיצות באופן אוטומטי.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>פרמט כל שטח בלתי מוקצה שנותר בכונן הנבחר כמחיצה שלישית</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פרמט כל שטח בלתי מוקצה שנותר בכונן הנבחר כמחיצה שלישית</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פרמט כל שטח בלתי מוקצה שנותר בכונן הנבחר כמחיצה שלישית</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>מערכת הקבצים של המחיצה השלישית</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>צור כונן אתחול</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל את תהליך יצירת כונן האתחול.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל את תהליך יצירת כונן האתחול.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>חילוץ ISO</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>חלץ את תוכן קובץ ה-ISO הנבחר לתיקייה.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>חלץ תוכן ISO</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל את תהליך חילוץ תוכן קובץ ה-ISO הנבחר לתיקייה שבחרת.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל את תהליך חילוץ תוכן קובץ ה-ISO הנבחר לתיקייה שבחרת.</value>
+  </data>
 </root>

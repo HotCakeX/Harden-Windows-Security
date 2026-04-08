@@ -5636,4 +5636,82 @@ Empreinte : {3}</value>
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>L'énumération des fichiers a pris {0} heures et {1} minutes et {2} secondes pour se terminer.</value>
   </data>
+    <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>Créez un lecteur amorçable à partir d'un fichier ISO Windows pour l'installation, la mise à niveau ou la récupération.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>Créateur de Lecteur Amorçable</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Créez un lecteur amorçable à partir d'un fichier ISO Windows pour l'installation, la mise à niveau ou la récupération. Vous pouvez également utiliser cette page pour extraire des fichiers ISO vers un autre emplacement.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Créez un lecteur amorçable à partir d'un fichier ISO Windows pour l'installation, la mise à niveau ou la récupération. Vous pouvez également utiliser cette page pour extraire des fichiers ISO vers un autre emplacement.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>Sélectionner le fichier ISO Windows</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>Actualiser les lecteurs</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actualisez la liste des lecteurs disponibles.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actualisez la liste des lecteurs disponibles.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>Sélectionner le mode du lecteur cible</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>Sélection manuelle des partitions</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>Partitionnement automatique (Lecteur unique)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>Utilisez ce mode si votre lecteur est déjà correctement partitionné. Les partitions sélectionnées seront formatées.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>Utilisez ce mode si votre lecteur n'est pas correctement partitionné.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>Le lecteur cible sera complètement EFFACÉ et partitionné automatiquement.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>Formater tout l'espace non alloué restant sur le lecteur sélectionné comme une troisième partition</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Formater tout l'espace non alloué restant sur le lecteur sélectionné comme une troisième partition</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Formater tout l'espace non alloué restant sur le lecteur sélectionné comme une troisième partition</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>Système de fichiers de la troisième partition</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>Créer un lecteur amorçable</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Démarrez le processus de création du lecteur amorçable.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Démarrez le processus de création du lecteur amorçable.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>Extraction d'ISO</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>Extrayez le contenu du fichier ISO sélectionné dans un dossier.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>Extraire le contenu de l'ISO</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Démarrez le processus d'extraction du contenu du fichier ISO sélectionné vers le dossier que vous avez choisi.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Démarrez le processus d'extraction du contenu du fichier ISO sélectionné vers le dossier que vous avez choisi.</value>
+  </data>
 </root>

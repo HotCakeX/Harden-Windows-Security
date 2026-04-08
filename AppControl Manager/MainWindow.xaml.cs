@@ -675,6 +675,10 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(ServiceManagerNavItem, Atlas.GetStr("ServiceManagerNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(ServiceManagerNavItem, Atlas.GetStr("ServiceManagerNavItem/ToolTipService/ToolTip"));
 
+			BootableDriveMakerNavigationViewItem.Content = Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(BootableDriveMakerNavigationViewItem, Atlas.GetStr("BootableDriveMakerNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(BootableDriveMakerNavigationViewItem, Atlas.GetStr("BootableDriveMakerNavigationViewItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

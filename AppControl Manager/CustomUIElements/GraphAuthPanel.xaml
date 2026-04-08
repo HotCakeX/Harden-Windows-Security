@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
@@ -107,9 +106,7 @@
                     <controls:SwitchPresenter Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                         <controls:Case Value="Active">
-                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                        animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                        Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="10" Padding="10">
+                            <StackPanel Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="10" Padding="10">
 
                                 <controls:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalSpacing="10" HorizontalAlignment="Center">
 
@@ -136,9 +133,7 @@
                         </controls:Case>
 
                         <controls:Case Value="Authentication">
-                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                        animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                        Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="10" Padding="10">
+                            <StackPanel Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="10" Padding="10">
 
                                 <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
 
@@ -280,9 +275,7 @@
 
                         <controls:Case Value="SignedIn">
 
-                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                     animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                     Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
+                            <StackPanel Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
 
                                 <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Top">
 

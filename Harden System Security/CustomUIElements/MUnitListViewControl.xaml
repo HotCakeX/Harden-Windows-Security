@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:protect="using:HardenSystemSecurity.Protect"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     Loaded="{x:Bind MUnitListViewControl_Loaded}"
     Unloaded="{x:Bind MUnitListViewControl_Unloaded}"
@@ -37,15 +36,6 @@
                         Padding="12"
                         Margin="0,4,0,4"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:TranslationAnimation Duration="0:0:0.3" To="0,-20,0"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:TranslationAnimation Duration="0:0:0.5" From="0,-20,0" To="0,0,0"/>
-                    </ani:Implicit.ShowAnimations>
-
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -135,12 +125,11 @@
                                         VerticalAlignment="Center">
 
                                 <Button Click="{x:Bind ApplyMUnit}">
-                                    <ani:Implicit.HideAnimations>
-                                        <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
-                                    </ani:Implicit.HideAnimations>
-                                    <ani:Implicit.ShowAnimations>
-                                        <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
-                                    </ani:Implicit.ShowAnimations>
+                                    <Button.Transitions>
+                                        <TransitionCollection>
+                                            <PopupThemeTransition />
+                                        </TransitionCollection>
+                                    </Button.Transitions>
                                     <StackPanel Orientation="Horizontal" Spacing="4">
 
                                         <AnimatedIcon Height="18" Width="18">
@@ -156,12 +145,11 @@
                                 </Button>
 
                                 <Button Click="{x:Bind VerifyMUnit}">
-                                    <ani:Implicit.HideAnimations>
-                                        <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
-                                    </ani:Implicit.HideAnimations>
-                                    <ani:Implicit.ShowAnimations>
-                                        <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
-                                    </ani:Implicit.ShowAnimations>
+                                    <Button.Transitions>
+                                        <TransitionCollection>
+                                            <PopupThemeTransition />
+                                        </TransitionCollection>
+                                    </Button.Transitions>
                                     <StackPanel Orientation="Horizontal" Spacing="4">
 
                                         <AnimatedIcon Height="18" Width="18">
@@ -177,12 +165,11 @@
                                 </Button>
 
                                 <Button Click="{x:Bind RemoveMUnit}">
-                                    <ani:Implicit.HideAnimations>
-                                        <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
-                                    </ani:Implicit.HideAnimations>
-                                    <ani:Implicit.ShowAnimations>
-                                        <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
-                                    </ani:Implicit.ShowAnimations>
+                                    <Button.Transitions>
+                                        <TransitionCollection>
+                                            <PopupThemeTransition />
+                                        </TransitionCollection>
+                                    </Button.Transitions>
                                     <StackPanel Orientation="Horizontal" Spacing="4">
 
                                         <AnimatedIcon Height="18" Width="18">
@@ -208,14 +195,6 @@
 
         <!-- Control Bar with Search and Buttons -->
         <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
-            <ani:Implicit.HideAnimations>
-                <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                <ani:TranslationAnimation Duration="0:0:0.3" To="0,-30,0"/>
-            </ani:Implicit.HideAnimations>
-            <ani:Implicit.ShowAnimations>
-                <ani:OpacityAnimation Duration="0:0:0.6" From="0.0" To="1.0"/>
-                <ani:TranslationAnimation Duration="0:0:0.6" From="0,-30,0" To="0,0,0"/>
-            </ani:Implicit.ShowAnimations>
 
             <controls:WrapPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
@@ -223,16 +202,14 @@
                                 HorizontalSpacing="15"
                                 VerticalSpacing="15">
 
+                <controls:WrapPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition IsStaggeringEnabled="False" />
+                    </TransitionCollection>
+                </controls:WrapPanel.ChildrenTransitions>
+
                 <!-- Search Box -->
                 <Border MinWidth="200">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.95"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -264,14 +241,6 @@
                         CornerRadius="6"
                         Padding="12,8"
                         BorderThickness="0">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.95"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
 
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <TextBlock VerticalAlignment="Center"
@@ -408,16 +377,7 @@
 
                 <ProgressRing IsActive="True"
                               Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
-                              VerticalAlignment="Center">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.8"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.8" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
-                </ProgressRing>
+                              VerticalAlignment="Center" />
 
                 <!-- Apply All Button -->
                 <customUI:AnimatedCancellableButton
@@ -437,18 +397,7 @@
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplyAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.ApplyAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind ApplyAllMUnits}"
-                    IsEnabled="{x:Bind ComputeApplyAllEnabled(ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}">
-
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
-
-                </customUI:AnimatedCancellableButton>
+                    IsEnabled="{x:Bind ComputeApplyAllEnabled(ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}"/>
 
                 <!-- Verify All Button -->
                 <customUI:AnimatedCancellableButton
@@ -468,18 +417,7 @@
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.VerifyAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.VerifyAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind VerifyAllMUnits}"
-                    IsEnabled="{x:Bind ComputeVerifyAllEnabled(ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}">
-
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
-
-                </customUI:AnimatedCancellableButton>
+                    IsEnabled="{x:Bind ComputeVerifyAllEnabled(ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}"/>
 
                 <!-- Remove All Button -->
                 <customUI:AnimatedCancellableButton
@@ -499,29 +437,9 @@
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.RemoveAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.RemoveAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind RemoveAllMUnits}"
-                    IsEnabled="{x:Bind ComputeRemoveAllEnabled(ViewModel.RemoveAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}">
-
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
-
-                </customUI:AnimatedCancellableButton>
+                    IsEnabled="{x:Bind ComputeRemoveAllEnabled(ViewModel.RemoveAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}" />
 
                 <DropDownButton x:Uid="ManageSelectionsDropDownButton">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
-
                     <DropDownButton.Flyout>
                         <MenuFlyout Placement="Bottom">
                             <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind SelectAllMenuFlyoutItem_Click}">
@@ -578,15 +496,6 @@
                 <Border Background="#aa4b6b"
                         CornerRadius="12"
                         Padding="12,8">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.95"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0"/>
-                    </ani:Implicit.ShowAnimations>
-
                     <TextBlock FontSize="14"
                                FontWeight="SemiBold"
                                Foreground="WhiteSmoke"
@@ -614,14 +523,12 @@
                   SelectionChanged="{x:Bind MainListView_SelectionChanged}"
                   ContainerContentChanging="{x:Bind MainListView_ContainerContentChanging}"
                   SelectionMode="Multiple">
-            <ani:Implicit.HideAnimations>
-                <ani:OpacityAnimation Duration="0:0:0.4" To="0.0"/>
-                <ani:TranslationAnimation Duration="0:0:0.4" To="0,20,0"/>
-            </ani:Implicit.HideAnimations>
-            <ani:Implicit.ShowAnimations>
-                <ani:OpacityAnimation Duration="0:0:0.7" From="0.0" To="1.0"/>
-                <ani:TranslationAnimation Duration="0:0:0.7" From="0,20,0" To="0,0,0"/>
-            </ani:Implicit.ShowAnimations>
+            <ListView.ItemContainerTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition IsStaggeringEnabled="True" />
+                    <AddDeleteThemeTransition />
+                </TransitionCollection>
+            </ListView.ItemContainerTransitions>
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -635,14 +542,11 @@
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate x:DataType="protect:GroupInfoListForMUnit">
                             <Border AutomationProperties.AccessibilityView="Raw">
-                                <ani:Implicit.HideAnimations>
-                                    <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                                    <ani:TranslationAnimation Duration="0:0:0.3" To="-20,0,0"/>
-                                </ani:Implicit.HideAnimations>
-                                <ani:Implicit.ShowAnimations>
-                                    <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
-                                    <ani:TranslationAnimation Duration="0:0:0.5" From="-20,0,0" To="0,0,0"/>
-                                </ani:Implicit.ShowAnimations>
+                                <Border.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition IsStaggeringEnabled="True" />
+                                    </TransitionCollection>
+                                </Border.Transitions>
                                 <TextBlock Text="{x:Bind Key}" Style="{ThemeResource TitleTextBlockStyle}" AutomationProperties.AccessibilityView="Raw"/>
                             </Border>
                         </DataTemplate>

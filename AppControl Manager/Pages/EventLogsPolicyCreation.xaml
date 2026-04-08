@@ -8,7 +8,6 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:intelgathering="using:CommonCore.IntelGathering"
     xmlns:CommonCore="using:CommonCore"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     KeyboardAcceleratorPlacementMode="Hidden">
@@ -161,9 +160,7 @@
                                     <controls:SwitchPresenter Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
 
                                         <controls:Case Value="AddToPolicy">
-                                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                                        animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                                        Style="{StaticResource PanelStyle}">
+                                            <StackPanel Style="{StaticResource PanelStyle}">
 
                                                 <TextBlock Margin="5"
                                                        VerticalAlignment="Center"
@@ -219,9 +216,7 @@
                                             </StackPanel>
                                         </controls:Case>
                                         <controls:Case Value="BasePolicyFile">
-                                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                                        animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                                        Style="{StaticResource PanelStyle}">
+                                            <StackPanel Style="{StaticResource PanelStyle}">
 
                                                 <TextBlock Margin="5"
                                                            VerticalAlignment="Center"
@@ -278,10 +273,7 @@
                                         </controls:Case>
 
                                         <controls:Case Value="BaseGUID">
-                                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                                        animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                                        Orientation="Vertical"
-                                                        Style="{StaticResource PanelStyle}">
+                                            <StackPanel Orientation="Vertical" Style="{StaticResource PanelStyle}">
 
                                                 <StackPanel Orientation="Horizontal"
                                                             Spacing="8"

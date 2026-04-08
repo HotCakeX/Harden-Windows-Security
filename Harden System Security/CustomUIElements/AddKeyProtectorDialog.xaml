@@ -5,7 +5,6 @@
     xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     x:Uid="AddKeyProtectorContentDialog"
     DefaultButton="Close"
@@ -37,9 +36,7 @@
 
                 <controls:Case Value="TPM">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="TPMSectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="TPMSectionDescription"
@@ -55,9 +52,7 @@
 
                 <controls:Case Value="TPMPIN">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="TPMPINSectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="TPMPINSectionDescription"
@@ -80,10 +75,7 @@
 
                 <controls:Case Value="TPMStartupKey">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                Orientation="Vertical"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}" Orientation="Vertical">
                         <TextBlock x:Uid="TPMStartupKeySectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="TPMStartupKeySectionDescription"
@@ -131,9 +123,7 @@
 
                 <controls:Case Value="TPMPINStartupKey">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="TPMPINStartupKeySectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="TPMPINStartupKeySectionDescription"
@@ -193,9 +183,7 @@
 
                 <controls:Case Value="StartupKey">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="StartupKeySectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="StartupKeySectionDescription"
@@ -244,9 +232,7 @@
 
                 <controls:Case Value="AutoUnlock">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="AutoUnlockSectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="AutoUnlockSectionDescription"
@@ -264,9 +250,7 @@
 
                 <controls:Case Value="Password">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="PasswordSectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="PasswordSectionDescription"
@@ -289,9 +273,7 @@
 
                 <controls:Case Value="RecoveryPassword">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="RecoveryPasswordSectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="RecoveryPasswordSectionDescription"

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Application
     x:Class="HardenSystemSecurity.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,8 +5,7 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations">
+    xmlns:customUI="using:AppControlManager.CustomUIElements">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -99,18 +97,14 @@
                 <Setter Property="Orientation" Value="Horizontal" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="Spacing" Value="8" />
-                <Setter Property="animations:Implicit.HideAnimations" Value="{StaticResource ShowTransitions}" />
+                <Setter Property="Transitions">
+                    <Setter.Value>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromVerticalOffset="24" IsStaggeringEnabled="False" />
+                        </TransitionCollection>
+                    </Setter.Value>
+                </Setter>
             </Style>
-
-
-            <animations:ImplicitAnimationSet x:Name="ShowTransitions">
-                <animations:OffsetAnimation EasingMode="EaseOut" From="0,24,0" To="0" Duration="0:0:0.4" />
-                <animations:OpacityAnimation EasingMode="EaseOut" From="0" To="1" Duration="0:0:0.2" />
-            </animations:ImplicitAnimationSet>
-            <animations:ImplicitAnimationSet x:Name="HideTransitions">
-                <animations:OffsetAnimation EasingMode="EaseOut" From="0" To="0,24,0" Duration="0:0:0.2" />
-                <animations:OpacityAnimation EasingMode="EaseOut" From="1" To="0" Duration="0:0:0.1" />
-            </animations:ImplicitAnimationSet>
 
             <media:AttachedCardShadow x:Key="BorderShadow" Offset="0" Color="Violet" BlurRadius="10" Opacity="50" CornerRadius="18" />
 
@@ -152,6 +146,13 @@
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
                 <Setter Property="Spacing" Value="10"/>
+                <Setter Property="Transitions">
+                    <Setter.Value>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromVerticalOffset="24" IsStaggeringEnabled="False" />
+                        </TransitionCollection>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <LinearGradientBrush x:Key="RoseGradientBrush"

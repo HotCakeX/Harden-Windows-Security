@@ -5,7 +5,6 @@
     xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     x:Uid="BitLockerEncryptDriveContentDialog"
     DefaultButton="Close"
@@ -44,9 +43,7 @@
 
                 <controls:Case Value="OSDrive">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                 animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                 animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="OSDriveEncryptionSectionTitle"
                                     Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="OSDriveEncryptionSectionDescription"
@@ -121,9 +118,7 @@
 
                 <controls:Case Value="FixedDrive">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="FixedDriveEncryptionSectionTitle"
                                     Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="FixedDriveEncryptionSectionDescription"
@@ -138,10 +133,7 @@
 
                 <controls:Case Value="RemovableDrive">
 
-                    <StackPanel Style="{StaticResource PanelStyleV2}"
-                                Orientation="Vertical"
-                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                    <StackPanel Style="{StaticResource PanelStyleV2}" Orientation="Vertical">
                         <TextBlock x:Uid="RemovableDriveEncryptionSectionTitle"
                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock x:Uid="RemovableDriveEncryptionSectionDescription"

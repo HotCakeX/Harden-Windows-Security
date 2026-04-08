@@ -5636,4 +5636,82 @@ Huella Digital: {3}</value>
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>La enumeración de archivos tardó {0} horas y {1} minutos y {2} segundos en completarse.</value>
   </data>
+    <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>Cree una unidad de arranque desde un archivo ISO de Windows para instalación, actualización o recuperación.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>Creador de Unidades de Arranque</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cree una unidad de arranque desde un archivo ISO de Windows para instalación, actualización o recuperación. También puede usar esta página para extraer archivos ISO a otra ubicación.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cree una unidad de arranque desde un archivo ISO de Windows para instalación, actualización o recuperación. También puede usar esta página para extraer archivos ISO a otra ubicación.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>Seleccionar archivo ISO de Windows</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>Actualizar unidades</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actualice la lista de unidades disponibles.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actualice la lista de unidades disponibles.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>Seleccionar modo de unidad de destino</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>Selección manual de particiones</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>Partición automática (Unidad única)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>Use este modo si su unidad ya está particionada correctamente. Las particiones seleccionadas serán formateadas.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>Use este modo si su unidad no está particionada correctamente.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>La unidad de destino será completamente BORRADA y particionada automáticamente.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>Formatear cualquier espacio no asignado restante en la unidad seleccionada como una tercera partición</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Formatear cualquier espacio no asignado restante en la unidad seleccionada como una tercera partición</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Formatear cualquier espacio no asignado restante en la unidad seleccionada como una tercera partición</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>Sistema de archivos de la tercera partición</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>Crear unidad de arranque</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inicie el proceso de creación de la unidad de arranque.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Inicie el proceso de creación de la unidad de arranque.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>Extracción de ISO</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>Extraiga el contenido del archivo ISO seleccionado a una carpeta.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>Extraer contenido de ISO</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inicie el proceso de extracción del contenido del archivo ISO seleccionado a la carpeta que eligió.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Inicie el proceso de extracción del contenido del archivo ISO seleccionado a la carpeta que eligió.</value>
+  </data>
 </root>

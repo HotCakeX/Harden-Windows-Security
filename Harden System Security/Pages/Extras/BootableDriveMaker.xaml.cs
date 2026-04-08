@@ -19,20 +19,31 @@ using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-
 namespace HardenSystemSecurity.Pages.Extras;
 
-internal sealed partial class DuplicatePhotoFinder : Page, CommonCore.UI.IPageHeaderProvider
+internal sealed partial class BootableDriveMaker : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private DuplicatePhotoFinderVM ViewModel => ViewModelProvider.DuplicatePhotoFinderVM;
+	private BootableDriveMakerVM ViewModel => ViewModelProvider.BootableDriveMakerVM;
 
-	internal DuplicatePhotoFinder()
+	internal BootableDriveMaker()
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DuplicatePhotosFinderPageTitle");
-	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Duplicate-Photo-Finder");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("BootableDriveMakerPageTitle");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Bootable-Drive-Maker");
+
+	private void ModeSelectorBar_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
+	{
+		if (sender.SelectedItem == SelectorBarItemManual)
+		{
+			ViewModel.SetMode(true);
+		}
+		else if (sender.SelectedItem == SelectorBarItemAuto)
+		{
+			ViewModel.SetMode(false);
+		}
+	}
 }

@@ -1,11 +1,5 @@
-* Updated dependencies to the latest versions.
+* Added a new section to the Service Manager in the Harden System Security app that offers a quick and easy way to optimize your system by disabling and stopping services that are rarely used.
 
-* Added a new button to the app's toolbar which allows you to easily relaunch the app with different privileges. If running as Administrator, pressing this button will launch the app with limited privileges and if running with limited privileges, pressing this button will relaunch the app with Administrator privileges.
+* Added a new feature and page to the app called Bootable Drive Maker. It provides a reliable and streamlined way to create bootable Windows installation media from ISO files. Whether you want granular control over your USB drive's partitions or prefer a fully automated setup, this tool caters to both needs while also offering standard ISO extraction capabilities.
 
-* Added clickable indicators to the tiles on the home page that are clickable.
-
-* You can now click on the open ports tile on the home page to see all open ports on your system, see which programs are using which port and also view source and destination IP addresses of each port. This can give you advanced overview of active open ports on your system and help you identify any suspicious or unwanted activity.
-
-* Added a new security measure to the Miscellaneous category: Disables the WebClient service which prevents attackers from abusing WebDAV to intercept and steal NTLM credentials and other sensitive data via malicious links.
-
-* Added Security Score to the app! 🎊 When you use the Verify button on the Protect page, at the end there will be a new section displayed which shows you the security score of your system, how many security measures are compliant and how many are not compliant. The details of each category can be viewed by simply browsing to each of their respective pages. Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1105
+* Improved localization.

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.Extras.BootableDriveMaker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:HardenSystemSecurity.ViewModels"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:core="using:CommonCore"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- InfoBar -->
+        <customUI:InfoBarV2 Grid.Row="0"
+                            Margin="0,0,0,12"
+                            Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1"
+              Background="Transparent">
+
+            <ScrollViewer>
+                <StackPanel Spacing="10">
+
+                    <!-- Drive Selection Section -->
+                    <Border CornerRadius="10" Padding="16" BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                        <StackPanel Spacing="12" Orientation="Vertical">
+
+                            <TextBlock x:Uid="SelectWindowsISOFile" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <HyperlinkButton Content="Download Windows ISO Files" Margin="0,-8,0,0" NavigateUri="https://www.microsoft.com/software-download/windows11" />
+
+                            <controls:WrapPanel Orientation="Horizontal"
+                                                HorizontalSpacing="6"
+                                                VerticalSpacing="6"
+                                                Margin="0,0,0,10">
+
+                                <!-- Progress & Controls -->
+                                <Border CornerRadius="10"
+                                        Padding="6,4"
+                                        BorderThickness="1"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+
+                                        <!-- Progress Ring -->
+                                        <ProgressRing IsActive="{x:Bind ViewModel.IsWorkInProgress, Mode=OneWay}"
+                                                      VerticalAlignment="Center"
+                                                      Background="Gray"
+                                                      Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
+                                                      IsIndeterminate="{x:Bind ViewModel.IsProgressIndeterminate, Mode=OneWay}"
+                                                      Value="{x:Bind ViewModel.OperationProgress, Mode=OneWay}" />
+
+                                        <!-- Progress Text -->
+                                        <TextBlock Text="{x:Bind ViewModel.ProgressText, Mode=OneWay}"
+                                                   VerticalAlignment="Center"
+                                                   Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
+                                                   Margin="4,0,10,0"/>
+
+                                        <Button Style="{StaticResource AccentButtonStyle}"
+                                                x:Uid="RefreshDrivesButton"
+                                                VerticalAlignment="Center"
+                                                Click="{x:Bind ViewModel.RefreshDrives_Click}"
+                                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+
+                                <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                   ObservedData="{x:Bind ViewModel.IsoPath, Mode=OneWay}"
+                                                   x:Uid="GenericBrowseButton"
+                                                   VerticalAlignment="Center"
+                                                   Click="{x:Bind ViewModel.BrowseIso_Click}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+
+                                    <customUI:ButtonV2.Flyout>
+                                        <Flyout>
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedISOPath}" />
+                                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+                                                <TextBox Text="{x:Bind ViewModel.IsoPath, Mode=OneWay}"
+                                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                         MinWidth="400" IsReadOnly="True" />
+                                            </controls:WrapPanel>
+                                        </Flyout>
+                                    </customUI:ButtonV2.Flyout>
+                                </customUI:ButtonV2>
+
+                                <TextBlock Text="{x:Bind ViewModel.IsoDetails, Mode=OneWay}"
+                                           VerticalAlignment="Center"
+                                           Margin="15,0,0,0"
+                                           Style="{StaticResource CaptionTextBlockStyle}" 
+                                           Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
+
+                            </controls:WrapPanel>
+
+                            <TextBlock x:Uid="SelectTargetDriveMode" Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                            <SelectorBar SelectionChanged="{x:Bind ModeSelectorBar_SelectionChanged}" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                <SelectorBarItem x:Name="SelectorBarItemManual" x:Uid="ManualPartitioning" IsSelected="True" />
+                                <SelectorBarItem x:Name="SelectorBarItemAuto" x:Uid="AutomaticPartitioning" />
+                            </SelectorBar>
+
+                            <!-- Manual Mode Grid -->
+                            <Grid ColumnSpacing="20" Visibility="{x:Bind ViewModel.IsManualModeVisibility, Mode=OneWay}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,-5,0,15" x:Uid="ManualPartitioningDescription" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <!-- Boot Drive -->
+                                <StackPanel Grid.Column="0" Grid.Row="1" Spacing="8">
+                                    <TextBlock Text="BOOT Partition (Min 2GB, Max 32GB)" FontWeight="SemiBold"/>
+                                    <ComboBox ItemsSource="{x:Bind ViewModel.AvailableDrives, Mode=OneWay}"
+                                              SelectedItem="{x:Bind ViewModel.SelectedBootDrive, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                              HorizontalAlignment="Stretch">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:DriveInfoModel">
+                                                <TextBlock Text="{x:Bind DisplayText}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <!-- Data Drive -->
+                                <StackPanel Grid.Column="1" Grid.Row="1" Spacing="8">
+                                    <TextBlock Text="DATA Partition (Min 8GB)" FontWeight="SemiBold"/>
+                                    <ComboBox ItemsSource="{x:Bind ViewModel.AvailableDrives, Mode=OneWay}"
+                                              SelectedItem="{x:Bind ViewModel.SelectedDataDrive, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                              HorizontalAlignment="Stretch">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:DriveInfoModel">
+                                                <TextBlock Text="{x:Bind DisplayText}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Automatic Mode Grid -->
+                            <StackPanel Spacing="8" Visibility="{x:Bind ViewModel.IsAutoModeVisibility, Mode=OneWay}">
+
+                                <TextBlock x:Uid="AutomaticPartitioningDescription" TextWrapping="Wrap" Margin="0,-5,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <TextBlock x:Uid="AutomaticPartitioningWarning" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
+                                <ComboBox ItemsSource="{x:Bind ViewModel.AvailablePhysicalDisks, Mode=OneWay}"
+                                          SelectedItem="{x:Bind ViewModel.SelectedSingleDrive, Mode=TwoWay}"
+                                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                          HorizontalAlignment="Stretch">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="core:PhysicalDiskInfo">
+                                            <TextBlock Text="{x:Bind DisplayText}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <CheckBox x:Uid="FormatRemainingUnallocatedSpaceCheckBox"
+                                          IsChecked="{x:Bind ViewModel.FormatRemainingSpace, Mode=TwoWay}"
+                                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                          Margin="0,8,0,0"/>
+
+                                <StackPanel Spacing="8" Visibility="{x:Bind ViewModel.FormatRemainingSpaceVisibility, Mode=OneWay}">
+                                    <TextBlock x:Uid="ThirdPartitionFileSystem" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                                    <ComboBox ItemsSource="{x:Bind ViewModel.AvailableFileSystems}"
+                                              SelectedItem="{x:Bind ViewModel.SelectedFileSystem, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                              HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <Button Style="{StaticResource AccentButtonStyle}"
+                                    x:Uid="CreateBootableDriveButton"
+                                    Margin="0,10,0,0"
+                                    Click="{x:Bind ViewModel.CreateBootableDrive_Click}"
+                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE930;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Extraction Section -->
+                    <Border CornerRadius="10" Padding="16" BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                        <StackPanel Spacing="12">
+                            <TextBlock x:Uid="ISOExtraction" TextWrapping="Wrap" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Uid="ISOExtractionDescription" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                            <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                               ObservedData="{x:Bind ViewModel.ExtractionPath, Mode=OneWay}"
+                                               x:Uid="GenericBrowseButton"
+                                               VerticalAlignment="Center"
+                                               Click="{x:Bind ViewModel.BrowseExtractionFolder_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+
+                                <customUI:ButtonV2.Flyout>
+                                    <Flyout>
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedExtractionISOPath}" />
+                                            <TextBlock x:Uid="SelectedDirectory" TextWrapping="WrapWholeWords" />
+                                            <TextBox Text="{x:Bind ViewModel.ExtractionPath, Mode=OneWay}"
+                                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                     MinWidth="400" IsReadOnly="True" />
+                                        </controls:WrapPanel>
+                                    </Flyout>
+                                </customUI:ButtonV2.Flyout>
+                            </customUI:ButtonV2>
+
+                            <Button Style="{StaticResource AccentButtonStyle}"
+                                    x:Uid="ExtractISOButton"
+                                    Margin="0,10,0,0"
+                                    Click="{x:Bind ViewModel.ExtractIso_Click}"
+                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE8E5;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

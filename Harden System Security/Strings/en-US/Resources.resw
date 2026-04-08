@@ -5636,4 +5636,82 @@ Thumbprint: {3}</value>
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>File enumeration took {0} hours and {1} minutes and {2} seconds to complete.</value>
   </data>
+  <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>Create a bootable drive from a Windows ISO file for installation, upgrade, or recovery.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>Bootable Drive Maker</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a bootable drive from a Windows ISO file for installation, upgrade, or recovery. You can also use this page to extract ISO files to another location.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create a bootable drive from a Windows ISO file for installation, upgrade, or recovery. You can also use this page to extract ISO files to another location.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>Select Windows ISO File</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>Refresh Drives</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh the list of available drives.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Refresh the list of available drives.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>Select Target Drive Mode</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>Manual Partition Selection</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>Automatic Partitioning (Single Drive)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>Use this mode if your drive is already partitioned properly. The selected partitions will be formatted.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>Use this mode if your drive is not partitioned properly.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>Target Drive Will be completely ERASED and partitioned automatically.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>Format any remaining unallocated space on the selected drive as a third partition</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Format any remaining unallocated space on the selected drive as a third partition</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Format any remaining unallocated space on the selected drive as a third partition</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>Third Partition File System</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>Create Bootable Drive</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start the process of creating the bootable drive.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Start the process of creating the bootable drive.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>ISO Extraction</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>Extract the selected ISO file's content to a folder.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>Extract ISO Contents</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start the process of extracting the selected ISO file's content to the folder you selected.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Start the process of extracting the selected ISO file's content to the folder you selected.</value>
+  </data>
 </root>

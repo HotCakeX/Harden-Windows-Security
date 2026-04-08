@@ -5601,7 +5601,7 @@
     <value>Βελτιστοποιήστε τις υπηρεσίες του συστήματος διακόπτοντας και απενεργοποιώντας ορισμένες υπηρεσίες στα Windows που χρησιμοποιούνται σπάνια και είναι ασφαλές να απενεργοποιηθούν. Μπορείτε πάντα να αναιρέσετε αυτές τις ενέργειες ανά πάσα στιγμή.</value>
   </data>
   <data name="OptimizeServicesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Βελτιστοποιήστε τις υπηρεσίες του συστήματος διακόπτοντας και απενεργοποιώντας ορισμένες υπηρεσίες στα Windows που χρησιμοποιούνται σπάνια και είναι ασφαλέ�� να απενεργοποιηθούν. Μπορείτε πάντα να αναιρέσετε αυτές τις ενέργειες ανά πάσα στιγμή.</value>
+    <value>Βελτιστοποιήστε τις υπηρεσίες του συστήματος διακόπτοντας και απενεργοποιώντας ορισμένες υπηρεσίες στα Windows που χρησιμοποιούνται σπάνια και είναι ασφαλές να απενεργοποιηθούν. Μπορείτε πάντα να αναιρέσετε αυτές τις ενέργειες ανά πάσα στιγμή.</value>
   </data>
   <data name="RecommendedServices.Text" xml:space="preserve">
     <value>Προτεινόμενες Υπηρεσίες</value>
@@ -5635,5 +5635,83 @@
   </data>
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>Η απαρίθμηση των αρχείων χρειάστηκε {0} ώρες και {1} λεπτά και {2} δευτερόλεπτα για να ολοκληρωθεί.</value>
+  </data>
+    <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>Δημιουργήστε μια μονάδα δίσκου εκκίνησης από ένα αρχείο ISO των Windows για εγκατάσταση, αναβάθμιση ή ανάκτηση.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>Δημιουργός Μονάδας Δίσκου Εκκίνησης</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε μια μονάδα δίσκου εκκίνησης από ένα αρχείο ISO των Windows για εγκατάσταση, αναβάθμιση ή ανάκτηση. Μπορείτε επίσης να χρησιμοποιήσετε αυτήν τη σελίδα για την εξαγωγή αρχείων ISO σε άλλη τοποθεσία.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε μια μονάδα δίσκου εκκίνησης από ένα αρχείο ISO των Windows για εγκατάσταση, αναβάθμιση ή ανάκτηση. Μπορείτε επίσης να χρησιμοποιήσετε αυτήν τη σελίδα για την εξαγωγή αρχείων ISO σε άλλη τοποθεσία.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>Επιλέξτε αρχείο ISO των Windows</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>Ανανέωση μονάδων δίσκου</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανανεώστε τη λίστα με τις διαθέσιμες μονάδες δίσκου.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανανεώστε τη λίστα με τις διαθέσιμες μονάδες δίσκου.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>Επιλέξτε Λειτουργία Μονάδας Δίσκου Προορισμού</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>Μη αυτόματη επιλογή διαμερίσματος</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>Αυτόματη δημιουργία διαμερισμάτων (Μονός δίσκος)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>Χρησιμοποιήστε αυτήν τη λειτουργία εάν η μονάδα δίσκου σας έχει ήδη σωστά διαμερίσματα. Τα επιλεγμένα διαμερίσματα θα διαμορφωθούν.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>Χρησιμοποιήστε αυτήν τη λειτουργία εάν η μονάδα δίσκου σας δεν έχει σωστά διαμερίσματα.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>Η μονάδα δίσκου προορισμού θα ΔΙΑΓΡΑΦΕΙ πλήρως και θα διαχωριστεί σε διαμερίσματα αυτόματα.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>Διαμορφώστε τυχόν εναπομείναντα μη εκχωρημένο χώρο στην επιλεγμένη μονάδα δίσκου ως τρίτο διαμέρισμα</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαμορφώστε τυχόν εναπομείναντα μη εκχωρημένο χώρο στην επιλεγμένη μονάδα δίσκου ως τρίτο διαμέρισμα</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαμορφώστε τυχόν εναπομείναντα μη εκχωρημένο χώρο στην επιλεγμένη μονάδα δίσκου ως τρίτο διαμέρισμα</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>Σύστημα αρχείων τρίτου διαμερίσματος</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>Δημιουργία μονάδας δίσκου εκκίνησης</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ξεκινήστε τη διαδικασία δημιουργίας της μονάδας δίσκου εκκίνησης.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ξεκινήστε τη διαδικασία δημιουργίας της μονάδας δίσκου εκκίνησης.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>Εξαγωγή ISO</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>Εξαγάγετε τα περιεχόμενα του επιλεγμένου αρχείου ISO σε έναν φάκελο.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>Εξαγωγή περιεχομένων ISO</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ξεκινήστε τη διαδικασία εξαγωγής του περιεχομένου του επιλεγμένου αρχείου ISO στον φάκελο που επιλέξατε.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ξεκινήστε τη διαδικασία εξαγωγής του περιεχομένου του επιλεγμένου αρχείου ISO στον φάκελο που επιλέξατε.</value>
   </data>
 </root>

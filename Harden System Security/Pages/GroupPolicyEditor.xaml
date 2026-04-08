@@ -424,7 +424,9 @@
                                 </Border>
 
                                 <!-- JSON to POL Conversion -->
+                                <!-- Collapsed until further notice. JSON files have been evolved and no longer only contain Group Policies: https://github.com/HotCakeX/Harden-Windows-Security/issues/1123 -->
                                 <Border Padding="10"
+                                        Visibility="Collapsed"
                                         CornerRadius="15"
                                         Translation="0, 0, 500"
                                         Shadow="{StaticResource SharedShadow}"

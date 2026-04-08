@@ -5636,4 +5636,82 @@
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>ഫയൽ എണ്ണൽ പൂർത്തിയാക്കാൻ {0} മണിക്കൂറും {1} മിനിറ്റും {2} സെക്കൻഡും എടുത്തു.</value>
   </data>
+    <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>ഇൻസ്റ്റാളേഷൻ, അപ്‌ഗ്രേഡ് അല്ലെങ്കിൽ വീണ്ടെടുക്കൽ എന്നിവയ്ക്കായി ഒരു വിൻഡോസ് ISO ഫയലിൽ നിന്ന് ബൂട്ടബിൾ ഡ്രൈവ് സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>ബൂട്ടബിൾ ഡ്രൈവ് മേക്കർ</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇൻസ്റ്റാളേഷൻ, അപ്‌ഗ്രേഡ് അല്ലെങ്കിൽ വീണ്ടെടുക്കൽ എന്നിവയ്ക്കായി ഒരു വിൻഡോസ് ISO ഫയലിൽ നിന്ന് ബൂട്ടബിൾ ഡ്രൈവ് സൃഷ്ടിക്കുക. ISO ഫയലുകൾ മറ്റൊരു സ്ഥാനത്തേക്ക് എക്‌സ്‌ട്രാക്റ്റുചെയ്യാനും നിങ്ങൾക്ക് ഈ പേജ് ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇൻസ്റ്റാളേഷൻ, അപ്‌ഗ്രേഡ് അല്ലെങ്കിൽ വീണ്ടെടുക്കൽ എന്നിവയ്ക്കായി ഒരു വിൻഡോസ് ISO ഫയലിൽ നിന്ന് ബൂട്ടബിൾ ഡ്രൈവ് സൃഷ്ടിക്കുക. ISO ഫയലുകൾ മറ്റൊരു സ്ഥാനത്തേക്ക് എക്‌സ്‌ട്രാക്റ്റുചെയ്യാനും നിങ്ങൾക്ക് ഈ പേജ് ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>വിൻഡോസ് ISO ഫയൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>ഡ്രൈവുകൾ പുതുക്കുക</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലഭ്യമായ ഡ്രൈവുകളുടെ ലിസ്റ്റ് പുതുക്കുക.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലഭ്യമായ ഡ്രൈവുകളുടെ ലിസ്റ്റ് പുതുക്കുക.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>ലക്ഷ്യ ഡ്രൈവ് മോഡ് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>മാനുവൽ പാർട്ടീഷൻ തിരഞ്ഞെടുക്കൽ</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>ഓട്ടോമാറ്റിക് പാർട്ടീഷനിംഗ് (സിംഗിൾ ഡ്രൈവ്)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഡ്രൈവ് ഇതിനകം ശരിയായി പാർട്ടീഷൻ ചെയ്തിട്ടുണ്ടെങ്കിൽ ഈ മോഡ് ഉപയോഗിക്കുക. തിരഞ്ഞെടുത്ത പാർട്ടീഷനുകൾ ഫോർമാറ്റ് ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഡ്രൈവ് ശരിയായി പാർട്ടീഷൻ ചെയ്തിട്ടില്ലെങ്കിൽ ഈ മോഡ് ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>ലക്ഷ്യ ഡ്രൈവ് പൂർണ്ണമായും മായ്‌ക്കുകയും സ്വയമേവ പാർട്ടീഷൻ ചെയ്യുകയും ചെയ്യും.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡ്രൈവിൽ അവശേഷിക്കുന്ന അലോക്കേറ്റ് ചെയ്യാത്ത ഇടം മൂന്നാമത്തെ പാർട്ടീഷനായി ഫോർമാറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡ്രൈവിൽ അവശേഷിക്കുന്ന അലോക്കേറ്റ് ചെയ്യാത്ത ഇടം മൂന്നാമത്തെ പാർട്ടീഷനായി ഫോർമാറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡ്രൈവിൽ അവശേഷിക്കുന്ന അലോക്കേറ്റ് ചെയ്യാത്ത ഇടം മൂന്നാമത്തെ പാർട്ടീഷനായി ഫോർമാറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>മൂന്നാമത്തെ പാർട്ടീഷൻ ഫയൽ സിസ്റ്റം</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>ബൂട്ടബിൾ ഡ്രൈവ് സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബൂട്ടബിൾ ഡ്രൈവ് സൃഷ്ടിക്കുന്നതിനുള്ള പ്രക്രിയ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബൂട്ടബിൾ ഡ്രൈവ് സൃഷ്ടിക്കുന്നതിനുള്ള പ്രക്രിയ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>ISO എക്‌സ്‌ട്രാക്ഷൻ</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ISO ഫയലിന്റെ ഉള്ളടക്കം ഒരു ഫോൾഡറിലേക്ക് എക്‌സ്‌ട്രാക്റ്റുചെയ്യുക.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>ISO ഉള്ളടക്കങ്ങൾ എക്‌സ്‌ട്രാക്റ്റുചെയ്യുക</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ISO ഫയലിന്റെ ഉള്ളടക്കം നിങ്ങൾ തിരഞ്ഞെടുത്ത ഫോൾഡറിലേക്ക് എക്‌സ്‌ട്രാക്റ്റുചെയ്യുന്ന പ്രക്രിയ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ISO ഫയലിന്റെ ഉള്ളടക്കം നിങ്ങൾ തിരഞ്ഞെടുത്ത ഫോൾഡറിലേക്ക് എക്‌സ്‌ട്രാക്റ്റുചെയ്യുന്ന പ്രക്രിയ ആരംഭിക്കുക.</value>
+  </data>
 </root>

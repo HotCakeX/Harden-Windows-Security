@@ -5636,4 +5636,82 @@
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>फ़ाइल गणना को पूरा होने में {0} घंटे और {1} मिनट और {2} सेकंड लगे।</value>
   </data>
+     <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>स्थापना, अपग्रेड या पुनर्प्राप्ति के लिए Windows ISO फ़ाइल से एक बूट करने योग्य ड्राइव बनाएँ.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>बूट करने योग्य ड्राइव निर्माता</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्थापना, अपग्रेड या पुनर्प्राप्ति के लिए Windows ISO फ़ाइल से एक बूट करने योग्य ड्राइव बनाएँ. आप ISO फ़ाइलों को किसी अन्य स्थान पर निकालने के लिए भी इस पृष्ठ का उपयोग कर सकते हैं.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>स्थापना, अपग्रेड या पुनर्प्राप्ति के लिए Windows ISO फ़ाइल से एक बूट करने योग्य ड्राइव बनाएँ. आप ISO फ़ाइलों को किसी अन्य स्थान पर निकालने के लिए भी इस पृष्ठ का उपयोग कर सकते हैं.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>Windows ISO फ़ाइल चुनें</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>ड्राइव रीफ्रेश करें</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उपलब्ध ड्राइव की सूची रीफ्रेश करें.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उपलब्ध ड्राइव की सूची रीफ्रेश करें.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>लक्षित ड्राइव मोड चुनें</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>मैन्युअल विभाजन चयन</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>स्वचालित विभाजन (एकल ड्राइव)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>यदि आपकी ड्राइव पहले से ही ठीक से विभाजित है, तो इस मोड का उपयोग करें. चयनित विभाजनों को स्वरूपित किया जाएगा.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>यदि आपकी ड्राइव ठीक से विभाजित नहीं है, तो इस मोड का उपयोग करें.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>लक्षित ड्राइव पूरी तरह से मिटा दी जाएगी और स्वचालित रूप से विभाजित की जाएगी.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>चयनित ड्राइव पर बचे हुए किसी भी अवंटित स्थान को तीसरे विभाजन के रूप में स्वरूपित करें</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित ड्राइव पर बचे हुए किसी भी अवंटित स्थान को तीसरे विभाजन के रूप में स्वरूपित करें</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित ड्राइव पर बचे हुए किसी भी अवंटित स्थान को तीसरे विभाजन के रूप में स्वरूपित करें</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>तीसरा विभाजन फ़ाइल सिस्टम</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>बूट करने योग्य ड्राइव बनाएँ</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बूट करने योग्य ड्राइव बनाने की प्रक्रिया शुरू करें.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बूट करने योग्य ड्राइव बनाने की प्रक्रिया शुरू करें.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>ISO निष्कर्षण</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>चयनित ISO फ़ाइल की सामग्री को एक फ़ोल्डर में निकालें.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>ISO सामग्री निकालें</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित ISO फ़ाइल की सामग्री को आपके द्वारा चुने गए फ़ोल्डर में निकालने की प्रक्रिया शुरू करें.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित ISO फ़ाइल की सामग्री को आपके द्वारा चुने गए फ़ोल्डर में निकालने की प्रक्रिया शुरू करें.</value>
+  </data>
 </root>

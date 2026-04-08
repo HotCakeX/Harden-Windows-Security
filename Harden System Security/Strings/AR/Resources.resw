@@ -5636,4 +5636,82 @@
   <data name="FileEnumerationDurationMessage" xml:space="preserve">
     <value>استغرق حصر الملفات {0} من الساعات و {1} من الدقائق و {2} من الثواني للاكتمال.</value>
   </data>
+    <data name="BootableDriveMakerPageTitle" xml:space="preserve">
+    <value>قم بإنشاء محرك أقراص قابل للتمهيد من ملف Windows ISO للتثبيت أو الترقية أو الاسترداد.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.Content" xml:space="preserve">
+    <value>صانع محرك الأقراص القابل للتمهيد</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بإنشاء محرك أقراص قابل للتمهيد من ملف Windows ISO للتثبيت أو الترقية أو الاسترداد. يمكنك أيضاً استخدام هذه الصفحة لاستخراج ملفات ISO إلى موقع آخر.</value>
+  </data>
+  <data name="BootableDriveMakerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بإنشاء محرك أقراص قابل للتمهيد من ملف Windows ISO للتثبيت أو الترقية أو الاسترداد. يمكنك أيضاً استخدام هذه الصفحة لاستخراج ملفات ISO إلى موقع آخر.</value>
+  </data>
+  <data name="SelectWindowsISOFile.Text" xml:space="preserve">
+    <value>حدد ملف Windows ISO</value>
+  </data>
+  <data name="RefreshDrivesButton.Content" xml:space="preserve">
+    <value>تحديث محركات الأقراص</value>
+  </data>
+  <data name="RefreshDrivesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتحديث قائمة محركات الأقراص المتوفرة.</value>
+  </data>
+  <data name="RefreshDrivesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتحديث قائمة محركات الأقراص المتوفرة.</value>
+  </data>
+  <data name="SelectTargetDriveMode.Text" xml:space="preserve">
+  <value>تحديد وضع محرك الأقراص المستهدف</value>
+  </data>
+  <data name="ManualPartitioning.Text" xml:space="preserve">
+    <value>تحديد التقسيم اليدوي</value>
+  </data>
+  <data name="AutomaticPartitioning.Text" xml:space="preserve">
+    <value>التقسيم التلقائي (محرك أقراص واحد)</value>
+  </data>
+  <data name="ManualPartitioningDescription.Text" xml:space="preserve">
+    <value>استخدم هذا الوضع إذا كان محرك الأقراص لديك مقسماً بشكل صحيح بالفعل. سيتم تهيئة الأقسام المحددة.</value>
+  </data>
+  <data name="AutomaticPartitioningDescription.Text" xml:space="preserve">
+    <value>استخدم هذا الوضع إذا لم يكن محرك الأقراص لديك مقسماً بشكل صحيح.</value>
+  </data>
+  <data name="AutomaticPartitioningWarning.Text" xml:space="preserve">
+    <value>سيتم مسح محرك الأقراص المستهدف بالكامل وتقسيمه تلقائياً.</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.Content" xml:space="preserve">
+    <value>تهيئة أي مساحة غير مخصصة متبقية على محرك الأقراص المحدد كقسم ثالث</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تهيئة أي مساحة غير مخصصة متبقية على محرك الأقراص المحدد كقسم ثالث</value>
+  </data>
+  <data name="FormatRemainingUnallocatedSpaceCheckBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تهيئة أي مساحة غير مخصصة متبقية على محرك الأقراص المحدد كقسم ثالث</value>
+  </data>
+  <data name="ThirdPartitionFileSystem.Text" xml:space="preserve">
+    <value>نظام ملفات القسم الثالث</value>
+  </data>
+  <data name="CreateBootableDriveButton.Content" xml:space="preserve">
+    <value>إنشاء محرك أقراص قابل للتمهيد</value>
+  </data>
+  <data name="CreateBootableDriveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ابدأ عملية إنشاء محرك الأقراص القابل للتمهيد.</value>
+  </data>
+  <data name="CreateBootableDriveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ابدأ عملية إنشاء محرك الأقراص القابل للتمهيد.</value>
+  </data>
+  <data name="ISOExtraction.Text" xml:space="preserve">
+    <value>استخراج ISO</value>
+  </data>
+  <data name="ISOExtractionDescription.Text" xml:space="preserve">
+    <value>قم باستخراج محتوى ملف ISO المحدد إلى مجلد.</value>
+  </data>
+  <data name="ExtractISOButton.Content" xml:space="preserve">
+    <value>استخراج محتويات ISO</value>
+  </data>
+  <data name="ExtractISOButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ابدأ عملية استخراج محتوى ملف ISO المحدد إلى المجلد الذي اخترته.</value>
+  </data>
+  <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ابدأ عملية استخراج محتوى ملف ISO المحدد إلى المجلد الذي اخترته.</value>
+  </data>
 </root>

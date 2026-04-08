@@ -53,6 +53,7 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)ISOManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GetAppsList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ShutDownInfo.cs" />

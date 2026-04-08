@@ -192,6 +192,8 @@ The following chart explains various symbols you will see throughout the documen
 
     - <img src="https://github.com/HotCakeX/.github/blob/fd092d5c17c12767ca88b5cb1861735078b81458/Pictures/Gifs/Harden%20System%20Security%20Menu/EXIF%20Manager.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [EXIF Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/EXIF-Manager)
 
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/Assets/External/BootableDrive.png?raw=true" alt="Harden System Security Menu Item" width="30"> [Bootable Driver Maker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Bootable-Drive-Maker)
+
 <br>
 
 ## Supported Languages

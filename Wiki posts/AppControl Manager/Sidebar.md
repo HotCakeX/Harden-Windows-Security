@@ -20,19 +20,20 @@ Any new policy that you create in the app will be automatically added to the lib
 
 * The library offers quick actions for every policy in it when you click or tap on it, such as:
 
-    * Saving as XML (prompts for file picker so you can pick a location to save)
-    * Saving as CIP (prompts for file picker so you can pick a location to save)
-    * Opening in Policy Editor (The changes will be saved back to the same exact policy in the library)
-    * Configuring Rule Options (The changes will be saved back to the same exact policy in the library)
-    * Removing from the list (If persistence is enabled, this means it will be removed from the cache on the disk as well.)
-    * Deploying on the system (only available when running the app as Admin)
+    * **Saving as XML** (prompts for file picker so you can pick a location to save)
+    * **Saving as CIP** (prompts for file picker so you can pick a location to save)
+    * **Opening in Policy Editor** (The changes will be saved back to the same exact policy in the library)
+    * **Configuring Rule Options** (The changes will be saved back to the same exact policy in the library)
+    * **Removing from the list** (If persistence is enabled, this means it will be removed from the cache on the disk as well.)
+    * **Deploying on the system** (only available when running the app as Admin)
 
 * Some of the quick actions described above are also available when swiping right or left on each policy in the list. (only available on devices with touch capability)
 
 * You can right-click or top + hold on each policy in the library to access the following features
 
-    * Copy BasePolicyID
-    * Copy policyID
+    * **Copy BasePolicyID** (Copies the BasePolicyID to the clipboard)
+    * **Copy policyID** (Copies the PolicyID to the clipboard)
+    * **Set Color** (You can tag policies in the library with colors to help with easy recognition or categorization of them. You can choose from a pre-defined set of colors or use the color picker to select any color you like. The colors you select are remembered by the app and in the Policies Library local cache location, a new JSON file will be created that will be used to remember the colors. If you do not use any colors, that JSON file will never be created.)
 
 ### Persistence Feature
 

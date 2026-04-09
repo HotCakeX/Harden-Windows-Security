@@ -1,5 +1,1 @@
-* Added a new section to the Service Manager in the Harden System Security app that offers a quick and easy way to optimize your system by disabling and stopping services that are rarely used.
-
-* Added a new feature and page to the app called Bootable Drive Maker. It provides a reliable and streamlined way to create bootable Windows installation media from ISO files. Whether you want granular control over your USB drive's partitions or prefer a fully automated setup, this tool caters to both needs while also offering standard ISO extraction capabilities.
-
-* Improved localization.
+* Updated dependencies to the latest versions.

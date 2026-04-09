@@ -6,7 +6,6 @@
     xmlns:CommonCore="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:PolicyEditor="using:AppControlManager.PolicyEditor"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -31,7 +30,7 @@
                 Style="{StaticResource GridCardStyle}"
                 Padding="8">
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+            <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                 <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}" />
 
@@ -58,7 +57,7 @@
                     <customUI:ButtonV2.Flyout>
                         <Flyout>
 
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearButton_Click}">
                                     <Button.ContentTemplate>
@@ -77,7 +76,7 @@
                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                          MinWidth="400" IsReadOnly="True" />
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
                         </Flyout>
                     </customUI:ButtonV2.Flyout>
@@ -151,7 +150,7 @@
                     </Button.Content>
                 </Button>
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
         </Border>
 
         <TabView VerticalAlignment="Stretch"
@@ -532,64 +531,64 @@
                                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                                 </win:StackPanel.ChildrenTransitions>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"
+                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"
                                                        IsClickEnabled="False">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/Name.png"
                                                     ShowAsMonochrome="False"/>
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyName"
                                              Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay}" />
 
-                                </controls:SettingsCard>
+                                </CCToolKit:SettingsCard>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"
+                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"
                                                        IsClickEnabled="False">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/ID.png"
                                                     ShowAsMonochrome="False"/>
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyID"
                                              Text="{x:Bind ViewModel.PolicyIDTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </controls:SettingsCard>
+                                </CCToolKit:SettingsCard>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"
+                                <CCToolKit:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"
                                                        IsClickEnabled="False">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/BasePolicyID.png"
                                                     ShowAsMonochrome="False"/>
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorBasePolicyID"
                                              Text="{x:Bind ViewModel.PolicyBaseIDTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </controls:SettingsCard>
+                                </CCToolKit:SettingsCard>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyVersionSettingsCard"
+                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyVersionSettingsCard"
                                                        IsClickEnabled="False">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/Version.png"
                                                     ShowAsMonochrome="False"/>
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyVersion"
                                              Text="{x:Bind ViewModel.PolicyVersionTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </controls:SettingsCard>
+                                </CCToolKit:SettingsCard>
 
                                 <customUI:SettingsCardV2 x:Uid="PolicyEditorPolicyTypeSettingsCard"
                                                          IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/PolicyType.png"
                                                     ShowAsMonochrome="False"/>
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                               x:Uid="PolicyEditorPolicyType"
@@ -598,25 +597,25 @@
 
                                 </customUI:SettingsCardV2>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyInfoIDSettingsCard"
+                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyInfoIDSettingsCard"
                                                        IsClickEnabled="False">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/PolicyIDInfo.png"
                                                     ShowAsMonochrome="False"/>
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyInfoID"
                                              Text="{x:Bind ViewModel.PolicyInfoIDTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </controls:SettingsCard>
+                                </CCToolKit:SettingsCard>
 
                                 <customUI:SettingsCardV2 x:Uid="PolicyEditorHVCILevelSettingsCard"
                                                          IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/HVCIOption.png"
                                                     ShowAsMonochrome="False"/>
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                               x:Uid="PolicyEditorHVCILevel"
@@ -632,17 +631,17 @@
 
                                 </customUI:SettingsCardV2>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"
+                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"
                                                        IsClickEnabled="False">
-                                    <controls:SettingsCard.HeaderIcon>
+                                    <CCToolKit:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE8AC;" />
-                                    </controls:SettingsCard.HeaderIcon>
+                                    </CCToolKit:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyName"
                                              Text="{x:Bind ViewModel.PolicyFriendlyNameTextBox, Mode=TwoWay}" />
 
-                                </controls:SettingsCard>
+                                </CCToolKit:SettingsCard>
 
                                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                                            x:Uid="AppIDTags" />
@@ -778,7 +777,7 @@
                         <!-- Header section with action buttons -->
                         <Border Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="12" Margin="12,12,12,6">
 
-                            <controls:WrapPanel Orientation="Horizontal"
+                            <CCToolKit:WrapPanel Orientation="Horizontal"
                                                     HorizontalSpacing="8"
                                                     VerticalSpacing="8"
                                                     VerticalAlignment="Center">
@@ -847,7 +846,7 @@
                                         <TextBlock x:Uid="ClearAllPolicySettingsTextBlock" />
                                     </StackPanel>
                                 </Button>
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
 
                         </Border>

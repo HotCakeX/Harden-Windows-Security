@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     x:Uid="AddKeyProtectorContentDialog"
     DefaultButton="Close"
@@ -31,10 +30,10 @@
         <ScrollViewer Grid.Row="1"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Top">
-            <controls:SwitchPresenter
-                Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
+            <CCToolKit:SwitchPresenter
+                TargetValue="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
 
-                <controls:Case Value="TPM">
+                <CCToolKit:Case TargetValue="TPM">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="TPMSectionTitle"
@@ -48,9 +47,9 @@
                         </Border>
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-                <controls:Case Value="TPMPIN">
+                <CCToolKit:Case TargetValue="TPMPIN">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="TPMPINSectionTitle"
@@ -71,9 +70,9 @@
 
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-                <controls:Case Value="TPMStartupKey">
+                <CCToolKit:Case TargetValue="TPMStartupKey">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}" Orientation="Vertical">
                         <TextBlock x:Uid="TPMStartupKeySectionTitle"
@@ -87,7 +86,7 @@
                             <StackPanel Spacing="6">
                                 <TextBlock x:Uid="SelectARemovableDriveText"/>
 
-                                <controls:WrapPanel Orientation="Horizontal"
+                                <CCToolKit:WrapPanel Orientation="Horizontal"
                                                     HorizontalSpacing="10"
                                                     VerticalSpacing="10">
 
@@ -114,14 +113,14 @@
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
 
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-                <controls:Case Value="TPMPINStartupKey">
+                <CCToolKit:Case TargetValue="TPMPINStartupKey">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="TPMPINStartupKeySectionTitle"
@@ -146,7 +145,7 @@
                             <StackPanel Spacing="6">
                                 <TextBlock x:Uid="SelectARemovableDriveText"/>
 
-                                <controls:WrapPanel Orientation="Horizontal"
+                                <CCToolKit:WrapPanel Orientation="Horizontal"
                                                     HorizontalSpacing="10"
                                                     VerticalSpacing="10">
 
@@ -173,15 +172,15 @@
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
 
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
                             </StackPanel>
                         </Border>
 
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-                <controls:Case Value="StartupKey">
+                <CCToolKit:Case TargetValue="StartupKey">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="StartupKeySectionTitle"
@@ -195,7 +194,7 @@
                             <StackPanel Spacing="6">
                                 <TextBlock x:Uid="SelectARemovableDriveText"/>
 
-                                <controls:WrapPanel Orientation="Horizontal"
+                                <CCToolKit:WrapPanel Orientation="Horizontal"
                                                     HorizontalSpacing="10"
                                                     VerticalSpacing="10">
 
@@ -222,15 +221,15 @@
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
 
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
                             </StackPanel>
                         </Border>
 
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-                <controls:Case Value="AutoUnlock">
+                <CCToolKit:Case TargetValue="AutoUnlock">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="AutoUnlockSectionTitle"
@@ -246,9 +245,9 @@
 
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-                <controls:Case Value="Password">
+                <CCToolKit:Case TargetValue="Password">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="PasswordSectionTitle"
@@ -269,9 +268,9 @@
 
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-                <controls:Case Value="RecoveryPassword">
+                <CCToolKit:Case TargetValue="RecoveryPassword">
 
                     <StackPanel Style="{StaticResource PanelStyleV2}">
                         <TextBlock x:Uid="RecoveryPasswordSectionTitle"
@@ -291,9 +290,9 @@
 
                     </StackPanel>
 
-                </controls:Case>
+                </CCToolKit:Case>
 
-            </controls:SwitchPresenter>
+            </CCToolKit:SwitchPresenter>
         </ScrollViewer>
 
         <!-- Segmented control -->
@@ -307,7 +306,7 @@
                  Instead of a single horizontal line, the items go to the next rows when width gets too small -->
             <CCToolKit:Segmented.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <controls:WrapPanel Orientation="Horizontal"
+                    <CCToolKit:WrapPanel Orientation="Horizontal"
                                         HorizontalSpacing="{ThemeResource SegmentedItemSpacing}"
                                         VerticalSpacing="{ThemeResource SegmentedItemSpacing}" />
                 </ItemsPanelTemplate>

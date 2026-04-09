@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:others="using:AppControlManager.Others"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:CommonCore="using:CommonCore"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -63,7 +62,7 @@
 
         </StackPanel>
 
-        <controls:WrapPanel Margin="10,5,10,5" Grid.Row="2" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
+        <CCToolKit:WrapPanel Margin="10,5,10,5" Grid.Row="2" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
 
             <DropDownButton x:Uid="FirmwareInfoDropdownButton"
                             IsEnabled="{x:Bind ViewModel.IsElevated}">
@@ -249,7 +248,7 @@
                 </Button.ContentTemplate>
             </Button>
 
-        </controls:WrapPanel>
+        </CCToolKit:WrapPanel>
 
         <customUI:ListViewV2 RegistryKey="View_File_Certificates"
                      Grid.Row="3"

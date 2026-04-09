@@ -2,7 +2,7 @@
     x:Class="AppControlManager.CustomUIElements.MUnitListViewControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:protect="using:HardenSystemSecurity.Protect"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     Loaded="{x:Bind MUnitListViewControl_Loaded}"
@@ -196,17 +196,17 @@
         <!-- Control Bar with Search and Buttons -->
         <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
 
-            <controls:WrapPanel Orientation="Horizontal"
+            <CCToolKit:WrapPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 HorizontalSpacing="15"
                                 VerticalSpacing="15">
 
-                <controls:WrapPanel.ChildrenTransitions>
+                <CCToolKit:WrapPanel.ChildrenTransitions>
                     <TransitionCollection>
                         <EntranceThemeTransition IsStaggeringEnabled="False" />
                     </TransitionCollection>
-                </controls:WrapPanel.ChildrenTransitions>
+                </CCToolKit:WrapPanel.ChildrenTransitions>
 
                 <!-- Search Box -->
                 <Border MinWidth="200">
@@ -505,7 +505,7 @@
                     </TextBlock>
                 </Border>
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
         </Border>
 
         <ListView Grid.Row="1"

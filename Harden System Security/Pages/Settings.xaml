@@ -6,7 +6,7 @@
     xmlns:CC="using:CommonCore.Others"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
@@ -33,12 +33,12 @@
 
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
-                <controls:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True">
-                    <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True">
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE790;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
@@ -104,19 +104,19 @@
                                 </ComboBox>
 
                                 <!-- SwitchPresenter binds to a value -->
-                                <controls:SwitchPresenter Value="{x:Bind BorderTypeSelection.SelectedItem, Mode=OneWay}">
+                                <CCToolKit:SwitchPresenter TargetValue="{x:Bind BorderTypeSelection.SelectedItem, Mode=OneWay}">
                                     <!--And then only dynamically displays the Case with the matching Value -->
 
-                                    <controls:Case Value="Rainbow">
+                                    <CCToolKit:Case TargetValue="Rainbow">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
                                             <Button x:Uid="RainbowBorderAnimationStartButton" Click="{x:Bind ViewModel.StartRainbowAnimation}" />
                                             <Button x:Uid="RainbowBorderAnimationStopButton" Click="{x:Bind ViewModel.StopRainbowAnimation}" />
                                         </StackPanel>
-                                    </controls:Case>
+                                    </CCToolKit:Case>
 
-                                    <controls:Case Value="Custom Color">
+                                    <CCToolKit:Case TargetValue="Custom Color">
 
-                                        <controls:WrapPanel Orientation="Vertical"
+                                        <CCToolKit:WrapPanel Orientation="Vertical"
                                                             HorizontalSpacing="10"
                                                             VerticalSpacing="10">
 
@@ -138,26 +138,26 @@
                                                          IsAlphaSliderVisible="False"
                                                          IsAlphaTextInputVisible="False" />
 
-                                        </controls:WrapPanel>
+                                        </CCToolKit:WrapPanel>
 
-                                    </controls:Case>
-                                </controls:SwitchPresenter>
+                                    </CCToolKit:Case>
+                                </CCToolKit:SwitchPresenter>
 
                             </StackPanel>
 
                         </customUI:SettingsCardV2>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Behavior section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Behavior" />
-                <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander">
-                    <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander">
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE9E9;" />
-                    </controls:SettingsExpander.HeaderIcon>
-                    <controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xE8E3;" />
@@ -212,17 +212,17 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                    </CCToolKit:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Language section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="LanguageTextBlock" />
-                <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">
-                    <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xF2B7;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xF69E;" />
@@ -252,8 +252,8 @@
                                       Toggled="{x:Bind ViewModel.FlowDirectionToggleSwitch_Toggled}"
                                       x:Uid="UIFlowDirectionToggleSwitch" />
                         </customUI:SettingsCardV2>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                    </CCToolKit:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
@@ -268,19 +268,19 @@
                 <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                            x:Uid="About" />
-                <controls:SettingsExpander Header="Harden System Security"
+                <CCToolKit:SettingsExpander Header="Harden System Security"
                                        IsExpanded="True"
                                        Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}">
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <BitmapIcon UriSource="ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png"
                                     ShowAsMonochrome="False"/>
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
                     <TextBlock Text="{x:Bind ViewModel.VersionTextBlockText, Mode=OneTime}" win:IsTextSelectionEnabled="True"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                    <CCToolKit:SettingsExpander.Items>
+                        <CCToolKit:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
 
-                            <controls:WrapPanel Margin="-12,0,0,0" Orientation="Horizontal" HorizontalSpacing="13">
+                            <CCToolKit:WrapPanel Margin="-12,0,0,0" Orientation="Horizontal" HorizontalSpacing="13">
 
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton x:Uid="GitHubRepoHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
@@ -297,13 +297,13 @@
                                     <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
                                 </StackPanel>
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                        </CCToolKit:SettingsCard>
+                    </CCToolKit:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
+                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
                     <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose">
                         <HyperlinkButton.ContentTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -337,7 +337,7 @@
                         </HyperlinkButton.ContentTemplate>
                     </HyperlinkButton>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </StackPanel>
 

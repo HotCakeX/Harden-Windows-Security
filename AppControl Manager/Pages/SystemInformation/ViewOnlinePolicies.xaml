@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:others="using:AppControlManager.Others"
     xmlns:VM="using:AppControlManager.ViewModels"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -27,7 +26,7 @@
 
         <Border Grid.Row="1" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
+            <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
                 <customUI:GraphAuthPanel Host="{x:Bind ViewModel}" />
 
@@ -120,7 +119,7 @@
                 <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
                                          IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
 
         </Border>
 

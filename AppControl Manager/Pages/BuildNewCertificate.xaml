@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -104,26 +104,26 @@
 
                 </customUI:SettingsCardV2>
 
-                <controls:SettingsCard x:Uid="CommonNameSettingsCard"
+                <CCToolKit:SettingsCard x:Uid="CommonNameSettingsCard"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False">
-                    <controls:SettingsCard.HeaderIcon>
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8AC;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
                     <TextBox x:Uid="CommonNameTextBox"
                              Text="{x:Bind ViewModel.CommonName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}"
                              MinWidth="200"/>
 
-                </controls:SettingsCard>
+                </CCToolKit:SettingsCard>
 
-                <controls:SettingsCard x:Uid="ValiditySettingsCard"
+                <CCToolKit:SettingsCard x:Uid="ValiditySettingsCard"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False">
-                    <controls:SettingsCard.HeaderIcon>
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE787;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
                     <NumberBox Value="{x:Bind ViewModel.Validity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                SpinButtonPlacementMode="Inline"
@@ -133,14 +133,14 @@
                                Minimum="1"
                                MaxHeight="3000"/>
 
-                </controls:SettingsCard>
+                </CCToolKit:SettingsCard>
 
-                <controls:SettingsCard x:Uid="PFXPasswordSettingsCard"
+                <CCToolKit:SettingsCard x:Uid="PFXPasswordSettingsCard"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False">
-                    <controls:SettingsCard.HeaderIcon>
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF78D;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
                     <PasswordBox MinWidth="250"
                                  PasswordChar="#"
@@ -149,7 +149,7 @@
                                  Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  x:Uid="PFXEncryptionPasswordBox" />
 
-                </controls:SettingsCard>
+                </CCToolKit:SettingsCard>
 
             </StackPanel>
 

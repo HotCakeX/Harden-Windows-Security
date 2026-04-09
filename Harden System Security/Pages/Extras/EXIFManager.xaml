@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
     xmlns:CommonCore="using:CommonCore"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     KeyboardAcceleratorPlacementMode="Hidden"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -44,7 +44,7 @@
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 VerticalAlignment="Center">
 
-            <controls:WrapPanel Orientation="Horizontal"
+            <CCToolKit:WrapPanel Orientation="Horizontal"
                                 HorizontalSpacing="6"
                                 VerticalSpacing="6"
                                 VerticalAlignment="Center">
@@ -66,13 +66,13 @@
 
                     <customUI:ButtonV2.Flyout>
                         <Flyout>
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedImagePath}" />
                                 <TextBlock x:Uid="ViewSelectedGroupPolicyFileTextBlock" TextWrapping="WrapWholeWords" />
                                 <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                          MinWidth="400" IsReadOnly="True" />
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
                         </Flyout>
                     </customUI:ButtonV2.Flyout>
                 </customUI:ButtonV2>
@@ -136,7 +136,7 @@
                     </DropDownButton.Flyout>
                 </DropDownButton>
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
         </Border>
 
         <!-- Main Content Area -->

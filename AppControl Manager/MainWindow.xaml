@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:siPolicy="using:AppControlManager.SiPolicy"
@@ -269,7 +268,7 @@
                     BorderThickness="0">
 
                 <Button.Content>
-                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="7">
+                    <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="7">
 
                         <AnimatedIcon Height="35" Width="35" Margin="-9,-9,-9,-9">
                             <AnimatedIcon.Source>
@@ -284,7 +283,7 @@
                             </InfoBadge.IconSource>
                         </InfoBadge>
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
                 </Button.Content>
 
             </Button>
@@ -1026,7 +1025,7 @@
                         </Button>
                     </Grid>
                     <!-- Inline header row (wide widths) -->
-                    <controls:WrapPanel Grid.Row="1"
+                    <CCToolKit:WrapPanel Grid.Row="1"
                                         Margin="20,10,0,0"
                                         Visibility="{x:Bind ViewModel.HeaderInlineVisibility, Mode=OneWay}"
                                         Style="{StaticResource PageHeaderWrapPanelStyle}">
@@ -1047,7 +1046,7 @@
                             </HyperlinkButton.ContentTemplate>
                         </HyperlinkButton>
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
                     <CCToolKit:PropertySizer HorizontalAlignment="Left"

@@ -21,6 +21,7 @@ using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -65,13 +66,35 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 
 	#endregion
 
-	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
+	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
 	{
-		await ShadowEnterAnimation.StartAsync((UIElement)sender);
+		AnimateShadowBlur((FrameworkElement)sender, 20.0f);
 	}
-	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
+
+	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
 	{
-		await ShadowExitAnimation.StartAsync((UIElement)sender);
+		AnimateShadowBlur((FrameworkElement)sender, 10.0f);
+	}
+
+	private void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)
+	{
+		CommonCore.ToolKits.AttachedShadowBase? shadowBase = CommonCore.ToolKits.Effects.GetShadow(element);
+
+		// Get the actual underlying GPU DropShadow to animate directly
+		Microsoft.UI.Composition.DropShadow? dropShadow = shadowBase?.GetElementContext(element)?.Shadow;
+
+		if (dropShadow != null)
+		{
+			Microsoft.UI.Composition.Compositor compositor = dropShadow.Compositor;
+			Microsoft.UI.Composition.ScalarKeyFrameAnimation blurAnimation = compositor.CreateScalarKeyFrameAnimation();
+
+			// Use the native Composition easing curve
+			blurAnimation.InsertKeyFrame(1.0f, toBlurRadius, compositor.CreateCubicBezierEasingFunction(new System.Numerics.Vector2(0.1f, 0.9f), new System.Numerics.Vector2(0.2f, 1.0f)));
+			blurAnimation.Duration = TimeSpan.FromMilliseconds(400);
+
+			// Start the animation natively on the compositor
+			dropShadow.StartAnimation("BlurRadius", blurAnimation);
+		}
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("CreateDenyPolicyPageTitle");

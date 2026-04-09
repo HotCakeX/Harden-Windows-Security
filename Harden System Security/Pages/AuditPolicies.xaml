@@ -3,7 +3,6 @@
     x:Class="HardenSystemSecurity.Pages.AuditPolicies"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:audit="using:CommonCore.SecurityPolicy"
@@ -25,7 +24,7 @@
 
         <Border Grid.Row="1" Margin="0,5,0,5" Style="{StaticResource GridCardStyle}" Padding="8">
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
+            <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 HorizontalSpacing="10"
                                 VerticalSpacing="10">
@@ -113,7 +112,7 @@
                     </Button.ContentTemplate>
                 </Button>
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
         </Border>
 
         <customUI:ListViewV2 Grid.Row="2"

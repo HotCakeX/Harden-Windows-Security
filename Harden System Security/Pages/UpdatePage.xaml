@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -59,7 +59,7 @@
                         <FontIcon Glyph="&#xF83E;"/>
                     </customUI:SettingsCardV2.HeaderIcon>
 
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <CCToolKit:WrapPanel Orientation="Horizontal">
 
                         <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
                                       Value="{x:Bind ViewModel.ProgressBarValue, Mode=OneWay}"
@@ -84,7 +84,7 @@
                             </Button.ContentTemplate>
                         </Button>
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
                 </customUI:SettingsCardV2>
 
@@ -97,27 +97,27 @@
                                   x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 
-                <controls:SettingsCard Click="{x:Bind ViewModel.LaunchRating}"
+                <CCToolKit:SettingsCard Click="{x:Bind ViewModel.LaunchRating}"
                                        Visibility="{x:Bind ViewModel.RatingsSectionVisibility, Mode=OneWay}"
                                        x:Uid="RateAndReviewSettingsCard"
                                        IsClickEnabled="True"
                                        IsActionIconVisible="True">
-                    <controls:SettingsCard.HeaderIcon>
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEC24;"/>
-                    </controls:SettingsCard.HeaderIcon>
-                    <controls:SettingsCard.ActionIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <CCToolKit:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE8A7;"/>
-                    </controls:SettingsCard.ActionIcon>
-                </controls:SettingsCard>
+                    </CCToolKit:SettingsCard.ActionIcon>
+                </CCToolKit:SettingsCard>
 
-                <controls:SettingsCard x:Uid="InstallAppPackagesSettingsCard"
+                <CCToolKit:SettingsCard x:Uid="InstallAppPackagesSettingsCard"
                                        IsClickEnabled="True"
                                        IsActionIconVisible="True"
                                        Click="{x:Bind ViewModel.NavigateToAppPackageInstallerPage_Click}">
-                    <controls:SettingsCard.HeaderIcon>
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE83B;"/>
-                    </controls:SettingsCard.HeaderIcon>
-                </controls:SettingsCard>
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                </CCToolKit:SettingsCard>
 
             </StackPanel>
 

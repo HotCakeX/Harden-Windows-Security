@@ -2,7 +2,6 @@
     x:Class="AppControlManager.CustomUIElements.GraphAuthPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
@@ -103,17 +102,17 @@
                         </CCToolKit:SegmentedItem>
                     </CCToolKit:Segmented>
 
-                    <controls:SwitchPresenter Value="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <CCToolKit:SwitchPresenter TargetValue="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                        <controls:Case Value="Active">
+                        <CCToolKit:Case TargetValue="Active">
                             <StackPanel Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="10" Padding="10">
 
-                                <controls:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalSpacing="10" HorizontalAlignment="Center">
+                                <CCToolKit:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalSpacing="10" HorizontalAlignment="Center">
 
-                                    <controls:WrapPanel.Resources>
+                                    <CCToolKit:WrapPanel.Resources>
                                         <ResourceDictionary
                                             Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
-                                    </controls:WrapPanel.Resources>
+                                    </CCToolKit:WrapPanel.Resources>
 
                                     <TextBlock x:Uid="CurrentlyInUseAccountDetailsTextBlock"
                                                Margin="0,0,0,5"
@@ -126,13 +125,13 @@
                                     <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountPermissions" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountPermissions, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Center" Width="470"/>
                                     <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountEnvironment" Text="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccountEnvironment, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Center" Width="470"/>
 
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
 
                             </StackPanel>
 
-                        </controls:Case>
+                        </CCToolKit:Case>
 
-                        <controls:Case Value="Authentication">
+                        <CCToolKit:Case TargetValue="Authentication">
                             <StackPanel Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="10" Padding="10">
 
                                 <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
@@ -271,9 +270,9 @@
                                 </Border>
 
                             </StackPanel>
-                        </controls:Case>
+                        </CCToolKit:Case>
 
-                        <controls:Case Value="SignedIn">
+                        <CCToolKit:Case TargetValue="SignedIn">
 
                             <StackPanel Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
 
@@ -380,8 +379,8 @@
 
                             </StackPanel>
 
-                        </controls:Case>
-                    </controls:SwitchPresenter>
+                        </CCToolKit:Case>
+                    </CCToolKit:SwitchPresenter>
 
                 </StackPanel>
 

@@ -42,11 +42,11 @@ THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
  */
 
 using System.Numerics;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
+using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -126,6 +126,27 @@ public static class StickyHeaderBehaviorV2
 				SetState(element, null);
 			}
 		}
+	}
+
+	/// <summary>
+	/// Finds the first ascendant element of a given type in the visual tree.
+	/// Replaces the CommunityToolkit.WinUI.DependencyObjectExtensions.FindAscendant method.
+	/// </summary>
+	private static T? FindAscendant<T>(DependencyObject element) where T : DependencyObject
+	{
+		DependencyObject? parent = VisualTreeHelper.GetParent(element);
+
+		while (parent is not null)
+		{
+			if (parent is T match)
+			{
+				return match;
+			}
+
+			parent = VisualTreeHelper.GetParent(parent);
+		}
+
+		return null;
 	}
 
 	// Encapsulates all composition state and event hookups for a single attached element
@@ -230,7 +251,7 @@ public static class StickyHeaderBehaviorV2
 			if (_scrollViewer is null)
 			{
 				// Find the ancestor ScrollViewer within the ListView/Grid/List control
-				_scrollViewer = _headerElement.FindAscendant<ScrollViewer>();
+				_scrollViewer = FindAscendant<ScrollViewer>(_headerElement);
 				if (_scrollViewer is null)
 				{
 					return;
@@ -238,7 +259,7 @@ public static class StickyHeaderBehaviorV2
 			}
 
 			// Ensure the header is above list content (or list content behind header)
-			ItemsControl? itemsControl = _headerElement.FindAscendant<ItemsControl>();
+			ItemsControl? itemsControl = FindAscendant<ItemsControl>(_headerElement);
 			if (itemsControl is not null && itemsControl.ItemsPanelRoot is not null)
 			{
 				Canvas.SetZIndex(itemsControl.ItemsPanelRoot, -1);

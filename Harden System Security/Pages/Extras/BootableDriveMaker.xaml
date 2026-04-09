@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:core="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -39,7 +39,7 @@
                             <TextBlock x:Uid="SelectWindowsISOFile" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <HyperlinkButton Content="Download Windows ISO Files" Margin="0,-8,0,0" NavigateUri="https://www.microsoft.com/software-download/windows11" />
 
-                            <controls:WrapPanel Orientation="Horizontal"
+                            <CCToolKit:WrapPanel Orientation="Horizontal"
                                                 HorizontalSpacing="6"
                                                 VerticalSpacing="6"
                                                 Margin="0,0,0,10">
@@ -100,13 +100,13 @@
 
                                     <customUI:ButtonV2.Flyout>
                                         <Flyout>
-                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
                                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedISOPath}" />
                                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
                                                 <TextBox Text="{x:Bind ViewModel.IsoPath, Mode=OneWay}"
                                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                          MinWidth="400" IsReadOnly="True" />
-                                            </controls:WrapPanel>
+                                            </CCToolKit:WrapPanel>
                                         </Flyout>
                                     </customUI:ButtonV2.Flyout>
                                 </customUI:ButtonV2>
@@ -117,7 +117,7 @@
                                            Style="{StaticResource CaptionTextBlockStyle}" 
                                            Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
                             <TextBlock x:Uid="SelectTargetDriveMode" Style="{StaticResource SubtitleTextBlockStyle}"/>
 
@@ -243,13 +243,13 @@
 
                                 <customUI:ButtonV2.Flyout>
                                     <Flyout>
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedExtractionISOPath}" />
                                             <TextBlock x:Uid="SelectedDirectory" TextWrapping="WrapWholeWords" />
                                             <TextBox Text="{x:Bind ViewModel.ExtractionPath, Mode=OneWay}"
                                                      TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                      MinWidth="400" IsReadOnly="True" />
-                                        </controls:WrapPanel>
+                                        </CCToolKit:WrapPanel>
                                     </Flyout>
                                 </customUI:ButtonV2.Flyout>
                             </customUI:ButtonV2>

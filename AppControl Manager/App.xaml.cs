@@ -88,6 +88,7 @@ public sealed partial class App : Application
 
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
 		// This line would require us to add "Microsoft.WindowsAppSDK.Runtime" NuGet package as dependency which would add an extra 20MB size to the whole package.
+		// See issue: https://github.com/microsoft/WindowsAppSDK/issues/6387
 		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
 
 		try

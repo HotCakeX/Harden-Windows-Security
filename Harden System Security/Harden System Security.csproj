@@ -226,18 +226,16 @@
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.5" />
 		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.5" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260224000" />
 
 		<!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.17.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
-		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
-		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.4" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260222000" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.260125001" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260224000" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260316102">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

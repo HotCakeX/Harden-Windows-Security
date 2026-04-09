@@ -49,4 +49,7 @@ There will be very detailed results of each file that participates in the Simula
 
 * **Clear Data**: Use this button to clear the Simulation results data displayed on the page.
 
+> [!TIP]\
+> You can right-click on the items in the list view to allow or deny them in the selected policy. This makes it easier to tune your policy and adjust it quickly to meet your needs.
+
 <br>

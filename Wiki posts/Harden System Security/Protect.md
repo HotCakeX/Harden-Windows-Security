@@ -12,6 +12,16 @@ The Protect page in the [Harden System Security App](https://github.com/HotCakeX
 
 Each Security Measure category on this page has its own dedicated page where you can view and modify the specific settings related to that category in a more detailed manner. When you use the Apply, Verify or Remove buttons on this page, it is as if you are directly interacting with the button on that category's page.
 
+### System Security Score
+
+When you press the **Verify Selected** in this page, you will be given a security score at the end to help you understand how well your system is hardened. The score is calculated based on the number of compliant items versus the total number of items in the selected categories and their sub-categories, giving you a clear percentage that reflects your system's security posture. This score can be a useful metric to track your progress as you apply more security measures and harden your system further.
+
+<div align="center">
+
+<img height="380" alt="Verification Results Score Popup" src="https://github.com/user-attachments/assets/2f2b9f31-08fe-438b-ad98-e8f0a3adc204" />
+
+</div>
+
 <br>
 
 ## Device Usage Intents

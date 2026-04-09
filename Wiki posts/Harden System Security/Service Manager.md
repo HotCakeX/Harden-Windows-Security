@@ -85,3 +85,17 @@ The context menu provides several shortcuts to manage the service at the system 
 * **Search:** Performs a quick web search of the service name and display name to help you identify unknown or suspicious services.
 * **Security:** Opens the native Windows Advanced Security Settings dialog explicitly targeted at the Service object, allowing you to view and modify its access control list (ACL).
 * **Delete Service:** Completely and permanently removes the service from the Service Control Manager. (A confirmation dialog is displayed to prevent accidental system breakage).
+
+### Service Optimization
+
+Use the **Optimize** button to view a list of services that are rarely used and can be disabled if not needed
+
+* **Maps Broker**: This is used to manage downloaded maps in Windows.
+
+* **Web Client**: Disabling this is recommended by [Microsoft](https://techcommunity.microsoft.com/blog/itopstalkblog/how-to-defend-users-from-interception-attacks-via-smb-client-defense/1494995) to improve security.
+
+* **Windows Image acquisition**: Only disable this if you do not use a scanner, digital camera or their image acquisition functions.
+
+* **Data usage restriction**: Only disable this if you do not worry about data caps, you don't limit your network usage and you do not use metered networks.
+
+*More services will be added to this section in the future.*

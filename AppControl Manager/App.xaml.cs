@@ -87,7 +87,8 @@ public sealed partial class App : Application
 		Logger.Write(string.Format(Atlas.GetStr("AppStartupMessage"), Environment.Version));
 
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
-		Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
+		// This line would require us to add "Microsoft.WindowsAppSDK.Runtime" NuGet package as dependency which would add an extra 20MB size to the whole package.
+		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
 
 		try
 		{

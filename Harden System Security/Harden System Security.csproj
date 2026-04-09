@@ -237,11 +237,6 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260222000" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.260125001" />
-		<!-- Microsoft.WindowsAppSDK.Base/build/Microsoft.WindowsAppSDK.SelfContained.targets
-			 explicitly checks if we're self contained and then extracts the runtime MSIX within our MSIX package.
-			 Without this package, compilation runs fine but app crashes at startup.
-		-->
-		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.260317003" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260224000" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260316102">
 			<PrivateAssets>all</PrivateAssets>

@@ -40,7 +40,7 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 
 ## Configuration Details
 
-* **Scan Event Logs**: Click this button to initiate a scan of the system for relevant Code Integrity and AppLocker events and display them in the page.
+* **Scan Event Logs**: Click this button to initiate a scan of the system for relevant Code Integrity and AppLocker events and display them in the page. (You can also use `F5` as keyboard shortcut for this function.)
 
 * **Browse for EVTX**: Use this option to browse for Code Integrity and/or AppLocker exported EVTX log files. When EVTX log files are selected, pressing the **Scan Logs** button will scan those instead of the system logs.
 

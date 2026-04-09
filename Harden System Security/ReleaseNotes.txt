@@ -1,1 +1,3 @@
-* Updated dependencies to the latest versions.
+* Removed multiple dependencies by implementing them natively.
+
+* Reduced the app package size by over 20MBs.

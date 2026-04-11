@@ -39,26 +39,34 @@ internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ProtectPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect");
 
-	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
+	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
 	{
-		try
-		{
-			await ShadowEnterAnimation.StartAsync((UIElement)sender);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
+		AnimateShadowBlur((FrameworkElement)sender, 20.0f);
 	}
-	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
+
+	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
 	{
-		try
+		AnimateShadowBlur((FrameworkElement)sender, 10.0f);
+	}
+
+	private void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)
+	{
+		CommonCore.ToolKits.AttachedShadowBase? shadowBase = CommonCore.ToolKits.Effects.GetShadow(element);
+
+		// Get the actual underlying GPU DropShadow to animate directly
+		Microsoft.UI.Composition.DropShadow? dropShadow = shadowBase?.GetElementContext(element)?.Shadow;
+
+		if (dropShadow != null)
 		{
-			await ShadowExitAnimation.StartAsync((UIElement)sender);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
+			Microsoft.UI.Composition.Compositor compositor = dropShadow.Compositor;
+			Microsoft.UI.Composition.ScalarKeyFrameAnimation blurAnimation = compositor.CreateScalarKeyFrameAnimation();
+
+			// Use the Composition easing curve
+			blurAnimation.InsertKeyFrame(1.0f, toBlurRadius, compositor.CreateCubicBezierEasingFunction(new System.Numerics.Vector2(0.1f, 0.9f), new System.Numerics.Vector2(0.2f, 1.0f)));
+			blurAnimation.Duration = TimeSpan.FromMilliseconds(400);
+
+			// Start the animation natively on the compositor
+			dropShadow.StartAnimation("BlurRadius", blurAnimation);
 		}
 	}
 }

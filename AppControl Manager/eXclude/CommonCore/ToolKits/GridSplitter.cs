@@ -376,7 +376,7 @@ internal sealed partial class GridSplitter : SizerBase
 		_resizeBehavior = GetResizeBehavior();
 
 		// The parent of a GridSplitter must always be a Grid.
-		_cachedResizable = (Grid)this.Parent;
+		_cachedResizable = (Grid)Parent;
 
 		int columnIndex = Grid.GetColumn(this);
 		int rowIndex = Grid.GetRow(this);

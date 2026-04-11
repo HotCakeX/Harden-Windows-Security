@@ -33,7 +33,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media.Animation;
 
-#pragma warning disable CA1515, CA1062, CA2227, CA1030
+#pragma warning disable CA1515, CA1062, CA2227
 
 namespace CommonCore.ToolKits;
 
@@ -88,15 +88,10 @@ public static partial class StyleExtensions
 	{
 	}
 
-	public static ResourceDictionary? GetResources(Style obj)
-	{
-		return (ResourceDictionary?)obj.GetValue(ResourcesProperty);
-	}
+	public static ResourceDictionary? GetResources(Style obj) => (ResourceDictionary?)obj.GetValue(ResourcesProperty);
 
-	public static void SetResources(Style obj, ResourceDictionary? value)
-	{
-		obj.SetValue(ResourcesProperty, value);
-	}
+	public static void SetResources(Style obj, ResourceDictionary? value) => obj.SetValue(ResourcesProperty, value);
+
 
 	public static readonly DependencyProperty ResourcesProperty = DependencyProperty.RegisterAttached(
 		"Resources",
@@ -163,7 +158,7 @@ public partial class SettingsCardAutomationPeer(SettingsCard owner) : ButtonBase
 		return AutomationControlType.Group;
 	}
 
-	protected override string GetClassNameCore() => Owner.GetType().Name;
+	protected override string GetClassNameCore() => nameof(SettingsCard);
 
 	protected override string GetNameCore()
 	{
@@ -247,6 +242,7 @@ public partial class SettingsCard : ButtonBase
 	internal const string HeaderIconPresenterHolder = "PART_HeaderIconPresenterHolder";
 
 	private Grid? _rootGrid;
+	private long _contentPropertyChangedCallbackToken = -1;
 
 	public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
 		nameof(Header), typeof(object), typeof(SettingsCard), new PropertyMetadata(null, (d, e) => ((SettingsCard)d).OnHeaderPropertyChanged(e.OldValue, e.NewValue)));
@@ -320,19 +316,64 @@ public partial class SettingsCard : ButtonBase
 		set => SetValue(IsActionIconVisibleProperty, value);
 	}
 
-	public SettingsCard() => DefaultStyleKey = typeof(SettingsCard);
+	public SettingsCard()
+	{
+		DefaultStyleKey = typeof(SettingsCard);
+		Loaded += OnLoaded;
+		Unloaded += OnUnloaded;
+	}
+
+	private void OnLoaded(object sender, RoutedEventArgs e) => HookEvents();
+
+	private void OnUnloaded(object sender, RoutedEventArgs e) => UnhookEvents();
+
+	private void HookEvents()
+	{
+		if (_rootGrid != null)
+		{
+			_rootGrid.SizeChanged -= OnRootGridSizeChanged;
+			_rootGrid.SizeChanged += OnRootGridSizeChanged;
+		}
+
+		if (_contentPropertyChangedCallbackToken != -1)
+		{
+			UnregisterPropertyChangedCallback(ContentProperty, _contentPropertyChangedCallbackToken);
+		}
+		_contentPropertyChangedCallbackToken = RegisterPropertyChangedCallback(ContentProperty, OnContentChanged);
+
+		IsEnabledChanged -= OnIsEnabledChanged;
+		IsEnabledChanged += OnIsEnabledChanged;
+
+		if (IsClickEnabled)
+		{
+			EnableButtonInteraction();
+		}
+	}
+
+	private void UnhookEvents()
+	{
+		_rootGrid?.SizeChanged -= OnRootGridSizeChanged;
+
+		if (_contentPropertyChangedCallbackToken != -1)
+		{
+			UnregisterPropertyChangedCallback(ContentProperty, _contentPropertyChangedCallbackToken);
+			_contentPropertyChangedCallbackToken = -1;
+		}
+
+		IsEnabledChanged -= OnIsEnabledChanged;
+		DisableButtonInteraction();
+	}
 
 	protected override void OnApplyTemplate()
 	{
 		base.OnApplyTemplate();
 
-		_rootGrid?.SizeChanged -= OnRootGridSizeChanged;
+		UnhookEvents();
 
 		_rootGrid = GetTemplateChild("PART_RootGrid") as Grid;
 
-		_rootGrid?.SizeChanged += OnRootGridSizeChanged;
+		HookEvents();
 
-		IsEnabledChanged -= OnIsEnabledChanged;
 		OnActionIconChanged();
 		OnHeaderChanged();
 		OnHeaderIconChanged();
@@ -344,8 +385,6 @@ public partial class SettingsCard : ButtonBase
 		CheckHeaderIconState();
 
 		SetAccessibleContentName();
-		_ = RegisterPropertyChangedCallback(ContentProperty, OnContentChanged);
-		IsEnabledChanged += OnIsEnabledChanged;
 
 		_ = VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
 	}
@@ -428,7 +467,7 @@ public partial class SettingsCard : ButtonBase
 	{
 		if (Header is string headerString && !string.IsNullOrEmpty(headerString))
 		{
-			if (Content is UIElement element && string.IsNullOrEmpty(AutomationProperties.GetName(element)) && element.GetType().BaseType != typeof(ButtonBase) && element.GetType() != typeof(TextBlock))
+			if (Content is UIElement element && string.IsNullOrEmpty(AutomationProperties.GetName(element)) && element is not ButtonBase && element is not TextBlock)
 			{
 				AutomationProperties.SetName(element, headerString);
 			}
@@ -643,7 +682,7 @@ public partial class SettingsExpanderAutomationPeer(SettingsExpander owner) : Fr
 {
 	protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Group;
 
-	protected override string GetClassNameCore() => Owner.GetType().Name;
+	protected override string GetClassNameCore() => nameof(SettingsExpander);
 
 	protected override string GetNameCore()
 	{
@@ -666,7 +705,7 @@ public partial class SettingsExpanderAutomationPeer(SettingsExpander owner) : Fr
 		return name;
 	}
 
-	public void RaiseExpandedChangedEvent(bool newValue)
+	public void NotifyExpandedChanged(bool newValue)
 	{
 		ExpandCollapseState newState = newValue ? ExpandCollapseState.Expanded : ExpandCollapseState.Collapsed;
 		ExpandCollapseState oldState = newState == ExpandCollapseState.Expanded ? ExpandCollapseState.Collapsed : ExpandCollapseState.Expanded;
@@ -679,6 +718,9 @@ public partial class SettingsExpanderAutomationPeer(SettingsExpander owner) : Fr
 [TemplatePart(Name = "ExpanderContent", Type = typeof(FrameworkElement))]
 internal sealed partial class SettingsExpanderInner : Expander
 {
+	private FrameworkElement? _expanderContent;
+	private long _cornerRadiusToken = -1;
+
 	public static readonly DependencyProperty ContentHeightProperty = DependencyProperty.Register(
 		nameof(ContentHeight), typeof(double), typeof(SettingsExpanderInner), new PropertyMetadata(0.0));
 
@@ -719,29 +761,65 @@ internal sealed partial class SettingsExpanderInner : Expander
 	{
 		DefaultStyleKey = typeof(SettingsExpanderInner);
 
-		_ = RegisterPropertyChangedCallback(CornerRadiusProperty, (s, e) =>
+		CornerRadius innerCr = CornerRadius;
+		TopCornerRadius = new(innerCr.TopLeft, innerCr.TopRight, 0, 0);
+		BottomCornerRadius = new(0, 0, innerCr.BottomRight, innerCr.BottomLeft);
+
+		Loaded += OnLoaded;
+		Unloaded += OnUnloaded;
+	}
+
+	private void OnLoaded(object sender, RoutedEventArgs e) => HookEvents();
+
+	private void OnUnloaded(object sender, RoutedEventArgs e) => UnhookEvents();
+
+	private void HookEvents()
+	{
+		if (_expanderContent != null)
+		{
+			_expanderContent.SizeChanged -= ExpanderContent_SizeChanged;
+			_expanderContent.SizeChanged += ExpanderContent_SizeChanged;
+		}
+
+		if (_cornerRadiusToken != -1)
+		{
+			UnregisterPropertyChangedCallback(CornerRadiusProperty, _cornerRadiusToken);
+		}
+		_cornerRadiusToken = RegisterPropertyChangedCallback(CornerRadiusProperty, (s, args) =>
 		{
 			CornerRadius cr = CornerRadius;
-			TopCornerRadius = new CornerRadius(cr.TopLeft, cr.TopRight, 0, 0);
-			BottomCornerRadius = new CornerRadius(0, 0, cr.BottomRight, cr.BottomLeft);
+			TopCornerRadius = new(cr.TopLeft, cr.TopRight, 0, 0);
+			BottomCornerRadius = new(0, 0, cr.BottomRight, cr.BottomLeft);
 		});
+	}
+
+	private void UnhookEvents()
+	{
+		_expanderContent?.SizeChanged -= ExpanderContent_SizeChanged;
+
+		if (_cornerRadiusToken != -1)
+		{
+			UnregisterPropertyChangedCallback(CornerRadiusProperty, _cornerRadiusToken);
+			_cornerRadiusToken = -1;
+		}
 	}
 
 	protected override void OnApplyTemplate()
 	{
 		base.OnApplyTemplate();
 
-		if (GetTemplateChild("ExpanderContent") is FrameworkElement expanderContent)
-		{
-			expanderContent.SizeChanged += (s, e) =>
-			{
-				ContentHeight = e.NewSize.Height;
-				NegativeContentHeight = -e.NewSize.Height;
+		UnhookEvents();
+		_expanderContent = GetTemplateChild("ExpanderContent") as FrameworkElement;
+		HookEvents();
+	}
 
-				// Directly updating the animation keyframes here for Native AOT compatibility
-				UpdateAnimationKeyFrames();
-			};
-		}
+	private void ExpanderContent_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		ContentHeight = e.NewSize.Height;
+		NegativeContentHeight = -e.NewSize.Height;
+
+		// Directly updating the animation keyframes here for Native AOT compatibility
+		UpdateAnimationKeyFrames();
 	}
 
 	private void UpdateAnimationKeyFrames()
@@ -751,10 +829,9 @@ internal sealed partial class SettingsExpanderInner : Expander
 			IList<VisualStateGroup>? groups = VisualStateManager.GetVisualStateGroups(rootGrid);
 			if (groups != null)
 			{
-				VisualStateGroup? expandStates = groups.FirstOrDefault(g => g.Name == "ExpandStates");
+				VisualStateGroup? expandStates = groups.FirstOrDefault(g => string.Equals(g.Name, "ExpandStates", StringComparison.OrdinalIgnoreCase));
 				if (expandStates != null)
 				{
-					// Update the specific keyframes in the 4 visual states
 					UpdateKeyFrame(expandStates, "ExpandUp", ContentHeight, isStartFrame: true);
 					UpdateKeyFrame(expandStates, "CollapseDown", ContentHeight, isStartFrame: false);
 					UpdateKeyFrame(expandStates, "ExpandDown", NegativeContentHeight, isStartFrame: true);
@@ -766,22 +843,19 @@ internal sealed partial class SettingsExpanderInner : Expander
 
 	private static void UpdateKeyFrame(VisualStateGroup group, string stateName, double value, bool isStartFrame)
 	{
-		VisualState? state = group.States.FirstOrDefault(s => s.Name == stateName);
+		VisualState? state = group.States.FirstOrDefault(s => string.Equals(s.Name, stateName, StringComparison.OrdinalIgnoreCase));
 		if (state?.Storyboard != null)
 		{
-			DoubleAnimationUsingKeyFrames? anim = state.Storyboard.Children.OfType<DoubleAnimationUsingKeyFrames>().FirstOrDefault();
-			if (anim != null)
+			foreach (Timeline timeline in state.Storyboard.Children)
 			{
-				if (isStartFrame && anim.KeyFrames.Count > 0)
+				if (timeline is DoubleAnimationUsingKeyFrames anim &&
+					string.Equals(Storyboard.GetTargetName(anim), "ExpanderContent", StringComparison.OrdinalIgnoreCase))
 				{
-					if (anim.KeyFrames[0] is DiscreteDoubleKeyFrame ddk)
+					if (isStartFrame && anim.KeyFrames.Count > 0 && anim.KeyFrames[0] is DiscreteDoubleKeyFrame ddk)
 					{
 						ddk.Value = value;
 					}
-				}
-				else if (!isStartFrame && anim.KeyFrames.Count > 1)
-				{
-					if (anim.KeyFrames[1] is SplineDoubleKeyFrame sdk)
+					else if (!isStartFrame && anim.KeyFrames.Count > 1 && anim.KeyFrames[1] is SplineDoubleKeyFrame sdk)
 					{
 						sdk.Value = value;
 					}
@@ -798,8 +872,11 @@ public partial class SettingsExpander : Control
 {
 	private const string PART_ItemsRepeater = "PART_ItemsRepeater";
 	private const string PART_Expander = "PART_Expander";
+
 	private ItemsRepeater? _itemsRepeater;
 	private SettingsExpanderInner? _expander;
+	private long _innerExpanderIsExpandedCallbackToken = -1;
+	private long _cornerRadiusPropertyChangedCallbackToken = -1;
 
 	public event EventHandler? Expanded;
 	public event EventHandler? Collapsed;
@@ -915,13 +992,62 @@ public partial class SettingsExpander : Control
 	public SettingsExpander()
 	{
 		DefaultStyleKey = typeof(SettingsExpander);
-		Items = new List<object>();
+		Items = [];
 
-		_ = RegisterPropertyChangedCallback(CornerRadiusProperty, (s, e) =>
+		CornerRadius cornerRadius = CornerRadius;
+		InnerCornerRadius = new(0, 0, cornerRadius.BottomRight, cornerRadius.BottomLeft);
+
+		Loaded += OnLoaded;
+		Unloaded += OnUnloaded;
+	}
+
+	private void OnLoaded(object sender, RoutedEventArgs e) => HookEvents();
+
+	private void OnUnloaded(object sender, RoutedEventArgs e) => UnhookEvents();
+
+	private void HookEvents()
+	{
+		if (_itemsRepeater != null)
 		{
-			CornerRadius cr = CornerRadius;
-			InnerCornerRadius = new CornerRadius(0, 0, cr.BottomRight, cr.BottomLeft);
-		});
+			_itemsRepeater.ElementPrepared -= ItemsRepeater_ElementPrepared;
+			_itemsRepeater.ElementPrepared += ItemsRepeater_ElementPrepared;
+		}
+
+		if (_expander != null)
+		{
+			if (_innerExpanderIsExpandedCallbackToken != -1)
+			{
+				_expander.UnregisterPropertyChangedCallback(Expander.IsExpandedProperty, _innerExpanderIsExpandedCallbackToken);
+				_innerExpanderIsExpandedCallbackToken = -1;
+			}
+
+			_innerExpanderIsExpandedCallbackToken = _expander.RegisterPropertyChangedCallback(Expander.IsExpandedProperty, OnInnerExpanderIsExpandedChanged);
+		}
+
+		if (_cornerRadiusPropertyChangedCallbackToken != -1)
+		{
+			UnregisterPropertyChangedCallback(CornerRadiusProperty, _cornerRadiusPropertyChangedCallbackToken);
+			_cornerRadiusPropertyChangedCallbackToken = -1;
+		}
+
+		_cornerRadiusPropertyChangedCallbackToken = RegisterPropertyChangedCallback(CornerRadiusProperty, OnCornerRadiusPropertyChanged);
+	}
+
+	private void UnhookEvents()
+	{
+		_itemsRepeater?.ElementPrepared -= ItemsRepeater_ElementPrepared;
+
+		if (_expander != null && _innerExpanderIsExpandedCallbackToken != -1)
+		{
+			_expander.UnregisterPropertyChangedCallback(Expander.IsExpandedProperty, _innerExpanderIsExpandedCallbackToken);
+			_innerExpanderIsExpandedCallbackToken = -1;
+		}
+
+		if (_cornerRadiusPropertyChangedCallbackToken != -1)
+		{
+			UnregisterPropertyChangedCallback(CornerRadiusProperty, _cornerRadiusPropertyChangedCallbackToken);
+			_cornerRadiusPropertyChangedCallbackToken = -1;
+		}
 	}
 
 	protected override void OnApplyTemplate()
@@ -929,39 +1055,33 @@ public partial class SettingsExpander : Control
 		base.OnApplyTemplate();
 		SetAccessibleName();
 
-		_itemsRepeater?.ElementPrepared -= ItemsRepeater_ElementPrepared;
-
-		if (_expander != null)
-		{
-			_expander.Expanding -= Expander_Expanding;
-			_expander.Collapsed -= Expander_Collapsed;
-		}
+		UnhookEvents();
 
 		_itemsRepeater = GetTemplateChild(PART_ItemsRepeater) as ItemsRepeater;
 		_expander = GetTemplateChild(PART_Expander) as SettingsExpanderInner;
 
 		if (_itemsRepeater != null)
 		{
-			_itemsRepeater.ElementPrepared += ItemsRepeater_ElementPrepared;
 			UpdateItemsSource();
 		}
 
-		if (_expander != null)
+		_ = (_expander?.IsExpanded = IsExpanded);
+
+		HookEvents();
+	}
+
+	private void OnCornerRadiusPropertyChanged(DependencyObject sender, DependencyProperty dp)
+	{
+		CornerRadius updatedCornerRadius = CornerRadius;
+		InnerCornerRadius = new(0, 0, updatedCornerRadius.BottomRight, updatedCornerRadius.BottomLeft);
+	}
+
+	private void OnInnerExpanderIsExpandedChanged(DependencyObject sender, DependencyProperty dp)
+	{
+		if (sender is Expander innerExpander && IsExpanded != innerExpander.IsExpanded)
 		{
-			_expander.IsExpanded = IsExpanded;
-			_expander.Expanding += Expander_Expanding;
-			_expander.Collapsed += Expander_Collapsed;
+			IsExpanded = innerExpander.IsExpanded;
 		}
-	}
-
-	private void Expander_Expanding(Expander sender, ExpanderExpandingEventArgs args)
-	{
-		IsExpanded = true;
-	}
-
-	private void Expander_Collapsed(Expander sender, ExpanderCollapsedEventArgs args)
-	{
-		IsExpanded = false;
 	}
 
 	private void SetAccessibleName()
@@ -975,10 +1095,7 @@ public partial class SettingsExpander : Control
 		}
 	}
 
-	protected override AutomationPeer OnCreateAutomationPeer()
-	{
-		return new SettingsExpanderAutomationPeer(this);
-	}
+	protected override AutomationPeer OnCreateAutomationPeer() => new SettingsExpanderAutomationPeer(this);
 
 	private void OnIsExpandedChanged(bool oldValue, bool newValue)
 	{
@@ -988,7 +1105,7 @@ public partial class SettingsExpander : Control
 		}
 
 		SettingsExpanderAutomationPeer? peer = FrameworkElementAutomationPeer.FromElement(this) as SettingsExpanderAutomationPeer;
-		peer?.RaiseExpandedChangedEvent(newValue);
+		peer?.NotifyExpandedChanged(newValue);
 	}
 
 	protected virtual void OnIsExpandedPropertyChanged(bool oldValue, bool newValue)

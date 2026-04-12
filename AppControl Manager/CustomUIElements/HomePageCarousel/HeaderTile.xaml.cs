@@ -45,7 +45,7 @@
 //
 
 using System.Numerics;
-using CommunityToolkit.WinUI.Animations;
+using CommonCore.ToolKits;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
@@ -101,6 +101,8 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(IsSelectedProperty, value);
 	}
 
+	private StackPanel? _textPanel;
+
 	internal HeaderTile()
 	{
 		Visual visual = ElementCompositionPreview.GetElementVisual(this);
@@ -119,24 +121,116 @@ internal sealed partial class HeaderTile : Button
 		DefaultStyleKey = typeof(HeaderTile);
 	}
 
-	private void IsSelectedChanged(object oldValue, object newValue)
+	protected override void OnApplyTemplate()
 	{
+		base.OnApplyTemplate();
+		_textPanel = GetTemplateChild("TextPanel") as StackPanel;
+
+		if (_textPanel != null)
+		{
+			// Explicitly enable the Translation property
+			ElementCompositionPreview.SetIsTranslationEnabled(_textPanel, true);
+
+			// Initialize default visual state position
+			Visual textVisual = ElementCompositionPreview.GetElementVisual(_textPanel);
+			textVisual.Properties.InsertVector3("Translation", new Vector3(0f, 200f, 0f));
+			textVisual.Opacity = 0.0f;
+		}
+	}
+
+	private void IsSelectedChanged(bool oldValue, bool newValue)
+	{
+		if (_textPanel == null)
+		{
+			return;
+		}
+
+		Visual tileVisual = ElementCompositionPreview.GetElementVisual(this);
+		Visual textVisual = ElementCompositionPreview.GetElementVisual(_textPanel);
+		Compositor compositor = tileVisual.Compositor;
+
+		AttachedShadowBase? shadowBase = Effects.GetShadow(this);
+		DropShadow? dropShadow = shadowBase?.GetElementContext(this)?.Shadow;
+
 		if (IsSelected)
 		{
 			Canvas.SetZIndex(this, 10);
-			_ = VisualStateManager.GoToState(this, "Selected", true);
-			AnimationSet selectAnimation = [new ScaleAnimation() { To = "1.0", Duration = TimeSpan.FromMilliseconds(600) }, new OpacityDropShadowAnimation() { To = 0.4 }, new BlurRadiusDropShadowAnimation() { To = 24 }];
-			selectAnimation.Start(this);
+			_textPanel.Visibility = Visibility.Visible;
+
+			// We only provide the final destination (1.0f keyframe). 
+			// Composition will perfectly interpolate from wherever it currently is.
+
+			Vector3KeyFrameAnimation scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
+			scaleAnimation.InsertKeyFrame(1.0f, new Vector3(1.0f, 1.0f, 1.0f));
+			scaleAnimation.Duration = TimeSpan.FromMilliseconds(600);
+			tileVisual.StartAnimation("Scale", scaleAnimation);
+
+			if (dropShadow != null)
+			{
+				ScalarKeyFrameAnimation shadowOpacity = compositor.CreateScalarKeyFrameAnimation();
+				shadowOpacity.InsertKeyFrame(1.0f, 0.4f);
+				shadowOpacity.Duration = TimeSpan.FromMilliseconds(600);
+				dropShadow.StartAnimation("Opacity", shadowOpacity);
+
+				ScalarKeyFrameAnimation shadowBlur = compositor.CreateScalarKeyFrameAnimation();
+				shadowBlur.InsertKeyFrame(1.0f, 24.0f);
+				shadowBlur.Duration = TimeSpan.FromMilliseconds(600);
+				dropShadow.StartAnimation("BlurRadius", shadowBlur);
+			}
+
+			ScalarKeyFrameAnimation textOpacity = compositor.CreateScalarKeyFrameAnimation();
+			textOpacity.InsertKeyFrame(1.0f, 1.0f);
+			textOpacity.Duration = TimeSpan.FromMilliseconds(400);
+			textVisual.StartAnimation("Opacity", textOpacity);
+
+			Vector3KeyFrameAnimation textTranslation = compositor.CreateVector3KeyFrameAnimation();
+			textTranslation.InsertKeyFrame(1.0f, new Vector3(0f, 0f, 0f));
+			textTranslation.Duration = TimeSpan.FromMilliseconds(600);
+			textVisual.StartAnimation("Translation", textTranslation);
 		}
 		else
 		{
-			_ = VisualStateManager.GoToState(this, "NotSelected", true);
-			AnimationSet deselectAnimation = [new ScaleAnimation() { To = "0.8", Duration = TimeSpan.FromMilliseconds(350) }, new OpacityDropShadowAnimation() { To = 0.2 }, new BlurRadiusDropShadowAnimation() { To = 12 }];
-			deselectAnimation.Completed += (s, e) =>
+			CompositionScopedBatch batch = compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+
+			Vector3KeyFrameAnimation scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
+			scaleAnimation.InsertKeyFrame(1.0f, new Vector3(0.8f, 0.8f, 1.0f));
+			scaleAnimation.Duration = TimeSpan.FromMilliseconds(350);
+			tileVisual.StartAnimation("Scale", scaleAnimation);
+
+			if (dropShadow != null)
 			{
-				Canvas.SetZIndex(this, 0);
+				ScalarKeyFrameAnimation shadowOpacity = compositor.CreateScalarKeyFrameAnimation();
+				shadowOpacity.InsertKeyFrame(1.0f, 0.2f);
+				shadowOpacity.Duration = TimeSpan.FromMilliseconds(350);
+				dropShadow.StartAnimation("Opacity", shadowOpacity);
+
+				ScalarKeyFrameAnimation shadowBlur = compositor.CreateScalarKeyFrameAnimation();
+				shadowBlur.InsertKeyFrame(1.0f, 12.0f);
+				shadowBlur.Duration = TimeSpan.FromMilliseconds(350);
+				dropShadow.StartAnimation("BlurRadius", shadowBlur);
+			}
+
+			ScalarKeyFrameAnimation textOpacity = compositor.CreateScalarKeyFrameAnimation();
+			textOpacity.InsertKeyFrame(1.0f, 0.0f);
+			textOpacity.Duration = TimeSpan.FromMilliseconds(350);
+			textVisual.StartAnimation("Opacity", textOpacity);
+
+			Vector3KeyFrameAnimation textTranslation = compositor.CreateVector3KeyFrameAnimation();
+			textTranslation.InsertKeyFrame(1.0f, new Vector3(0f, 200f, 0f));
+			textTranslation.Duration = TimeSpan.FromMilliseconds(600);
+			textVisual.StartAnimation("Translation", textTranslation);
+
+			batch.End();
+
+			// Wait for animation to finish completely before hiding to prevent chopping
+			batch.Completed += (s, e) =>
+			{
+				if (!IsSelected)
+				{
+					_textPanel.Visibility = Visibility.Collapsed;
+					Canvas.SetZIndex(this, 0);
+				}
 			};
-			deselectAnimation.Start(this);
 		}
 	}
 

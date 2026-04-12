@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:core="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     KeyboardAcceleratorPlacementMode="Hidden"
@@ -92,7 +92,7 @@
                             IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
 
         <!-- Toolbar Area -->
-        <controls:WrapPanel Grid.Row="1"
+        <CCToolKit:WrapPanel Grid.Row="1"
                             Orientation="Horizontal"
                             HorizontalSpacing="2"
                             VerticalSpacing="6"
@@ -130,7 +130,7 @@
                         </customUI:ButtonV2.ContentTemplate>
                         <customUI:ButtonV2.Flyout>
                             <Flyout>
-                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
                                     <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFiles}">
                                         <Button.ContentTemplate>
                                             <DataTemplate x:DataType="x:String">
@@ -143,7 +143,7 @@
                                     </Button>
                                     <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords"/>
                                     <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedFiles, Mode=OneWay}"/>
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
                             </Flyout>
                         </customUI:ButtonV2.Flyout>
                     </customUI:ButtonV2>
@@ -164,7 +164,7 @@
                         </customUI:ButtonV2.ContentTemplate>
                         <customUI:ButtonV2.Flyout>
                             <Flyout>
-                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
                                     <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFolders}">
                                         <Button.ContentTemplate>
                                             <DataTemplate x:DataType="x:String">
@@ -177,7 +177,7 @@
                                     </Button>
                                     <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords"/>
                                     <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedFolders, Mode=OneWay}"/>
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
                             </Flyout>
                         </customUI:ButtonV2.Flyout>
                     </customUI:ButtonV2>
@@ -422,7 +422,7 @@
                 </StackPanel>
             </Border>
 
-        </controls:WrapPanel>
+        </CCToolKit:WrapPanel>
 
         <!-- Results area: ListView and empty-state placeholder share Grid Row 2 -->
         <Grid Grid.Row="2">

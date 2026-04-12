@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     x:Uid="SigningDetailsDialog"
     PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
@@ -49,26 +49,26 @@
                 </win:StackPanel.ChildrenTransitions>
 
 
-                <controls:SettingsCard x:Uid="CertificateDetailsSettingsCard">
-                    <controls:SettingsCard.HeaderIcon>
+                <CCToolKit:SettingsCard x:Uid="CertificateDetailsSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEA86;"/>
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
-                    <controls:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
+                    <CCToolKit:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
 
                         <Button x:Name="CertFileBrowseButton" HorizontalAlignment="Center" Click="{x:Bind CertFileBrowseButton_Click}" x:Uid="FileBrowseButton"/>
                         <TextBox MaxWidth="700" x:Name="CertFilePathTextBox" TextWrapping="Wrap" PlaceholderText=".cer file path" />
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
-                </controls:SettingsCard>
+                </CCToolKit:SettingsCard>
 
-                <controls:SettingsCard x:Uid="CertificateCommonNameSettingsCard">
-                    <controls:SettingsCard.HeaderIcon>
+                <CCToolKit:SettingsCard x:Uid="CertificateCommonNameSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEA86;"/>
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
-                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
+                    <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
                         <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
                                         MaxWidth="700"
@@ -77,13 +77,13 @@
                                         TextChanged="{x:Bind CertificateCNAutoSuggestBox_TextChanged}"
                                         PlaceholderText="Find Certificate Common Names"/>
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
-                </controls:SettingsCard>
+                </CCToolKit:SettingsCard>
 
             </StackPanel>
 
-            <controls:WrapPanel Grid.Row="3" Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10" Margin="10,15,10,0" HorizontalAlignment="Center">
+            <CCToolKit:WrapPanel Grid.Row="3" Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10" Margin="10,15,10,0" HorizontalAlignment="Center">
 
                 <Button HorizontalAlignment="Center"
                         ToolTipService.ToolTip="Verify the settings before submitting them"
@@ -105,7 +105,7 @@
                              Title="Error">
                 </TeachingTip>
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
 
         </Grid>
 

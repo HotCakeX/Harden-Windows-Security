@@ -21,10 +21,4 @@
 		<DebugType>none</DebugType>
 		<PackageTags>Partner Center, Microsoft</PackageTags>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
-		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.5" />
-	</ItemGroup>
-
 </Project>

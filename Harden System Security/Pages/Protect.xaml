@@ -3,12 +3,10 @@
     x:Class="HardenSystemSecurity.Pages.Protect"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:Protect="using:HardenSystemSecurity.Protect"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:GP="using:CommonCore.GroupPolicy"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     Loaded="{x:Bind ViewModel.Page_Loaded}"
     Unloaded="{x:Bind ViewModel.Page_Unloaded}"
@@ -308,7 +306,7 @@
                       Margin="5,0,5,5">
 
             <!-- Device Intents section -->
-            <Grid ui:Effects.Shadow="{StaticResource BorderShadow}"
+            <Grid CCToolKit:Effects.Shadow="{StaticResource BorderShadow}"
                   CornerRadius="18"
                   HorizontalAlignment="Center">
 
@@ -354,7 +352,7 @@
                 <Expander Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Stretch">
                     <Expander.Header>
 
-                        <controls:WrapPanel Orientation="Horizontal"
+                        <CCToolKit:WrapPanel Orientation="Horizontal"
                                             Padding="8"
                                             HorizontalSpacing="10"
                                             VerticalSpacing="6"
@@ -413,7 +411,7 @@
                                     ExternalOperationStarted="{x:Bind ViewModel.ApplyIntentsCancellableButton.OperationStarted, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.ApplySelectedDeviceIntents}" />
 
-                        </controls:WrapPanel>
+                        </CCToolKit:WrapPanel>
 
                     </Expander.Header>
 
@@ -445,29 +443,19 @@
 
             <Border x:Name="AnimatedBorder"
                     Grid.Row="0"
-                    ui:Effects.Shadow="{StaticResource BorderShadow}"
+                    CCToolKit:Effects.Shadow="{StaticResource BorderShadow}"
                     Background="Transparent"
                     BorderThickness="0"
                     Margin="15,0,15,0"
                     PointerEntered="{x:Bind OnBorderPointerEntered}"
                     PointerExited="{x:Bind OnBorderPointerExited}">
 
-                <ani:Explicit.Animations>
-                    <ani:AnimationSet x:Name="ShadowEnterAnimation">
-                        <ani:BlurRadiusDropShadowAnimation To="20"/>
-                    </ani:AnimationSet>
-
-                    <ani:AnimationSet x:Name="ShadowExitAnimation">
-                        <ani:BlurRadiusDropShadowAnimation To="10"/>
-                    </ani:AnimationSet>
-                </ani:Explicit.Animations>
-
                 <Border BorderThickness="0"
                         Padding="5"
                         Background="{ThemeResource AppOverlayBackgroundBrush}"
                         CornerRadius="18">
 
-                    <controls:WrapPanel Orientation="Horizontal"
+                    <CCToolKit:WrapPanel Orientation="Horizontal"
                                         Margin="10"
                                         HorizontalSpacing="15"
                                         VerticalSpacing="12"
@@ -605,7 +593,7 @@
 
                         </Button>
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
                 </Border>
 
@@ -637,7 +625,7 @@
                     CornerRadius="20"
                     Width="320"
                     BorderThickness="2"
-                    ui:Effects.Shadow="{StaticResource BorderShadow}">
+                    CCToolKit:Effects.Shadow="{StaticResource BorderShadow}">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                         <GradientStop Color="#FFF0F5" Offset="0.0"/>

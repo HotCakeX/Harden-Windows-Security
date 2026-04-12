@@ -3,7 +3,7 @@
     x:Class="HardenSystemSecurity.Pages.InstalledAppsManagement"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:CC="using:CommonCore.Others"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
@@ -91,7 +91,7 @@
                                        x:Phase="0"/>
 
                             <!-- Secondary Information -->
-                            <controls:WrapPanel x:Name="SecondaryInfoWrapPanel"
+                            <CCToolKit:WrapPanel x:Name="SecondaryInfoWrapPanel"
                                               Orientation="Horizontal"
                                               HorizontalSpacing="16"
                                               VerticalSpacing="6">
@@ -197,7 +197,7 @@
                                                VerticalAlignment="Center"/>
                                 </Grid>
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
                             <!-- Expandable Details Section -->
                             <Expander x:Name="DetailsExpander"
@@ -371,7 +371,7 @@
         <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility,Mode=OneWay}"
                               VerticalAlignment="Center"
@@ -471,13 +471,13 @@
                         </TextBlock>
                     </Border>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Header>
 
             <Expander.Content>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                     <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson_Click}">
                         <Button.ContentTemplate>
@@ -490,7 +490,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Content>
         </Expander>

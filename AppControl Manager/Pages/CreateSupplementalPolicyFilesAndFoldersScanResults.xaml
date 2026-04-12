@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:CommonCore.IntelGathering"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -19,7 +18,7 @@
         <Expander Grid.Row="0" Margin="0,0,0,10" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <DropDownButton x:Uid="ExtraActionsDropDownButton">
                         <DropDownButton.ContentTemplate>
@@ -104,12 +103,12 @@
                              Text="{x:Bind ViewModel.FilesAndFoldersScanResultsSearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              VerticalContentAlignment="Center" />
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
             </Expander.Header>
 
             <Expander.Content>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                     <Button Click="{x:Bind ViewModel.ExportFilesAndFoldersToJsonButton_Click}"
                             x:Uid="ExportToJSONButton">
@@ -123,7 +122,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Content>
         </Expander>

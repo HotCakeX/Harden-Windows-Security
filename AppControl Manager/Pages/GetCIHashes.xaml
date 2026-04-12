@@ -7,7 +7,7 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CommonCore="using:CommonCore"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -55,7 +55,7 @@
                             <customUI:ButtonV2.Flyout>
                                 <Flyout>
 
-                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                    <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                         <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFilePath}">
                                             <Button.ContentTemplate>
@@ -74,7 +74,7 @@
                                                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                  MinWidth="400" IsReadOnly="True" />
 
-                                    </controls:WrapPanel>
+                                    </CCToolKit:WrapPanel>
 
                                 </Flyout>
                             </customUI:ButtonV2.Flyout>

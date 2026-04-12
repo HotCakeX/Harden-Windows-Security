@@ -44,16 +44,16 @@
 //    SOFTWARE
 //
 
-using CommunityToolkit.WinUI.Animations;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace AppControlManager.CustomUIElements.HomePageCarousel;
 
 internal sealed partial class AnimatedImage : UserControl
 {
-	private AnimationSet? selectAnimation;
+	private Storyboard? selectAnimation;
 
 	private static readonly DependencyProperty ImageUrlProperty = DependencyProperty.Register(
 		nameof(ImageUrl),
@@ -71,8 +71,12 @@ internal sealed partial class AnimatedImage : UserControl
 
 	private void AnimatedImage_Unloaded(object sender, RoutedEventArgs e)
 	{
-		selectAnimation?.Completed -= SelectAnimation_Completed;
-		selectAnimation = null;
+		if (selectAnimation is not null)
+		{
+			selectAnimation.Completed -= SelectAnimation_Completed;
+			selectAnimation.Stop();
+			selectAnimation = null;
+		}
 	}
 
 	private void IsImageChanged(Uri oldValue, Uri newValue)
@@ -80,14 +84,32 @@ internal sealed partial class AnimatedImage : UserControl
 		BottomImage.Source = new BitmapImage(ImageUrl);
 		BottomImage.Opacity = 1;
 
-		selectAnimation?.Completed -= SelectAnimation_Completed;
+		if (selectAnimation is not null)
+		{
+			selectAnimation.Completed -= SelectAnimation_Completed;
+			selectAnimation.Stop();
+		}
 
-		selectAnimation = [new OpacityAnimation() { From = 1, To = 0, Duration = TimeSpan.FromMilliseconds(800) }];
+		selectAnimation = new Storyboard();
+
+		// Using a DoubleAnimation targeting the XAML Opacity property so the BackdropBrush
+		// correctly invalidates and blurs every frame.
+		DoubleAnimation opacityAnimation = new()
+		{
+			From = 1.0,
+			To = 0.0,
+			Duration = new Duration(TimeSpan.FromMilliseconds(800))
+		};
+
+		Storyboard.SetTarget(opacityAnimation, TopImage);
+		Storyboard.SetTargetProperty(opacityAnimation, "Opacity");
+		selectAnimation.Children.Add(opacityAnimation);
+
 		selectAnimation.Completed += SelectAnimation_Completed;
-		selectAnimation.Start(TopImage);
+		selectAnimation.Begin();
 	}
 
-	private void SelectAnimation_Completed(object? sender, EventArgs e)
+	private void SelectAnimation_Completed(object? sender, object e)
 	{
 		try
 		{

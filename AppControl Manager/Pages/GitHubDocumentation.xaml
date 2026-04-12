@@ -3,7 +3,7 @@
     x:Class="AppControlManager.Pages.GitHubDocumentation"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
 
         <!-- Navigation Bar -->
-        <controls:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="5" VerticalSpacing="5" VerticalAlignment="Top" Margin="0,0,0,10">
+        <CCToolKit:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="5" VerticalSpacing="5" VerticalAlignment="Top" Margin="0,0,0,10">
             <!-- Back Button with Icon - Set initially to disabled until it makes sense to be enabled -->
             <Button Click="{x:Bind BackButton_Click}" IsEnabled="False" x:Name="BackButton">
                 <StackPanel Orientation="Horizontal">
@@ -46,7 +46,7 @@
                     <TextBlock x:Uid="WebViewHomeButton" Margin="5,0,0,0"/>
                 </StackPanel>
             </Button>
-        </controls:WrapPanel>
+        </CCToolKit:WrapPanel>
 
         <!-- WebView2 Control -->
         <WebView2 Grid.Row="1"

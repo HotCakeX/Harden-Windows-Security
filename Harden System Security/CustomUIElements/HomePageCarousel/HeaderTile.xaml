@@ -2,11 +2,9 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:local="using:AppControlManager.CustomUIElements.HomePageCarousel"
     xmlns:lights="using:AppControlManager.CustomUIElements.HomePageCarousel.Lights"
-    xmlns:media="using:CommunityToolkit.WinUI.Media"
-    xmlns:ui="using:CommunityToolkit.WinUI">
+    xmlns:common="using:CommonCore.ToolKits">
 
     <Style BasedOn="{StaticResource DefaultHeaderTileStyle}" TargetType="local:HeaderTile" />
     <Style x:Key="DefaultHeaderTileStyle" TargetType="local:HeaderTile">
@@ -15,9 +13,9 @@
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Height" Value="208" />
         <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="ui:Effects.Shadow">
+        <Setter Property="common:Effects.Shadow">
             <Setter.Value>
-                <media:AttachedCardShadow
+                <common:AttachedCardShadow
                     BlurRadius="12"
                     CornerRadius="8"
                     Opacity="0.2"
@@ -49,26 +47,6 @@
                             Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
                             Orientation="Vertical"
                             Visibility="Collapsed">
-                            <animations:Implicit.ShowAnimations>
-                                <animations:OpacityAnimation
-                                    From="0"
-                                    To="1.0"
-                                    Duration="0:0:0.4" />
-                                <animations:TranslationAnimation
-                                    From="0,200,0"
-                                    To="0"
-                                    Duration="0:0:0.6" />
-                            </animations:Implicit.ShowAnimations>
-                            <animations:Implicit.HideAnimations>
-                                <animations:OpacityAnimation
-                                    From="1.0"
-                                    To="0"
-                                    Duration="0:0:0.35" />
-                                <animations:TranslationAnimation
-                                    From="0"
-                                    To="0,200,0"
-                                    Duration="0:0:0.6" />
-                            </animations:Implicit.HideAnimations>
                             <TextBlock
                                 FontWeight="SemiBold"
                                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"

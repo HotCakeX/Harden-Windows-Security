@@ -6,7 +6,6 @@
     xmlns:local="using:HardenSystemSecurity"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:CC="using:CommonCore.Others"
@@ -261,7 +260,7 @@
                     BorderThickness="0">
 
                 <Button.Content>
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <CCToolKit:WrapPanel Orientation="Horizontal">
 
                         <AnimatedIcon Height="35" Width="35" Margin="-9,-9,-9,-9">
                             <AnimatedIcon.Source>
@@ -269,7 +268,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
                 </Button.Content>
 
             </Button>
@@ -532,7 +531,7 @@
 
                             <ScrollViewer>
 
-                                <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
+                                <CCToolKit:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
 
                                     <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
 
@@ -739,7 +738,7 @@
                                         </Button.ContentTemplate>
                                     </Button>
 
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
 
                             </ScrollViewer>
 
@@ -844,7 +843,7 @@
                     </Grid>
 
                     <!-- Inline header row (wide widths) -->
-                    <controls:WrapPanel Grid.Row="1"
+                    <CCToolKit:WrapPanel Grid.Row="1"
                                         Margin="20,10,10,0"
                                         Visibility="{x:Bind ViewModel.HeaderInlineVisibility, Mode=OneWay}"
                                         Style="{StaticResource PageHeaderWrapPanelStyle}">
@@ -864,7 +863,7 @@
                                 </DataTemplate>
                             </HyperlinkButton.ContentTemplate>
                         </HyperlinkButton>
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
                     <!-- Note the use of a TwoWay binding here, this is required for this control to work.  -->
                     <CCToolKit:PropertySizer HorizontalAlignment="Left"

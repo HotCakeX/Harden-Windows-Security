@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.CustomUIElements"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     Title="Open Network Ports"
     PrimaryButtonText="Close"
     DefaultButton="Primary"
@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top Bar Controls -->
-        <controls:WrapPanel Grid.Row="0"
+        <CCToolKit:WrapPanel Grid.Row="0"
                             Orientation="Horizontal"
                             Margin="0,0,0,10"
                             HorizontalSpacing="8"
@@ -68,7 +68,7 @@
                           VerticalAlignment="Center"
                           Toggled="{x:Bind AutoRefreshToggle_Toggled}"/>
 
-        </controls:WrapPanel>
+        </CCToolKit:WrapPanel>
 
         <ListView Grid.Row="1"
                   ItemsSource="{x:Bind DisplayedPorts}"

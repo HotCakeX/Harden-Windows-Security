@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -23,7 +23,7 @@
                                 Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
                                 IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
 
-            <controls:WrapPanel Orientation="Horizontal"
+            <CCToolKit:WrapPanel Orientation="Horizontal"
                                 HorizontalSpacing="20"
                                 VerticalSpacing="10"
                                 HorizontalAlignment="Center"
@@ -55,7 +55,7 @@
                     <customUI:ButtonV2.Flyout>
                         <Flyout x:Name="PickPolicyFileButton_FlyOut">
 
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PickPolicyFileButton_FlyOut_Clear_Click}">
                                     <Button.ContentTemplate>
@@ -74,7 +74,7 @@
                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                          MinWidth="400" IsReadOnly="True" />
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
                         </Flyout>
                     </customUI:ButtonV2.Flyout>
@@ -97,7 +97,7 @@
                                   IsOn="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=TwoWay}"/>
                 </Border>
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}"
@@ -108,14 +108,14 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsExpander x:Uid="PolicyRuleExpander"
+                <CCToolKit:SettingsExpander x:Uid="PolicyRuleExpander"
                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                            IsExpanded="{x:Bind ViewModel.SettingsExpanderIsExpanded, Mode=TwoWay}">
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE71D;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
+                    <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
                         <Button x:Uid="ApplyThePolicyRuleOptionsChangesButton"
                                 Click="{x:Bind ViewModel.ApplyTheChangesButton_Click}"
                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
@@ -138,9 +138,9 @@
                             </Button.ContentTemplate>
                         </Button>
 
-                    </controls:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
                         <customUI:SettingsCardV2 Header="Enabled:UMCI"
                                                  ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:UMCI'], Mode=OneTime}"
                                                  Description="{x:Bind ViewModel.RuleOptions['Enabled:UMCI'], Mode=OneTime}">
@@ -306,16 +306,16 @@
                             <CheckBox IsChecked="{x:Bind ViewModel.EnabledConditionalWindowsLockdownPolicyCheckBox, Mode=TwoWay}"
                                       HorizontalAlignment="Right" />
                         </customUI:SettingsCardV2>
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
-                <controls:SettingsCard x:Uid="PolicyTemplateSettingCard">
-                    <controls:SettingsCard.HeaderIcon>
+                <CCToolKit:SettingsCard x:Uid="PolicyTemplateSettingCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE799;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <CCToolKit:WrapPanel Orientation="Horizontal">
 
                         <Button Click="{x:Bind ViewModel.SetPolicyTemplate_Click}"
                                 x:Uid="SetPolicyTemplateButton"
@@ -330,8 +330,8 @@
                             <x:String>BaseKernel</x:String>
                             <x:String>Supplemental</x:String>
                         </ComboBox>
-                    </controls:WrapPanel>
-                </controls:SettingsCard>
+                    </CCToolKit:WrapPanel>
+                </CCToolKit:SettingsCard>
             </StackPanel>
         </Grid>
     </ScrollViewer>

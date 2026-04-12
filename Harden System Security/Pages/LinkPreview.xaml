@@ -3,7 +3,7 @@
     x:Class="AppControlManager.Pages.LinkPreview"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
 
         <!-- Navigation Bar -->
-        <controls:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="3" VerticalSpacing="3" VerticalAlignment="Top" Margin="0,0,0,4">
+        <CCToolKit:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="3" VerticalSpacing="3" VerticalAlignment="Top" Margin="0,0,0,4">
 
             <Button Click="{x:Bind BackButton_Click}" IsEnabled="False" x:Name="BackButton">
                 <FontIcon Glyph="&#xE72B;" FontSize="12" />
@@ -34,7 +34,7 @@
             <Button Click="{x:Bind OpenURL_Click}" ToolTipService.ToolTip="Open URL" Style="{StaticResource AccentButtonStyle}">
                 <FontIcon Glyph="&#xE71B;" FontSize="12"/>
             </Button>
-        </controls:WrapPanel>
+        </CCToolKit:WrapPanel>
 
         <WebView2 Grid.Row="1"
                   x:Name="LinkPreviewWebView2"

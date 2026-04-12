@@ -6,7 +6,6 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:GP="using:CommonCore.GroupPolicy"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -29,7 +28,7 @@
 
         <Border Grid.Row="1" Margin="0,5,0,5" Style="{StaticResource GridCardStyle}" Padding="8">
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
+            <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 HorizontalSpacing="10"
                                 VerticalSpacing="10">
@@ -97,7 +96,7 @@
                     <customUI:ButtonV2.Flyout>
                         <Flyout>
 
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFile_Click}" />
 
@@ -107,7 +106,7 @@
                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                          MinWidth="400" IsReadOnly="True" />
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
                         </Flyout>
                     </customUI:ButtonV2.Flyout>
@@ -165,7 +164,7 @@
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
         </Border>
 
         <SplitView PaneBackground="Transparent"
@@ -208,7 +207,7 @@
 
                         <ScrollViewer Grid.Row="1">
 
-                            <controls:WrapPanel HorizontalSpacing="20"
+                            <CCToolKit:WrapPanel HorizontalSpacing="20"
                                                 VerticalSpacing="25"
                                                 Orientation="Vertical"
                                                 Margin="10,10,10,0"
@@ -227,7 +226,7 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
 
-                                    <controls:WrapPanel HorizontalSpacing="20"
+                                    <CCToolKit:WrapPanel HorizontalSpacing="20"
                                                 VerticalSpacing="20"
                                                 Orientation="Vertical"
                                                 Margin="10,0,10,0"
@@ -252,7 +251,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedMainPOLFileForMerge_Click}" />
 
@@ -262,7 +261,7 @@
                                                              TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                              MinWidth="400" IsReadOnly="True" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -283,7 +282,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedOtherPOLFilesForMerge}" />
 
@@ -291,7 +290,7 @@
 
                                                             <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedOtherPOLFilesForMerge, Mode=OneWay}" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -314,7 +313,7 @@
                                             </Button.ContentTemplate>
                                         </Button>
 
-                                    </controls:WrapPanel>
+                                    </CCToolKit:WrapPanel>
 
                                 </Border>
 
@@ -331,7 +330,7 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
 
-                                    <controls:WrapPanel HorizontalSpacing="20"
+                                    <CCToolKit:WrapPanel HorizontalSpacing="20"
                                                         VerticalSpacing="20"
                                                         Orientation="Vertical"
                                                         Margin="10,0,10,0"
@@ -354,7 +353,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedPOLFilesForConversionToJSON}" />
 
@@ -362,7 +361,7 @@
 
                                                             <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedPOLFilesForConversionToJSON, Mode=OneWay}" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -384,7 +383,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearOutputDirForJsonFilesAfterConversion_Click}" />
 
@@ -394,7 +393,7 @@
                                                                      TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                                      MinWidth="400" IsReadOnly="True" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -419,7 +418,7 @@
                                             </Button.ContentTemplate>
                                         </Button>
 
-                                    </controls:WrapPanel>
+                                    </CCToolKit:WrapPanel>
 
                                 </Border>
 
@@ -438,7 +437,7 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
 
-                                    <controls:WrapPanel HorizontalSpacing="20"
+                                    <CCToolKit:WrapPanel HorizontalSpacing="20"
                                                         VerticalSpacing="20"
                                                         Orientation="Vertical"
                                                         Margin="10,0,10,0"
@@ -461,7 +460,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedJSONFilesForConversionToPol}" />
 
@@ -469,7 +468,7 @@
 
                                                             <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedJSONFilesForConversionToPol, Mode=OneWay}" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -491,7 +490,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearOutputDirForPOLFilesAfterConversion_Click}" />
 
@@ -501,7 +500,7 @@
                                                                      TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                                      MinWidth="400" IsReadOnly="True" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -526,7 +525,7 @@
                                             </Button.ContentTemplate>
                                         </Button>
 
-                                    </controls:WrapPanel>
+                                    </CCToolKit:WrapPanel>
 
                                 </Border>
 
@@ -543,7 +542,7 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
 
-                                    <controls:WrapPanel HorizontalSpacing="20"
+                                    <CCToolKit:WrapPanel HorizontalSpacing="20"
                                                         VerticalSpacing="20"
                                                         Orientation="Vertical"
                                                         Margin="10,0,10,0"
@@ -566,7 +565,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedSecurityINFFilesForConversionToJSON}" />
 
@@ -574,7 +573,7 @@
 
                                                             <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedSecurityINFFilesForConversionToJSON, Mode=OneWay}" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -596,7 +595,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
 
-                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearOutputDirForSecurityINFToJSONConversion_Click}" />
 
@@ -606,7 +605,7 @@
                                                                      TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                                      MinWidth="400" IsReadOnly="True" />
 
-                                                        </controls:WrapPanel>
+                                                        </CCToolKit:WrapPanel>
 
                                                     </Flyout>
                                                 </Button.Flyout>
@@ -630,11 +629,11 @@
                                             </Button.ContentTemplate>
                                         </Button>
 
-                                    </controls:WrapPanel>
+                                    </CCToolKit:WrapPanel>
 
                                 </Border>
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
                         </ScrollViewer>
 

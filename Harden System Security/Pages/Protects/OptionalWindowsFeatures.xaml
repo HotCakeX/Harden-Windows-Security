@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:viewModels="using:HardenSystemSecurity.ViewModels"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -171,13 +171,13 @@
         <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
-                    <controls:WrapPanel.ChildrenTransitions>
+                    <CCToolKit:WrapPanel.ChildrenTransitions>
                         <TransitionCollection>
                             <EntranceThemeTransition IsStaggeringEnabled="False" />
                         </TransitionCollection>
-                    </controls:WrapPanel.ChildrenTransitions>
+                    </CCToolKit:WrapPanel.ChildrenTransitions>
 
                     <!-- Search TextBox -->
                     <TextBox x:Uid="SearchFeatureCapabilityPlaceHolder"
@@ -370,13 +370,13 @@
                         </TextBlock>
                     </Border>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Header>
 
             <Expander.Content>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                     <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson_Click}">
                         <Button.ContentTemplate>
@@ -389,7 +389,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Content>
         </Expander>

@@ -3,7 +3,6 @@
     x:Class="HardenSystemSecurity.Pages.Protects.WindowsFirewall"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CommonCore="using:CommonCore"
@@ -73,7 +72,7 @@
                                 Grid.Row="0"
                                 Style="{StaticResource GridCardStyle}" Padding="8">
 
-                            <controls:WrapPanel Orientation="Horizontal"
+                            <CCToolKit:WrapPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
                                                 HorizontalSpacing="10"
@@ -211,7 +210,7 @@
                                     <!-- Secondary Flyout (for Right Click / Tap + Hold) -->
                                     <customUI:ButtonV2.ContextFlyout>
                                         <Flyout>
-                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                 <Button x:Uid="ClearButton"
                                                         Click="{x:Bind ViewModel.ClearSelectedFiles}" />
@@ -221,7 +220,7 @@
                                                 <customUI:ListBoxV2 MinWidth="400"
                                                                     SelectionMode="Single"
                                                                     ItemsSource="{x:Bind ViewModel.SelectedFiles, Mode=OneWay}" />
-                                            </controls:WrapPanel>
+                                            </CCToolKit:WrapPanel>
                                         </Flyout>
                                     </customUI:ButtonV2.ContextFlyout>
 
@@ -341,7 +340,7 @@
                                     </DropDownButton.Flyout>
                                 </DropDownButton>
 
-                            </controls:WrapPanel>
+                            </CCToolKit:WrapPanel>
 
                         </Border>
 

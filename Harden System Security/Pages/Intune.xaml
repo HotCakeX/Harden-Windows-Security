@@ -3,7 +3,6 @@
     x:Class="HardenSystemSecurity.Pages.Intune"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCGraph="using:CommonCore.MicrosoftGraph"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
@@ -26,7 +25,7 @@
         <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <ProgressRing IsActive="True"
                                   Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
@@ -126,12 +125,12 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
             </Expander.Header>
 
             <Expander.Content>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                     <!-- Delete selected policy -->
                     <Button x:Uid="DeleteSelectedPolicyButton"
@@ -148,7 +147,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Content>
         </Expander>

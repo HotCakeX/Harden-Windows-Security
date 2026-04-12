@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:viewModels="using:HardenSystemSecurity.ViewModels"
     xmlns:Protect="using:HardenSystemSecurity.Protect"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -26,7 +25,7 @@
         <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <ProgressRing IsActive="True"
                               Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
@@ -128,13 +127,13 @@
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Header>
 
             <Expander.Content>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                     <customUI:ButtonV2 x:Uid="FileBrowseButton"
                                        ObservedData="{x:Bind ViewModel.CustomBaselineFilePath, Mode=OneWay}"
@@ -153,7 +152,7 @@
                         <customUI:ButtonV2.Flyout>
                             <Flyout>
 
-                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                     <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearCustomBaselineFilePath}" />
 
@@ -163,7 +162,7 @@
                                              TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                              MinWidth="400" IsReadOnly="True" />
 
-                                </controls:WrapPanel>
+                                </CCToolKit:WrapPanel>
 
                             </Flyout>
                         </customUI:ButtonV2.Flyout>
@@ -181,7 +180,7 @@
                         </Button.ContentTemplate>
                     </Button>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Expander.Content>
         </Expander>

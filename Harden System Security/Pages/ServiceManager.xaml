@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+   xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     KeyboardAcceleratorPlacementMode="Hidden"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -74,7 +74,7 @@
                             IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
 
         <!-- Toolbar Area -->
-        <controls:WrapPanel Grid.Row="1"
+        <CCToolKit:WrapPanel Grid.Row="1"
                             Orientation="Horizontal"
                             HorizontalSpacing="2"
                             VerticalSpacing="6"
@@ -254,7 +254,7 @@
                 </StackPanel>
             </Border>
 
-        </controls:WrapPanel>
+        </CCToolKit:WrapPanel>
 
         <!-- SplitView for sidebar filtering -->
         <SplitView Grid.Row="2"
@@ -454,7 +454,7 @@
                                             </SelectorBar>
 
                                             <!-- Configuration Details Grid -->
-                                            <controls:WrapPanel HorizontalSpacing="12" VerticalSpacing="12" Visibility="{x:Bind ConfigDetailsVisibility, Mode=OneWay}">
+                                            <CCToolKit:WrapPanel HorizontalSpacing="12" VerticalSpacing="12" Visibility="{x:Bind ConfigDetailsVisibility, Mode=OneWay}">
 
                                                 <!-- Description -->
                                                 <Border Style="{StaticResource ConfigCardBorderStyle}">
@@ -907,10 +907,10 @@
                                                     </Grid>
                                                 </Border>
 
-                                            </controls:WrapPanel>
+                                            </CCToolKit:WrapPanel>
 
                                             <!-- Portable Executable Metadata Grid -->
-                                            <controls:WrapPanel HorizontalSpacing="12" VerticalSpacing="12" Visibility="{x:Bind PeDetailsVisibility, Mode=OneWay}">
+                                            <CCToolKit:WrapPanel HorizontalSpacing="12" VerticalSpacing="12" Visibility="{x:Bind PeDetailsVisibility, Mode=OneWay}">
 
                                                 <!-- 1. File Description -->
                                                 <Border Style="{StaticResource ConfigCardBorderStyle}">
@@ -1188,7 +1188,7 @@
                                                     </Grid>
                                                 </Border>
 
-                                            </controls:WrapPanel>
+                                            </CCToolKit:WrapPanel>
 
                                         </StackPanel>
                                     </Expander.Content>

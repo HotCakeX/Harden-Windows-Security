@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
@@ -18,7 +18,7 @@
 
             <Border Grid.Row="0" Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8,15,8,15">
 
-                <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                <CCToolKit:WrapPanel HorizontalSpacing="10" VerticalSpacing="10" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
 
                     <Button x:Uid="RetrieveSecureSettingsButton" Click="{x:Bind ViewModel.InvokeButton_Click}" Margin="0,12,5,0"
                             HorizontalAlignment="Center" Style="{StaticResource AccentButtonStyle}">
@@ -43,11 +43,11 @@
                              x:Uid="SecureSettingValueNameTextBox"
                              MinWidth="200"/>
 
-                </controls:WrapPanel>
+                </CCToolKit:WrapPanel>
 
             </Border>
 
-            <controls:WrapPanel HorizontalSpacing="10" Margin="0,15,0,15"
+            <CCToolKit:WrapPanel HorizontalSpacing="10" Margin="0,15,0,15"
                                 VerticalSpacing="10" Orientation="Vertical" HorizontalAlignment="Center" Grid.Row="1">
 
                 <!-- Result Fields -->
@@ -58,7 +58,7 @@
                 <TextBox Text="{x:Bind ViewModel.Status, Mode=OneWay}" IsReadOnly="True" Header="Status" MinWidth="200"/>
                 <TextBox Text="{x:Bind ViewModel.StatusCode, Mode=OneWay}" IsReadOnly="True" Header="Status Code" MinWidth="200"/>
 
-            </controls:WrapPanel>
+            </CCToolKit:WrapPanel>
 
             <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
                                 Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"

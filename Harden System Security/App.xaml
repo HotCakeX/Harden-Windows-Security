@@ -11,8 +11,6 @@
                 <ResourceDictionary Source="ms-appx:///CustomUIElements/HomePageCarousel/OpacityMask.xaml" />
                 <ResourceDictionary Source="ms-appx:///CustomUIElements/HomePageCarousel/HeaderTile.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/SelectorBar.xaml" />
-                <ResourceDictionary Source="ms-appx:///CustomUIElements/SegmentedStyles.xaml" />
-                <ResourceDictionary Source="ms-appx:///CustomUIElements/SettingsControls.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->

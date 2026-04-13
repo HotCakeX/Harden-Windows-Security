@@ -203,6 +203,12 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260224000" />
 		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.5" />
 
+		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.3.260402-preview2" />
+		<PackageReference Include="CommunityToolkit.Common" Version="8.4.2" />
+
 		<!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.17.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />

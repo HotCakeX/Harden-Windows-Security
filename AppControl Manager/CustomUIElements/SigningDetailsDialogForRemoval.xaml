@@ -7,6 +7,7 @@
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     x:Uid="SigningDetailsDialog"
     IsPrimaryButtonEnabled="False"
     DefaultButton="Primary">
@@ -51,10 +52,10 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <CCToolKit:SettingsCard x:Uid="CertificateDetailsSettingsCard">
-                    <CCToolKit:SettingsCard.HeaderIcon>
+                <controls:SettingsCard x:Uid="CertificateDetailsSettingsCard">
+                    <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEA86;"/>
-                    </CCToolKit:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard.HeaderIcon>
 
                     <CCToolKit:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
 
@@ -63,12 +64,12 @@
 
                     </CCToolKit:WrapPanel>
 
-                </CCToolKit:SettingsCard>
+                </controls:SettingsCard>
 
-                <CCToolKit:SettingsCard x:Uid="CertificateCommonNameSettingsCard">
-                    <CCToolKit:SettingsCard.HeaderIcon>
+                <controls:SettingsCard x:Uid="CertificateCommonNameSettingsCard">
+                    <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEA86;"/>
-                    </CCToolKit:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard.HeaderIcon>
 
                     <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -81,12 +82,12 @@
 
                     </CCToolKit:WrapPanel>
 
-                </CCToolKit:SettingsCard>
+                </controls:SettingsCard>
 
-                <CCToolKit:SettingsCard x:Uid="XMLPolicyPathForRemovalSettingsCard">
-                    <CCToolKit:SettingsCard.HeaderIcon>
+                <controls:SettingsCard x:Uid="XMLPolicyPathForRemovalSettingsCard">
+                    <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEA86;"/>
-                    </CCToolKit:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard.HeaderIcon>
 
                     <CCToolKit:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
 
@@ -96,7 +97,7 @@
 
                     </CCToolKit:WrapPanel>
 
-                </CCToolKit:SettingsCard>
+                </controls:SettingsCard>
 
             </StackPanel>
 

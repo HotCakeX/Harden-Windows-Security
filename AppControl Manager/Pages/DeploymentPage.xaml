@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -44,18 +45,18 @@
                         BorderThickness="0.8"
                         CornerRadius="4">
 
-                    <CCToolKit:SettingsExpander x:Uid="UseIntuneDeploySettingsExpander"
+                    <controls:SettingsExpander x:Uid="UseIntuneDeploySettingsExpander"
                                                IsExpanded="True">
 
-                        <CCToolKit:SettingsExpander.HeaderIcon>
+                        <controls:SettingsExpander.HeaderIcon>
                             <FontIcon Glyph="{x:Bind ViewModel.DeploymentModeIcon, Mode=OneWay}"
                                       Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
-                        </CCToolKit:SettingsExpander.HeaderIcon>
+                        </controls:SettingsExpander.HeaderIcon>
 
                         <TextBlock Text="{x:Bind ViewModel.LocalOnlineStatusText, Mode=OneWay}"
                                    TextWrapping="Wrap" />
 
-                        <CCToolKit:SettingsExpander.Items>
+                        <controls:SettingsExpander.Items>
 
                             <customUI:SettingsCardV2 x:Uid="EntraSignInSettingsCard">
 
@@ -67,13 +68,13 @@
 
                             </customUI:SettingsCardV2>
 
-                            <CCToolKit:SettingsCard x:Uid="SelectIntuneGroupsSettingsCard"
+                            <controls:SettingsCard x:Uid="SelectIntuneGroupsSettingsCard"
                                                    IsClickEnabled="True" IsActionIconVisible="True"
                                                    Click="{x:Bind ViewModel.SelectGroups_Click}">
 
-                                <CCToolKit:SettingsCard.HeaderIcon>
+                                <controls:SettingsCard.HeaderIcon>
                                     <FontIcon Glyph="&#xE83B;" />
-                                </CCToolKit:SettingsCard.HeaderIcon>
+                                </controls:SettingsCard.HeaderIcon>
 
                                 <!-- Selected Groups chip -->
                                 <Border CornerRadius="8"
@@ -94,23 +95,23 @@
                                     </StackPanel>
                                 </Border>
 
-                            </CCToolKit:SettingsCard>
+                            </controls:SettingsCard>
 
-                        </CCToolKit:SettingsExpander.Items>
-                    </CCToolKit:SettingsExpander>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
                 </Border>
 
-                <CCToolKit:SettingsCard x:Uid="DeployUnsignedXMLPolicyFilesSettingsCard"
+                <controls:SettingsCard x:Uid="DeployUnsignedXMLPolicyFilesSettingsCard"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False"
                                        BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
                                        BorderThickness="0.8">
 
-                    <CCToolKit:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE82D;" Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
-                    </CCToolKit:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard.HeaderIcon>
 
-                    <CCToolKit:SettingsCard.Content>
+                    <controls:SettingsCard.Content>
                         <StackPanel>
 
                             <!-- Cloud Mode Indicator -->
@@ -205,20 +206,20 @@
 
                             </CCToolKit:WrapPanel>
                         </StackPanel>
-                    </CCToolKit:SettingsCard.Content>
+                    </controls:SettingsCard.Content>
 
-                </CCToolKit:SettingsCard>
+                </controls:SettingsCard>
 
                 <Border BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
                         BorderThickness="0.8"
                         CornerRadius="4">
 
-                    <CCToolKit:SettingsExpander x:Uid="DeploySignedXMLPolicyFilesSettingsExpander"
+                    <controls:SettingsExpander x:Uid="DeploySignedXMLPolicyFilesSettingsExpander"
                                                IsExpanded="True">
 
-                        <CCToolKit:SettingsExpander.HeaderIcon>
+                        <controls:SettingsExpander.HeaderIcon>
                             <FontIcon Glyph="&#xEF3F;" Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
-                        </CCToolKit:SettingsExpander.HeaderIcon>
+                        </controls:SettingsExpander.HeaderIcon>
 
                         <StackPanel>
                             <!-- Cloud Mode Indicator -->
@@ -312,7 +313,7 @@
                             </CCToolKit:WrapPanel>
                         </StackPanel>
 
-                        <CCToolKit:SettingsExpander.Items>
+                        <controls:SettingsExpander.Items>
 
                             <customUI:SettingsCardV2 x:Uid="SignOnlyNoDeploySettingsCard"
                                                      IsClickEnabled="True"
@@ -328,23 +329,23 @@
 
                             </customUI:SettingsCardV2>
 
-                        </CCToolKit:SettingsExpander.Items>
+                        </controls:SettingsExpander.Items>
 
-                    </CCToolKit:SettingsExpander>
+                    </controls:SettingsExpander>
                 </Border>
 
 
-                <CCToolKit:SettingsCard x:Uid="DeployCIPFilesSettingsCard"
+                <controls:SettingsCard x:Uid="DeployCIPFilesSettingsCard"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False"
                                        BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
                                        BorderThickness="0.8">
 
-                    <CCToolKit:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEF3E;" Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}" />
-                    </CCToolKit:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard.HeaderIcon>
 
-                    <CCToolKit:SettingsCard.Content>
+                    <controls:SettingsCard.Content>
                         <StackPanel>
                             <!-- Cloud Mode Indicator -->
                             <StackPanel Orientation="Horizontal"
@@ -425,21 +426,21 @@
 
                             </CCToolKit:WrapPanel>
                         </StackPanel>
-                    </CCToolKit:SettingsCard.Content>
+                    </controls:SettingsCard.Content>
 
-                </CCToolKit:SettingsCard>
+                </controls:SettingsCard>
 
-                <CCToolKit:SettingsCard x:Uid="ConvertXMLToBinarySettingsCard"
+                <controls:SettingsCard x:Uid="ConvertXMLToBinarySettingsCard"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False"
                                        BorderBrush="{x:Bind ViewModel.LocalOnlyBorderBrush, Mode=OneWay}"
                                        BorderThickness="0.8">
 
-                    <CCToolKit:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF003;" Foreground="{x:Bind ViewModel.LocalOnlyHeaderForeground, Mode=OneWay}" />
-                    </CCToolKit:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard.HeaderIcon>
 
-                    <CCToolKit:SettingsCard.Content>
+                    <controls:SettingsCard.Content>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal"
                                         Spacing="8"
@@ -508,9 +509,9 @@
 
                             </CCToolKit:WrapPanel>
                         </StackPanel>
-                    </CCToolKit:SettingsCard.Content>
+                    </controls:SettingsCard.Content>
 
-                </CCToolKit:SettingsCard>
+                </controls:SettingsCard>
 
             </StackPanel>
 

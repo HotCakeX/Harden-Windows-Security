@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CommonCore="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:PolicyEditor="using:AppControlManager.PolicyEditor"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -531,64 +532,64 @@
                                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                                 </win:StackPanel.ChildrenTransitions>
 
-                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"
                                                        IsClickEnabled="False">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/Name.png"
                                                     ShowAsMonochrome="False"/>
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyName"
                                              Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay}" />
 
-                                </CCToolKit:SettingsCard>
+                                </controls:SettingsCard>
 
-                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"
                                                        IsClickEnabled="False">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/ID.png"
                                                     ShowAsMonochrome="False"/>
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyID"
                                              Text="{x:Bind ViewModel.PolicyIDTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </CCToolKit:SettingsCard>
+                                </controls:SettingsCard>
 
-                                <CCToolKit:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"
+                                <controls:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"
                                                        IsClickEnabled="False">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/BasePolicyID.png"
                                                     ShowAsMonochrome="False"/>
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorBasePolicyID"
                                              Text="{x:Bind ViewModel.PolicyBaseIDTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </CCToolKit:SettingsCard>
+                                </controls:SettingsCard>
 
-                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyVersionSettingsCard"
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyVersionSettingsCard"
                                                        IsClickEnabled="False">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/Version.png"
                                                     ShowAsMonochrome="False"/>
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyVersion"
                                              Text="{x:Bind ViewModel.PolicyVersionTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </CCToolKit:SettingsCard>
+                                </controls:SettingsCard>
 
                                 <customUI:SettingsCardV2 x:Uid="PolicyEditorPolicyTypeSettingsCard"
                                                          IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/PolicyType.png"
                                                     ShowAsMonochrome="False"/>
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                               x:Uid="PolicyEditorPolicyType"
@@ -597,25 +598,25 @@
 
                                 </customUI:SettingsCardV2>
 
-                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyInfoIDSettingsCard"
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyInfoIDSettingsCard"
                                                        IsClickEnabled="False">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/PolicyIDInfo.png"
                                                     ShowAsMonochrome="False"/>
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyInfoID"
                                              Text="{x:Bind ViewModel.PolicyInfoIDTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                </CCToolKit:SettingsCard>
+                                </controls:SettingsCard>
 
                                 <customUI:SettingsCardV2 x:Uid="PolicyEditorHVCILevelSettingsCard"
                                                          IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <BitmapIcon UriSource="ms-appx:///Assets/External/HVCIOption.png"
                                                     ShowAsMonochrome="False"/>
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                               x:Uid="PolicyEditorHVCILevel"
@@ -631,17 +632,17 @@
 
                                 </customUI:SettingsCardV2>
 
-                                <CCToolKit:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyFriendlyNameSettingsCard"
                                                        IsClickEnabled="False">
-                                    <CCToolKit:SettingsCard.HeaderIcon>
+                                    <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE8AC;" />
-                                    </CCToolKit:SettingsCard.HeaderIcon>
+                                    </controls:SettingsCard.HeaderIcon>
 
                                     <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                              x:Uid="PolicyEditorPolicyName"
                                              Text="{x:Bind ViewModel.PolicyFriendlyNameTextBox, Mode=TwoWay}" />
 
-                                </CCToolKit:SettingsCard>
+                                </controls:SettingsCard>
 
                                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                                            x:Uid="AppIDTags" />

@@ -3,6 +3,7 @@
     x:Class="AppControlManager.Pages.ValidatePolicy"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -107,11 +108,11 @@
                 </customUI:SettingsCardV3>
 
                 <!-- Schema -->
-                <CCToolKit:SettingsCard x:Uid="SchemaValidationSettingsCard">
+                <controls:SettingsCard x:Uid="SchemaValidationSettingsCard">
                     <ToggleSwitch IsOn="True"
                                   x:Uid="ToggleSwitchGeneral"
                                   IsEnabled="False"/>
-                </CCToolKit:SettingsCard>
+                </controls:SettingsCard>
 
                 <!-- Deserialize -->
                 <customUI:SettingsCardV2 x:Uid="DeserializeValidationSettingsCard">

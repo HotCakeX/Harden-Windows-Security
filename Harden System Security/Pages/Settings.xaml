@@ -7,6 +7,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
@@ -33,12 +34,12 @@
 
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
-                <CCToolKit:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True">
-                    <CCToolKit:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True">
+                    <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE790;" />
-                    </CCToolKit:SettingsExpander.HeaderIcon>
+                    </controls:SettingsExpander.HeaderIcon>
 
-                    <CCToolKit:SettingsExpander.Items>
+                    <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
@@ -147,17 +148,17 @@
 
                         </customUI:SettingsCardV2>
 
-                    </CCToolKit:SettingsExpander.Items>
+                    </controls:SettingsExpander.Items>
 
-                </CCToolKit:SettingsExpander>
+                </controls:SettingsExpander>
 
                 <!-- Behavior section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Behavior" />
-                <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander">
-                    <CCToolKit:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander">
+                    <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE9E9;" />
-                    </CCToolKit:SettingsExpander.HeaderIcon>
-                    <CCToolKit:SettingsExpander.Items>
+                    </controls:SettingsExpander.HeaderIcon>
+                    <controls:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xE8E3;" />
@@ -212,17 +213,17 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                    </CCToolKit:SettingsExpander.Items>
-                </CCToolKit:SettingsExpander>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <!-- Language section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="LanguageTextBlock" />
-                <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">
-                    <CCToolKit:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">
+                    <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xF2B7;" />
-                    </CCToolKit:SettingsExpander.HeaderIcon>
+                    </controls:SettingsExpander.HeaderIcon>
 
-                    <CCToolKit:SettingsExpander.Items>
+                    <controls:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xF69E;" />
@@ -252,8 +253,8 @@
                                       Toggled="{x:Bind ViewModel.FlowDirectionToggleSwitch_Toggled}"
                                       x:Uid="UIFlowDirectionToggleSwitch" />
                         </customUI:SettingsCardV2>
-                    </CCToolKit:SettingsExpander.Items>
-                </CCToolKit:SettingsExpander>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
@@ -268,17 +269,17 @@
                 <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                            x:Uid="About" />
-                <CCToolKit:SettingsExpander Header="Harden System Security"
+                <controls:SettingsExpander Header="Harden System Security"
                                        IsExpanded="True"
                                        Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}">
-                    <CCToolKit:SettingsExpander.HeaderIcon>
+                    <controls:SettingsExpander.HeaderIcon>
                         <BitmapIcon UriSource="ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png"
                                     ShowAsMonochrome="False"/>
-                    </CCToolKit:SettingsExpander.HeaderIcon>
+                    </controls:SettingsExpander.HeaderIcon>
                     <TextBlock Text="{x:Bind ViewModel.VersionTextBlockText, Mode=OneTime}" win:IsTextSelectionEnabled="True"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <CCToolKit:SettingsExpander.Items>
-                        <CCToolKit:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
 
                             <CCToolKit:WrapPanel Margin="-12,0,0,0" Orientation="Horizontal" HorizontalSpacing="13">
 
@@ -299,9 +300,9 @@
 
                             </CCToolKit:WrapPanel>
 
-                        </CCToolKit:SettingsCard>
-                    </CCToolKit:SettingsExpander.Items>
-                </CCToolKit:SettingsExpander>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
 
                 <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
                     <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose">

@@ -5714,4 +5714,40 @@
   <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>चयनित ISO फ़ाइल की सामग्री को आपके द्वारा चुने गए फ़ोल्डर में निकालने की प्रक्रिया शुरू करें.</value>
   </data>
+   <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप की ल्यूमिनोसिटी ओपेसिटी को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>ल्यूमिनोसिटी ओपेसिटी</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप की ल्यूमिनोसिटी ओपेसिटी को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप की ल्यूमिनोसिटी ओपेसिटी को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप की टिंट ओपेसिटी को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>टिंट ओपेसिटी</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप की टिंट ओपेसिटी को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप की टिंट ओपेसिटी को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप के टिंट कलर को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>टिंट कलर</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप के टिंट कलर को एडजस्ट करें।</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक्रिलिक पतले बैकड्रॉप के टिंट कलर को एडजस्ट करें।</value>
+  </data>
 </root>

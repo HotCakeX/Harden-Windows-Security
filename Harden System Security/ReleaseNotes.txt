@@ -1,3 +1,5 @@
 * Removed multiple dependencies by implementing them natively.
 
 * Reduced the app package size by over 20MBs.
+
+* Added a new backdrop option for the app called "Acrylic Thin", available in the app's settings page. This backdrop option provides a sleek and modern look to the app's interface, enhancing the overall user experience. It offers new options to further customize the Acrylic backdrop, such as controlling the tint color, tint opacity or luminosity opacity. You can view the changes you make to the Acrylic backdrop in real-time, allowing you to find the perfect settings for your preferences and your configurations will be saved for the next time you open the app.

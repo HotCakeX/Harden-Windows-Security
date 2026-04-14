@@ -5714,4 +5714,40 @@ Empreinte : {3}</value>
   <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Démarrez le processus d'extraction du contenu du fichier ISO sélectionné vers le dossier que vous avez choisi.</value>
   </data>
+   <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Ajustez l'opacité de la luminosité de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Opacité de la luminosité</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajustez l'opacité de la luminosité de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajustez l'opacité de la luminosité de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Ajustez l'opacité de la teinte de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Opacité de la teinte</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajustez l'opacité de la teinte de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajustez l'opacité de la teinte de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Ajustez la couleur de la teinte de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Couleur de la teinte</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajustez la couleur de la teinte de l'arrière-plan acrylique fin.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajustez la couleur de la teinte de l'arrière-plan acrylique fin.</value>
+  </data>
 </root>

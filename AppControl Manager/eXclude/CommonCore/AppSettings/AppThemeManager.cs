@@ -20,7 +20,7 @@ namespace CommonCore.AppSettings;
 // Custom EventArgs class for app theme changes
 internal sealed class AppThemeChangedEventArgs(string? newTheme) : EventArgs
 {
-	internal string? NewTheme => newTheme;
+	internal string? NewTheme { get; set; } = newTheme;
 }
 
 internal static class AppThemeManager

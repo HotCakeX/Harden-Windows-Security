@@ -7127,4 +7127,40 @@
   <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>ലൈബ്രറിയിലെ നയത്തിന് ടാഗ് ചെയ്യുന്നതിനുള്ള ഒരു മാർഗമായി അതിന് നിറം സജ്ജീകരിക്കുക.</value>
   </data>
+   <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ലൂമിനോസിറ്റി ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>ലൂമിനോസിറ്റി ഒപാസിറ്റി</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ലൂമിനോസിറ്റി ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ലൂമിനോസിറ്റി ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>ടിന്റ് ഒപാസിറ്റി</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>ടിന്റ് നിറം</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അക്രിലിക് തിൻ ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
 </root>

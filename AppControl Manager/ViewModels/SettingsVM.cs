@@ -21,6 +21,7 @@ using Microsoft.Windows.Globalization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Dispatching;
 using CommonCore.AppSettings;
+using WinRT;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.WindowComponents;
@@ -149,10 +150,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				Atlas.Settings.ApplicationGlobalLanguage = x;
 
 				// Get reference to the MainWindow and refresh the localized content
-				if (App.MainWindow is MainWindow mainWindow)
-				{
-					mainWindow.RefreshLocalizedContent();
-				}
+				App.MainWindow?.RefreshLocalizedContent();
 
 				// Refresh this page.
 				ViewModelProvider.NavigationService.RefreshSettingsPage();
@@ -242,12 +240,51 @@ internal sealed partial class SettingsVM : ViewModelBase
 		_ = Atlas.AppDispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
 		{
 			// Get reference to the MainWindow and refresh the localized content
-			if (App.MainWindow is MainWindow mainWindow)
-			{
-				mainWindow.SetRegionsForCustomTitleBar();
-			}
+			App.MainWindow?.SetRegionsForCustomTitleBar();
 		});
 	}
+
+	// Only Dark theme looks good when Acrylic Thin backdrop is used.
+	internal void AppThemeSetting_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		int x = ((ComboBox)sender).SelectedIndex;
+		AppThemeSettingsCardVisibility = x == 3 ? Visibility.Collapsed : Visibility.Visible;
+		AcrylicThinConfigurationsSettingsCardVisibility = x == 3 ? Visibility.Visible : Visibility.Collapsed;
+	}
+
+	// Only Dark theme looks good when Acrylic Thin backdrop is used, so we control the App Theme settings card's visibility here.
+	internal Visibility AppThemeSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex == 3 ? Visibility.Collapsed : Visibility.Visible;
+
+	// Controls whether the configurations for Acrylic Thin Backdrop are visible or not.
+	internal Visibility AcrylicThinConfigurationsSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex == 3 ? Visibility.Visible : Visibility.Collapsed;
+
+	internal void TintColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+	{
+		byte R = args.NewColor.R;
+		byte G = args.NewColor.G;
+		byte B = args.NewColor.B;
+		byte A = args.NewColor.A;
+
+		_ = (ViewModelProvider.MainWindowVM.AcrylicController?.TintColor = Windows.UI.Color.FromArgb(A, R, G, B));
+
+		// Save the color as hex in the App settings.
+		Atlas.Settings.AcrylicThinTintColor = RGBHEX.ToHex(R, G, B);
+	}
+
+	// To set the Color Picker's color to the one currently in use in App Settings.
+	internal void AcrylicThinTintColorPicker_Loaded(object sender, RoutedEventArgs e)
+	{
+		if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
+		{
+			((ColorPicker)sender).Color = Windows.UI.Color.FromArgb(255, R, G, B);
+		}
+	}
+
+	internal void AcrylicThinLuminosityOpacitySlider_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	{
+		_ = (ViewModelProvider.MainWindowVM.AcrylicController?.LuminosityOpacity = (float)e.NewValue);
+	}
+
 
 #if APP_CONTROL_MANAGER
 

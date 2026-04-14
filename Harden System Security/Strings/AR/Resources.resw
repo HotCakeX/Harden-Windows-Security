@@ -5714,4 +5714,40 @@
   <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ابدأ عملية استخراج محتوى ملف ISO المحدد إلى المجلد الذي اخترته.</value>
   </data>
+   <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>اضبط شفافية الإضاءة للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>شفافية الإضاءة</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط شفافية الإضاءة للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط شفافية الإضاءة للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>اضبط شفافية درجة اللون للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>شفافية درجة اللون</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط شفافية درجة اللون للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط شفافية درجة اللون للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>اضبط لون الدرجة للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>لون الدرجة</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط لون الدرجة للخلفية الأكريليك الرقيقة.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط لون الدرجة للخلفية الأكريليك الرقيقة.</value>
+  </data>
 </root>

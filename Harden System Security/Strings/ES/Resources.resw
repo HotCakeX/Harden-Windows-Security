@@ -5714,4 +5714,40 @@ Huella Digital: {3}</value>
   <data name="ExtractISOButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Inicie el proceso de extracción del contenido del archivo ISO seleccionado a la carpeta que eligió.</value>
   </data>
+   <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Ajuste la opacidad de luminosidad del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Opacidad de luminosidad</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajuste la opacidad de luminosidad del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajuste la opacidad de luminosidad del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Ajuste la opacidad de matiz del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Opacidad de matiz</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajuste la opacidad de matiz del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajuste la opacidad de matiz del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Ajuste el color de matiz del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Color de matiz</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajuste el color de matiz del fondo acrílico delgado.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajuste el color de matiz del fondo acrílico delgado.</value>
+  </data>
 </root>

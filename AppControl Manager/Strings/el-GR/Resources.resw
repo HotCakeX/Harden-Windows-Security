@@ -7127,4 +7127,40 @@
   <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Ορίστε ένα χρώμα για την πολιτική στη βιβλιοθήκη ως τρόπο προσθήκης ετικέτας σε αυτήν.</value>
   </data>
+   <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε την Αδιαφάνεια Φωτεινότητας του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Αδιαφάνεια Φωτεινότητας</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε την Αδιαφάνεια Φωτεινότητας του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε την Αδιαφάνεια Φωτεινότητας του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε την Αδιαφάνεια Απόχρωσης του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Αδιαφάνεια Απόχρωσης</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε την Αδιαφάνεια Απόχρωσης του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε την Αδιαφάνεια Απόχρωσης του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το Χρώμα Απόχρωσης του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Χρώμα Απόχρωσης</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε το Χρώμα Απόχρωσης του λεπτού ακρυλικού φόντου.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε το Χρώμα Απόχρωσης του λεπτού ακρυλικού φόντου.</value>
+  </data>
 </root>

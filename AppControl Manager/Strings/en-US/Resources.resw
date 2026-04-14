@@ -7127,4 +7127,40 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Set a color to the policy in the library as a way of tagging it.</value>
   </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Luminosity Opacity of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Luminosity Opacity</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Luminosity Opacity of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Luminosity Opacity of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Tint Opacity</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Tint Color of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Tint Color</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Tint Color of the Acrylic thin backdrop.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Tint Color of the Acrylic thin backdrop.</value>
+  </data>
 </root>

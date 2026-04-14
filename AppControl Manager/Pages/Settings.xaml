@@ -116,12 +116,40 @@
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xEF1F;" />
                             </customUI:SettingsCardV2.HeaderIcon>
-                            <ComboBox
-                                ItemsSource="{x:Bind ViewModelMainWindow.BackDropOptions, Mode=OneTime}"
-                                SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <ComboBox ItemsSource="{x:Bind ViewModelMainWindow.BackDropOptions, Mode=OneTime}"
+                                      SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectionChanged="{x:Bind ViewModel.AppThemeSetting_SelectionChanged}" />
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard">
+                        <controls:SettingsCard x:Uid="AcrylicThinLuminosityOpacitySettingsCard"
+                                               Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
+                                    ValueChanged="{x:Bind ViewModel.AcrylicThinLuminosityOpacitySlider_ValueChanged}"
+                                    SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.AcrylicThinLuminosityOpacity, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="AcrylicThinTintOpacitySettingsCard"                                          
+                                               Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
+                                    SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.AcrylicThinTintOpacity, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="AcrylicThinTintColorSettingsCard"
+                                               Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <ColorPicker Loaded="{x:Bind ViewModel.AcrylicThinTintColorPicker_Loaded}"
+                                         ColorSpectrumShape="Ring"
+                                         IsMoreButtonVisible="True"
+                                         IsColorSliderVisible="False"
+                                         IsColorChannelTextInputVisible="False"
+                                         IsHexInputVisible="True"
+                                         IsAlphaEnabled="False"                                         
+                                         ColorChanged="{x:Bind ViewModel.TintColorPicker_ColorChanged}"
+                                         IsAlphaSliderVisible="False"
+                                         IsAlphaTextInputVisible="False" />
+                        </controls:SettingsCard>
+
+                        <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard"
+                                                 Visibility="{x:Bind ViewModel.AppThemeSettingsCardVisibility, Mode=OneWay}" >
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xE706;" />
                             </customUI:SettingsCardV2.HeaderIcon>

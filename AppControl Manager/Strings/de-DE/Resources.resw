@@ -7127,4 +7127,40 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="SetColorMenuFlyoutSubItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Weisen Sie der Richtlinie in der Bibliothek eine Farbe zu, um sie zu markieren.</value>
   </data>
+   <data name="AcrylicThinLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Passen Sie die Leuchtkraftdeckkraft des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Leuchtkraftdeckkraft</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Passen Sie die Leuchtkraftdeckkraft des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Passen Sie die Leuchtkraftdeckkraft des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Passen Sie die Farbtondeckkraft des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Farbtondeckkraft</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Passen Sie die Farbtondeckkraft des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Passen Sie die Farbtondeckkraft des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Passen Sie die Farbtonfarbe des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Farbtonfarbe</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Passen Sie die Farbtonfarbe des dünnen Acryl-Hintergrunds an.</value>
+  </data>
+  <data name="AcrylicThinTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Passen Sie die Farbtonfarbe des dünnen Acryl-Hintergrunds an.</value>
+  </data>
 </root>

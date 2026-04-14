@@ -37,6 +37,9 @@ using AppControlManager.Others;
 using Microsoft.UI.Xaml.Input;
 using CommonCore.ToolKits;
 using AppControlManager.CustomUIElements;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Composition;
+using WinRT;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -125,6 +128,10 @@ internal sealed partial class MainWindow : Window
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = this;
 
+		// We can't rely on "UpdateSystemBackDrop" method in "MainWindowVM" ckass because when it runs at startup due to AppSettings class instance creation, Window hasn't been initialized yet so it silently skips setting AcrylicThin backdrop that requires Window reference for setup.
+		if (Enum.Parse<ViewModels.MainWindowVM.BackDropComboBoxItems>(Atlas.Settings.BackDropBackground) == ViewModels.MainWindowVM.BackDropComboBoxItems.AcrylicThin)
+			SetThinAcrylicBackdrop();
+
 		// Subscribe to the NavigationView Content background change event
 		NavigationBackgroundManager.NavViewBackgroundChange += OnNavigationBackgroundChanged;
 
@@ -179,7 +186,7 @@ internal sealed partial class MainWindow : Window
 	{
 		_ = Atlas.AppDispatcher.TryEnqueue(() =>
 		{
-			((MainWindow)App.MainWindow!).TriggerTransferIconAnimation(sourceElement);
+			App.MainWindow!.TriggerTransferIconAnimation(sourceElement);
 		});
 	}
 
@@ -313,6 +320,108 @@ internal sealed partial class MainWindow : Window
 		}
 	}
 
+	#region Custom Acrylic Backdrop details
+
+	internal void RemoveAcrylicController()
+	{
+		if (ViewModel.AcrylicController is not null || ViewModel.ConfigurationSource is not null)
+		{
+			Closed -= Window_Closed;
+			ViewModel.AcrylicController?.Dispose();
+			ViewModel.AcrylicController = null;
+			Activated -= Window_Activated;
+			ViewModel.ConfigurationSource = null;
+		}
+	}
+
+	internal void SetThinAcrylicBackdrop()
+	{
+		if (DesktopAcrylicController.IsSupported())
+		{
+			ViewModel.ConfigurationSource = new();
+			Activated += Window_Activated;
+			Closed += Window_Closed;
+
+			ViewModel.ConfigurationSource.IsInputActive = true;
+
+			// On Acrylic Thin, only Dark theme looks nice, light theme creates white background for various elements.
+			ViewModel.ConfigurationSource.Theme = SystemBackdropTheme.Dark;
+			OnAppThemeChanged(null, new("Dark")); // Change app theme to dark if it's currently anything else.
+
+			ViewModel.AcrylicController = new()
+			{
+				Kind = DesktopAcrylicKind.Thin,
+				TintOpacity = Atlas.Settings.AcrylicThinTintOpacity,
+				LuminosityOpacity = Atlas.Settings.AcrylicThinLuminosityOpacity
+			};
+			try
+			{
+				if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
+				{
+					ViewModel.AcrylicController.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
+			// Enable the system backdrop
+			_ = ViewModel.AcrylicController.AddSystemBackdropTarget(this.As<ICompositionSupportsSystemBackdrop>());
+			ViewModel.AcrylicController.SetSystemBackdropConfiguration(ViewModel.ConfigurationSource);
+
+			// Needed to null this since it's bound to the XAML in UI.
+			ViewModel.SystemBackDropStyle = null;
+		}
+		else
+		{
+			Logger.Write("Your system does not support Acrylic backdrop.");
+		}
+	}
+
+	internal void ReapplyThinAcrylicBackdrop()
+	{
+		if (DesktopAcrylicController.IsSupported())
+		{
+			ViewModel.AcrylicController?.Dispose();
+
+			ViewModel.AcrylicController = new()
+			{
+				Kind = DesktopAcrylicKind.Thin,
+				TintOpacity = Atlas.Settings.AcrylicThinTintOpacity
+			};
+			try
+			{
+				if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
+				{
+					ViewModel.AcrylicController.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+			ViewModel.AcrylicController.LuminosityOpacity = Atlas.Settings.AcrylicThinLuminosityOpacity;
+
+			// Enable the system backdrop
+			_ = ViewModel.AcrylicController.AddSystemBackdropTarget(this.As<ICompositionSupportsSystemBackdrop>());
+			ViewModel.AcrylicController.SetSystemBackdropConfiguration(ViewModel.ConfigurationSource);
+		}
+		else
+		{
+			Logger.Write("Your system does not support Acrylic backdrop.");
+		}
+	}
+
+	private void Window_Activated(object sender, WindowActivatedEventArgs args)
+	{
+		_ = (ViewModel.ConfigurationSource?.IsInputActive = true);
+		args.Handled = true; // Doesn't look good when AcrylicThin is in use so we never set input as inactive.
+	}
+
+	private void Window_Closed(object sender, WindowEventArgs args) => RemoveAcrylicController();
+
+	#endregion
 
 	/// <summary>
 	/// Note: Keeping it transparent would probably not be good for accessibility.
@@ -343,7 +452,6 @@ internal sealed partial class MainWindow : Window
 		RootGrid.RequestedTheme = currentTheme;
 	}
 
-
 	/// <summary>
 	/// Event handler for the global AppThemeChanged event
 	/// Also changes the AnimatedIcons based on the theme to maintain their accessibility
@@ -352,6 +460,12 @@ internal sealed partial class MainWindow : Window
 	/// <param name="e"></param>
 	private void OnAppThemeChanged(object? sender, AppThemeChangedEventArgs e)
 	{
+		if (ViewModel.AcrylicController is not null || ViewModel.ConfigurationSource is not null)
+		{
+			// On Acrylic Thin, only Dark theme looks nice, light theme creates white background for various elements.
+			e.NewTheme = "Dark";
+		}
+
 		// Get the current system color mode
 		ElementTheme currentColorMode = Application.Current.RequestedTheme == ApplicationTheme.Dark
 			? ElementTheme.Dark

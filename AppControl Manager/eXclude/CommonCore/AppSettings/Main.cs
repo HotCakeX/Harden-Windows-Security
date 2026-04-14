@@ -15,6 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
+#else
+using AppControlManager;
+#endif
 using System.Threading;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
@@ -76,6 +81,9 @@ internal sealed partial class Main : ViewModelBase
 		FirewallSentinelPinnedPolicyID = ReadValue(nameof(FirewallSentinelPinnedPolicyID), FirewallSentinelPinnedPolicyID);
 		CacheAuthenticationTokensLocally = ReadValue(nameof(CacheAuthenticationTokensLocally), CacheAuthenticationTokensLocally);
 		CustomSidebarPoliciesLibraryCacheLocation = ReadValue(nameof(CustomSidebarPoliciesLibraryCacheLocation), CustomSidebarPoliciesLibraryCacheLocation);
+		AcrylicThinLuminosityOpacity = ReadValue(nameof(AcrylicThinLuminosityOpacity), AcrylicThinLuminosityOpacity);
+		AcrylicThinTintOpacity = ReadValue(nameof(AcrylicThinTintOpacity), AcrylicThinTintOpacity);
+		AcrylicThinTintColor = ReadValue(nameof(AcrylicThinTintColor), AcrylicThinTintColor);
 	}
 
 	/// <summary>
@@ -596,4 +604,48 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = string.Empty;
 
+	/// <summary>
+	/// The Luminosity Opacity of the Acrylic Thin backdrop.
+	/// </summary>
+	internal float AcrylicThinLuminosityOpacity
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AcrylicThinLuminosityOpacity), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// The Tint Opacity of the Acrylic Thin backdrop.
+	/// </summary>
+	internal float AcrylicThinTintOpacity
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AcrylicThinTintOpacity), field);
+
+				// This is required for the changes to take effect immediately.
+				App.MainWindow?.ReapplyThinAcrylicBackdrop();
+			}
+		}
+	}
+
+	/// <summary>
+	/// The Tint Color of the Acrylic Thin backdrop.
+	/// </summary>
+	internal string AcrylicThinTintColor
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AcrylicThinTintColor), field);
+			}
+		}
+	} = "#E9A6FF";
 }

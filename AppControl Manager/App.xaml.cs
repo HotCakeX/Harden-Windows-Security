@@ -162,7 +162,7 @@ public sealed partial class App : Application
 	/// Exposes the main application window as a static property. It retrieves the window from the current application
 	/// instance.
 	/// </summary>
-	internal static Window? MainWindow { get; private set; }
+	internal static MainWindow? MainWindow { get; private set; }
 
 	/// <summary>
 	/// Event handler for unhandled exceptions.

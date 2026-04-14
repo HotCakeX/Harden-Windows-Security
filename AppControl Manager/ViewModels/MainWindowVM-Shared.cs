@@ -69,12 +69,16 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Values for back drop combo box in the settings page
 	/// </summary>
-	private enum BackDropComboBoxItems
+	internal enum BackDropComboBoxItems
 	{
 		MicaAlt = 0,
 		Mica = 1,
-		Acrylic = 2
+		Acrylic = 2,
+		AcrylicThin = 3
 	};
+
+	internal DesktopAcrylicController? AcrylicController;
+	internal SystemBackdropConfiguration? ConfigurationSource;
 
 	/// <summary>
 	/// ItemsSource of the ComboBox in the Settings page
@@ -99,10 +103,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind BaseAlt.
 	/// </summary>
-	internal SystemBackdrop SystemBackDropStyle
-	{
-		get; set => SP(ref field, value);
-	} = new MicaBackdrop { Kind = MicaKind.BaseAlt };
+	internal SystemBackdrop? SystemBackDropStyle { get; set => SP(ref field, value); } = new MicaBackdrop { Kind = MicaKind.BaseAlt };
 
 	/// <summary>
 	/// The state of the OpenConfigDirectoryButton button which is on the Sidebar
@@ -182,6 +183,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	private void UpdateSystemBackDrop()
 	{
+		// Remove the Acrylic controller elements for any backdrop change.
+		App.MainWindow?.RemoveAcrylicController();
+
 		// Cast the index to the enum
 		BackDropComboBoxItems selection = (BackDropComboBoxItems)BackDropComboBoxSelectedIndex;
 		switch (selection)
@@ -194,6 +198,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				break;
 			case BackDropComboBoxItems.Acrylic:
 				SystemBackDropStyle = new DesktopAcrylicBackdrop();
+				break;
+			case BackDropComboBoxItems.AcrylicThin:
+				App.MainWindow?.SetThinAcrylicBackdrop();
 				break;
 			default:
 				break;

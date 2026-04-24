@@ -6,7 +6,7 @@ AppControl Manager can now analyze the App Control for Business (Code Integrity)
 
 <div align="center">
 
-<img src="https://github.com/HotCakeX/.github/blob/730cf8f84e6a83596b17475a02eaf7ea130dd034/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/1.png?raw=true" alt="AppControl Manager interactive chart">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/1.png" alt="AppControl Manager interactive chart">
 
 </div>
 
@@ -22,7 +22,7 @@ This section will provide you with one or more recommendations based on your dat
 
 <div align="center">
 
-<img src="https://github.com/HotCakeX/.github/blob/730cf8f84e6a83596b17475a02eaf7ea130dd034/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/2.png?raw=true" alt="AppControl Manager interactive chart">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/2.png" alt="AppControl Manager interactive chart">
 
 </div>
 
@@ -51,7 +51,7 @@ The analysis page generates many categories based on your data for further visua
 
 <div align="center">
 
-<img src="https://github.com/HotCakeX/.github/blob/730cf8f84e6a83596b17475a02eaf7ea130dd034/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/3.png?raw=true" alt="AppControl Manager interactive chart">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/3.png" alt="AppControl Manager interactive chart">
 
 </div>
 
@@ -59,7 +59,7 @@ The analysis page generates many categories based on your data for further visua
 
 <div align="center">
 
-<img src="https://github.com/HotCakeX/.github/blob/730cf8f84e6a83596b17475a02eaf7ea130dd034/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/4.png?raw=true" alt="AppControl Manager interactive chart">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/4.png" alt="AppControl Manager interactive chart">
 
 </div>
 

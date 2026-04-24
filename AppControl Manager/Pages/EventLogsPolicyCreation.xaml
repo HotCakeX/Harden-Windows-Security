@@ -532,6 +532,47 @@
                     <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
                                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
+                    <SplitButton x:Uid="DataAnalysisButton"
+                                 x:Name="DataAnalysisButton"
+                                 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                 Click="{x:Bind ViewModel.DataAnalysisSplitButton_Click}"
+                                 VerticalAlignment="Center">
+                        <SplitButton.Resources>
+                            <ResourceDictionary>
+                                <LinearGradientBrush x:Key="SplitButtonBorderBrush" StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#FFF867FF" Offset="0.0"/>
+                                    <GradientStop Color="#FF5DE5FF" Offset="0.5"/>
+                                    <GradientStop Color="#FFF4FF9C" Offset="1.0"/>
+                                </LinearGradientBrush>
+
+                                <LinearGradientBrush x:Key="SplitButtonBorderBrushPointerOver" StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#FFF867FF" Offset="0.0"/>
+                                    <GradientStop Color="#FF5DE5FF" Offset="0.5"/>
+                                    <GradientStop Color="#FFF4FF9C" Offset="1.0"/>
+                                </LinearGradientBrush>
+
+                                <LinearGradientBrush x:Key="SplitButtonBorderBrushPressed" StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#FFF867FF" Offset="0.0"/>
+                                    <GradientStop Color="#FF5DE5FF" Offset="0.5"/>
+                                    <GradientStop Color="#FFF4FF9C" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </ResourceDictionary>
+                        </SplitButton.Resources>
+                        <SplitButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xEB78;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </SplitButton.ContentTemplate>
+                        <SplitButton.Flyout>
+                            <MenuFlyout>
+                                <ToggleMenuFlyoutItem x:Uid="AutoSwitchToAnalysisPageToggleMenuFlyoutItem" IsChecked="{x:Bind ViewModel.AppSettings.AutoSwitchToAnalysisPageAfterDataRetrieval, Mode=TwoWay}"/>
+                            </MenuFlyout>
+                        </SplitButton.Flyout>
+                    </SplitButton>
+
                 </CCToolKit:WrapPanel>
             </Expander.Header>
 

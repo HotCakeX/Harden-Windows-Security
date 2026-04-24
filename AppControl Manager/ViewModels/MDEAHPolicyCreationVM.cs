@@ -118,6 +118,8 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 
 	internal readonly InfoBarSettings MainInfoBar;
 
+	internal readonly Analysis.FileIdentityAnalysis AnalysisResults = new();
+
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
 	internal readonly RangedObservableCollection<FileIdentity> FileIdentities = [];
@@ -388,11 +390,23 @@ DeviceEvents
 	/// <summary>
 	/// Event handler for the Clear Data button
 	/// </summary>
-	internal void ClearDataButton_Click()
+	internal async void ClearDataButton_Click()
+	{
+		try
+		{
+			await ClearData_Private();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+	private async Task ClearData_Private()
 	{
 		FileIdentities.Clear();
 		AllFileIdentities.Clear();
 		CalculateColumnWidths();
+		await AnalysisResults.PrepareAnalysis(AllFileIdentities); // in order to zero the analysis data
 	}
 
 	/// <summary>
@@ -517,6 +531,16 @@ DeviceEvents
 			ApplyFilters();
 
 			await Task.Run(CalculateColumnWidths);
+
+			// Analyze the data
+			await AnalysisResults.PrepareAnalysis(AllFileIdentities);
+
+			// If the app settings requires auto switch, do it here.
+			if (Atlas.Settings.AutoSwitchToAnalysisPageAfterDataRetrieval)
+			{
+				// Navigate to the analysis page
+				await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.MDEAdvancedHunting), null);
+			}
 		}
 		catch (Exception ex)
 		{
@@ -1015,4 +1039,15 @@ DeviceEvents
 		}
 	}
 
+	internal async void DataAnalysisSplitButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
+	{
+		if (AllFileIdentities.Count == 0)
+		{
+			MainInfoBar.WriteWarning("Please retrieve the data first.");
+			return;
+		}
+
+		// Navigate to the analysis page
+		await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.MDEAdvancedHunting), null);
+	}
 }

@@ -64,7 +64,7 @@
                                     SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.AcrylicThinLuminosityOpacity, Mode=TwoWay}" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="AcrylicThinTintOpacitySettingsCard"                                          
+                        <controls:SettingsCard x:Uid="AcrylicThinTintOpacitySettingsCard"
                                                Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
                                     SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.AcrylicThinTintOpacity, Mode=TwoWay}" />
@@ -78,7 +78,7 @@
                                          IsColorSliderVisible="False"
                                          IsColorChannelTextInputVisible="False"
                                          IsHexInputVisible="True"
-                                         IsAlphaEnabled="False"                                         
+                                         IsAlphaEnabled="False"
                                          ColorChanged="{x:Bind ViewModel.TintColorPicker_ColorChanged}"
                                          IsAlphaSliderVisible="False"
                                          IsAlphaTextInputVisible="False" />

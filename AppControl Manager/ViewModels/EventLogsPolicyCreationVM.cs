@@ -75,6 +75,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 	internal readonly InfoBarSettings MainInfoBar = new();
 
+	internal readonly Analysis.FileIdentityAnalysis AnalysisResults = new();
+
 	/// <summary>
 	/// Initialization details for the main button for the Scan Logs.
 	/// </summary>
@@ -213,11 +215,24 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the Clear Data button
 	/// </summary>
-	internal void ClearDataButton_Click()
+	internal async void ClearDataButton_Click()
+	{
+		try
+		{
+			await ClearData_Private();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	internal async Task ClearData_Private()
 	{
 		FileIdentities.Clear();
 		AllFileIdentities.Clear();
 		CalculateColumnWidths();
+		await AnalysisResults.PrepareAnalysis(AllFileIdentities); // in order to zero the analysis data
 	}
 
 	/// <summary>
@@ -411,7 +426,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			ScanLogsCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-			ClearDataButton_Click();
+			await ClearData_Private();
 
 			MainInfoBar.WriteInfo(Atlas.GetStr("ScanningEventLogsMessage"));
 
@@ -462,6 +477,15 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 						.BuildNotification();
 
 				AppNotificationManager.Default.Show(notification);
+			}
+
+			// Analyze the data
+			await AnalysisResults.PrepareAnalysis(AllFileIdentities);
+
+			// If the app settings requires auto switch, do it here.
+			if (Atlas.Settings.AutoSwitchToAnalysisPageAfterDataRetrieval)
+			{
+				await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.EventLogs), null);
 			}
 		}
 		catch (Exception ex)
@@ -891,5 +915,17 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		_OpenInFileExplorer();
 		args.Handled = true;
+	}
+
+	internal async void DataAnalysisSplitButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
+	{
+		if (AllFileIdentities.Count == 0)
+		{
+			MainInfoBar.WriteWarning("Please retrieve the data first.");
+			return;
+		}
+
+		// Navigate to the analysis page
+		await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.EventLogs), null);
 	}
 }

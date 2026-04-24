@@ -7241,4 +7241,129 @@
   <data name="PoliciesLibraryContextualSearchToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>חפש בתוכן של כל סוגי המדיניות.</value>
   </data>
+    <data name="DuplicatePolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>שכפול מדיניות</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שכפל את המדיניות על ידי יצירת עותק שלה בספרייה.</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שכפל את המדיניות על ידי יצירת עותק שלה בספרייה.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הסר נתיב קובץ</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את נתיב הקובץ המשויך למדיניות. הוא מוקצה למדיניות המתווספת ידנית לספרייה על ידי גרירה ושחרור לכאן או על ידי דפדוף עבורה.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את נתיב הקובץ המשויך למדיניות. הוא מוקצה למדיניות המתווספת ידנית לספרייה על ידי גרירה ושחרור לכאן או על ידי דפדוף עבורה.</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveToPoliciesLibraryMessage" xml:space="preserve">
+    <value>השינויים נשמרו בהצלחה בספריית המדיניות.</value>
+  </data>
+  <data name="EventLogsAnalysisNavItemContent" xml:space="preserve">
+    <value>ניתוח יומני אירועים</value>
+  </data>
+  <data name="MDEAdvancedHuntingAnalysisNavItemContent" xml:space="preserve">
+    <value>ניתוח ציד מתקדם של MDE</value>
+  </data>
+    <data name="DataSummary.Text" xml:space="preserve">
+    <value>סיכום נתונים</value>
+  </data>
+  <data name="RecommendedActions.Text" xml:space="preserve">
+    <value>פעולות מומלצות</value>
+  </data>
+  <data name="TotalBlockedItems.Text" xml:space="preserve">
+    <value>סה״כ פריטים חסומים</value>
+  </data>
+  <data name="TotalAllowedOrAuditedItems.Text" xml:space="preserve">
+    <value>סה״כ פריטים מורשים או מבוקרים</value>
+  </data>
+  <data name="ColorPalettes.Text" xml:space="preserve">
+    <value>לוחות צבעים</value>
+  </data>
+  <data name="DataVisualizations.Text" xml:space="preserve">
+    <value>הדמיית נתונים</value>
+  </data>
+  <data name="DistributionOverview.Text" xml:space="preserve">
+    <value>סקירת התפלגות</value>
+  </data>
+  <data name="Allowed.Text" xml:space="preserve">
+    <value>מורשה</value>
+  </data>
+  <data name="Blocked.Text" xml:space="preserve">
+    <value>חסום</value>
+  </data>
+  <data name="BlockedEventsTrend.Text" xml:space="preserve">
+    <value>מגמת אירועים חסומים (כרונולוגי)</value>
+  </data>
+  <data name="AllowedOrAuditedEventsTrend.Text" xml:space="preserve">
+    <value>מגמת אירועים מורשים / מבוקרים (כרונולוגי)</value>
+  </data>
+  <data name="GlobalMetrics.Text" xml:space="preserve">
+    <value>מדדים גלובליים (כל האירועים)</value>
+  </data>
+  <!--Start of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="AnalysisCompleteSummary" xml:space="preserve">
+    <value>הניתוח הושלם. מתוך {0} אירועים בסך הכל, {1} אושרו/בוקרו ו-{2} נחסמו. </value>
+  </data>
+  <data name="SignificantBlockedEventsSummary" xml:space="preserve">
+    <value>ישנו מספר משמעותי של אירועים חסומים, דבר העשוי להעיד על מצב מדיניות אגרסיבי או נוכחותן של יישומים רבים שאינם מזוהים. </value>
+  </data>
+  <data name="MajorityAllowedEventsSummary" xml:space="preserve">
+    <value>מרבית האירועים אושרו, מה שמצביע על סביבה מתירנית יחסית או עומסי עבודה מוכרים וצפויים. </value>
+  </data>
+  <data name="UnsignedFilesDetectedSummary" xml:space="preserve">
+    <value>זוהו {0} קבצים שאינם חתומים. מומלץ לחקור קבצים אלו מכיוון שהם עשויים להוות סיכון אבטחה גבוה יותר בהשוואה לקבצים חתומים. </value>
+  </data>
+  <data name="UniqueComputersSummary" xml:space="preserve">
+    <value>האירועים נאספו מ-{0} מחשב(ים) ייחודיים. </value>
+  </data>
+  <data name="UserModeMajoritySummary" xml:space="preserve">
+    <value>מרבית האירועים מקורם בקוד במצב משתמש (User Mode). </value>
+  </data>
+  <data name="KernelModeMajoritySummary" xml:space="preserve">
+    <value>מרבית האירועים מקורם בקוד במצב ליבה (Kernel Mode). </value>
+  </data>
+  <data name="EvenModeDistributionSummary" xml:space="preserve">
+    <value>האירועים מתפלגים באופן שווה בין מצב משתמש (User Mode) למצב ליבה (Kernel Mode). </value>
+  </data>
+  <data name="TopPublisherSummary" xml:space="preserve">
+    <value>המפיץ המוביל בכל האירועים הוא '{0}' עם {1} מופעים. </value>
+  </data>
+  <data name="AllowPublisherRecommendation" xml:space="preserve">
+    <value>אישור המפיץ '{0}' יפתור {1}% ({2} מקרים) מהאירועים החסומים שלך כעת.</value>
+  </data>
+  <data name="CreatePathRuleRecommendation" xml:space="preserve">
+    <value>יצירת כלל נתיב עבור התיקייה '{0}' תפתור {1}% ({2} מקרים) מהאירועים החסומים שלך כעת.</value>
+  </data>
+  <data name="UserWriteableLocationsRecommendation" xml:space="preserve">
+    <value>ישנם {0} אירועים שמקורם במיקומים הניתנים לכתיבה על ידי משתמשים. סקור נתיבים אלו כדי לוודא שתוכנה זדונית אינה יכולה לפעול מהם בקלות.</value>
+  </data>
+  <data name="FileTypeRecommendation" xml:space="preserve">
+    <value>סוג הקובץ '{0}' מהווה {1}% מהאירועים החסומים שלך. ודא שסוג קובץ זה מטופל כראוי במדיניות שלך.</value>
+  </data>
+  <data name="NoImmediateRecommendations" xml:space="preserve">
+    <value>לא נמצאו המלצות לפעולה מיידית בהתבסס על מערך הנתונים הנוכחי.</value>
+  </data>
+  <!--End of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="DataAnalysisButton.Content" xml:space="preserve">
+    <value>ניתוח</value>
+  </data>
+  <data name="DataAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג ניתוח מתקדם המבוסס על הנתונים שאוחזרו, הכולל סיכום, תרשימים שונים והמלצות לפעולה.</value>
+  </data>
+  <data name="DataAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצג ניתוח מתקדם המבוסס על הנתונים שאוחזרו, הכולל סיכום, תרשימים שונים והמלצות לפעולה.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מעבר אוטומטי לדף הניתוח</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עבור תמיד באופן אוטומטי לדף הניתוח לאחר אחזור הנתונים.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עבור תמיד באופן אוטומטי לדף הניתוח לאחר אחזור הנתונים.</value>
+  </data>
 </root>

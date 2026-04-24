@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* Added Night Light toggle button and temperature adjustment slider to the sidebar.

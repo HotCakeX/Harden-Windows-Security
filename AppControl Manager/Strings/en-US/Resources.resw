@@ -7241,7 +7241,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="PoliciesLibraryContextualSearchToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Search through the contents of all policies.</value>
   </data>
-  <!--NEW-->
   <data name="DuplicatePolicyMenuFlyoutItem.Text" xml:space="preserve">
     <value>Duplicate Policy</value>
   </data>
@@ -7262,5 +7261,109 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PolicyEditorSuccessfulSaveToPoliciesLibraryMessage" xml:space="preserve">
     <value>Successfully saved the changes to the policies library.</value>
+  </data>
+  <data name="EventLogsAnalysisNavItemContent" xml:space="preserve">
+    <value>Event Logs Analysis</value>
+  </data>
+  <data name="MDEAdvancedHuntingAnalysisNavItemContent" xml:space="preserve">
+    <value>MDE Advanced Hunting Analysis</value>
+  </data>
+  <data name="DataSummary.Text" xml:space="preserve">
+    <value>Data Summary</value>
+  </data>
+  <data name="RecommendedActions.Text" xml:space="preserve">
+    <value>Recommended Actions</value>
+  </data>
+  <data name="TotalBlockedItems.Text" xml:space="preserve">
+    <value>Total Blocked Items</value>
+  </data>
+  <data name="TotalAllowedOrAuditedItems.Text" xml:space="preserve">
+    <value>Total Allowed or Audited Items</value>
+  </data>
+  <data name="ColorPalettes.Text" xml:space="preserve">
+    <value>Color Palettes</value>
+  </data>
+  <data name="DataVisualizations.Text" xml:space="preserve">
+    <value>Data Visualizations</value>
+  </data>
+  <data name="DistributionOverview.Text" xml:space="preserve">
+    <value>Distribution Overview</value>
+  </data>
+  <data name="Allowed.Text" xml:space="preserve">
+    <value>Allowed</value>
+  </data>
+  <data name="Blocked.Text" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="BlockedEventsTrend.Text" xml:space="preserve">
+    <value>Blocked Events Trend (Chronological)</value>
+  </data>
+  <data name="AllowedOrAuditedEventsTrend.Text" xml:space="preserve">
+    <value>Allowed / Audited Events Trend (Chronological)</value>
+  </data>
+  <data name="GlobalMetrics.Text" xml:space="preserve">
+    <value>Global Metrics (All Events)</value>
+  </data>
+  <!--Start of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="AnalysisCompleteSummary" xml:space="preserve">
+    <value>Analysis complete. Out of {0} total events, {1} were allowed/audited and {2} were blocked. </value>
+  </data>
+  <data name="SignificantBlockedEventsSummary" xml:space="preserve">
+    <value>There is a significant number of blocked events, which may indicate an aggressive policy mode or presence of many unrecognized applications. </value>
+  </data>
+  <data name="MajorityAllowedEventsSummary" xml:space="preserve">
+    <value>The majority of events were allowed, suggesting a relatively permissive environment or well-known and expected workloads. </value>
+  </data>
+  <data name="UnsignedFilesDetectedSummary" xml:space="preserve">
+    <value>There are {0} unsigned files detected. Consider investigating these as they may pose a higher security risk compared to signed files. </value>
+  </data>
+  <data name="UniqueComputersSummary" xml:space="preserve">
+    <value>Events were collected from {0} unique computer(s). </value>
+  </data>
+  <data name="UserModeMajoritySummary" xml:space="preserve">
+    <value>The majority of events originated from User Mode code. </value>
+  </data>
+  <data name="KernelModeMajoritySummary" xml:space="preserve">
+    <value>The majority of events originated from Kernel Mode code. </value>
+  </data>
+  <data name="EvenModeDistributionSummary" xml:space="preserve">
+    <value>The events are evenly distributed between User Mode and Kernel Mode. </value>
+  </data>
+  <data name="TopPublisherSummary" xml:space="preserve">
+    <value>The top publisher across all events is '{0}' with {1} occurrences. </value>
+  </data>
+  <data name="AllowPublisherRecommendation" xml:space="preserve">
+    <value>Allowing the publisher '{0}' would resolve {1}% ({2} instances) of your currently blocked events.</value>
+  </data>
+  <data name="CreatePathRuleRecommendation" xml:space="preserve">
+    <value>Creating a path rule for the directory '{0}' would resolve {1}% ({2} instances) of your currently blocked events.</value>
+  </data>
+  <data name="UserWriteableLocationsRecommendation" xml:space="preserve">
+    <value>There are {0} events originating from User-Writeable locations. Review these paths to ensure malware cannot easily execute from them.</value>
+  </data>
+  <data name="FileTypeRecommendation" xml:space="preserve">
+    <value>The '{0}' file type accounts for {1}% of your blocked events. Ensure this file type is handled properly in your policy.</value>
+  </data>
+  <data name="NoImmediateRecommendations" xml:space="preserve">
+    <value>No immediate actionable recommendations found based on the current dataset.</value>
+  </data>
+  <!--End of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="DataAnalysisButton.Content" xml:space="preserve">
+    <value>Analysis</value>
+  </data>
+  <data name="DataAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View advanced analysis based on the retrieved data, including summary, various charts and actionable recommendations.</value>
+  </data>
+  <data name="DataAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View advanced analysis based on the retrieved data, including summary, various charts and actionable recommendations.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Auto Switch To Analysis Page</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Always automatically switch to the analysis page after the data has been retrieved.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Always automatically switch to the analysis page after the data has been retrieved.</value>
   </data>
 </root>

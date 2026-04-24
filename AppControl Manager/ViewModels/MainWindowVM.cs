@@ -227,7 +227,9 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		typeof(Pages.StrictKernelPolicyScanResults),
 		typeof(Pages.Simulation),
 		typeof(Pages.GetSecurePolicySettings),
-		typeof(Pages.SystemInformation)
+		typeof(Pages.SystemInformation),
+		typeof(Pages.Analysis.EventLogs),
+		typeof(Pages.Analysis.MDEAdvancedHunting),
 		];
 
 
@@ -321,14 +323,14 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 
 		breadCrumbMappingsV2[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
 		(
-			titles: [Atlas.GetStr("CreatePolicyFromEventLogsNavItem/Content")],
-			pages: [typeof(Pages.EventLogsPolicyCreation)]
+			titles: [Atlas.GetStr("CreatePolicyFromEventLogsNavItem/Content"), Atlas.GetStr("EventLogsAnalysisNavItemContent")],
+			pages: [typeof(Pages.EventLogsPolicyCreation), typeof(Pages.Analysis.EventLogs)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.MDEAHPolicyCreation)] = new PageTitleMap
 		(
-			titles: [Atlas.GetStr("CreatePolicyFromMDEAHNavItem/Content")],
-			pages: [typeof(Pages.MDEAHPolicyCreation)]
+			titles: [Atlas.GetStr("CreatePolicyFromMDEAHNavItem/Content"), Atlas.GetStr("MDEAdvancedHuntingAnalysisNavItemContent")],
+			pages: [typeof(Pages.MDEAHPolicyCreation), typeof(Pages.Analysis.MDEAdvancedHunting)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.AllowNewApps)] = new PageTitleMap
@@ -407,6 +409,18 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		(
 			titles: [Atlas.GetStr("FirewallSentinelNavItem/Content")],
 			pages: [typeof(Pages.FirewallSentinel)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.Analysis.EventLogs)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("CreatePolicyFromEventLogsNavItem/Content"), Atlas.GetStr("EventLogsAnalysisNavItemContent")],
+			pages: [typeof(Pages.EventLogsPolicyCreation), typeof(Pages.Analysis.EventLogs)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.Analysis.MDEAdvancedHunting)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("CreatePolicyFromMDEAHNavItem/Content"), Atlas.GetStr("MDEAdvancedHuntingAnalysisNavItemContent")],
+			pages: [typeof(Pages.MDEAHPolicyCreation), typeof(Pages.Analysis.MDEAdvancedHunting)]
 		);
 	}
 

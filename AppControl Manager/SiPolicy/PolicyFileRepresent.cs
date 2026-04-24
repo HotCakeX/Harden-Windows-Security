@@ -25,7 +25,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
-using Windows.UI;
 
 namespace AppControlManager.SiPolicy;
 

@@ -86,6 +86,7 @@ internal sealed partial class Main : ViewModelBase
 		AcrylicThinTintColor = ReadValue(nameof(AcrylicThinTintColor), AcrylicThinTintColor);
 		ToastNotificationsAreEnabled = ReadValue(nameof(ToastNotificationsAreEnabled), ToastNotificationsAreEnabled);
 		SidebarPaneDisplayMode = ReadValue(nameof(SidebarPaneDisplayMode), SidebarPaneDisplayMode);
+		AutoSwitchToAnalysisPageAfterDataRetrieval = ReadValue(nameof(AutoSwitchToAnalysisPageAfterDataRetrieval), AutoSwitchToAnalysisPageAfterDataRetrieval);
 	}
 
 	/// <summary>
@@ -677,6 +678,20 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(SidebarPaneDisplayMode), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the app should automatically switch to the Data Analysis pages after the data have been retrieved in the main pages.
+	/// </summary>
+	internal bool AutoSwitchToAnalysisPageAfterDataRetrieval
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AutoSwitchToAnalysisPageAfterDataRetrieval), field);
 			}
 		}
 	}

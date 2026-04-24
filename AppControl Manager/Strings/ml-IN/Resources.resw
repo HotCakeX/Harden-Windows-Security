@@ -7241,4 +7241,129 @@
   <data name="PoliciesLibraryContextualSearchToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>എല്ലാ നയങ്ങളുടെയും ഉള്ളടക്കങ്ങളിലൂടെ തിരയുക.</value>
   </data>
+    <data name="DuplicatePolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>നയം ഡ്യൂപ്ലിക്കേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ നയത്തിന്റെ ഒരു പകർപ്പ് സൃഷ്ടിച്ച് അത് ഡ്യൂപ്ലിക്കേറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലൈബ്രറിയിൽ നയത്തിന്റെ ഒരു പകർപ്പ് സൃഷ്ടിച്ച് അത് ഡ്യൂപ്ലിക്കേറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫയൽ പാത്ത് നീക്കംചെയ്യുക</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നയവുമായി ബന്ധപ്പെട്ട ഫയൽ പാത്ത് നീക്കംചെയ്യുക. ഡ്രാഗ് ആൻഡ് ഡ്രോപ്പ് വഴിയോ ബ്രൗസ് ചെയ്യുന്നതിലൂടെയോ നിങ്ങൾ നേരിട്ട് ലൈബ്രറിയിലേക്ക് ചേർക്കുന്ന നയങ്ങൾക്കാണ് ഇത് അസൈൻ ചെയ്യുന്നത്.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നയവുമായി ബന്ധപ്പെട്ട ഫയൽ പാത്ത് നീക്കംചെയ്യുക. ഡ്രാഗ് ആൻഡ് ഡ്രോപ്പ് വഴിയോ ബ്രൗസ് ചെയ്യുന്നതിലൂടെയോ നിങ്ങൾ നേരിട്ട് ലൈബ്രറിയിലേക്ക് ചേർക്കുന്ന നയങ്ങൾക്കാണ് ഇത് അസൈൻ ചെയ്യുന്നത്.</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveToPoliciesLibraryMessage" xml:space="preserve">
+    <value>നയങ്ങളുടെ ലൈബ്രറിയിലെ മാറ്റങ്ങൾ വിജയകരമായി സംരക്ഷിച്ചു.</value>
+  </data>
+  <data name="EventLogsAnalysisNavItemContent" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗ് വിശകലനം</value>
+  </data>
+  <data name="MDEAdvancedHuntingAnalysisNavItemContent" xml:space="preserve">
+    <value>MDE വിപുലമായ ഹണ്ടിംഗ് വിശകലനം</value>
+  </data>
+    <data name="DataSummary.Text" xml:space="preserve">
+    <value>ഡാറ്റാ ചുരുക്കം</value>
+  </data>
+  <data name="RecommendedActions.Text" xml:space="preserve">
+    <value>ശുപാർശ ചെയ്യുന്ന പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="TotalBlockedItems.Text" xml:space="preserve">
+    <value>മൊത്തം ബ്ലോക്ക് ചെയ്ത ഇനങ്ങൾ</value>
+  </data>
+  <data name="TotalAllowedOrAuditedItems.Text" xml:space="preserve">
+    <value>മൊത്തം അനുവദിച്ചതോ പരിശോധിച്ചതോ ആയ ഇനങ്ങൾ</value>
+  </data>
+  <data name="ColorPalettes.Text" xml:space="preserve">
+    <value>വർണ്ണ പാലറ്റുകൾ</value>
+  </data>
+  <data name="DataVisualizations.Text" xml:space="preserve">
+    <value>ഡാറ്റാ വിഷ്വലൈസേഷനുകൾ</value>
+  </data>
+  <data name="DistributionOverview.Text" xml:space="preserve">
+    <value>വിതരണ അവലോകനം</value>
+  </data>
+  <data name="Allowed.Text" xml:space="preserve">
+    <value>അനുവദിച്ചു</value>
+  </data>
+  <data name="Blocked.Text" xml:space="preserve">
+    <value>ബ്ലോക്ക് ചെയ്തു</value>
+  </data>
+  <data name="BlockedEventsTrend.Text" xml:space="preserve">
+    <value>ബ്ലോക്ക് ചെയ്ത ഇവന്റുകളുടെ ട്രെൻഡ് (കാലാനുക്രമം)</value>
+  </data>
+  <data name="AllowedOrAuditedEventsTrend.Text" xml:space="preserve">
+    <value>അനുവദിച്ച / പരിശോധിച്ച ഇവന്റുകളുടെ ട്രെൻഡ് (കാലാനുക്രമം)</value>
+  </data>
+  <data name="GlobalMetrics.Text" xml:space="preserve">
+    <value>ഗ്ലോബൽ മെട്രിക്സ് (എല്ലാ ഇവന്റുകളും)</value>
+  </data>
+  <!--Start of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="AnalysisCompleteSummary" xml:space="preserve">
+    <value>വിശകലനം പൂർത്തിയായി. മൊത്തം {0} ഇവന്റുകളിൽ, {1} എണ്ണം അനുവദിച്ചു/പരിശോധിച്ചു, {2} എണ്ണം ബ്ലോക്ക് ചെയ്തു. </value>
+  </data>
+  <data name="SignificantBlockedEventsSummary" xml:space="preserve">
+    <value>ഗണ്യമായ എണ്ണം ബ്ലോക്ക് ചെയ്ത ഇവന്റുകൾ ഉണ്ട്, ഇത് ഒരു കർശന പോളിസി മോഡിനെയോ തിരിച്ചറിയാത്ത നിരവധി അപ്ലിക്കേഷനുകളുടെ സാന്നിധ്യത്തെയോ സൂചിപ്പിക്കാം. </value>
+  </data>
+  <data name="MajorityAllowedEventsSummary" xml:space="preserve">
+    <value>ഭൂരിഭാഗം ഇവന്റുകളും അനുവദിച്ചിട്ടുണ്ട്, ഇത് താരതമ്യേന ഉദാരമായ അന്തരീക്ഷത്തെയോ പരിചിതവും പ്രതീക്ഷിക്കുന്നതുമായ വർക്ക്ലോഡുകളെയോ സൂചിപ്പിക്കുന്നു. </value>
+  </data>
+  <data name="UnsignedFilesDetectedSummary" xml:space="preserve">
+    <value>{0} ഒപ്പിടാത്ത ഫയലുകൾ കണ്ടെത്തിയിട്ടുണ്ട്. ഒപ്പിട്ട ഫയലുകളുമായി താരതമ്യം ചെയ്യുമ്പോൾ ഇവ ഉയർന്ന സുരക്ഷാ അപകടസാധ്യത സൃഷ്ടിക്കാൻ ഇടയുള്ളതിനാൽ ഇവയെക്കുറിച്ച് അന്വേഷിക്കുന്നത് പരിഗണിക്കുക. </value>
+  </data>
+  <data name="UniqueComputersSummary" xml:space="preserve">
+    <value>{0} അതുല്യമായ കമ്പ്യൂട്ടറുകളിൽ നിന്ന് ഇവന്റുകൾ ശേഖരിച്ചു. </value>
+  </data>
+  <data name="UserModeMajoritySummary" xml:space="preserve">
+    <value>ഭൂരിഭാഗം ഇവന്റുകളും യൂസർ മോഡ് (User Mode) കോഡിൽ നിന്നാണ് ഉത്ഭവിച്ചത്. </value>
+  </data>
+  <data name="KernelModeMajoritySummary" xml:space="preserve">
+    <value>ഭൂരിഭാഗം ഇവന്റുകളും കേർണൽ മോഡ് (Kernel Mode) കോഡിൽ നിന്നാണ് ഉത്ഭവിച്ചത്. </value>
+  </data>
+  <data name="EvenModeDistributionSummary" xml:space="preserve">
+    <value>ഇവന്റുകൾ യൂസർ മോഡിനും കേർണൽ മോഡിനുമിടയിൽ തുല്യമായി വിതരണം ചെയ്യപ്പെടുന്നു. </value>
+  </data>
+  <data name="TopPublisherSummary" xml:space="preserve">
+    <value>എല്ലാ ഇവന്റുകളിലുമുള്ള മികച്ച പബ്ലിഷർ '{0}' ആണ്, {1} തവണ സംഭവിച്ചു. </value>
+  </data>
+  <data name="AllowPublisherRecommendation" xml:space="preserve">
+    <value>പബ്ലിഷർ '{0}'-യെ അനുവദിക്കുന്നത് നിലവിൽ ബ്ലോക്ക് ചെയ്തിരിക്കുന്ന ഇവന്റുകളുടെ {1}% ({2} സംഭവങ്ങൾ) പരിഹരിക്കും.</value>
+  </data>
+  <data name="CreatePathRuleRecommendation" xml:space="preserve">
+    <value>ഡയറക്‌ടറി '{0}'-നായി ഒരു പാത്ത് റൂൾ സൃഷ്ടിക്കുന്നത് നിലവിൽ ബ്ലോക്ക് ചെയ്തിരിക്കുന്ന ഇവന്റുകളുടെ {1}% ({2} സംഭവങ്ങൾ) പരിഹരിക്കും.</value>
+  </data>
+  <data name="UserWriteableLocationsRecommendation" xml:space="preserve">
+    <value>ഉപയോക്താവിന് എഴുതാൻ കഴിയുന്ന ലൊക്കേഷനുകളിൽ നിന്ന് ഉത്ഭവിച്ച {0} ഇവന്റുകൾ ഉണ്ട്. ക്ഷുദ്ര സോഫ്റ്റ്‌വെയറുകൾക്ക് ഇവിടെനിന്ന് എളുപ്പത്തിൽ പ്രവർത്തിക്കാൻ കഴിയില്ലെന്ന് ഉറപ്പാക്കാൻ ഈ പാത്തുകൾ അവലോകനം ചെയ്യുക.</value>
+  </data>
+  <data name="FileTypeRecommendation" xml:space="preserve">
+    <value>'{0}' ഫയൽ തരം നിങ്ങളുടെ ബ്ലോക്ക് ചെയ്ത ഇവന്റുകളുടെ {1}% വരും. നിങ്ങളുടെ പോളിസിയിൽ ഈ ഫയൽ തരം ശരിയായി കൈകാര്യം ചെയ്തിട്ടുണ്ടെന്ന് ഉറപ്പാക്കുക.</value>
+  </data>
+  <data name="NoImmediateRecommendations" xml:space="preserve">
+    <value>നിലവിലെ ഡാറ്റാസെറ്റ് അടിസ്ഥാനമാക്കി ഉടനടി സ്വീകരിക്കേണ്ട ശുപാർശകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <!--End of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="DataAnalysisButton.Content" xml:space="preserve">
+    <value>വിശകലനം</value>
+  </data>
+  <data name="DataAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലഭ്യമാക്കിയ ഡാറ്റയുടെ അടിസ്ഥാനത്തിൽ ചുരുക്കം, വിവിധ ചാർട്ടുകൾ, സ്വീകരിക്കേണ്ട ശുപാർശകൾ എന്നിവ ഉൾപ്പെടുന്ന വിപുലമായ വിശകലനം കാണുക.</value>
+  </data>
+  <data name="DataAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലഭ്യമാക്കിയ ഡാറ്റയുടെ അടിസ്ഥാനത്തിൽ ചുരുക്കം, വിവിധ ചാർട്ടുകൾ, സ്വീകരിക്കേണ്ട ശുപാർശകൾ എന്നിവ ഉൾപ്പെടുന്ന വിപുലമായ വിശകലനം കാണുക.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>വിശകലന പേജിലേക്ക് സ്വയമേവ മാറുക</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡാറ്റ ലഭ്യമാക്കിയ ശേഷം എല്ലായ്പ്പോഴും സ്വയമേവ വിശകലന പേജിലേക്ക് മാറുക.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡാറ്റ ലഭ്യമാക്കിയ ശേഷം എല്ലായ്പ്പോഴും സ്വയമേവ വിശകലന പേജിലേക്ക് മാറുക.</value>
+  </data>
 </root>

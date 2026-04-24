@@ -7241,4 +7241,129 @@
   <data name="PoliciesLibraryContextualSearchToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>すべてのポリシーのコンテンツを検索します。</value>
   </data>
+    <data name="DuplicatePolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ポリシーを複製する</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ライブラリ内にポリシーのコピーを作成して複製します。</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ライブラリ内にポリシーのコピーを作成して複製します。</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ファイル パスを削除する</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ポリシーに関連付けられているファイル パスを削除します。これは、ここにドラッグ アンド ドロップするか参照することによって、ライブラリに手動で追加したポリシーに割り当てられます。</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ポリシーに関連付けられているファイル パスを削除します。これは、ここにドラッグ アンド ドロップするか参照することによって、ライブラリに手動で追加したポリシーに割り当てられます。</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveToPoliciesLibraryMessage" xml:space="preserve">
+    <value>ポリシー ライブラリに対する変更が正常に保存されました。</value>
+  </data>
+  <data name="EventLogsAnalysisNavItemContent" xml:space="preserve">
+    <value>イベント ログの分析</value>
+  </data>
+  <data name="MDEAdvancedHuntingAnalysisNavItemContent" xml:space="preserve">
+    <value>MDE の高度な追求の分析</value>
+  </data>
+    <data name="DataSummary.Text" xml:space="preserve">
+    <value>データの概要</value>
+  </data>
+  <data name="RecommendedActions.Text" xml:space="preserve">
+    <value>推奨されるアクション</value>
+  </data>
+  <data name="TotalBlockedItems.Text" xml:space="preserve">
+    <value>ブロックされたアイテムの合計</value>
+  </data>
+  <data name="TotalAllowedOrAuditedItems.Text" xml:space="preserve">
+    <value>許可または監査されたアイテムの合計</value>
+  </data>
+  <data name="ColorPalettes.Text" xml:space="preserve">
+    <value>カラー パレット</value>
+  </data>
+  <data name="DataVisualizations.Text" xml:space="preserve">
+    <value>データの視覚化</value>
+  </data>
+  <data name="DistributionOverview.Text" xml:space="preserve">
+    <value>分布の概要</value>
+  </data>
+  <data name="Allowed.Text" xml:space="preserve">
+    <value>許可</value>
+  </data>
+  <data name="Blocked.Text" xml:space="preserve">
+    <value>ブロック</value>
+  </data>
+  <data name="BlockedEventsTrend.Text" xml:space="preserve">
+    <value>ブロックされたイベントの傾向 (時系列)</value>
+  </data>
+  <data name="AllowedOrAuditedEventsTrend.Text" xml:space="preserve">
+    <value>許可/監査されたイベントの傾向 (時系列)</value>
+  </data>
+  <data name="GlobalMetrics.Text" xml:space="preserve">
+    <value>グローバル メトリクス (すべてのイベント)</value>
+  </data>
+  <!--Start of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="AnalysisCompleteSummary" xml:space="preserve">
+    <value>分析が完了しました。合計 {0} 件のイベントのうち、{1} 件が許可/監査され、{2} 件がブロックされました。 </value>
+  </data>
+  <data name="SignificantBlockedEventsSummary" xml:space="preserve">
+    <value>ブロックされたイベントの数が多数あります。これは、積極的なポリシー モード、または認識されていないアプリケーションが多数存在することを示している可能性があります。 </value>
+  </data>
+  <data name="MajorityAllowedEventsSummary" xml:space="preserve">
+    <value>イベントの大部分は許可されました。これは、比較的寛容な環境、または既知で予期されるワークロードであることを示唆しています。 </value>
+  </data>
+  <data name="UnsignedFilesDetectedSummary" xml:space="preserve">
+    <value>{0} 個の署名されていないファイルが検出されました。署名されたファイルに比べてセキュリティ リスクが高くなる可能性があるため、これらを調査することを検討してください。 </value>
+  </data>
+  <data name="UniqueComputersSummary" xml:space="preserve">
+    <value>イベントは {0} 台の固有のコンピューターから収集されました。 </value>
+  </data>
+  <data name="UserModeMajoritySummary" xml:space="preserve">
+    <value>イベントの大部分は、ユーザー モード (User Mode) コードに起因しています。 </value>
+  </data>
+  <data name="KernelModeMajoritySummary" xml:space="preserve">
+    <value>イベントの大部分は、カーネル モード (Kernel Mode) コードに起因しています。 </value>
+  </data>
+  <data name="EvenModeDistributionSummary" xml:space="preserve">
+    <value>イベントは、ユーザー モードとカーネル モードで均等に分布しています。 </value>
+  </data>
+  <data name="TopPublisherSummary" xml:space="preserve">
+    <value>すべてのイベントで最も多い発行元は '{0}' で、{1} 回発生しています。 </value>
+  </data>
+  <data name="AllowPublisherRecommendation" xml:space="preserve">
+    <value>発行元 '{0}' を許可すると、現在ブロックされているイベントの {1}% ({2} 件) が解決されます。</value>
+  </data>
+  <data name="CreatePathRuleRecommendation" xml:space="preserve">
+    <value>ディレクトリ '{0}' のパス ルールを作成すると、現在ブロックされているイベントの {1}% ({2} 件) が解決されます。</value>
+  </data>
+  <data name="UserWriteableLocationsRecommendation" xml:space="preserve">
+    <value>ユーザーが書き込み可能な場所から発生したイベントが {0} 件あります。マルウェアが簡単に実行されないように、これらのパスを確認してください。</value>
+  </data>
+  <data name="FileTypeRecommendation" xml:space="preserve">
+    <value>'{0}' ファイル タイプは、ブロックされたイベントの {1}% を占めています。このファイル タイプがポリシーで適切に処理されていることを確認してください。</value>
+  </data>
+  <data name="NoImmediateRecommendations" xml:space="preserve">
+    <value>現在のデータセットに基づく、即座に実行可能な推奨事項は見つかりませんでした。</value>
+  </data>
+  <!--End of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="DataAnalysisButton.Content" xml:space="preserve">
+    <value>分析</value>
+  </data>
+  <data name="DataAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>概要、さまざまなグラフ、実行可能な推奨事項など、取得したデータに基づく高度な分析を表示します。</value>
+  </data>
+  <data name="DataAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>概要、さまざまなグラフ、実行可能な推奨事項など、取得したデータに基づく高度な分析を表示します。</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>分析ページへの自動切り替え</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>データ取得後、常に自動的に分析ページに切り替えます。</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>データ取得後、常に自動的に分析ページに切り替えます。</value>
+  </data>
 </root>

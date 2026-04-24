@@ -7241,4 +7241,129 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="PoliciesLibraryContextualSearchToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Durchsuchen Sie den Inhalt aller Richtlinien.</value>
   </data>
+    <data name="DuplicatePolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Richtlinie duplizieren</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Duplizieren Sie die Richtlinie, indem Sie eine Kopie davon in der Bibliothek erstellen.</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Duplizieren Sie die Richtlinie, indem Sie eine Kopie davon in der Bibliothek erstellen.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Dateipfad entfernen</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Entfernen Sie den Dateipfad, der der Richtlinie zugeordnet ist. Dieser wird Richtlinien zugewiesen, die Sie manuell zur Bibliothek hinzufügen, indem Sie sie per Drag &amp; Drop hierher ziehen oder danach suchen.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Entfernen Sie den Dateipfad, der der Richtlinie zugeordnet ist. Dieser wird Richtlinien zugewiesen, die Sie manuell zur Bibliothek hinzufügen, indem Sie sie per Drag &amp; Drop hierher ziehen oder danach suchen.</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveToPoliciesLibraryMessage" xml:space="preserve">
+    <value>Die Änderungen wurden erfolgreich in der Richtlinienbibliothek gespeichert.</value>
+  </data>
+  <data name="EventLogsAnalysisNavItemContent" xml:space="preserve">
+    <value>Ereignisprotokollanalyse</value>
+  </data>
+  <data name="MDEAdvancedHuntingAnalysisNavItemContent" xml:space="preserve">
+    <value>MDE Advanced Hunting-Analyse</value>
+  </data>
+    <data name="DataSummary.Text" xml:space="preserve">
+    <value>Datenzusammenfassung</value>
+  </data>
+  <data name="RecommendedActions.Text" xml:space="preserve">
+    <value>Empfohlene Aktionen</value>
+  </data>
+  <data name="TotalBlockedItems.Text" xml:space="preserve">
+    <value>Gesamt blockierte Elemente</value>
+  </data>
+  <data name="TotalAllowedOrAuditedItems.Text" xml:space="preserve">
+    <value>Gesamt zugelassene oder überprüfte Elemente</value>
+  </data>
+  <data name="ColorPalettes.Text" xml:space="preserve">
+    <value>Farbpaletten</value>
+  </data>
+  <data name="DataVisualizations.Text" xml:space="preserve">
+    <value>Datenvisualisierungen</value>
+  </data>
+  <data name="DistributionOverview.Text" xml:space="preserve">
+    <value>Verteilungsübersicht</value>
+  </data>
+  <data name="Allowed.Text" xml:space="preserve">
+    <value>Zugelassen</value>
+  </data>
+  <data name="Blocked.Text" xml:space="preserve">
+    <value>Blockiert</value>
+  </data>
+  <data name="BlockedEventsTrend.Text" xml:space="preserve">
+    <value>Trend blockierter Ereignisse (Chronologisch)</value>
+  </data>
+  <data name="AllowedOrAuditedEventsTrend.Text" xml:space="preserve">
+    <value>Trend zugelassener / überprüfter Ereignisse (Chronologisch)</value>
+  </data>
+  <data name="GlobalMetrics.Text" xml:space="preserve">
+    <value>Globale Metriken (Alle Ereignisse)</value>
+  </data>
+  <!--Start of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="AnalysisCompleteSummary" xml:space="preserve">
+    <value>Analyse abgeschlossen. Von insgesamt {0} Ereignissen wurden {1} zugelassen/überprüft und {2} blockiert. </value>
+  </data>
+  <data name="SignificantBlockedEventsSummary" xml:space="preserve">
+    <value>Es gibt eine signifikante Anzahl blockierter Ereignisse, was auf einen aggressiven Richtlinienmodus oder das Vorhandensein vieler unbekannter Anwendungen hinweisen könnte. </value>
+  </data>
+  <data name="MajorityAllowedEventsSummary" xml:space="preserve">
+    <value>Die Mehrheit der Ereignisse wurde zugelassen, was auf eine relativ permissive Umgebung oder bekannte und erwartete Workloads hindeutet. </value>
+  </data>
+  <data name="UnsignedFilesDetectedSummary" xml:space="preserve">
+    <value>Es wurden {0} unsignierte Dateien erkannt. Erwägen Sie die Untersuchung dieser Dateien, da sie im Vergleich zu signierten Dateien ein höheres Sicherheitsrisiko darstellen können. </value>
+  </data>
+  <data name="UniqueComputersSummary" xml:space="preserve">
+    <value>Es wurden Ereignisse von {0} eindeutigen Computer(n) gesammelt. </value>
+  </data>
+  <data name="UserModeMajoritySummary" xml:space="preserve">
+    <value>Die Mehrheit der Ereignisse stammte von Code im Benutzermodus. </value>
+  </data>
+  <data name="KernelModeMajoritySummary" xml:space="preserve">
+    <value>Die Mehrheit der Ereignisse stammte von Code im Kernelmodus. </value>
+  </data>
+  <data name="EvenModeDistributionSummary" xml:space="preserve">
+    <value>Die Ereignisse sind gleichmäßig zwischen Benutzermodus und Kernelmodus verteilt. </value>
+  </data>
+  <data name="TopPublisherSummary" xml:space="preserve">
+    <value>Der häufigste Herausgeber über alle Ereignisse hinweg ist '{0}' mit {1} Vorkommen. </value>
+  </data>
+  <data name="AllowPublisherRecommendation" xml:space="preserve">
+    <value>Die Zulassung des Herausgebers '{0}' würde {1}% ({2} Instanzen) Ihrer derzeit blockierten Ereignisse beheben.</value>
+  </data>
+  <data name="CreatePathRuleRecommendation" xml:space="preserve">
+    <value>Das Erstellen einer Pfadregel für das Verzeichnis '{0}' würde {1}% ({2} Instanzen) Ihrer derzeit blockierten Ereignisse beheben.</value>
+  </data>
+  <data name="UserWriteableLocationsRecommendation" xml:space="preserve">
+    <value>Es gibt {0} Ereignisse, die von vom Benutzer beschreibbaren Speicherorten stammen. Überprüfen Sie diese Pfade, um sicherzustellen, dass Malware nicht leicht von dort ausgeführt werden kann.</value>
+  </data>
+  <data name="FileTypeRecommendation" xml:space="preserve">
+    <value>Der Dateityp '{0}' macht {1}% Ihrer blockierten Ereignisse aus. Stellen Sie sicher, dass dieser Dateityp in Ihrer Richtlinie ordnungsgemäß behandelt wird.</value>
+  </data>
+  <data name="NoImmediateRecommendations" xml:space="preserve">
+    <value>Basierend auf dem aktuellen Datensatz wurden keine unmittelbar umsetzbaren Empfehlungen gefunden.</value>
+  </data>
+  <!--End of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="DataAnalysisButton.Content" xml:space="preserve">
+    <value>Analyse</value>
+  </data>
+  <data name="DataAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erweiterte Analyse basierend auf den abgerufenen Daten anzeigen, einschließlich Zusammenfassung, verschiedener Diagramme und umsetzbarer Empfehlungen.</value>
+  </data>
+  <data name="DataAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erweiterte Analyse basierend auf den abgerufenen Daten anzeigen, einschließlich Zusammenfassung, verschiedener Diagramme und umsetzbarer Empfehlungen.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Automatisch zur Analyseseite wechseln</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nach dem Abrufen der Daten immer automatisch zur Analyseseite wechseln.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Nach dem Abrufen der Daten immer automatisch zur Analyseseite wechseln.</value>
+  </data>
 </root>

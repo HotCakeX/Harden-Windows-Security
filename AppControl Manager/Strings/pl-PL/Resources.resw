@@ -7241,4 +7241,129 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="PoliciesLibraryContextualSearchToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przeszukaj zawartość wszystkich zasad.</value>
   </data>
+    <data name="DuplicatePolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Powiel zasady</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Powiel zasady poprzez utworzenie ich kopii w bibliotece.</value>
+  </data>
+  <data name="DuplicatePolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Powiel zasady poprzez utworzenie ich kopii w bibliotece.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń ścieżkę pliku</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń ścieżkę pliku skojarzoną z zasadami. Jest ona przypisywana do zasad, które ręcznie dodajesz do biblioteki poprzez przeciągnięcie i upuszczenie ich w tym miejscu lub ich wyszukanie.</value>
+  </data>
+  <data name="RemovePolicyFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń ścieżkę pliku skojarzoną z zasadami. Jest ona przypisywana do zasad, które ręcznie dodajesz do biblioteki poprzez przeciągnięcie i upuszczenie ich w tym miejscu lub ich wyszukanie.</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveToPoliciesLibraryMessage" xml:space="preserve">
+    <value>Pomyślnie zapisano zmiany w bibliotece zasad.</value>
+  </data>
+  <data name="EventLogsAnalysisNavItemContent" xml:space="preserve">
+    <value>Analiza dzienników zdarzeń</value>
+  </data>
+  <data name="MDEAdvancedHuntingAnalysisNavItemContent" xml:space="preserve">
+    <value>Analiza Advanced Hunting w usłudze MDE</value>
+  </data>
+    <data name="DataSummary.Text" xml:space="preserve">
+    <value>Podsumowanie danych</value>
+  </data>
+  <data name="RecommendedActions.Text" xml:space="preserve">
+    <value>Rekomendowane akcje</value>
+  </data>
+  <data name="TotalBlockedItems.Text" xml:space="preserve">
+    <value>Łączna liczba zablokowanych elementów</value>
+  </data>
+  <data name="TotalAllowedOrAuditedItems.Text" xml:space="preserve">
+    <value>Łączna liczba dozwolonych lub kontrolowanych elementów</value>
+  </data>
+  <data name="ColorPalettes.Text" xml:space="preserve">
+    <value>Palety kolorów</value>
+  </data>
+  <data name="DataVisualizations.Text" xml:space="preserve">
+    <value>Wizualizacje danych</value>
+  </data>
+  <data name="DistributionOverview.Text" xml:space="preserve">
+    <value>Przegląd dystrybucji</value>
+  </data>
+  <data name="Allowed.Text" xml:space="preserve">
+    <value>Dozwolone</value>
+  </data>
+  <data name="Blocked.Text" xml:space="preserve">
+    <value>Zablokowane</value>
+  </data>
+  <data name="BlockedEventsTrend.Text" xml:space="preserve">
+    <value>Trend zablokowanych zdarzeń (Chronologicznie)</value>
+  </data>
+  <data name="AllowedOrAuditedEventsTrend.Text" xml:space="preserve">
+    <value>Trend dozwolonych / kontrolowanych zdarzeń (Chronologicznie)</value>
+  </data>
+  <data name="GlobalMetrics.Text" xml:space="preserve">
+    <value>Globalne wskaźniki (Wszystkie zdarzenia)</value>
+  </data>
+  <!--Start of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="AnalysisCompleteSummary" xml:space="preserve">
+    <value>Analiza zakończona. Spośród {0} wszystkich zdarzeń, {1} zostało dozwolonych/skontrolowanych, a {2} zostało zablokowanych. </value>
+  </data>
+  <data name="SignificantBlockedEventsSummary" xml:space="preserve">
+    <value>Występuje znaczna liczba zablokowanych zdarzeń, co może wskazywać na agresywny tryb zasad lub obecność wielu nierozpoznanych aplikacji. </value>
+  </data>
+  <data name="MajorityAllowedEventsSummary" xml:space="preserve">
+    <value>Większość zdarzeń została dozwolona, co sugeruje dość otwarte środowisko lub znane i oczekiwane obciążenia. </value>
+  </data>
+  <data name="UnsignedFilesDetectedSummary" xml:space="preserve">
+    <value>Wykryto {0} niepodpisanych plików. Rozważ zbadanie ich, ponieważ mogą stanowić większe zagrożenie bezpieczeństwa w porównaniu z plikami podpisanymi. </value>
+  </data>
+  <data name="UniqueComputersSummary" xml:space="preserve">
+    <value>Zdarzenia zebrano z {0} unikalnego(ych) komputera(ów). </value>
+  </data>
+  <data name="UserModeMajoritySummary" xml:space="preserve">
+    <value>Większość zdarzeń pochodzi z kodu trybu użytkownika. </value>
+  </data>
+  <data name="KernelModeMajoritySummary" xml:space="preserve">
+    <value>Większość zdarzeń pochodzi z kodu trybu jądra. </value>
+  </data>
+  <data name="EvenModeDistributionSummary" xml:space="preserve">
+    <value>Zdarzenia są równomiernie rozłożone między tryb użytkownika a tryb jądra. </value>
+  </data>
+  <data name="TopPublisherSummary" xml:space="preserve">
+    <value>Najpopularniejszym wydawcą dla wszystkich zdarzeń jest '{0}' z liczbą wystąpień: {1}. </value>
+  </data>
+  <data name="AllowPublisherRecommendation" xml:space="preserve">
+    <value>Zezwolenie dla wydawcy '{0}' rozwiązałoby {1}% ({2} przypadków) obecnie zablokowanych zdarzeń.</value>
+  </data>
+  <data name="CreatePathRuleRecommendation" xml:space="preserve">
+    <value>Utworzenie reguły ścieżki dla katalogu '{0}' rozwiązałoby {1}% ({2} przypadków) obecnie zablokowanych zdarzeń.</value>
+  </data>
+  <data name="UserWriteableLocationsRecommendation" xml:space="preserve">
+    <value>Zarejestrowano {0} zdarzeń pochodzących z lokalizacji z możliwością zapisu dla użytkownika. Przejrzyj te ścieżki, aby upewnić się, że złośliwe oprogramowanie nie może z nich łatwo się uruchomić.</value>
+  </data>
+  <data name="FileTypeRecommendation" xml:space="preserve">
+    <value>Typ pliku '{0}' odpowiada za {1}% zablokowanych zdarzeń. Upewnij się, że ten typ pliku jest odpowiednio obsługiwany w Twoich zasadach.</value>
+  </data>
+  <data name="NoImmediateRecommendations" xml:space="preserve">
+    <value>Nie znaleziono natychmiastowych rekomendacji na podstawie bieżącego zestawu danych.</value>
+  </data>
+  <!--End of Data Analysis Summary and Actionable Recommendations Section-->
+  <data name="DataAnalysisButton.Content" xml:space="preserve">
+    <value>Analiza</value>
+  </data>
+  <data name="DataAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetl zaawansowaną analizę na podstawie pobranych danych, w tym podsumowanie, różne wykresy oraz rekomendowane akcje.</value>
+  </data>
+  <data name="DataAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetl zaawansowaną analizę na podstawie pobranych danych, w tym podsumowanie, różne wykresy oraz rekomendowane akcje.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Automatyczne przełączanie na stronę analizy</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zawsze automatycznie przełączaj na stronę analizy po pobraniu danych.</value>
+  </data>
+  <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zawsze automatycznie przełączaj na stronę analizy po pobraniu danych.</value>
+  </data>
 </root>

@@ -32,9 +32,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI;
-using Microsoft.UI.Composition;
-using HardenSystemSecurity;
-using System.Numerics;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -873,8 +870,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 		// Unsubscribe from all MUnit events
 		UnsubscribeFromAllMUnits();
-
-		SpringAnimationForIndividualButtons.Dispose();
 	}
 
 	#region Logic for Animated Button Enablement
@@ -1379,74 +1374,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 		_currentHighlightedElement = null;
 		_originalBackgroundBrush = null;
-	}
-
-	#endregion
-
-	#region Animating the individual Apply/Verify/Remove buttons
-
-#pragma warning disable IDE0370
-	private readonly SpringVector3NaturalMotionAnimation SpringAnimationForIndividualButtons = App.MainWindow!.Compositor.CreateSpringVector3Animation();
-#pragma warning restore IDE370
-	private static readonly Vector3 OnePoint1Vector = new(1.1f);
-	private static readonly Vector3 OneVector = new(1.0f);
-
-	private void element_PointerEntered(object sender, PointerRoutedEventArgs e)
-	{
-		// Scale up to 1.1
-		SpringAnimationForIndividualButtons.FinalValue = OnePoint1Vector;
-
-		((UIElement)sender).StartAnimation(SpringAnimationForIndividualButtons);
-	}
-
-	private void element_PointerExited(object sender, PointerRoutedEventArgs e)
-	{
-		// Scale back down to 1.0
-		SpringAnimationForIndividualButtons.FinalValue = OneVector;
-
-		((UIElement)sender).StartAnimation(SpringAnimationForIndividualButtons);
-	}
-
-	private void IndividualButtonsStackPanel_Loaded(object sender, RoutedEventArgs e)
-	{
-		SpringAnimationForIndividualButtons.Target = "Scale";
-
-		StackPanel stack = (StackPanel)sender;
-
-		Button ApplyButtonIndividual = null!;
-		Button VerifyButtonIndividual = null!;
-		Button RemoveButtonIndividual = null!;
-
-		foreach (UIElement item in stack.Children)
-		{
-			if (item is Button button)
-			{
-				if (string.Equals(button.Name, "ApplyButtonIndividual", StringComparison.OrdinalIgnoreCase))
-				{
-					ApplyButtonIndividual = button;
-				}
-				else if (string.Equals(button.Name, "VerifyButtonIndividual", StringComparison.OrdinalIgnoreCase))
-				{
-					VerifyButtonIndividual = button;
-				}
-				else if (string.Equals(button.Name, "RemoveButtonIndividual", StringComparison.OrdinalIgnoreCase))
-				{
-					RemoveButtonIndividual = button;
-				}
-			}
-		}
-
-		ExpressionAnimation animation = App.MainWindow!.Compositor.CreateExpressionAnimation();
-		animation.Expression = "(left.Scale.X - 1) * 50 + left.Translation.X % (50 * index)";
-		animation.Target = "Translation.X";
-
-		animation.SetExpressionReferenceParameter("left", ApplyButtonIndividual);
-		animation.SetScalarParameter("index", 1);
-		VerifyButtonIndividual.StartAnimation(animation);
-
-		animation.SetExpressionReferenceParameter("left", VerifyButtonIndividual);
-		animation.SetScalarParameter("index", 2);
-		RemoveButtonIndividual.StartAnimation(animation);
 	}
 
 	#endregion

@@ -541,7 +541,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		{"Windows 11 version 24H2", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Windows%2011%20v24H2%20Security%20Baseline.zip"},
 		{"Windows 11 version 25H2", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Windows%2011%20v25H2%20Security%20Baseline.zip"},
 		{"Windows Server 2025 - 2506", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Windows%20Server%202025%20Security%20Baseline.zip"}
-	}.ToFrozenDictionary();
+	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal List<string> SecurityBaselinesComboBoxItemsSource => DownloadURLs.Keys.ToList();
 
@@ -698,6 +698,72 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 				filterIds: idsToRemove);
 
 			MainInfoBar.WriteSuccess("Selected policies removed successfully.");
+
+			// Verify again to show the updated state
+			await VerifyInternal();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	#endregion
+
+	#region Apply
+
+	/// <summary>
+	/// Applies the selected policies from to system.
+	/// </summary>
+	internal async void ApplySelectedPolicies_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MicrosoftSecurityBaseline);
+
+		if (lv is null || lv.SelectedItems.Count == 0)
+		{
+			MainInfoBar.WriteWarning("No policies selected for application.");
+			return;
+		}
+
+		// Collect IDs of the selected items
+		HashSet<string> idsToApply = new(StringComparer.OrdinalIgnoreCase);
+		foreach (object item in lv.SelectedItems)
+		{
+			if (item is VerificationResult res)
+			{
+				_ = idsToApply.Add(res.ID);
+			}
+		}
+
+		if (idsToApply.Count == 0)
+		{
+			return;
+		}
+
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
+			MainInfoBar.WriteInfo($"Applying {idsToApply.Count} selected policies...");
+
+			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
+			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
+				? new Uri(CustomBaselineFilePath)
+				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
+
+			// Perform application with IDs filtering
+			_ = await MSBaseline.DownloadAndProcessSecurityBaseline(
+				sourceUri,
+				MSBaseline.Action.Apply,
+				cancellationToken: CancellationToken.None,
+				filterIds: idsToApply);
+
+			MainInfoBar.WriteSuccess("Selected policies applied successfully.");
 
 			// Verify again to show the updated state
 			await VerifyInternal();

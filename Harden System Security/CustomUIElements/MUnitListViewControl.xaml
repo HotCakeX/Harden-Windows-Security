@@ -121,16 +121,11 @@
                             <StackPanel Grid.Column="2"
                                         Orientation="Horizontal"
                                         Spacing="8"
-                                        Margin="0,0,5,0"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
-                                        XYFocusKeyboardNavigation="Enabled"
-                                        Loaded="IndividualButtonsStackPanel_Loaded">
+                                        XYFocusKeyboardNavigation="Enabled">
 
-                                <Button Click="{x:Bind ApplyMUnit}"                           
-                                        x:Name="ApplyButtonIndividual"                                        
-                                        PointerEntered="element_PointerEntered"
-                                        PointerExited="element_PointerExited">
+                                <Button Click="{x:Bind ApplyMUnit}">
                                     <Button.Transitions>
                                         <TransitionCollection>
                                             <PopupThemeTransition />
@@ -150,10 +145,7 @@
                                     </StackPanel>
                                 </Button>
 
-                                <Button Click="{x:Bind VerifyMUnit}"
-                                        x:Name="VerifyButtonIndividual"
-                                        PointerEntered="element_PointerEntered"
-                                        PointerExited="element_PointerExited">
+                                <Button Click="{x:Bind VerifyMUnit}">
                                     <Button.Transitions>
                                         <TransitionCollection>
                                             <PopupThemeTransition />
@@ -173,10 +165,7 @@
                                     </StackPanel>
                                 </Button>
 
-                                <Button Click="{x:Bind RemoveMUnit}"
-                                        x:Name="RemoveButtonIndividual"
-                                        PointerEntered="element_PointerEntered"
-                                        PointerExited="element_PointerExited">
+                                <Button Click="{x:Bind RemoveMUnit}">
                                     <Button.Transitions>
                                         <TransitionCollection>
                                             <PopupThemeTransition />

@@ -5756,4 +5756,14 @@ Thumbprint: {3}</value>
   <data name="SidebarSplitViewDisplayModeChangerToggleButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Switch between the Overlay and Inline modes of the sidebar pane.</value>
   </data>
+  <!--NEW-->
+  <data name="ApplyRow.Text" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="ApplyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apply the currently selected item(s).</value>
+  </data>
+  <data name="ApplyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apply the currently selected item(s).</value>
+  </data>
 </root>

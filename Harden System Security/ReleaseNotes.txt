@@ -1,3 +1,5 @@
 * Updated dependencies to the latest versions.
 
 * Added Night Light toggle button and temperature adjustment slider to the sidebar.
+
+* Added "Apply" option to the right-click context menus in the Microsoft Security baseline and Microsoft 365 apps Security baseline pages. This means you can now apply the policies from any of the baselines selectively.

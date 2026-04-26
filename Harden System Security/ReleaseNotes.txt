@@ -9,3 +9,5 @@
 * You can now view the total count of the firewall rules in the firewall management page.
 
 * Improved the UI in the Firewall management page.
+
+* Do you often use the Microsoft Security baselines from your local files? Do you often use the app in offline environments? Your workflow has just got easier! Harden System Security app can now remember the paths of the Microsoft Security baseline files your browse for on your system. Now you only have to select them once and never have to do this twice. You can control this new behavior with a toggle switch that is available in the Baseline pages in the app.

@@ -87,6 +87,10 @@ internal sealed partial class Main : ViewModelBase
 		ToastNotificationsAreEnabled = ReadValue(nameof(ToastNotificationsAreEnabled), ToastNotificationsAreEnabled);
 		SidebarPaneDisplayMode = ReadValue(nameof(SidebarPaneDisplayMode), SidebarPaneDisplayMode);
 		AutoSwitchToAnalysisPageAfterDataRetrieval = ReadValue(nameof(AutoSwitchToAnalysisPageAfterDataRetrieval), AutoSwitchToAnalysisPageAfterDataRetrieval);
+		RememberMSSecurityBaselineFilePath = ReadValue(nameof(RememberMSSecurityBaselineFilePath), RememberMSSecurityBaselineFilePath);
+		MSSecurityBaselineFilePath = ReadValue(nameof(MSSecurityBaselineFilePath), MSSecurityBaselineFilePath);
+		RememberMS365AppsSecurityBaselineFilePath = ReadValue(nameof(RememberMS365AppsSecurityBaselineFilePath), RememberMS365AppsSecurityBaselineFilePath);
+		MS365AppsSecurityBaselineFilePath = ReadValue(nameof(MS365AppsSecurityBaselineFilePath), MS365AppsSecurityBaselineFilePath);
 	}
 
 	/// <summary>
@@ -695,4 +699,70 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// Whether or not to remember the path to the Microsoft Security Baseline zip file that user browses for on the local system.
+	/// </summary>
+	internal bool RememberMSSecurityBaselineFilePath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(RememberMSSecurityBaselineFilePath), field);
+
+				if (!value)
+				{
+					MSSecurityBaselineFilePath = string.Empty; // Clear the path if we shouldn't remember it.
+				}
+			}
+		}
+	} = true;
+
+	/// <summary>
+	/// The path to the Microsoft Security Baseline zip file that user browses for on the local system.
+	/// </summary>
+	internal string MSSecurityBaselineFilePath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(MSSecurityBaselineFilePath), field);
+			}
+		}
+	} = string.Empty;
+
+	/// <summary>
+	/// Whether or not to remember the path to the Microsoft 365 Apps Security Baseline zip file that user browses for on the local system.
+	/// </summary>
+	internal bool RememberMS365AppsSecurityBaselineFilePath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(RememberMS365AppsSecurityBaselineFilePath), field);
+
+				if (!value)
+				{
+					MS365AppsSecurityBaselineFilePath = string.Empty; // Clear the path if we shouldn't remember it.
+				}
+			}
+		}
+	} = true;
+
+	/// <summary>
+	/// The path to the Microsoft Security Baseline zip file that user browses for on the local system.
+	/// </summary>
+	internal string MS365AppsSecurityBaselineFilePath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(MS365AppsSecurityBaselineFilePath), field);
+			}
+		}
+	} = string.Empty;
 }

@@ -5766,4 +5766,16 @@ Thumbprint: {3}</value>
   <data name="ApplyRow.AutomationProperties.HelpText" xml:space="preserve">
     <value>Apply the currently selected item(s).</value>
   </data>
+  <data name="RememberPathToggleSwitch.OnContent" xml:space="preserve">
+    <value>Remember</value>
+  </data>
+  <data name="RememberPathToggleSwitch.OffContent" xml:space="preserve">
+    <value>Don't Remember</value>
+  </data>
+  <data name="RememberPathToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remember the selected path in order to autofill it next time.</value>
+  </data>
+  <data name="RememberPathToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remember the selected path in order to autofill it next time.</value>
+  </data>
 </root>

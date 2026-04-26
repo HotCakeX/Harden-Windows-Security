@@ -7,7 +7,8 @@
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:viewModels="using:HardenSystemSecurity.ViewModels"
     xmlns:Protect="using:HardenSystemSecurity.Protect"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    Loaded="{x:Bind ViewModel.Page_Loaded}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -100,8 +101,9 @@
                     </Button>
 
                     <ComboBox ItemsSource="{x:Bind ViewModel.SecurityBaselinesComboBoxItemsSource}"
-                          x:Uid="SecurityBaselinesComboBox"
-                          SelectedItem="{x:Bind ViewModel.SecurityBaselinesComboBoxSelectedItem, Mode=TwoWay}" />
+                              x:Uid="SecurityBaselinesComboBox"
+                              IsEnabled="{x:Bind ViewModel.IsMultiBaselineComboBoxEnabled, Mode=OneWay}"
+                              SelectedItem="{x:Bind ViewModel.SecurityBaselinesComboBoxSelectedItem, Mode=TwoWay}" />
 
                     <!-- Total chip -->
                     <Border CornerRadius="8"
@@ -135,26 +137,28 @@
 
                 <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                    <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                    <customUI:SplitButtonV2 x:Uid="FileBrowseButton"
                                        ObservedData="{x:Bind ViewModel.CustomBaselineFilePath, Mode=OneWay}"
                                        Click="{x:Bind ViewModel.CustomBaselineFilePathButton_Click}"
                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
 
-                        <customUI:ButtonV2.ContentTemplate>
+                        <customUI:SplitButtonV2.ContentTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <FontIcon Glyph="&#xE8DA;" FontSize="16"/>
                                     <TextBlock Text="{x:Bind}"/>
                                 </StackPanel>
                             </DataTemplate>
-                        </customUI:ButtonV2.ContentTemplate>
+                        </customUI:SplitButtonV2.ContentTemplate>
 
-                        <customUI:ButtonV2.Flyout>
+                        <customUI:SplitButtonV2.Flyout>
                             <Flyout>
 
-                                <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="5">
 
                                     <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearCustomBaselineFilePath}" />
+
+                                    <ToggleSwitch x:Uid="RememberPathToggleSwitch" IsOn="{x:Bind ViewModel.RememberCustomBaselineFilePath, Mode=TwoWay}" />
 
                                     <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -165,9 +169,9 @@
                                 </CCToolKit:WrapPanel>
 
                             </Flyout>
-                        </customUI:ButtonV2.Flyout>
+                        </customUI:SplitButtonV2.Flyout>
 
-                    </customUI:ButtonV2>
+                    </customUI:SplitButtonV2>
 
                     <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson}">
                         <Button.ContentTemplate>
@@ -231,7 +235,7 @@
                                         <FontIcon Glyph="&#xE73E;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                              
+
                                 <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.Microsoft365AppsSecurityBaselineVM.DeleteSelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMs:ViewModelProvider.Microsoft365AppsSecurityBaselineVM.DeleteSelectedPolicies_Click}"/>

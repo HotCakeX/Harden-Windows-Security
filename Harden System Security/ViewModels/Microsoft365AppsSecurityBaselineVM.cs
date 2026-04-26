@@ -17,6 +17,7 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -532,7 +533,16 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				IsMultiBaselineComboBoxEnabled = string.IsNullOrEmpty(value);
+				if (string.IsNullOrEmpty(value))
+				{
+					IsMultiBaselineComboBoxEnabled = true;
+					Atlas.Settings.MS365AppsSecurityBaselineFilePath = string.Empty;
+				}
+				else
+				{
+					IsMultiBaselineComboBoxEnabled = false;
+					Atlas.Settings.MS365AppsSecurityBaselineFilePath = value;
+				}
 			}
 		}
 	}
@@ -741,4 +751,22 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 	#endregion
 
+	internal bool RememberCustomBaselineFilePath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				Atlas.Settings.RememberMS365AppsSecurityBaselineFilePath = value;
+			}
+		}
+	} = Atlas.Settings.RememberMS365AppsSecurityBaselineFilePath;
+
+	internal void Page_Loaded(object sender, RoutedEventArgs e)
+	{
+		if (Atlas.Settings.RememberMS365AppsSecurityBaselineFilePath && Path.Exists(Atlas.Settings.MS365AppsSecurityBaselineFilePath))
+		{
+			CustomBaselineFilePath = Atlas.Settings.MS365AppsSecurityBaselineFilePath;
+		}
+	}
 }

@@ -147,3 +147,140 @@ internal sealed partial class ButtonV2 : Button
 		}
 	}
 }
+
+/// <summary>
+/// The same as <see cref="ButtonV2"/> but for a <see cref="SplitButton"/>, with a few differences to make the behavior match ButtonV2.
+/// </summary>
+internal sealed partial class SplitButtonV2 : SplitButton
+{
+	// Keep original content so we can restore it when there is no selection
+	private object? _originalContent;
+
+	// Shadow used to indicate selection.
+	private readonly AttachedCardShadow _selectedShadow = new()
+	{
+		Color = Color.FromArgb(255, 56, 239, 125),
+		Offset = "0",
+		BlurRadius = 20.0,
+		Opacity = 0.95,
+		CornerRadius = 4.0
+	};
+
+	// DP to observe either a string or a numeric count
+	private static readonly DependencyProperty ObservedDataProperty =
+		DependencyProperty.Register(
+			nameof(ObservedData),
+			typeof(object),
+			typeof(SplitButtonV2),
+			new PropertyMetadata(null, OnObservedDataChanged));
+
+	/// <summary>
+	/// Bound to either a string (non-empty => selected) or a numeric count (int/long > 0 => selected).
+	/// </summary>
+	public object? ObservedData
+	{
+		get => GetValue(ObservedDataProperty); set => SetValue(ObservedDataProperty, value);
+	}
+
+	private static void OnObservedDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		SplitButtonV2 instance = (SplitButtonV2)d;
+
+		if (instance.Flyout is Flyout flyout && !flyout.IsOpen && flyout.XamlRoot != null) // Checking for XAMLRoot not being null is necessary here. 
+		{
+			flyout.ShowAt(instance);
+		}
+
+		((SplitButtonV2)d).UpdateAppearance();
+	}
+
+	internal SplitButtonV2()
+	{
+		RightTapped += OnRightTapped_ShowFlyout;
+		Holding += OnHolding_ShowFlyout;
+		// Ensure we (re)apply the correct visuals when the element is realized since pages don't have navigation cache.
+		Loaded += OnLoaded_ApplyState;
+		Unloaded += OnUnloaded_Cleanup;
+	}
+
+	private void OnLoaded_ApplyState(object sender, RoutedEventArgs e)
+	{
+		// Capture original content once so we can restore it later
+		_originalContent ??= Content;
+		UpdateAppearance();
+	}
+
+	private void OnRightTapped_ShowFlyout(object sender, RightTappedRoutedEventArgs e)
+	{
+		_ = TryShowFlyout();
+		e.Handled = true;
+	}
+
+	private void OnHolding_ShowFlyout(object sender, HoldingRoutedEventArgs e)
+	{
+		// Only show at the start of the hold
+		if (e.HoldingState == HoldingState.Started)
+			_ = TryShowFlyout();
+
+		e.Handled = true;
+	}
+
+	/// <summary>
+	/// If a Flyout is attached to this Button and it isn't open, shows it.
+	/// Returns true if there was a Flyout to show, false otherwise.
+	/// </summary>
+	internal bool TryShowFlyout()
+	{
+		// First check if button has a ContextFlyout (intended for right-click/Tap+Hold actions)
+		if (ContextFlyout is FlyoutBase contextFlyout && !contextFlyout.IsOpen)
+		{
+			contextFlyout.ShowAt(this);
+			return true;
+		}
+
+		// Fallback to Standard Flyout, only if it's a generic Flyout, not a MenuFlyout,
+		// So that if the button already has a primary Flyout, maybe to act like a DropDownButton,
+		// We won't open it.
+		if (Flyout is Flyout flyout && !flyout.IsOpen)
+		{
+			flyout.ShowAt(this);
+			return true;
+		}
+
+		return false;
+	}
+
+	// Removes the shadow entirely and frees composition resources
+	// This is the correct way to clean up shadows instead of using: Effects.SetShadow(this, null);
+	private void OnUnloaded_Cleanup(object sender, RoutedEventArgs e) => ClearValue(Effects.ShadowProperty);
+
+	// Apply glow and text when ObservedData indicates "has content"
+	private void UpdateAppearance()
+	{
+		_originalContent ??= Content;
+
+		bool hasContent = ObservedData switch
+		{
+			string s => !string.IsNullOrEmpty(s),
+			int i => i > 0,
+			long l => l > 0,
+			_ => false
+		};
+
+		if (hasContent)
+		{
+			Content = Atlas.GetStr("SelectedText"); // Change text to "Selected" (localized) when active; otherwise restore original content
+
+			// Without this dispatcher, due to pages not having navigation page, sometimes the shadow will not be re-applied when we navigate away to another page and then navigate back
+			_ = DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+			{
+				Effects.SetShadow(this, _selectedShadow);
+			});
+		}
+		else if (_originalContent is not null)
+		{
+			Content = _originalContent;
+			ClearValue(Effects.ShadowProperty);
+		}
+	}
+}

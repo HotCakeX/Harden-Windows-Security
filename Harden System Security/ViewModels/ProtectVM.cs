@@ -1552,8 +1552,38 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 	}
 
-	internal bool RestorationModePartial { get; set => SP(ref field, value); }
-	internal bool RestorationModeFull { get; set => SP(ref field, value); } = true;
+	internal bool RestorationModePartial
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!value && !RestorationModeFull) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					RestorationModeFull = false;
+				}
+			}
+		}
+	}
+	internal bool RestorationModeFull
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!RestorationModePartial && !value) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					RestorationModePartial = false;
+				}
+			}
+		}
+	} = true;
 
 	#region Verification Popup Properties & Methods
 

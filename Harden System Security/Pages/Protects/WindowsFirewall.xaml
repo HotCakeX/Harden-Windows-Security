@@ -169,7 +169,7 @@
                                                                  IsChecked="{x:Bind ViewModel.FirewallStoreGPO, Mode=TwoWay}"
                                                                  IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}">
                                                 <RadioMenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE930;"/>
+                                                    <FontIcon Glyph="&#xEC26;"/>
                                                 </RadioMenuFlyoutItem.Icon>
                                             </RadioMenuFlyoutItem>
 
@@ -178,7 +178,7 @@
                                                                  IsEnabled="{x:Bind ViewModel.ManagementUIIsEnabled, Mode=OneWay}"
                                                                  IsChecked="{x:Bind ViewModel.FirewallStorePersistentStore, Mode=TwoWay}">
                                                 <RadioMenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE733;"/>
+                                                    <FontIcon Glyph="&#xF0B9;"/>
                                                 </RadioMenuFlyoutItem.Icon>
                                             </RadioMenuFlyoutItem>
 
@@ -339,6 +339,23 @@
                                         </MenuFlyout>
                                     </DropDownButton.Flyout>
                                 </DropDownButton>
+
+                                <!-- Total chip -->
+                                <Border CornerRadius="8"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Padding="10,6"
+                                        BorderThickness="1"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run x:Uid="TotalText" />
+                                            <Run Text="{x:Bind ViewModel.FirewallRules.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
 
                             </CCToolKit:WrapPanel>
 

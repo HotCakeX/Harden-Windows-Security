@@ -3,3 +3,9 @@
 * Added Night Light toggle button and temperature adjustment slider to the sidebar.
 
 * Added "Apply" option to the right-click context menus in the Microsoft Security baseline and Microsoft 365 apps Security baseline pages. This means you can now apply the policies from any of the baselines selectively.
+
+* Improved page navigation performance.
+
+* You can now view the total count of the firewall rules in the firewall management page.
+
+* Improved the UI in the Firewall management page.

@@ -155,15 +155,127 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// </summary>
 	internal Visibility ManagementProgressVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool FirewallDirectionInbound { get; set => SP(ref field, value); }
-	internal bool FirewallDirectionOutbound { get; set => SP(ref field, value); }
-	internal bool FirewallDirectionBoth { get; set => SP(ref field, value); } = true;
+	// Direction
+	// Using "GroupName" in XAML isn't enough, we have to handle the radio button groups here manually when navigation cache is disabled.
+	internal bool FirewallDirectionInbound
+	{
+		get; set
+		{
+			// Prevent unchecking if the other ones aren't checked
+			if (!value && !FirewallDirectionOutbound && !FirewallDirectionBoth) return;
 
-	internal bool FirewallActionAllow { get; set => SP(ref field, value); }
-	internal bool FirewallActionBlock { get; set => SP(ref field, value); } = true;
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					FirewallDirectionOutbound = false;
+					FirewallDirectionBoth = false;
+				}
+			}
+		}
+	}
+	internal bool FirewallDirectionOutbound
+	{
+		get; set
+		{
+			// Prevent unchecking if the other ones aren't checked
+			if (!FirewallDirectionInbound && !value && !FirewallDirectionBoth) return;
 
-	internal bool FirewallStoreGPO { get; set => SP(ref field, value); } = true;
-	internal bool FirewallStorePersistentStore { get; set => SP(ref field, value); }
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					FirewallDirectionInbound = false;
+					FirewallDirectionBoth = false;
+				}
+			}
+		}
+	}
+	internal bool FirewallDirectionBoth
+	{
+		get; set
+		{
+			// Prevent unchecking if the other ones aren't checked
+			if (!FirewallDirectionInbound && !FirewallDirectionOutbound && !value) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					FirewallDirectionInbound = false;
+					FirewallDirectionOutbound = false;
+				}
+			}
+		}
+	} = true;
+
+	// Action
+	internal bool FirewallActionAllow
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!value && !FirewallActionBlock) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					FirewallActionBlock = false;
+				}
+			}
+		}
+	}
+	internal bool FirewallActionBlock
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!FirewallActionAllow && !value) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					FirewallActionAllow = false;
+				}
+			}
+		}
+	} = true;
+
+	// Store
+	internal bool FirewallStoreGPO
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!value && !FirewallStorePersistentStore) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					FirewallStorePersistentStore = false;
+				}
+			}
+		}
+	} = true;
+	internal bool FirewallStorePersistentStore
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!FirewallStoreGPO && !value) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					FirewallStoreGPO = false;
+				}
+			}
+		}
+	}
 
 	/// <summary>
 	/// The list of executable files selected by the user for firewall rule management.
@@ -932,6 +1044,8 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			}
 
 			await Task.Run(() => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.GPO));
+
+			await RetrieveFirewallRules_internal();
 
 			MainInfoBar.WriteSuccess(Atlas.GetStr("FirewallDeleteSuccess"));
 		}

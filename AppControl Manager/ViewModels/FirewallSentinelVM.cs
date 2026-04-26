@@ -33,6 +33,7 @@ using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
 using CommonCore.IntelGathering;
 using CommonCore.SecurityPolicy;
+using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -1721,9 +1722,9 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				// Make sure auditing is enabled on the system first
 				await EnablePacketDropAuditing();
 
-				GetFirewallLogs.StartRealTimeMonitoring(IsResolveDestinationAddressesEnabled, (fwEvent) =>
+				GetFirewallLogs.StartRealTimeMonitoring(IsResolveDestinationAddressesEnabled, async (fwEvent) =>
 				{
-					_ = Atlas.AppDispatcher.TryEnqueue(() =>
+					await Atlas.AppDispatcher.EnqueueAsync(() =>
 					{
 						// Add to the main storage
 						AllBlockedPackets.Add(fwEvent);
@@ -1739,7 +1740,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 						}
 					});
 				});
-
 			}
 			else
 			{

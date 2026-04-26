@@ -170,7 +170,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			["Description"] = (Atlas.GetStr("GroupDescriptionHeader/Text"), g => g.Description),
 			["SecurityIdentifier"] = (Atlas.GetStr("GroupSecurityIdentifierHeader/Text"), g => g.SecurityIdentifier),
 			["CreatedDateTime"] = (Atlas.GetStr("GroupCreatedDateTimeHeader/Text"), g => g.CreatedDateTime)
-		}.ToFrozenDictionary();
+		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	#endregion
 

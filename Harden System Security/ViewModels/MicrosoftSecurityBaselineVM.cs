@@ -610,7 +610,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 			{ "IsCompliant",    (Atlas.GetStr("StatusHeader/Text") + ": ",       vr => vr.IsCompliant) },
 			{ "CurrentValue",   (Atlas.GetStr("CurrentValueHeader/Text") + ": ",  vr => vr.CurrentValue) },
 			{ "ExpectedValue",  (Atlas.GetStr("ExpectedValueHeader/Text") + ": ", vr => vr.ExpectedValue) }
-		}.ToFrozenDictionary();
+		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Converts the selected verification results into a labeled text block and copies it to the clipboard.

@@ -296,8 +296,38 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 	internal Visibility SigningScenarioRemovalPolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool UserModeSigningScenarioSelected { get; set => SP(ref field, value); }
-	internal bool KernelModeSigningScenarioSelected { get; set => SP(ref field, value); } = true;
+	internal bool UserModeSigningScenarioSelected
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!value && !KernelModeSigningScenarioSelected) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					KernelModeSigningScenarioSelected = false;
+				}
+			}
+		}
+	}
+	internal bool KernelModeSigningScenarioSelected
+	{
+		get; set
+		{
+			// Prevent unchecking if the other one isn't checked
+			if (!UserModeSigningScenarioSelected && !value) return;
+
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					UserModeSigningScenarioSelected = false;
+				}
+			}
+		}
+	} = true;
 
 	/// <summary>
 	/// Whether the elements for removing Signing Scenarios are enabled or not.

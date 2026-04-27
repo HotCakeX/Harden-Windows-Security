@@ -24,6 +24,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
+using CommonCore.AppSettings;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -75,16 +76,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		MicaAlt = 0,
 		Mica = 1,
 		Acrylic = 2,
-		AcrylicThin = 3
+		AcrylicThin = 3,
+		BackdropMicaBrush = 4,
+		BackdropBlurBrush = 5
 	};
 
 	internal DesktopAcrylicController? AcrylicController;
 	internal SystemBackdropConfiguration? ConfigurationSource;
-
-	/// <summary>
-	/// ItemsSource of the ComboBox in the Settings page
-	/// </summary>
-	internal IEnumerable<string> BackDropOptions => Enum.GetNames<BackDropComboBoxItems>();
 
 	/// <summary>
 	/// Sets the initial value of the back drop. if it's null, Mica Alt will be used.
@@ -96,7 +94,10 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			// Update the value and the system backdrop
 			if (SP(ref field, value))
 			{
-				UpdateSystemBackDrop();
+				if (App.MainWindow is not null)
+					UpdateSystemBackDrop(App.MainWindow);
+				else
+					Logger.Write("MainWindow was null for BackDropComboBoxSelectedIndex");
 			}
 		}
 	} = (int)Enum.Parse<BackDropComboBoxItems>(Atlas.Settings.BackDropBackground);
@@ -153,6 +154,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		args.Handled = true;
 	}
 
+	// For the Main Window's elements to enable custom brush backdrops.
+	internal Visibility MainWindowPictureBackgroundVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
 	/// <summary>
 	/// Event handler triggered when the UpdateAvailable event is raised, indicating an update is available.
 	/// Updates InfoBadgeOpacity to show the InfoBadge in the UI if an update is available.
@@ -189,29 +193,106 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	internal void HamburgerMenuButton_Click() => MainNavigationIsPaneOpen = !MainNavigationIsPaneOpen;
 
 	/// <summary>
+	/// On Acrylic Thin and some other custom brushes, only Dark theme looks nice, light theme creates white background for various elements.
+	/// </summary>
+	internal bool ForceDarkModeTheme { get; private set; }
+
+	/// <summary>
 	/// Event handler for the Background ComboBox selection change event in the Settings page.
 	/// </summary>
-	private void UpdateSystemBackDrop()
+	internal void UpdateSystemBackDrop(MainWindow instance)
 	{
 		// Remove the Acrylic controller elements for any backdrop change.
-		App.MainWindow?.RemoveAcrylicController();
+		instance.RemoveAcrylicController();
+
+		void UndoCustomBrushBackdrops()
+		{
+			_ = (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Visibility = Visibility.Collapsed);
+			MainWindowPictureBackgroundVisibility = Visibility.Collapsed;
+			_ = (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill = null);
+		}
 
 		// Cast the index to the enum
 		BackDropComboBoxItems selection = (BackDropComboBoxItems)BackDropComboBoxSelectedIndex;
 		switch (selection)
 		{
 			case BackDropComboBoxItems.MicaAlt:
-				SystemBackDropStyle = new MicaBackdrop { Kind = MicaKind.BaseAlt };
-				break;
+				{
+					SystemBackDropStyle = new MicaBackdrop { Kind = MicaKind.BaseAlt };
+					UndoCustomBrushBackdrops();
+					ForceDarkModeTheme = false;
+					break;
+				}
 			case BackDropComboBoxItems.Mica:
-				SystemBackDropStyle = new MicaBackdrop { Kind = MicaKind.Base };
-				break;
+				{
+					SystemBackDropStyle = new MicaBackdrop { Kind = MicaKind.Base };
+					UndoCustomBrushBackdrops();
+					ForceDarkModeTheme = false;
+					break;
+				}
 			case BackDropComboBoxItems.Acrylic:
-				SystemBackDropStyle = new DesktopAcrylicBackdrop();
-				break;
+				{
+					SystemBackDropStyle = new DesktopAcrylicBackdrop();
+					UndoCustomBrushBackdrops();
+					ForceDarkModeTheme = false;
+					break;
+				}
 			case BackDropComboBoxItems.AcrylicThin:
-				App.MainWindow?.SetThinAcrylicBackdrop();
-				break;
+				{
+					instance.SetThinAcrylicBackdrop();
+					UndoCustomBrushBackdrops();
+					ForceDarkModeTheme = true;
+					break;
+				}
+			case BackDropComboBoxItems.BackdropMicaBrush:
+				{
+					if (MainWindow.CustomAcrylicWithPictureBackdropHostPub is null)
+						break;
+
+					MainWindow.CustomAcrylicWithPictureBackdropHostPub.Visibility = Visibility.Visible;
+					MainWindowPictureBackgroundVisibility = Visibility.Visible;
+
+					CommonCore.UI.Brush.BackdropMicaBrush brush = new()
+					{
+						TintOpacity = Atlas.Settings.BackdropMicaBrushTintOpacity,
+						LuminosityOpacity = Atlas.Settings.BackdropMicaBrushLuminosityOpacity,
+						Amount = Atlas.Settings.BackdropMicaBrushBlurAmount
+					};
+
+					if (RGBHEX.ToRGB(Atlas.Settings.BackdropMicaBrushTintColor, out byte R, out byte G, out byte B))
+					{
+						brush.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
+					}
+
+					MainWindow.CustomAcrylicWithPictureBackdropHostPub.Fill = brush;
+
+					ForceDarkModeTheme = true;
+					break;
+				}
+			case BackDropComboBoxItems.BackdropBlurBrush:
+				{
+					if (MainWindow.CustomAcrylicWithPictureBackdropHostPub is null)
+						break;
+
+					MainWindow.CustomAcrylicWithPictureBackdropHostPub.Visibility = Visibility.Visible;
+					MainWindowPictureBackgroundVisibility = Visibility.Visible;
+
+					CommonCore.UI.Brush.BackdropBlurBrush brush = new()
+					{
+						TintOpacity = Atlas.Settings.BackdropBlurBrushTintOpacity,
+						Amount = Atlas.Settings.BackdropBlurBrushBlurAmount
+					};
+
+					if (RGBHEX.ToRGB(Atlas.Settings.BackdropBlurBrushTintColor, out byte R, out byte G, out byte B))
+					{
+						brush.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
+					}
+
+					MainWindow.CustomAcrylicWithPictureBackdropHostPub.Fill = brush;
+
+					ForceDarkModeTheme = true;
+					break;
+				}
 			default:
 				break;
 		}

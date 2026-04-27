@@ -244,16 +244,27 @@ internal sealed partial class SettingsVM : ViewModelBase
 		});
 	}
 
-	// Only Dark theme looks good when Acrylic Thin backdrop is used.
+	// Only Dark theme looks good when Acrylic Thin or custom backdrop brushes are used.
 	internal void AppThemeSetting_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		int x = ((ComboBox)sender).SelectedIndex;
-		AppThemeSettingsCardVisibility = x == 3 ? Visibility.Collapsed : Visibility.Visible;
+		AppThemeSettingsCardVisibility = x is 3 or 4 or 5 ? Visibility.Collapsed : Visibility.Visible;
 		AcrylicThinConfigurationsSettingsCardVisibility = x == 3 ? Visibility.Visible : Visibility.Collapsed;
+		BackdropMicaBrushConfigurationsSettingsCardVisibility = x == 4 ? Visibility.Visible : Visibility.Collapsed;
+		BackdropBlurBrushConfigurationsSettingsCardVisibility = x == 5 ? Visibility.Visible : Visibility.Collapsed;
+		BackdropCustomBrushPictureSelectionSettingsCardVisibility = x is 4 or 5 ? Visibility.Visible : Visibility.Collapsed; // Both custom backdrops use the same image and browse button.
+
+		// Change app theme to dark because only Dark theme looks good when Acrylic Thin or custom backdrop brushes are used.
+		if (AppThemeSettingsCardVisibility is Visibility.Collapsed)
+		{
+			AppThemeComboBoxSelectedIndex = 1;
+		}
 	}
 
-	// Only Dark theme looks good when Acrylic Thin backdrop is used, so we control the App Theme settings card's visibility here.
-	internal Visibility AppThemeSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex == 3 ? Visibility.Collapsed : Visibility.Visible;
+	// Only Dark theme looks good when Acrylic Thin or custom backdrop brushes are used, so we control the App Theme settings card's visibility here.
+	internal Visibility AppThemeSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex is 3 or 4 or 5 ? Visibility.Collapsed : Visibility.Visible;
+
+	#region Acrylic Thin Options
 
 	// Controls whether the configurations for Acrylic Thin Backdrop are visible or not.
 	internal Visibility AcrylicThinConfigurationsSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex == 3 ? Visibility.Visible : Visibility.Collapsed;
@@ -285,10 +296,148 @@ internal sealed partial class SettingsVM : ViewModelBase
 		_ = (ViewModelProvider.MainWindowVM.AcrylicController?.LuminosityOpacity = (float)e.NewValue);
 	}
 
-	internal async void RemoveAllToastNotifications(object sender, RoutedEventArgs e)
+	#endregion
+
+	// Controls the visibility of the settings card used by the custom brush backdrops.
+	internal Visibility BackdropCustomBrushPictureSelectionSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex is 4 or 5 ? Visibility.Visible : Visibility.Collapsed;
+
+	#region Backdrop Mica Brush Options
+
+	// Controls whether the configurations for Mica Brush Backdrop are visible or not.
+	internal Visibility BackdropMicaBrushConfigurationsSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex == 4 ? Visibility.Visible : Visibility.Collapsed;
+
+	internal void BackdropMicaBrushTintColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
 	{
-		await AppNotificationManager.Default.RemoveAllAsync();
+		byte R = args.NewColor.R;
+		byte G = args.NewColor.G;
+		byte B = args.NewColor.B;
+		byte A = args.NewColor.A;
+
+		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropMicaBrush brush)
+		{
+			brush.TintColor = Windows.UI.Color.FromArgb(A, R, G, B);
+		}
+
+		// Save the color as hex in the App settings.
+		Atlas.Settings.BackdropMicaBrushTintColor = RGBHEX.ToHex(R, G, B);
 	}
+
+	// To set the Color Picker's color to the one currently in use in App Settings.
+	internal void BackdropMicaBrushTintColorPicker_Loaded(object sender, RoutedEventArgs e)
+	{
+		if (RGBHEX.ToRGB(Atlas.Settings.BackdropMicaBrushTintColor, out byte R, out byte G, out byte B))
+		{
+			((ColorPicker)sender).Color = Windows.UI.Color.FromArgb(255, R, G, B);
+		}
+	}
+
+	internal void BackdropMicaBrushLuminosityOpacitySlider_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	{
+		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropMicaBrush brush)
+		{
+			brush.LuminosityOpacity = e.NewValue;
+		}
+	}
+
+	internal void BackdropMicaBrushTintOpacity_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	{
+		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropMicaBrush brush)
+		{
+			brush.TintOpacity = e.NewValue;
+		}
+	}
+
+	internal void BackdropMicaBrushBlurAmount_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	{
+		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropMicaBrush brush)
+		{
+			brush.Amount = e.NewValue;
+		}
+	}
+
+	internal void BackdropMicaBrushBrowseForPicButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog("Pictures|*.JPG;*.JPEG;*.PNG");
+
+		UriCreationOptions options = new()
+		{
+			DangerousDisablePathAndQueryCanonicalization = false
+		};
+
+		if (Uri.TryCreate(selectedFile, options, out Uri? _))
+		{
+			Atlas.Settings.BackdropCustomBrushPictureSelection = selectedFile;
+		}
+	}
+
+	#endregion
+
+	#region Backdrop Blur Brush Options
+
+	// Controls whether the configurations for Blur Brush Backdrop are visible or not.
+	internal Visibility BackdropBlurBrushConfigurationsSettingsCardVisibility { get; set => SP(ref field, value); } = ViewModelProvider.MainWindowVM.BackDropComboBoxSelectedIndex == 5 ? Visibility.Visible : Visibility.Collapsed;
+
+	internal void BackdropBlurBrushTintColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+	{
+		byte R = args.NewColor.R;
+		byte G = args.NewColor.G;
+		byte B = args.NewColor.B;
+		byte A = args.NewColor.A;
+
+		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropBlurBrush brush)
+		{
+			brush.TintColor = Windows.UI.Color.FromArgb(A, R, G, B);
+		}
+
+		// Save the color as hex in the App settings.
+		Atlas.Settings.BackdropBlurBrushTintColor = RGBHEX.ToHex(R, G, B);
+	}
+
+	// To set the Color Picker's color to the one currently in use in App Settings.
+	internal void BackdropBlurBrushTintColorPicker_Loaded(object sender, RoutedEventArgs e)
+	{
+		if (RGBHEX.ToRGB(Atlas.Settings.BackdropBlurBrushTintColor, out byte R, out byte G, out byte B))
+		{
+			((ColorPicker)sender).Color = Windows.UI.Color.FromArgb(255, R, G, B);
+		}
+	}
+
+	internal void BackdropBlurBrushTintOpacity_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	{
+		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropBlurBrush brush)
+		{
+			brush.TintOpacity = e.NewValue;
+		}
+	}
+
+	internal void BackdropBlurBrushBlurAmount_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	{
+		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropBlurBrush brush)
+		{
+			brush.Amount = e.NewValue;
+		}
+	}
+
+	internal void BackdropBlurBrushBrowseForPicButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog("Pictures|*.JPG;*.JPEG;*.PNG");
+
+		UriCreationOptions options = new()
+		{
+			DangerousDisablePathAndQueryCanonicalization = false
+		};
+
+		if (Uri.TryCreate(selectedFile, options, out Uri? _))
+		{
+			Atlas.Settings.BackdropCustomBrushPictureSelection = selectedFile;
+		}
+	}
+
+	internal void ClearBackdropCustomBrushPictureSelection() => Atlas.Settings.BackdropCustomBrushPictureSelection = string.Empty;
+
+	#endregion
+
+	internal async void RemoveAllToastNotifications(object sender, RoutedEventArgs e) => await AppNotificationManager.Default.RemoveAllAsync();
 
 
 #if APP_CONTROL_MANAGER

@@ -72,6 +72,13 @@
         <Border x:Name="CardBackgroundFillColorDefaultBrush_Helper" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Visibility="Collapsed" Opacity="0" />
         <Border x:Name="SolidBackgroundFillColorSecondaryBrush_Helper" Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}" Visibility="Collapsed" Opacity="0" />
 
+        <Image Source="{x:Bind ViewModel.AppSettings.BackdropCustomBrushPictureSelection, Mode=OneWay}"
+               Visibility="{x:Bind ViewModel.MainWindowPictureBackgroundVisibility, Mode=OneWay}"
+               Stretch="UniformToFill" 
+               Grid.RowSpan="2" />
+
+        <Rectangle Grid.RowSpan="2" x:Name="CustomAcrylicWithPictureBackdropHost" Visibility="Collapsed" IsHitTestVisible="False" />
+
         <!-- Titlebar -->
         <!-- https://learn.microsoft.com/windows/apps/develop/title-bar#full-customization-example -->
         <Grid x:Name="AppTitleBar"

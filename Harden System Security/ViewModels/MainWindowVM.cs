@@ -397,9 +397,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
 		Others.AppUpdate.UpdateAvailable += OnUpdateAvailable!;
-
-		// Apply the BackDrop when the ViewModel is instantiated
-		UpdateSystemBackDrop();
 	}
 
 	#region UI-Bound Properties

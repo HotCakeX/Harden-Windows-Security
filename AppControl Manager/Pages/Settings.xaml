@@ -115,10 +115,18 @@
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xEF1F;" />
                             </customUI:SettingsCardV2.HeaderIcon>
-                            <ComboBox ItemsSource="{x:Bind ViewModelMainWindow.BackDropOptions, Mode=OneTime}"
-                                      SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      SelectionChanged="{x:Bind ViewModel.AppThemeSetting_SelectionChanged}" />
+                            <ComboBox SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectionChanged="{x:Bind ViewModel.AppThemeSetting_SelectionChanged}">
+                                <x:String>Mica Alt</x:String>
+                                <x:String>Mica</x:String>
+                                <x:String>Acrylic</x:String>
+                                <x:String>Thin Acrylic</x:String>
+                                <x:String>Custom Mica</x:String>
+                                <x:String>Custom Blur</x:String>
+                            </ComboBox>
                         </customUI:SettingsCardV2>
+
+                        <!-- Acrylic Thin Options -->
 
                         <controls:SettingsCard x:Uid="AcrylicThinLuminosityOpacitySettingsCard"
                                                Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
@@ -138,14 +146,125 @@
                             <ColorPicker Loaded="{x:Bind ViewModel.AcrylicThinTintColorPicker_Loaded}"
                                          ColorSpectrumShape="Ring"
                                          IsMoreButtonVisible="True"
-                                         IsColorSliderVisible="False"
-                                         IsColorChannelTextInputVisible="False"
+                                         IsColorSliderVisible="True"
+                                         IsColorChannelTextInputVisible="True"
                                          IsHexInputVisible="True"
                                          IsAlphaEnabled="False"
                                          ColorChanged="{x:Bind ViewModel.TintColorPicker_ColorChanged}"
                                          IsAlphaSliderVisible="False"
                                          IsAlphaTextInputVisible="False" />
                         </controls:SettingsCard>
+
+                        <!-- End of Acrylic Thin Options -->
+
+                        <!-- BackdropMicaBrush Options -->
+
+                        <controls:SettingsCard x:Uid="BackdropMicaBrushLuminosityOpacitySettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
+                                    ValueChanged="{x:Bind ViewModel.BackdropMicaBrushLuminosityOpacitySlider_ValueChanged}"
+                                    SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.BackdropMicaBrushLuminosityOpacity, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="BackdropMicaBrushTintOpacitySettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
+                                    SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.BackdropMicaBrushTintOpacity, Mode=TwoWay}"
+                                    ValueChanged="{x:Bind ViewModel.BackdropMicaBrushTintOpacity_ValueChanged}"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="BackdropMicaBrushBlurAmountSettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <Slider Width="200" Minimum="1" Maximum="100" StepFrequency="1"
+                                    SmallChange="1" Value="{x:Bind ViewModel.AppSettings.BackdropMicaBrushBlurAmount, Mode=TwoWay}"
+                                    ValueChanged="{x:Bind ViewModel.BackdropMicaBrushBlurAmount_ValueChanged}"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="BackdropMicaBrushTintColorSettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <ColorPicker Loaded="{x:Bind ViewModel.BackdropMicaBrushTintColorPicker_Loaded}"
+                                         ColorSpectrumShape="Ring"
+                                         IsMoreButtonVisible="True"
+                                         IsColorSliderVisible="True"
+                                         IsColorChannelTextInputVisible="True"
+                                         IsHexInputVisible="True"
+                                         IsAlphaEnabled="False"
+                                         ColorChanged="{x:Bind ViewModel.BackdropMicaBrushTintColorPicker_ColorChanged}"
+                                         IsAlphaSliderVisible="False"
+                                         IsAlphaTextInputVisible="False" />
+                        </controls:SettingsCard>
+
+                        <!-- End of BackdropMicaBrush Options -->
+
+                        <!-- BackdropBlurBrush Options -->
+
+                        <controls:SettingsCard x:Uid="BackdropBlurBrushTintOpacitySettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropBlurBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
+                                    SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.BackdropBlurBrushTintOpacity, Mode=TwoWay}"
+                                    ValueChanged="{x:Bind ViewModel.BackdropBlurBrushTintOpacity_ValueChanged}"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="BackdropBlurBrushBlurAmountSettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropBlurBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <Slider Width="200" Minimum="1" Maximum="100" StepFrequency="1"
+                                    SmallChange="1" Value="{x:Bind ViewModel.AppSettings.BackdropBlurBrushBlurAmount, Mode=TwoWay}"
+                                    ValueChanged="{x:Bind ViewModel.BackdropBlurBrushBlurAmount_ValueChanged}"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="BackdropBlurBrushTintColorSettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropBlurBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
+                            <ColorPicker Loaded="{x:Bind ViewModel.BackdropBlurBrushTintColorPicker_Loaded}"
+                                         ColorSpectrumShape="Ring"
+                                         IsMoreButtonVisible="True"
+                                         IsColorSliderVisible="True"
+                                         IsColorChannelTextInputVisible="True"
+                                         IsHexInputVisible="True"
+                                         IsAlphaEnabled="False"
+                                         ColorChanged="{x:Bind ViewModel.BackdropBlurBrushTintColorPicker_ColorChanged}"
+                                         IsAlphaSliderVisible="False"
+                                         IsAlphaTextInputVisible="False" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="BackdropBlurBrushBackgroundPictureSettingsCard"
+                                               Visibility="{x:Bind ViewModel.BackdropCustomBrushPictureSelectionSettingsCardVisibility, Mode=OneWay}">
+
+                            <customUI:SplitButtonV2 x:Uid="FileBrowseButton"
+                                                    ObservedData="{x:Bind ViewModel.AppSettings.BackdropCustomBrushPictureSelection, Mode=OneWay}"
+                                                    Click="{x:Bind ViewModel.BackdropBlurBrushBrowseForPicButton_Click}">
+
+                                <customUI:SplitButtonV2.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE8DA;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </customUI:SplitButtonV2.ContentTemplate>
+
+                                <customUI:SplitButtonV2.Flyout>
+                                    <Flyout>
+
+                                        <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="5">
+
+                                            <Button x:Uid="ResetButton" Click="{x:Bind ViewModel.ClearBackdropCustomBrushPictureSelection}" />
+
+                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <TextBox Text="{x:Bind ViewModel.AppSettings.BackdropCustomBrushPictureSelection, Mode=OneWay}"
+                                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                     MinWidth="400" IsReadOnly="True" />
+
+                                        </CCToolKit:WrapPanel>
+
+                                    </Flyout>
+                                </customUI:SplitButtonV2.Flyout>
+
+                            </customUI:SplitButtonV2>
+
+                        </controls:SettingsCard>
+
+                        <!-- End of BackdropBlurBrush Options -->
 
                         <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard"
                                                  Visibility="{x:Bind ViewModel.AppThemeSettingsCardVisibility, Mode=OneWay}" >

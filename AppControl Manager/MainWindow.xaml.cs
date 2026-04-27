@@ -104,6 +104,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 #endif
 
 	internal static Grid? RootGridPub { get; private set; }
+	internal static Microsoft.UI.Xaml.Shapes.Rectangle? CustomAcrylicWithPictureBackdropHostPub { get; private set; }
 
 	private NavigationService Nav => ViewModelProvider.NavigationService;
 
@@ -118,6 +119,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		Nav.Initialize(ContentFrame, MainNavigation);
 
 		RootGridPub = RootGrid;
+		CustomAcrylicWithPictureBackdropHostPub = CustomAcrylicWithPictureBackdropHost;
 
 		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the Atlas
 		Atlas.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -142,9 +144,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = this;
 
-		// We can't rely on "UpdateSystemBackDrop" method in "MainWindowVM" class because when it runs at startup due to AppSettings class instance creation, Window hasn't been initialized yet so it silently skips setting AcrylicThin backdrop that requires Window reference for setup.
-		if (Enum.Parse<ViewModels.MainWindowVM.BackDropComboBoxItems>(Atlas.Settings.BackDropBackground) == ViewModels.MainWindowVM.BackDropComboBoxItems.AcrylicThin)
-			SetThinAcrylicBackdrop();
+		// Apply the BackDrop at startup.
+		ViewModel.UpdateSystemBackDrop(this);
 
 		// Subscribe to the NavigationView Content background change event
 		NavigationBackgroundManager.NavViewBackgroundChange += OnNavigationBackgroundChanged;
@@ -382,7 +383,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 			// On Acrylic Thin, only Dark theme looks nice, light theme creates white background for various elements.
 			ViewModel.ConfigurationSource.Theme = SystemBackdropTheme.Dark;
-			OnAppThemeChanged(null, new("Dark")); // Change app theme to dark if it's currently anything else.
 
 			ViewModel.AcrylicController = new()
 			{
@@ -496,9 +496,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <param name="e"></param>
 	private void OnAppThemeChanged(object? sender, AppThemeChangedEventArgs e)
 	{
-		if (ViewModel.AcrylicController is not null || ViewModel.ConfigurationSource is not null)
+		if (ViewModel.ForceDarkModeTheme)
 		{
-			// On Acrylic Thin, only Dark theme looks nice, light theme creates white background for various elements.
 			e.NewTheme = "Dark";
 		}
 

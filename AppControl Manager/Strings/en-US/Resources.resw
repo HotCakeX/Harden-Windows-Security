@@ -7366,4 +7366,110 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Always automatically switch to the analysis page after the data has been retrieved.</value>
   </data>
+  <!--NEW-->
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Luminosity Opacity of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Luminosity Opacity</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Luminosity Opacity of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Luminosity Opacity of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Tint Opacity</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Tint Color of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Tint Color</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Tint Color of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Tint Color of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Blur amount of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>Blur amount</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Blur amount of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Blur amount of the custom Mica backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Tint Opacity</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Tint Opacity of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Blur amount of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>Blur amount</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Blur amount of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Blur amount of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Adjust the Tint Color of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Tint Color</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Adjust the Tint Color of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust the Tint Color of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Description" xml:space="preserve">
+    <value>Set the background picture of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Header" xml:space="preserve">
+    <value>Background Picture</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Set the background picture of the custom Blur backdrop.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Set the background picture of the custom Blur backdrop.</value>
+  </data>
+  <data name="ResetButton.Content" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reset</value>
+  </data>
 </root>

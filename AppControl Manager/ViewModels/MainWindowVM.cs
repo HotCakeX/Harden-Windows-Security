@@ -521,9 +521,6 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
 		AppUpdate.UpdateAvailable += OnUpdateAvailable!;
 
-		// Apply the BackDrop when the ViewModel is instantiated
-		UpdateSystemBackDrop();
-
 		// Subscribe to encryption setting changes
 		Atlas.Settings.EncryptPoliciesLibraryChanged += (s, e) => OnEncryptPoliciesLibraryChanged(e);
 

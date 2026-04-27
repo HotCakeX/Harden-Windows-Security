@@ -1,15 +1,1 @@
-Introducing Data Analysis
-
-You can now analyze the App Control/Code Integrity event logs or Microsoft Defender for Endpoint (MDE) Advanced Hunting data via the AppControl Manager. Once the data has been retrieved, you will get a textual summary that explains all of the available data and what they mean, additionally, you will also receive multiple recommended actions that you can take for your specific situation.
-
-Interactive charts are generated to help with data visualization. You will have access to the entire blocked and audited/allowed trend in chronological order to quickly identify the peak points and detect anomalies.
-
-There are also multiple Pie and Bar charts to visualize multiple data points and provide insights that helps you understand your data.
-
-This analysis feature is available for both Event Logs (whether from EVTX or local system) and MDE Advanced hunting data (whether live data from cloud or from local CSV files).
-
-The interactive charts can be downloaded in SVG format.
-
-There are multiple color palettes to choose from in order to personalize the charts available in the analysis page.
-
-Please visit the GitHub for more information: https://github.com/HotCakeX/Harden-Windows-Security
+* Added 2 new background customization options to the Settings page: "Custom Mica" and "Custom Blur". They offer you greater flexibility and freedom to customize the app's appearance. You can set a custom background image, apply blur effects on it and more.

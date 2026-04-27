@@ -53,6 +53,8 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Brush\BackdropBlurBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Brush\BackdropMicaBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolKits\SwitchPresenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolKits\WrapPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolKits\ShadowsAndEffects.cs" />

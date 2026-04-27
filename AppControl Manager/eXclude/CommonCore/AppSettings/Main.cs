@@ -91,6 +91,14 @@ internal sealed partial class Main : ViewModelBase
 		MSSecurityBaselineFilePath = ReadValue(nameof(MSSecurityBaselineFilePath), MSSecurityBaselineFilePath);
 		RememberMS365AppsSecurityBaselineFilePath = ReadValue(nameof(RememberMS365AppsSecurityBaselineFilePath), RememberMS365AppsSecurityBaselineFilePath);
 		MS365AppsSecurityBaselineFilePath = ReadValue(nameof(MS365AppsSecurityBaselineFilePath), MS365AppsSecurityBaselineFilePath);
+		BackdropCustomBrushPictureSelection = ReadValue(nameof(BackdropCustomBrushPictureSelection), BackdropCustomBrushPictureSelection);
+		BackdropMicaBrushLuminosityOpacity = ReadValue(nameof(BackdropMicaBrushLuminosityOpacity), BackdropMicaBrushLuminosityOpacity);
+		BackdropMicaBrushTintOpacity = ReadValue(nameof(BackdropMicaBrushTintOpacity), BackdropMicaBrushTintOpacity);
+		BackdropMicaBrushTintColor = ReadValue(nameof(BackdropMicaBrushTintColor), BackdropMicaBrushTintColor);
+		BackdropMicaBrushBlurAmount = ReadValue(nameof(BackdropMicaBrushBlurAmount), BackdropMicaBrushBlurAmount);
+		BackdropBlurBrushTintOpacity = ReadValue(nameof(BackdropBlurBrushTintOpacity), BackdropBlurBrushTintOpacity);
+		BackdropBlurBrushTintColor = ReadValue(nameof(BackdropBlurBrushTintColor), BackdropBlurBrushTintColor);
+		BackdropBlurBrushBlurAmount = ReadValue(nameof(BackdropBlurBrushBlurAmount), BackdropBlurBrushBlurAmount);
 	}
 
 	/// <summary>
@@ -765,4 +773,122 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// The Blur Amount of the <see cref="UI.Brush.BackdropBlurBrush"/>
+	/// </summary>
+	internal double BackdropBlurBrushBlurAmount
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropBlurBrushBlurAmount), field);
+			}
+		}
+	} = 70;
+
+	/// <summary>
+	/// The Tint Color of the <see cref="UI.Brush.BackdropBlurBrush"/>
+	/// </summary>
+	internal string BackdropBlurBrushTintColor
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropBlurBrushTintColor), field);
+			}
+		}
+	} = "#E9A6FF";
+
+	/// <summary>
+	/// The Tint Opacity of the <see cref="UI.Brush.BackdropBlurBrush"/>
+	/// </summary>
+	internal double BackdropBlurBrushTintOpacity
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropBlurBrushTintOpacity), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// The Blur Amount of the <see cref="UI.Brush.BackdropMicaBrush"/>
+	/// </summary>
+	internal double BackdropMicaBrushBlurAmount
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropMicaBrushBlurAmount), field);
+			}
+		}
+	} = 40;
+
+	/// <summary>
+	/// The Tint Color of the <see cref="UI.Brush.BackdropMicaBrush"/>
+	/// </summary>
+	internal string BackdropMicaBrushTintColor
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropMicaBrushTintColor), field);
+			}
+		}
+	} = "#E9A6FF";
+
+	/// <summary>
+	/// The Tint Opacity of the <see cref="UI.Brush.BackdropMicaBrush"/>
+	/// </summary>
+	internal double BackdropMicaBrushTintOpacity
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropMicaBrushTintOpacity), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// The Luminosity Opacity of the <see cref="UI.Brush.BackdropMicaBrush"/>
+	/// </summary>
+	internal double BackdropMicaBrushLuminosityOpacity
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropMicaBrushLuminosityOpacity), field);
+			}
+		}
+	} = 0.1;
+
+	/// <summary>
+	/// The Background Picture used by the <see cref="UI.Brush.BackdropMicaBrush"/> and <see cref="UI.Brush.BackdropBlurBrush"/>.
+	/// </summary>
+	internal string BackdropCustomBrushPictureSelection
+	{
+		get; set
+		{
+			// Since this is used as the ImageSource, it cannot be null or empty string.
+			if (!System.IO.Path.Exists(value))
+			{
+				value = "ms-appx:///Assets/TileImages/flower.jpg";
+			}
+
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(BackdropCustomBrushPictureSelection), field);
+			}
+		}
+	} = "ms-appx:///Assets/TileImages/flower.jpg";
 }

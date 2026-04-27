@@ -21,6 +21,7 @@ using System.Threading;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
+using Microsoft.Win32;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -46,6 +47,9 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
 		new(() =>
 		{
+			// Register specialized strategies.
+			RegisterSpecializedStrategies();
+
 			return MUnit.CreateMUnitsFromPolicies(Categories.EdgeBrowserConfigurations);
 		}, LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -53,4 +57,63 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 	/// Gets the current catalog of all MUnits for this ViewModel.
 	/// </summary>
 	public override List<MUnit> AllMUnits => LazyCatalog.Value;
+
+	/// <summary>
+	/// Registers specialized strategies for specific policies.
+	/// </summary>
+	private static void RegisterSpecializedStrategies()
+	{
+		// Register specialized remove strategy for TLSCipherSuiteDenyList.
+		// Because "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList" must be deleted if empty.
+		// Otherwise Edge will still think it is being controlled by an organization.
+		// So after the removal of each of these values, there will be a check to see if that key is empty or not and if it's empty, it'll be deleted.
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"SOFTWARE\\Policies\\Microsoft\\Edge\\TLSCipherSuiteDenyList|1",
+			new TLSCipherSuiteDenyListPostRemoveCleanup()
+		);
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"SOFTWARE\\Policies\\Microsoft\\Edge\\TLSCipherSuiteDenyList|2",
+			new TLSCipherSuiteDenyListPostRemoveCleanup()
+		);
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"SOFTWARE\\Policies\\Microsoft\\Edge\\TLSCipherSuiteDenyList|3",
+			new TLSCipherSuiteDenyListPostRemoveCleanup()
+		);
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"SOFTWARE\\Policies\\Microsoft\\Edge\\TLSCipherSuiteDenyList|4",
+			new TLSCipherSuiteDenyListPostRemoveCleanup()
+		);
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"SOFTWARE\\Policies\\Microsoft\\Edge\\TLSCipherSuiteDenyList|5",
+			new TLSCipherSuiteDenyListPostRemoveCleanup()
+		);
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"SOFTWARE\\Policies\\Microsoft\\Edge\\TLSCipherSuiteDenyList|6",
+			new TLSCipherSuiteDenyListPostRemoveCleanup()
+		);
+	}
+
+	/// <summary>
+	/// Specialized remove strategy that runs after the main remove operation.	
+	/// </summary>
+	private sealed class TLSCipherSuiteDenyListPostRemoveCleanup : ISpecializedRemoveStrategy
+	{
+		public ExecutionTiming Timing => ExecutionTiming.After;
+
+		public void Remove()
+		{
+			using RegistryKey? TLSCipherSuiteDenyListSubKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList", false);
+
+			if (TLSCipherSuiteDenyListSubKey is not null)
+			{
+				string[] TLSCipherSuiteDenyListItems = TLSCipherSuiteDenyListSubKey.GetValueNames();
+
+				if (TLSCipherSuiteDenyListItems.Length == 0)
+				{
+					Registry.LocalMachine.DeleteSubKey(@"SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList");
+				}
+			}
+		}
+	}
+
 }

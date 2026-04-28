@@ -65,7 +65,7 @@ body:
   - type: input
     attributes:
       label: Windows Version
-      description: The version or build number of the Windows you're using. You can view it in the Windows Settings -> System -> About
+      description: The version or build number of the Windows you're using. You can view it in the Windows Settings -> System -> About. You can also access that area by pressing `Win + R` keys simultaneously, typing `ms-settings:about` and pressing enter.
       placeholder: E.g., 25H2 - 26200.8117
     validations:
       required: true

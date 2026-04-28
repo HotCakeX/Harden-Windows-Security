@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Dispatching;
 using CommonCore.AppSettings;
 using Microsoft.Windows.AppNotifications;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.WindowComponents;
@@ -291,7 +292,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	internal void AcrylicThinLuminosityOpacitySlider_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	internal void AcrylicThinLuminosityOpacitySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
 		_ = (ViewModelProvider.MainWindowVM.AcrylicController?.LuminosityOpacity = (float)e.NewValue);
 	}
@@ -331,7 +332,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	internal void BackdropMicaBrushLuminosityOpacitySlider_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	internal void BackdropMicaBrushLuminosityOpacitySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
 		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropMicaBrush brush)
 		{
@@ -339,7 +340,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	internal void BackdropMicaBrushTintOpacity_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	internal void BackdropMicaBrushTintOpacity_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
 		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropMicaBrush brush)
 		{
@@ -347,26 +348,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	internal void BackdropMicaBrushBlurAmount_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	internal void BackdropMicaBrushBlurAmount_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
 		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropMicaBrush brush)
 		{
 			brush.Amount = e.NewValue;
-		}
-	}
-
-	internal void BackdropMicaBrushBrowseForPicButton_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog("Pictures|*.JPG;*.JPEG;*.PNG");
-
-		UriCreationOptions options = new()
-		{
-			DangerousDisablePathAndQueryCanonicalization = false
-		};
-
-		if (Uri.TryCreate(selectedFile, options, out Uri? _))
-		{
-			Atlas.Settings.BackdropCustomBrushPictureSelection = selectedFile;
 		}
 	}
 
@@ -402,7 +388,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	internal void BackdropBlurBrushTintOpacity_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	internal void BackdropBlurBrushTintOpacity_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
 		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropBlurBrush brush)
 		{
@@ -410,7 +396,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	internal void BackdropBlurBrushBlurAmount_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+	internal void BackdropBlurBrushBlurAmount_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
 		if (MainWindow.CustomAcrylicWithPictureBackdropHostPub?.Fill is CommonCore.UI.Brush.BackdropBlurBrush brush)
 		{
@@ -420,7 +406,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	internal void BackdropBlurBrushBrowseForPicButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog("Pictures|*.JPG;*.JPEG;*.PNG");
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog("Pictures|*.JPG;*.JPEG;*.PNG;*.HEIC;*.WEBP;*.GIF;*.ICO;*.BMP");
 
 		UriCreationOptions options = new()
 		{

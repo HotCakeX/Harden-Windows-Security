@@ -85,7 +85,7 @@ internal static class RedundantAssetDetection
 	// 4096 bits / 64 bits-per-ulong = 64 ulongs
 	private const int HashSizeInUlongs = TotalPixelsForHash / 64;
 
-	private static readonly string[] Extensions = [".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff", ".ico", ".jxr", ".webp"];
+	private static readonly string[] Extensions = [".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff", ".ico", ".jxr", ".webp", ".heic"];
 
 	private static readonly BitmapTransform Transform = new()
 	{

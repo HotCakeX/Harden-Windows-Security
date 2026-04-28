@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
+        *Thanks for taking the time to fill out this bug report!*
   - type: dropdown
     id: version
     attributes:
@@ -20,19 +20,11 @@ body:
     validations:
       required: true
   - type: checkboxes
-    id: Requirements
-    attributes:
-      label: Does Your System Meet The Requirements?
-      description: Depending on which product your bug belongs to, please make sure you have read their requirements and meet them [Harden System Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security#supported-operation-systems), [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#supported-operation-systems)
-      options:
-        - label: Yes, I acknowledge that I've read the requirements and my system meets them. 👍
-          required: true
-  - type: checkboxes
     id: Genuine-Windows
     attributes:
       label: Is your Windows Installation Genuine?
       options:
-        - label: Yes, I acknowledge that the installation media (such as ISO file) of the Windows OS I used was downloaded from the official Microsoft website and I didn't tamper or modify it. 💯
+        - label: Yes, I acknowledge that the installation media (such as ISO file) of the Windows OS I'm using was downloaded from the official Microsoft website and I didn't tamper or modify it. 💯
           required: true
   - type: checkboxes
     id: No-3rd-Party-Tool
@@ -60,6 +52,27 @@ body:
     id: Error-Details
     attributes:
       label: Error Details
-      description: Any error messages or codes you received.
+      description: Any error messages you received or app logs you have can be pasted here.
     validations:
       required: false
+  - type: upload
+    id: Error-Details-File-Upload
+    attributes:
+      label: Upload any files you'd like to share as ZIP files.
+      description: If you'd like to upload file(s) that are related to the issue or can help reproduce the problem you're reporting, please zip them first and then upload them here.
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: Windows Version
+      description: The version or build number of the Windows you're using. You can view it in the Windows Settings -> System -> About
+      placeholder: E.g., 25H2 - 26200.8117
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: App Version
+      description: The version of the app you are using. You can view it in the app's Settings page -> About. You can also view app versions in the Windows Settings -> Installed Apps -> Select an app and choose "Advanced options".
+      placeholder: E.g., 2.0.56.0
+    validations:
+      required: true

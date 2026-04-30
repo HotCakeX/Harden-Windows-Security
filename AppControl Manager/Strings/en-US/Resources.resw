@@ -7366,7 +7366,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Always automatically switch to the analysis page after the data has been retrieved.</value>
   </data>
-  <!--NEW-->
   <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
     <value>Adjust the Luminosity Opacity of the custom Mica backdrop.</value>
   </data>

@@ -491,6 +491,12 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 			type: DependencyType.Apply,
 			timing: ExecutionTiming.Before
 		);
+
+		// Register specialized apply strategy for EnableScripts.
+		SpecializedStrategiesRegistry.RegisterSpecializedApply(
+			"Software\\Policies\\Microsoft\\Windows\\PowerShell|EnableScripts",
+			new SetWinPowerShellExecutionToRestrictedPostRemoveCleanup()
+		);
 	}
 
 	/// <summary>
@@ -547,4 +553,30 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		}
 	}
 
+	/// <summary>
+	/// Specialized apply strategy that runs after the main apply operation.
+	/// </summary>
+	private sealed class SetWinPowerShellExecutionToRestrictedPostRemoveCleanup : ISpecializedApplyStrategy
+	{
+		public ExecutionTiming Timing => ExecutionTiming.After;
+
+		public void Apply()
+		{
+			// When we disable running scripts on the system which sets the execution policy to Restricted,
+			// We need to delete the "ExecutionPolicy" in the following subkey since GP Editor's changes also causes a "**del." entry to be created in the POL file to delete the same subkey/entry.
+			// So here we just delete it once from the POL file which triggers the reg key deletion too.
+			RegistryPolicyEntry item = new(
+				source: Source.GroupPolicy,
+				keyName: "Software\\Policies\\Microsoft\\Windows\\PowerShell",
+				valueName: "ExecutionPolicy",
+				type: RegistryValueType.REG_SZ,
+				size: 4,
+				data: new ReadOnlyMemory<byte>(),
+				hive: Hive.HKLM,
+				id: Guid.CreateVersion7()
+				);
+
+			RegistryPolicyParser.RemovePoliciesFromSystem([item], GroupPolicyContext.Machine);
+		}
+	}
 }

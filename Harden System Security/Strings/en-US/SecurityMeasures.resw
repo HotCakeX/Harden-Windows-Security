@@ -985,4 +985,8 @@
 <data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
     <value>Disabling the WebClient service prevents attackers from abusing WebDAV to intercept and steal NTLM credentials and other sensitive data via malicious links.</value>
 </data>
+<!--NEW-->
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>Set the execution policy of the Windows PowerShell to restricted so that individual commands will be permitted but running scripts will not not allowed.</value>
+</data>
 </root>

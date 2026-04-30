@@ -5756,7 +5756,6 @@ Thumbprint: {3}</value>
   <data name="SidebarSplitViewDisplayModeChangerToggleButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Switch between the Overlay and Inline modes of the sidebar pane.</value>
   </data>
-  <!--NEW-->
   <data name="ApplyRow.Text" xml:space="preserve">
     <value>Apply</value>
   </data>
@@ -5891,5 +5890,14 @@ Thumbprint: {3}</value>
   </data>
   <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Change the Windows Accent Color that affects the user interface elements in apps.</value>
+  </data>
+  <data name="ExportSelectedRows.Text" xml:space="preserve">
+    <value>Export to JSON</value>
+  </data>
+  <data name="ExportSelectedRows.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Export the selected data to JSON.</value>
+  </data>
+  <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Export the selected data to JSON.</value>
   </data>
 </root>

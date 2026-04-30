@@ -7366,4 +7366,118 @@
   <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αυτόματη εναλλαγή στη σελίδα ανάλυσης μετά την ανάκτηση των δεδομένων πάντα.</value>
   </data>
+    <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια φωτεινότητας του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Αδιαφάνεια φωτεινότητας</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια φωτεινότητας του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια φωτεινότητας του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια απόχρωσης του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Αδιαφάνεια απόχρωσης</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια απόχρωσης του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια απόχρωσης του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα απόχρωσης του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Χρώμα απόχρωσης</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα απόχρωσης του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα απόχρωσης του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε την ένταση θολώματος του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>Ένταση θολώματος</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε την ένταση θολώματος του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε την ένταση θολώματος του προσαρμοσμένου φόντου Mica.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια απόχρωσης του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Αδιαφάνεια απόχρωσης</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια απόχρωσης του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε την αδιαφάνεια απόχρωσης του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε την ένταση θολώματος του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>Ένταση θολώματος</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε την ένταση θολώματος του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε την ένταση θολώματος του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα απόχρωσης του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Χρώμα απόχρωσης</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα απόχρωσης του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα απόχρωσης του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Description" xml:space="preserve">
+    <value>Ορίστε την εικόνα φόντου του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Header" xml:space="preserve">
+    <value>Εικόνα φόντου</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ορίστε την εικόνα φόντου του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ορίστε την εικόνα φόντου του προσαρμοσμένου φόντου Blur.</value>
+  </data>
+  <data name="ResetButton.Content" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="ResetButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.Content" xml:space="preserve">
+    <value>Αλλαγή χρώματος έμφασης</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αλλάξτε το χρώμα έμφασης των Windows που επηρεάζει τα στοιχεία διεπαφής χρήστη στις εφαρμογές.</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αλλάξτε το χρώμα έμφασης των Windows που επηρεάζει τα στοιχεία διεπαφής χρήστη στις εφαρμογές.</value>
+  </data>
 </root>

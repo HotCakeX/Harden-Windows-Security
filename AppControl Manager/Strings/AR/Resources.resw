@@ -7366,4 +7366,118 @@
   <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>التبديل دائمًا وبشكل تلقائي إلى صفحة التحليل بعد استرداد البيانات.</value>
   </data>
+    <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>اضبط تعتيم الإضاءة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>تعتيم الإضاءة</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط تعتيم الإضاءة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط تعتيم الإضاءة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>اضبط تعتيم الصبغة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>تعتيم الصبغة</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط تعتيم الصبغة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط تعتيم الصبغة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>اضبط لون الصبغة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>لون الصبغة</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط لون الصبغة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط لون الصبغة لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>اضبط مقدار التمويه لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>مقدار التمويه</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط مقدار التمويه لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط مقدار التمويه لخلفية Mica المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>اضبط تعتيم الصبغة لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>تعتيم الصبغة</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط تعتيم الصبغة لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط تعتيم الصبغة لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>اضبط مقدار التمويه لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>مقدار التمويه</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط مقدار التمويه لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط مقدار التمويه لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>اضبط لون الصبغة لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>لون الصبغة</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضبط لون الصبغة لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اضبط لون الصبغة لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Description" xml:space="preserve">
+    <value>عيّن صورة الخلفية لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Header" xml:space="preserve">
+    <value>صورة الخلفية</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عيّن صورة الخلفية لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عيّن صورة الخلفية لخلفية التمويه المخصصة.</value>
+  </data>
+  <data name="ResetButton.Content" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+  <data name="ResetButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+  <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.Content" xml:space="preserve">
+    <value>تغيير لون التمييز</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>غيّر لون التمييز في Windows الذي يؤثر على عناصر واجهة المستخدم في التطبيقات.</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>غيّر لون التمييز في Windows الذي يؤثر على عناصر واجهة المستخدم في التطبيقات.</value>
+  </data>
 </root>

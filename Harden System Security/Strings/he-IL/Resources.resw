@@ -5756,4 +5756,148 @@
   <data name="SidebarSplitViewDisplayModeChangerToggleButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>עבור בין תצוגת שכבת-על לתצוגה משולבת בחלונית סרגל הצד.</value>
   </data>
+   <data name="ApplyRow.Text" xml:space="preserve">
+    <value>החל</value>
+  </data>
+  <data name="ApplyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל את הפריט/ים הנבחר/ים כעת.</value>
+  </data>
+  <data name="ApplyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל את הפריט/ים הנבחר/ים כעת.</value>
+  </data>
+  <data name="RememberPathToggleSwitch.OnContent" xml:space="preserve">
+    <value>זכור</value>
+  </data>
+  <data name="RememberPathToggleSwitch.OffContent" xml:space="preserve">
+    <value>אל תזכור</value>
+  </data>
+  <data name="RememberPathToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>זכור את הנתיב הנבחר כדי למלא אותו אוטומטית בפעם הבאה.</value>
+  </data>
+  <data name="RememberPathToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>זכור את הנתיב הנבחר כדי למלא אותו אוטומטית בפעם הבאה.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>התאם את שקיפות הבהירות של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>שקיפות בהירות</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את שקיפות הבהירות של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את שקיפות הבהירות של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>התאם את שקיפות הגוון של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>שקיפות גוון</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את שקיפות הגוון של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את שקיפות הגוון של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>התאם את צבע הגוון של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>צבע גוון</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את צבע הגוון של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את צבע הגוון של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>התאם את עוצמת הטשטוש של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>עוצמת טשטוש</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את עוצמת הטשטוש של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את עוצמת הטשטוש של רקע Mica המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>התאם את שקיפות הגוון של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>שקיפות גוון</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את שקיפות הגוון של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את שקיפות הגוון של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>התאם את עוצמת הטשטוש של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>עוצמת טשטוש</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את עוצמת הטשטוש של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את עוצמת הטשטוש של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>התאם את צבע הגוון של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>צבע גוון</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את צבע הגוון של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את צבע הגוון של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Description" xml:space="preserve">
+    <value>הגדר את תמונת הרקע של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Header" xml:space="preserve">
+    <value>תמונת רקע</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדר את תמונת הרקע של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגדר את תמונת הרקע של רקע Blur המותאם אישית.</value>
+  </data>
+  <data name="ResetButton.Content" xml:space="preserve">
+    <value>איפוס</value>
+  </data>
+  <data name="ResetButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>איפוס</value>
+  </data>
+  <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>איפוס</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.Content" xml:space="preserve">
+    <value>שינוי צבע הדגשה</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שנה את צבע ההדגשה של Windows המשפיע על רכיבי ממשק המשתמש באפליקציות.</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שנה את צבע ההדגשה של Windows המשפיע על רכיבי ממשק המשתמש באפליקציות.</value>
+  </data>
+  <data name="ExportSelectedRows.Text" xml:space="preserve">
+    <value>ייצוא ל-JSON</value>
+  </data>
+  <data name="ExportSelectedRows.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ייצא את הנתונים הנבחרים ל-JSON.</value>
+  </data>
+  <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ייצא את הנתונים הנבחרים ל-JSON.</value>
+  </data>
 </root>

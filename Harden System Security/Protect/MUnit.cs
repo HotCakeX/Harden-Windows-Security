@@ -1051,6 +1051,7 @@ internal sealed partial class MUnit(
 					#region extra cleanup
 
 					// For removal, we handle both standard names and "**del." legacy names.
+					// Because we used to add the entries to the POL file with "**del." prefix but now we completely remove the entries that need to be removed, controlled by the PolicyAction: 1
 					List<RegistryPolicyEntry> toRemoveProcessed = [];
 
 					foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(toRemove))
@@ -1058,6 +1059,7 @@ internal sealed partial class MUnit(
 						// Add the original entry
 						toRemoveProcessed.Add(entry);
 
+						// This makes sure that if the same entry with "**del." prefix exists, it will be deleted too.
 						toRemoveProcessed.Add(new(
 							entry.Source,
 							entry.KeyName,

@@ -116,7 +116,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		get; set
 		{
 			if (SPT(ref field, value))
-				SearchBox_TextChanged();
+				_ = SearchBox_TextChanged();
 		}
 	}
 
@@ -142,12 +142,12 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the SearchBox text change
 	/// </summary>
-	private void SearchBox_TextChanged()
+	private bool SearchBox_TextChanged()
 	{
 		string? searchTerm = SearchKeyword?.Trim();
 
 		if (searchTerm is null)
-			return;
+			return false;
 
 		// Get the ListView ScrollViewer info
 		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.GroupPolicyEditor);
@@ -179,6 +179,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			// restore horizontal scroll position
 			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
+
+		return true;
 	}
 
 	#endregion
@@ -572,10 +574,11 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 						await Task.Run(SavePoliciesToFile);
 
 						// Refresh the search filter to update the ListView display based on the potentially changed properties of the edited entry
-						SearchBox_TextChanged();
-
-						// Recalculate columns to fit new data width
-						CalculateColumnWidths();
+						if (!SearchBox_TextChanged())
+						{
+							// Recalculate columns to fit new data width
+							CalculateColumnWidths();
+						}
 					}
 					catch
 					{
@@ -674,7 +677,15 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Deletes the selected policies from the currently loaded POL or JSON file and refreshes the UI.
 	/// </summary>
-	internal async void DeleteSelectedPolicies_Click()
+	internal async void DeleteSelectedPolicies_Invoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+	{
+		await DeleteSelectedPolicies();
+		args.Handled = true;
+	}
+
+	internal async void DeleteSelectedPolicies_Click() => await DeleteSelectedPolicies();
+
+	private async Task DeleteSelectedPolicies()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.GroupPolicyEditor);
 
@@ -788,10 +799,72 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	#endregion
 
+	#region Export
+
+	internal async void ExportSelectedDataToJSON_Invoke(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+	{
+		await ExportSelectedDataToJSON();
+		args.Handled = true;
+	}
+
+	internal async void ExportSelectedDataToJSON_Click() => await ExportSelectedDataToJSON();
+
+	private async Task ExportSelectedDataToJSON()
+	{
+		try
+		{
+			string? selectedFile = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, "Harden System Security Exported Policies.JSON");
+
+			if (string.IsNullOrEmpty(selectedFile))
+			{
+				MainInfoBar.WriteWarning("You need to select a location to export the data to.");
+				return;
+			}
+
+			ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.GroupPolicyEditor);
+
+			if (lv is null) return;
+
+			List<RegistryPolicyEntry> itemsToExport = [];
+
+			if (lv.SelectedItems.Count > 0)
+			{
+				// SelectedItems is an IList, and contains RegistryPolicyEntry
+				ListViewHelper.ConvertRowToText(lv.SelectedItems, RegistryPolicyEntryPropertyMappings);
+
+				foreach (object item in lv.SelectedItems)
+				{
+					if (item is RegistryPolicyEntry obj)
+					{
+						itemsToExport.Add(obj);
+					}
+				}
+			}
+
+			if (itemsToExport.Count > 0)
+			{
+				RegistryPolicyEntry.Save(selectedFile, itemsToExport);
+
+				MainInfoBar.WriteSuccess($"{itemsToExport.Count} policies have been successfully exported.");
+			}
+			else
+			{
+				MainInfoBar.WriteWarning("There is nothing to export.");
+				return;
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	#endregion
+
 	/// <summary>
 	/// The main policy file whose data will be displayed in the ListView.
 	/// </summary>
-	internal string? SelectedFile { get; set => SPT(ref field, value); }
+	internal string? SelectedFile { get; set => SP(ref field, value); }
 
 	internal void ClearSelectedFile_Click() => SelectedFile = null;
 
@@ -891,7 +964,12 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 			});
 
-			CalculateColumnWidths();
+			// If user has already typed something in the search bar, we need to display filtered results.
+			if (!SearchBox_TextChanged())
+			{
+				CalculateColumnWidths();
+			}
+
 			MainInfoBar.WriteSuccess(Atlas.GetStr("GroupPolicyDataLoadedSuccess"));
 		}
 		catch (Exception ex)
@@ -951,7 +1029,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	#region Merge POL files
 
-	internal string? SelectedMainPOLFileForMerge { get; set => SPT(ref field, value); }
+	internal string? SelectedMainPOLFileForMerge { get; set => SP(ref field, value); }
 	internal void ClearSelectedMainPOLFileForMerge_Click() => SelectedMainPOLFileForMerge = null;
 
 	internal UniqueStringObservableCollection SelectedOtherPOLFilesForMerge = [];

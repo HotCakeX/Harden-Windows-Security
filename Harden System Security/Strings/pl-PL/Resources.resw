@@ -5756,4 +5756,148 @@ Odcisk Palca: {3}</value>
   <data name="SidebarSplitViewDisplayModeChangerToggleButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przełącz między trybami nakładki i wbudowanym w panelu paska bocznego.</value>
   </data>
+   <data name="ApplyRow.Text" xml:space="preserve">
+    <value>Zastosuj</value>
+  </data>
+  <data name="ApplyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuj aktualnie wybrane elementy.</value>
+  </data>
+  <data name="ApplyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj aktualnie wybrane elementy.</value>
+  </data>
+  <data name="RememberPathToggleSwitch.OnContent" xml:space="preserve">
+    <value>Zapamiętaj</value>
+  </data>
+  <data name="RememberPathToggleSwitch.OffContent" xml:space="preserve">
+    <value>Nie zapamiętuj</value>
+  </data>
+  <data name="RememberPathToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapamiętaj wybraną ścieżkę, aby automatycznie ją wypełnić następnym razem.</value>
+  </data>
+  <data name="RememberPathToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zapamiętaj wybraną ścieżkę, aby automatycznie ją wypełnić następnym razem.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj krycie luminancji niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Krycie luminancji</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj krycie luminancji niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj krycie luminancji niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj krycie odcienia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Krycie odcienia</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj krycie odcienia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj krycie odcienia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj kolor odcienia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Kolor odcienia</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj kolor odcienia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj kolor odcienia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj poziom rozmycia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>Poziom rozmycia</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj poziom rozmycia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj poziom rozmycia niestandardowego tła Mica.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj krycie odcienia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>Krycie odcienia</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj krycie odcienia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj krycie odcienia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj poziom rozmycia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>Poziom rozmycia</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj poziom rozmycia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj poziom rozmycia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj kolor odcienia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>Kolor odcienia</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj kolor odcienia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj kolor odcienia niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Description" xml:space="preserve">
+    <value>Ustaw obraz tła niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Header" xml:space="preserve">
+    <value>Obraz tła</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ustaw obraz tła niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ustaw obraz tła niestandardowego tła Rozmycia.</value>
+  </data>
+  <data name="ResetButton.Content" xml:space="preserve">
+    <value>Resetuj</value>
+  </data>
+  <data name="ResetButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Resetuj</value>
+  </data>
+  <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Resetuj</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.Content" xml:space="preserve">
+    <value>Zmień kolor akcentu</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zmień kolor akcentu systemu Windows, który wpływa na elementy interfejsu użytkownika w aplikacjach.</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zmień kolor akcentu systemu Windows, który wpływa na elementy interfejsu użytkownika w aplikacjach.</value>
+  </data>
+  <data name="ExportSelectedRows.Text" xml:space="preserve">
+    <value>Eksportuj do JSON</value>
+  </data>
+  <data name="ExportSelectedRows.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eksportuj wybrane dane do JSON.</value>
+  </data>
+  <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eksportuj wybrane dane do JSON.</value>
+  </data>
 </root>

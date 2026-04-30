@@ -7366,4 +7366,118 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>डेटा प्राप्त होने के बाद हमेशा स्वचालित रूप से विश्लेषण पृष्ठ पर स्विच करें।</value>
   </data>
+    <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की ल्यूमिनोसिटी अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>ल्यूमिनोसिटी अपारदर्शिता</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की ल्यूमिनोसिटी अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की ल्यूमिनोसिटी अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की टिंट अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>टिंट अपारदर्शिता</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की टिंट अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की टिंट अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप का टिंट रंग समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>टिंट रंग</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप का टिंट रंग समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप का टिंट रंग समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की धुंधलापन मात्रा समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>धुंधलापन मात्रा</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की धुंधलापन मात्रा समायोजित करें।</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Mica बैकड्रॉप की धुंधलापन मात्रा समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की टिंट अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>टिंट अपारदर्शिता</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की टिंट अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की टिंट अपारदर्शिता समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की धुंधलापन मात्रा समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>धुंधलापन मात्रा</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की धुंधलापन मात्रा समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की धुंधलापन मात्रा समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप का टिंट रंग समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>टिंट रंग</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप का टिंट रंग समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप का टिंट रंग समायोजित करें।</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Description" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की पृष्ठभूमि तस्वीर सेट करें।</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Header" xml:space="preserve">
+    <value>पृष्ठभूमि तस्वीर</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की पृष्ठभूमि तस्वीर सेट करें।</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कस्टम Blur बैकड्रॉप की पृष्ठभूमि तस्वीर सेट करें।</value>
+  </data>
+  <data name="ResetButton.Content" xml:space="preserve">
+    <value>रीसेट</value>
+  </data>
+  <data name="ResetButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>रीसेट</value>
+  </data>
+  <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>रीसेट</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.Content" xml:space="preserve">
+    <value>एक्सेंट रंग बदलें</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows एक्सेंट रंग बदलें जो ऐप्स में उपयोगकर्ता इंटरफ़ेस तत्वों को प्रभावित करता है।</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows एक्सेंट रंग बदलें जो ऐप्स में उपयोगकर्ता इंटरफ़ेस तत्वों को प्रभावित करता है।</value>
+  </data>
 </root>

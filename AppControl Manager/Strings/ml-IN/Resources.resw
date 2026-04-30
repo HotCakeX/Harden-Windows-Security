@@ -7366,4 +7366,118 @@
   <data name="AutoSwitchToAnalysisPageToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഡാറ്റ ലഭ്യമാക്കിയ ശേഷം എല്ലായ്പ്പോഴും സ്വയമേവ വിശകലന പേജിലേക്ക് മാറുക.</value>
   </data>
+    <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ല്യൂമിനോസിറ്റി ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.Header" xml:space="preserve">
+    <value>ല്യൂമിനോസിറ്റി ഒപാസിറ്റി</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ല്യൂമിനോസിറ്റി ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushLuminosityOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ല്യൂമിനോസിറ്റി ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>ടിന്റ് ഒപാസിറ്റി</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>ടിന്റ് നിറം</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ബ്ലർ അളവ് ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>ബ്ലർ അളവ്</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ബ്ലർ അളവ് ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropMicaBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Mica ബാക്ക്ഡ്രോപ്പിന്റെ ബ്ലർ അളവ് ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.Header" xml:space="preserve">
+    <value>ടിന്റ് ഒപാസിറ്റി</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushTintOpacitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് ഒപാസിറ്റി ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ബ്ലർ അളവ് ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.Header" xml:space="preserve">
+    <value>ബ്ലർ അളവ്</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ബ്ലർ അളവ് ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushBlurAmountSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ബ്ലർ അളവ് ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.Header" xml:space="preserve">
+    <value>ടിന്റ് നിറം</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushTintColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ ടിന്റ് നിറം ക്രമീകരിക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Description" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ പശ്ചാത്തല ചിത്രം സജ്ജമാക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.Header" xml:space="preserve">
+    <value>പശ്ചാത്തല ചിത്രം</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ പശ്ചാത്തല ചിത്രം സജ്ജമാക്കുക.</value>
+  </data>
+  <data name="BackdropBlurBrushBackgroundPictureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കസ്റ്റം Blur ബാക്ക്ഡ്രോപ്പിന്റെ പശ്ചാത്തല ചിത്രം സജ്ജമാക്കുക.</value>
+  </data>
+  <data name="ResetButton.Content" xml:space="preserve">
+    <value>റീസെറ്റ്</value>
+  </data>
+  <data name="ResetButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>റീസെറ്റ്</value>
+  </data>
+  <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>റീസെറ്റ്</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.Content" xml:space="preserve">
+    <value>ആക്സന്റ് നിറം മാറ്റുക</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പുകളിൽ ഉപയോക്തൃ ഇന്റർഫേസ് ഘടകങ്ങളെ ബാധിക്കുന്ന Windows ആക്സന്റ് നിറം മാറ്റുക.</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പുകളിൽ ഉപയോക്തൃ ഇന്റർഫേസ് ഘടകങ്ങളെ ബാധിക്കുന്ന Windows ആക്സന്റ് നിറം മാറ്റുക.</value>
+  </data>
 </root>

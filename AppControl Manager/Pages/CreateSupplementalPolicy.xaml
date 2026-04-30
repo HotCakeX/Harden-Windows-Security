@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CC="using:CommonCore.Others"
     xmlns:vm="using:AppControlManager.ViewModels"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -484,13 +483,13 @@
                 </StackPanel.ChildrenTransitions>
 
                 <!-- Files and Folders Scan -->
-                <controls:SettingsExpander x:Uid="SupplementalFilesAndFoldersSettingsCard"
+                <CCToolKit:SettingsExpander x:Uid="SupplementalFilesAndFoldersSettingsCard"
                                            IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}">
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE71D;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.ItemsHeader>
+                    <CCToolKit:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
@@ -523,7 +522,7 @@
                                 </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
-                    </controls:SettingsExpander.ItemsHeader>
+                    </CCToolKit:SettingsExpander.ItemsHeader>
 
 
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
@@ -554,7 +553,7 @@
 
                     </CCToolKit:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesSettingsCardVisibility, Mode=OneWay}"
                                                  x:Uid="BrowseForFilesPolicyCreationSettingsCard">
@@ -647,7 +646,7 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                        <CCToolKit:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                x:Uid="SupplementalPolicyNameSettingsCard"
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False">
@@ -655,7 +654,7 @@
                                      Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.FilesAndFoldersSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
@@ -769,28 +768,28 @@
 
                         </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
                             IsClickEnabled="True" IsActionIconVisible="True"
                             Click="{x:Bind ViewModel.FilesAndFoldersViewFileDetailsSettingsCard_Click}">
 
-                            <controls:SettingsCard.HeaderIcon>
+                            <CCToolKit:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE83B;" />
-                            </controls:SettingsCard.HeaderIcon>
+                            </CCToolKit:SettingsCard.HeaderIcon>
 
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Certificate -->
-                <controls:SettingsExpander x:Uid="CertificatesSettingsExpander"
+                <CCToolKit:SettingsExpander x:Uid="CertificatesSettingsExpander"
                     IsExpanded="{x:Bind ViewModel.CertificatesBasedSettingsExpanderIsExpanded, Mode=TwoWay}">
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xEB95;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.ItemsHeader>
+                    <CCToolKit:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
@@ -823,7 +822,7 @@
                                 </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
-                    </controls:SettingsExpander.ItemsHeader>
+                    </CCToolKit:SettingsExpander.ItemsHeader>
 
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -840,7 +839,7 @@
 
                     </CCToolKit:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
 
                         <customUI:SettingsCardV3 x:Uid="BrowseForCertificatesSettingsCard"
                                                  IsClickEnabled="True"
@@ -891,12 +890,12 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <CCToolKit:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.CertificatesBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
@@ -956,7 +955,7 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard x:Uid="SigningScenariosSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="SigningScenariosSettingsCard"
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False">
 
@@ -966,23 +965,23 @@
                                 <RadioButton x:Uid="KernelModeRadioButton" IsChecked="{x:Bind ViewModel.CertificatesBasedKernelModeOption, Mode=TwoWay}"/>
                             </RadioButtons>
 
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
                 <!-- ISG -->
-                <controls:SettingsExpander
+                <CCToolKit:SettingsExpander
                     Description="Create a Supplemental policy that only enables the usage of the Intelligent Security Graph to automatically authorize reputable apps and files"
                     Header="ISG"
                     IsExpanded="{x:Bind ViewModel.ISGSettingsExpanderIsExpanded, Mode=TwoWay}">
 
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE734;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.ItemsHeader>
+                    <CCToolKit:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
@@ -1015,7 +1014,7 @@
                                 </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
-                    </controls:SettingsExpander.ItemsHeader>
+                    </CCToolKit:SettingsExpander.ItemsHeader>
 
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -1032,14 +1031,14 @@
 
                     </CCToolKit:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <CCToolKit:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.ISGBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
@@ -1097,19 +1096,19 @@
 
                         </customUI:SettingsCardV3>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Strict Kernel-Mode -->
-                <controls:SettingsExpander x:Uid="StrictKernelModeSettingsExpander"
+                <CCToolKit:SettingsExpander x:Uid="StrictKernelModeSettingsExpander"
                     IsExpanded="{x:Bind ViewModel.StrictKernelModeSettingsExpanderIsExpanded, Mode=TwoWay}">
 
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE945;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.ItemsHeader>
+                    <CCToolKit:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
@@ -1142,7 +1141,7 @@
                                 </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
-                    </controls:SettingsExpander.ItemsHeader>
+                    </CCToolKit:SettingsExpander.ItemsHeader>
 
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -1159,7 +1158,7 @@
 
                     </CCToolKit:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="AutoDriverDetectionSettingsCard">
 
@@ -1185,7 +1184,7 @@
 
                         </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="ScanEventLogsForStrictKernelPolicySettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="ScanEventLogsForStrictKernelPolicySettingsCard"
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False" >
 
@@ -1203,7 +1202,7 @@
 
                             </CCToolKit:WrapPanel>
 
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
@@ -1260,7 +1259,7 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                        <CCToolKit:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                x:Uid="SupplementalPolicyNameSettingsCard"
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False">
@@ -1268,32 +1267,32 @@
                                      IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.StrictKernelModePolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="ViewStrictKernelModeDetailsSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="ViewStrictKernelModeDetailsSettingsCard"
                             IsClickEnabled="True" IsActionIconVisible="True"
                             Click="{x:Bind ViewModel.DetectedKernelModeFilesDetailsSettingsCard_Click}">
 
-                            <controls:SettingsCard.HeaderIcon>
+                            <CCToolKit:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE83B;" />
-                            </controls:SettingsCard.HeaderIcon>
+                            </CCToolKit:SettingsCard.HeaderIcon>
 
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Package Family Name (PFN) -->
-                <controls:SettingsExpander x:Uid="PFNSupplementalPolicySettingsExpander"
+                <CCToolKit:SettingsExpander x:Uid="PFNSupplementalPolicySettingsExpander"
                                            IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
                                            Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}">
 
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE8F1;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.ItemsHeader>
+                    <CCToolKit:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
@@ -1326,7 +1325,7 @@
                                 </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
-                    </controls:SettingsExpander.ItemsHeader>
+                    </CCToolKit:SettingsExpander.ItemsHeader>
 
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -1356,9 +1355,9 @@
 
                     </CCToolKit:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                        <CCToolKit:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                x:Uid="SupplementalPolicyNameSettingsCard"
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False">
@@ -1366,7 +1365,7 @@
                                      IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.PFNBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
@@ -1423,7 +1422,7 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard x:Uid="PackageFamilyNamesSelectionSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="PackageFamilyNamesSelectionSettingsCard"
                                                IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False">
@@ -1518,22 +1517,22 @@
 
                             </CCToolKit:WrapPanel>
 
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Custom File Path Rules -->
-                <controls:SettingsExpander
+                <CCToolKit:SettingsExpander
                         x:Uid="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander"
                         IsExpanded="{x:Bind ViewModel.CustomFilePathRulesSettingsExpanderIsExpanded, Mode=TwoWay}">
 
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE8A1;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.ItemsHeader>
+                    <CCToolKit:SettingsExpander.ItemsHeader>
                         <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
@@ -1566,7 +1565,7 @@
                                 </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
-                    </controls:SettingsExpander.ItemsHeader>
+                    </CCToolKit:SettingsExpander.ItemsHeader>
 
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -1596,14 +1595,14 @@
 
                     </CCToolKit:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <CCToolKit:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
@@ -1661,22 +1660,22 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard x:Uid="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <CCToolKit:SettingsCard x:Uid="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox Text="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedCustomPatternTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
                                      x:Uid="SupplementalPolicyCustomPatternBasedCustomPatternTextBox"
                                      TextWrapping="Wrap"
                                      MaxWidth="400"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard"
                                                IsClickEnabled="True"
                                                Click="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click}"
                                                IsActionIconVisible="True"/>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
             </StackPanel>
 

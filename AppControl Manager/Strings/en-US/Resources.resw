@@ -7472,4 +7472,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ResetButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Reset</value>
   </data>
+  <data name="ChangeWindowsAccentColorButton.Content" xml:space="preserve">
+    <value>Change Accent Color</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Change the Windows Accent Color that affects the user interface elements in apps.</value>
+  </data>
+  <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Change the Windows Accent Color that affects the user interface elements in apps.</value>
+  </data>
 </root>

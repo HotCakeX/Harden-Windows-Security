@@ -186,7 +186,7 @@ internal sealed partial class SplitButtonV2 : SplitButton
 	{
 		SplitButtonV2 instance = (SplitButtonV2)d;
 
-		if (instance.Flyout is Flyout flyout && !flyout.IsOpen && flyout.XamlRoot != null) // Checking for XAMLRoot not being null is necessary here. 
+		if (instance.Flyout is Flyout flyout && !flyout.IsOpen && flyout.XamlRoot != null) // Checking for XAMLRoot not being null is necessary here.
 		{
 			flyout.ShowAt(instance);
 		}

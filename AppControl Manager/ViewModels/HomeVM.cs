@@ -815,6 +815,19 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		}
 	}
 
+	// Safely converts long bytes to ulong bytes. Just an overload.
+	internal static string FormatDataSize(long bytes)
+	{
+		try
+		{
+			return FormatDataSize((ulong)bytes);
+		}
+		catch
+		{
+			return FormatDataSize(0);
+		}
+	}
+
 	/// <summary>
 	/// Formats a cumulative byte counter using binary units (KiB, MiB, GiB, TiB) collapsed to KB/MB/GB/TB labels,
 	/// with one decimal precision.

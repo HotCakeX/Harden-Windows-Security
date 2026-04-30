@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 
 namespace HardenSystemSecurity.ViewModels;
@@ -131,10 +132,10 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 		{
 			if (drive.IsReady && drive.DriveType == DriveType.Removable)
 			{
-				long sizeGb = drive.TotalSize / (1024 * 1024 * 1024);
-				long freeGb = drive.AvailableFreeSpace / (1024 * 1024 * 1024);
+				string sizeGb = HomeVM.FormatDataSize(drive.TotalSize);
+				string freeGb = HomeVM.FormatDataSize(drive.AvailableFreeSpace);
 				string label = string.IsNullOrWhiteSpace(drive.VolumeLabel) ? "Local Disk" : drive.VolumeLabel;
-				string displayText = $"{drive.Name} [{label}] - {drive.DriveFormat} - {sizeGb} GB Total / {freeGb} GB Free";
+				string displayText = $"{drive.Name} [{label}] - {drive.DriveFormat} - {sizeGb} Total / {freeGb} Free";
 
 				AvailableDrives.Add(new DriveInfoModel(drive.Name, displayText));
 			}
@@ -171,8 +172,7 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 		if (File.Exists(IsoPath))
 		{
 			FileInfo fi = new(IsoPath);
-			double sizeGb = fi.Length / (1024.0 * 1024.0 * 1024.0);
-			IsoDetails = $"Size: {sizeGb:F2} GB";
+			IsoDetails = $"Size: {HomeVM.FormatDataSize(fi.Length)}";
 		}
 		else
 		{

@@ -74,7 +74,7 @@
 
         <Image Source="{x:Bind ViewModel.AppSettings.BackdropCustomBrushPictureSelection, Mode=OneWay}"
                Visibility="{x:Bind ViewModel.MainWindowPictureBackgroundVisibility, Mode=OneWay}"
-               Stretch="UniformToFill" 
+               Stretch="UniformToFill"
                Grid.RowSpan="2" />
 
         <Rectangle Grid.RowSpan="2" x:Name="CustomAcrylicWithPictureBackdropHost" Visibility="Collapsed" IsHitTestVisible="False" />
@@ -552,7 +552,7 @@
 
                                     <ToggleButton HorizontalAlignment="Right"
                                                   x:Uid="SidebarSplitViewDisplayModeChangerToggleButton"
-                                                  Margin="0,5,5,-25"                                                  
+                                                  Margin="0,5,5,-25"
                                                   IsChecked="{x:Bind SidebarSplitViewDisplayModeChangerButtonIsChecked, Mode=TwoWay}">
                                         <ToggleButton.ContentTemplate>
                                             <DataTemplate>

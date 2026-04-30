@@ -1064,7 +1064,6 @@ public sealed class AttachedCardShadow : AttachedShadowBase
 		}
 	}
 
-	/// <inheritdoc />
 	protected internal override void OnSizeChanged(AttachedShadowElementContext context, Size newSize, Size previousSize)
 	{
 		Vector2 sizeAsVec2 = newSize.ToVector2();

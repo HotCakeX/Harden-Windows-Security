@@ -94,7 +94,7 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 	}
 
 	/// <summary>
-	/// Specialized remove strategy that runs after the main remove operation.	
+	/// Specialized remove strategy that runs after the main remove operation.
 	/// </summary>
 	private sealed class TLSCipherSuiteDenyListPostRemoveCleanup : ISpecializedRemoveStrategy
 	{

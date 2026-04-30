@@ -147,7 +147,7 @@ Security is paramount when selecting any application designed to safeguard your 
 
 AppControl Manager is engineered with a security-first approach from the ground up. It's crafted specifically for defense teams, yet its design has been rigorously shaped with a keen awareness of potential offensive strategies, ensuring resilience against emerging threats.
 
-* The AppControl Manager does not rely on any 3rd party component or dependency. All the logics are built securely and specifically for the app.
+* The AppControl Manager does not rely on any 3rd party component or dependency. All the logics are built securely and specifically for the app. The only few dependencies of the application are from `System` and `Microsoft` namespaces. **.NET SDK** and **Windows App SDK** are required for the app to even compile and function. **Win2D** is used for enhanced visuals and **MSAL** is used for authentication with Microsoft tenants. This makes code review and validation of the app easier in case you have policies or restrictions in your organization as to which source(s) to consume your apps/programs from. In conclusion, the app uses the bare minimum amount of dependencies, providing very secure supply chain the level of which is a lot higher than regular standards.
 
 * Any file(s) the AppControl Manager ever produces, uses or expects is only from an Administrator-protected location in `C:\Program Files\AppControl Manager`.
 

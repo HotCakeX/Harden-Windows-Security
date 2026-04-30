@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     x:Uid="SigningDetailsDialog"
     PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
     IsPrimaryButtonEnabled="False"
@@ -47,10 +46,10 @@
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Uid="CertificateDetailsSettingsCard">
-                    <controls:SettingsCard.HeaderIcon>
+                <CCToolKit:SettingsCard x:Uid="CertificateDetailsSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEA86;"/>
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
                     <CCToolKit:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
 
@@ -59,12 +58,12 @@
 
                     </CCToolKit:WrapPanel>
 
-                </controls:SettingsCard>
+                </CCToolKit:SettingsCard>
 
-                <controls:SettingsCard x:Uid="CertificateCommonNameSettingsCard">
-                    <controls:SettingsCard.HeaderIcon>
+                <CCToolKit:SettingsCard x:Uid="CertificateCommonNameSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEA86;"/>
-                    </controls:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard.HeaderIcon>
 
                     <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -77,7 +76,7 @@
 
                     </CCToolKit:WrapPanel>
 
-                </controls:SettingsCard>
+                </CCToolKit:SettingsCard>
 
             </StackPanel>
 

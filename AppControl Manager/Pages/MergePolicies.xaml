@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:ViewModel="using:AppControlManager.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -19,15 +18,15 @@
                 <RepositionThemeTransition IsStaggeringEnabled="False" />
             </StackPanel.ChildrenTransitions>
 
-            <controls:SettingsExpander
+            <CCToolKit:SettingsExpander
                            x:Uid="MergePoliciesSettingsExpander"
                            IsExpanded="True">
 
-                <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xEA3C;" />
-                </controls:SettingsExpander.HeaderIcon>
+                </CCToolKit:SettingsExpander.HeaderIcon>
 
-                <controls:SettingsExpander.ItemsHeader>
+                <CCToolKit:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
@@ -39,7 +38,7 @@
                             IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}">
                     </customUI:InfoBarV2>
-                </controls:SettingsExpander.ItemsHeader>
+                </CCToolKit:SettingsExpander.ItemsHeader>
 
                 <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -55,7 +54,7 @@
 
                 </CCToolKit:WrapPanel>
 
-                <controls:SettingsExpander.Items>
+                <CCToolKit:SettingsExpander.Items>
 
                     <customUI:SettingsCardV3 x:Uid="BrowseForMainPolicyToMergeSettingsCard">
 
@@ -159,21 +158,21 @@
 
                     </customUI:SettingsCardV3>
 
-                </controls:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander.Items>
 
-            </controls:SettingsExpander>
+            </CCToolKit:SettingsExpander>
 
             <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                        x:Uid="Advanced" />
 
-            <controls:SettingsExpander x:Uid="AdvancedFeaturesSettingsExpander"
+            <CCToolKit:SettingsExpander x:Uid="AdvancedFeaturesSettingsExpander"
                                        IsExpanded="True">
 
-                <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE712;" />
-                </controls:SettingsExpander.HeaderIcon>
+                </CCToolKit:SettingsExpander.HeaderIcon>
 
-                <controls:SettingsExpander.ItemsHeader>
+                <CCToolKit:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"
                                         BorderThickness="0"
                                         CornerRadius="0"
@@ -184,11 +183,11 @@
                                         IsClosable="{x:Bind ViewModel.AdvancedFeaturesInfoBar.IsClosable, Mode=OneWay}"
                                         Severity="{x:Bind ViewModel.AdvancedFeaturesInfoBar.Severity, Mode=OneWay}">
                     </customUI:InfoBarV2>
-                </controls:SettingsExpander.ItemsHeader>
+                </CCToolKit:SettingsExpander.ItemsHeader>
 
-                <controls:SettingsExpander.Items>
+                <CCToolKit:SettingsExpander.Items>
 
-                    <controls:SettingsCard x:Uid="ConvertPoliciesToAppIDTaggingSettingsCard">
+                    <CCToolKit:SettingsCard x:Uid="ConvertPoliciesToAppIDTaggingSettingsCard">
 
                         <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -261,9 +260,9 @@
 
                         </CCToolKit:WrapPanel>
 
-                    </controls:SettingsCard>
+                    </CCToolKit:SettingsCard>
 
-                    <controls:SettingsCard x:Uid="RemoveSigningScenarioFeatureSettingsCard">
+                    <CCToolKit:SettingsCard x:Uid="RemoveSigningScenarioFeatureSettingsCard">
 
                         <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -340,11 +339,11 @@
 
                         </CCToolKit:WrapPanel>
 
-                    </controls:SettingsCard>
+                    </CCToolKit:SettingsCard>
 
-                </controls:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander.Items>
 
-            </controls:SettingsExpander>
+            </CCToolKit:SettingsExpander>
 
         </StackPanel>
     </ScrollViewer>

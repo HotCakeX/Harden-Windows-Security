@@ -606,4 +606,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	#endregion
 
+	internal async void OpenWindowsSettings() => await OpenFileInDefaultFileHandler("ms-settings:personalization-colors");
+
 }

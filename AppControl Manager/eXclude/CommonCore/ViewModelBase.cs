@@ -110,8 +110,8 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		if (Atlas.Settings.SoundSetting && !string.IsNullOrEmpty(field))
 		{
-			TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
-			TypeWriterMediaPlayer.Play();
+			_ = (TypeWriterMediaPlayer.Value?.Position = TypeWriterAudioStartTime);
+			TypeWriterMediaPlayer.Value?.Play();
 		}
 
 		return true;
@@ -406,22 +406,25 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		}
 	}
 
-	private static readonly MediaPlayer TypeWriterMediaPlayer = new()
+	private static readonly Lazy<MediaPlayer?> TypeWriterMediaPlayer = new(() =>
 	{
-		Source = MediaSource.CreateFromUri(new("ms-appx:///Assets/Audio/TypeWriter.wav")),
-		// https://learn.microsoft.com/uwp/api/windows.media.systemmediatransportcontrols
-		CommandManager = { IsEnabled = false } // Disable System Media Transport Controls (SMTC) to prevent the audio from being displayed by the OS.
-	};
+		try
+		{
+			return new MediaPlayer()
+			{
+				Source = MediaSource.CreateFromUri(new("ms-appx:///Assets/Audio/TypeWriter.wav")),
+				// https://learn.microsoft.com/uwp/api/windows.media.systemmediatransportcontrols
+				CommandManager = { IsEnabled = false } // Disable System Media Transport Controls (SMTC) to prevent the audio from being displayed by the OS.
+			};
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			return null;
+		}
+	}, LazyThreadSafetyMode.PublicationOnly);
 
 	private static readonly TimeSpan TypeWriterAudioStartTime = TimeSpan.FromMilliseconds(167);
-
-	internal static void EmitTypingSound()
-	{
-		if (!Atlas.Settings.SoundSetting) return;
-
-		TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
-		TypeWriterMediaPlayer.Play();
-	}
 
 	/// <summary>
 	/// The current user's profile directory path.

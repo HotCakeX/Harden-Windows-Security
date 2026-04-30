@@ -113,7 +113,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathAllowMicrosoft);
 
-			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Visible;
 			AllowMSFTInfoBar.WriteSuccess(AllowMicrosoftCreateAndDeploy ? Atlas.GetStr("SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy") : Atlas.GetStr("SuccessfullyCreatedAllowMicrosoftBasePolicy"));
@@ -225,7 +225,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathDefaultWindows);
 
-			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			DefaultWindowsInfoBarActionButtonVisibility = Visibility.Visible;
 			DefaultWinInfoBar.WriteSuccess(DefaultWindowsCreateAndDeploy ? Atlas.GetStr("SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy") : Atlas.GetStr("SuccessfullyCreatedDefaultWindowsBasePolicy"));
@@ -334,7 +334,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathSignedAndReputable);
 
-			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			SignedAndReputableInfoBarActionButtonVisibility = Visibility.Visible;
 			SignedAndRepInfoBar.WriteSuccess(SignedAndReputableCreateAndDeploy ? Atlas.GetStr("SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy") : Atlas.GetStr("SuccessfullyCreatedSignedAndReputableBasePolicy"));
@@ -406,7 +406,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathMSFTRecommendedDriverBlockRules);
 
-			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			KernelModeBlockListInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedRecommendedDriverBlockRulesPolicy"));
 
@@ -479,7 +479,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility RecommendedUserModeBlockRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool RecommendedUserModeBlockRulesSettingsIsExpanded { get; set => SP(ref field, value); }
 
 	internal readonly InfoBarSettings UserModeBlockListInfoBar = new();
 
@@ -497,8 +496,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Disable the buttons
 			RecommendedUserModeBlockRulesSectionIsEnabled = false;
 
-			RecommendedUserModeBlockRulesSettingsIsExpanded = true;
-
 			UserModeBlockListInfoBar.IsClosable = false;
 
 			UserModeBlockListInfoBar.WriteInfo(Atlas.GetStr("CreatingUserModeBlockRules"));
@@ -511,7 +508,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathRecommendedUserModeBlockRules);
 
-			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			RecommendedUserModeBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			UserModeBlockListInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCreatedUserModeBlockRules"));
@@ -581,7 +578,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathStrictKernelMode);
 
-			AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
 
@@ -653,7 +650,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathRMMBlocking);
 
 			if (sender is not null)
-				AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			RMMBlockingInfoBarActionButtonVisibility = Visibility.Visible;
 
@@ -765,7 +762,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathDownloadsDefenseMeasure);
 
 			if (sender is not null)
-				AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			DownloadsDefenseMeasureInfoBarActionButtonVisibility = Visibility.Visible;
 
@@ -837,7 +834,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathDangerousScriptHostsBlocking);
 
 			if (sender is not null)
-				AppControlManager.MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			DangerousScriptHostsBlockingInfoBarActionButtonVisibility = Visibility.Visible;
 

@@ -103,7 +103,6 @@ internal sealed partial class OpacityMaskView : ContentControl
 		set => SetValue(OpacityMaskProperty, value);
 	}
 
-	/// <inheritdoc />
 	protected override void OnApplyTemplate()
 	{
 		base.OnApplyTemplate();

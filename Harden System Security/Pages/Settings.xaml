@@ -6,7 +6,6 @@
     xmlns:CC="using:CommonCore.Others"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
@@ -33,12 +32,24 @@
 
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
-                <controls:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True">
-                    <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True">
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE790;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.Items>
+                    <Button x:Uid="ChangeWindowsAccentColorButton"
+                            Click="{x:Bind ViewModel.OpenWindowsSettings}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xEABC;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <CCToolKit:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
@@ -65,20 +76,20 @@
 
                         <!-- Acrylic Thin Options -->
 
-                        <controls:SettingsCard x:Uid="AcrylicThinLuminosityOpacitySettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="AcrylicThinLuminosityOpacitySettingsCard"
                                                Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
                                     ValueChanged="{x:Bind ViewModel.AcrylicThinLuminosityOpacitySlider_ValueChanged}"
                                     SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.AcrylicThinLuminosityOpacity, Mode=TwoWay}" />
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="AcrylicThinTintOpacitySettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="AcrylicThinTintOpacitySettingsCard"
                                                Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
                                     SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.AcrylicThinTintOpacity, Mode=TwoWay}" />
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="AcrylicThinTintColorSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="AcrylicThinTintColorSettingsCard"
                                                Visibility="{x:Bind ViewModel.AcrylicThinConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <ColorPicker Loaded="{x:Bind ViewModel.AcrylicThinTintColorPicker_Loaded}"
                                          ColorSpectrumShape="Ring"
@@ -90,34 +101,34 @@
                                          ColorChanged="{x:Bind ViewModel.TintColorPicker_ColorChanged}"
                                          IsAlphaSliderVisible="False"
                                          IsAlphaTextInputVisible="False" />
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <!-- End of Acrylic Thin Options -->
 
                         <!-- BackdropMicaBrush Options -->
 
-                        <controls:SettingsCard x:Uid="BackdropMicaBrushLuminosityOpacitySettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropMicaBrushLuminosityOpacitySettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
                                     ValueChanged="{x:Bind ViewModel.BackdropMicaBrushLuminosityOpacitySlider_ValueChanged}"
                                     SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.BackdropMicaBrushLuminosityOpacity, Mode=TwoWay}" />
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BackdropMicaBrushTintOpacitySettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropMicaBrushTintOpacitySettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
                                     SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.BackdropMicaBrushTintOpacity, Mode=TwoWay}"
                                     ValueChanged="{x:Bind ViewModel.BackdropMicaBrushTintOpacity_ValueChanged}"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BackdropMicaBrushBlurAmountSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropMicaBrushBlurAmountSettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="1" Maximum="100" StepFrequency="1"
                                     SmallChange="1" Value="{x:Bind ViewModel.AppSettings.BackdropMicaBrushBlurAmount, Mode=TwoWay}"
                                     ValueChanged="{x:Bind ViewModel.BackdropMicaBrushBlurAmount_ValueChanged}"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BackdropMicaBrushTintColorSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropMicaBrushTintColorSettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropMicaBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <ColorPicker Loaded="{x:Bind ViewModel.BackdropMicaBrushTintColorPicker_Loaded}"
                                          ColorSpectrumShape="Ring"
@@ -129,27 +140,27 @@
                                          ColorChanged="{x:Bind ViewModel.BackdropMicaBrushTintColorPicker_ColorChanged}"
                                          IsAlphaSliderVisible="False"
                                          IsAlphaTextInputVisible="False" />
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <!-- End of BackdropMicaBrush Options -->
 
                         <!-- BackdropBlurBrush Options -->
 
-                        <controls:SettingsCard x:Uid="BackdropBlurBrushTintOpacitySettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropBlurBrushTintOpacitySettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropBlurBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.01"
                                     SmallChange="0.01" Value="{x:Bind ViewModel.AppSettings.BackdropBlurBrushTintOpacity, Mode=TwoWay}"
                                     ValueChanged="{x:Bind ViewModel.BackdropBlurBrushTintOpacity_ValueChanged}"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BackdropBlurBrushBlurAmountSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropBlurBrushBlurAmountSettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropBlurBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <Slider Width="200" Minimum="1" Maximum="100" StepFrequency="1"
                                     SmallChange="1" Value="{x:Bind ViewModel.AppSettings.BackdropBlurBrushBlurAmount, Mode=TwoWay}"
                                     ValueChanged="{x:Bind ViewModel.BackdropBlurBrushBlurAmount_ValueChanged}"/>
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BackdropBlurBrushTintColorSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropBlurBrushTintColorSettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropBlurBrushConfigurationsSettingsCardVisibility, Mode=OneWay}">
                             <ColorPicker Loaded="{x:Bind ViewModel.BackdropBlurBrushTintColorPicker_Loaded}"
                                          ColorSpectrumShape="Ring"
@@ -161,9 +172,9 @@
                                          ColorChanged="{x:Bind ViewModel.BackdropBlurBrushTintColorPicker_ColorChanged}"
                                          IsAlphaSliderVisible="False"
                                          IsAlphaTextInputVisible="False" />
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BackdropBlurBrushBackgroundPictureSettingsCard"
+                        <CCToolKit:SettingsCard x:Uid="BackdropBlurBrushBackgroundPictureSettingsCard"
                                                Visibility="{x:Bind ViewModel.BackdropCustomBrushPictureSelectionSettingsCardVisibility, Mode=OneWay}">
 
                             <customUI:SplitButtonV2 x:Uid="FileBrowseButton"
@@ -199,7 +210,7 @@
 
                             </customUI:SplitButtonV2>
 
-                        </controls:SettingsCard>
+                        </CCToolKit:SettingsCard>
 
                         <!-- End of BackdropBlurBrush Options -->
 
@@ -294,17 +305,17 @@
 
                         </customUI:SettingsCardV2>
 
-                    </controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Behavior section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Behavior" />
-                <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander">
-                    <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander">
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE9E9;" />
-                    </controls:SettingsExpander.HeaderIcon>
-                    <controls:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xE8E3;" />
@@ -359,17 +370,17 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                    </CCToolKit:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Language section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="LanguageTextBlock" />
-                <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">
-                    <controls:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xF2B7;" />
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
 
-                    <controls:SettingsExpander.Items>
+                    <CCToolKit:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xF69E;" />
@@ -399,8 +410,8 @@
                                       Toggled="{x:Bind ViewModel.FlowDirectionToggleSwitch_Toggled}"
                                       x:Uid="UIFlowDirectionToggleSwitch" />
                         </customUI:SettingsCardV2>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                    </CCToolKit:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander>
 
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
@@ -415,17 +426,17 @@
                 <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                            x:Uid="About" />
-                <controls:SettingsExpander Header="Harden System Security"
+                <CCToolKit:SettingsExpander Header="Harden System Security"
                                        IsExpanded="True"
                                        Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}">
-                    <controls:SettingsExpander.HeaderIcon>
+                    <CCToolKit:SettingsExpander.HeaderIcon>
                         <BitmapIcon UriSource="ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png"
                                     ShowAsMonochrome="False"/>
-                    </controls:SettingsExpander.HeaderIcon>
+                    </CCToolKit:SettingsExpander.HeaderIcon>
                     <TextBlock Text="{x:Bind ViewModel.VersionTextBlockText, Mode=OneTime}" IsTextSelectionEnabled="True"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                    <CCToolKit:SettingsExpander.Items>
+                        <CCToolKit:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
 
                             <CCToolKit:WrapPanel Margin="-12,0,0,0" Orientation="Horizontal" HorizontalSpacing="13">
 
@@ -446,9 +457,9 @@
 
                             </CCToolKit:WrapPanel>
 
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                        </CCToolKit:SettingsCard>
+                    </CCToolKit:SettingsExpander.Items>
+                </CCToolKit:SettingsExpander>
 
                 <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
                     <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose">

@@ -68,4 +68,6 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 
 * **Actions -> Clear System Logs**: Use this button to clear the entire Code Integrity or AppLocker event logs from the system. Keep in mind that this action is irreversible and there will be an additional prompt that needs confirmation before proceeding.
 
+* **Analysis**: Use this button to [analyze](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Data-Analysis-in-AppControl-Manager) the data and access the analysis dashboard where you can see detailed charts, visualizations and summaries about your data.
+
 <br>

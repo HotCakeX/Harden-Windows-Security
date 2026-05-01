@@ -146,3 +146,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables the [WebClient service](https://techcommunity.microsoft.com/blog/itopstalkblog/how-to-defend-users-from-interception-attacks-via-smb-client-defense/1494995) which prevents attackers from abusing WebDAV to intercept and steal NTLM credentials and other sensitive data via malicious links.
 
 <br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the Execution Policy of the Windows PowerShell to **Restricted**.
+
+<br>

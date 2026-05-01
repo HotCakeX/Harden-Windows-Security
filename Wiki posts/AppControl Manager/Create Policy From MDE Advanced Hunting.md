@@ -92,6 +92,8 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 
 * **Only Use Selected Items**: If this button is toggled, only the items in the List View that are highlighted will be added to the Supplemental policy. If this button is not toggled, then everything available in the List View will be added to the Supplemental policy.
 
+* **Analysis**: Use this button to [analyze](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Data-Analysis-in-AppControl-Manager) the data and access the analysis dashboard where you can see detailed charts, visualizations and summaries about your data.
+
 <br>
 
 > [!TIP]\

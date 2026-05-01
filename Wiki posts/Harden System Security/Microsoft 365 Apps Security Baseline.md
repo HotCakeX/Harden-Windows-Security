@@ -22,7 +22,9 @@ Each security measure has the following details:
 
 * Use the `Browse` button to browse for a Microsoft 365 Apps Security Baseline ZIP file that you've already downloaded on your device, this way you can use it on systems that have no Internet connectivity.
 
-* When the results are loaded, you can right-click or tap + hold on each security measure in this page and select `Delete` in order to remove it from your system. The Delete key on your keyboard can also be used as a shortcut for this action. This functionality allows you to fine-tune the Microsoft 365 Apps Security baseline policies so that if you don't want or need some of the policies it offers, you can undo and remove them from your system.
+   * The `Remember` option which is on by default, will remember the file path you select so that when you close and reopen the app, you won't have to browse and select it again.
+
+* When the results are loaded, you can right-click or tap + hold on each security measure in this page to access additional options such as `Delete` or `Apply` in order to selectively remove it from your system or apply it to your system. The `Delete` key on your keyboard can also be used as a shortcut for removal. These functionalities allow you to fine-tune the Microsoft 365 Apps Security baseline policies so that if you don't want or need some of the policies it offers, you can undo and remove them from your system or apply only a subset of them.
 
 <br>
 

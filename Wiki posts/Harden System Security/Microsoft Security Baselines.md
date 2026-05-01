@@ -22,11 +22,13 @@ Each security measure has the following details:
 
 * Use the `Browse` button to browse for a Microsoft Security baseline ZIP file that you've already downloaded on your device, this way you can use it on systems that have no Internet connectivity.
 
+   * The `Remember` option which is on by default, will remember the file path you select so that when you close and reopen the app, you won't have to browse and select it again.
+
 * Use the **Apply Optional Overrides** toggle button, which is toggled by default, to apply the [Overrides for Microsoft Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline). They are recommended for enhanced user experience when using the Microsoft Security Baselines.
 
    * Users usually apply the Microsoft Security Baseline on their system, which is mostly geared towards enterprise use, but then they find that some settings are not user-friendly for personal use. These optional overrides help to mitigate that situation. You can of course disable this toggle if you want to stick strictly to the Microsoft Security Baseline without any modifications.
 
-* When the results are loaded, you can right-click or tap + hold on each security measure in this page and select `Delete` in order to remove it from your system. The Delete key on your keyboard can also be used as a shortcut for this action. This functionality allows you to fine-tune the Microsoft Security baseline policies so that if you don't want or need some of the policies it offers, you can undo and remove them from your system.
+* When the results are loaded, you can right-click or tap + hold on each security measure in this page to access additional options such as `Delete` or `Apply` in order to selectively remove it from your system or apply it to your system. The `Delete` key on your keyboard can also be used as a shortcut for removal. These functionalities allow you to fine-tune the Microsoft Security baseline policies so that if you don't want or need some of the policies it offers, you can undo and remove them from your system or apply only a subset of them.
 
 <br>
 

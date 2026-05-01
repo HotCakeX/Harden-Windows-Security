@@ -5900,4 +5900,76 @@
   <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
     <value>ייצא את הנתונים הנבחרים ל-JSON.</value>
   </data>
+   <data name="RestoreTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>שחזר</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שחזר את גודל החלון.</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שחזר את גודל החלון.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>העבר</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העבר את חלון האפליקציה.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העבר את חלון האפליקציה.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>גודל</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שנה את גודל חלון האפליקציה.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שנה את גודל חלון האפליקציה.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מזער</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מזער את חלון האפליקציה.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מזער את חלון האפליקציה.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הגדל</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדל את חלון האפליקציה.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגדל את חלון האפליקציה.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>סגור</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סגור את האפליקציה.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סגור את האפליקציה.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נווט לדף ההגדרות של האפליקציה.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נווט לדף ההגדרות של האפליקציה.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>סרגל צד</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח או סגור את חלונית סרגל הצד.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח או סגור את חלונית סרגל הצד.</value>
+  </data>
 </root>

@@ -5900,4 +5900,76 @@
   <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
     <value>تصدير البيانات المحددة إلى JSON.</value>
   </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>استعادة</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعادة حجم النافذة.</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعادة حجم النافذة.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>نقل</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نقل نافذة التطبيق.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نقل نافذة التطبيق.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>الحجم</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تغيير حجم نافذة التطبيق.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تغيير حجم نافذة التطبيق.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تصغير</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تصغير نافذة التطبيق.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تصغير نافذة التطبيق.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تكبير</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تكبير نافذة التطبيق.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تكبير نافذة التطبيق.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إغلاق التطبيق.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إغلاق التطبيق.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الانتقال إلى صفحة إعدادات التطبيق.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الانتقال إلى صفحة إعدادات التطبيق.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>الشريط الجانبي</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح أو إغلاق جزء الشريط الجانبي.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح أو إغلاق جزء الشريط الجانبي.</value>
+  </data>
 </root>

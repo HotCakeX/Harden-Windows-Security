@@ -301,29 +301,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		Atlas.Settings.BackDropBackground = selection.ToString();
 	}
 
-	/// <summary>
-	/// Event handler for when the main AppWindow size changes.
-	/// Throughout the app the AppWindow's size must be used, nothing else such as frame size, Window size etc.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	internal void MainWindow_SizeChanged(AppWindow sender, AppWindowChangedEventArgs args)
-	{
-		if (!args.DidSizeChange) return;
-
-		double mainWindowWidth = sender.Size.Width; // Width of the main AppWindow
-
-		// Hide TitleColumn if width is less than certain amount, Restore the TitleColumn if width is more
-		TitleColumnWidth = mainWindowWidth < 950 ? new(0) : GridLength.Auto;
-
-		bool wide = mainWindowWidth >= HeaderThresholdWidth;
-
-		// Update breadcrumb text style based on width threshold
-		BreadcrumbItemStyle = (Style)Application.Current.Resources[wide ? "TitleTextBlockStyle" : "SubtitleTextBlockStyle"];
-
-		HeaderInlineVisibility = (wide && HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
-		HeaderFlyoutVisibility = (!wide && HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
-	}
 
 	internal const double HeaderThresholdWidth = 1300;
 
@@ -479,7 +456,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	internal Visibility HeaderFlyoutVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	// Style used by Breadcrumb items
-	internal Style? BreadcrumbItemStyle { get; private set => SP(ref field, value); } = (Style)Application.Current.Resources["SubtitleTextBlockStyle"];
+	internal Style? BreadcrumbItemStyle { get; set => SP(ref field, value); } = (Style)Application.Current.Resources["SubtitleTextBlockStyle"];
 
 	// Whether the current page supplies a header, aka implements the IPageHeaderProvider interface.
 	internal bool HasPageHeader { get; set => SP(ref field, value); }

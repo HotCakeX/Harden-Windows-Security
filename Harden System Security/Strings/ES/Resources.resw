@@ -5900,4 +5900,76 @@ Huella Digital: {3}</value>
   <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
     <value>Exportar los datos seleccionados a JSON.</value>
   </data>
+    <data name="RestoreTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Restaurar</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restaura el tamaño de la ventana.</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restaura el tamaño de la ventana.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Mover</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mueve la ventana de la aplicación.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Mueve la ventana de la aplicación.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cambia el tamaño de la ventana de la aplicación.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cambia el tamaño de la ventana de la aplicación.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Minimizar</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Minimiza la ventana de la aplicación.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Minimiza la ventana de la aplicación.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Maximizar</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Maximiza la ventana de la aplicación.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Maximiza la ventana de la aplicación.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cierra la aplicación.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cierra la aplicación.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Navega a la página de configuración de la aplicación.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Navega a la página de configuración de la aplicación.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Barra lateral</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre o cierra el panel de la barra lateral.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre o cierra el panel de la barra lateral.</value>
+  </data>
 </root>

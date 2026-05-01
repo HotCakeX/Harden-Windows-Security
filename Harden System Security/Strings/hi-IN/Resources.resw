@@ -5900,4 +5900,76 @@
   <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
     <value>चयनित डेटा को JSON में निर्यात करें.</value>
   </data>
+   <data name="RestoreTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>पुनर्स्थापित करें</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>विंडो का आकार पुनर्स्थापित करें.</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>विंडो का आकार पुनर्स्थापित करें.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>स्थानांतरित करें</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो स्थानांतरित करें.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो स्थानांतरित करें.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>आकार</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो का आकार बदलें.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो का आकार बदलें.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>छोटा करें</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो छोटी करें.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो छोटी करें.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>बड़ा करें</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो बड़ी करें.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो बड़ी करें.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप बंद करें.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप बंद करें.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सेटिंग्स</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप के सेटिंग्स पेज पर जाएँ.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप के सेटिंग्स पेज पर जाएँ.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>साइडबार</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>साइडबार पेन खोलें या बंद करें.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>साइडबार पेन खोलें या बंद करें.</value>
+  </data>
 </root>

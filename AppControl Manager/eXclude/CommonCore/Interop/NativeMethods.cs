@@ -2731,4 +2731,46 @@ internal static unsafe partial class NativeMethods
 	internal const int UDP_TABLE_OWNER_PID = 1;
 	internal const uint MIB_TCP_STATE_LISTEN = 2;
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass
+	/// </summary>
+	[LibraryImport("Comctl32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetWindowSubclass(IntPtr hWnd, IntPtr pfnSubclass, uint uIdSubclass, IntPtr dwRefData);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/commctrl/nf-commctrl-defsubclassproc
+	/// </summary>
+	[LibraryImport("Comctl32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr DefSubclassProc(IntPtr hWnd, WinMsg uMsg, UIntPtr wParam, IntPtr lParam);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-findwindowexw
+	/// </summary>
+	[LibraryImport("USER32", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr FindWindowExW(IntPtr hWndParent, IntPtr hWndChildAfter, string lpszClass, string? lpszWindow);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-sendmessagew
+	/// </summary>
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr SendMessageW(IntPtr hWnd, WinMsg wMsg, int wParam, IntPtr lParam);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass
+	/// </summary>
+	[LibraryImport("Comctl32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool RemoveWindowSubclass(IntPtr hWnd, IntPtr pfnSubclass, uint uIdSubclass);
+
 }

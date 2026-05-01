@@ -43,6 +43,9 @@ using WinRT;
 using System.ComponentModel;
 using Windows.UI.ViewManagement;
 using Microsoft.Win32;
+using Microsoft.UI.Content;
+using System.Runtime.InteropServices;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -55,7 +58,6 @@ namespace AppControlManager;
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.ViewModels;
 using HardenSystemSecurity.WindowComponents;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using System.Threading;
 namespace HardenSystemSecurity;
 #endif
@@ -108,6 +110,11 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private NavigationService Nav => ViewModelProvider.NavigationService;
 
+	private readonly ContentCoordinateConverter? contentCoordinateConverter;
+	private readonly OverlappedPresenter overlappedPresenter;
+	internal bool IsWindowMaximized { get; set => this.SP(ref field, value); }
+	private static MainWindow? Instance { get; set; }
+
 	/// <summary>
 	/// Initializes the main window, sets up event handlers, and configures UI elements like the title bar and navigation
 	/// items.
@@ -116,6 +123,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	{
 		InitializeComponent();
 
+		Instance = this;
+
 		Nav.Initialize(ContentFrame, MainNavigation);
 
 		RootGridPub = RootGrid;
@@ -123,6 +132,34 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the Atlas
 		Atlas.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+
+		overlappedPresenter = AppWindow.Presenter.As<OverlappedPresenter>();
+		IsWindowMaximized = overlappedPresenter.State is OverlappedPresenterState.Maximized;
+		contentCoordinateConverter = ContentCoordinateConverter.CreateForWindowId(AppWindow.Id);
+
+		// Set up window subclass
+		IntPtr mainWindowSubclassProcPtr;
+		unsafe
+		{
+			mainWindowSubclassProcPtr = (IntPtr)(delegate* unmanaged[Stdcall]<IntPtr, WinMsg, UIntPtr, IntPtr, uint, IntPtr, IntPtr>)&MainWindowSubClassProc_Unmanaged;
+		}
+
+		// Passing IntPtr.Zero instead of GCHandle because we're using single-window app.
+		NativeMethods.SetWindowSubclass(Atlas.hWnd, mainWindowSubclassProcPtr, 1, IntPtr.Zero);
+
+		IntPtr inputNonClientPointerSourceHandle = NativeMethods.FindWindowExW(Atlas.hWnd, IntPtr.Zero, "InputNonClientPointerSource", null);
+
+		if (inputNonClientPointerSourceHandle != IntPtr.Zero)
+		{
+			IntPtr inputNonClientSubclassProcPtr;
+			unsafe
+			{
+				inputNonClientSubclassProcPtr = (IntPtr)(delegate* unmanaged[Stdcall]<IntPtr, WinMsg, UIntPtr, IntPtr, uint, IntPtr, IntPtr>)&InputNonClientPointerSourceSubClassProc_Unmanaged;
+			}
+
+			// Passing IntPtr.Zero instead of GCHandle because we're using single-window app.
+			NativeMethods.SetWindowSubclass(inputNonClientPointerSourceHandle, inputNonClientSubclassProcPtr, 2, IntPtr.Zero);
+		}
 
 		// Set the window display affinity upon window creation to exclude it from capture if ScreenShield is enabled, otherwise set it to
 		WindowDisplayAffinity.SetWindowDisplayAffinity(Atlas.hWnd, ViewModel.AppSettings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
@@ -157,7 +194,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		AppThemeManager.AppThemeChanged += OnAppThemeChanged;
 
 		// Subscribe to the size changed of the AppWindow
-		AppWindow.Changed += ViewModel.MainWindow_SizeChanged;
+		AppWindow.Changed += MainWindow_SizeChanged;
+
+		// Subscribe to size and window state changes to update the MenuFlyout controls correctly
+		SizeChanged += OnSizeChanged;
 
 		// Subscribe to the AppWindow Closing event
 		AppWindow.Closing += AppWindow_Closing;
@@ -199,6 +239,187 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	}
 
+	private void OnSizeChanged(object sender, WindowSizeChangedEventArgs args)
+	{
+		if (TopBarOverrideMenuFlyout.IsOpen)
+			TopBarOverrideMenuFlyout.Hide();
+
+		if (overlappedPresenter is not null)
+		{
+			IsWindowMaximized = overlappedPresenter.State is OverlappedPresenterState.Maximized;
+		}
+	}
+
+	private void RestoreWindow_Click(object sender, RoutedEventArgs args) => overlappedPresenter.Restore();
+
+	private void MoveWindow_Click(object sender, RoutedEventArgs args)
+	{
+		TopBarOverrideMenuFlyout.Hide();
+		_ = NativeMethods.SendMessageW(Atlas.hWnd, WinMsg.WM_SYSCOMMAND, 0xF010, 0);
+	}
+
+	private void ResizeWindow_Click(object sender, RoutedEventArgs args)
+	{
+		TopBarOverrideMenuFlyout.Hide();
+		_ = NativeMethods.SendMessageW(Atlas.hWnd, WinMsg.WM_SYSCOMMAND, 0xF000, 0);
+	}
+
+	private void MinimizeWindow_Click(object sender, RoutedEventArgs args) => overlappedPresenter.Minimize();
+
+	private void MaximizeWindow_Click(object sender, RoutedEventArgs args) => overlappedPresenter.Maximize();
+
+	private async void CloseWindow_Click(object sender, RoutedEventArgs args)
+	{
+		// If we should always ask for confirmation
+		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0)
+		{
+			// Do nothing and let the flow continue
+		}
+		// If we should automatically/conditionally ask for confirmation
+		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 1)
+		{
+			if (!TaskTracking.AppNeedsCloseConfirmation)
+			{
+				return;
+			}
+		}
+		// If we should never ask for confirmation
+		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2)
+		{
+			return;
+		}
+
+		// Close without re-triggering the cancelable AppWindow.Closing event loop
+		await AskForConfirmation(Application.Current.Exit);
+	}
+
+	private async void NavigateToSettings() => await Nav.Navigate(typeof(Pages.Settings));
+
+	private static readonly FlyoutShowOptions SC_MOUSEMENUFlyoutShowOptions = new()
+	{
+		Position = new Point(0, 15),
+		ShowMode = FlyoutShowMode.Standard
+	};
+
+	private static readonly FlyoutShowOptions SC_KEYMENUFlyoutShowOptions = new()
+	{
+		Position = new Point(0, 45),
+		ShowMode = FlyoutShowMode.Standard
+	};
+
+	/// <summary>
+	/// Callback for main window subclass procedure.
+	/// This method is called by Windows for window messages.
+	/// </summary>
+	[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
+	private static IntPtr MainWindowSubClassProc_Unmanaged(IntPtr hWnd, WinMsg Msg, UIntPtr wParam, IntPtr lParam, uint uIdSubclass, IntPtr dwRefData)
+	{
+		MainWindow? instance = Instance;
+
+		if (instance is null)
+		{
+			return NativeMethods.DefSubclassProc(hWnd, Msg, wParam, lParam);
+		}
+
+		// Clean up subclass to prevent memory leaks.
+		if (Msg == WinMsg.WM_NCDESTROY)
+		{
+			IntPtr mainWindowSubclassProcPtr;
+			unsafe
+			{
+				// https://learn.microsoft.com/windows/win32/api/commctrl/nc-commctrl-subclassproc
+				mainWindowSubclassProcPtr = (IntPtr)(delegate* unmanaged[Stdcall]<IntPtr, WinMsg, UIntPtr, IntPtr, uint, IntPtr, IntPtr>)&MainWindowSubClassProc_Unmanaged;
+			}
+
+			_ = NativeMethods.RemoveWindowSubclass(hWnd, mainWindowSubclassProcPtr, uIdSubclass);
+
+			return NativeMethods.DefSubclassProc(hWnd, Msg, wParam, lParam);
+		}
+
+		if (Msg is WinMsg.WM_SYSCOMMAND)
+		{
+			WM_SYSCOMMAND sisCommand = (WM_SYSCOMMAND)(wParam.ToUInt32() & 0xFFF0);
+
+			if (sisCommand is WM_SYSCOMMAND.SC_MOUSEMENU)
+			{
+				instance.TopBarOverrideMenuFlyout.ShowAt(null, SC_MOUSEMENUFlyoutShowOptions);
+				return 0;
+			}
+			else if (sisCommand is WM_SYSCOMMAND.SC_KEYMENU)
+			{
+				instance.TopBarOverrideMenuFlyout.ShowAt(null, SC_KEYMENUFlyoutShowOptions);
+				return 0;
+			}
+		}
+
+		return NativeMethods.DefSubclassProc(hWnd, Msg, wParam, lParam);
+	}
+
+	/// <summary>
+	/// Callback for input non-client pointer source subclass procedure.
+	/// This method is called by Windows for window messages on the InputNonClientPointerSource window.
+	/// </summary>
+	[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
+	private static IntPtr InputNonClientPointerSourceSubClassProc_Unmanaged(IntPtr hWnd, WinMsg Msg, UIntPtr wParam, IntPtr lParam, uint uIdSubclass, IntPtr dwRefData)
+	{
+		MainWindow? instance = Instance;
+
+		if (instance is null)
+		{
+			return NativeMethods.DefSubclassProc(hWnd, Msg, wParam, lParam);
+		}
+
+		// Clean up subclass to prevent memory leaks.
+		if (Msg == WinMsg.WM_NCDESTROY)
+		{
+			IntPtr inputNonClientSubclassProcPtr;
+			unsafe
+			{
+				inputNonClientSubclassProcPtr = (IntPtr)(delegate* unmanaged[Stdcall]<IntPtr, WinMsg, UIntPtr, IntPtr, uint, IntPtr, IntPtr>)&InputNonClientPointerSourceSubClassProc_Unmanaged;
+			}
+
+			_ = NativeMethods.RemoveWindowSubclass(hWnd, inputNonClientSubclassProcPtr, uIdSubclass);
+
+			return NativeMethods.DefSubclassProc(hWnd, Msg, wParam, lParam);
+		}
+
+#pragma warning disable IDE0010
+
+		switch (Msg)
+		{
+			case WinMsg.WM_NCRBUTTONUP:
+				{
+					if (wParam.ToUInt32() is 2 && instance.Content is not null && instance.Content.XamlRoot is not null && instance.contentCoordinateConverter is not null)
+					{
+						Point local = instance.contentCoordinateConverter.ConvertScreenToLocal(new PointInt32(lParam.ToInt32() & 0xFFFF, lParam.ToInt32() >> 16));
+
+						double RasterizationScale = instance.Content.XamlRoot.RasterizationScale;
+
+						FlyoutShowOptions options = new()
+						{
+							ShowMode = FlyoutShowMode.Standard,
+							Position = new(local.X / RasterizationScale, local.Y / RasterizationScale)
+						};
+
+						instance.TopBarOverrideMenuFlyout.ShowAt(null, options);
+					}
+					return 0;
+				}
+			case WinMsg.WM_NCLBUTTONDOWN:
+				{
+					if (instance.TopBarOverrideMenuFlyout.IsOpen)
+						instance.TopBarOverrideMenuFlyout.Hide();
+
+					break;
+				}
+			default:
+				break;
+		}
+#pragma warning restore IDE0010
+
+		return NativeMethods.DefSubclassProc(hWnd, Msg, wParam, lParam);
+	}
+
 #if APP_CONTROL_MANAGER
 
 	/// <summary>
@@ -214,6 +435,44 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	}
 
 #endif
+
+	/// <summary>
+	/// Event handler for when the main AppWindow size changes.
+	/// Throughout the app the AppWindow's size must be used, nothing else such as frame size, Window size etc.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void MainWindow_SizeChanged(AppWindow sender, AppWindowChangedEventArgs args)
+	{
+		if (args.DidSizeChange)
+		{
+			double mainWindowWidth = sender.Size.Width; // Width of the main AppWindow
+
+			// Hide TitleColumn if width is less than certain amount, Restore the TitleColumn if width is more
+			ViewModel.TitleColumnWidth = mainWindowWidth < 950 ? new(0) : GridLength.Auto;
+
+			bool wide = mainWindowWidth >= MainWindowVM.HeaderThresholdWidth;
+
+			// Update breadcrumb text style based on width threshold
+			ViewModel.BreadcrumbItemStyle = (Style)Application.Current.Resources[wide ? "TitleTextBlockStyle" : "SubtitleTextBlockStyle"];
+
+			ViewModel.HeaderInlineVisibility = (wide && ViewModel.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
+			ViewModel.HeaderFlyoutVisibility = (!wide && ViewModel.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
+		}
+
+		if (args.DidPositionChange)
+		{
+			if (TopBarOverrideMenuFlyout.IsOpen)
+			{
+				TopBarOverrideMenuFlyout.Hide();
+			}
+
+			if (overlappedPresenter is not null)
+			{
+				IsWindowMaximized = overlappedPresenter.State is OverlappedPresenterState.Maximized;
+			}
+		}
+	}
 
 	private readonly UISettings UISettingInstance = new();
 

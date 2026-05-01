@@ -9,3 +9,5 @@
 * Improved the way partition sizes are displayed in the Bootable Drive Maker page.
 
 * Added a new Security Measure to the Miscellaneous category which will set the Execution Policy of the Windows PowerShell to the most secure state which is "Restricted", completing the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1140
+
+* When you right-click on the top/title bar of the app, you no longer see the legacy options, instead you'll see a modern flyout menu with Mica style. They are also fully localized so you will see the options in the language you select in the Harden System Security's settings page.

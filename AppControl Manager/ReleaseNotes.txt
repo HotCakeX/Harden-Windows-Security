@@ -1,3 +1,5 @@
 * Added 2 new background customization options to the Settings page: "Custom Mica" and "Custom Blur". They offer you greater flexibility and freedom to customize the app's appearance. You can set a custom background image, apply blur effects on it and more. Animated GIFs also work so you can set a video/animated background for the app.
 
 * Updated dependencies to the latest version.
+
+* When you right-click on the top/title bar of the app, you no longer see the legacy options, instead you'll see a modern flyout menu with Mica style. They are also fully localized so you will see the options in the language you select in the AppControl Manager's settings page.

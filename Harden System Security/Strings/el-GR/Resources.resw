@@ -5900,4 +5900,76 @@
   <data name="ExportSelectedRows.AutomationProperties.HelpText" xml:space="preserve">
     <value>Εξαγωγή των επιλεγμένων δεδομένων σε JSON.</value>
   </data>
+   <data name="RestoreTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφέρει το μέγεθος του παραθύρου.</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφέρει το μέγεθος του παραθύρου.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Μετακίνηση</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μετακινεί το παράθυρο της εφαρμογής.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μετακινεί το παράθυρο της εφαρμογής.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Μέγεθος</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αλλάζει το μέγεθος του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αλλάζει το μέγεθος του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ελαχιστοποίηση</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ελαχιστοποιεί το παράθυρο της εφαρμογής.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ελαχιστοποιεί το παράθυρο της εφαρμογής.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Μεγιστοποίηση</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μεγιστοποιεί το παράθυρο της εφαρμογής.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μεγιστοποιεί το παράθυρο της εφαρμογής.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κλείνει την εφαρμογή.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κλείνει την εφαρμογή.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ρυθμίσεις</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μεταβαίνει στη σελίδα ρυθμίσεων της εφαρμογής.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μεταβαίνει στη σελίδα ρυθμίσεων της εφαρμογής.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Πλευρική γραμμή</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει ή κλείνει το τμήμα της πλευρικής γραμμής.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει ή κλείνει το τμήμα της πλευρικής γραμμής.</value>
+  </data>
 </root>

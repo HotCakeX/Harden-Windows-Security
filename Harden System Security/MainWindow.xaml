@@ -28,6 +28,89 @@
             <!-- Theme Shadow effect used on certain elements inside of the grid -->
             <!-- https://learn.microsoft.com/windows/apps/design/layout/depth-shadow -->
             <ThemeShadow x:Name="SharedShadow" />
+
+            <MenuFlyout x:Name="TopBarOverrideMenuFlyout"                        
+                        Placement="BottomEdgeAlignedLeft">
+                <MenuFlyout.SystemBackdrop>
+                    <MicaBackdrop Kind="BaseAlt"/>
+                </MenuFlyout.SystemBackdrop>
+
+                <MenuFlyoutItem x:Uid="RestoreTitleBarMenuFlyoutItem"
+                                Click="{x:Bind RestoreWindow_Click}"
+                                IsEnabled="{x:Bind IsWindowMaximized, Mode=OneWay}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE923;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutItem x:Uid="MoveTitleBarMenuFlyoutItem"
+                                Click="{x:Bind MoveWindow_Click}"
+                                IsEnabled="{x:Bind IsWindowMaximized.Equals(x:False), Mode=OneWay}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE7C2;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutItem x:Uid="SizeTitleBarMenuFlyoutItem"
+                                Click="{x:Bind ResizeWindow_Click}"
+                                IsEnabled="{x:Bind IsWindowMaximized.Equals(x:False), Mode=OneWay}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE744;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutItem x:Uid="MinimizeTitleBarMenuFlyoutItem"
+                                Click="{x:Bind MinimizeWindow_Click}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE921;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutItem x:Uid="MaximizeTitleBarMenuFlyoutItem"
+                                Click="{x:Bind MaximizeWindow_Click}"
+                                IsEnabled="{x:Bind IsWindowMaximized.Equals(x:False), Mode=OneWay}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE922;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+
+                <!-- In case other languages have longer texts, we set minimum here instead of just Width.
+                     MenuFlyout itself doesn't have any Width related properties. -->
+                <MenuFlyoutSeparator MinWidth="215" />
+
+                <MenuFlyoutItem x:Uid="CloseTitleBarMenuFlyoutItem"
+                                Click="{x:Bind CloseWindow_Click}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE8BB;" />
+                    </MenuFlyoutItem.Icon>
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F4" Modifiers="Menu" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutSeparator />
+
+                <MenuFlyoutItem x:Uid="SettingsTitleBarMenuFlyoutItem"
+                                Click="{x:Bind NavigateToSettings}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE713;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutSeparator />
+
+                <MenuFlyoutItem x:Uid="SidebarTitleBarMenuFlyoutItem"
+                                Click="{x:Bind ViewModel.SidebarButton_Click}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xEA5B;" />
+                    </MenuFlyoutItem.Icon>
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="S" Modifiers="Control" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+
+            </MenuFlyout>
+
         </Grid.Resources>
 
         <!-- When using this, we shouldn't set PaneDisplayMode="" property on the navigation element itself or set that property to anything other than Auto, otherwise these dynamic triggers won't work on it. -->

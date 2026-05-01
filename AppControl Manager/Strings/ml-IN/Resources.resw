@@ -7480,4 +7480,76 @@
   <data name="ChangeWindowsAccentColorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ആപ്പുകളിൽ ഉപയോക്തൃ ഇന്റർഫേസ് ഘടകങ്ങളെ ബാധിക്കുന്ന Windows ആക്സന്റ് നിറം മാറ്റുക.</value>
   </data>
+   <data name="RestoreTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പുനഃസ്ഥാപിക്കുക</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വിൻഡോയുടെ വലുപ്പം പുനഃസ്ഥാപിക്കുന്നു.</value>
+  </data>
+  <data name="RestoreTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>വിൻഡോയുടെ വലുപ്പം പുനഃസ്ഥാപിക്കുന്നു.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>നീക്കുക</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ നീക്കുന്നു.</value>
+  </data>
+  <data name="MoveTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ നീക്കുന്നു.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>വലുപ്പം</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോയുടെ വലുപ്പം മാറ്റുന്നു.</value>
+  </data>
+  <data name="SizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോയുടെ വലുപ്പം മാറ്റുന്നു.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ചെറുതാക്കുക</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ ചെറുതാക്കുന്നു.</value>
+  </data>
+  <data name="MinimizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ ചെറുതാക്കുന്നു.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>വലുതാക്കുക</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ വലുതാക്കുന്നു.</value>
+  </data>
+  <data name="MaximizeTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ വലുതാക്കുന്നു.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>അടയ്ക്കുക</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് അടയ്ക്കുന്നു.</value>
+  </data>
+  <data name="CloseTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് അടയ്ക്കുന്നു.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ക്രമീകരണങ്ങൾ</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ ക്രമീകരണങ്ങൾ പേജിലേക്ക് പോകുന്നു.</value>
+  </data>
+  <data name="SettingsTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ ക്രമീകരണങ്ങൾ പേജിലേക്ക് പോകുന്നു.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സൈഡ്‌ബാർ</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൈഡ്‌ബാർ പെയിൻ തുറക്കുക അല്ലെങ്കിൽ അടയ്ക്കുക.</value>
+  </data>
+  <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൈഡ്‌ബാർ പെയിൻ തുറക്കുക അല്ലെങ്കിൽ അടയ്ക്കുക.</value>
+  </data>
 </root>

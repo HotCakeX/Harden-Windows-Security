@@ -63,7 +63,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			new("Opus", "OpusDataHeader/Text", x => x.Opus),
 			new("PolicyGUID", "PolicyGUIDHeader/Text", x => x.PolicyGUID),
 			new("PolicyName", "PolicyNameHeader/Text", x => x.PolicyName),
-			new("ComputerName", "ComputerNameHeader/Text", x => x.ComputerName)
+			new("ComputerName", "ComputerNameHeader/Text", x => x.ComputerName),
+			new("HasWHQLSigner", "HasWHQLSignerHeader/Text", x => x.HasWHQLSigner.ToString()),
 		]);
 
 		// To adjust the initial width of the columns, giving them nice paddings.

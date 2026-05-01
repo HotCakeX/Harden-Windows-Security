@@ -3,3 +3,5 @@
 * Updated dependencies to the latest version.
 
 * When you right-click on the top/title bar of the app, you no longer see the legacy options, instead you'll see a modern flyout menu with Mica style. They are also fully localized so you will see the options in the language you select in the AppControl Manager's settings page.
+
+* Improved policy creation from Event Logs for the WHQL File Publisher level. The analysis page now also shows the counts of WHQL signed files.

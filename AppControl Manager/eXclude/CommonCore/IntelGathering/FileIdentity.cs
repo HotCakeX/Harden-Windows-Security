@@ -180,11 +180,9 @@ internal sealed class FileIdentity
 	[JsonInclude]
 	internal bool? IsECCSigned { get; set; }
 
-	// Computed property to gather all OPUSInfo from FileSignerInfos and save them in a comma-separated string for displaying purposes
-	// And to create WHQLFilePublisher rules in SignerAndHashBuilder.cs file.
-	// Based on the Schema, each Signer can only have 1 CertOEMID aka OPUS.
+	// Computed property to gather all OPUSInfo from FileSignerInfos and save them in a comma-separated string for displaying purposes only.
 	[JsonInclude]
-	internal string? Opus => FileSignerInfos.FirstOrDefault(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo))?.OPUSInfo;
+	internal string? Opus => string.Join(", ", FileSignerInfos.Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo)).Select(x => x.OPUSInfo));
 
 	/// <summary>
 	/// Determines whether the specified object is equal to the current object.

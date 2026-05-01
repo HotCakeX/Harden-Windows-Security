@@ -21,7 +21,7 @@ using CommonCore.IntelGathering;
 namespace AppControlManager.Others;
 
 internal sealed class WHQLFilePublisherSignerCreator(
-	List<CertificateDetailsCreator> certificateDetails,
+	List<WHQLCertificateDetailsCreator> certificateDetails,
 	Version? fileVersion,
 	string? fileDescription,
 	string? internalName,
@@ -31,10 +31,9 @@ internal sealed class WHQLFilePublisherSignerCreator(
 	string? fileName,
 	string? authenticodeSHA256,
 	string? authenticodeSHA1,
-	SSType siSigningScenario,
-	string? opus)
+	SSType siSigningScenario)
 {
-	internal List<CertificateDetailsCreator> CertificateDetails => certificateDetails;
+	internal List<WHQLCertificateDetailsCreator> CertificateDetails => certificateDetails;
 	internal Version? FileVersion => fileVersion;
 	internal string? FileDescription => fileDescription;
 	internal string? InternalName => internalName;
@@ -45,5 +44,4 @@ internal sealed class WHQLFilePublisherSignerCreator(
 	internal string? AuthenticodeSHA256 => authenticodeSHA256;
 	internal string? AuthenticodeSHA1 => authenticodeSHA1;
 	internal SSType SiSigningScenario => siSigningScenario;
-	internal string? Opus => opus;
 }

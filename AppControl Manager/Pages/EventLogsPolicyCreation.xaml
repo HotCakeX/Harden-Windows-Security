@@ -633,6 +633,7 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[18].Width, Mode=TwoWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[19].Width, Mode=TwoWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[20].Width, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[21].Width, Mode=TwoWay}" />
                         </Grid.ColumnDefinitions>
 
                         <!-- Header Buttons -->
@@ -657,29 +658,31 @@
                         <Button x:Uid="PolicyGUIDColumnHeaderBtn" Tag="PolicyGUID" Grid.Column="18" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[18], Mode=OneWay}"/>
                         <Button x:Uid="PolicyNameColumnHeaderBtn" Tag="PolicyName" Grid.Column="19" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[19], Mode=OneWay}"/>
                         <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" Grid.Column="20" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[20], Mode=OneWay}"/>
+                        <Button x:Uid="HasWHQLSignerColumnHeaderBtn" Tag="HasWHQLSigner" Grid.Column="21" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[21], Mode=OneWay}"/>
 
                         <!-- GridSplitters between columns -->
                         <!-- Splitters are indexed after the columns (index 21-41) in the same collection -->
-                        <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[22], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[34], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[35], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[36], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[37], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="17" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[38], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="18" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[39], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="19" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[40], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="20" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[41], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[23], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[24], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[25], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="4" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[26], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[27], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="12" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[34], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="13" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[35], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="14" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[36], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="15" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[37], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="16" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[38], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="17" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[39], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="18" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[40], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="19" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[41], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="20" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[42], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="21" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[43], Mode=OneWay}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>
@@ -849,6 +852,12 @@
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
+                                        <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Tag="HasWHQLSigner" Click="CopyToClipboard_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
                                     </MenuFlyoutSubItem.Items>
 
                                 </MenuFlyoutSubItem>
@@ -877,6 +886,7 @@
                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnWidths[18].Width, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnWidths[19].Width, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnWidths[20].Width, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnWidths[21].Width, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FileName}" FontFamily="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0" Visibility="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnVisibilities[0], Mode=OneWay}"/>
                         <TextBlock Text="{x:Bind TimeCreated}" FontFamily="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1" Visibility="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnVisibilities[1], Mode=OneWay}"/>
@@ -899,6 +909,7 @@
                         <TextBlock x:Phase="4" Text="{x:Bind PolicyGUID}" FontFamily="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="18" Visibility="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnVisibilities[18], Mode=OneWay}"/>
                         <TextBlock x:Phase="3" Text="{x:Bind PolicyName}" FontFamily="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="19" Visibility="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnVisibilities[19], Mode=OneWay}"/>
                         <TextBlock x:Phase="3" Text="{x:Bind ComputerName}" FontFamily="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="20" Visibility="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnVisibilities[20], Mode=OneWay}"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind HasWHQLSigner}" FontFamily="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="21" Visibility="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.ColumnManager.ColumnVisibilities[21], Mode=OneWay}"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

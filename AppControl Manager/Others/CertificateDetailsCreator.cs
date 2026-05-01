@@ -17,10 +17,25 @@
 
 namespace AppControlManager.Others;
 
+/// <summary>
+/// Created based on the details from <see cref="CommonCore.IntelGathering.FileIdentity.FileSignerInfos"/>.
+/// </summary>
 internal sealed class CertificateDetailsCreator(string intermediateCertTBS, string intermediateCertName, string leafCertTBS, string leafCertName)
 {
 	internal string IntermediateCertTBS => intermediateCertTBS;
 	internal string IntermediateCertName => intermediateCertName;
 	internal string LeafCertTBS => leafCertTBS;
 	internal string LeafCertName => leafCertName;
+}
+
+/// <summary>
+/// Created based on the details from <see cref="CommonCore.IntelGathering.FileIdentity.FileSignerInfos"/>.
+/// </summary>
+internal sealed class WHQLCertificateDetailsCreator(string intermediateCertTBS, string intermediateCertName, string leafCertTBS, string leafCertName, string opus)
+{
+	internal string IntermediateCertTBS => intermediateCertTBS;
+	internal string IntermediateCertName => intermediateCertName;
+	internal string LeafCertTBS => leafCertTBS;
+	internal string LeafCertName => leafCertName;
+	internal string Opus => opus;
 }

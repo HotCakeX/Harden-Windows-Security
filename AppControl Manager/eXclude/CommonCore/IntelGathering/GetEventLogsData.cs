@@ -21,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -299,6 +300,10 @@ internal static class GetEventLogsData
 					string? fileVersionString = GetStringValue(xmlSpan, "FileVersion");
 					eventData.FileVersion = Version.TryParse(fileVersionString, out Version? v) ? v : null;
 
+
+					bool hasWHQL = false;
+					bool isECC = false;
+
 					// Iterate over each correlated event (if any) - files can have multiple signers
 					foreach (EventRecord correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 					{
@@ -342,10 +347,30 @@ internal static class GetEventLogsData
 
 						// Add the current signer info/correlated event data to the main event package
 						_ = eventData.FileSignerInfos.Add(signerInfo);
+
+						// Parse EKU OIDs once per signer and use them to determine WHQL and ECC.
+						List<string> oids = ParseOidsFromCiEkusHexBlob(signerInfo.EKUs);
+						foreach (string oid in CollectionsMarshal.AsSpan(oids))
+						{
+							if (string.Equals(oid, LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))
+							{
+								hasWHQL = true;
+								signerInfo.IsWHQL = true;
+							}
+
+							if (!isECC && string.Equals(oid, LocalFilesScan.ECCOID, StringComparison.OrdinalIgnoreCase))
+								isECC = true;
+						}
 					}
 
 					// Set the SignatureStatus based on the number of signers
 					eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
+
+					// Indicating the current FileIdentity contains an item in FileSignerInfos property that is a WHQL signer.
+					eventData.HasWHQLSigner = hasWHQL;
+
+					// Determine whether any of the file's certificates are ECC signed.
+					eventData.IsECCSigned = isECC;
 
 					// Add the entire event package to the output list
 					_ = fileIdentities.Add(eventData);
@@ -433,6 +458,10 @@ internal static class GetEventLogsData
 					string? fileVersionString = GetStringValue(xmlSpan, "FileVersion");
 					eventData.FileVersion = Version.TryParse(fileVersionString, out Version? v) ? v : null;
 
+
+					bool hasWHQL = false;
+					bool isECC = false;
+
 					// Iterate over each correlated event (if any) - files can have multiple signers
 					foreach (EventRecord correlatedEvent in CollectionsMarshal.AsSpan(correlatedEvents))
 					{
@@ -476,10 +505,30 @@ internal static class GetEventLogsData
 
 						// Add the current signer info/correlated event data to the main event package
 						_ = eventData.FileSignerInfos.Add(signerInfo);
+
+						// Parse EKU OIDs once per signer and use them to determine WHQL and ECC.
+						List<string> oids = ParseOidsFromCiEkusHexBlob(signerInfo.EKUs);
+						foreach (string oid in CollectionsMarshal.AsSpan(oids))
+						{
+							if (string.Equals(oid, LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))
+							{
+								hasWHQL = true;
+								signerInfo.IsWHQL = true;
+							}
+
+							if (!isECC && string.Equals(oid, LocalFilesScan.ECCOID, StringComparison.OrdinalIgnoreCase))
+								isECC = true;
+						}
 					}
 
 					// Set the SignatureStatus based on the number of signers
 					eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
+
+					// Indicating the current FileIdentity contains an item in FileSignerInfos property that is a WHQL signer.
+					eventData.HasWHQLSigner = hasWHQL;
+
+					// Determine whether any of the file's certificates are ECC signed.
+					eventData.IsECCSigned = isECC;
 
 					// Add the populated EventData instance to the list
 					_ = fileIdentities.Add(eventData);
@@ -502,6 +551,147 @@ internal static class GetEventLogsData
 				item.Dispose();
 			}
 		}
+	}
+
+	/// <summary>
+	/// Parses Code Integrity Events EKU fields (hex blob) and returns dotted OID strings.
+	/// Example: "030A2B0601040182370A03270A2B0601040182370A0305082B06010505070303" => ["1.3.6.1.4.1.311.10.3.39", "1.3.6.1.4.1.311.10.3.5", "1.3.6.1.5.5.7.3.3"]
+	/// </summary>
+	private static List<string> ParseOidsFromCiEkusHexBlob(string? ekusHexBlob)
+	{
+		List<string> result = [];
+
+		if (string.IsNullOrWhiteSpace(ekusHexBlob))
+			return result;
+
+		ReadOnlySpan<char> hex = ekusHexBlob.AsSpan().Trim();
+		if ((hex.Length % 2) != 0)
+			return result;
+
+		// CI packs EKU OIDs as: <OID count><len byte><OID bytes...>...
+		if (!TryReadByte(hex, 0, out byte oidCount))
+			return result;
+
+		int index = 2;
+		for (int oidIndex = 0; oidIndex < oidCount; oidIndex++)
+		{
+			if (!TryReadByte(hex, index, out byte len) || len == 0)
+			{
+				result.Clear();
+				return result;
+			}
+
+			int oidHexChars = len * 2;
+			int oidStart = index + 2;
+			if ((hex.Length - oidStart) < oidHexChars)
+			{
+				result.Clear();
+				return result;
+			}
+
+			if (TryParseOidFromBytes(hex.Slice(oidStart, oidHexChars), out string? oid))
+				result.Add(oid!);
+			else
+			{
+				result.Clear();
+				return result;
+			}
+
+			index = oidStart + oidHexChars;
+		}
+
+		if (index != hex.Length)
+			result.Clear();
+
+		return result;
+	}
+
+	private static bool TryReadByte(ReadOnlySpan<char> hex, int start, out byte value)
+	{
+		value = 0;
+		if (start < 0 || (hex.Length - start) < 2)
+			return false;
+
+		return byte.TryParse(hex.Slice(start, 2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out value);
+	}
+
+	private static bool TryParseOidFromBytes(ReadOnlySpan<char> oidHexBytes, out string? oid)
+	{
+		oid = null;
+		if (oidHexBytes.IsEmpty || (oidHexBytes.Length % 2) != 0)
+			return false;
+
+		int index = 0;
+		if (!TryReadOidArc(oidHexBytes, ref index, out BigInteger firstSubIdentifier))
+			return false;
+
+		// The first ASN.1 OID subidentifier encodes the first two arcs as (X * 40) + Y.
+		BigInteger firstArc;
+		BigInteger secondArc;
+		if (firstSubIdentifier < 40)
+		{
+			firstArc = BigInteger.Zero;
+			secondArc = firstSubIdentifier;
+		}
+		else if (firstSubIdentifier < 80)
+		{
+			firstArc = BigInteger.One;
+			secondArc = firstSubIdentifier - 40;
+		}
+		else
+		{
+			firstArc = new BigInteger(2);
+			secondArc = firstSubIdentifier - 80;
+		}
+
+		List<string> arcs = [
+			firstArc.ToString(CultureInfo.InvariantCulture),
+			secondArc.ToString(CultureInfo.InvariantCulture)
+		];
+
+		while (index < oidHexBytes.Length)
+		{
+			if (!TryReadOidArc(oidHexBytes, ref index, out BigInteger arc))
+				return false;
+
+			arcs.Add(arc.ToString(CultureInfo.InvariantCulture));
+		}
+
+		oid = string.Join('.', arcs);
+		return true;
+	}
+
+	private static bool TryReadOidArc(ReadOnlySpan<char> oidHexBytes, ref int index, out BigInteger arc)
+	{
+		arc = BigInteger.Zero;
+
+		if (index < 0 || (oidHexBytes.Length - index) < 2)
+			return false;
+
+		bool isFirstByte = true;
+		while (true)
+		{
+			if (!TryReadByte(oidHexBytes, index, out byte b))
+				return false;
+
+			index += 2;
+
+			// DER requires the shortest possible base-128 representation.
+			if (isFirstByte && (b & 0x80) != 0 && (b & 0x7F) == 0)
+				return false;
+
+			arc = (arc << 7) | (b & 0x7F);
+			isFirstByte = false;
+
+			if ((b & 0x80) == 0)
+				break;
+
+			// Continuation bit is set, so another byte must be available.
+			if ((oidHexBytes.Length - index) < 2)
+				return false;
+		}
+
+		return true;
 	}
 
 	/// <summary>

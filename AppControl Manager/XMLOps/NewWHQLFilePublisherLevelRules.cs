@@ -119,14 +119,11 @@ internal static class NewWHQLFilePublisherLevelRules
 			// Create signer for each certificate details in the FilePublisherSigners
 			// Some files are signed by multiple signers
 
-			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(whqlFilePublisherData.CertificateDetails))
+			foreach (WHQLCertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(whqlFilePublisherData.CertificateDetails))
 			{
 				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
 				string signerID = $"ID_SIGNER_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
-
-				if (string.IsNullOrWhiteSpace(whqlFilePublisherData.Opus))
-					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID");
 
 				Signer newSigner = new(
 					id: signerID,
@@ -138,7 +135,7 @@ internal static class NewWHQLFilePublisherLevelRules
 					))
 				{
 					CertEKU = [new CertEKU(id: EKUID)],
-					CertOemID = new CertOemID(value: whqlFilePublisherData.Opus),
+					CertOemID = new CertOemID(value: signerData.Opus),
 					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]
 				};
 
@@ -246,14 +243,16 @@ internal static class NewWHQLFilePublisherLevelRules
 			// Create signer for each certificate details in the FilePublisherSigners
 			// Some files are signed by multiple signers
 
-			foreach (CertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(whqlFilePublisherData.CertificateDetails))
+			foreach (WHQLCertificateDetailsCreator signerData in CollectionsMarshal.AsSpan(whqlFilePublisherData.CertificateDetails))
 			{
 				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
 				string signerID = $"ID_SIGNER_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
-				if (string.IsNullOrWhiteSpace(whqlFilePublisherData.Opus))
-					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID");
+				// Based on the Schema, each Signer can only have 1 CertOEMID aka OPUS.
+
+				// Opus Info are only associated with each FileSignerInfos in a FileIdentity, not directly with FileIdentity itself.
+				// Because a file (aka FileIdentity) can have multiple signers (aka FileSignerInfos) and each have different Opus.
 
 				Signer newSigner = new(
 					id: signerID,
@@ -265,7 +264,7 @@ internal static class NewWHQLFilePublisherLevelRules
 					))
 				{
 					CertEKU = [new CertEKU(id: EKUID)],
-					CertOemID = new CertOemID(value: whqlFilePublisherData.Opus),
+					CertOemID = new CertOemID(value: signerData.Opus),
 					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]
 				};
 

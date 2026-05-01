@@ -366,8 +366,7 @@ internal static class SignerAndHashBuilder
 				authenticodeSHA1: signedData.SHA1Hash,
 				siSigningScenario: signedData.SISigningScenario,
 				packageFamilyName: signedData.PackageFamilyName,
-				certificateDetails: [],
-				opus: signedData.Opus
+				certificateDetails: []
 				);
 
 			// Loop through each correlated event and process the certificate details
@@ -383,32 +382,36 @@ internal static class SignerAndHashBuilder
 				// For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
 				// currentCorData to store the current SignerInfo/Correlated
-				CertificateDetailsCreator? currentCorData;
+				WHQLCertificateDetailsCreator? currentCorData;
+
+				if (string.IsNullOrWhiteSpace(corDataValue.OPUSInfo))
+					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID!");
 
 				if (string.IsNullOrWhiteSpace(corDataValue.IssuerTBSHash) && !string.IsNullOrWhiteSpace(corDataValue.PublisherTBSHash))
 				{
 					Logger.Write(string.Format(Atlas.GetStr("BuildSignerIntermediateCertEmptyMessage"), signedData.FilePath));
 
-					currentCorData = new CertificateDetailsCreator(
+					currentCorData = new WHQLCertificateDetailsCreator(
 						corDataValue.PublisherTBSHash,
 						corDataValue.PublisherName!,
 						corDataValue.PublisherTBSHash,
-						corDataValue.PublisherName!
+						corDataValue.PublisherName!,
+						opus: corDataValue.OPUSInfo
 					);
 				}
 				else
 				{
-					currentCorData = new CertificateDetailsCreator(
+					currentCorData = new WHQLCertificateDetailsCreator(
 						corDataValue.IssuerTBSHash!,
 						corDataValue.IssuerName!,
 						corDataValue.PublisherTBSHash!,
-						corDataValue.PublisherName!
+						corDataValue.PublisherName!,
+						opus: corDataValue.OPUSInfo
 					);
 				}
 
 				// Add the Certificate details to the CurrentFilePublisherSigner's CertificateDetails property
 				currentWHQLFilePublisherSigner.CertificateDetails.Add(currentCorData);
-
 			}
 
 			// Add the completed FilePublisherSigner to the list

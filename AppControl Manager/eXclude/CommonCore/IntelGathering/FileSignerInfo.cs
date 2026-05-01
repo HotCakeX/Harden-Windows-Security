@@ -55,5 +55,5 @@ internal sealed class FileSignerInfo(
 	internal string? OPUSInfo => oPUSInfo;
 	internal string? EKUs => eKUs;
 	internal int? KnownRoot => knownRoot;
-	internal bool? IsWHQL => isWHQL;
+	internal bool? IsWHQL { get; set; } = isWHQL;
 }

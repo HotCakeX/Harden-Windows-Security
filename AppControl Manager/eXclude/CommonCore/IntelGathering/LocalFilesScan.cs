@@ -32,7 +32,7 @@ internal static class LocalFilesScan
 {
 
 	internal const string WHQLOid = "1.3.6.1.4.1.311.10.3.5";
-	private const string ECCOID = "1.2.840.10045.2.1";
+	internal const string ECCOID = "1.2.840.10045.2.1";
 
 	/// <summary>
 	/// Scans the local files and returns the scan results

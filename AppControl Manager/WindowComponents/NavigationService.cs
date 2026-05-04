@@ -370,7 +370,7 @@ internal sealed class NavigationService
 		if (_frame.CanGoBack)
 		{
 
-			// Don't go back if the nav pane is overlayed.
+			// Don't go back if the nav pane is overlaid.
 			/*
                 if (MainNavigation.IsPaneOpen &&
                     (MainNavigation.DisplayMode == NavigationViewDisplayMode.Compact ||

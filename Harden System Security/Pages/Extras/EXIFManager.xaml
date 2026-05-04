@@ -279,7 +279,7 @@
                                HorizontalAlignment="Center"/>
 
                     <!-- Instruction -->
-                    <TextBlock Text="Drag and drop a JPG or PNG image here (works only when runing unelevated), or use the Browse button to select one."
+                    <TextBlock Text="Drag and drop a JPG or PNG image here (works only when running unelevated), or use the Browse button to select one."
                                Style="{StaticResource BodyTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                HorizontalAlignment="Center"

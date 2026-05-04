@@ -4049,13 +4049,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Signing Scenario</value>
   </data>
   <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
-    <value>Choose wether this certificate will be added to the User Mode or Kernel Mode Signing Scenario</value>
+    <value>Choose whether this certificate will be added to the User Mode or Kernel Mode Signing Scenario</value>
   </data>
   <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Choose wether this certificate will be added to the User Mode or Kernel Mode Signing Scenario</value>
+    <value>Choose whether this certificate will be added to the User Mode or Kernel Mode Signing Scenario</value>
   </data>
   <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Choose wether this certificate will be added to the User Mode or Kernel Mode Signing Scenario</value>
+    <value>Choose whether this certificate will be added to the User Mode or Kernel Mode Signing Scenario</value>
   </data>
   <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
     <value>Browse For Certificates</value>

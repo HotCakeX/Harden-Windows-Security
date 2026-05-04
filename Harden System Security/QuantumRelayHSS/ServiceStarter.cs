@@ -45,7 +45,7 @@ internal static partial class ServiceStarter
 
 		try
 		{
-			// Open the Service Control Manager by openning a service handle.
+			// Open the Service Control Manager by opening a service handle.
 			scmHandle = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 			if (scmHandle == IntPtr.Zero)
 			{

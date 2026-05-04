@@ -359,7 +359,7 @@
                                         </VisualState.Setters>
                                     </VisualState>
 
-                                    <!--  Similiar to Left, but the HeaderIcon/Header/Description is visible  -->
+                                    <!--  Similar to Left, but the HeaderIcon/Header/Description is visible  -->
                                     <VisualState x:Name="Vertical">
                                         <VisualState.StateTriggers>
                                             <local:IsEqualStateTrigger Value="{Binding ContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"

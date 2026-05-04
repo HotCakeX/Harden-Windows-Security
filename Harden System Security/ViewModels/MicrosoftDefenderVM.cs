@@ -103,7 +103,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			// Create MUnits from JSON policies using the centralized method.
 			List<MUnit> allResults = MUnit.CreateMUnitsFromPolicies(Categories.MicrosoftDefender);
 
-			// Create programatic MUnits that are not from Group Policies.
+			// Create programmatic MUnits that are not from Group Policies.
 			allResults.AddRange(CreateUnits());
 
 			return allResults;

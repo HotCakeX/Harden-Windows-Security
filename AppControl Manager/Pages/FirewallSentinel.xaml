@@ -558,7 +558,7 @@
 
             </Border>
 
-            <!-- Rule Creation Secton -->
+            <!-- Rule Creation Section -->
             <StackPanel HorizontalAlignment="Stretch"
                         Margin="0,5,0,0"
                         Grid.Row="3"

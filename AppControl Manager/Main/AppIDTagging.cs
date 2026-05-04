@@ -42,7 +42,7 @@ internal static class AppIDTagging
 
 	/// <summary>
 	/// App ID Tagging only applies to user mode Exe files.
-	/// Creationg explicit Allow rules for them improves system performance.
+	/// Creating explicit Allow rules for them improves system performance.
 	/// </summary>
 	private static readonly List<FileIdentity> AppIDTaggingFileTypeExceptions = [
 		new(){FilePath = "*.sys", SISigningScenario = SSType.UserMode},

@@ -345,7 +345,7 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 <br>
 
 > [!IMPORTANT]\
-> Always Pay attention to the [Microsoft Security Servicing Criteria for Windows](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria), specially the Security boundaries. There is no security boundary between Administrator to Kernel.
+> Always pay attention to the [Microsoft Security Servicing Criteria for Windows](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria), especially the security boundaries. There is no security boundary between Administrator to Kernel.
 >
 > Some penetration testers overlook this fact, assuming it is a vulnerability that they can perform administrative tasks such as disabling security features as Administrator. This is an expected behavior. Administrators have the power to control the security of a device and can disable security features at their discretion. This is why you need to use a Standard user account when performing a realistic penetration test.
 >
@@ -518,7 +518,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <br>
 
-* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> When using Xbox, make sure you [configure sign-in preference](https://support.xbox.com/en-US/help/account-profile/signin-security/change-signin-preferences) and set it to either `Ask for my PIN` or `Lock it down`. The latter is the most secure one since it will require authentication using Microsoft Authenticator app. `Ask for my PIN` is recommended for the most people because it will only require a PIN to be entered using controller.
+* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> When using Xbox, make sure you [configure sign-in preference](https://support.xbox.com/en-US/help/account-profile/signin-security/change-signin-preferences) and set it to either `Ask for my PIN` or `Lock it down`. The latter is the most secure option because it requires authentication using the Microsoft Authenticator app. `Ask for my PIN` is recommended for most people because it only requires entering a PIN with a controller.
 
 <br>
 

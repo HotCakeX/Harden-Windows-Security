@@ -1357,7 +1357,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	#endregion
 
-	#region Retrive System Security Policy
+	#region Retrieve System Security Policy
 
 	internal async void RetrieveSystemSecurityPolicy()
 	{

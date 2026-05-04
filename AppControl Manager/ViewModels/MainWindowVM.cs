@@ -793,7 +793,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			// If an error occured, we want to print it on the Sidebar's infobar and continue using our own guaranteed path.
+			// If an error occurred, we want to print it on the Sidebar's infobar and continue using our own guaranteed path.
 			MainInfoBar.WriteError(ex);
 		}
 

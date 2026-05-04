@@ -193,7 +193,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 			// Clear undo stack on new scan
 			ClearUndoStack();
 
-			// Initially the Progress Ring is determinate becaue the Progress reporter assigns accurate values to it.
+			// Initially the Progress Ring is determinate because the progress reporter assigns accurate values to it.
 			IsProgressIndeterminate = false;
 
 			ScanProgress = 0;
@@ -560,7 +560,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 
 	/// <summary>
 	/// It undoes deletion actions in the reverse order they happened (Last-In, First-Out).
-	/// Only Single picture deletions or Duplicte group deletions supported, not automated deletion of all duplicates because they can be too big.
+	/// Only Single-picture deletions or duplicate-group deletions supported, not automated deletion of all duplicates because they can be too large.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>

@@ -46,7 +46,7 @@ Get-Item "C:\Users\$($env:USERNAME)\OneDrive\Desktop\Hyper-V Guardian certificat
 
 <br>
 
-You should change the values for `$CertificateLocation` and `$CertificatePassword` varaibles according to your own needs and environment.
+You should change the values for the `$CertificateLocation` and `$CertificatePassword` variables according to your own needs and environment.
 
 - You can find more info about those commands here:
 

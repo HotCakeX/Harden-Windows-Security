@@ -114,7 +114,7 @@
         </Grid.Resources>
 
         <!-- When using this, we shouldn't set PaneDisplayMode="" property on the navigation element itself or set that property to anything other than Auto, otherwise these dynamic triggers won't work on it. -->
-        <!-- Also apparently there are hardcoded minimum width that do not allow for smaller MinWindowWidth to be set for the triggers below and they are overriden when it happens -->
+        <!-- Also apparently there are hardcoded minimum widths that do not allow smaller MinWindowWidth values for the triggers below, and they are overridden when that happens -->
 
         <!-- VisualStateManager for responsive layout of the NavigationView -->
         <VisualStateManager.VisualStateGroups>

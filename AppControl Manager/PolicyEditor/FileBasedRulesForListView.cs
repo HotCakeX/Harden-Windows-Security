@@ -36,7 +36,7 @@ namespace AppControlManager.PolicyEditor;
 /// <param name="type"></param>
 /// <param name="sourceType"></param>
 /// <param name="source"></param>
-/// <param name="requireHotpatchID">Only used for <see cref="SiPolicy.Allow"/> type</parm>
+/// <param name="requireHotpatchID">Only used for <see cref="SiPolicy.Allow"/> type</param>
 /// <param name="minimumHotpatchSequence">Only used for <see cref="SiPolicy.Allow"/> type</param>
 /// <param name="maximumHotpatchSequence">Only used for <see cref="SiPolicy.Allow"/> type</param>
 internal sealed class FileBasedRulesForListView(

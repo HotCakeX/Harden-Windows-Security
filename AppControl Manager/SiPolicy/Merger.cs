@@ -816,7 +816,7 @@ internal static partial class Merger
 	/// <returns>True if the rules are considered equal according to the common logic; otherwise false.</returns>
 	internal static bool CompareCommonRuleProperties(
 	SSType? signingScenarioX, SSType? signingScenarioY,
-	RuleTypeType? ruleTypeX, RuleTypeType? ruleTypeY, // Ony for FileRule type
+	RuleTypeType? ruleTypeX, RuleTypeType? ruleTypeY, // Only for FileRule type
 	string? packageFamilyNameX, string? packageFamilyNameY,
 	ReadOnlyMemory<byte> hashX, ReadOnlyMemory<byte> hashY,
 	string? filePathX, string? filePathY,

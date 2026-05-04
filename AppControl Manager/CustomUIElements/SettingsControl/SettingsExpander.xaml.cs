@@ -34,7 +34,7 @@ using Windows.UI.Xaml.Markup;
 namespace CommonCore.ToolKits;
 
 /// <summary>
-///  The SettingsExpander is a collapsable control to host multiple SettingsCards.
+///  The SettingsExpander is a collapsible control to host multiple SettingsCards.
 /// </summary>
 //// Note: ItemsRepeater will request all the available horizontal space: https://github.com/microsoft/microsoft-ui-xaml/issues/3842
 [TemplatePart(Name = PART_ItemsRepeater, Type = typeof(ItemsRepeater))]
@@ -45,7 +45,7 @@ internal sealed partial class SettingsExpander : Control
 	private ItemsRepeater? _itemsRepeater;
 
 	/// <summary>
-	/// The SettingsExpander is a collapsable control to host multiple SettingsCards.
+	/// The SettingsExpander is a collapsible control to host multiple SettingsCards.
 	/// </summary>
 	public SettingsExpander()
 	{

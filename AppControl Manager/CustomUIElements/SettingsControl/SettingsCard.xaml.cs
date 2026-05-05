@@ -22,6 +22,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Automation.Peers;
@@ -40,6 +41,7 @@ namespace CommonCore.ToolKits;
 [TemplatePart(Name = HeaderPresenter, Type = typeof(ContentPresenter))]
 [TemplatePart(Name = DescriptionPresenter, Type = typeof(ContentPresenter))]
 [TemplatePart(Name = HeaderIconPresenterHolder, Type = typeof(Viewbox))]
+[TemplatePart(Name = RootGrid, Type = typeof(FrameworkElement))]
 
 [TemplateVisualState(Name = NormalState, GroupName = CommonStates)]
 [TemplateVisualState(Name = PointerOverState, GroupName = CommonStates)]
@@ -57,6 +59,8 @@ namespace CommonCore.ToolKits;
 
 [TemplateVisualState(Name = NoContentSpacingState, GroupName = ContentSpacingStates)]
 [TemplateVisualState(Name = ContentSpacingState, GroupName = ContentSpacingStates)]
+[TemplateVisualState(Name = VisibleState, GroupName = ContentVisibilityStates)]
+[TemplateVisualState(Name = CollapsedState, GroupName = ContentVisibilityStates)]
 internal partial class SettingsCard : ButtonBase
 {
 	internal const string CommonStates = "CommonStates";
@@ -79,11 +83,21 @@ internal partial class SettingsCard : ButtonBase
 	internal const string ContentSpacingStates = "ContentSpacingStates";
 	internal const string NoContentSpacingState = "NoContentSpacing";
 	internal const string ContentSpacingState = "ContentSpacing";
+	internal const string ContentVisibilityStates = "ContentVisibilityStates";
+	internal const string VisibleState = "Visible";
+	internal const string CollapsedState = "Collapsed";
 
 	internal const string ActionIconPresenterHolder = "PART_ActionIconPresenterHolder";
 	internal const string HeaderPresenter = "PART_HeaderPresenter";
 	internal const string DescriptionPresenter = "PART_DescriptionPresenter";
 	internal const string HeaderIconPresenterHolder = "PART_HeaderIconPresenterHolder";
+	internal const string RootGrid = "PART_RootGrid";
+
+	// Keeping these values aligned with the SettingsCardWrapThreshold resources in SettingsCard.xaml.
+	private const double SettingsCardWrapThreshold = 476.0;
+	private const double SettingsCardWrapNoIconThreshold = 286.0;
+
+	private FrameworkElement? _rootGrid;
 
 	/// <summary>
 	/// Creates a new instance of the <see cref="SettingsCard"/> class.
@@ -92,7 +106,10 @@ internal partial class SettingsCard : ButtonBase
 
 	protected override void OnApplyTemplate()
 	{
+		DetachRootGridSizeChanged();
 		base.OnApplyTemplate();
+		_rootGrid = GetTemplateChild(RootGrid) as FrameworkElement;
+		AttachRootGridSizeChanged();
 		IsEnabledChanged -= OnIsEnabledChanged;
 		OnActionIconChanged();
 		OnHeaderChanged();
@@ -100,8 +117,8 @@ internal partial class SettingsCard : ButtonBase
 		OnDescriptionChanged();
 		OnIsClickEnabledChanged();
 		CheckInitialVisualState();
+		UpdateContentVisibilityState();
 		SetAccessibleContentName();
-		_ = RegisterPropertyChangedCallback(ContentProperty, OnContentChanged); // Need to unregister this later ?
 		IsEnabledChanged += OnIsEnabledChanged;
 	}
 
@@ -112,10 +129,10 @@ internal partial class SettingsCard : ButtonBase
 		if (GetTemplateChild("ContentAlignmentStates") is VisualStateGroup contentAlignmentStatesGroup)
 		{
 			contentAlignmentStatesGroup.CurrentStateChanged -= ContentAlignmentStates_Changed;
-			CheckVerticalSpacingState(contentAlignmentStatesGroup.CurrentState);
 			contentAlignmentStatesGroup.CurrentStateChanged += ContentAlignmentStates_Changed;
 		}
 
+		UpdateContentAlignmentState();
 		CheckHeaderIconState();
 	}
 
@@ -236,6 +253,12 @@ internal partial class SettingsCard : ButtonBase
 	/// <returns>An automation peer for <see cref="SettingsCard"/>.</returns>
 	protected override AutomationPeer OnCreateAutomationPeer() => new SettingsCardAutomationPeer(this);
 
+	protected override void OnContentChanged(object oldContent, object newContent)
+	{
+		base.OnContentChanged(oldContent, newContent);
+		UpdateContentVisibilityState();
+	}
+
 	private void OnIsClickEnabledChanged()
 	{
 		OnActionIconChanged();
@@ -306,9 +329,51 @@ internal partial class SettingsCard : ButtonBase
 
 	}
 
-	private void ContentAlignmentStates_Changed(object sender, VisualStateChangedEventArgs e)
+	private void ContentAlignmentStates_Changed(object sender, VisualStateChangedEventArgs e) => CheckVerticalSpacingState(e.NewState);
+
+	private void AttachRootGridSizeChanged() => _rootGrid?.SizeChanged += RootGrid_SizeChanged;
+
+	private void DetachRootGridSizeChanged()
 	{
-		CheckVerticalSpacingState(e.NewState);
+		_rootGrid?.SizeChanged -= RootGrid_SizeChanged;
+		_rootGrid = null;
+	}
+
+	private void RootGrid_SizeChanged(object sender, SizeChangedEventArgs e) => UpdateContentAlignmentState();
+
+	private void UpdateContentAlignmentState()
+	{
+		string contentAlignmentState = ContentAlignment switch
+		{
+			ContentAlignment.Left => LeftState,
+			ContentAlignment.Vertical => VerticalState,
+			_ => GetRightContentAlignmentState()
+		};
+
+		_ = VisualStateManager.GoToState(this, contentAlignmentState, true);
+	}
+
+	private string GetRightContentAlignmentState()
+	{
+		double actualWidth = _rootGrid?.ActualWidth ?? ActualWidth;
+
+		if (actualWidth < SettingsCardWrapNoIconThreshold)
+		{
+			return RightWrappedNoIconState;
+		}
+
+		if (actualWidth < SettingsCardWrapThreshold)
+		{
+			return RightWrappedState;
+		}
+
+		return RightState;
+	}
+
+	private void UpdateContentVisibilityState()
+	{
+		string contentVisibilityState = IsNullOrEmpty(Content) ? CollapsedState : VisibleState;
+		_ = VisualStateManager.GoToState(this, contentVisibilityState, true);
 	}
 
 	private void CheckVerticalSpacingState(VisualState s)
@@ -343,6 +408,42 @@ internal partial class SettingsCard : ButtonBase
 			return true;
 		}
 
+		return false;
+	}
+
+	private static bool IsNullOrEmpty(object obj)
+	{
+		if (obj == null)
+		{
+			return true;
+		}
+
+		// Object is not null, check for an empty string
+		if (obj is string objString)
+		{
+			return objString.Length == 0;
+		}
+
+		// Object is not a string, check for an empty ICollection (faster)
+		if (obj is ICollection objCollection)
+		{
+			return objCollection.Count == 0;
+		}
+#pragma warning disable IDE0059
+		// Object is not an ICollection, check for an empty IEnumerable
+		if (obj is IEnumerable objEnumerable)
+		{
+			foreach (object? item in objEnumerable)
+			{
+				// Found an item, not empty
+				return false;
+			}
+
+			return true;
+		}
+#pragma warning restore IDE0059
+
+		// Not null and not a known type to test for emptiness
 		return false;
 	}
 }
@@ -410,7 +511,7 @@ internal partial class SettingsCard : ButtonBase
 		nameof(ContentAlignment),
 		typeof(ContentAlignment),
 		typeof(SettingsCard),
-		new PropertyMetadata(defaultValue: ContentAlignment.Right));
+		new PropertyMetadata(defaultValue: ContentAlignment.Right, (d, e) => ((SettingsCard)d).OnContentAlignmentPropertyChanged((ContentAlignment)e.OldValue, (ContentAlignment)e.NewValue)));
 
 	/// <summary>
 	/// The backing <see cref="DependencyProperty"/> for the <see cref="IsActionIconVisible"/> property.
@@ -519,6 +620,11 @@ internal partial class SettingsCard : ButtonBase
 	/// Called when the IsActionIconVisible property changes.
 	/// </summary>
 	protected virtual void OnIsActionIconVisiblePropertyChanged(bool oldValue, bool newValue) => OnActionIconChanged();
+
+	/// <summary>
+	/// Called when the ContentAlignment property changes.
+	/// </summary>
+	protected virtual void OnContentAlignmentPropertyChanged(ContentAlignment oldValue, ContentAlignment newValue) => UpdateContentAlignmentState();
 }
 
 /// <summary>

@@ -22,8 +22,6 @@
     <x:Double x:Key="SettingsExpanderChevronButtonWidth">32</x:Double>
     <x:Double x:Key="SettingsExpanderChevronButtonHeight">32</x:Double>
 
-    <local:CornerRadiusConverter x:Key="CornerRadiusConverter" />
-
     <Style x:Key="DefaultSettingsExpanderItemStyle"
            BasedOn="{StaticResource DefaultSettingsCardStyle}"
            TargetType="local:SettingsCard">
@@ -76,16 +74,16 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:SettingsExpander">
-                        <muxc:Expander MinWidth="{TemplateBinding MinWidth}"
-                                       MinHeight="{TemplateBinding MinHeight}"
-                                       HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                       win:AutomationProperties.HelpText="{TemplateBinding AutomationProperties.HelpText}"
-                                       win:AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}"
-                                       CornerRadius="{TemplateBinding CornerRadius}"
-                                       IsExpanded="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Style="{StaticResource SettingsExpanderExpanderStyle}">
-                            <muxc:Expander.Header>
+                        <local:SettingsExpanderInnerExpander x:Name="PART_Expander"
+                                                             MinWidth="{TemplateBinding MinWidth}"
+                                                             MinHeight="{TemplateBinding MinHeight}"
+                                                             HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                             win:AutomationProperties.HelpText="{TemplateBinding AutomationProperties.HelpText}"
+                                                             win:AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}"
+                                                             CornerRadius="{TemplateBinding CornerRadius}"
+                                                             Style="{StaticResource SettingsExpanderExpanderStyle}">
+                            <local:SettingsExpanderInnerExpander.Header>
                                 <local:SettingsCard Padding="{StaticResource SettingsExpanderHeaderPadding}"
                                                     VerticalAlignment="Center"
                                                     Background="Transparent"
@@ -96,9 +94,9 @@
                                                     Header="{TemplateBinding Header}"
                                                     HeaderIcon="{TemplateBinding HeaderIcon}"
                                                     IsClickEnabled="False" />
-                            </muxc:Expander.Header>
-                            <muxc:Expander.Content>
-                                <Grid CornerRadius="{Binding CornerRadius, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource CornerRadiusConverter}}">
+                            </local:SettingsExpanderInnerExpander.Header>
+                            <local:SettingsExpanderInnerExpander.Content>
+                                <Grid x:Name="PART_ItemsRoot">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
@@ -107,7 +105,7 @@
                                     <ContentPresenter Content="{TemplateBinding ItemsHeader}" />
                                     <muxc:ItemsRepeater x:Name="PART_ItemsRepeater"
                                                         Grid.Row="1"
-                                                        ItemTemplate="{Binding ItemTemplate, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                        ItemTemplate="{TemplateBinding ItemTemplate}"
                                                         TabFocusNavigation="Local">
                                         <muxc:ItemsRepeater.Layout>
                                             <muxc:StackLayout Orientation="Vertical" />
@@ -116,8 +114,8 @@
                                     <ContentPresenter Grid.Row="2"
                                                       Content="{TemplateBinding ItemsFooter}" />
                                 </Grid>
-                            </muxc:Expander.Content>
-                        </muxc:Expander>
+                            </local:SettingsExpanderInnerExpander.Content>
+                        </local:SettingsExpanderInnerExpander>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -125,7 +123,7 @@
     </Style>
 
     <Style x:Key="SettingsExpanderExpanderStyle"
-           TargetType="muxc:Expander">
+           TargetType="local:SettingsExpanderInnerExpander">
         <Setter Property="Background" Value="{ThemeResource ExpanderContentBackground}" />
         <Setter Property="BackgroundSizing" Value="InnerBorderEdge" />
         <Setter Property="MinWidth" Value="{ThemeResource FlyoutThemeMinWidth}" />
@@ -138,7 +136,7 @@
         <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="muxc:Expander">
+                <ControlTemplate TargetType="local:SettingsExpanderInnerExpander">
                     <Grid MinWidth="{TemplateBinding MinWidth}"
                           MaxWidth="{TemplateBinding MaxWidth}">
                         <Grid.RowDefinitions>
@@ -151,7 +149,7 @@
                             <VisualStateGroup x:Name="ExpandStates">
                                 <VisualState x:Name="ExpandUp">
                                     <VisualState.Setters>
-                                        <Setter Target="ExpanderHeader.CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomCornerRadiusFilterConverter}}" />
+                                        <Setter Target="ExpanderHeader.CornerRadius" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=BottomCornerRadius}" />
                                     </VisualState.Setters>
                                     <VisualState.Storyboard>
                                         <Storyboard>
@@ -192,7 +190,7 @@
                                 </VisualState>
                                 <VisualState x:Name="ExpandDown">
                                     <VisualState.Setters>
-                                        <Setter Target="ExpanderHeader.CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopCornerRadiusFilterConverter}}" />
+                                        <Setter Target="ExpanderHeader.CornerRadius" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TopCornerRadius}" />
                                     </VisualState.Setters>
                                     <VisualState.Storyboard>
                                         <Storyboard>
@@ -238,7 +236,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="ExpanderHeader.Style" Value="{StaticResource ExpanderHeaderUpStyle}" />
                                         <Setter Target="ExpanderContent.BorderThickness" Value="{StaticResource ExpanderContentUpBorderThickness}" />
-                                        <Setter Target="ExpanderContent.CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopCornerRadiusFilterConverter}}" />
+                                        <Setter Target="ExpanderContent.CornerRadius" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TopCornerRadius}" />
                                         <Setter Target="ExpanderHeader.(Grid.Row)" Value="1" />
                                         <Setter Target="ExpanderContentClip.(Grid.Row)" Value="0" />
                                         <Setter Target="Row0.Height" Value="*" />
@@ -262,7 +260,6 @@
                                       ContentTemplate="{TemplateBinding HeaderTemplate}"
                                       ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
                                       CornerRadius="{TemplateBinding CornerRadius}"
-                                      IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                       IsEnabled="{TemplateBinding IsEnabled}"
                                       IsTabStop="True"
                                       Style="{StaticResource SettingsExpanderHeaderDownStyle}" />
@@ -277,7 +274,7 @@
                                     BackgroundSizing="{TemplateBinding BackgroundSizing}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{StaticResource ExpanderContentDownBorderThickness}"
-                                    CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
+                                    CornerRadius="{TemplateBinding BottomCornerRadius}"
                                     Visibility="Collapsed">
                                 <ContentPresenter Margin="0,-2,0,0"
                                                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"

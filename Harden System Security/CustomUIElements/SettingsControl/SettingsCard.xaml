@@ -308,16 +308,12 @@
                                 </VisualStateGroup>
 
                                 <VisualStateGroup x:Name="ContentAlignmentStates">
+                                    <!--  These states are driven from code-behind to keep the template Native AOT compatible.  -->
                                     <!--  Default  -->
                                     <VisualState x:Name="Right" />
 
                                     <!--  Whenever the control width is less than SettingsCardWrapThreshold, the Content is below the Header/Description  -->
                                     <VisualState x:Name="RightWrapped">
-                                        <VisualState.StateTriggers>
-                                            <local:ControlSizeTrigger MinWidth="{ThemeResource SettingsCardWrapNoIconThreshold}"
-                                                                   MaxWidth="{ThemeResource SettingsCardWrapThreshold}"
-                                                                   TargetElement="{Binding ElementName=PART_RootGrid}" />
-                                        </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="PART_ContentPresenter.(Grid.Row)" Value="1" />
                                             <Setter Target="PART_ContentPresenter.(Grid.Column)" Value="1" />
@@ -329,10 +325,6 @@
 
                                     <!--  For even smaller widths: the HeaderIcon is collapsed.  -->
                                     <VisualState x:Name="RightWrappedNoIcon">
-                                        <VisualState.StateTriggers>
-                                            <local:ControlSizeTrigger MaxWidth="{ThemeResource SettingsCardWrapNoIconThreshold}"
-                                                                   TargetElement="{Binding ElementName=PART_RootGrid}" />
-                                        </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="PART_HeaderIconPresenterHolder.Visibility" Value="Collapsed" />
                                             <Setter Target="PART_ContentPresenter.(Grid.Row)" Value="1" />
@@ -345,10 +337,6 @@
 
                                     <!--  Header/Description/Icon collapsed, content is to the left. Great for e.g. Checkboxes  -->
                                     <VisualState x:Name="Left">
-                                        <VisualState.StateTriggers>
-                                            <local:IsEqualStateTrigger Value="{Binding ContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
-                                                                    To="Left" />
-                                        </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="PART_HeaderIconPresenterHolder.Visibility" Value="Collapsed" />
                                             <Setter Target="PART_DescriptionPresenter.Visibility" Value="Collapsed" />
@@ -361,26 +349,18 @@
 
                                     <!--  Similar to Left, but the HeaderIcon/Header/Description is visible  -->
                                     <VisualState x:Name="Vertical">
-                                        <VisualState.StateTriggers>
-                                            <local:IsEqualStateTrigger Value="{Binding ContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
-                                                                    To="Vertical" />
-                                        </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="PART_ContentPresenter.(Grid.Row)" Value="1" />
                                             <Setter Target="PART_ContentPresenter.(Grid.Column)" Value="1" />
                                             <Setter Target="PART_ContentPresenter.HorizontalAlignment" Value="Stretch" />
-                                            <Setter Target="PART_ContentPresenter.HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
 
-                                <!--  Collapsing the Content presenter whenever it's empty  -->
+                                <!--  Collapsing the Content presenter whenever it's empty. This state is driven from code-behind to keep the template Native AOT compatible.  -->
                                 <VisualStateGroup x:Name="ContentVisibilityStates">
                                     <VisualState x:Name="Visible" />
                                     <VisualState x:Name="Collapsed">
-                                        <VisualState.StateTriggers>
-                                            <local:IsNullOrEmptyStateTrigger Value="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" />
-                                        </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="PART_ContentPresenter.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>

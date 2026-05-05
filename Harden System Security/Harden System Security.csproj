@@ -80,12 +80,6 @@
             <ServerGarbageCollection>true</ServerGarbageCollection>
             <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
         -->
-
-		<!-- To suppress the Trim warnings for Settings Control only which uses regular Bindings and is built that way in Community Toolkits / official Nuget package.
-			 If we consume the SettingsControl Nuget package directly, we inherently hide these warnings and don't see them.
-			 The warnings are false-positives because the controls work fine after NAOT compilation on WinAppSDK v1.8.
-			 Projects must be compiled without this suppression periodically to ensure nothing else is being suppressed. -->
-		<NoWarn>WMC1510</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

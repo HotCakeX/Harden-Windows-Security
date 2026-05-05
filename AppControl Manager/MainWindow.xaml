@@ -37,7 +37,7 @@
                 <GradientStop Color="#8CA6DB" Offset="1.0" />
             </LinearGradientBrush>
 
-            <MenuFlyout x:Name="TopBarOverrideMenuFlyout"                        
+            <MenuFlyout x:Name="TopBarOverrideMenuFlyout"
                         Placement="BottomEdgeAlignedLeft">
                 <MenuFlyout.SystemBackdrop>
                     <MicaBackdrop Kind="BaseAlt"/>

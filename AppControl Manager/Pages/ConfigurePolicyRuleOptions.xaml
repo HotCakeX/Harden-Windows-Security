@@ -97,6 +97,19 @@
                                   IsOn="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=TwoWay}"/>
                 </Border>
 
+                <Button x:Uid="RefreshRuleOptionsStateButton"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.RefreshRuleOptionsState_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
             </CCToolKit:WrapPanel>
 
             <StackPanel HorizontalAlignment="Stretch"
@@ -124,19 +137,6 @@
                         <ToggleButton x:Uid="DeployAfterApplyingRuleOptionsToggleButton"
                                       IsChecked="{x:Bind ViewModel.DeployAfterApplyingToggleButton, Mode=TwoWay}"
                                       IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" />
-
-                        <Button x:Uid="RefreshRuleOptionsStateButton"
-                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.RefreshRuleOptionsState_Click}">
-                            <Button.ContentTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
-                                        <TextBlock Text="{x:Bind}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </Button.ContentTemplate>
-                        </Button>
 
                     </CCToolKit:WrapPanel>
 

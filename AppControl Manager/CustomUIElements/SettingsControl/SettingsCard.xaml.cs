@@ -36,7 +36,6 @@ namespace CommonCore.ToolKits;
 /// This is the base control to create consistent settings experiences, inline with the Windows 11 design language.
 /// A SettingsCard can also be hosted within a SettingsExpander.
 /// </summary>
-
 [TemplatePart(Name = ActionIconPresenterHolder, Type = typeof(Viewbox))]
 [TemplatePart(Name = HeaderPresenter, Type = typeof(ContentPresenter))]
 [TemplatePart(Name = DescriptionPresenter, Type = typeof(ContentPresenter))]
@@ -59,6 +58,7 @@ namespace CommonCore.ToolKits;
 
 [TemplateVisualState(Name = NoContentSpacingState, GroupName = ContentSpacingStates)]
 [TemplateVisualState(Name = ContentSpacingState, GroupName = ContentSpacingStates)]
+[TemplateVisualState(Name = ContentSpacingNarrowState, GroupName = ContentSpacingStates)]
 [TemplateVisualState(Name = VisibleState, GroupName = ContentVisibilityStates)]
 [TemplateVisualState(Name = CollapsedState, GroupName = ContentVisibilityStates)]
 internal partial class SettingsCard : ButtonBase
@@ -83,6 +83,7 @@ internal partial class SettingsCard : ButtonBase
 	internal const string ContentSpacingStates = "ContentSpacingStates";
 	internal const string NoContentSpacingState = "NoContentSpacing";
 	internal const string ContentSpacingState = "ContentSpacing";
+	internal const string ContentSpacingNarrowState = "ContentSpacingNarrow";
 	internal const string ContentVisibilityStates = "ContentVisibilityStates";
 	internal const string VisibleState = "Visible";
 	internal const string CollapsedState = "Collapsed";
@@ -126,7 +127,10 @@ internal partial class SettingsCard : ButtonBase
 	{
 		_ = VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
 
-		if (GetTemplateChild("ContentAlignmentStates") is VisualStateGroup contentAlignmentStatesGroup)
+		// In NativeAOT, VisualStateGroups are not reliably retrievable via GetTemplateChild(...)
+		// So query the groups from the templated root instead, and also ensure spacing is updated proactively.
+		VisualStateGroup? contentAlignmentStatesGroup = GetRootGridVisualStateGroup(ContentAlignmentStates);
+		if (contentAlignmentStatesGroup is not null)
 		{
 			contentAlignmentStatesGroup.CurrentStateChanged -= ContentAlignmentStates_Changed;
 			contentAlignmentStatesGroup.CurrentStateChanged += ContentAlignmentStates_Changed;
@@ -257,6 +261,7 @@ internal partial class SettingsCard : ButtonBase
 	{
 		base.OnContentChanged(oldContent, newContent);
 		UpdateContentVisibilityState();
+		UpdateContentSpacingState(GetContentAlignmentStateName());
 	}
 
 	private void OnIsClickEnabledChanged()
@@ -316,6 +321,7 @@ internal partial class SettingsCard : ButtonBase
 				: Visibility.Visible;
 		}
 
+		UpdateContentSpacingState(GetContentAlignmentStateName());
 	}
 
 	private void OnHeaderChanged()
@@ -327,9 +333,14 @@ internal partial class SettingsCard : ButtonBase
 				: Visibility.Visible;
 		}
 
+		UpdateContentSpacingState(GetContentAlignmentStateName());
 	}
 
-	private void ContentAlignmentStates_Changed(object sender, VisualStateChangedEventArgs e) => CheckVerticalSpacingState(e.NewState);
+	private void ContentAlignmentStates_Changed(object sender, VisualStateChangedEventArgs e)
+	{
+		string contentAlignmentStateName = e.NewState?.Name ?? string.Empty;
+		UpdateContentSpacingState(contentAlignmentStateName);
+	}
 
 	private void AttachRootGridSizeChanged() => _rootGrid?.SizeChanged += RootGrid_SizeChanged;
 
@@ -343,14 +354,25 @@ internal partial class SettingsCard : ButtonBase
 
 	private void UpdateContentAlignmentState()
 	{
-		string contentAlignmentState = ContentAlignment switch
-		{
-			ContentAlignment.Left => LeftState,
-			ContentAlignment.Vertical => VerticalState,
-			_ => GetRightContentAlignmentState()
-		};
+		string contentAlignmentState = GetContentAlignmentStateName();
 
 		_ = VisualStateManager.GoToState(this, contentAlignmentState, true);
+		UpdateContentSpacingState(contentAlignmentState);
+	}
+
+	private string GetContentAlignmentStateName()
+	{
+		if (ContentAlignment == ContentAlignment.Left)
+		{
+			return LeftState;
+		}
+
+		if (ContentAlignment == ContentAlignment.Vertical)
+		{
+			return VerticalState;
+		}
+
+		return GetRightContentAlignmentState();
 	}
 
 	private string GetRightContentAlignmentState()
@@ -376,12 +398,48 @@ internal partial class SettingsCard : ButtonBase
 		_ = VisualStateManager.GoToState(this, contentVisibilityState, true);
 	}
 
-	private void CheckVerticalSpacingState(VisualState s)
+	private void UpdateContentSpacingState(string contentAlignmentStateName)
 	{
-		// On state change, checking if the Content should be wrapped (e.g. when the card is made smaller or the ContentAlignment is set to Vertical). If the Content and the Header or Description are not null, we add spacing between the Content and the Header/Description.
-		_ = s != null && (s.Name == RightWrappedState || s.Name == RightWrappedNoIconState || s.Name == VerticalState) && (Content != null) && (!IsNullOrEmptyString(Header) || !IsNullOrEmptyString(Description))
-			? VisualStateManager.GoToState(this, ContentSpacingState, true)
-			: VisualStateManager.GoToState(this, NoContentSpacingState, true);
+		// If the Content and the Header or Description are not null, add spacing between the Content and the Header/Description.
+		if (Content is null || (IsNullOrEmptyString(Header) && IsNullOrEmptyString(Description)))
+		{
+			_ = VisualStateManager.GoToState(this, NoContentSpacingState, true);
+			return;
+		}
+
+		// Even smaller widths (RightWrappedNoIcon) need a bit more separation between the header text and the now-stacked content.
+		if (contentAlignmentStateName == RightWrappedNoIconState)
+		{
+			_ = VisualStateManager.GoToState(this, ContentSpacingNarrowState, true);
+			return;
+		}
+
+		if (contentAlignmentStateName == RightWrappedState || contentAlignmentStateName == VerticalState)
+		{
+			_ = VisualStateManager.GoToState(this, ContentSpacingState, true);
+			return;
+		}
+
+		_ = VisualStateManager.GoToState(this, NoContentSpacingState, true);
+	}
+
+	private VisualStateGroup? GetRootGridVisualStateGroup(string groupName)
+	{
+		if (_rootGrid is null)
+		{
+			return null;
+		}
+
+		IEnumerable visualStateGroups = VisualStateManager.GetVisualStateGroups(_rootGrid);
+		foreach (object visualStateGroupObject in visualStateGroups)
+		{
+			if (visualStateGroupObject is VisualStateGroup visualStateGroup && visualStateGroup.Name == groupName)
+			{
+				return visualStateGroup;
+			}
+		}
+
+		return null;
 	}
 
 	private FrameworkElement? GetFocusedElement()

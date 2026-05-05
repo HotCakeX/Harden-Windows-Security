@@ -22,6 +22,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
@@ -33,24 +34,23 @@ using Windows.UI.Xaml.Markup;
 namespace CommonCore.ToolKits;
 
 /// <summary>
-///  The SettingsExpander is a collapsible control to host multiple SettingsCards.
+/// The SettingsExpander is a collapsible control to host multiple SettingsCards.
 /// </summary>
-//// Note: ItemsRepeater will request all the available horizontal space: https://github.com/microsoft/microsoft-ui-xaml/issues/3842
-[TemplatePart(Name = PART_ItemsRepeater, Type = typeof(ItemsRepeater))]
+/// <remarks> ItemsControl keeps static settings items non-virtualized so the parent ScrollViewer extent remains stable. </remarks>
+[TemplatePart(Name = PART_ItemsControl, Type = typeof(ItemsControl))]
 [TemplatePart(Name = PART_Expander, Type = typeof(SettingsExpanderInnerExpander))]
 [TemplatePart(Name = PART_ItemsRoot, Type = typeof(Grid))]
 internal sealed partial class SettingsExpander : Control
 {
-	private const string PART_ItemsRepeater = "PART_ItemsRepeater";
+	private const string PART_ItemsControl = "PART_ItemsControl";
 	private const string PART_Expander = "PART_Expander";
 	private const string PART_ItemsRoot = "PART_ItemsRoot";
 
-	private ItemsRepeater? _itemsRepeater;
+	private ItemsControl? _itemsControl;
 	private SettingsExpanderInnerExpander? _expander;
 	private Grid? _itemsRoot;
 	private long _cornerRadiusPropertyChangedToken;
 	private long _expanderIsExpandedPropertyChangedToken;
-	private bool _itemsRepeaterElementPreparedAttached;
 
 	/// <summary>
 	/// The SettingsExpander is a collapsible control to host multiple SettingsCards.
@@ -68,7 +68,6 @@ internal sealed partial class SettingsExpander : Control
 	{
 		AttachCornerRadiusPropertyChangedCallback();
 		AttachExpanderEvents();
-		AttachItemsRepeaterEvents();
 		UpdateExpanderState();
 		UpdateCornerRadius();
 		OnItemsConnectedPropertyChanged(this, null!);
@@ -77,29 +76,25 @@ internal sealed partial class SettingsExpander : Control
 	private void SettingsExpander_Unloaded(object sender, RoutedEventArgs args)
 	{
 		DetachExpanderEvents();
-		DetachItemsRepeaterEvents();
 		DetachCornerRadiusPropertyChangedCallback();
 	}
 
 	protected override void OnApplyTemplate()
 	{
 		DetachExpanderEvents();
-		DetachItemsRepeaterEvents();
 		base.OnApplyTemplate();
 		SetAccessibleName();
 
 		_expander = GetTemplateChild(PART_Expander) as SettingsExpanderInnerExpander;
 		_itemsRoot = GetTemplateChild(PART_ItemsRoot) as Grid;
-		_itemsRepeater = GetTemplateChild(PART_ItemsRepeater) as ItemsRepeater;
+		_itemsControl = GetTemplateChild(PART_ItemsControl) as ItemsControl;
 
 		AttachExpanderEvents();
 		UpdateExpanderState();
 		UpdateCornerRadius();
 
-		if (_itemsRepeater != null)
+		if (_itemsControl != null)
 		{
-			AttachItemsRepeaterEvents();
-
 			// Update it's source based on our current items properties.
 			OnItemsConnectedPropertyChanged(this, null!); // Can't get it to accept type here? (DependencyPropertyChangedEventArgs)EventArgs.Empty
 		}
@@ -215,7 +210,7 @@ internal partial class SettingsExpander
 	public event EventHandler? Collapsed;
 }
 
-//// Implement properties for ItemsControl like behavior.
+/// Implement properties for ItemsControl like behavior.
 internal partial class SettingsExpander
 {
 	/// <summary>
@@ -233,7 +228,7 @@ internal partial class SettingsExpander
 		DependencyProperty.Register(nameof(Items), typeof(IList<object>), typeof(SettingsExpander), new PropertyMetadata(null, OnItemsConnectedPropertyChanged));
 
 	/// <summary>
-	/// Gets or sets the value to use for the inner <see cref="ItemsRepeater.ItemsSource"/>.
+	/// Gets or sets the value to use for the inner <see cref="ItemsControl.ItemsSource"/>.
 	/// </summary>
 	public object ItemsSource
 	{
@@ -247,21 +242,21 @@ internal partial class SettingsExpander
 		DependencyProperty.Register(nameof(ItemsSource), typeof(object), typeof(SettingsExpander), new PropertyMetadata(null, OnItemsConnectedPropertyChanged));
 
 	/// <summary>
-	/// Gets or sets the value to use for the inner <see cref="ItemsRepeater.ItemTemplate"/>.
+	/// Gets or sets the value to use for the inner <see cref="ItemsControl.ItemTemplate"/>.
 	/// </summary>
-	public object ItemTemplate
+	public DataTemplate? ItemTemplate
 	{
-		get => GetValue(ItemTemplateProperty); set => SetValue(ItemTemplateProperty, value);
+		get => (DataTemplate?)GetValue(ItemTemplateProperty); set => SetValue(ItemTemplateProperty, value);
 	}
 
 	/// <summary>
 	/// Identifies the <see cref="ItemTemplate"/> DependencyProperty.
 	/// </summary>
 	public static readonly DependencyProperty ItemTemplateProperty =
-		DependencyProperty.Register(nameof(ItemTemplate), typeof(object), typeof(SettingsExpander), new PropertyMetadata(null));
+		DependencyProperty.Register(nameof(ItemTemplate), typeof(DataTemplate), typeof(SettingsExpander), new PropertyMetadata(null));
 
 	/// <summary>
-	/// Gets or sets the value to use for the ItemContainerStyle applied to the inner <see cref="ItemsRepeater"/>.
+	/// Gets or sets the value to use for the ItemContainerStyle applied to the inner <see cref="ItemsControl"/>.
 	/// </summary>
 	public StyleSelector ItemContainerStyleSelector
 	{
@@ -276,42 +271,31 @@ internal partial class SettingsExpander
 
 	private static void OnItemsConnectedPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
 	{
-		if (dependencyObject is SettingsExpander expander && expander._itemsRepeater is not null)
+		if (dependencyObject is SettingsExpander expander && expander._itemsControl is not null)
 		{
 			object datasource = expander.ItemsSource;
 
 			datasource ??= expander.Items;
 
-			expander._itemsRepeater.ItemsSource = datasource;
+			expander._itemsControl.ItemsSource = datasource;
+			expander.ApplyItemContainerStylesToStaticItems(datasource);
 		}
 	}
 
-	private void ItemsRepeater_ElementPrepared(ItemsRepeater sender, ItemsRepeaterElementPreparedEventArgs args)
+	private void ApplyItemContainerStylesToStaticItems(object datasource)
 	{
-		if (ItemContainerStyleSelector != null &&
-			args.Element is FrameworkElement element &&
-			element.ReadLocalValue(StyleProperty) == DependencyProperty.UnsetValue)
+		if (ItemContainerStyleSelector is null || datasource is not IEnumerable items)
 		{
-			// TODO: Get item from args.Index?
-			element.Style = ItemContainerStyleSelector.SelectStyle(null, element);
+			return;
 		}
-	}
 
-	private void AttachItemsRepeaterEvents()
-	{
-		if (_itemsRepeater is not null && !_itemsRepeaterElementPreparedAttached)
+		foreach (object item in items)
 		{
-			_itemsRepeater.ElementPrepared += ItemsRepeater_ElementPrepared;
-			_itemsRepeaterElementPreparedAttached = true;
-		}
-	}
-
-	private void DetachItemsRepeaterEvents()
-	{
-		if (_itemsRepeater is not null && _itemsRepeaterElementPreparedAttached)
-		{
-			_itemsRepeater.ElementPrepared -= ItemsRepeater_ElementPrepared;
-			_itemsRepeaterElementPreparedAttached = false;
+			if (item is FrameworkElement element &&
+				element.ReadLocalValue(StyleProperty) == DependencyProperty.UnsetValue)
+			{
+				element.Style = ItemContainerStyleSelector.SelectStyle(null, element);
+			}
 		}
 	}
 }

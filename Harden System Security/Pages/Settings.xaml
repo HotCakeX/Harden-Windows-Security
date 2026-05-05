@@ -261,14 +261,32 @@
                                     <x:String>Custom Color</x:String>
                                 </ComboBox>
 
-                                <!-- SwitchPresenter binds to a value -->
+                                <!-- SwitchPresenter binds to a TargetValue -->
                                 <CCToolKit:SwitchPresenter TargetValue="{x:Bind BorderTypeSelection.SelectedItem, Mode=OneWay}">
-                                    <!--And then only dynamically displays the Case with the matching Value -->
+                                    <!--And then only dynamically displays the Case with the matching TargetValue -->
 
                                     <CCToolKit:Case TargetValue="Rainbow">
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-                                            <Button x:Uid="RainbowBorderAnimationStartButton" Click="{x:Bind ViewModel.StartRainbowAnimation}" />
-                                            <Button x:Uid="RainbowBorderAnimationStopButton" Click="{x:Bind ViewModel.StopRainbowAnimation}" />
+                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="10">
+                                            <Button x:Uid="RainbowBorderAnimationStartButton" HorizontalAlignment="Center" Click="{x:Bind ViewModel.StartRainbowAnimation}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+                                            <Button x:Uid="RainbowBorderAnimationStopButton" HorizontalAlignment="Center" Click="{x:Bind ViewModel.StopRainbowAnimation}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE71A;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
                                         </StackPanel>
                                     </CCToolKit:Case>
 
@@ -281,8 +299,30 @@
                                             <StackPanel Orientation="Horizontal"
                                                         HorizontalAlignment="Center"
                                                         Spacing="10">
-                                                <Button x:Uid="SetBorderColorButton" Click="{x:Bind ViewModel.StartCustomColorAnimation}" />
-                                                <Button x:Uid="ResetBorderColorButton" Click="{x:Bind ViewModel.StopCustomColorAnimation}" />
+                                                <Button x:Uid="SetBorderColorButton"
+                                                        HorizontalAlignment="Center"
+                                                        Click="{x:Bind ViewModel.StartCustomColorAnimation}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE8FB;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
+                                                <Button x:Uid="ResetBorderColorButton"
+                                                        HorizontalAlignment="Center"
+                                                        Click="{x:Bind ViewModel.StopCustomColorAnimation}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate x:DataType="x:String">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <FontIcon Glyph="&#xE7A7;" FontSize="16"/>
+                                                                <TextBlock Text="{x:Bind}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
 
                                             </StackPanel>
 

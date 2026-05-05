@@ -6,8 +6,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
                     xmlns:local="using:CommonCore.ToolKits"
-                    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-                    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///CustomUIElements/SettingsControl/SettingsCard.xaml" />
@@ -79,8 +78,8 @@
                                                              MinHeight="{TemplateBinding MinHeight}"
                                                              HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                             win:AutomationProperties.HelpText="{TemplateBinding AutomationProperties.HelpText}"
-                                                             win:AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}"
+                                                             AutomationProperties.HelpText="{TemplateBinding AutomationProperties.HelpText}"
+                                                             AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}"
                                                              CornerRadius="{TemplateBinding CornerRadius}"
                                                              Style="{StaticResource SettingsExpanderExpanderStyle}">
                             <local:SettingsExpanderInnerExpander.Header>
@@ -103,14 +102,17 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <ContentPresenter Content="{TemplateBinding ItemsHeader}" />
-                                    <muxc:ItemsRepeater x:Name="PART_ItemsRepeater"
-                                                        Grid.Row="1"
-                                                        ItemTemplate="{TemplateBinding ItemTemplate}"
-                                                        TabFocusNavigation="Local">
-                                        <muxc:ItemsRepeater.Layout>
-                                            <muxc:StackLayout Orientation="Vertical" />
-                                        </muxc:ItemsRepeater.Layout>
-                                    </muxc:ItemsRepeater>
+                                    <!-- Settings expanders host static settings controls, so use a non-virtualizing item host to keep the outer ScrollViewer extent stable while scrolling. -->
+                                    <ItemsControl x:Name="PART_ItemsControl"
+                                                  Grid.Row="1"
+                                                  ItemTemplate="{TemplateBinding ItemTemplate}"
+                                                  TabFocusNavigation="Local">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
                                     <ContentPresenter Grid.Row="2"
                                                       Content="{TemplateBinding ItemsFooter}" />
                                 </Grid>
@@ -251,8 +253,8 @@
                                       HorizontalAlignment="Stretch"
                                       HorizontalContentAlignment="{StaticResource ExpanderHeaderHorizontalContentAlignment}"
                                       VerticalContentAlignment="{StaticResource ExpanderHeaderVerticalContentAlignment}"
-                                      win:AutomationProperties.AutomationId="ExpanderToggleButton"
-                                      win:AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}"
+                                      AutomationProperties.AutomationId="ExpanderToggleButton"
+                                      AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}"
                                       BackgroundSizing="{TemplateBinding BackgroundSizing}"
                                       BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
                                       BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
@@ -530,7 +532,7 @@
                         <ContentPresenter x:Name="ContentPresenter"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          win:AutomationProperties.AccessibilityView="Raw"
+                                          AutomationProperties.AccessibilityView="Raw"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           ContentTransitions="{TemplateBinding ContentTransitions}"
@@ -559,7 +561,7 @@
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
                                                muxc:AnimatedIcon.State="NormalOff"
-                                               win:AutomationProperties.AccessibilityView="Raw"
+                                               AutomationProperties.AccessibilityView="Raw"
                                                Foreground="{ThemeResource ExpanderChevronForeground}"
                                                RenderTransformOrigin="0.5, 0.5">
                                 <animatedvisuals:AnimatedChevronUpDownSmallVisualSource />

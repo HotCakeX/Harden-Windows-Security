@@ -36,7 +36,16 @@
                         Style="{StaticResource AccentButtonStyle}"
                         Click="{x:Bind ViewModel.InstallButton_Click}"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                        HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE7B8;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <customUI:SettingsCardV3 x:Uid="BrowseForAppPackagePathSettingsCard">
                     <customUI:SettingsCardV3.HeaderIcon>

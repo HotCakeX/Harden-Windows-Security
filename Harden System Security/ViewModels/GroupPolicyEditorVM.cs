@@ -909,6 +909,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			AllPolicies.Clear();
 			Policies.Clear();
 

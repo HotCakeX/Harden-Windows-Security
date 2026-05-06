@@ -4,8 +4,7 @@
  -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="using:CommonCore.ToolKits"
-                    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+                    xmlns:local="using:CommonCore.ToolKits">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
@@ -183,7 +182,7 @@
                               Padding="{TemplateBinding Padding}"
                               HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                               VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                              muxc:AnimatedIcon.State="Normal"
+                              AnimatedIcon.State="Normal"
                               Background="{TemplateBinding Background}"
                               BackgroundSizing="{TemplateBinding BackgroundSizing}"
                               BorderBrush="{TemplateBinding BorderBrush}"

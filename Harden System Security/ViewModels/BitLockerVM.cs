@@ -520,6 +520,8 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				return;
 			}
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			BitLockerUiEnabled = false;
 			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingKeyProtectorFromVolume"), keyProtector.ID, volume.MountPoint));
@@ -564,6 +566,8 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumeSelected"));
 			return;
 		}
+
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 		try
 		{
@@ -709,6 +713,8 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				throw new InvalidOperationException(string.Format(Atlas.GetStr("OSDriveNotEncryptedForFixedDriveEncryptionError"), OSDrive.ConversionStatus, OSDrive.EncryptionPercentage));
 			}
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			BitLockerUiEnabled = false;
 			MainInfoBar.IsClosable = false;
 
@@ -822,6 +828,8 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				return;
 			}
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			BitLockerUiEnabled = false;
 			MainInfoBar.IsClosable = false;
 
@@ -877,6 +885,8 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				return;
 			}
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			BitLockerUiEnabled = false;
 			MainInfoBar.IsClosable = false;
 
@@ -928,6 +938,8 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				MainInfoBar.WriteWarning(Atlas.GetStr("NoBitLockerVolumeSelected"));
 				return;
 			}
+
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			BitLockerUiEnabled = false;
 			MainInfoBar.IsClosable = false;

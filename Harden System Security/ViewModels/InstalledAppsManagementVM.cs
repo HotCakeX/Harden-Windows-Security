@@ -17,13 +17,17 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
 using Windows.Management.Deployment;
 
@@ -31,6 +35,17 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 {
+	private sealed partial class ActionCommand(Action<object?> execute) : ICommand
+	{
+		public event EventHandler? CanExecuteChanged { add { } remove { } }
+
+		public bool CanExecute(object? parameter) => true;
+
+		public void Execute(object? parameter) => execute(parameter);
+	}
+
+	internal static ICommand PackagedAppsZoomedOutGroupInvokedCommand { get; } = new ActionCommand(ViewModelProvider.InstalledAppsManagementVM.ZoomInToPackagedAppsGroup);
+
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
@@ -53,6 +68,11 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// Items Source of the ListView that displays the list of the installed packaged apps.
 	/// </summary>
 	internal ObservableCollection<GroupInfoListForPackagedAppView> AppsListItemsSource { get; set => SP(ref field, value); } = [];
+
+	/// <summary>
+	/// Tracks the active SemanticZoom view for the installed apps list.
+	/// </summary>
+	internal bool IsPackagedAppsZoomedInViewActive { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// Search text entered in the UI text box.
@@ -139,8 +159,13 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			_isUpdatingItemsSource = true;
 			try
 			{
-				AppsListItemsSource = results.Item1;
-				AppsListItemsSourceBackingList = results.Item2;
+				AppsListItemsSourceBackingList = SortPackagedAppGroups(results.Item2);
+
+				// Remove any stale selections that are no longer present in the refreshed list (e.g., apps that were uninstalled).
+				PruneSelectionToLoadedApps();
+
+				// Keep the current search filter active after retrieval if the search box still contains text.
+				AppsListItemsSource = string.IsNullOrWhiteSpace(SearchKeyword) ? new(AppsListItemsSourceBackingList) : GetFilteredAppsListItemsSource();
 
 				// Update counts after loading apps
 				UpdateCounts();
@@ -161,6 +186,38 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		{
 			ElementsAreEnabled = true;
 		}
+	}
+
+	/// <summary>
+	/// Keeps the persisted selection list consistent with the current loaded apps list.
+	/// This is important after uninstall/refresh, because removed apps are no longer visible
+	/// and won't appear in SelectionChanged.RemovedItems.
+	/// </summary>
+	private void PruneSelectionToLoadedApps()
+	{
+		if (AppsListItemsSourceSelectedItems.Count == 0)
+		{
+			return;
+		}
+
+		HashSet<PackagedAppView> loadedApps = new(new PackagedAppViewIdentityComparer());
+		foreach (GroupInfoListForPackagedAppView group in AppsListItemsSourceBackingList)
+		{
+			foreach (PackagedAppView app in group)
+			{
+				_ = loadedApps.Add(app);
+			}
+		}
+
+		if (loadedApps.Count == 0)
+		{
+			AppsListItemsSourceSelectedItems.Clear();
+			SelectedItemsCount = 0;
+			return;
+		}
+
+		AppsListItemsSourceSelectedItems.IntersectWith(loadedApps);
+		SelectedItemsCount = AppsListItemsSourceSelectedItems.Count;
 	}
 
 	/// <summary>
@@ -203,6 +260,32 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		UIListView = sender as ListViewBase;
 		// Restore selection when ListView is loaded
 		RestoreSelectionFromViewModel();
+	}
+
+	private void ZoomInToPackagedAppsGroup(object? parameter)
+	{
+		if (parameter is not ICollectionViewGroup viewGroup)
+		{
+			return;
+		}
+
+		object? firstItem = null;
+		if (viewGroup.GroupItems is not null && viewGroup.GroupItems.Count > 0)
+		{
+			firstItem = viewGroup.GroupItems[0];
+		}
+
+		IsPackagedAppsZoomedInViewActive = true;
+
+		if (firstItem is null || UIListView is null)
+		{
+			return;
+		}
+
+		_ = Atlas.AppDispatcher.TryEnqueue(() =>
+		{
+			UIListView.ScrollIntoView(firstItem);
+		});
 	}
 
 	/// <summary>
@@ -276,6 +359,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <param name="e"></param>
 	internal void RemoveSelectionsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
 	{
+		AppsListItemsSourceSelectedItems.Clear();
+		SelectedItemsCount = 0;
 		UIListView?.SelectedItems.Clear();
 	}
 
@@ -330,28 +415,11 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			return;
 		}
 
-		// Filter the original collection
-		List<GroupInfoListForPackagedAppView> filtered = AppsListItemsSourceBackingList
-			.Select(group => new GroupInfoListForPackagedAppView(
-				items: group.Where(app =>
-					(app.DisplayName?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Version?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.PackageFamilyName?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Publisher?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Architecture?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.PublisherID?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.FullName?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Description?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.InstallLocation?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.InstalledDate?.Contains(SearchKeyword, StringComparison.OrdinalIgnoreCase) == true)
-				),
-				key: group.Key)).Where(group => group.Any()).ToList();
-
 		_isUpdatingItemsSource = true;
 		try
 		{
 			// Update the ListView source with the filtered data
-			AppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
+			AppsListItemsSource = GetFilteredAppsListItemsSource();
 			UpdateCounts();
 		}
 		finally
@@ -361,6 +429,71 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 		// Restore selection after filtering (only items that match search will be selected)
 		RestoreSelectionFromViewModel();
+	}
+
+	/// <summary>
+	/// Filters the backing installed apps list using the current search query.
+	/// </summary>
+	private ObservableCollection<GroupInfoListForPackagedAppView> GetFilteredAppsListItemsSource()
+	{
+		string searchKeyword = SearchKeyword ?? string.Empty;
+
+		List<GroupInfoListForPackagedAppView> filtered = AppsListItemsSourceBackingList
+			.Select(group => new GroupInfoListForPackagedAppView(
+				items: group.Where(app =>
+					(app.DisplayName?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.Version?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.PackageFamilyName?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.Publisher?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.Architecture?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.PublisherID?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.FullName?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.Description?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.InstallLocation?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.InstalledDate?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true)
+				),
+				key: group.Key))
+			.Where(group => group.Any())
+			.OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+			.ToList();
+
+		return new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
+	}
+
+	/// <summary>
+	/// Sorts app groups by their displayed SemanticZoom key so the zoomed-out letters are shown alphabetically.
+	/// </summary>
+	private static List<GroupInfoListForPackagedAppView> SortPackagedAppGroups(IEnumerable<GroupInfoListForPackagedAppView> groups) =>
+		 groups.OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase).ToList();
+
+	/// <summary>
+	/// Gets the group letter displayed in SemanticZoom's zoomed-out view.
+	/// </summary>
+	internal static string GetPackagedAppsGroupKey(object? group) => group is GroupInfoListForPackagedAppView packagedAppsGroup ? packagedAppsGroup.Key : string.Empty;
+
+	/// <summary>
+	/// Gets the packaged app represented by a context-menu item.
+	/// </summary>
+	private static PackagedAppView? GetPackagedAppFromMenuFlyoutSender(object sender)
+	{
+		if (sender is not MenuFlyoutItem menuItem)
+		{
+			return null;
+		}
+
+		DependencyObject? current = menuItem;
+
+		while (current is not null)
+		{
+			if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
+			{
+				return app;
+			}
+
+			current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
+		}
+
+		return null;
 	}
 
 	/// <summary>
@@ -402,9 +535,16 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingUninstallationOfApp"), targetApp.DisplayName));
 
+			bool error = await UninstallApp(targetApp);
+
+			// Refresh the apps list to reflect changes
+			await RefreshAppsList();
+
 			// Show success only if no errors
-			if (!await UninstallApp(targetApp))
+			if (!error)
+			{
 				MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyUninstalledApp"), targetApp.DisplayName));
+			}
 		}
 		catch (Exception ex)
 		{
@@ -415,6 +555,191 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			ElementsAreEnabled = true;
 			MainInfoBar.IsClosable = true;
 		}
+	}
+
+	/// <summary>
+	/// Event handler for repairing a single app from the context menu.
+	/// </summary>
+	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
+	/// <param name="e">Event arguments</param>
+	internal async void RepairApp_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
+
+			PackagedAppView? targetApp = GetPackagedAppFromMenuFlyoutSender(sender);
+			if (targetApp is null)
+			{
+				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppToRepair"));
+				return;
+			}
+
+			MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("StartingRepairOfApp"), targetApp.DisplayName));
+
+			bool error = await RunPackageMaintenanceOperation(targetApp, PackageMaintenanceOperation.Repair);
+			if (!error)
+			{
+				MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("SuccessfullyRepairedApp"), targetApp.DisplayName));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for resetting a single app from the context menu.
+	/// </summary>
+	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
+	/// <param name="e">Event arguments</param>
+	internal async void ResetApp_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PackagedAppView? targetApp = GetPackagedAppFromMenuFlyoutSender(sender);
+			if (targetApp is null)
+			{
+				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppToReset"));
+				return;
+			}
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 confirmDialog = new()
+			{
+				Title = Atlas.GetStr("ResetAppConfirmationTitle"),
+				Content = string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("ResetAppConfirmationContent"), targetApp.DisplayName),
+				PrimaryButtonText = Atlas.GetStr("ResetButton/Content"),
+				SecondaryButtonText = Atlas.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Secondary
+			};
+
+			ContentDialogResult result = await confirmDialog.ShowAsync();
+			if (result is not ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
+			MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("StartingResetOfApp"), targetApp.DisplayName));
+
+			bool error = await RunPackageMaintenanceOperation(targetApp, PackageMaintenanceOperation.Reset);
+			if (!error)
+			{
+				MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("SuccessfullyResetApp"), targetApp.DisplayName));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Runs the selected package maintenance operation on an installed packaged app.
+	/// </summary>
+	/// <param name="package">The target packaged app.</param>
+	/// <param name="operation">The maintenance operation to run.</param>
+	/// <returns>true if error occurred, false if OK</returns>
+	private async Task<bool> RunPackageMaintenanceOperation(PackagedAppView package, PackageMaintenanceOperation operation)
+	{
+		try
+		{
+			if (operation is PackageMaintenanceOperation.Repair)
+			{
+				await RunNativePackageMaintenanceOperation(package, PackageMaintenanceOperation.Repair);
+			}
+			else
+			{
+				await RunNativePackageMaintenanceOperation(package, PackageMaintenanceOperation.Reset);
+			}
+
+			return false;
+		}
+		catch (Exception ex)
+		{
+			string operationName = operation is PackageMaintenanceOperation.Repair ? Atlas.GetStr("RepairAppText/Text") : Atlas.GetStr("ResetButton/Content");
+			MainInfoBar.WriteWarning(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("PackageMaintenanceOperationFailed"), operationName, package.FullName, $"0x{ex.HResult:X8}", ex.Message));
+			return true;
+		}
+	}
+
+	/// <summary>
+	/// Runs a native MSIX package deployment maintenance operation and validates the WinRT deployment result.
+	/// </summary>
+	/// <param name="package">The target packaged app.</param>
+	/// <param name="operation">The maintenance operation to run.</param>
+	private static async Task RunNativePackageMaintenanceOperation(PackagedAppView package, PackageMaintenanceOperation operation)
+	{
+		await Task.Run(() =>
+		{
+			IntPtr nativeDeploymentOperation = IntPtr.Zero;
+
+			try
+			{
+				int hResult = operation is PackageMaintenanceOperation.Repair
+					? NativeMethods.MsixRepairPackageAsync(package.FullName, out nativeDeploymentOperation)
+					: NativeMethods.MsixResetPackageAsync(package.FullName, out nativeDeploymentOperation);
+
+				Marshal.ThrowExceptionForHR(hResult);
+
+				if (nativeDeploymentOperation == IntPtr.Zero)
+				{
+					throw new InvalidOperationException(Atlas.GetStr("RemovalStatusUnknown"));
+				}
+
+				NativeMethods.PackageDeploymentOperationResult operationResult = NativeMethods.WaitForPackageDeploymentOperation(nativeDeploymentOperation);
+
+				if (operationResult.Status is NativeMethods.AsyncStatusError)
+				{
+					int errorCode = operationResult.ErrorCode < 0
+						? operationResult.ErrorCode
+						: operationResult.ExtendedErrorCode < 0 ? operationResult.ExtendedErrorCode : unchecked((int)0x80004005);
+
+					Exception? exception = Marshal.GetExceptionForHR(errorCode);
+
+					string errorText = string.IsNullOrWhiteSpace(operationResult.ErrorText) ? exception?.Message ?? string.Format(CultureInfo.InvariantCulture, "0x{0:X8}", errorCode) : operationResult.ErrorText;
+
+					throw new InvalidOperationException($"{errorText} - {errorCode}");
+				}
+				else if (operationResult.Status is NativeMethods.AsyncStatusCanceled)
+				{
+					throw new OperationCanceledException(Atlas.GetStr("RemovalCanceled"));
+				}
+				else if (operationResult.Status is not NativeMethods.AsyncStatusCompleted)
+				{
+					throw new InvalidOperationException(Atlas.GetStr("RemovalStatusUnknown"));
+				}
+			}
+			finally
+			{
+				if (nativeDeploymentOperation != IntPtr.Zero)
+				{
+					NativeMethods.ReleaseComObject(nativeDeploymentOperation);
+				}
+			}
+		});
+	}
+
+	/// <summary>
+	/// App package maintenance operations supported by the context menu.
+	/// </summary>
+	private enum PackageMaintenanceOperation
+	{
+		Repair,
+		Reset
 	}
 
 	/// <summary>
@@ -440,18 +765,53 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingUninstallationOfMultipleApps"), appsToUninstall.Count));
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			bool error = false;
+
+			int failed = 0;
+
+			List<string> successfullAppNames = [];
+			List<string> failedAppNames = [];
 
 			foreach (PackagedAppView app in appsToUninstall)
 			{
-				error = await UninstallApp(app);
+				bool currentAppError = await UninstallApp(app);
 
-				if (error) break;
+				if (currentAppError)
+				{
+					failed++;
+					failedAppNames.Add(app.DisplayName);
+				}
+				else
+				{
+					successfullAppNames.Add(app.DisplayName);
+				}
+
+				if (!error && currentAppError)
+				{
+					error = currentAppError;
+				}
 			}
+
+			// Refresh the apps list to reflect changes
+			await RefreshAppsList();
 
 			// Show success only if no errors
 			if (!error)
+			{
+				MainInfoBar.WriteInfo($"Apps that were successfully uninstalled: {string.Join(", ", successfullAppNames)}");
 				MainInfoBar.WriteSuccess(Atlas.GetStr("AllAppsSuccessfullyUninstalled"));
+			}
+			else
+			{
+				if (successfullAppNames.Count > 0)
+					MainInfoBar.WriteInfo($"Apps that were successfully uninstalled: {string.Join(", ", successfullAppNames)}");
+
+				MainInfoBar.WriteInfo($"Apps that could not be uninstalled: {string.Join(", ", failedAppNames)}");
+
+				MainInfoBar.WriteInfo($"Some apps could not be successfully uninstalled. Total: {appsToUninstall.Count} - Failed: {failed} - Successful: {appsToUninstall.Count - failed}. Please view the logs for more information.");
+			}
 		}
 		catch (Exception ex)
 		{
@@ -564,12 +924,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			});
 		}
 
-		// Refresh the apps list to reflect changes
-		await RefreshAppsList();
-
 		return error;
 	}
-
 
 	/// <summary>
 	/// Event handler for opening the installation location of a single app from the context menu.

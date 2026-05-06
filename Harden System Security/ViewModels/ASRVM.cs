@@ -346,6 +346,8 @@ internal sealed partial class ASRVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			await Task.Run(() =>
 			{
 
@@ -402,6 +404,8 @@ internal sealed partial class ASRVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
+
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			await Task.Run(() => RegistryPolicyParser.RemovePoliciesFromSystem(ASRPolicyFromJSON, GroupPolicyContext.Machine));
 

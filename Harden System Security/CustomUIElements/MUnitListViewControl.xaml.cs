@@ -615,6 +615,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 		ViewModel.ApplyAllCancellableButton.Begin();
 
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
@@ -686,6 +688,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		bool errorsOccurred = false;
 
 		ViewModel.RemoveAllCancellableButton.Begin();
+
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 		try
 		{
@@ -767,6 +771,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		bool errorsOccurred = false;
 
 		ViewModel.VerifyAllCancellableButton.Begin();
+
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 		try
 		{

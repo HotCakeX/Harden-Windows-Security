@@ -6,6 +6,7 @@
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:CC="using:CommonCore.Others"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:xamlData="using:Microsoft.UI.Xaml.Data"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     xmlns:animatedvisuals="using:AnimatedVisuals">
@@ -318,40 +319,64 @@
 
                         </StackPanel>
 
-                        <!-- Action Button Area -->
-                        <StackPanel Grid.Column="2"
-                                    Orientation="Vertical"
-                                    Spacing="8"
-                                    VerticalAlignment="Top"
-                                    Margin="16,0,0,0">
-
-                            <!-- Quick Action Button -->
-                            <Button Style="{ThemeResource AccentButtonStyle}"
-                                    Width="32"
-                                    Height="32"
-                                    Padding="0"
-                                    CornerRadius="16"
-                                    ToolTipService.ToolTip="Quick Actions">
-                                <FontIcon Glyph="&#xE712;" FontSize="14"/>
-                                <Button.Flyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem x:Uid="UninstallText"
-                                                        Icon="Delete"
-                                                        Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).UninstallSingleApp_Click}"/>
-                                        <MenuFlyoutItem x:Uid="OpenLocationText"
-                                                        Icon="Folder"
-                                                        Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).OpenAppLocation_Click}"/>
-                                        <MenuFlyoutItem x:Uid="CopyAppDetailsText"
-                                                        Icon="Copy"
-                                                        Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).CopyAppDetails_Click}"/>
-                                    </MenuFlyout>
-                                </Button.Flyout>
-                            </Button>
-
-                        </StackPanel>
+                        <!-- Quick Action Button -->
+                        <Button Style="{ThemeResource AccentButtonStyle}"
+                                Grid.Column="2"
+                                Margin="16,0,0,0"
+                                CornerRadius="4"
+                                VerticalAlignment="Top"
+                                ToolTipService.ToolTip="Quick Actions">
+                            <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="UninstallText"
+                                                    Icon="Delete"
+                                                    Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).UninstallSingleApp_Click}"/>
+                                    <MenuFlyoutItem x:Uid="RepairAppText"
+                                                    Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).RepairApp_Click}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE90F;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="ResetAppText"
+                                                    Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).ResetApp_Click}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE72C;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="OpenLocationText"
+                                                    Icon="Folder"
+                                                    Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).OpenAppLocation_Click}"/>
+                                    <MenuFlyoutItem x:Uid="CopyAppDetailsText"
+                                                    Icon="Copy"
+                                                    Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).CopyAppDetails_Click}"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
 
                     </Grid>
                 </Border>
+            </DataTemplate>
+
+            <!-- Defines each app-name starting letter shown by SemanticZoom's zoomed-out view. -->
+            <DataTemplate x:Key="PackagedAppsZoomedOutTemplate" x:DataType="xamlData:ICollectionViewGroup">
+                <Button Width="64"
+                        Height="64"
+                        Margin="4"
+                        Padding="0"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{x:Bind vm:InstalledAppsManagementVM.PackagedAppsZoomedOutGroupInvokedCommand, Mode=OneWay}"
+                        CommandParameter="{x:Bind}">
+                    <TextBlock Text="{x:Bind vm:InstalledAppsManagementVM.GetPackagedAppsGroupKey(Group), Mode=OneWay}"
+                               Style="{ThemeResource TitleTextBlockStyle}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Button>
             </DataTemplate>
 
         </Grid.Resources>
@@ -499,31 +524,61 @@
                           IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                           RefreshRequested="{x:Bind ViewModel.RefreshAppsListButton_Click}">
 
-            <ListView IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                      ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
-                      Loaded="{x:Bind ViewModel.MainListView_Loaded}"
-                      SelectionChanged="{x:Bind ViewModel.MainListView_SelectionChanged}"
-                      SelectionMode="Multiple"
-                      ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
+            <SemanticZoom IsZoomedInViewActive="{x:Bind ViewModel.IsPackagedAppsZoomedInViewActive, Mode=TwoWay}">
+                <SemanticZoom.ZoomedInView>
+                    <ListView IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                              ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
+                              Loaded="{x:Bind ViewModel.MainListView_Loaded}"
+                              SelectionChanged="{x:Bind ViewModel.MainListView_SelectionChanged}"
+                              SelectionMode="Multiple"
+                              ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
 
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsStackPanel AreStickyGroupHeadersEnabled="True"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.GroupStyle>
-                    <GroupStyle >
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate x:DataType="CC:GroupInfoListForPackagedAppView">
-                                <Border AutomationProperties.AccessibilityView="Raw">
-                                    <TextBlock Text="{x:Bind Key}" Style="{ThemeResource TitleTextBlockStyle}" AutomationProperties.AccessibilityView="Raw"/>
-                                </Border>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListView.GroupStyle>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel AreStickyGroupHeadersEnabled="True"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate x:DataType="CC:GroupInfoListForPackagedAppView">
+                                        <Button Padding="12,6"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                ToolTipService.ToolTip="Show app groups">
+                                            <TextBlock Text="{x:Bind Key}"
+                                                       Style="{ThemeResource TitleTextBlockStyle}"
+                                                       AutomationProperties.AccessibilityView="Raw"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
 
-            </ListView>
+                    </ListView>
+                </SemanticZoom.ZoomedInView>
+
+                <SemanticZoom.ZoomedOutView>
+                    <GridView IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                              ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View.CollectionGroups, Mode=OneWay}"
+                              SelectionMode="None"
+                              ScrollViewer.VerticalScrollMode="Enabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ItemTemplate="{StaticResource PackagedAppsZoomedOutTemplate}">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Horizontal">
+                                    <ItemsWrapGrid.ChildrenTransitions>
+                                        <TransitionCollection>
+                                            <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                                        </TransitionCollection>
+                                    </ItemsWrapGrid.ChildrenTransitions>
+                                </ItemsWrapGrid>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                    </GridView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>
 
         </RefreshContainer>
 

@@ -185,6 +185,8 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 
 		try
 		{
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			TotalProcessed = 0;
 			DuplicateCount = 0;
 

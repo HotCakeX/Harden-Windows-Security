@@ -307,7 +307,11 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Apply Microsoft Security Baseline.
 	/// </summary>
-	internal async void ApplySecurityBaseline() => await ApplyInternal();
+	internal async void ApplySecurityBaseline()
+	{
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+		await ApplyInternal();
+	}
 
 	internal async Task ApplyInternal()
 	{
@@ -413,7 +417,11 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Remove Microsoft Security Baseline.
 	/// </summary>
-	internal async void RemoveSecurityBaseline() => await RemoveInternal();
+	internal async void RemoveSecurityBaseline()
+	{
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+		await RemoveInternal();
+	}
 
 	internal async Task RemoveInternal()
 	{
@@ -464,7 +472,11 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Verify Microsoft Security Baseline.
 	/// </summary>
-	internal async void VerifySecurityBaseline() => await VerifyInternal();
+	internal async void VerifySecurityBaseline()
+	{
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+		await VerifyInternal();
+	}
 
 	internal async Task VerifyInternal()
 	{

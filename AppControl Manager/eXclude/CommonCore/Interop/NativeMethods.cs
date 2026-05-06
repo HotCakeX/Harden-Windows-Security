@@ -18,6 +18,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+using System.Threading;
 using Microsoft.Win32.SafeHandles;
 
 namespace CommonCore.Interop;
@@ -2772,5 +2773,345 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool RemoveWindowSubclass(IntPtr hWnd, IntPtr pfnSubclass, uint uIdSubclass);
+
+
+	#region Windows App Package Management
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw
+	/// </summary>
+	private const uint LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800;
+
+	internal const int AsyncStatusCompleted = 1;
+
+	internal const int AsyncStatusCanceled = 2;
+
+	internal const int AsyncStatusError = 3;
+
+	private static readonly Guid IAsyncInfoGuid = new("00000036-0000-0000-C000-000000000046");
+
+	private static IntPtr AppxDeploymentClientModule { get; set; }
+
+	/// <summary>
+	/// Creates a new package deployment operation result captured from the raw WinRT ABI.
+	/// </summary>
+	/// <param name="status">The WinRT AsyncStatus value.</param>
+	/// <param name="errorCode">The IAsyncInfo error code.</param>
+	/// <param name="extendedErrorCode">The DeploymentResult extended error code.</param>
+	/// <param name="errorText">The DeploymentResult error text.</param>
+	/// <param name="activityId">The DeploymentResult activity ID.</param>
+	internal readonly struct PackageDeploymentOperationResult(int status, int errorCode, int extendedErrorCode, string errorText, Guid activityId)
+	{
+		internal int Status => status;
+		internal int ErrorCode => errorCode;
+		internal int ExtendedErrorCode => extendedErrorCode;
+		internal string ErrorText => errorText;
+		internal Guid ActivityId => activityId;
+	}
+
+	/// <summary>
+	/// Calls the native MSIX package reset deployment export from appxdeploymentclient.dll.
+	/// </summary>
+	/// <param name="packageFullName">The package full name to reset for the current user.</param>
+	/// <param name="deploymentOperation">The returned IAsyncOperationWithProgress ABI pointer.</param>
+	/// <returns>HRESULT returned by the native deployment API.</returns>
+	internal static int MsixResetPackageAsync(string packageFullName, out IntPtr deploymentOperation) => MsixPackageMaintenanceAsync("MsixResetPackageAsync", packageFullName, out deploymentOperation);
+
+	/// <summary>
+	/// Calls the native MSIX package repair deployment export from appxdeploymentclient.dll.
+	/// </summary>
+	/// <param name="packageFullName">The package full name to repair for the current user.</param>
+	/// <param name="deploymentOperation">The returned IAsyncOperationWithProgress ABI pointer.</param>
+	/// <returns>HRESULT returned by the native deployment API.</returns>
+	internal static int MsixRepairPackageAsync(string packageFullName, out IntPtr deploymentOperation) => MsixPackageMaintenanceAsync("MsixRepairPackageAsync", packageFullName, out deploymentOperation);
+
+	/// <summary>
+	/// Waits for a native MSIX package deployment operation.
+	/// </summary>
+	/// <param name="deploymentOperation">The IAsyncOperationWithProgress ABI pointer returned by the MSIX package deployment export.</param>
+	/// <returns>The completed package deployment operation result.</returns>
+	internal static PackageDeploymentOperationResult WaitForPackageDeploymentOperation(IntPtr deploymentOperation)
+	{
+		if (deploymentOperation == IntPtr.Zero)
+		{
+			throw new ArgumentException("Deployment operation cannot be zero.", nameof(deploymentOperation));
+		}
+
+		IntPtr asyncInfo = IntPtr.Zero;
+
+		try
+		{
+			Marshal.ThrowExceptionForHR(QueryInterface(deploymentOperation, IAsyncInfoGuid, out asyncInfo));
+
+			int status;
+			do
+			{
+				Marshal.ThrowExceptionForHR(GetAsyncInfoStatus(asyncInfo, out status));
+				if (status is 0)
+				{
+					Thread.Sleep(50);
+				}
+			}
+			while (status is 0);
+
+			int errorCode = 0;
+			if (status is AsyncStatusError)
+			{
+				Marshal.ThrowExceptionForHR(GetAsyncInfoErrorCode(asyncInfo, out errorCode));
+			}
+
+			IntPtr deploymentResult = IntPtr.Zero;
+			try
+			{
+				int getResultsHResult = GetPackageDeploymentResults(deploymentOperation, out deploymentResult);
+				if (getResultsHResult < 0)
+				{
+					if (status is AsyncStatusCompleted)
+					{
+						Marshal.ThrowExceptionForHR(getResultsHResult);
+					}
+
+					return new PackageDeploymentOperationResult(status, errorCode, 0, string.Empty, Guid.Empty);
+				}
+
+				string errorText = string.Empty;
+				Guid activityId = Guid.Empty;
+				int extendedErrorCode = 0;
+
+				if (deploymentResult != IntPtr.Zero)
+				{
+					errorText = GetDeploymentResultErrorText(deploymentResult);
+					Marshal.ThrowExceptionForHR(GetDeploymentResultActivityId(deploymentResult, out activityId));
+					Marshal.ThrowExceptionForHR(GetDeploymentResultExtendedErrorCode(deploymentResult, out extendedErrorCode));
+				}
+
+				return new PackageDeploymentOperationResult(status, errorCode, extendedErrorCode, errorText, activityId);
+			}
+			finally
+			{
+				ReleaseComObject(deploymentResult);
+			}
+		}
+		finally
+		{
+			if (asyncInfo != IntPtr.Zero)
+			{
+				_ = CloseAsyncInfo(asyncInfo);
+				ReleaseComObject(asyncInfo);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Releases a COM interface pointer.
+	/// </summary>
+	/// <param name="comObject">The COM interface pointer to release.</param>
+	internal static void ReleaseComObject(IntPtr comObject)
+	{
+		if (comObject == IntPtr.Zero)
+		{
+			return;
+		}
+
+		unsafe
+		{
+			_ = ((delegate* unmanaged[Stdcall]<IntPtr, uint>)(*(*(void***)comObject + 2)))(comObject);
+		}
+	}
+
+	/// <summary>
+	/// Invokes a native MSIX package maintenance export that has the PackageManagement_*Async2 ABI shape.
+	/// </summary>
+	/// <param name="exportName">The appxdeploymentclient.dll export name.</param>
+	/// <param name="packageFullName">The target package full name.</param>
+	/// <param name="deploymentOperation">The returned IAsyncOperationWithProgress ABI pointer.</param>
+	/// <returns>HRESULT returned by the native deployment API.</returns>
+	private static int MsixPackageMaintenanceAsync(string exportName, string packageFullName, out IntPtr deploymentOperation)
+	{
+		IntPtr functionAddress = GetAppxDeploymentClientExport(exportName);
+		deploymentOperation = IntPtr.Zero;
+
+		unsafe
+		{
+			delegate* unmanaged[Stdcall]<char*, IntPtr*, int> packageMaintenanceAsync = (delegate* unmanaged[Stdcall]<char*, IntPtr*, int>)functionAddress;
+
+			fixed (char* packageFullNamePointer = packageFullName)
+			{
+				IntPtr nativeDeploymentOperation = IntPtr.Zero;
+				int hResult = packageMaintenanceAsync(packageFullNamePointer, &nativeDeploymentOperation);
+				deploymentOperation = nativeDeploymentOperation;
+				return hResult;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Gets an appxdeploymentclient.dll export by name from System32.
+	/// </summary>
+	/// <param name="exportName">The export name to resolve.</param>
+	/// <returns>The export address.</returns>
+	private static IntPtr GetAppxDeploymentClientExport(string exportName)
+	{
+		IntPtr module = AppxDeploymentClientModule;
+		if (module == IntPtr.Zero)
+		{
+			module = LoadLibraryExW("appxdeploymentclient.dll", IntPtr.Zero, LOAD_LIBRARY_SEARCH_SYSTEM32);
+			if (module == IntPtr.Zero)
+			{
+				throw new DllNotFoundException("Could not load appxdeploymentclient.dll from System32.");
+			}
+
+			AppxDeploymentClientModule = module;
+		}
+
+		IntPtr functionAddress = GetProcAddress(module, exportName);
+		if (functionAddress == IntPtr.Zero)
+		{
+			throw new EntryPointNotFoundException($"{exportName} was not found in appxdeploymentclient.dll.");
+		}
+
+		return functionAddress;
+	}
+
+
+	/// <summary>
+	/// Gets the raw buffer for an HSTRING.
+	/// </summary>
+	/// <param name="sourceString">The source HSTRING.</param>
+	/// <param name="length">The number of UTF-16 code units in the returned buffer.</param>
+	/// <returns>The raw UTF-16 buffer.</returns>
+	[LibraryImport("combase.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial char* WindowsGetStringRawBuffer(IntPtr sourceString, out uint length);
+
+
+	/// <summary>
+	/// Deletes an HSTRING.
+	/// </summary>
+	/// <param name="sourceString">The HSTRING to delete.</param>
+	/// <returns>HRESULT returned by WindowsDeleteString.</returns>
+	[LibraryImport("combase.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int WindowsDeleteString(IntPtr sourceString);
+
+
+	private static int QueryInterface(IntPtr comObject, Guid iid, out IntPtr result)
+	{
+		result = IntPtr.Zero;
+
+		unsafe
+		{
+			Guid requestedInterfaceId = iid;
+			void* queriedInterface = null;
+			int hResult = ((delegate* unmanaged[Stdcall]<IntPtr, Guid*, void**, int>)(*(*(void***)comObject + 0)))(comObject, &requestedInterfaceId, &queriedInterface);
+			result = (IntPtr)queriedInterface;
+			return hResult;
+		}
+	}
+
+	private static int GetAsyncInfoStatus(IntPtr asyncInfo, out int status)
+	{
+		status = 0;
+
+		unsafe
+		{
+			int asyncStatus = 0;
+			int hResult = ((delegate* unmanaged[Stdcall]<IntPtr, int*, int>)(*(*(void***)asyncInfo + 7)))(asyncInfo, &asyncStatus);
+			status = asyncStatus;
+			return hResult;
+		}
+	}
+
+	private static int GetAsyncInfoErrorCode(IntPtr asyncInfo, out int errorCode)
+	{
+		errorCode = 0;
+
+		unsafe
+		{
+			int asyncErrorCode = 0;
+			int hResult = ((delegate* unmanaged[Stdcall]<IntPtr, int*, int>)(*(*(void***)asyncInfo + 8)))(asyncInfo, &asyncErrorCode);
+			errorCode = asyncErrorCode;
+			return hResult;
+		}
+	}
+
+	private static int CloseAsyncInfo(IntPtr asyncInfo) => ((delegate* unmanaged[Stdcall]<IntPtr, int>)(*(*(void***)asyncInfo + 10)))(asyncInfo);
+
+	private static int GetPackageDeploymentResults(IntPtr deploymentOperation, out IntPtr deploymentResult)
+	{
+		deploymentResult = IntPtr.Zero;
+
+		unsafe
+		{
+			IntPtr packageDeploymentResult = IntPtr.Zero;
+			int hResult = ((delegate* unmanaged[Stdcall]<IntPtr, IntPtr*, int>)(*(*(void***)deploymentOperation + 10)))(deploymentOperation, &packageDeploymentResult);
+			deploymentResult = packageDeploymentResult;
+			return hResult;
+		}
+	}
+
+	private static string GetDeploymentResultErrorText(IntPtr deploymentResult)
+	{
+		IntPtr errorText = IntPtr.Zero;
+
+		try
+		{
+			unsafe
+			{
+				Marshal.ThrowExceptionForHR(((delegate* unmanaged[Stdcall]<IntPtr, IntPtr*, int>)(*(*(void***)deploymentResult + 6)))(deploymentResult, &errorText));
+			}
+
+			return HStringToString(errorText);
+		}
+		finally
+		{
+			if (errorText != IntPtr.Zero)
+			{
+				_ = WindowsDeleteString(errorText);
+			}
+		}
+	}
+
+	private static int GetDeploymentResultActivityId(IntPtr deploymentResult, out Guid activityId)
+	{
+		activityId = Guid.Empty;
+
+		unsafe
+		{
+			Guid resultActivityId = Guid.Empty;
+			int hResult = ((delegate* unmanaged[Stdcall]<IntPtr, Guid*, int>)(*(*(void***)deploymentResult + 7)))(deploymentResult, &resultActivityId);
+			activityId = resultActivityId;
+			return hResult;
+		}
+	}
+
+	private static int GetDeploymentResultExtendedErrorCode(IntPtr deploymentResult, out int extendedErrorCode)
+	{
+		extendedErrorCode = 0;
+
+		unsafe
+		{
+			int resultExtendedErrorCode = 0;
+			int hResult = ((delegate* unmanaged[Stdcall]<IntPtr, int*, int>)(*(*(void***)deploymentResult + 8)))(deploymentResult, &resultExtendedErrorCode);
+			extendedErrorCode = resultExtendedErrorCode;
+			return hResult;
+		}
+	}
+
+	private static string HStringToString(IntPtr hString)
+	{
+		if (hString == IntPtr.Zero)
+		{
+			return string.Empty;
+		}
+
+		unsafe
+		{
+			char* buffer = WindowsGetStringRawBuffer(hString, out uint length);
+			return buffer is null ? string.Empty : new string(buffer, 0, checked((int)length));
+		}
+	}
+
+	#endregion
 
 }

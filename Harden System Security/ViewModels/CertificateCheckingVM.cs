@@ -455,6 +455,8 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			// Clear existing data
 			AllNonStlCertificates.Clear();
 			NonStlCertificates.Clear();

@@ -212,6 +212,8 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 
 		try
 		{
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			Progress<double> progressReporter = new(value =>
 			{
 				if (IsProgressIndeterminate) IsProgressIndeterminate = false;
@@ -256,6 +258,8 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 			MainInfoBar.WriteWarning("Please select a valid destination folder.");
 			return;
 		}
+
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 		ElementsAreEnabled = false;
 		IsProgressIndeterminate = true;

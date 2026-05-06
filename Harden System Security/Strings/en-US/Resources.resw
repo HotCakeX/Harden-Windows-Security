@@ -5972,4 +5972,38 @@ Thumbprint: {3}</value>
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Open or close the Sidebar's pane.</value>
   </data>
+   <!--NEW-->
+  <data name="CouldNotDetermineWhichAppToRepair" xml:space="preserve">
+  <value>Could not determine which app to repair.</value>
+</data>
+<data name="StartingRepairOfApp" xml:space="preserve">
+  <value>Starting repair of the app: {0}...</value>
+</data>
+<data name="SuccessfullyRepairedApp" xml:space="preserve">
+  <value>Successfully repaired the app: {0}</value>
+</data>
+<data name="CouldNotDetermineWhichAppToReset" xml:space="preserve">
+  <value>Could not determine which app to reset.</value>
+</data>
+<data name="StartingResetOfApp" xml:space="preserve">
+  <value>Starting reset of the app: {0}...</value>
+</data>
+<data name="SuccessfullyResetApp" xml:space="preserve">
+  <value>Successfully reset the app: {0}</value>
+</data>
+<data name="ResetAppConfirmationTitle" xml:space="preserve">
+  <value>Reset app?</value>
+</data>
+<data name="ResetAppConfirmationContent" xml:space="preserve">
+  <value>This will permanently delete the app's data and restore {0} to its initial state.</value>
+</data>
+<data name="PackageMaintenanceOperationFailed" xml:space="preserve">
+  <value>{0} failed for '{1}'. Error code: {2} - Error Text: {3}</value>
+</data>
+  <data name="RepairAppText.Text" xml:space="preserve">
+    <value>Repair</value>
+  </data>
+  <data name="ResetAppText.Text" xml:space="preserve">
+    <value>Reset</value>
+  </data>
 </root>

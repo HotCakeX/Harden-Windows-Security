@@ -209,7 +209,7 @@ internal sealed partial class CSPVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 
-			using IDisposable taskTracker = CommonCore.TaskTracking.RegisterOperation();
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			// Clear the collection and backing field.
 			Policies.Clear();

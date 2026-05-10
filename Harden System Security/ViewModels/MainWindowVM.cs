@@ -282,6 +282,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Extras.BootableDriveMaker)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ExploitMitigations)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("ExploitMitigationsNavItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.ExploitMitigations)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -329,7 +335,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "DuplicatePhotosFinder", typeof(Pages.Extras.DuplicatePhotoFinder) },
 		{ "EXIFManager", typeof(Pages.Extras.EXIFManager) },
 		{ "ServiceManager", typeof(Pages.ServiceManager) },
-		{ "BootableDriveMaker", typeof(Pages.Extras.BootableDriveMaker) }
+		{ "BootableDriveMaker", typeof(Pages.Extras.BootableDriveMaker) },
+		{ "ExploitMitigations", typeof(Pages.ExploitMitigations) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -379,6 +386,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.EXIFManager)] = Atlas.GetStr("EXIFManagerNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ServiceManager)] = Atlas.GetStr("ServiceManagerNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.BootableDriveMaker)] = Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.ExploitMitigations)] = Atlas.GetStr("ExploitMitigationsNavItem/Content");
 	}
 
 	/// <summary>

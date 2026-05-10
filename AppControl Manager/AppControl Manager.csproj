@@ -195,23 +195,23 @@
 
 		<!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.83.3" />
-		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.83.3" />
-		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.83.3" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.84.0" />
+		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.84.0" />
+		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.84.0" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.7" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.0.12" />
 		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.7" />
 
 		<!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.17.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.18.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3912.50" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
 		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.4" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.3" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.0.20" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.0.12" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260425100">
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260501103">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

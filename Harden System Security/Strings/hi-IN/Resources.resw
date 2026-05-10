@@ -5972,4 +5972,223 @@
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>साइडबार पेन खोलें या बंद करें.</value>
   </data>
+  <data name="CouldNotDetermineWhichAppToRepair" xml:space="preserve">
+    <value>यह निर्धारित नहीं किया जा सका कि किस ऐप की मरम्मत करनी है।</value>
+  </data>
+  <data name="StartingRepairOfApp" xml:space="preserve">
+    <value>ऐप की मरम्मत शुरू की जा रही है: {0}...</value>
+  </data>
+  <data name="SuccessfullyRepairedApp" xml:space="preserve">
+    <value>ऐप की मरम्मत सफलतापूर्वक की गई: {0}</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToReset" xml:space="preserve">
+    <value>यह निर्धारित नहीं किया जा सका कि किस ऐप को रीसेट करना है।</value>
+  </data>
+  <data name="StartingResetOfApp" xml:space="preserve">
+    <value>ऐप को रीसेट करना शुरू किया जा रहा है: {0}...</value>
+  </data>
+  <data name="SuccessfullyResetApp" xml:space="preserve">
+    <value>ऐप सफलतापूर्वक रीसेट कर दिया गया: {0}</value>
+  </data>
+  <data name="ResetAppConfirmationTitle" xml:space="preserve">
+    <value>ऐप रीसेट करें?</value>
+  </data>
+  <data name="ResetAppConfirmationContent" xml:space="preserve">
+    <value>इससे ऐप का डेटा स्थायी रूप से हट जाएगा और {0} को उसकी प्रारंभिक अवस्था में बहाल कर दिया जाएगा।</value>
+  </data>
+  <data name="PackageMaintenanceOperationFailed" xml:space="preserve">
+    <value>'{1}' के लिए {0} विफल रहा। त्रुटि कोड: {2} - त्रुटि पाठ: {3}</value>
+  </data>
+  <data name="RepairAppText.Text" xml:space="preserve">
+    <value>मरम्मत करें</value>
+  </data>
+  <data name="ResetAppText.Text" xml:space="preserve">
+    <value>रीसेट करें</value>
+  </data>
+  <data name="ExploitMitigationsVMPageTitle" xml:space="preserve">
+    <value>सभी प्रोसेस के लिए एक्सप्लॉइट शमन लागू या संशोधित करें, चल रही प्रोसेस के मौजूदा शमन देखें, तथा बैकअप और पुनर्स्थापन करें।</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.Content" xml:space="preserve">
+    <value>एक्सप्लॉइट शमन</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी प्रोसेस के लिए एक्सप्लॉइट शमन लागू या संशोधित करें, चल रही प्रोसेस के मौजूदा शमन देखें, तथा बैकअप और पुनर्स्थापन करें।</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी प्रोसेस के लिए एक्सप्लॉइट शमन लागू या संशोधित करें, चल रही प्रोसेस के मौजूदा शमन देखें, तथा बैकअप और पुनर्स्थापन करें।</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>ऐप में सूची दृश्यों में प्रदर्शित डेटा के लिए एक फ़ॉन्ट परिवार चुनें। आपके द्वारा चुने गए फ़ॉन्ट और सूची दृश्यों में डेटा पहले से लोड होने की स्थिति में, उनकी चौड़ाई को फिर से समायोजित करना पड़ सकता है।</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>सूची दृश्यों का फ़ॉन्ट परिवार</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप में सूची दृश्यों में प्रदर्शित डेटा के लिए एक फ़ॉन्ट परिवार चुनें। आपके द्वारा चुने गए फ़ॉन्ट और सूची दृश्यों में डेटा पहले से लोड होने की स्थिति में, उनकी चौड़ाई को फिर से समायोजित करना पड़ सकता है।</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप में सूची दृश्यों में प्रदर्शित डेटा के लिए एक फ़ॉन्ट परिवार चुनें। आपके द्वारा चुने गए फ़ॉन्ट और सूची दृश्यों में डेटा पहले से लोड होने की स्थिति में, उनकी चौड़ाई को फिर से समायोजित करना पड़ सकता है।</value>
+  </data>
+  <data name="RetrieveMitigationsButton.Content" xml:space="preserve">
+    <value>शमन प्राप्त करें</value>
+  </data>
+  <data name="RetrieveMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अलग-अलग प्रोसेस के लिए एक्सप्लॉइट शमन डेटा प्राप्त करें।</value>
+  </data>
+  <data name="RetrieveMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अलग-अलग प्रोसेस के लिए एक्सप्लॉइट शमन डेटा प्राप्त करें।</value>
+  </data>
+  <data name="AddProcessButton.Content" xml:space="preserve">
+    <value>प्रोसेस जोड़ें</value>
+  </data>
+  <data name="AddProcessButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>किसी नए प्रोसेस या एक्ज़िक्यूटेबल फ़ाइल के लिए शमन जोड़ें।</value>
+  </data>
+  <data name="AddProcessButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>किसी नए प्रोसेस या एक्ज़िक्यूटेबल फ़ाइल के लिए शमन जोड़ें।</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.Content" xml:space="preserve">
+    <value>आयात और निर्यात</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>XML फ़ाइल के माध्यम से प्रोसेस के एक्सप्लॉइट शमन डेटा का आयात या निर्यात करें।</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>XML फ़ाइल के माध्यम से प्रोसेस के एक्सप्लॉइट शमन डेटा का आयात या निर्यात करें।</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>शमन आयात करें</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>XML फ़ाइल से एक्सप्लॉइट शमन डेटा आयात करें।</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>XML फ़ाइल से एक्सप्लॉइट शमन डेटा आयात करें।</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>शमन निर्यात करें</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक्सप्लॉइट शमन डेटा को XML फ़ाइल में निर्यात करें।</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक्सप्लॉइट शमन डेटा को XML फ़ाइल में निर्यात करें।</value>
+  </data>
+  <data name="OpenRegistryLocationButton.Content" xml:space="preserve">
+    <value>रजिस्ट्री स्थान खोलें</value>
+  </data>
+  <data name="OpenRegistryLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>रजिस्ट्री संपादक को उस स्थान पर खोलें जहाँ image file execution options सहेजे गए हैं।</value>
+  </data>
+  <data name="OpenRegistryLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>रजिस्ट्री संपादक को उस स्थान पर खोलें जहाँ image file execution options सहेजे गए हैं।</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>पूर्ण विवरण देखें</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित प्रोसेस पर लागू शमन का पूरा विवरण देखें।</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित प्रोसेस पर लागू शमन का पूरा विवरण देखें।</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>शमन संशोधित करें</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित प्रोसेस की एक्सप्लॉइट शमन सेटिंग्स संशोधित करें।</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित प्रोसेस की एक्सप्लॉइट शमन सेटिंग्स संशोधित करें।</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.Text" xml:space="preserve">
+    <value>रजिस्ट्री से हटाएँ</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित प्रोसेस के सभी शमन रजिस्ट्री से हटाएँ।</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित प्रोसेस के सभी शमन रजिस्ट्री से हटाएँ।</value>
+  </data>
+  <data name="AutoRefreshButton.Content" xml:space="preserve">
+    <value>स्वतः रिफ़्रेश</value>
+  </data>
+  <data name="AutoRefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चल रही प्रोसेस की जानकारी स्वतः रिफ़्रेश करें।</value>
+  </data>
+  <data name="AutoRefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चल रही प्रोसेस की जानकारी स्वतः रिफ़्रेश करें।</value>
+  </data>
+  <data name="BulkActionsButton.Content" xml:space="preserve">
+    <value>सामूहिक कार्रवाइयाँ</value>
+  </data>
+  <data name="BulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वे कार्रवाइयाँ जो सभी डेटा को प्रभावित करती हैं।</value>
+  </data>
+  <data name="BulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वे कार्रवाइयाँ जो सभी डेटा को प्रभावित करती हैं।</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सब लागू करें</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी अनुशंसित एक्सप्लॉइट शमन लागू करें।</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी अनुशंसित एक्सप्लॉइट शमन लागू करें।</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सब सत्यापित करें</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी अनुशंसित एक्सप्लॉइट शमन सत्यापित करें।</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी अनुशंसित एक्सप्लॉइट शमन सत्यापित करें।</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सब हटाएँ</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी अनुशंसित एक्सप्लॉइट शमन हटाएँ।</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी अनुशंसित एक्सप्लॉइट शमन हटाएँ।</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>फ़ोल्डर ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक या अधिक फ़ोल्डर ब्राउज़ करें।</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक या अधिक फ़ोल्डर ब्राउज़ करें।</value>
+  </data>
+  <data name="ScanSelectionsButton.Content" xml:space="preserve">
+    <value>चयन स्कैन करें</value>
+  </data>
+  <data name="ScanSelectionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित फ़ाइलों और फ़ोल्डरों को स्कैन करें।</value>
+  </data>
+  <data name="ScanSelectionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित फ़ाइलों और फ़ोल्डरों को स्कैन करें।</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.Content" xml:space="preserve">
+    <value>सब हटाएँ</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी शमन हटाएँ।</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी शमन हटाएँ।</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.Content" xml:space="preserve">
+    <value>संशोधित करें</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम-व्यापी शमन संशोधित करें।</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम-व्यापी शमन संशोधित करें।</value>
+  </data>
 </root>

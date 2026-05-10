@@ -141,6 +141,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<BootableDriveMakerVM> _bootableDriveMakerVM = new(() =>
 		new BootableDriveMakerVM(), false);
 
+	private static readonly Lazy<ExploitMitigationsVM> _exploitMitigationsVM = new(() =>
+		new ExploitMitigationsVM(), false);
+
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
 	internal static MainWindowVM MainWindowVM => _mainWindowVM.Value;
@@ -181,6 +184,7 @@ internal static class ViewModelProvider
 	internal static ServiceManagerVM ServiceManagerVM => _serviceManagerVM.Value;
 	internal static SystemShutdownInfoDialogVM SystemShutdownInfoDialogVM => _systemShutdownInfoDialogVM.Value;
 	internal static BootableDriveMakerVM BootableDriveMakerVM => _bootableDriveMakerVM.Value;
+	internal static ExploitMitigationsVM ExploitMitigationsVM => _exploitMitigationsVM.Value;
 
 	/// <summary>
 	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>

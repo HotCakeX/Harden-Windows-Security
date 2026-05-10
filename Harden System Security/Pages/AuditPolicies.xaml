@@ -218,8 +218,8 @@
                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.ColumnWidth5, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{x:Bind CategoryName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind SubcategoryName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind CategoryName}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.ExploitMitigationsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind SubcategoryName}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.ExploitMitigationsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
 
                         <!-- ComboBox with inline Apply button -->
                         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
@@ -249,8 +249,8 @@
                             </Button>
                         </StackPanel>
 
-                        <TextBlock Text="{x:Bind CategoryGuid}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind SubcategoryGuid}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock Text="{x:Bind CategoryGuid}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.ExploitMitigationsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind SubcategoryGuid}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.ExploitMitigationsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

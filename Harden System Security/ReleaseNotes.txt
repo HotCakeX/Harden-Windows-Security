@@ -1,9 +1,21 @@
-* You can now Repair and Reset every installed app in the "Manage Installed Apps" page.
+# Introducing Exploit Mitigations
 
-* Improved the "Manage Installed Apps" page's design by making the app group headers clickable so you can jump quickly to different groups of apps.
+The Exploit Mitigations page in the Harden System Security app is a focused operational workspace for Windows process mitigation policy. It brings registry-backed rules (IFEO / Image File Execution Options), live process state, system defaults, recommendations, and binary inspection into a single coherent dashboard so you can make changes with confidence and then immediately verify outcomes.
 
-* Fixed an issue in the "Manage Installed Apps" page's displayed selected count: https://github.com/HotCakeX/Harden-Windows-Security/issues/1144
+The Exploit Mitigations page is split into 5 functional views:
 
-* In the "Manage Installed Apps" page, when an app uninstallation fails, the next app is attempted and the operation no longer stops. Also, there will be detailed logs generated containing the counts and names of the apps that were successfully uninstalled and failed. Completes the following request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1145
+1. Registry - per-process mitigation policies stored in the registry.
+2. Running Processes - live mitigation state of currently running processes.
+3. Recommended - curated recommended mitigation sets for specific programs. They align with the app's broader hardening guidance in the Microsoft Defender category.
+4. Binary Scan - binary hardening inspection for selected executable files and folders.
+5. System - system-wide exploit mitigation settings.
 
-* Significantly Improved the multi app uninstallation performance in the "Manage Installed Apps" page.
+Please refer to the GitHub Wiki document for full information: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Exploit-Mitigations 
+
+## Other Changes
+
+* You can now choose the font family of the texts displayed in the list views in the app settings.
+
+* Updated dependencies to the latest versions.
+
+* The links in the Microsoft Edge category now point to the precise location in the policies page: https://github.com/HotCakeX/Harden-Windows-Security/pull/1150

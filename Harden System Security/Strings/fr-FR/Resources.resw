@@ -5972,4 +5972,223 @@ Empreinte : {3}</value>
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ouvre ou ferme le volet de la barre latérale.</value>
   </data>
+  <data name="CouldNotDetermineWhichAppToRepair" xml:space="preserve">
+    <value>Impossible de déterminer quelle application réparer.</value>
+  </data>
+  <data name="StartingRepairOfApp" xml:space="preserve">
+    <value>Démarrage de la réparation de l’application : {0}...</value>
+  </data>
+  <data name="SuccessfullyRepairedApp" xml:space="preserve">
+    <value>Application réparée avec succès : {0}</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToReset" xml:space="preserve">
+    <value>Impossible de déterminer quelle application réinitialiser.</value>
+  </data>
+  <data name="StartingResetOfApp" xml:space="preserve">
+    <value>Démarrage de la réinitialisation de l’application : {0}...</value>
+  </data>
+  <data name="SuccessfullyResetApp" xml:space="preserve">
+    <value>Application réinitialisée avec succès : {0}</value>
+  </data>
+  <data name="ResetAppConfirmationTitle" xml:space="preserve">
+    <value>Réinitialiser l’application ?</value>
+  </data>
+  <data name="ResetAppConfirmationContent" xml:space="preserve">
+    <value>Cette opération supprimera définitivement les données de l’application et restaurera {0} à son état initial.</value>
+  </data>
+  <data name="PackageMaintenanceOperationFailed" xml:space="preserve">
+    <value>L’opération {0} a échoué pour '{1}'. Code d’erreur : {2} - Texte de l’erreur : {3}</value>
+  </data>
+  <data name="RepairAppText.Text" xml:space="preserve">
+    <value>Réparer</value>
+  </data>
+  <data name="ResetAppText.Text" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="ExploitMitigationsVMPageTitle" xml:space="preserve">
+    <value>Appliquez ou modifiez les mesures d’atténuation des exploits pour tous les processus, affichez les mesures existantes des processus en cours d’exécution, puis sauvegardez et restaurez.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.Content" xml:space="preserve">
+    <value>Mesures d’atténuation des exploits</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Appliquez ou modifiez les mesures d’atténuation des exploits pour tous les processus, affichez les mesures existantes des processus en cours d’exécution, puis sauvegardez et restaurez.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Appliquez ou modifiez les mesures d’atténuation des exploits pour tous les processus, affichez les mesures existantes des processus en cours d’exécution, puis sauvegardez et restaurez.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Choisissez une famille de polices pour les données affichées dans les vues de liste de l’application. Selon la police choisie et si des données sont déjà chargées dans les vues de liste, leur largeur devra peut-être être réajustée.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>Famille de polices des vues de liste</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisissez une famille de polices pour les données affichées dans les vues de liste de l’application. Selon la police choisie et si des données sont déjà chargées dans les vues de liste, leur largeur devra peut-être être réajustée.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choisissez une famille de polices pour les données affichées dans les vues de liste de l’application. Selon la police choisie et si des données sont déjà chargées dans les vues de liste, leur largeur devra peut-être être réajustée.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.Content" xml:space="preserve">
+    <value>Récupérer les mesures</value>
+  </data>
+  <data name="RetrieveMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Récupère les données de mesures d’atténuation des exploits pour des processus individuels.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Récupère les données de mesures d’atténuation des exploits pour des processus individuels.</value>
+  </data>
+  <data name="AddProcessButton.Content" xml:space="preserve">
+    <value>Ajouter un processus</value>
+  </data>
+  <data name="AddProcessButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajoute des mesures d’atténuation pour un nouveau processus ou exécutable.</value>
+  </data>
+  <data name="AddProcessButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajoute des mesures d’atténuation pour un nouveau processus ou exécutable.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.Content" xml:space="preserve">
+    <value>Importer et exporter</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importe ou exporte les données de mesures d’atténuation des exploits pour les processus via un fichier XML.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importe ou exporte les données de mesures d’atténuation des exploits pour les processus via un fichier XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Importer les mesures</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importe les données de mesures d’atténuation des exploits à partir d’un fichier XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importe les données de mesures d’atténuation des exploits à partir d’un fichier XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Exporter les mesures</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exporte les données de mesures d’atténuation des exploits vers un fichier XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exporte les données de mesures d’atténuation des exploits vers un fichier XML.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.Content" xml:space="preserve">
+    <value>Ouvrir l’emplacement du Registre</value>
+  </data>
+  <data name="OpenRegistryLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ouvre l’Éditeur du Registre à l’emplacement où les options d’exécution du fichier image sont enregistrées.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ouvre l’Éditeur du Registre à l’emplacement où les options d’exécution du fichier image sont enregistrées.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Afficher tous les détails</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Affiche tous les détails des mesures d’atténuation appliquées au processus sélectionné.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Affiche tous les détails des mesures d’atténuation appliquées au processus sélectionné.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Modifier les mesures</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modifie les mesures d’atténuation des exploits du processus sélectionné.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Modifie les mesures d’atténuation des exploits du processus sélectionné.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Supprimer du Registre</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprime du Registre toutes les mesures d’atténuation du processus sélectionné.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprime du Registre toutes les mesures d’atténuation du processus sélectionné.</value>
+  </data>
+  <data name="AutoRefreshButton.Content" xml:space="preserve">
+    <value>Actualisation automatique</value>
+  </data>
+  <data name="AutoRefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actualise automatiquement les informations des processus en cours d’exécution.</value>
+  </data>
+  <data name="AutoRefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actualise automatiquement les informations des processus en cours d’exécution.</value>
+  </data>
+  <data name="BulkActionsButton.Content" xml:space="preserve">
+    <value>Actions groupées</value>
+  </data>
+  <data name="BulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actions qui affectent l’ensemble des données.</value>
+  </data>
+  <data name="BulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actions qui affectent l’ensemble des données.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Tout appliquer</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Applique toutes les mesures d’atténuation des exploits recommandées.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Applique toutes les mesures d’atténuation des exploits recommandées.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Tout vérifier</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Vérifie toutes les mesures d’atténuation des exploits recommandées.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Vérifie toutes les mesures d’atténuation des exploits recommandées.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Tout supprimer</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprime toutes les mesures d’atténuation des exploits recommandées.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprime toutes les mesures d’atténuation des exploits recommandées.</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Parcourir les dossiers</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Parcourt un ou plusieurs dossiers.</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Parcourt un ou plusieurs dossiers.</value>
+  </data>
+  <data name="ScanSelectionsButton.Content" xml:space="preserve">
+    <value>Analyser les sélections</value>
+  </data>
+  <data name="ScanSelectionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Analyse les fichiers et dossiers sélectionnés.</value>
+  </data>
+  <data name="ScanSelectionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Analyse les fichiers et dossiers sélectionnés.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.Content" xml:space="preserve">
+    <value>Tout supprimer</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprime toutes les mesures d’atténuation.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprime toutes les mesures d’atténuation.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.Content" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modifie les mesures d’atténuation à l’échelle du système.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Modifie les mesures d’atténuation à l’échelle du système.</value>
+  </data>
 </root>

@@ -5972,4 +5972,223 @@ Odcisk Palca: {3}</value>
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Otwórz lub zamknij panel paska bocznego.</value>
   </data>
+  <data name="CouldNotDetermineWhichAppToRepair" xml:space="preserve">
+    <value>Nie można ustalić, którą aplikację naprawić.</value>
+  </data>
+  <data name="StartingRepairOfApp" xml:space="preserve">
+    <value>Rozpoczynanie naprawy aplikacji: {0}...</value>
+  </data>
+  <data name="SuccessfullyRepairedApp" xml:space="preserve">
+    <value>Pomyślnie naprawiono aplikację: {0}</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToReset" xml:space="preserve">
+    <value>Nie można ustalić, którą aplikację zresetować.</value>
+  </data>
+  <data name="StartingResetOfApp" xml:space="preserve">
+    <value>Rozpoczynanie resetowania aplikacji: {0}...</value>
+  </data>
+  <data name="SuccessfullyResetApp" xml:space="preserve">
+    <value>Pomyślnie zresetowano aplikację: {0}</value>
+  </data>
+  <data name="ResetAppConfirmationTitle" xml:space="preserve">
+    <value>Zresetować aplikację?</value>
+  </data>
+  <data name="ResetAppConfirmationContent" xml:space="preserve">
+    <value>Ta operacja trwale usunie dane aplikacji i przywróci {0} do stanu początkowego.</value>
+  </data>
+  <data name="PackageMaintenanceOperationFailed" xml:space="preserve">
+    <value>Operacja {0} nie powiodła się dla '{1}'. Kod błędu: {2} - Treść błędu: {3}</value>
+  </data>
+  <data name="RepairAppText.Text" xml:space="preserve">
+    <value>Napraw</value>
+  </data>
+  <data name="ResetAppText.Text" xml:space="preserve">
+    <value>Resetuj</value>
+  </data>
+  <data name="ExploitMitigationsVMPageTitle" xml:space="preserve">
+    <value>Zastosuj lub zmodyfikuj mitygacje exploitów dla wszystkich procesów, wyświetl istniejące mitygacje uruchomionych procesów oraz wykonaj kopię zapasową i przywracanie.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.Content" xml:space="preserve">
+    <value>Mitygacje exploitów</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuj lub zmodyfikuj mitygacje exploitów dla wszystkich procesów, wyświetl istniejące mitygacje uruchomionych procesów oraz wykonaj kopię zapasową i przywracanie.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj lub zmodyfikuj mitygacje exploitów dla wszystkich procesów, wyświetl istniejące mitygacje uruchomionych procesów oraz wykonaj kopię zapasową i przywracanie.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Wybierz rodzinę czcionek dla danych wyświetlanych w widokach listy w aplikacji. W zależności od wybranej czcionki oraz od tego, czy dane są już załadowane w widokach listy, może być konieczne ponowne dostosowanie ich szerokości.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>Rodzina czcionek widoków listy</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz rodzinę czcionek dla danych wyświetlanych w widokach listy w aplikacji. W zależności od wybranej czcionki oraz od tego, czy dane są już załadowane w widokach listy, może być konieczne ponowne dostosowanie ich szerokości.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz rodzinę czcionek dla danych wyświetlanych w widokach listy w aplikacji. W zależności od wybranej czcionki oraz od tego, czy dane są już załadowane w widokach listy, może być konieczne ponowne dostosowanie ich szerokości.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.Content" xml:space="preserve">
+    <value>Pobierz mitygacje</value>
+  </data>
+  <data name="RetrieveMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobiera dane mitygacji exploitów dla poszczególnych procesów.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobiera dane mitygacji exploitów dla poszczególnych procesów.</value>
+  </data>
+  <data name="AddProcessButton.Content" xml:space="preserve">
+    <value>Dodaj proces</value>
+  </data>
+  <data name="AddProcessButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaje mitygacje dla nowego procesu lub pliku wykonywalnego.</value>
+  </data>
+  <data name="AddProcessButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaje mitygacje dla nowego procesu lub pliku wykonywalnego.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.Content" xml:space="preserve">
+    <value>Import i eksport</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importuje lub eksportuje dane mitygacji exploitów dla procesów za pomocą pliku XML.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importuje lub eksportuje dane mitygacji exploitów dla procesów za pomocą pliku XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Importuj mitygacje</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importuje dane mitygacji exploitów z pliku XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importuje dane mitygacji exploitów z pliku XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Eksportuj mitygacje</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eksportuje dane mitygacji exploitów do pliku XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eksportuje dane mitygacji exploitów do pliku XML.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.Content" xml:space="preserve">
+    <value>Otwórz lokalizację rejestru</value>
+  </data>
+  <data name="OpenRegistryLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwiera Edytor rejestru w lokalizacji, w której są zapisane opcje wykonywania plików obrazu.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwiera Edytor rejestru w lokalizacji, w której są zapisane opcje wykonywania plików obrazu.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wyświetl pełne szczegóły</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetla pełne szczegóły zastosowanych mitygacji dla wybranego procesu.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetla pełne szczegóły zastosowanych mitygacji dla wybranego procesu.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zmień mitygacje</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modyfikuje mitygacje exploitów wybranego procesu.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Modyfikuje mitygacje exploitów wybranego procesu.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń z rejestru</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuwa z rejestru wszystkie mitygacje wybranego procesu.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuwa z rejestru wszystkie mitygacje wybranego procesu.</value>
+  </data>
+  <data name="AutoRefreshButton.Content" xml:space="preserve">
+    <value>Automatyczne odświeżanie</value>
+  </data>
+  <data name="AutoRefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatycznie odświeża informacje o uruchomionych procesach.</value>
+  </data>
+  <data name="AutoRefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Automatycznie odświeża informacje o uruchomionych procesach.</value>
+  </data>
+  <data name="BulkActionsButton.Content" xml:space="preserve">
+    <value>Działania zbiorcze</value>
+  </data>
+  <data name="BulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Działania wpływające na wszystkie dane.</value>
+  </data>
+  <data name="BulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Działania wpływające na wszystkie dane.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zastosuj wszystkie</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosowuje wszystkie zalecane mitygacje exploitów.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosowuje wszystkie zalecane mitygacje exploitów.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zweryfikuj wszystkie</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Weryfikuje wszystkie zalecane mitygacje exploitów.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Weryfikuje wszystkie zalecane mitygacje exploitów.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń wszystkie</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuwa wszystkie zalecane mitygacje exploitów.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuwa wszystkie zalecane mitygacje exploitów.</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Przeglądaj foldery</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przegląda co najmniej jeden folder.</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przegląda co najmniej jeden folder.</value>
+  </data>
+  <data name="ScanSelectionsButton.Content" xml:space="preserve">
+    <value>Skanuj zaznaczone</value>
+  </data>
+  <data name="ScanSelectionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skanuje wybrane pliki i foldery.</value>
+  </data>
+  <data name="ScanSelectionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Skanuje wybrane pliki i foldery.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.Content" xml:space="preserve">
+    <value>Usuń wszystkie</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuwa wszystkie mitygacje.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuwa wszystkie mitygacje.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.Content" xml:space="preserve">
+    <value>Modyfikuj</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modyfikuje mitygacje dla całego systemu.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Modyfikuje mitygacje dla całego systemu.</value>
+  </data>
 </root>

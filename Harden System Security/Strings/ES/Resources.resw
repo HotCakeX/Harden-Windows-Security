@@ -5972,4 +5972,223 @@ Huella Digital: {3}</value>
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Abre o cierra el panel de la barra lateral.</value>
   </data>
+  <data name="CouldNotDetermineWhichAppToRepair" xml:space="preserve">
+    <value>No se pudo determinar qué aplicación reparar.</value>
+  </data>
+  <data name="StartingRepairOfApp" xml:space="preserve">
+    <value>Iniciando la reparación de la aplicación: {0}...</value>
+  </data>
+  <data name="SuccessfullyRepairedApp" xml:space="preserve">
+    <value>La aplicación se reparó correctamente: {0}</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToReset" xml:space="preserve">
+    <value>No se pudo determinar qué aplicación restablecer.</value>
+  </data>
+  <data name="StartingResetOfApp" xml:space="preserve">
+    <value>Iniciando el restablecimiento de la aplicación: {0}...</value>
+  </data>
+  <data name="SuccessfullyResetApp" xml:space="preserve">
+    <value>La aplicación se restableció correctamente: {0}</value>
+  </data>
+  <data name="ResetAppConfirmationTitle" xml:space="preserve">
+    <value>¿Restablecer la aplicación?</value>
+  </data>
+  <data name="ResetAppConfirmationContent" xml:space="preserve">
+    <value>Esta acción eliminará permanentemente los datos de la aplicación y restaurará {0} a su estado inicial.</value>
+  </data>
+  <data name="PackageMaintenanceOperationFailed" xml:space="preserve">
+    <value>La operación {0} falló para '{1}'. Código de error: {2} - Texto del error: {3}</value>
+  </data>
+  <data name="RepairAppText.Text" xml:space="preserve">
+    <value>Reparar</value>
+  </data>
+  <data name="ResetAppText.Text" xml:space="preserve">
+    <value>Restablecer</value>
+  </data>
+  <data name="ExploitMitigationsVMPageTitle" xml:space="preserve">
+    <value>Aplique o modifique las mitigaciones contra exploits de todos los procesos, vea las mitigaciones existentes de los procesos en ejecución y realice copias de seguridad y restauraciones.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.Content" xml:space="preserve">
+    <value>Mitigaciones contra exploits</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplique o modifique las mitigaciones contra exploits de todos los procesos, vea las mitigaciones existentes de los procesos en ejecución y realice copias de seguridad y restauraciones.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplique o modifique las mitigaciones contra exploits de todos los procesos, vea las mitigaciones existentes de los procesos en ejecución y realice copias de seguridad y restauraciones.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Elija una familia tipográfica para los datos que se muestran en las vistas de lista de la aplicación. Según la fuente que seleccione y si ya hay datos cargados en las vistas de lista, podría ser necesario reajustar su ancho.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>Familia tipográfica de las vistas de lista</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija una familia tipográfica para los datos que se muestran en las vistas de lista de la aplicación. Según la fuente que seleccione y si ya hay datos cargados en las vistas de lista, podría ser necesario reajustar su ancho.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija una familia tipográfica para los datos que se muestran en las vistas de lista de la aplicación. Según la fuente que seleccione y si ya hay datos cargados en las vistas de lista, podría ser necesario reajustar su ancho.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.Content" xml:space="preserve">
+    <value>Recuperar mitigaciones</value>
+  </data>
+  <data name="RetrieveMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupera los datos de mitigación contra exploits de procesos individuales.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupera los datos de mitigación contra exploits de procesos individuales.</value>
+  </data>
+  <data name="AddProcessButton.Content" xml:space="preserve">
+    <value>Agregar proceso</value>
+  </data>
+  <data name="AddProcessButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agrega mitigaciones para un proceso nuevo o un archivo ejecutable.</value>
+  </data>
+  <data name="AddProcessButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agrega mitigaciones para un proceso nuevo o un archivo ejecutable.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.Content" xml:space="preserve">
+    <value>Importar y exportar</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importa o exporta datos de mitigación contra exploits de procesos mediante un archivo XML.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importa o exporta datos de mitigación contra exploits de procesos mediante un archivo XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Importar mitigaciones</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importa datos de mitigación contra exploits desde un archivo XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importa datos de mitigación contra exploits desde un archivo XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Exportar mitigaciones</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exporta datos de mitigación contra exploits a un archivo XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exporta datos de mitigación contra exploits a un archivo XML.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.Content" xml:space="preserve">
+    <value>Abrir ubicación del Registro</value>
+  </data>
+  <data name="OpenRegistryLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre el Editor del Registro en la ubicación donde se guardan las opciones de ejecución del archivo de imagen.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre el Editor del Registro en la ubicación donde se guardan las opciones de ejecución del archivo de imagen.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ver detalles completos</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Muestra todos los detalles de las mitigaciones aplicadas al proceso seleccionado.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Muestra todos los detalles de las mitigaciones aplicadas al proceso seleccionado.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Modificar mitigaciones</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modifica las mitigaciones contra exploits del proceso seleccionado.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Modifica las mitigaciones contra exploits del proceso seleccionado.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Eliminar del Registro</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elimina del Registro todas las mitigaciones del proceso seleccionado.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elimina del Registro todas las mitigaciones del proceso seleccionado.</value>
+  </data>
+  <data name="AutoRefreshButton.Content" xml:space="preserve">
+    <value>Actualización automática</value>
+  </data>
+  <data name="AutoRefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actualiza automáticamente la información de los procesos en ejecución.</value>
+  </data>
+  <data name="AutoRefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actualiza automáticamente la información de los procesos en ejecución.</value>
+  </data>
+  <data name="BulkActionsButton.Content" xml:space="preserve">
+    <value>Acciones masivas</value>
+  </data>
+  <data name="BulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Acciones que afectan a todos los datos.</value>
+  </data>
+  <data name="BulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Acciones que afectan a todos los datos.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Aplicar todo</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplica todas las mitigaciones contra exploits recomendadas.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplica todas las mitigaciones contra exploits recomendadas.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Verificar todo</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verifica todas las mitigaciones contra exploits recomendadas.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verifica todas las mitigaciones contra exploits recomendadas.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Quitar todo</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quita todas las mitigaciones contra exploits recomendadas.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quita todas las mitigaciones contra exploits recomendadas.</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Examinar carpetas</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examina una o varias carpetas.</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examina una o varias carpetas.</value>
+  </data>
+  <data name="ScanSelectionsButton.Content" xml:space="preserve">
+    <value>Escanear selecciones</value>
+  </data>
+  <data name="ScanSelectionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Escanea los archivos y carpetas seleccionados.</value>
+  </data>
+  <data name="ScanSelectionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Escanea los archivos y carpetas seleccionados.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.Content" xml:space="preserve">
+    <value>Quitar todo</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quita todas las mitigaciones.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quita todas las mitigaciones.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.Content" xml:space="preserve">
+    <value>Modificar</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Modifica las mitigaciones de todo el sistema.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Modifica las mitigaciones de todo el sistema.</value>
+  </data>
 </root>

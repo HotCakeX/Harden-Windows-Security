@@ -139,6 +139,16 @@ internal static unsafe partial class NativeMethods
 
 
 #if DEBUG
+	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
+#endif
+#if !DEBUG
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+#endif
+	internal static partial nint scan_file_via_interop(string filePath);
+
+
+#if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif

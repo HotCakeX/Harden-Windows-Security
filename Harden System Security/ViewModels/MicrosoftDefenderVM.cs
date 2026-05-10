@@ -701,7 +701,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			else
 				appMitigations = fromRegistryByName[0];
 
-			return SetProcessMitigationsCommand.setEnableAndDisable(appMitigations, disableList, enableList, EAFModulesList, isForce, isRemove, isReset, isSystemMode: false);
+			return SetProcessMitigationsCommand.SetEnableAndDisable(appMitigations, disableList, enableList, EAFModulesList, isForce, isRemove, isReset, isSystemMode: false);
 		}
 		catch (Exception ex)
 		{
@@ -723,7 +723,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				{
 					Source = "System Defaults"
 				};
-			return SetProcessMitigationsCommand.setEnableAndDisable(appMitigations, disableList, enableList, EAFModulesList, isForce, isRemove, isReset, isSystemMode: true);
+			return SetProcessMitigationsCommand.SetEnableAndDisable(appMitigations, disableList, enableList, EAFModulesList, isForce, isRemove, isReset, isSystemMode: true);
 		}
 		catch (Exception ex)
 		{

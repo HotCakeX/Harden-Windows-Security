@@ -463,6 +463,82 @@ fn create_fallback_error_result(file_path: &str) -> SecurityAnalysisResult {
     }
 }
 
+fn analyze_binary_file(file_path: &str) -> SecurityAnalysisResult {
+    let (
+        binary_path,
+        address_randomization,
+        entropy_randomization,
+        flow_protection,
+        error_code,
+        error_message,
+    ) = match BinarySecurityAnalyzer::initialize_from_file(file_path) {
+        Ok(mut analyzer) => analyzer.perform_security_analysis(file_path),
+        Err(e) => (
+            file_path.to_string(),
+            SecurityFeatureStatus::Disabled,
+            SecurityFeatureStatus::Disabled,
+            SecurityFeatureStatus::Disabled,
+            2001,
+            format!("File access error: {}", e),
+        ),
+    };
+
+    let binary_path_c: *mut c_char = match CString::new(binary_path) {
+        Ok(s) => s.into_raw(),
+        Err(_) => return create_fallback_error_result(file_path),
+    };
+
+    let error_message_c: *mut c_char = match CString::new(error_message) {
+        Ok(s) => s.into_raw(),
+        Err(_) => {
+            unsafe {
+                let _ = CString::from_raw(binary_path_c);
+            }
+            return create_fallback_error_result(file_path);
+        }
+    };
+
+    SecurityAnalysisResult {
+        binary_path: binary_path_c,
+        address_randomization,
+        entropy_randomization,
+        flow_protection,
+        error_code,
+        error_message: error_message_c,
+    }
+}
+
+fn create_analysis_collection(
+    mut analysis_results: Vec<SecurityAnalysisResult>,
+) -> *mut SecurityAnalysisCollection {
+    let result_count: c_int = analysis_results.len() as c_int;
+    let results_ptr: *mut SecurityAnalysisResult = analysis_results.as_mut_ptr();
+    std::mem::forget(analysis_results);
+
+    let security_analysis_collection: Box<SecurityAnalysisCollection> =
+        Box::new(SecurityAnalysisCollection {
+            analysis_results: results_ptr,
+            total_count: result_count,
+        });
+
+    Box::into_raw(security_analysis_collection)
+}
+
+#[unsafe(no_mangle)]
+pub extern "system" fn scan_file_via_interop(file_path: *const c_char) -> *mut SecurityAnalysisCollection {
+    if file_path.is_null() {
+        return std::ptr::null_mut();
+    }
+
+    let c_string: &CStr = unsafe { CStr::from_ptr(file_path) };
+    let target_path: &str = match c_string.to_str() {
+        Ok(s) => s,
+        Err(_) => return std::ptr::null_mut(),
+    };
+
+    create_analysis_collection(vec![analyze_binary_file(target_path)])
+}
+
 #[unsafe(no_mangle)]
 pub extern "system" fn scan_directory_via_interop(
     directory_path: *const c_char,
@@ -487,66 +563,10 @@ pub extern "system" fn scan_directory_via_interop(
     let mut analysis_results: Vec<SecurityAnalysisResult> = Vec::new();
 
     for file_path in binary_files {
-        let (
-            binary_path,
-            address_randomization,
-            entropy_randomization,
-            flow_protection,
-            error_code,
-            error_message,
-        ) = match BinarySecurityAnalyzer::initialize_from_file(&file_path) {
-            Ok(mut analyzer) => analyzer.perform_security_analysis(&file_path),
-            Err(e) => (
-                file_path.clone(),
-                SecurityFeatureStatus::Disabled,
-                SecurityFeatureStatus::Disabled,
-                SecurityFeatureStatus::Disabled,
-                2001,
-                format!("File access error: {}", e),
-            ),
-        };
-
-        // Try to create CStrings, but if any fail, create a fallback error result
-        let binary_path_c: *mut c_char = match CString::new(binary_path) {
-            Ok(s) => s.into_raw(),
-            Err(_) => {
-                analysis_results.push(create_fallback_error_result(&file_path));
-                continue;
-            }
-        };
-
-        let error_message_c: *mut c_char = match CString::new(error_message) {
-            Ok(s) => s.into_raw(),
-            Err(_) => {
-                unsafe {
-                    let _ = CString::from_raw(binary_path_c);
-                }
-                analysis_results.push(create_fallback_error_result(&file_path));
-                continue;
-            }
-        };
-
-        analysis_results.push(SecurityAnalysisResult {
-            binary_path: binary_path_c,
-            address_randomization,
-            entropy_randomization,
-            flow_protection,
-            error_code,
-            error_message: error_message_c,
-        });
+        analysis_results.push(analyze_binary_file(&file_path));
     }
 
-    let result_count: c_int = analysis_results.len() as c_int;
-    let results_ptr: *mut SecurityAnalysisResult = analysis_results.as_mut_ptr();
-    std::mem::forget(analysis_results);
-
-    let security_analysis_collection: Box<SecurityAnalysisCollection> =
-        Box::new(SecurityAnalysisCollection {
-            analysis_results: results_ptr,
-            total_count: result_count,
-        });
-
-    Box::into_raw(security_analysis_collection)
+    create_analysis_collection(analysis_results)
 }
 
 #[unsafe(no_mangle)]

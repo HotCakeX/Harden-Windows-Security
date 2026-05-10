@@ -568,6 +568,13 @@
                 </NavigationViewItem>
 
                 <NavigationViewItem x:Name="ServiceManagerNavItem" Icon="{x:Bind ViewModel.ServiceManagerIcon, Mode=OneWay}" x:Uid="ServiceManagerNavItem" Tag="ServiceManager"/>
+                <NavigationViewItem x:Name="ExploitMitigationsNavItem" x:Uid="ExploitMitigationsNavItem" Tag="ExploitMitigations">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="ms-appx:///Assets/Others/Exploit Mitigation Icon.png"
+                                    Margin="-25"
+                                    ShowAsMonochrome="False" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
 
                 <!-- Extras -->
 

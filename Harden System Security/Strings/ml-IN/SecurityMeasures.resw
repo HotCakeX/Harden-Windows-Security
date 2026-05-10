@@ -985,4 +985,7 @@
 <data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
     <value>വെബ്ക്ലയന്റ് (WebClient) സേവനം പ്രവർത്തനരഹിതമാക്കുന്നത്, ക്ഷുദ്രകരമായ ലിങ്കുകൾ വഴി NTLM ക്രെഡൻഷ്യലുകളും മറ്റ് തന്ത്രപ്രധാനമായ ഡാറ്റയും തടസ്സപ്പെടുത്തുന്നതിനും മോഷ്ടിക്കുന്നതിനും വെബ്ഡാവ് (WebDAV) ദുരുപയോഗം ചെയ്യുന്നതിൽ നിന്ന് ആക്രമണകാരികളെ തടയുന്നു.</value>
 </data>
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>Windows PowerShell ന്റെ execution policy Restricted ആയി സജ്ജീകരിക്കുക; ഇതിലൂടെ individual commands അനുവദിക്കപ്പെടും, പക്ഷേ scripts പ്രവർത്തിപ്പിക്കുന്നത് അനുവദിക്കില്ല.</value>
+</data>
 </root>

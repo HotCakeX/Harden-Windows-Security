@@ -5972,4 +5972,223 @@
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>فتح أو إغلاق جزء الشريط الجانبي.</value>
   </data>
+  <data name="CouldNotDetermineWhichAppToRepair" xml:space="preserve">
+    <value>تعذر تحديد التطبيق المطلوب إصلاحه.</value>
+  </data>
+  <data name="StartingRepairOfApp" xml:space="preserve">
+    <value>جارٍ بدء إصلاح التطبيق: {0}...</value>
+  </data>
+  <data name="SuccessfullyRepairedApp" xml:space="preserve">
+    <value>تم إصلاح التطبيق بنجاح: {0}</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToReset" xml:space="preserve">
+    <value>تعذر تحديد التطبيق المطلوب إعادة تعيينه.</value>
+  </data>
+  <data name="StartingResetOfApp" xml:space="preserve">
+    <value>جارٍ بدء إعادة تعيين التطبيق: {0}...</value>
+  </data>
+  <data name="SuccessfullyResetApp" xml:space="preserve">
+    <value>تمت إعادة تعيين التطبيق بنجاح: {0}</value>
+  </data>
+  <data name="ResetAppConfirmationTitle" xml:space="preserve">
+    <value>إعادة تعيين التطبيق؟</value>
+  </data>
+  <data name="ResetAppConfirmationContent" xml:space="preserve">
+    <value>سيؤدي هذا إلى حذف بيانات التطبيق نهائيًا وإعادة {0} إلى حالته الأولية.</value>
+  </data>
+  <data name="PackageMaintenanceOperationFailed" xml:space="preserve">
+    <value>فشلت العملية {0} لـ '{1}'. رمز الخطأ: {2} - نص الخطأ: {3}</value>
+  </data>
+  <data name="RepairAppText.Text" xml:space="preserve">
+    <value>إصلاح</value>
+  </data>
+  <data name="ResetAppText.Text" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+  <data name="ExploitMitigationsVMPageTitle" xml:space="preserve">
+    <value>طبّق أو عدّل وسائل تخفيف الاستغلال لجميع العمليات، واعرض وسائل التخفيف الحالية للعمليات قيد التشغيل، ونفّذ النسخ الاحتياطي والاستعادة.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.Content" xml:space="preserve">
+    <value>وسائل تخفيف الاستغلال</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>طبّق أو عدّل وسائل تخفيف الاستغلال لجميع العمليات، واعرض وسائل التخفيف الحالية للعمليات قيد التشغيل، ونفّذ النسخ الاحتياطي والاستعادة.</value>
+  </data>
+  <data name="ExploitMitigationsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>طبّق أو عدّل وسائل تخفيف الاستغلال لجميع العمليات، واعرض وسائل التخفيف الحالية للعمليات قيد التشغيل، ونفّذ النسخ الاحتياطي والاستعادة.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>اختر عائلة خطوط للبيانات المعروضة في طرق عرض القائمة داخل التطبيق. بحسب الخط الذي تختاره وما إذا كانت البيانات محمّلة بالفعل في طرق عرض القائمة، فقد يلزم إعادة ضبط عرضها.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>عائلة خطوط طرق عرض القائمة</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر عائلة خطوط للبيانات المعروضة في طرق عرض القائمة داخل التطبيق. بحسب الخط الذي تختاره وما إذا كانت البيانات محمّلة بالفعل في طرق عرض القائمة، فقد يلزم إعادة ضبط عرضها.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر عائلة خطوط للبيانات المعروضة في طرق عرض القائمة داخل التطبيق. بحسب الخط الذي تختاره وما إذا كانت البيانات محمّلة بالفعل في طرق عرض القائمة، فقد يلزم إعادة ضبط عرضها.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.Content" xml:space="preserve">
+    <value>استرداد وسائل التخفيف</value>
+  </data>
+  <data name="RetrieveMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد بيانات وسائل تخفيف الاستغلال للعمليات الفردية.</value>
+  </data>
+  <data name="RetrieveMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد بيانات وسائل تخفيف الاستغلال للعمليات الفردية.</value>
+  </data>
+  <data name="AddProcessButton.Content" xml:space="preserve">
+    <value>إضافة عملية</value>
+  </data>
+  <data name="AddProcessButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة وسائل تخفيف لعملية أو ملف تنفيذي جديد.</value>
+  </data>
+  <data name="AddProcessButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة وسائل تخفيف لعملية أو ملف تنفيذي جديد.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.Content" xml:space="preserve">
+    <value>استيراد وتصدير</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استيراد أو تصدير بيانات وسائل تخفيف الاستغلال للعمليات عبر ملف XML.</value>
+  </data>
+  <data name="ImportAndExportMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استيراد أو تصدير بيانات وسائل تخفيف الاستغلال للعمليات عبر ملف XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>استيراد وسائل التخفيف</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استيراد بيانات وسائل تخفيف الاستغلال من ملف XML.</value>
+  </data>
+  <data name="ImportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استيراد بيانات وسائل تخفيف الاستغلال من ملف XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تصدير وسائل التخفيف</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تصدير بيانات وسائل تخفيف الاستغلال إلى ملف XML.</value>
+  </data>
+  <data name="ExportMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تصدير بيانات وسائل تخفيف الاستغلال إلى ملف XML.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.Content" xml:space="preserve">
+    <value>فتح موقع السجل</value>
+  </data>
+  <data name="OpenRegistryLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح محرر السجل في الموقع الذي تُحفظ فيه خيارات تنفيذ ملف الصورة.</value>
+  </data>
+  <data name="OpenRegistryLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح محرر السجل في الموقع الذي تُحفظ فيه خيارات تنفيذ ملف الصورة.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>عرض التفاصيل الكاملة</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض التفاصيل الكاملة لوسائل التخفيف المطبقة على العملية المحددة.</value>
+  </data>
+  <data name="ViewFullDetailsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض التفاصيل الكاملة لوسائل التخفيف المطبقة على العملية المحددة.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تعديل وسائل التخفيف</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تعديل وسائل تخفيف الاستغلال للعملية المحددة.</value>
+  </data>
+  <data name="ModifyMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تعديل وسائل تخفيف الاستغلال للعملية المحددة.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حذف من السجل</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف جميع وسائل التخفيف الخاصة بالعملية المحددة من السجل.</value>
+  </data>
+  <data name="DeleteFromRegistryMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حذف جميع وسائل التخفيف الخاصة بالعملية المحددة من السجل.</value>
+  </data>
+  <data name="AutoRefreshButton.Content" xml:space="preserve">
+    <value>تحديث تلقائي</value>
+  </data>
+  <data name="AutoRefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحديث معلومات العمليات قيد التشغيل تلقائيًا.</value>
+  </data>
+  <data name="AutoRefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحديث معلومات العمليات قيد التشغيل تلقائيًا.</value>
+  </data>
+  <data name="BulkActionsButton.Content" xml:space="preserve">
+    <value>إجراءات مجمّعة</value>
+  </data>
+  <data name="BulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إجراءات تؤثر في جميع البيانات.</value>
+  </data>
+  <data name="BulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إجراءات تؤثر في جميع البيانات.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تطبيق الكل</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تطبيق جميع وسائل تخفيف الاستغلال الموصى بها.</value>
+  </data>
+  <data name="ApplyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تطبيق جميع وسائل تخفيف الاستغلال الموصى بها.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>التحقق من الكل</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>التحقق من جميع وسائل تخفيف الاستغلال الموصى بها.</value>
+  </data>
+  <data name="VerifyAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>التحقق من جميع وسائل تخفيف الاستغلال الموصى بها.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>إزالة الكل</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة جميع وسائل تخفيف الاستغلال الموصى بها.</value>
+  </data>
+  <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إزالة جميع وسائل تخفيف الاستغلال الموصى بها.</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>استعراض المجلدات</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعراض مجلد واحد أو أكثر.</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعراض مجلد واحد أو أكثر.</value>
+  </data>
+  <data name="ScanSelectionsButton.Content" xml:space="preserve">
+    <value>فحص التحديدات</value>
+  </data>
+  <data name="ScanSelectionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فحص الملفات والمجلدات المحددة.</value>
+  </data>
+  <data name="ScanSelectionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فحص الملفات والمجلدات المحددة.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.Content" xml:space="preserve">
+    <value>إزالة الكل</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة جميع وسائل التخفيف.</value>
+  </data>
+  <data name="RemoveAllMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إزالة جميع وسائل التخفيف.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.Content" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تعديل وسائل التخفيف على مستوى النظام.</value>
+  </data>
+  <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تعديل وسائل التخفيف على مستوى النظام.</value>
+  </data>
 </root>

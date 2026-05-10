@@ -99,7 +99,9 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			FlowDirection = Enum.Parse<FlowDirection>(Atlas.Settings.ApplicationGlobalFlowDirection);
 
 			// https://github.com/microsoft/microsoft-ui-xaml/issues/424
-			Resources["ContentDialogMaxWidth"] = 2000;
+			// This is necessary so the content dialogs can expand vertically and horizontally as much as needed and as much as the screen size allows.
+			Resources["ContentDialogMaxWidth"] = 5000;
+			Resources["ContentDialogMaxHeight"] = 5000;
 
 			// Immediately disable the default ContentDialog shadow by setting the Translation property
 			Translation = ZeroVector;

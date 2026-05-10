@@ -23,6 +23,7 @@ using Microsoft.UI.Dispatching;
 using CommonCore.AppSettings;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using System.Linq;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.WindowComponents;
@@ -35,7 +36,6 @@ using CommonCore.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.WindowComponents;
 using System.Threading.Tasks;
-using System.Linq;
 using System.Runtime.InteropServices;
 using CommonCore.IncrementalCollection;
 namespace AppControlManager.ViewModels;
@@ -48,11 +48,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		// Populate the ComboBoxes' ItemsSource collections
 		LoadLanguages();
 
-#if APP_CONTROL_MANAGER
 		FontFamilies = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies().ToList();
 		FontFamilies.Sort(); // Sort alphabetically
-#endif
-
 	}
 
 	private void LoadLanguages()
@@ -425,13 +422,12 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	internal async void RemoveAllToastNotifications(object sender, RoutedEventArgs e) => await AppNotificationManager.Default.RemoveAllAsync();
 
-
-#if APP_CONTROL_MANAGER
-
 	/// <summary>
 	/// The list of all Font Families for the ComboBox ItemsSource.
 	/// </summary>
 	internal readonly List<string> FontFamilies = [];
+
+#if APP_CONTROL_MANAGER
 
 	/// <summary>
 	/// Opens a file picker for Code Integrity Schema path.

@@ -1089,6 +1089,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			AutomationProperties.SetHelpText(BootableDriveMakerNavigationViewItem, Atlas.GetStr("BootableDriveMakerNavigationViewItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(BootableDriveMakerNavigationViewItem, Atlas.GetStr("BootableDriveMakerNavigationViewItem/ToolTipService/ToolTip"));
 
+			ExploitMitigationsNavItem.Content = Atlas.GetStr("ExploitMitigationsNavItem/Content");
+			AutomationProperties.SetHelpText(ExploitMitigationsNavItem, Atlas.GetStr("ExploitMitigationsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ExploitMitigationsNavItem, Atlas.GetStr("ExploitMitigationsNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

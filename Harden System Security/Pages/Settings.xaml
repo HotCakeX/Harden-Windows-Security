@@ -399,6 +399,15 @@
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
+                        <!-- https://microsoft.github.io/Win2D/WinUI2/html/M_Microsoft_Graphics_Canvas_Text_CanvasTextFormat_GetSystemFontFamilies.htm -->
+                        <customUI:SettingsCardV2 x:Uid="ListViewFontFamilySettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE8D2;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
+                            <ComboBox ItemsSource="{x:Bind ViewModel.FontFamilies}"
+                                      SelectedItem="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=TwoWay}" />
+                        </customUI:SettingsCardV2>
+
                         <customUI:SettingsCardV2 x:Uid="AppCloseConfirmationSettingsCard">
                             <customUI:SettingsCardV2.HeaderIcon>
                                 <FontIcon Glyph="&#xE7E8;" />

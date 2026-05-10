@@ -68,6 +68,55 @@ internal sealed class BinarySecurityProfile(
 
 internal static class BinarySecurityAnalyzer
 {
+	internal static List<BinarySecurityProfile> ScanSelectedTargets(IReadOnlyCollection<string> filePaths, IReadOnlyCollection<string> directoryPaths)
+	{
+		(IEnumerable<string> detectedFiles, int count) = FileUtility.GetFilesFast(directoryPaths, filePaths, [".exe"]);
+
+		List<BinarySecurityProfile> results = new(count);
+
+		foreach (string filePath in detectedFiles)
+		{
+			results.Add(ScanFile(filePath));
+		}
+
+		return results;
+	}
+
+	private unsafe static BinarySecurityProfile ScanFile(string filePath)
+	{
+		IntPtr resultsPtr = NativeMethods.scan_file_via_interop(filePath);
+
+		if (resultsPtr == IntPtr.Zero)
+		{
+			return CreateErrorProfile(filePath, "The executable could not be analyzed by the Rust interop scan.", 4004);
+		}
+
+		try
+		{
+			SecurityAnalysisCollection results = *(SecurityAnalysisCollection*)resultsPtr;
+
+			if (results.TotalCount <= 0)
+			{
+				return CreateErrorProfile(filePath, "The executable could not be analyzed by the Rust interop scan.", 4004);
+			}
+
+			SecurityAnalysisResult result = *(SecurityAnalysisResult*)results.AnalysisResults;
+
+			return new BinarySecurityProfile
+			(
+				binaryPath: Marshal.PtrToStringAnsi(result.BinaryPath) ?? string.Empty,
+				addressRandomization: result.AddressRandomization,
+				entropyRandomization: result.EntropyRandomization,
+				flowProtection: result.FlowProtection,
+				errorCode: result.ErrorCode,
+				errorMessage: Marshal.PtrToStringAnsi(result.ErrorMessage) ?? string.Empty
+			);
+		}
+		finally
+		{
+			NativeMethods.release_analysis_results(resultsPtr);
+		}
+	}
 
 	private unsafe static BinarySecurityProfile[] ScanDirectory(string directoryPath)
 	{
@@ -106,6 +155,9 @@ internal static class BinarySecurityAnalyzer
 			NativeMethods.release_analysis_results(resultsPtr);
 		}
 	}
+
+	private static BinarySecurityProfile CreateErrorProfile(string binaryPath, string errorMessage, int errorCode) =>
+		new(binaryPath, SecurityFeatureStatus.Disabled, SecurityFeatureStatus.Unavailable, SecurityFeatureStatus.Unavailable, errorCode, errorMessage);
 
 	/// <summary>
 	/// Searches for executables in GitHub desktop and returns paths of files not compatible with the ASLR Exploit Protection.

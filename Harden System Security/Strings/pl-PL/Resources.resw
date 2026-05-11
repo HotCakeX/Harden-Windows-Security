@@ -6197,4 +6197,16 @@ Odcisk Palca: {3}</value>
   <data name="Continue" xml:space="preserve">
     <value>Kontynuuj</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>Uruchom ponownie do UEFI</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Na obsługiwanych systemach uruchamia urządzenie ponownie bezpośrednio do interfejsu oprogramowania układowego UEFI.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Na obsługiwanych systemach uruchamia urządzenie ponownie bezpośrednio do interfejsu oprogramowania układowego UEFI.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>System zostanie natychmiast uruchomiony ponownie. Przed kontynuowaniem zapisz swoją pracę w innych programach.</value>
+  </data>
 </root>

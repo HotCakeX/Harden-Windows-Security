@@ -2173,6 +2173,22 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint GetFirmwareEnvironmentVariableExW(string lpName, string lpGuid, IntPtr pBuffer, uint nSize, out uint pdwAttrib);
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-setfirmwareenvironmentvariableexw
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetFirmwareEnvironmentVariableExW(string lpName, string lpGuid, IntPtr pValue, uint nSize, uint dwAttributes);
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-exitwindowsex
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool ExitWindowsEx(uint uFlags, uint dwReason);
+
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-setcomputernameexw

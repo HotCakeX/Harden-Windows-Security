@@ -73,36 +73,215 @@ internal static partial class Firmware
 	private const int SE_PRIVILEGE_ENABLED = 0x0002;
 	private const int ERROR_INSUFFICIENT_BUFFER = 122;
 	private const int ERROR_ENVVAR_NOT_FOUND = 203;
+	private const int ERROR_INVALID_FUNCTION = 1;
 	private const uint TOKEN_ADJUST_PRIVILEGES = 0x00000020;
 	private const uint TOKEN_QUERY = 0x00000008;
+	private const string OsIndicationsVariableName = "OsIndications";
+	private const string OsIndicationsSupportedVariableName = "OsIndicationsSupported";
+	private const uint EfiVariableNonVolatile = 0x00000001;
+	private const uint EfiVariableBootServiceAccess = 0x00000002;
+	private const uint EfiVariableRuntimeAccess = 0x00000004;
+	private const ulong EfiOsIndicationsBootToFirmwareUi = 0x0000000000000001;
+	private const uint EwxReboot = 0x00000002;
+	private const uint EwxForceIfHung = 0x00000010;
+	private const uint ShtdnReasonMajorOperatingSystem = 0x00020000;
+	private const uint ShtdnReasonMinorReconfig = 0x00000004;
+	private const uint ShtdnReasonFlagPlanned = 0x80000000;
+	private static readonly string EfiGlobalVariableGuidString = $"{{{EfiGlobalVariableGuid:D}}}";
 
 	/// <summary>
 	/// Enables the SeSystemEnvironmentPrivilege required to read UEFI variables.
 	/// </summary>
 	private static bool EnableSystemEnvironmentPrivilege()
 	{
-		if (!NativeMethods.OpenProcessToken(NativeMethods.GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, out IntPtr token))
+		try
+		{
+			EnablePrivilege("SeSystemEnvironmentPrivilege");
+			return true;
+		}
+		catch
+		{
 			return false;
+		}
+	}
+
+	/// <summary>
+	/// Reboots the operating system directly into the firmware settings UI when the platform supports it.
+	/// </summary>
+	internal static void RebootToUefiFirmwareSettings()
+	{
+		EnablePrivilege("SeSystemEnvironmentPrivilege");
+
+		if (!TryReadUefiUInt64GlobalVariable(OsIndicationsSupportedVariableName, out ulong supportedOsIndications, out _))
+		{
+			throw new NotSupportedException("This system firmware does not expose OsIndicationsSupported.");
+		}
+
+		if ((supportedOsIndications & EfiOsIndicationsBootToFirmwareUi) == 0)
+		{
+			throw new NotSupportedException("This system firmware does not support rebooting directly into the UEFI settings UI.");
+		}
+
+		bool hadExistingOsIndications = TryReadUefiUInt64GlobalVariable(OsIndicationsVariableName, out ulong currentOsIndications, out uint osIndicationsAttributes);
+
+		uint attributesToUse = osIndicationsAttributes != 0
+			? osIndicationsAttributes
+			: EfiVariableNonVolatile | EfiVariableBootServiceAccess | EfiVariableRuntimeAccess;
+
+		WriteUefiUInt64GlobalVariable(OsIndicationsVariableName, currentOsIndications | EfiOsIndicationsBootToFirmwareUi, attributesToUse);
+
+		EnablePrivilege("SeShutdownPrivilege");
+
+		if (!NativeMethods.ExitWindowsEx(EwxReboot | EwxForceIfHung, ShtdnReasonMajorOperatingSystem | ShtdnReasonMinorReconfig | ShtdnReasonFlagPlanned))
+		{
+			int rebootError = Marshal.GetLastPInvokeError();
+
+			try
+			{
+				if (hadExistingOsIndications)
+				{
+					WriteUefiUInt64GlobalVariable(OsIndicationsVariableName, currentOsIndications, attributesToUse);
+				}
+				else
+				{
+					DeleteUefiGlobalVariable(OsIndicationsVariableName, attributesToUse);
+				}
+			}
+			catch
+			{
+				// Preserve the reboot failure as the primary error if the rollback also fails.
+			}
+
+			throw new Win32Exception(rebootError, "Failed to reboot after requesting the UEFI firmware settings UI.");
+		}
+	}
+
+	/// <summary>
+	/// Enables a privilege required for firmware or reboot operations.
+	/// </summary>
+	private static void EnablePrivilege(string privilegeName)
+	{
+		if (!NativeMethods.OpenProcessToken(NativeMethods.GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, out IntPtr tokenHandle))
+		{
+			throw new Win32Exception(Marshal.GetLastPInvokeError(), $"Failed to open the current process token for privilege '{privilegeName}'.");
+		}
 
 		try
 		{
-			if (!NativeMethods.LookupPrivilegeValueW(null, "SeSystemEnvironmentPrivilege", out LUID luid))
-				return false;
+			if (!NativeMethods.LookupPrivilegeValueW(null, privilegeName, out LUID luid))
+			{
+				throw new Win32Exception(Marshal.GetLastPInvokeError(), $"Failed to look up privilege '{privilegeName}'.");
+			}
 
-			TOKEN_PRIVILEGES tp = new()
+			TOKEN_PRIVILEGES tokenPrivileges = new()
 			{
 				PrivilegeCount = 1,
-				Privileges = new LUID_AND_ATTRIBUTES { Luid = luid, Attributes = SE_PRIVILEGE_ENABLED }
+				Privileges = new LUID_AND_ATTRIBUTES
+				{
+					Luid = luid,
+					Attributes = SE_PRIVILEGE_ENABLED
+				}
 			};
 
-			if (!NativeMethods.AdjustTokenPrivileges(token, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero))
-				return false;
+			if (!NativeMethods.AdjustTokenPrivileges(tokenHandle, false, ref tokenPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
+			{
+				throw new Win32Exception(Marshal.GetLastPInvokeError(), $"Failed to enable privilege '{privilegeName}'.");
+			}
 
-			return Marshal.GetLastPInvokeError() == 0;
+			int adjustError = Marshal.GetLastPInvokeError();
+
+			if (adjustError != 0)
+			{
+				throw new Win32Exception(adjustError, $"The process token does not allow enabling privilege '{privilegeName}'.");
+			}
 		}
 		finally
 		{
-			_ = NativeMethods.CloseHandle(token);
+			_ = NativeMethods.CloseHandle(tokenHandle);
+		}
+	}
+
+	/// <summary>
+	/// Reads a UInt64 global UEFI variable value when present.
+	/// </summary>
+	private static bool TryReadUefiUInt64GlobalVariable(string variableName, out ulong value, out uint attributes)
+	{
+		IntPtr buffer = Marshal.AllocHGlobal(sizeof(ulong));
+
+		try
+		{
+			uint read = NativeMethods.GetFirmwareEnvironmentVariableExW(variableName, EfiGlobalVariableGuidString, buffer, sizeof(ulong), out attributes);
+
+			if (read == sizeof(ulong))
+			{
+				value = unchecked((ulong)Marshal.ReadInt64(buffer));
+				return true;
+			}
+
+			if (read == 0)
+			{
+				int error = Marshal.GetLastPInvokeError();
+
+				if (error == ERROR_ENVVAR_NOT_FOUND)
+				{
+					value = 0;
+					attributes = 0;
+					return false;
+				}
+
+				if (error == ERROR_INVALID_FUNCTION)
+				{
+					throw new NotSupportedException("UEFI firmware variables are not available on this Windows installation.");
+				}
+
+				throw new Win32Exception(error, $"Failed to read UEFI variable '{variableName}'.");
+			}
+
+			throw new InvalidOperationException($"UEFI variable '{variableName}' returned {read} bytes instead of the expected {sizeof(ulong)} bytes.");
+		}
+		finally
+		{
+			Marshal.FreeHGlobal(buffer);
+		}
+	}
+
+	/// <summary>
+	/// Writes a UInt64 value to a global UEFI variable.
+	/// </summary>
+	private static void WriteUefiUInt64GlobalVariable(string variableName, ulong value, uint attributes)
+	{
+		IntPtr buffer = Marshal.AllocHGlobal(sizeof(ulong));
+
+		try
+		{
+			Marshal.WriteInt64(buffer, unchecked((long)value));
+
+			if (!NativeMethods.SetFirmwareEnvironmentVariableExW(variableName, EfiGlobalVariableGuidString, buffer, sizeof(ulong), attributes))
+			{
+				int error = Marshal.GetLastPInvokeError();
+
+				if (error == ERROR_INVALID_FUNCTION)
+				{
+					throw new NotSupportedException("UEFI firmware variables are not available on this Windows installation.");
+				}
+
+				throw new Win32Exception(error, $"Failed to write UEFI variable '{variableName}'.");
+			}
+		}
+		finally
+		{
+			Marshal.FreeHGlobal(buffer);
+		}
+	}
+
+	/// <summary>
+	/// Deletes a global UEFI variable when rollback is required.
+	/// </summary>
+	private static void DeleteUefiGlobalVariable(string variableName, uint attributes)
+	{
+		if (!NativeMethods.SetFirmwareEnvironmentVariableExW(variableName, EfiGlobalVariableGuidString, IntPtr.Zero, 0, attributes))
+		{
+			throw new Win32Exception(Marshal.GetLastPInvokeError(), $"Failed to delete UEFI variable '{variableName}' during rollback.");
 		}
 	}
 

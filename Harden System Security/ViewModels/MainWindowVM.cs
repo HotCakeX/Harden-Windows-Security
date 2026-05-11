@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AnimatedVisuals;
+using AppControlManager.CustomUIElements;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -851,6 +852,52 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		finally
 		{
 			IsCheckForAllAppUpdatesButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Whether the button for rebooting the system into UEFI is enabled.
+	/// </summary>
+	internal bool IsRebootToUEFIButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
+
+	/// <summary>
+	/// Reboots the system directly into the firmware settings UI on supported devices.
+	/// </summary>
+	internal async void RebootToUEFI()
+	{
+		try
+		{
+			IsRebootToUEFIButtonEnabled = false;
+
+			using ContentDialogV2 confirmationDialog = new()
+			{
+				Title = Atlas.GetStr("WarningTitle"),
+				Content = new TextBlock
+				{
+					Text = Atlas.GetStr("RebootToUEFIConfirmationDialogContent"),
+					TextWrapping = TextWrapping.Wrap
+				},
+				PrimaryButtonText = Atlas.GetStr("Cancel"),
+				SecondaryButtonText = Atlas.GetStr("OK"),
+				DefaultButton = ContentDialogButton.Primary
+			};
+
+			ContentDialogResult dialogResult = await confirmationDialog.ShowAsync();
+			if (dialogResult is not ContentDialogResult.Secondary)
+			{
+				return;
+			}
+
+			Firmware.RebootToUefiFirmwareSettings();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsRebootToUEFIButtonEnabled = true;
 		}
 	}
 

@@ -6197,4 +6197,16 @@ Empreinte : {3}</value>
   <data name="Continue" xml:space="preserve">
     <value>Continuer</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>Redémarrer vers l’UEFI</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Redémarre l’appareil directement dans l’interface du microprogramme UEFI sur les systèmes pris en charge.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Redémarre l’appareil directement dans l’interface du microprogramme UEFI sur les systèmes pris en charge.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>Votre système va redémarrer immédiatement. Veuillez enregistrer votre travail dans les autres programmes avant de continuer.</value>
+  </data>
 </root>

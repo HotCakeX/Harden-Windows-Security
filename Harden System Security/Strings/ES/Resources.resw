@@ -6197,4 +6197,16 @@ Huella Digital: {3}</value>
   <data name="Continue" xml:space="preserve">
     <value>Continuar</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>Reiniciar en UEFI</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reinicia el dispositivo directamente en la interfaz de firmware UEFI en sistemas compatibles.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reinicia el dispositivo directamente en la interfaz de firmware UEFI en sistemas compatibles.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>El sistema se reiniciará de inmediato. Guarda tu trabajo en otros programas antes de continuar.</value>
+  </data>
 </root>

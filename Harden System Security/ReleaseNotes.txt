@@ -1,23 +1,3 @@
-# Introducing Exploit Mitigations
+* You can now view the firmware-embedded product key (if available) in the home page's activation details section.
 
-The Exploit Mitigations page in the Harden System Security app is a focused operational workspace for Windows process mitigation policy. It brings registry-backed rules (IFEO / Image File Execution Options), live process state, system defaults, recommendations, and binary inspection into a single coherent dashboard so you can make changes with confidence and then immediately verify outcomes.
-
-The Exploit Mitigations page is split into 5 functional views:
-
-1. Registry - per-process mitigation policies stored in the registry.
-2. Running Processes - live mitigation state of currently running processes.
-3. Recommended - curated recommended mitigation sets for specific programs. They align with the app's broader hardening guidance in the Microsoft Defender category.
-4. Binary Scan - binary hardening inspection for selected executable files and folders.
-5. System - system-wide exploit mitigation settings.
-
-Please refer to the GitHub Wiki document for full information: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Exploit-Mitigations 
-
-## Other Changes
-
-* You can now choose the font family of the texts displayed in the list views in the app settings.
-
-* Updated dependencies to the latest versions.
-
-* The links in the Microsoft Edge category now point to the precise location in the policies page: https://github.com/HotCakeX/Harden-Windows-Security/pull/1150
-
-* Added live interactive charts to the Home page.
+* Added a new button to the sidebar that you can use to reboot your system directly to the UEFI/BIOS settings.

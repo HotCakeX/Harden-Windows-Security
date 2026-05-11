@@ -6197,4 +6197,16 @@ Fingerabdruck: {3}</value>
   <data name="Continue" xml:space="preserve">
     <value>Fortfahren</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>In UEFI neu starten</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Starten Sie das Gerät auf unterstützten Systemen direkt in die UEFI-Firmwareoberfläche neu.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Starten Sie das Gerät auf unterstützten Systemen direkt in die UEFI-Firmwareoberfläche neu.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>Ihr System wird sofort neu gestartet. Bitte speichern Sie Ihre Arbeit in anderen Programmen, bevor Sie fortfahren.</value>
+  </data>
 </root>

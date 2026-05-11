@@ -6197,4 +6197,16 @@ Thumbprint: {3}</value>
   <data name="Continue" xml:space="preserve">
     <value>Continue</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>Reboot to UEFI</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restart the device directly into the UEFI firmware interface on supported systems.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restart the device directly into the UEFI firmware interface on supported systems.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>Your system will be immediately restarted. Please save your works in other programs before proceeding.</value>
+  </data>
 </root>

@@ -6197,4 +6197,16 @@
   <data name="Continue" xml:space="preserve">
     <value>متابعة</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>إعادة التشغيل إلى UEFI</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يعيد تشغيل الجهاز مباشرة إلى واجهة البرنامج الثابت UEFI على الأنظمة المدعومة.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يعيد تشغيل الجهاز مباشرة إلى واجهة البرنامج الثابت UEFI على الأنظمة المدعومة.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>سيتم إعادة تشغيل نظامك فورًا. يُرجى حفظ عملك في البرامج الأخرى قبل المتابعة.</value>
+  </data>
 </root>

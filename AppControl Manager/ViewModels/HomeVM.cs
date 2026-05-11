@@ -1747,12 +1747,18 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		try
 		{
 			List<WindowsActivationStatus> statuses = GetOSActivationStates.Get();
+			string? firmwareEmbeddedProductKey = TryGetFirmwareEmbeddedProductKey();
 
 			StackPanel contentPanel = new()
 			{
 				Spacing = 16,
 				Padding = new Thickness(10, 0, 16, 0)
 			};
+
+			if (statuses.Count > 0)
+			{
+				contentPanel.Children.Add(new MenuFlyoutSeparator());
+			}
 
 			if (statuses.Count == 0)
 			{
@@ -1820,6 +1826,10 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 						contentPanel.Children.Add(new MenuFlyoutSeparator());
 					}
 				}
+
+				contentPanel.Children.Add(new MenuFlyoutSeparator());
+
+				contentPanel.Children.Add(CreateActivationDetailRow("Firmware Embedded Product Key", firmwareEmbeddedProductKey));
 			}
 
 			// ScrollViewer for the content
@@ -1859,6 +1869,36 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = label + ": ", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
 		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = string.IsNullOrEmpty(value) ? "N/A" : value });
 		return tb;
+	}
+
+	/// <summary>
+	/// Retrieves the embedded Windows product key from the MSDM ACPI firmware table when present.
+	/// </summary>
+	private static unsafe string? TryGetFirmwareEmbeddedProductKey()
+	{
+		const uint ProviderAcpi = 0x41435049; // ACPI
+		const uint TableMsdm = 0x4D44534D; // MSDM
+		const int ProductKeyLength = 0x1D;
+
+		uint tableSize = NativeMethods.GetSystemFirmwareTable(ProviderAcpi, TableMsdm, IntPtr.Zero, 0);
+		if (tableSize < ProductKeyLength || tableSize > 4096U)
+		{
+			return null;
+		}
+
+		Span<byte> FWBuff = stackalloc byte[(int)tableSize];
+		fixed (byte* bufferPointer = FWBuff)
+		{
+			uint read = NativeMethods.GetSystemFirmwareTable(ProviderAcpi, TableMsdm, (IntPtr)bufferPointer, tableSize);
+			if (read != tableSize)
+			{
+				return null;
+			}
+
+			ReadOnlySpan<byte> productKeyBytes = FWBuff.Slice((int)tableSize - ProductKeyLength, ProductKeyLength);
+			string pKey = Encoding.UTF8.GetString(productKeyBytes).TrimEnd('\0');
+			return string.IsNullOrWhiteSpace(pKey) ? null : pKey;
+		}
 	}
 
 	#region USB History

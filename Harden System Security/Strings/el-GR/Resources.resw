@@ -6197,4 +6197,16 @@
   <data name="Continue" xml:space="preserve">
     <value>Συνέχεια</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>Επανεκκίνηση σε UEFI</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επανεκκινεί τη συσκευή απευθείας στο περιβάλλον υλικολογισμικού UEFI σε υποστηριζόμενα συστήματα.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επανεκκινεί τη συσκευή απευθείας στο περιβάλλον υλικολογισμικού UEFI σε υποστηριζόμενα συστήματα.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>Το σύστημά σας θα επανεκκινηθεί αμέσως. Αποθηκεύστε την εργασία σας σε άλλα προγράμματα πριν συνεχίσετε.</value>
+  </data>
 </root>

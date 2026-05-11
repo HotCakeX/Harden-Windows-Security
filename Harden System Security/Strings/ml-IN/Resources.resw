@@ -6197,4 +6197,16 @@
   <data name="Continue" xml:space="preserve">
     <value>തുടരുക</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>UEFI ലേക്ക് പുനരാരംഭിക്കുക</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിന്തുണയുള്ള സിസ്റ്റങ്ങളിൽ ഉപകരണത്തെ നേരിട്ട് UEFI ഫേംവെയർ ഇന്റർഫേസിലേക്ക് പുനരാരംഭിക്കുന്നു.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പിന്തുണയുള്ള സിസ്റ്റങ്ങളിൽ ഉപകരണത്തെ നേരിട്ട് UEFI ഫേംവെയർ ഇന്റർഫേസിലേക്ക് പുനരാരംഭിക്കുന്നു.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>നിങ്ങളുടെ സിസ്റ്റം ഉടൻ പുനരാരംഭിക്കും. തുടരുന്നതിന് മുമ്പ് മറ്റ് പ്രോഗ്രാമുകളിലെ നിങ്ങളുടെ ജോലി ദയവായി സംരക്ഷിക്കുക.</value>
+  </data>
 </root>

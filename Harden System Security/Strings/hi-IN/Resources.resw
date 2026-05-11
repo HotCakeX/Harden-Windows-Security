@@ -6197,4 +6197,16 @@
   <data name="Continue" xml:space="preserve">
     <value>जारी रखें</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>UEFI में पुनः आरंभ करें</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>समर्थित सिस्टम पर डिवाइस को सीधे UEFI फर्मवेयर इंटरफ़ेस में पुनः आरंभ करता है।</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>समर्थित सिस्टम पर डिवाइस को सीधे UEFI फर्मवेयर इंटरफ़ेस में पुनः आरंभ करता है।</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>आपका सिस्टम तुरंत पुनः आरंभ होगा। आगे बढ़ने से पहले कृपया अन्य प्रोग्रामों में अपना काम सहेज लें।</value>
+  </data>
 </root>

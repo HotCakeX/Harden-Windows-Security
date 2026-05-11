@@ -6197,4 +6197,16 @@
   <data name="Continue" xml:space="preserve">
     <value>המשך</value>
   </data>
+  <data name="RebootToUEFIButton.Content" xml:space="preserve">
+    <value>הפעל מחדש ל-UEFI</value>
+  </data>
+  <data name="RebootToUEFIButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל מחדש את המכשיר ישירות לממשק הקושחה של UEFI במערכות נתמכות.</value>
+  </data>
+  <data name="RebootToUEFIButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל מחדש את המכשיר ישירות לממשק הקושחה של UEFI במערכות נתמכות.</value>
+  </data>
+  <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
+    <value>המערכת שלך תופעל מחדש באופן מיידי. נא לשמור את העבודה שלך בתוכניות אחרות לפני שתמשיך.</value>
+  </data>
 </root>

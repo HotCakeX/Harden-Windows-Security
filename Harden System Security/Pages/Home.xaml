@@ -358,45 +358,195 @@
                         </Border>
 
                         <!-- APP RAM USAGE -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}">
-                            <Grid Style="{StaticResource CardContentGridStyle}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
-                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
-                                              Glyph="&#xEAC2;"/>
-                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               x:Uid="AppRAMUsage"/>
-                                </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}"/>
+                        <Border Style="{StaticResource OverviewCardBorderStyle}"
+                                Padding="0"
+                                Background="Transparent">
+                            <Grid>
+                                <Border CornerRadius="8">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#C75F00" Opacity="0.12"/>
+                                    </Border.Background>
+                                </Border>
+
+                                <Grid Margin="0,34,0,0"
+                                      FlowDirection="LeftToRight"
+                                      IsHitTestVisible="False">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="232"/>
+                                        <ColumnDefinition Width="8"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="44"/>
+                                        <RowDefinition Height="18"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Margin="4,0,2,0"
+                                               VerticalAlignment="Top"
+                                               FontSize="9"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind ViewModel.AppRamChartMaxLabel, Mode=OneWay}"/>
+                                    <TextBlock Grid.Column="0"
+                                               Margin="4,0,2,0"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="9"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind ViewModel.AppRamChartMinLabel, Mode=OneWay}"/>
+
+                                    <Grid Grid.Column="1"
+                                          Width="232"
+                                          Height="44">
+                                        <Line X1="0" X2="232" Y1="0" Y2="0" Stroke="#C75F00" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="0" X2="232" Y1="14.67" Y2="14.67" Stroke="#C75F00" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="0" X2="232" Y1="29.33" Y2="29.33" Stroke="#C75F00" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="0" X2="232" Y1="44" Y2="44" Stroke="#C75F00" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="0" X2="0" Y1="0" Y2="44" Stroke="#C75F00" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="58" X2="58" Y1="0" Y2="44" Stroke="#C75F00" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="116" X2="116" Y1="0" Y2="44" Stroke="#C75F00" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="174" X2="174" Y1="0" Y2="44" Stroke="#C75F00" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="232" X2="232" Y1="0" Y2="44" Stroke="#C75F00" StrokeThickness="1" Opacity="0.22"/>
+                                        <Path Data="{x:Bind ViewModel.AppRamChartLinePathData, Mode=OneWay}"
+                                              Stroke="#E87500"
+                                              StrokeThickness="2"
+                                              StrokeLineJoin="Round"
+                                              StrokeStartLineCap="Round"
+                                              StrokeEndLineCap="Round"/>
+                                    </Grid>
+
+                                    <TextBlock Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                FontSize="8"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}"/>
+                                    <TextBlock Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Right"
+                                                FontSize="8"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="{x:Bind ViewModel.HomeChartEndSecondsLabel, Mode=OneWay}"/>
+                                </Grid>
+
+                                <Grid Margin="10,8,10,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                        <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                                  Glyph="&#xEAC2;"/>
+                                        <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                                   x:Uid="AppRAMUsage"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="1"
+                                               Margin="0,1,0,0"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                               Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}"/>
+                                </Grid>
                             </Grid>
                         </Border>
 
                         <!-- STORAGE SIZE And TEMP -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}">
-                            <Grid Style="{StaticResource CardContentGridStyle}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
-                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
-                                              Glyph="&#xEDA2;"/>
-                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               x:Uid="StorageSizeAndTemp"/>
-                                </StackPanel>
-                                <StackPanel Grid.Row="1"
-                                            VerticalAlignment="Center"
-                                            Spacing="2">
-                                    <TextBlock Style="{StaticResource CardBodyTextStyle}"
-                                               Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"/>
-                                    <TextBlock Style="{StaticResource CardBodyTextStyle}"
-                                               Text="{x:Bind ViewModel.DiskTemperatureText, Mode=OneWay}"/>
-                                </StackPanel>
+                        <Border Style="{StaticResource OverviewCardBorderStyle}"
+                                Padding="0"
+                                Background="Transparent">
+                            <Grid>
+                                <Border CornerRadius="8">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#10893E" Opacity="0.12"/>
+                                    </Border.Background>
+                                </Border>
+
+                                <Grid Margin="0,34,0,0"
+                                      FlowDirection="LeftToRight"
+                                      IsHitTestVisible="False">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="232"/>
+                                        <ColumnDefinition Width="8"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="44"/>
+                                        <RowDefinition Height="18"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Margin="4,0,2,0"
+                                               VerticalAlignment="Top"
+                                               FontSize="9"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind ViewModel.StorageTemperatureChartMaxLabel, Mode=OneWay}"/>
+                                    <TextBlock Grid.Column="0"
+                                               Margin="4,0,2,0"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="9"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind ViewModel.StorageTemperatureChartMinLabel, Mode=OneWay}"/>
+
+                                    <Grid Grid.Column="1"
+                                          Width="232"
+                                          Height="44">
+                                        <Line X1="0" X2="232" Y1="0" Y2="0" Stroke="#10893E" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="0" X2="232" Y1="14.67" Y2="14.67" Stroke="#10893E" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="0" X2="232" Y1="29.33" Y2="29.33" Stroke="#10893E" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="0" X2="232" Y1="44" Y2="44" Stroke="#10893E" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="0" X2="0" Y1="0" Y2="44" Stroke="#10893E" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="58" X2="58" Y1="0" Y2="44" Stroke="#10893E" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="116" X2="116" Y1="0" Y2="44" Stroke="#10893E" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="174" X2="174" Y1="0" Y2="44" Stroke="#10893E" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="232" X2="232" Y1="0" Y2="44" Stroke="#10893E" StrokeThickness="1" Opacity="0.22"/>
+                                        <Path Data="{x:Bind ViewModel.StorageTemperatureChartLinePathData, Mode=OneWay}"
+                                              Stroke="#13A10E"
+                                              StrokeThickness="2"
+                                              StrokeLineJoin="Round"
+                                              StrokeStartLineCap="Round"
+                                              StrokeEndLineCap="Round"/>
+                                    </Grid>
+
+                                    <TextBlock Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                FontSize="8"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}"/>
+                                    <TextBlock Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Right"
+                                                FontSize="8"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="{x:Bind ViewModel.HomeChartEndSecondsLabel, Mode=OneWay}"/>
+                                </Grid>
+
+                                <Grid Margin="10,8,10,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                        <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                                  Glyph="&#xEDA2;"/>
+                                        <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                                   x:Uid="StorageSizeAndTemp"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1"
+                                                Margin="0,1,0,0"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                Spacing="8">
+                                        <TextBlock Style="{StaticResource CardBodyTextStyle}"
+                                                   Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                                   Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"/>
+                                        <TextBlock Style="{StaticResource CardBodyTextStyle}"
+                                                   Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                                   Text="{x:Bind ViewModel.DiskTemperatureText, Mode=OneWay}"/>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </Border>
 
@@ -517,21 +667,95 @@
                         </Button>
 
                         <!-- CPU TEMPERATURE -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}">
-                            <Grid Style="{StaticResource CardContentGridStyle}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
-                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
-                                              Glyph="&#xE9CA;"/>
-                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               x:Uid="CPUTemperature"/>
-                                </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}"/>
+                        <Border Style="{StaticResource OverviewCardBorderStyle}"
+                                Padding="0"
+                                Background="Transparent">
+                            <Grid>
+                                <Border CornerRadius="8">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#0078D4" Opacity="0.12"/>
+                                    </Border.Background>
+                                </Border>
+
+                                <Grid Margin="0,34,0,0"
+                                      FlowDirection="LeftToRight"
+                                      IsHitTestVisible="False">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="232"/>
+                                        <ColumnDefinition Width="8"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="44"/>
+                                        <RowDefinition Height="18"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Margin="4,0,2,0"
+                                               VerticalAlignment="Top"
+                                               FontSize="9"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind ViewModel.CpuTemperatureChartMaxLabel, Mode=OneWay}"/>
+                                    <TextBlock Grid.Column="0"
+                                               Margin="4,0,2,0"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="9"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind ViewModel.CpuTemperatureChartMinLabel, Mode=OneWay}"/>
+
+                                    <Grid Grid.Column="1"
+                                          Width="232"
+                                          Height="44">
+                                        <Line X1="0" X2="232" Y1="0" Y2="0" Stroke="#0078D4" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="0" X2="232" Y1="14.67" Y2="14.67" Stroke="#0078D4" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="0" X2="232" Y1="29.33" Y2="29.33" Stroke="#0078D4" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="0" X2="232" Y1="44" Y2="44" Stroke="#0078D4" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="0" X2="0" Y1="0" Y2="44" Stroke="#0078D4" StrokeThickness="1" Opacity="0.22"/>
+                                        <Line X1="58" X2="58" Y1="0" Y2="44" Stroke="#0078D4" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="116" X2="116" Y1="0" Y2="44" Stroke="#0078D4" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="174" X2="174" Y1="0" Y2="44" Stroke="#0078D4" StrokeThickness="1" Opacity="0.16"/>
+                                        <Line X1="232" X2="232" Y1="0" Y2="44" Stroke="#0078D4" StrokeThickness="1" Opacity="0.22"/>
+                                        <Path Data="{x:Bind ViewModel.CpuTemperatureChartLinePathData, Mode=OneWay}"
+                                              Stroke="#40B6E6"
+                                              StrokeThickness="2"
+                                              StrokeLineJoin="Round"
+                                              StrokeStartLineCap="Round"
+                                              StrokeEndLineCap="Round"/>
+                                    </Grid>
+
+                                    <TextBlock Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                FontSize="8"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}"/>
+                                    <TextBlock Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,0"
+                                                HorizontalAlignment="Right"
+                                                FontSize="8"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="{x:Bind ViewModel.HomeChartEndSecondsLabel, Mode=OneWay}"/>
+                                </Grid>
+
+                                <Grid Margin="10,8,10,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                        <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                                  Glyph="&#xE9CA;"/>
+                                        <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                                   x:Uid="CPUTemperature"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="1"
+                                               Margin="0,1,0,0"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                               Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}"/>
+                                </Grid>
                             </Grid>
                         </Border>
 

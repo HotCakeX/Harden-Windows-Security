@@ -267,7 +267,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			_clockTimer = null;
 		}
 
-		// Clean up the app RAM usage timer
+		// Clean up the app RAM usage and chart sampler timer
 		if (_appRamTimer is not null)
 		{
 			_appRamTimer.Stop();
@@ -310,6 +310,19 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string? SystemInfoText { get; private set => SP(ref field, value); }
 	internal string? ActivationStatusSummaryText { get; private set => SP(ref field, value); } = "Checking...";
 
+	// Line chart paths and edge labels for the three live home tiles.
+	internal string AppRamChartLinePathData { get; private set => SP(ref field, value); } = DefaultHomeChartPathData;
+	internal string AppRamChartMinLabel { get; private set => SP(ref field, value); } = "0";
+	internal string AppRamChartMaxLabel { get; private set => SP(ref field, value); } = "0";
+	internal string CpuTemperatureChartLinePathData { get; private set => SP(ref field, value); } = DefaultHomeChartPathData;
+	internal string CpuTemperatureChartMinLabel { get; private set => SP(ref field, value); } = "0";
+	internal string CpuTemperatureChartMaxLabel { get; private set => SP(ref field, value); } = "0";
+	internal string StorageTemperatureChartLinePathData { get; private set => SP(ref field, value); } = DefaultHomeChartPathData;
+	internal string StorageTemperatureChartMinLabel { get; private set => SP(ref field, value); } = "0";
+	internal string StorageTemperatureChartMaxLabel { get; private set => SP(ref field, value); } = "0";
+	internal string HomeChartStartSecondsLabel { get; } = $"{HomeChartTimeWindowSeconds} Seconds";
+	internal string HomeChartEndSecondsLabel { get; } = "0 Seconds";
+
 	/// <summary>
 	/// Timer first used as one-shot to align to next minute, then switched to repeating every minute.
 	/// </summary>
@@ -329,6 +342,17 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// CPU temperature sampler instance
 	/// </summary>
 	private TemperatureSampler? _temperatureSampler;
+
+	private const int HomeChartTimeWindowSeconds = 60;
+	private const int HomeChartUpdateIntervalSeconds = 2;
+	private const int HomeChartMaxSamples = (HomeChartTimeWindowSeconds / HomeChartUpdateIntervalSeconds) + 1;
+	private const double HomeChartWidth = 232.0;
+	private const double HomeChartHeight = 44.0;
+	private const double HomeChartVerticalPadding = 2.0;
+	private const string DefaultHomeChartPathData = "M 0.00,22.00 L 232.00,22.00";
+	private readonly List<double> _appRamChartSamples = new(HomeChartMaxSamples);
+	private readonly List<double> _cpuTemperatureChartSamples = new(HomeChartMaxSamples);
+	private readonly List<double> _storageTemperatureChartSamples = new(HomeChartMaxSamples);
 
 	/// <summary>
 	/// Sets the current time immediately, then aligns the timer to the next minute boundary.
@@ -358,12 +382,12 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	private void InitializeAppRamUpdater()
 	{
 		// Always set the initial values immediately.
-		AppRamText = GetAppPrivateWorkingSetBytes_Native();
+		UpdateAppRamUsage();
 		UpdateStorageTemperature();
 
 		_appRamTimer = Atlas.AppDispatcher.CreateTimer();
 		_appRamTimer.IsRepeating = true; // repeating update
-		_appRamTimer.Interval = TimeSpan.FromSeconds(2);
+		_appRamTimer.Interval = TimeSpan.FromSeconds(HomeChartUpdateIntervalSeconds);
 		_appRamTimer.Tick += OnAppRamTick;
 		_appRamTimer.Start();
 	}
@@ -430,7 +454,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void OnAppRamTick(DispatcherQueueTimer sender, object args)
 	{
-		AppRamText = GetAppPrivateWorkingSetBytes_Native();
+		UpdateAppRamUsage();
 		UpdateInternetSpeed(first: false);
 		UpdateCpuTemperature();
 		UpdateStorageTemperature();
@@ -474,6 +498,13 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			return;
 
 		CpuTemperatureText = celsius.ToString("0.0", CultureInfo.InvariantCulture) + " °C";
+		AddChartSample(_cpuTemperatureChartSamples, celsius);
+		UpdateChartPathAndLabels(_cpuTemperatureChartSamples, value =>
+		{
+			CpuTemperatureChartLinePathData = value.PathData;
+			CpuTemperatureChartMinLabel = value.MinLabel;
+			CpuTemperatureChartMaxLabel = value.MaxLabel;
+		});
 	}
 
 	/// <summary>
@@ -487,8 +518,16 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			if (temps.Count > 0)
 			{
-				// Join disk temperatures
+				// Join disk temperatures and graph the hottest drive so brief storage spikes remain visible.
 				DiskTemperatureText = string.Join(" - ", temps.Select(t => t.ToString(CultureInfo.InvariantCulture) + " °C"));
+				int hottestTemperature = temps.Max();
+				AddChartSample(_storageTemperatureChartSamples, hottestTemperature);
+				UpdateChartPathAndLabels(_storageTemperatureChartSamples, value =>
+				{
+					StorageTemperatureChartLinePathData = value.PathData;
+					StorageTemperatureChartMinLabel = value.MinLabel;
+					StorageTemperatureChartMaxLabel = value.MaxLabel;
+				});
 			}
 			else
 			{
@@ -578,7 +617,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// Falls back to Working Set when PrivateWorkingSetSize is not available.
 	/// </summary>
 	/// <returns>bytes</returns>
-	private static string GetAppPrivateWorkingSetBytes_Native()
+	private static ulong GetAppPrivateWorkingSetBytesNativeValue()
 	{
 		PROCESS_MEMORY_COUNTERS_EX2 counters = default;
 		counters.cb = (uint)Unsafe.SizeOf<PROCESS_MEMORY_COUNTERS_EX2>();
@@ -587,17 +626,98 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		bool ok = NativeMethods.K32GetProcessMemoryInfo(hProcess, ref counters, counters.cb);
 		if (!ok)
 		{
-			return ByteToString(0UL);
+			return 0UL;
 		}
 
 		// Prefer Private Working Set to match Task Manager's reported value; if zero/unavailable, fall back to total Working Set.
 		ulong privateWs = counters.PrivateWorkingSetSize;
 		if (privateWs != 0UL)
 		{
-			return ByteToString(privateWs);
+			return privateWs;
 		}
 
-		return ByteToString(counters.WorkingSetSize);
+		return counters.WorkingSetSize;
+	}
+
+	private void UpdateAppRamUsage()
+	{
+		ulong appRamBytes = GetAppPrivateWorkingSetBytesNativeValue();
+		AppRamText = ByteToString(appRamBytes);
+
+		const double OneMB = 1024.0 * 1024.0;
+		double appRamMegabytes = appRamBytes / OneMB;
+		AddChartSample(_appRamChartSamples, appRamMegabytes);
+		UpdateChartPathAndLabels(_appRamChartSamples, value =>
+		{
+			AppRamChartLinePathData = value.PathData;
+			AppRamChartMinLabel = value.MinLabel;
+			AppRamChartMaxLabel = value.MaxLabel;
+		});
+	}
+
+	private static void AddChartSample(List<double> samples, double value)
+	{
+		if (samples.Count == HomeChartMaxSamples)
+		{
+			samples.RemoveAt(0);
+		}
+
+		samples.Add(value);
+	}
+
+	private static void UpdateChartPathAndLabels(List<double> samples, Action<(string PathData, string MinLabel, string MaxLabel)> apply)
+	{
+		if (samples.Count == 0)
+		{
+			return;
+		}
+
+		double minValue = samples.Min();
+		double maxValue = samples.Max();
+		double range = maxValue - minValue;
+		if (range < 1.0)
+		{
+			double center = (minValue + maxValue) / 2.0;
+			minValue = Math.Max(0.0, center - 0.5);
+			maxValue = center + 0.5;
+		}
+
+		string pathData = BuildChartPath(samples, minValue, maxValue);
+		apply((pathData, minValue.ToString("0.#", CultureInfo.InvariantCulture), maxValue.ToString("0.#", CultureInfo.InvariantCulture)));
+	}
+
+	private static string BuildChartPath(List<double> samples, double minValue, double maxValue)
+	{
+		int count = samples.Count;
+		if (count == 0)
+		{
+			return DefaultHomeChartPathData;
+		}
+
+		double range = maxValue - minValue;
+		double drawableHeight = HomeChartHeight - (HomeChartVerticalPadding * 2.0);
+
+		if (count == 1)
+		{
+			double normalized = range <= 0.0 ? 0.5 : (samples[0] - minValue) / range;
+			double y = HomeChartVerticalPadding + ((1.0 - normalized) * drawableHeight);
+			return FormattableString.Invariant($"M 0.00,{y:0.00} L {HomeChartWidth:0.00},{y:0.00}");
+		}
+
+		StringBuilder pathBuilder = new(count * 18);
+
+		for (int index = 0; index < count; index++)
+		{
+			double x = count == 1 ? HomeChartWidth : HomeChartWidth * index / (count - 1);
+			double normalized = range <= 0.0 ? 0.5 : (samples[index] - minValue) / range;
+			double y = HomeChartVerticalPadding + ((1.0 - normalized) * drawableHeight);
+
+			_ = index == 0
+				? pathBuilder.Append(CultureInfo.InvariantCulture, $"M {x:0.00},{y:0.00} ")
+				: pathBuilder.Append(CultureInfo.InvariantCulture, $"L {x:0.00},{y:0.00} ");
+		}
+
+		return pathBuilder.ToString();
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]

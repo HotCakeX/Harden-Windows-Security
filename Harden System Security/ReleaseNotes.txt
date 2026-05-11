@@ -19,3 +19,5 @@ Please refer to the GitHub Wiki document for full information: https://github.co
 * Updated dependencies to the latest versions.
 
 * The links in the Microsoft Edge category now point to the precise location in the policies page: https://github.com/HotCakeX/Harden-Windows-Security/pull/1150
+
+* Added live interactive charts to the Home page.

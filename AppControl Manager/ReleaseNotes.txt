@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* 3 of the tiles on the home page now include live view and interactive charts.

@@ -766,7 +766,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		// Create a copy of selected items to avoid collection modification during iteration
 		List<PackagedAppView> appsToUninstall = AppsListItemsSourceSelectedItems.ToList();
 
-		PackagedAppView? currentApplicationPackage = appsToUninstall.FirstOrDefault(x => (string.Equals(x.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase)));
+		PackagedAppView? currentApplicationPackage = appsToUninstall.FirstOrDefault(x => string.Equals(x.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase));
 		if (currentApplicationPackage is not null)
 		{
 			if (await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)

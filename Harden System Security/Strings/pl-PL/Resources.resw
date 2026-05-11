@@ -6191,4 +6191,10 @@ Odcisk Palca: {3}</value>
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Modyfikuje mitygacje dla całego systemu.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>Wybrano Harden System Security, czyli tę samą aplikację. Czy na pewno chcesz kontynuować jej odinstalowywanie?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Kontynuuj</value>
+  </data>
 </root>

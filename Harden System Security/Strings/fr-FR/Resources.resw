@@ -6191,4 +6191,10 @@ Empreinte : {3}</value>
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Modifie les mesures d’atténuation à l’échelle du système.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>Vous avez sélectionné Harden System Security, c’est cette application elle-même. Voulez-vous vraiment poursuivre sa désinstallation ?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continuer</value>
+  </data>
 </root>

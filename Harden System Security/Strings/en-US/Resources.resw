@@ -6191,4 +6191,10 @@ Thumbprint: {3}</value>
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Modify the system-wide mitigations.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>You selected Harden System Security, which is this app. Are you sure you want to continue uninstalling it?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
 </root>

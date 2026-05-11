@@ -6191,4 +6191,10 @@
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>تعديل وسائل التخفيف على مستوى النظام.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>لقد حددت Harden System Security، وهو هذا التطبيق نفسه. هل أنت متأكد من أنك تريد متابعة إلغاء تثبيته؟</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>متابعة</value>
+  </data>
 </root>

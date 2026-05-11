@@ -505,9 +505,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		try
 		{
-			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
-
 			if (sender is not MenuFlyoutItem menuItem)
 			{
 				return;
@@ -532,6 +529,17 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppToUninstall"));
 				return;
 			}
+
+			if (string.Equals(targetApp.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase))
+			{
+				if (await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)
+				{
+					return;
+				}
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingUninstallationOfApp"), targetApp.DisplayName));
 
@@ -758,6 +766,15 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		// Create a copy of selected items to avoid collection modification during iteration
 		List<PackagedAppView> appsToUninstall = AppsListItemsSourceSelectedItems.ToList();
 
+		PackagedAppView? currentApplicationPackage = appsToUninstall.FirstOrDefault(x => (string.Equals(x.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase)));
+		if (currentApplicationPackage is not null)
+		{
+			if (await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)
+			{
+				return;
+			}
+		}
+
 		try
 		{
 			ElementsAreEnabled = false;
@@ -822,6 +839,23 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			ElementsAreEnabled = true;
 			MainInfoBar.IsClosable = true;
 		}
+	}
+
+	/// <summary>
+	/// Shows a warning dialog when the user tries to uninstall the running app.
+	/// </summary>
+	private static async Task<ContentDialogResult> ShowCurrentApplicationUninstallWarningAsync()
+	{
+		using AppControlManager.CustomUIElements.ContentDialogV2 warningDialog = new()
+		{
+			Title = Atlas.GetStr("WarningTitle"),
+			Content = Atlas.GetStr("InstalledAppsManagementCurrentAppUninstallWarning"),
+			CloseButtonText = Atlas.GetStr("Cancel"),
+			PrimaryButtonText = Atlas.GetStr("Continue"),
+			DefaultButton = ContentDialogButton.Close
+		};
+
+		return await warningDialog.ShowAsync();
 	}
 
 	/// <summary>

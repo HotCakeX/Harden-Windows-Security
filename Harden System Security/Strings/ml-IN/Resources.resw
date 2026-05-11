@@ -6191,4 +6191,10 @@
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>സിസ്റ്റം-വ്യാപകമായ ശമനങ്ങൾ തിരുത്തുക.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്തത് Harden System Security ആണ്, അതായത് ഇതേ ആപ്പാണ്. ഇതിന്റെ അൺഇൻസ്റ്റാൾ തുടരണമെന്ന് നിങ്ങൾക്ക് ഉറപ്പാണോ?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>തുടരുക</value>
+  </data>
 </root>

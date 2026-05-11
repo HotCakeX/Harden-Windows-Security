@@ -6191,4 +6191,10 @@
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>שנה את ההגנות המערכתיות.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>בחרת את Harden System Security, וזו האפליקציה עצמה. האם אתה בטוח שברצונך להמשיך להסיר אותה?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>המשך</value>
+  </data>
 </root>

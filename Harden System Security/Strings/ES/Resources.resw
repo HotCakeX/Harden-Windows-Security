@@ -6191,4 +6191,10 @@ Huella Digital: {3}</value>
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Modifica las mitigaciones de todo el sistema.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>Seleccionaste Harden System Security, que es esta misma aplicación. ¿Seguro que deseas continuar con su desinstalación?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continuar</value>
+  </data>
 </root>

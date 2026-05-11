@@ -6191,4 +6191,10 @@
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>सिस्टम-व्यापी शमन संशोधित करें।</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>आपने Harden System Security चुना है, और यही यह ऐप है। क्या आप वाकई इसका अनइंस्टॉल जारी रखना चाहते हैं?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>जारी रखें</value>
+  </data>
 </root>

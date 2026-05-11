@@ -6191,4 +6191,10 @@ Fingerabdruck: {3}</value>
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ändert die systemweiten Schutzmaßnahmen.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>Sie haben Harden System Security ausgewählt, also genau diese App. Möchten Sie die Deinstallation wirklich fortsetzen?</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Fortfahren</value>
+  </data>
 </root>

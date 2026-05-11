@@ -6191,4 +6191,10 @@
   <data name="ModifySystemMitigationsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Τροποποιεί τα μέτρα σε επίπεδο συστήματος.</value>
   </data>
+  <data name="InstalledAppsManagementCurrentAppUninstallWarning" xml:space="preserve">
+    <value>Επιλέξατε το Harden System Security, δηλαδή αυτήν την ίδια την εφαρμογή. Είστε βέβαιοι ότι θέλετε να συνεχίσετε με την απεγκατάστασή της;</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Συνέχεια</value>
+  </data>
 </root>

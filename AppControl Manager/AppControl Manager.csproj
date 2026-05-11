@@ -64,6 +64,11 @@
 		<FileVersion>2.0.710.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
+        <AssemblyProduct>AppControlManager</AssemblyProduct>
+        <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
+        <AssemblyTitle>AppControlManager</AssemblyTitle>
+        <AssemblyDescription>Application Control for Business Management</AssemblyDescription>
+
 		<StartupObject>AppControlManager.Program</StartupObject>
 
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>

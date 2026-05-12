@@ -129,7 +129,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		get; set
 		{
 			double validatedValue = ValidateRAM(value);
-			SP(ref field, validatedValue);
+			_ = SP(ref field, validatedValue);
 		}
 	} = 4000D;
 	internal bool DisableNetworking { get; set => SP(ref field, value); }

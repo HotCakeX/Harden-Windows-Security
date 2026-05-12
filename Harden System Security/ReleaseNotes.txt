@@ -11,3 +11,5 @@ The **Sandbox Maker** page in the [Harden System Security app](https://github.co
 * Temporarily removed the night light slider from the sidebar.
 
 * Updated dependencies to the latest versions.
+
+* Fixed an issue where the device usage intent workflow wouldn't apply the optional overrides (of Microsoft Security Baseline) based on the selected intent: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1154

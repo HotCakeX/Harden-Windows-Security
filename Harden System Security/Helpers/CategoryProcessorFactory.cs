@@ -236,7 +236,7 @@ internal static class CategoryProcessorFactory
 
 		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
-			await ViewModelProvider.MicrosoftSecurityBaselineVM.ApplyInternal();
+			await ViewModelProvider.MicrosoftSecurityBaselineVM.ApplyInternal(selectedIntent);
 		}
 
 		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)

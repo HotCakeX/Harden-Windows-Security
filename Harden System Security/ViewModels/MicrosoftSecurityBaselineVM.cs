@@ -313,7 +313,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		await ApplyInternal();
 	}
 
-	internal async Task ApplyInternal()
+	internal async Task ApplyInternal(Intent? selectedIntent = null)
 	{
 		bool errorsOccurred = false;
 		// Mark "Apply" as the only enabled cancellable button
@@ -336,8 +336,12 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 				MSBaseline.Action.Apply,
 				cancellationToken: ApplyAllCancellableButton.Cts?.Token);
 
-			// Check if the Optional Overrides toggle is enabled
-			if (ApplyBaselineOverridesToggle)
+			// The standalone Microsoft Security Baseline page uses this toggle to apply every optional override.
+			// The Protect page's device-intent workflow passes selectedIntent and applies optional overrides
+			// through their own MUnit category, where each JSON DeviceIntents list is filtered before apply.
+			// Keeping this branch baseline-page-only prevents unrelated overrides, such as "Internet Connection Sharing enablement"
+			// Which is only for Development/Gaming/School device usage intents, from being applied when "Specialized Access Workstation" device usage intent is selected.
+			if (ApplyBaselineOverridesToggle && selectedIntent is null)
 			{
 				ICategoryProcessor overridesProcessor = CategoryProcessorFactory.GetProcessor(Categories.MSFTSecBaselines_OptionalOverrides);
 

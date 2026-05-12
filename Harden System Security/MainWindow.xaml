@@ -883,31 +883,6 @@
                                         </Button.ContentTemplate>
                                     </Button>
 
-                                    <!-- Night Light Controls -->
-                                    <StackPanel Orientation="Vertical" Spacing="8" HorizontalAlignment="Center">
-                                        <ToggleButton x:Name="NightLightToggleButton"
-                                                      Content="Toggle Night Light"
-                                                      HorizontalAlignment="Center"
-                                                      Click="{x:Bind NightLightToggleButton_Click}">
-                                            <ToggleButton.ContentTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <FontIcon Glyph="&#xE706;" FontSize="16"/>
-                                                        <TextBlock Text="{x:Bind}"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ToggleButton.ContentTemplate>
-                                        </ToggleButton>
-
-                                        <Slider x:Name="NightLightSlider"
-                                                Width="150"
-                                                Minimum="0"
-                                                Maximum="100"
-                                                ValueChanged="{x:Bind NightLightSlider_ValueChanged}"
-                                                Header="Intensity"
-                                                HorizontalAlignment="Center"/>
-                                    </StackPanel>
-
                                 </CCToolKit:WrapPanel>
 
                             </ScrollViewer>

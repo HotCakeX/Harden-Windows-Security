@@ -6209,4 +6209,100 @@
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>നിങ്ങളുടെ സിസ്റ്റം ഉടൻ പുനരാരംഭിക്കും. തുടരുന്നതിന് മുമ്പ് മറ്റ് പ്രോഗ്രാമുകളിലെ നിങ്ങളുടെ ജോലി ദയവായി സംരക്ഷിക്കുക.</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>സാൻഡ്ബോക്സ് നിർമ്മാതാവ്</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഉപയോഗിക്കാൻ എളുപ്പമുള്ള ഗ്രാഫിക്കൽ ഉപയോക്തൃ ഇന്റർഫേസ് ഉപയോഗിച്ച് വിവിധ സാഹചര്യങ്ങൾക്കായി Windows Sandbox പ്രൊഫൈലുകൾ സൃഷ്ടിക്കാനും സംരക്ഷിക്കാനും പ്രവർത്തിപ്പിക്കാനും നിയന്ത്രിക്കാനും ഇല്ലാതാക്കാനും കഴിയും.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഉപയോഗിക്കാൻ എളുപ്പമുള്ള ഗ്രാഫിക്കൽ ഉപയോക്തൃ ഇന്റർഫേസ് ഉപയോഗിച്ച് വിവിധ സാഹചര്യങ്ങൾക്കായി Windows Sandbox പ്രൊഫൈലുകൾ സൃഷ്ടിക്കാനും സംരക്ഷിക്കാനും പ്രവർത്തിപ്പിക്കാനും നിയന്ത്രിക്കാനും ഇല്ലാതാക്കാനും കഴിയും.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>സാൻഡ്ബോക്സ് തിരിച്ചറിയൽ</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>സാൻഡ്ബോക്സ് പേര്</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>ഈ സാൻഡ്ബോക്സിനായി ഒരു പേര് നൽകുക.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>സാൻഡ്ബോക്സ് ഫയൽ പാത</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>.wsb പാതയുടെ പ്രിവ്യൂ കാണാൻ ഒരു സാൻഡ്ബോക്സ് പേര് നൽകുക.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>സമയ മേഖല</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>സാൻഡ്ബോക്സ് പ്രൊഫൈൽ</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>സംരക്ഷിച്ച സാൻഡ്ബോക്സുകൾ</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>എല്ലാം ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സംരക്ഷിച്ച എല്ലാ സാൻഡ്ബോക്സ് പ്രൊഫൈലുകളും ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സംരക്ഷിച്ച എല്ലാ സാൻഡ്ബോക്സ് പ്രൊഫൈലുകളും ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>ഇതുവരെ സാൻഡ്ബോക്സുകളൊന്നുമില്ല.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>ആരംഭിക്കുക</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Sandbox പ്രവർത്തിപ്പിക്കാൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Sandbox പ്രവർത്തിപ്പിക്കാൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കപ്പെട്ട ഇനം ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കപ്പെട്ട ഇനം ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>സ്ഥാനം തുറക്കുക</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കപ്പെട്ട ഇനത്തിന്റെ സ്ഥാനം തുറക്കുക.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കപ്പെട്ട ഇനത്തിന്റെ സ്ഥാനം തുറക്കുക.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>ലോഡ് ചെയ്യുക</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കപ്പെട്ട Windows Sandbox ക്രമീകരണം ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കപ്പെട്ട Windows Sandbox ക്രമീകരണം ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>സംരക്ഷിക്കുക</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Sandbox ക്രമീകരണം സംരക്ഷിക്കുക.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Sandbox ക്രമീകരണം സംരക്ഷിക്കുക.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>ഐച്ഛികമായി മാപ്പുചെയ്ത പ്രോഗ്രാം</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>തെരഞ്ഞെടുത്ത ഹോസ്റ്റ് ഫോൾഡർ അതേ ഫോൾഡർ നാമം ഉപയോഗിച്ച് സാൻഡ്ബോക്സിനകത്ത് C: ഡ്രൈവിൽ മൗണ്ട് ചെയ്യപ്പെടും.</value>
+  </data>
 </root>

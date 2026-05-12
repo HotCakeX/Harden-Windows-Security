@@ -1,3 +1,13 @@
+# Introducing the Sandbox Maker Feature
+
+The **Sandbox Maker** page in the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) is a refined workspace for making, preserving, and launching Windows Sandbox environments. It brings identity, resource allocation, device-integration controls, time-zone tailoring, optional host-folder mapping, and saved-profile management into one coherent dashboard so you can prepare disposable environments with both precision and ease.
+
+## Other Features
+
 * You can now view the firmware-embedded product key (if available) in the home page's activation details section.
 
 * Added a new button to the sidebar that you can use to reboot your system directly to the UEFI/BIOS settings.
+
+* Temporarily removed the night light slider from the sidebar.
+
+* Updated dependencies to the latest versions.

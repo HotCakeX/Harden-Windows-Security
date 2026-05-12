@@ -6209,4 +6209,100 @@
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>Το σύστημά σας θα επανεκκινηθεί αμέσως. Αποθηκεύστε την εργασία σας σε άλλα προγράμματα πριν συνεχίσετε.</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>Δημιουργός Sandbox</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε, αποθηκεύστε, εκκινήστε, διαχειριστείτε και διαγράψτε προφίλ Windows Sandbox για διαφορετικά σενάρια χρησιμοποιώντας ένα εύχρηστο γραφικό περιβάλλον χρήστη.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε, αποθηκεύστε, εκκινήστε, διαχειριστείτε και διαγράψτε προφίλ Windows Sandbox για διαφορετικά σενάρια χρησιμοποιώντας ένα εύχρηστο γραφικό περιβάλλον χρήστη.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>Ταυτότητα Sandbox</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>Όνομα Sandbox</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>Εισαγάγετε ένα όνομα για αυτό το Sandbox.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>Διαδρομή αρχείου Sandbox</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>Εισαγάγετε ένα όνομα Sandbox για προεπισκόπηση της διαδρομής .wsb.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Ζώνη ώρας</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>Προφίλ Sandbox</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>Αποθηκευμένα Sandbox</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>Διαγραφή όλων</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε όλα τα αποθηκευμένα προφίλ Sandbox.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράψτε όλα τα αποθηκευμένα προφίλ Sandbox.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>Δεν υπάρχουν ακόμη Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>Εκκίνηση</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εκκινήστε το Windows Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εκκινήστε το Windows Sandbox.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>Διαγραφή</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράψτε το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>Άνοιγμα τοποθεσίας</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε την τοποθεσία του επιλεγμένου στοιχείου.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε την τοποθεσία του επιλεγμένου στοιχείου.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>Φόρτωση</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Φορτώστε την επιλεγμένη ρύθμιση παραμέτρων Windows Sandbox.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Φορτώστε την επιλεγμένη ρύθμιση παραμέτρων Windows Sandbox.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>Αποθήκευση</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποθηκεύστε τη ρύθμιση παραμέτρων Windows Sandbox.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποθηκεύστε τη ρύθμιση παραμέτρων Windows Sandbox.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>Προαιρετικό αντιστοιχισμένο πρόγραμμα</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>Ο επιλεγμένος φάκελος κεντρικού υπολογιστή προσαρτάται μέσα στο Sandbox στη μονάδα C: χρησιμοποιώντας το ίδιο όνομα φακέλου.</value>
+  </data>
 </root>

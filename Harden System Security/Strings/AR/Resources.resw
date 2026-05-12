@@ -6209,4 +6209,100 @@
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>سيتم إعادة تشغيل نظامك فورًا. يُرجى حفظ عملك في البرامج الأخرى قبل المتابعة.</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>منشئ Windows Sandbox</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أنشئ ملفات تعريف Windows Sandbox واحفظها وشغّلها وأدرها واحذفها لسيناريوهات مختلفة باستخدام واجهة مستخدم رسومية سهلة الاستخدام.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أنشئ ملفات تعريف Windows Sandbox واحفظها وشغّلها وأدرها واحذفها لسيناريوهات مختلفة باستخدام واجهة مستخدم رسومية سهلة الاستخدام.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>هوية Sandbox</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>اسم Sandbox</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>أدخل اسمًا لهذا الـ Sandbox.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>مسار ملف Sandbox</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>أدخل اسم Sandbox لمعاينة مسار ملف ‎.wsb‎.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>المنطقة الزمنية</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>ملف تعريف Sandbox</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>بيئات Sandbox المحفوظة</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>حذف الكل</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>احذف جميع ملفات تعريف Sandbox المحفوظة.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>احذف جميع ملفات تعريف Sandbox المحفوظة.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>لا توجد أي بيئات Sandbox بعد.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>ابدأ</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ابدأ تشغيل Windows Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ابدأ تشغيل Windows Sandbox.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>احذف العنصر المحدد.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>احذف العنصر المحدد.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>فتح الموقع</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>افتح موقع العنصر المحدد.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>افتح موقع العنصر المحدد.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>تحميل</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حمّل تكوين Windows Sandbox المحدد.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حمّل تكوين Windows Sandbox المحدد.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>احفظ تكوين Windows Sandbox.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>احفظ تكوين Windows Sandbox.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>برنامج معيّن اختياري</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>يتم تحميل مجلد المضيف المحدد داخل Sandbox على محرك الأقراص C: باستخدام اسم المجلد نفسه.</value>
+  </data>
 </root>

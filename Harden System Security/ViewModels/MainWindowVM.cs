@@ -48,7 +48,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.Intune),
 		typeof(AppControlManager.Pages.IntuneDeploymentDetails),
 		typeof(Pages.Extras.DuplicatePhotoFinder),
-		typeof(Pages.Extras.EXIFManager)
+		typeof(Pages.Extras.EXIFManager),
+		typeof(Pages.SandboxMaker)
 		];
 
 
@@ -289,6 +290,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [Atlas.GetStr("ExploitMitigationsNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.ExploitMitigations)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.SandboxMaker)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("SandboxMakerNavItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.SandboxMaker)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -337,7 +344,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "EXIFManager", typeof(Pages.Extras.EXIFManager) },
 		{ "ServiceManager", typeof(Pages.ServiceManager) },
 		{ "BootableDriveMaker", typeof(Pages.Extras.BootableDriveMaker) },
-		{ "ExploitMitigations", typeof(Pages.ExploitMitigations) }
+		{ "ExploitMitigations", typeof(Pages.ExploitMitigations) },
+		{ "SandboxMaker", typeof(Pages.SandboxMaker) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -388,6 +396,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ServiceManager)] = Atlas.GetStr("ServiceManagerNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.BootableDriveMaker)] = Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ExploitMitigations)] = Atlas.GetStr("ExploitMitigationsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.SandboxMaker)] = Atlas.GetStr("SandboxMakerNavItem/Content");
 	}
 
 	/// <summary>

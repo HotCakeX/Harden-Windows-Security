@@ -6209,4 +6209,100 @@ Empreinte : {3}</value>
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>Votre système va redémarrer immédiatement. Veuillez enregistrer votre travail dans les autres programmes avant de continuer.</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>Créateur de sandbox</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Créez, enregistrez, lancez, gérez et supprimez des profils Windows Sandbox pour différents scénarios à l’aide d’une interface utilisateur graphique facile à utiliser.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Créez, enregistrez, lancez, gérez et supprimez des profils Windows Sandbox pour différents scénarios à l’aide d’une interface utilisateur graphique facile à utiliser.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>Identité du sandbox</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>Nom du sandbox</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>Saisissez un nom pour ce sandbox.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>Chemin du fichier sandbox</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>Saisissez un nom de sandbox pour prévisualiser le chemin .wsb.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>Profil de sandbox</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>Sandboxes enregistrés</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>Tout supprimer</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimez tous les profils de sandbox enregistrés.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimez tous les profils de sandbox enregistrés.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>Aucun sandbox pour le moment.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>Démarrer</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Démarrez Windows Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Démarrez Windows Sandbox.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimez l’élément sélectionné.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimez l’élément sélectionné.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>Ouvrir l’emplacement</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ouvrez l’emplacement de l’élément sélectionné.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ouvrez l’emplacement de l’élément sélectionné.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>Charger</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Chargez la configuration Windows Sandbox sélectionnée.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Chargez la configuration Windows Sandbox sélectionnée.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enregistrez la configuration Windows Sandbox.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enregistrez la configuration Windows Sandbox.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>Programme mappé facultatif</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>Le dossier hôte sélectionné est monté dans le sandbox sur le lecteur C: en utilisant le même nom de dossier.</value>
+  </data>
 </root>

@@ -575,6 +575,15 @@
                                     ShowAsMonochrome="False" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem x:Name="SandboxMakerNavItem"
+                                    x:Uid="SandboxMakerNavItem"
+                                    Tag="SandboxMaker">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="ms-appx:///Assets/Others/Sandbox Maker Icon.png"
+                                    Margin="-25"
+                                    ShowAsMonochrome="False" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
 
                 <!-- Extras -->
 
@@ -691,18 +700,18 @@
                                     </HyperlinkButton>
 
                                     <HyperlinkButton Content="AppControl Manager"
-                                                     HorizontalAlignment="Center"
-                                                     NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
-                                                     Padding="12,8"
-                                                     CornerRadius="6"
-                                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                     BorderThickness="1"/>
+                                                      HorizontalAlignment="Center"
+                                                      NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
+                                                      Padding="12,8"
+                                                      CornerRadius="6"
+                                                      Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                      BorderThickness="1"/>
 
                                     <Button HorizontalAlignment="Center"
-                                            x:Uid="OptimizeMemoryButton"
-                                            IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
-                                            Click="{x:Bind ViewModel.OptimizeMemory}">
+                                              x:Uid="OptimizeMemoryButton"
+                                             IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
+                                             Click="{x:Bind ViewModel.OptimizeMemory}">
                                         <Button.ContentTemplate>
                                             <DataTemplate x:DataType="x:String">
                                                 <Grid>

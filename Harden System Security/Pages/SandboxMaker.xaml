@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.SandboxMaker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:vm="using:HardenSystemSecurity.ViewModels"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Page.Resources>
+        <Style x:Key="SandboxProfileOptionCardStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="230" />
+            <Setter Property="Height" Value="188" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style x:Key="SandboxProfileOptionGridItemStyle"
+               TargetType="GridViewItem"
+               BasedOn="{StaticResource DefaultGridViewItemStyle}">
+            <Setter Property="Margin" Value="0,0,12,12" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="8">
+
+            <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock x:Uid="SandboxIdentity"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                    <CCToolKit:WrapPanel Orientation="Horizontal"                                        
+                                         HorizontalSpacing="16"
+                                         VerticalSpacing="12">
+
+                        <TextBox Text="{x:Bind ViewModel.SandboxName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 VerticalAlignment="Center"
+                                 x:Uid="SandboxName" />
+
+                        <TextBox Text="{x:Bind ViewModel.SandboxConfigurationPath, Mode=OneWay}"
+                                 x:Uid="SandboxFilePath"
+                                 VerticalAlignment="Center"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap" />
+                    </CCToolKit:WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock x:Uid="TimeZone"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                    <ComboBox ItemsSource="{x:Bind vm:SandboxMakerVM.TimeZoneOptions, Mode=OneTime}"
+                              SelectedItem="{x:Bind ViewModel.SelectedTimeZone, Mode=TwoWay}"
+                              MaxWidth="850"
+                              HorizontalAlignment="Stretch">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:WindowsSandboxTimeZoneOption">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{x:Bind RegionName}"
+                                               TextWrapping="WrapWholeWords" />
+                                    <TextBlock Text="{x:Bind OffsetLabel}"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="16">
+                <StackPanel Spacing="20">
+                    <TextBlock x:Uid="SandboxProfile"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                    <NumberBox Value="{x:Bind ViewModel.MemoryInMb, Mode=TwoWay}"                               
+                               Minimum="{x:Bind vm:SandboxMakerVM.MinimumAllowedSelectedRAMValue, Mode=OneTime}"
+                               Maximum="{x:Bind ViewModel.MaxAllowedSelectedRAM, Mode=OneWay}"
+                               SmallChange="512"
+                               LargeChange="1024"
+                               Header="Custom RAM (MB)"
+                               MaxWidth="400"
+                               SpinButtonPlacementMode="Inline" />
+
+                    <GridView SelectionMode="None"
+                              IsItemClickEnabled="False"
+                              Padding="0"
+                              BorderThickness="0"
+                              Background="Transparent"
+                              HorizontalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollMode="Disabled"
+                              ItemContainerStyle="{StaticResource SandboxProfileOptionGridItemStyle}">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Horizontal">
+                                    <ItemsWrapGrid.ChildrenTransitions>
+                                        <TransitionCollection>
+                                            <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                                        </TransitionCollection>
+                                    </ItemsWrapGrid.ChildrenTransitions>
+                                </ItemsWrapGrid>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+
+                        <ToggleButton Style="{StaticResource SandboxProfileOptionCardStyle}"
+                                      IsChecked="{x:Bind ViewModel.DisableNetworking, Mode=TwoWay}">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <FontIcon Glyph="&#xE839;"
+                                          FontSize="20"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              VerticalScrollMode="Auto"
+                                              IsVerticalRailEnabled="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="Disable internet access"
+                                                   FontWeight="Bold"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   TextWrapping="WrapWholeWords" />
+                                        <TextBlock Text="Disables networking in the sandbox to decrease the attack surface exposed by the sandbox."
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </ToggleButton>
+
+                        <ToggleButton Style="{StaticResource SandboxProfileOptionCardStyle}"
+                                      IsChecked="{x:Bind ViewModel.EnableVGpu, Mode=TwoWay}">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <FontIcon Glyph="&#xE7F8;"
+                                          FontSize="20"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              VerticalScrollMode="Auto"
+                                              IsVerticalRailEnabled="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="Enable vGPU"
+                                                   FontWeight="Bold"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   TextWrapping="WrapWholeWords" />
+                                        <TextBlock Text="Enables GPU sharing in the sandbox. If disabled, Windows Sandbox uses software rendering instead."
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </ToggleButton>
+
+                        <ToggleButton Style="{StaticResource SandboxProfileOptionCardStyle}"
+                                      IsChecked="{x:Bind ViewModel.EnableClipboardRedirection, Mode=TwoWay}">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <FontIcon Glyph="&#xE8C8;"
+                                          FontSize="20"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              VerticalScrollMode="Auto"
+                                              IsVerticalRailEnabled="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="Enable clipboard redirection"
+                                                   FontWeight="Bold"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   TextWrapping="WrapWholeWords" />
+                                        <TextBlock Text="Shares the host clipboard with the sandbox so text and files can be pasted back and forth."
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </ToggleButton>
+
+                        <ToggleButton Style="{StaticResource SandboxProfileOptionCardStyle}"
+                                      IsChecked="{x:Bind ViewModel.EnableAudioInput, Mode=TwoWay}">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <FontIcon Glyph="&#xE720;"
+                                          FontSize="20"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              VerticalScrollMode="Auto"
+                                              IsVerticalRailEnabled="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="Enable audio input"
+                                                   FontWeight="Bold"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   TextWrapping="WrapWholeWords" />
+                                        <TextBlock Text="Shares the host microphone input with the sandbox for apps that need audio capture."
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </ToggleButton>
+
+                        <ToggleButton Style="{StaticResource SandboxProfileOptionCardStyle}"
+                                      IsChecked="{x:Bind ViewModel.EnableVideoInput, Mode=TwoWay}">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <FontIcon Glyph="&#xE714;"
+                                          FontSize="20"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              VerticalScrollMode="Auto"
+                                              IsVerticalRailEnabled="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="Enable video input"
+                                                   FontWeight="Bold"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   TextWrapping="WrapWholeWords" />
+                                        <TextBlock Text="Shares the host webcam with the sandbox for apps that require video input."
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </ToggleButton>
+
+                        <ToggleButton Style="{StaticResource SandboxProfileOptionCardStyle}"
+                                      IsChecked="{x:Bind ViewModel.EnablePrinterRedirection, Mode=TwoWay}">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <FontIcon Glyph="&#xE749;"
+                                          FontSize="20"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              VerticalScrollMode="Auto"
+                                              IsVerticalRailEnabled="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="Enable printer redirection"
+                                                   FontWeight="Bold"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   TextWrapping="WrapWholeWords" />
+                                        <TextBlock Text="Shares printers from the host into the sandbox so apps inside it can see them."
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </ToggleButton>
+
+                        <ToggleButton Style="{StaticResource SandboxProfileOptionCardStyle}"
+                                      IsChecked="{x:Bind ViewModel.EnableProtectedClient, Mode=TwoWay}">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <FontIcon Glyph="&#xE72E;"
+                                          FontSize="20"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              VerticalScrollMode="Auto"
+                                              IsVerticalRailEnabled="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="Enable protected client mode"
+                                                   FontWeight="Bold"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   TextWrapping="WrapWholeWords" />
+                                        <TextBlock Text="Runs Windows Sandbox with increased security settings on the RDP session by using AppContainer isolation."
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </ToggleButton>
+                    </GridView>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock x:Uid="OptionalMappedProgram"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                    <TextBlock x:Uid="OptionalMappedProgramLongerDescription"
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <CCToolKit:WrapPanel Orientation="Horizontal"
+                                         HorizontalSpacing="10"
+                                         VerticalSpacing="10">
+                        <TextBox Width="460"
+                                 Text="{x:Bind ViewModel.SelectedProgramFolderPath, Mode=OneWay}"
+                                 PlaceholderText="No program folder selected."
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"/>
+
+                        <Button x:Uid="BrowseFoldersButton"
+                                Click="{x:Bind ViewModel.BrowseProgramFolder_Click}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEC51;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+
+                        <Button x:Uid="ClearButton"
+                                Click="{x:Bind ViewModel.ClearProgramFolder_Click}"
+                                IsEnabled="{x:Bind ViewModel.HasProgramFolderSelection, Mode=OneWay}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE8E6;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </CCToolKit:WrapPanel>
+
+                    <ComboBox ItemsSource="{x:Bind ViewModel.AvailableProgramExecutables, Mode=OneWay}"
+                              SelectedItem="{x:Bind ViewModel.SelectedProgramExecutable, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ViewModel.HasProgramExecutableChoices, Mode=OneWay}"
+                              PlaceholderText="Select the main executable inside the chosen folder.">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:WindowsSandboxProgramOption">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{x:Bind DisplayName}" />
+                                    <TextBlock Text="{x:Bind RelativePath}"
+                                               FontSize="12"
+                                               TextWrapping="WrapWholeWords"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <ToggleSwitch Header="Map the selected host folder as read-only"
+                                  IsOn="{x:Bind ViewModel.IsProgramFolderReadOnly, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.HasProgramFolderSelection, Mode=OneWay}" />
+
+                    <ToggleSwitch Header="Run the selected program automatically when the sandbox starts"
+                                  IsOn="{x:Bind ViewModel.RunMappedProgramOnStartup, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.HasProgramFolderSelection, Mode=OneWay}" />
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="5">
+
+                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                    <Button x:Uid="SaveSandboxProfileButton"
+                            Click="{x:Bind ViewModel.SaveSandbox_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <Button x:Uid="StartSandboxButton"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Click="{x:Bind ViewModel.StartSandbox_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                </CCToolKit:WrapPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <CCToolKit:WrapPanel Orientation="Horizontal"
+                                         HorizontalSpacing="12"
+                                         VerticalSpacing="8">
+                        <TextBlock x:Uid="SavedSandboxes"
+                                   Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                        <Button x:Uid="DeleteAllSandboxesButton"
+                                Click="{x:Bind ViewModel.DeleteAllSavedSandboxes_Click}"
+                                IsEnabled="{x:Bind ViewModel.HasSavedSandboxes, Mode=OneWay}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </CCToolKit:WrapPanel>
+
+                    <TextBlock Visibility="{x:Bind ViewModel.SavedSandboxesEmptyVisibility, Mode=OneWay}"
+                               x:Uid="NoSandboxesYetNotice"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <ListView ItemsSource="{x:Bind ViewModel.SavedSandboxes, Mode=OneWay}"
+                              Visibility="{x:Bind ViewModel.SavedSandboxesVisibility, Mode=OneWay}"
+                              SelectionMode="None"
+                              IsItemClickEnabled="False"
+                              MaxHeight="420"
+                              HorizontalContentAlignment="Stretch"
+                              BorderThickness="0"
+                              Background="Transparent"
+                              Padding="0"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollMode="Enabled"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.HorizontalScrollMode="Disabled">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="UseSystemFocusVisuals" Value="False" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:WindowsSandboxSavedDefinition">
+                                <Border Margin="0,0,0,10"
+                                        Padding="14"
+                                        CornerRadius="8"
+                                        BorderThickness="1"
+                                        Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                    <StackPanel Spacing="10">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Sandbox name"
+                                                       FontSize="12"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            <TextBlock Text="{x:Bind Name}"
+                                                       FontWeight="SemiBold"
+                                                       Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                                        </StackPanel>
+
+                                        <CCToolKit:WrapPanel Orientation="Horizontal"
+                                                             HorizontalSpacing="20"
+                                                             VerticalSpacing="10">
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="RAM"
+                                                           FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind MemoryDisplayText}"
+                                                           FontWeight="SemiBold" />
+                                            </StackPanel>
+
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Mapped program"
+                                                           FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind ProgramDisplayText}"
+                                                           FontWeight="SemiBold"
+                                                           TextWrapping="WrapWholeWords"
+                                                           MaxWidth="250" />
+                                            </StackPanel>
+
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Date"
+                                                           FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind SavedAtDisplayText}"
+                                                           FontWeight="SemiBold" />
+                                            </StackPanel>
+
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Timezone"
+                                                           FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind TimeZoneDisplayText}"
+                                                           FontWeight="SemiBold"
+                                                           TextWrapping="WrapWholeWords" />
+                                            </StackPanel>
+                                        </CCToolKit:WrapPanel>
+
+                                        <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                                            <Button x:Uid="LoadSandboxProfileButton"
+                                                    Tag="{x:Bind}"
+                                                    Click="{x:Bind vm:ViewModelProvider.SandboxMakerVM.LoadSavedSandboxIntoEditor_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE898;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <Button x:Uid="StartSandboxButton"
+                                                    Style="{StaticResource AccentButtonStyle}"
+                                                    Tag="{x:Bind}"
+                                                    Click="{x:Bind vm:ViewModelProvider.SandboxMakerVM.LaunchSavedSandbox_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <Button x:Uid="OpenLocationButton"
+                                                    Tag="{x:Bind}"
+                                                    Click="{x:Bind vm:ViewModelProvider.SandboxMakerVM.OpenSavedSandboxFileLocation_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xED25;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                            <Button x:Uid="DeleteButton"
+                                                    Tag="{x:Bind}"
+                                                    Click="{x:Bind vm:ViewModelProvider.SandboxMakerVM.DeleteSavedSandbox_Click}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+
+                                        </CCToolKit:WrapPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -6209,4 +6209,100 @@ Thumbprint: {3}</value>
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>Your system will be immediately restarted. Please save your works in other programs before proceeding.</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>Sandbox Maker</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create, save, launch, manage and delete Windows Sandbox profiles for different scenarios using easy to use graphical user interface.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create, save, launch, manage and delete Windows Sandbox profiles for different scenarios using easy to use graphical user interface.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>Sandbox Identity</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>Sandbox Name</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>Enter a name for this sandbox.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>Sandbox File Path</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>Enter a sandbox name to preview the .wsb path.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>Sandbox Profile</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>Saved Sandboxes</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete all of the saved sandbox profiles.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete all of the saved sandbox profiles.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>No sandboxes yet.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Start running the Windows Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start running the Windows Sandbox.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete the selected item.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete the selected item.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>Open Location</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the location of the selected item.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the location of the selected item.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Load the selected Windows Sandbox configuration.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Load the selected Windows Sandbox configuration.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Save the Windows Sandbox configuration.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save the Windows Sandbox configuration.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>Optional Mapped Program</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>The selected host folder is mounted inside the sandbox in the C: drive using the same folder name.</value>
+  </data>
 </root>

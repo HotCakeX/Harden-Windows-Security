@@ -1088,6 +1088,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			AutomationProperties.SetHelpText(ExploitMitigationsNavItem, Atlas.GetStr("ExploitMitigationsNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(ExploitMitigationsNavItem, Atlas.GetStr("ExploitMitigationsNavItem/ToolTipService/ToolTip"));
 
+			SandboxMakerNavItem.Content = Atlas.GetStr("SandboxMakerNavItem/Content");
+			AutomationProperties.SetHelpText(SandboxMakerNavItem, Atlas.GetStr("SandboxMakerNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SandboxMakerNavItem, Atlas.GetStr("SandboxMakerNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

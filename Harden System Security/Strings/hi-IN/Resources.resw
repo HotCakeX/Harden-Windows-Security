@@ -6209,4 +6209,100 @@
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>आपका सिस्टम तुरंत पुनः आरंभ होगा। आगे बढ़ने से पहले कृपया अन्य प्रोग्रामों में अपना काम सहेज लें।</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>सैंडबॉक्स निर्माता</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उपयोग में आसान ग्राफ़िकल यूज़र इंटरफ़ेस के माध्यम से अलग-अलग परिदृश्यों के लिए Windows Sandbox प्रोफ़ाइल बनाएं, सहेजें, चलाएं, प्रबंधित करें और हटाएं.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उपयोग में आसान ग्राफ़िकल यूज़र इंटरफ़ेस के माध्यम से अलग-अलग परिदृश्यों के लिए Windows Sandbox प्रोफ़ाइल बनाएं, सहेजें, चलाएं, प्रबंधित करें और हटाएं.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>सैंडबॉक्स पहचान</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>सैंडबॉक्स नाम</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>इस सैंडबॉक्स के लिए एक नाम दर्ज करें.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>सैंडबॉक्स फ़ाइल पथ</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>.wsb पथ का पूर्वावलोकन देखने के लिए सैंडबॉक्स नाम दर्ज करें.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>समय क्षेत्र</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>सैंडबॉक्स प्रोफ़ाइल</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>सहेजे गए सैंडबॉक्स</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>सभी हटाएँ</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी सहेजी गई सैंडबॉक्स प्रोफ़ाइल हटाएँ.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी सहेजी गई सैंडबॉक्स प्रोफ़ाइल हटाएँ.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>अभी तक कोई सैंडबॉक्स नहीं है.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>शुरू करें</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Sandbox चलाना शुरू करें.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Sandbox चलाना शुरू करें.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>हटाएँ</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित आइटम हटाएँ.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटम हटाएँ.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>स्थान खोलें</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित आइटम का स्थान खोलें.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटम का स्थान खोलें.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>लोड करें</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित Windows Sandbox कॉन्फ़िगरेशन लोड करें.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित Windows Sandbox कॉन्फ़िगरेशन लोड करें.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>सहेजें</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Sandbox कॉन्फ़िगरेशन सहेजें.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Sandbox कॉन्फ़िगरेशन सहेजें.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>वैकल्पिक मैप किया गया प्रोग्राम</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>चयनित होस्ट फ़ोल्डर को उसी फ़ोल्डर नाम के साथ सैंडबॉक्स के भीतर C: ड्राइव में माउंट किया जाता है.</value>
+  </data>
 </root>

@@ -6209,4 +6209,100 @@ Odcisk Palca: {3}</value>
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>System zostanie natychmiast uruchomiony ponownie. Przed kontynuowaniem zapisz swoją pracę w innych programach.</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>Kreator piaskownicy</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Twórz, zapisuj, uruchamiaj, zarządzaj i usuwaj profile Windows Sandbox dla różnych scenariuszy za pomocą łatwego w obsłudze graficznego interfejsu użytkownika.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Twórz, zapisuj, uruchamiaj, zarządzaj i usuwaj profile Windows Sandbox dla różnych scenariuszy za pomocą łatwego w obsłudze graficznego interfejsu użytkownika.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>Tożsamość piaskownicy</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>Nazwa piaskownicy</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>Wprowadź nazwę tej piaskownicy.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>Ścieżka pliku piaskownicy</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>Wprowadź nazwę piaskownicy, aby wyświetlić podgląd ścieżki pliku .wsb.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Strefa czasowa</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>Profil piaskownicy</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>Zapisane piaskownice</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>Usuń wszystko</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wszystkie zapisane profile piaskownicy.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wszystkie zapisane profile piaskownicy.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>Nie ma jeszcze żadnych piaskownic.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>Uruchom</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Uruchom Windows Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uruchom Windows Sandbox.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wybrany element.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wybrany element.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>Otwórz lokalizację</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz lokalizację wybranego elementu.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz lokalizację wybranego elementu.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>Wczytaj</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wczytaj wybraną konfigurację Windows Sandbox.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wczytaj wybraną konfigurację Windows Sandbox.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zapisz konfigurację Windows Sandbox.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapisz konfigurację Windows Sandbox.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>Opcjonalny mapowany program</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>Wybrany folder hosta jest montowany wewnątrz piaskownicy na dysku C: z użyciem tej samej nazwy folderu.</value>
+  </data>
 </root>

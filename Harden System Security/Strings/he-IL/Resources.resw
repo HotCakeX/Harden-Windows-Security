@@ -6209,4 +6209,100 @@
   <data name="RebootToUEFIConfirmationDialogContent" xml:space="preserve">
     <value>המערכת שלך תופעל מחדש באופן מיידי. נא לשמור את העבודה שלך בתוכניות אחרות לפני שתמשיך.</value>
   </data>
+  <data name="SandboxMakerNavItem.Content" xml:space="preserve">
+    <value>יוצר ה-Sandbox</value>
+  </data>
+  <data name="SandboxMakerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יצירה, שמירה, הפעלה, ניהול ומחיקה של פרופילי Windows Sandbox עבור תרחישים שונים באמצעות ממשק משתמש גרפי פשוט לשימוש.</value>
+  </data>
+  <data name="SandboxMakerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יצירה, שמירה, הפעלה, ניהול ומחיקה של פרופילי Windows Sandbox עבור תרחישים שונים באמצעות ממשק משתמש גרפי פשוט לשימוש.</value>
+  </data>
+  <data name="SandboxIdentity.Text" xml:space="preserve">
+    <value>זהות ה-Sandbox</value>
+  </data>
+  <data name="SandboxName.Header" xml:space="preserve">
+    <value>שם ה-Sandbox</value>
+  </data>
+  <data name="SandboxName.PlaceholderText" xml:space="preserve">
+    <value>הזן שם עבור ה-Sandbox הזה.</value>
+  </data>
+  <data name="SandboxFilePath.Header" xml:space="preserve">
+    <value>נתיב קובץ ה-Sandbox</value>
+  </data>
+  <data name="SandboxFilePath.PlaceholderText" xml:space="preserve">
+    <value>הזן שם Sandbox כדי להציג תצוגה מקדימה של נתיב ה-.wsb.</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>אזור זמן</value>
+  </data>
+  <data name="SandboxProfile.Text" xml:space="preserve">
+    <value>פרופיל Sandbox</value>
+  </data>
+  <data name="SavedSandboxes.Text" xml:space="preserve">
+    <value>סביבות Sandbox שמורות</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.Content" xml:space="preserve">
+    <value>מחק הכל</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את כל פרופילי ה-Sandbox השמורים.</value>
+  </data>
+  <data name="DeleteAllSandboxesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את כל פרופילי ה-Sandbox השמורים.</value>
+  </data>
+  <data name="NoSandboxesYetNotice.Text" xml:space="preserve">
+    <value>עדיין אין סביבות Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.Content" xml:space="preserve">
+    <value>התחל</value>
+  </data>
+  <data name="StartSandboxButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל את Windows Sandbox.</value>
+  </data>
+  <data name="StartSandboxButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל את Windows Sandbox.</value>
+  </data>
+  <data name="DeleteButton.Content" xml:space="preserve">
+    <value>מחק</value>
+  </data>
+  <data name="DeleteButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את הפריט שנבחר.</value>
+  </data>
+  <data name="DeleteButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את הפריט שנבחר.</value>
+  </data>
+  <data name="OpenLocationButton.Content" xml:space="preserve">
+    <value>פתח מיקום</value>
+  </data>
+  <data name="OpenLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את המיקום של הפריט שנבחר.</value>
+  </data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את המיקום של הפריט שנבחר.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.Content" xml:space="preserve">
+    <value>טען</value>
+  </data>
+  <data name="LoadSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>טען את תצורת ה-Windows Sandbox שנבחרה.</value>
+  </data>
+  <data name="LoadSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>טען את תצורת ה-Windows Sandbox שנבחרה.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.Content" xml:space="preserve">
+    <value>שמור</value>
+  </data>
+  <data name="SaveSandboxProfileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שמור את תצורת ה-Windows Sandbox.</value>
+  </data>
+  <data name="SaveSandboxProfileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שמור את תצורת ה-Windows Sandbox.</value>
+  </data>
+  <data name="OptionalMappedProgram.Text" xml:space="preserve">
+    <value>תוכנית ממופה אופציונלית</value>
+  </data>
+  <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
+    <value>תיקיית המארח שנבחרה ממופה בתוך ה-Sandbox בכונן C: באמצעות אותו שם תיקייה.</value>
+  </data>
 </root>

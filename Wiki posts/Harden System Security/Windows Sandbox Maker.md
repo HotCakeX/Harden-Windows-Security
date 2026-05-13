@@ -1,5 +1,9 @@
 # Sandbox Maker | Harden System Security
 
+<div align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/044eda32fad2c5707f2ba92297d074dd9a68196a/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Sandbox%20Maker.png" alt="Windows Sandbox Maker"></div>
+
+<br>
+
 The **Sandbox Maker** page in the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) is a refined workspace for making, preserving, and launching Windows Sandbox environments. It brings identity, resource allocation, device-integration controls, time-zone tailoring, optional host-folder mapping, and saved-profile management into one coherent dashboard so you can prepare disposable environments with both precision and ease.
 
 ## What This Page Offers

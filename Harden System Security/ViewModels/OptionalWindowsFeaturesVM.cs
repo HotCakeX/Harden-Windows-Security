@@ -26,11 +26,13 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using CommonCore.DISM;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 
@@ -49,6 +51,7 @@ internal sealed partial class DismServiceClient : IDisposable
 	private BinaryReader? _reader;
 	private readonly string _pipeName = $"DismService_{Guid.NewGuid():N}";
 	private bool _disposed;
+	internal bool LastOperationWasCancelled { get; private set; }
 
 	internal event Action<string, LogTypeIntel>? LogReceived;
 	internal event Action<string, uint, uint>? ItemProgressUpdated;
@@ -355,6 +358,19 @@ internal sealed partial class DismServiceClient : IDisposable
 		}
 	}
 
+	internal void CancelCurrentOperation()
+	{
+		try
+		{
+			_writer!.Write((byte)Command.CancelCurrentOperation);
+			_writer.Flush();
+		}
+		catch (Exception ex)
+		{
+			LogReceived?.Invoke(string.Format(Atlas.GetStr("ServiceError"), ex.Message), LogTypeIntel.Warning);
+		}
+	}
+
 	internal async Task ShutdownAsync()
 	{
 		try
@@ -402,11 +418,16 @@ internal sealed partial class DismServiceClient : IDisposable
 
 	private async Task<bool> WaitForOperationComplete()
 	{
+		LastOperationWasCancelled = false;
+
 		Response response = await WaitForResponse();
 		if (response != Response.OperationComplete)
 			return false;
 
-		return _reader!.ReadBoolean();
+		OperationCompletionState operationCompletionState = (OperationCompletionState)_reader!.ReadByte();
+		LastOperationWasCancelled = operationCompletionState == OperationCompletionState.Cancelled;
+
+		return operationCompletionState == OperationCompletionState.Succeeded;
 	}
 
 	private List<DISMOutput> ReadChunkedResultsList()
@@ -495,7 +516,8 @@ internal sealed partial class DismServiceClient : IDisposable
 		EnableFeature = 6,
 		DisableFeature = 7,
 		Shutdown = 8,
-		Exit = 9
+		Exit = 9,
+		CancelCurrentOperation = 10
 	}
 
 	private enum Response : byte
@@ -506,6 +528,13 @@ internal sealed partial class DismServiceClient : IDisposable
 		Log = 5,
 		ItemProgress = 6,
 		Error = 255
+	}
+
+	private enum OperationCompletionState : byte
+	{
+		Failed = 0,
+		Succeeded = 1,
+		Cancelled = 2
 	}
 }
 
@@ -559,6 +588,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 			{
 				OnPropertyChanged(nameof(StateDisplayName));
 				OnPropertyChanged(nameof(StateBadgeBrush));
+				ParentVM.UpdateFilteredItems();
 			}
 		}
 	} = dismOutput.State;
@@ -581,6 +611,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 				OnPropertyChanged(nameof(BorderBrush));
 				OnPropertyChanged(nameof(IsProgressIndeterminate));
 				OnPropertyChanged(nameof(ProgressTextVisibility));
+				OnPropertyChanged(nameof(CancelButtonVisibility));
 			}
 		}
 	}
@@ -622,6 +653,9 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 
 	[JsonIgnore]
 	internal Visibility ProgressBarVisibility => IsProcessing ? Visibility.Visible : Visibility.Collapsed;
+
+	[JsonIgnore]
+	internal Visibility CancelButtonVisibility => IsProcessing ? Visibility.Visible : Visibility.Collapsed;
 
 	[JsonIgnore]
 	internal bool ButtonsEnabled => !IsProcessing && ParentVM.ElementsAreEnabled;
@@ -693,6 +727,8 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 			Logger.Write(ex);
 		}
 	}
+
+	internal void CancelItem() => ParentVM.CancelCurrentOperation();
 }
 
 internal sealed partial class GroupInfoListForDISMItems(IEnumerable<DISMOutputEntry> items, string key) : List<DISMOutputEntry>(items)
@@ -767,6 +803,87 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 		}
 	}
+
+	internal bool ShowNotPresentState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowUninstallPendingState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowStagedState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowRemovedState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowInstalledState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowInstallPendingState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowSupersededState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowPartiallyInstalledState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
+
+	internal bool ShowNotAvailableOnSystemState
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				UpdateFilteredItems();
+		}
+	} = true;
 
 	internal bool ElementsAreEnabled
 	{
@@ -852,7 +969,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// </summary>
 	internal readonly ObservableCollection<GroupInfoListForDISMItems> GroupedFilteredDISMItems = [];
 
-	private void UpdateFilteredItems()
+	internal void UpdateFilteredItems()
 	{
 		// Choose the source items based on search query
 		IEnumerable<DISMOutputEntry> filtered = string.IsNullOrEmpty(SearchQuery)
@@ -862,6 +979,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				x.TypeDisplayName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
 				x.Description.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
 				x.StateDisplayName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase));
+
+		filtered = filtered.Where(x => IsStateVisible(x.State));
 
 		// Update total counts
 		TotalItemsCount = AllItems.Count;
@@ -907,6 +1026,22 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		// Sync ListView selection with our selection list after filtering
 		SyncListViewSelection();
 	}
+
+	private bool IsStateVisible(DismPackageFeatureState state) => state switch
+	{
+		DismPackageFeatureState.DismStateNotPresent => ShowNotPresentState,
+		DismPackageFeatureState.DismStateUninstallPending => ShowUninstallPendingState,
+		DismPackageFeatureState.DismStateStaged => ShowStagedState,
+		DismPackageFeatureState.DismStateRemoved => ShowRemovedState,
+		DismPackageFeatureState.DismStateInstalled => ShowInstalledState,
+		DismPackageFeatureState.DismStateInstallPending => ShowInstallPendingState,
+		DismPackageFeatureState.DismStateSuperseded => ShowSupersededState,
+		DismPackageFeatureState.DismStatePartiallyInstalled => ShowPartiallyInstalledState,
+		DismPackageFeatureState.NotAvailableOnSystem => ShowNotAvailableOnSystemState,
+		_ => true
+	};
+
+	internal void CancelCurrentOperation() => _dismServiceClient?.CancelCurrentOperation();
 
 	/// <summary>
 	/// For the button event handler.
@@ -1175,6 +1310,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 			else
 			{
+				if (WasLastDismOperationCancelled())
+				{
+					await VerifyItemStateAfterCancellationAsync(entry.Type, entry.Name, entry);
+					ReportCancelledEntryOperation(entry, "Enable");
+					return;
+				}
+
 				MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 			}
 		}
@@ -1257,6 +1399,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 			else
 			{
+				if (WasLastDismOperationCancelled())
+				{
+					await VerifyItemStateAfterCancellationAsync(entry.Type, entry.Name, entry);
+					ReportCancelledEntryOperation(entry, "Disable");
+					return;
+				}
+
 				MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 			}
 		}
@@ -1302,6 +1451,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			int successCount = 0;
 			int failureCount = 0;
+			int cancelledCount = 0;
 			List<string> failedItems = [];
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingBulkEnableOperation"), ItemsSourceSelectedItems.Count));
@@ -1352,6 +1502,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						}
 						else
 						{
+							if (WasLastDismOperationCancelled())
+							{
+								await VerifyItemStateAfterCancellationAsync(entry.Type, entry.Name, entry);
+								cancelledCount++;
+								ReportCancelledEntryOperation(entry, "Enable");
+								continue;
+							}
+
 							failureCount++;
 							failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
 							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
@@ -1378,7 +1536,15 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Show final results
 			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
-				if (failureCount == 0)
+				if (failureCount == 0 && successCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Cancelled {cancelledCount} selected item operation(s).");
+				}
+				else if (failureCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Enabled {successCount} selected item(s) and cancelled {cancelledCount} operation(s).");
+				}
+				else if (failureCount == 0)
 				{
 					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyEnabledAllSelectedItems"), successCount));
 				}
@@ -1437,6 +1603,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			int successCount = 0;
 			int failureCount = 0;
+			int cancelledCount = 0;
 			List<string> failedItems = [];
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingBulkDisableOperation"), ItemsSourceSelectedItems.Count));
@@ -1487,6 +1654,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						}
 						else
 						{
+							if (WasLastDismOperationCancelled())
+							{
+								await VerifyItemStateAfterCancellationAsync(entry.Type, entry.Name, entry);
+								cancelledCount++;
+								ReportCancelledEntryOperation(entry, "Disable");
+								continue;
+							}
+
 							failureCount++;
 							failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
 							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
@@ -1513,7 +1688,15 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Show final results
 			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
-				if (failureCount == 0)
+				if (failureCount == 0 && successCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Cancelled {cancelledCount} selected item operation(s).");
+				}
+				else if (failureCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Disabled {successCount} selected item(s) and cancelled {cancelledCount} operation(s).");
+				}
+				else if (failureCount == 0)
 				{
 					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyDisabledAllSelectedItems"), successCount));
 				}
@@ -1816,6 +1999,47 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	}
 
 	/// <summary>
+	/// DISM cancellation can leave the image state unknown, so immediately verify the item's current state afterwards.
+	/// </summary>
+	private async Task VerifyItemStateAfterCancellationAsync(DISMResultType type, string name, DISMOutputEntry? entry = null)
+	{
+		try
+		{
+			List<DISMOutput> updatedResults = type == DISMResultType.Feature
+				? await _dismServiceClient!.GetSpecificFeaturesAsync([name])
+				: await _dismServiceClient!.GetSpecificCapabilitiesAsync([name]);
+
+			if (entry != null && updatedResults.Count > 0)
+			{
+				await Atlas.AppDispatcher.EnqueueAsync(() =>
+				{
+					entry.State = updatedResults[0].State;
+				});
+			}
+			else if (updatedResults.Count == 0)
+			{
+				MainInfoBar.WriteWarning($"Could not verify {type.ToString().ToLowerInvariant()} state after cancellation: {name}");
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteWarning($"Could not verify {type.ToString().ToLowerInvariant()} state after cancellation: {name}. {ex.Message}");
+		}
+	}
+
+	private bool WasLastDismOperationCancelled() => _dismServiceClient?.LastOperationWasCancelled == true;
+
+	private void ReportCancelledEntryOperation(DISMOutputEntry entry, string operationName)
+	{
+		MainInfoBar.WriteWarning($"{operationName} {entry.TypeDisplayName.ToLowerInvariant()} cancelled: {entry.Name}");
+	}
+
+	private void ReportCancelledConfigOperation(OptionalFeatureConfig config, string operationName)
+	{
+		MainInfoBar.WriteWarning($"{operationName} {config.Type.ToString().ToLowerInvariant()} cancelled: {config.Name}");
+	}
+
+	/// <summary>
 	/// Apply the recommended configs by processing predefined features and capabilities according to their configurations we defined earlier.
 	/// Called from the Protect tab when Optional Windows Features category is applied and from the UI buttons.
 	/// </summary>
@@ -1838,6 +2062,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			int successCount = 0;
 			int failureCount = 0;
+			int cancelledCount = 0;
 			List<string> failedItems = [];
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("StartingWithOptionalWindowsFeatures"), SecurityHardeningConfigs.Count));
@@ -1887,6 +2112,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						}
 						else
 						{
+							if (WasLastDismOperationCancelled())
+							{
+								await VerifyItemStateAfterCancellationAsync(config.Type, config.Name, entry);
+								cancelledCount++;
+								ReportCancelledConfigOperation(config, actionText);
+								continue;
+							}
+
 							failureCount++;
 							string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enable" : "disable";
 							failedItems.Add($"{config.Type}: {config.Name}");
@@ -1920,7 +2153,15 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
-				if (failureCount == 0)
+				if (failureCount == 0 && successCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Cancelled {cancelledCount} recommended item operation(s).");
+				}
+				else if (failureCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Applied {successCount} recommended item(s) and cancelled {cancelledCount} operation(s).");
+				}
+				else if (failureCount == 0)
 				{
 					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyAppliedSecurityHardening"), successCount));
 				}
@@ -2178,6 +2419,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			int successCount = 0;
 			int failureCount = 0;
+			int cancelledCount = 0;
 			List<string> failedItems = [];
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("RemovingSecurityHardening"), SecurityHardeningConfigs.Count));
@@ -2229,6 +2471,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						}
 						else
 						{
+							if (WasLastDismOperationCancelled())
+							{
+								await VerifyItemStateAfterCancellationAsync(config.Type, config.Name, entry);
+								cancelledCount++;
+								ReportCancelledConfigOperation(config, actionText);
+								continue;
+							}
+
 							failureCount++;
 							string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restore" : "remove";
 							failedItems.Add($"{config.Type}: {config.Name}");
@@ -2263,7 +2513,15 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Show final results
 			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
-				if (failureCount == 0)
+				if (failureCount == 0 && successCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Cancelled {cancelledCount} recommended item operation(s).");
+				}
+				else if (failureCount == 0 && cancelledCount > 0)
+				{
+					MainInfoBar.WriteWarning($"Removed {successCount} recommended item(s) and cancelled {cancelledCount} operation(s).");
+				}
+				else if (failureCount == 0)
 				{
 					MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyRemovedSecurityHardening"), successCount));
 				}

@@ -3130,4 +3130,36 @@ internal static unsafe partial class NativeMethods
 
 	#endregion
 
+	internal const uint INPUT_KEYBOARD = 1;
+	internal const uint KEYEVENTF_KEYUP = 0x0002;
+	internal const ushort VK_CONTROL = 0x11;
+	internal const ushort VK_SHIFT = 0x10;
+	internal const ushort VK_KEY_B = 0x42;
+	internal const ushort VK_LWIN = 0x5B;
+
+
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint SendInput(uint cInputs, [In] INPUT[] pInputs, int cbSize);
+
+
+	internal const int ERROR_INSUFFICIENT_BUFFER = 122;
+	internal const int ERROR_NONE_MAPPED = 1332;
+	internal const int ERROR_TRUSTED_RELATIONSHIP_FAILURE = 1789;
+
+
+	[LibraryImport("appxalluserstore.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int IsPackageEndOfLife(
+		string userSidString,
+		string packageFullName,
+		[MarshalAs(UnmanagedType.Bool)] ref bool isPackageEndOfLife);
+
+
+	[LibraryImport("appxalluserstore.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int IsPackageFamilyInUninstallBlocklist(
+		string packageFamilyName,
+		[MarshalAs(UnmanagedType.Bool)] ref bool isPresent);
+
 }

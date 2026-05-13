@@ -1,15 +1,22 @@
-# Introducing the Sandbox Maker Feature
+* When enabling BitLocker encryption for the OS drive and a CD/DVD or mounted ISO file exists, there will be a message displayed, guiding users what to do next to remedy the situation.
 
-The **Sandbox Maker** page in the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) is a refined workspace for making, preserving, and launching Windows Sandbox environments. It brings identity, resource allocation, device-integration controls, time-zone tailoring, optional host-folder mapping, and saved-profile management into one coherent dashboard so you can prepare disposable environments with both precision and ease.
+* When interacting with BitLocker management page on a Windows Server OS and BitLocker component is not installed, it will be automatically installed and a notice will be displayed to the user.
 
-## Other Features
+* Made multiple improvements to the Optional Windows Features page:
 
-* You can now view the firmware-embedded product key (if available) in the home page's activation details section.
+    1. Improved the design of the items by utilizing the unused spaces better and compacting the UI a little.
+    2. You can now filter the results based on their status.
+    3. You can now cancel an enablement or disablement operation you start on an optional feature or Windows capability, improving user experience.
 
-* Added a new button to the sidebar that you can use to reboot your system directly to the UEFI/BIOS settings.
+* Added multiple features to the Installed Apps Management page:
 
-* Temporarily removed the night light slider from the sidebar.
-
-* Updated dependencies to the latest versions.
-
-* Fixed an issue where the device usage intent workflow wouldn't apply the optional overrides (of Microsoft Security Baseline) based on the selected intent: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1154
+    1. The ability to terminate an app and all of its associated processes.
+    2. View the size of the apps and their cache data.
+    3. See which apps are allowed by the OS to be removed.
+    4. See which users the apps are installed for.
+    5. See the capabilities of every single app.
+    6. See the dependencies of every single app.
+    7. See the status of each app to see whether they are OK or have problems.
+    8. See the kind of signature each app was signed with.
+    9. See which apps are bundled apps, resource packages, frameworks or in development mode.
+    10. See which apps are partially staged (not fully installed).

@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using CommonCore.DISM;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
 using HardenSystemSecurity.BitLocker;
@@ -31,6 +32,7 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Win32;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -252,6 +254,9 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 			MainInfoBar.WriteInfo(Atlas.GetStr("RetrievingBitLockerVolumesEllipsis"));
 
+			bool serverCheckResult = await EnsureBitLockerWindowsFeatureOnServerAsync();
+			if (!serverCheckResult) return; // Shouldn't continue if it's Server OS and BitLocker component was just enabled because reboot is required.
+
 			await GetVolumes();
 
 			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("LoadedBitLockerVolumesCount"), BitLockerVolumes.Count));
@@ -265,6 +270,63 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			BitLockerUiEnabled = true;
 			MainInfoBar.IsClosable = true;
 		}
+	}
+
+	private static bool IsWindowsServer()
+	{
+		if (!OperatingSystem.IsWindows())
+		{
+			return false;
+		}
+
+		string? productType = Registry.GetValue(
+			@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions",
+			"ProductType",
+			null) as string;
+
+		return !string.Equals(productType, "WinNT", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private async Task<bool> EnsureBitLockerWindowsFeatureOnServerAsync()
+	{
+		if (!IsWindowsServer())
+		{
+			return true;
+		}
+
+		using DismServiceClient dismServiceClient = new();
+		if (!await dismServiceClient.StartServiceAsync(DismServiceClient.DISMServiceLocationInPackage))
+		{
+			throw new InvalidOperationException(Atlas.GetStr("FailedToStartDISMServiceAdministrator"));
+		}
+
+		List<DISMOutput> featureResults = await dismServiceClient.GetSpecificFeaturesAsync(["BitLocker"]);
+		DISMOutput? bitLockerFeature = featureResults.FirstOrDefault();
+
+		if (bitLockerFeature is null || bitLockerFeature.State is DismPackageFeatureState.DismStateInstalled or DismPackageFeatureState.DismStateInstallPending)
+		{
+			return true;
+		}
+
+		MainInfoBar.WriteInfo("The BitLocker Windows Feature is not enabled on this Windows Server OS. Enabling it now...");
+
+		bool enabled = await dismServiceClient.EnableFeatureAsync("BitLocker");
+		if (!enabled)
+		{
+			throw new InvalidOperationException("The BitLocker Windows Feature is required on Windows Server, but it could not be enabled.");
+		}
+
+		using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+		{
+			Title = "BitLocker Windows Feature enabled",
+			Content = "This Windows Server OS did not have the BitLocker Windows Feature enabled. It has been enabled because Windows Server does not include it by default and it is required before the app can interact with BitLocker features. Please restart your system before trying again.",
+			CloseButtonText = Atlas.GetStr("OK"),
+			DefaultButton = ContentDialogButton.Close
+		};
+
+		_ = await dialog.ShowAsync();
+
+		return false;
 	}
 
 	private async Task GetVolumes()
@@ -364,7 +426,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.BitLockerVolumes);
 		if (lv is null) return;
 
-		if (_volumeMappings.TryGetValue(key, out var map))
+		if (_volumeMappings.TryGetValue(key, out (string Label, Func<BitLockerVolume, object?> Getter) map))
 		{
 			// TElement = BitLockerVolume, copy just that one property
 			ListViewHelper.CopyToClipboard<BitLockerVolume>(ci => map.Getter(ci)?.ToString(), lv);

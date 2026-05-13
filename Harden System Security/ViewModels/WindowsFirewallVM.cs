@@ -343,17 +343,6 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	} = true;
 
 	/// <summary>
-	/// Event handler to prevent the MenuFlyout to automatically close immediately after selecting a checkbox or any button in it
-	/// </summary>
-	internal void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
-	{
-		if (sender is MenuFlyoutV2 { IsPointerOver: true })
-		{
-			args.Cancel = true;
-		}
-	}
-
-	/// <summary>
 	/// Event handler for the UI button to select files.
 	/// </summary>
 	internal async void SelectFiles()

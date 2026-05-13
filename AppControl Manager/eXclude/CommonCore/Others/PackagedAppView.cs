@@ -17,6 +17,8 @@
 
 using System.Buffers;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -24,7 +26,7 @@ using System.Text.Json.Serialization;
 
 namespace CommonCore.Others;
 
-internal sealed class PackagedAppView(
+internal sealed partial class PackagedAppView(
 	string displayName,
 	string version,
 	string packageFamilyName,
@@ -35,9 +37,27 @@ internal sealed class PackagedAppView(
 	string fullName,
 	string description,
 	string installLocation,
+	string installDrive,
 	string installedDate,
-	object? vmRef = null)
+	string isFramework,
+	string packageUserInformation,
+	string appSize,
+	string appDataSize,
+	string totalUsage,
+	string isResourcePackage,
+	string isBundle,
+	string isDevelopmentMode,
+	string nonRemovable,
+	string dependencies,
+	string isPartiallyStaged,
+	string signatureKind,
+	string status,
+	string capabilities,
+	int capabilityCount,
+	object? vmRef = null) : INotifyPropertyChanged
 {
+	public event PropertyChangedEventHandler? PropertyChanged;
+
 	[JsonInclude]
 	[JsonPropertyName("Display Name")]
 	internal string DisplayName => displayName;
@@ -78,17 +98,151 @@ internal sealed class PackagedAppView(
 	internal string InstallLocation => installLocation;
 
 	[JsonInclude]
+	[JsonPropertyName("Install Drive")]
+	internal string InstallDrive => installDrive;
+
+	[JsonInclude]
 	[JsonPropertyName("Installed Date")]
 	internal string InstalledDate => installedDate;
 
+	[JsonInclude]
+	[JsonPropertyName("IsFramework")]
+	internal string IsFramework => isFramework;
+
+	[JsonInclude]
+	[JsonPropertyName("Package User Information")]
+	internal string PackageUserInformation => packageUserInformation;
+
+	[JsonInclude]
+	[JsonPropertyName("App Size")]
+	internal string AppSize
+	{
+		get; set
+		{
+			if (string.Equals(field, value, StringComparison.Ordinal))
+			{
+				return;
+			}
+
+			field = value;
+			OnPropertyChanged();
+		}
+	} = appSize;
+
+	[JsonInclude]
+	[JsonPropertyName("App Data Size")]
+	internal string AppDataSize
+	{
+		get; set
+		{
+			if (string.Equals(field, value, StringComparison.Ordinal))
+			{
+				return;
+			}
+
+			field = value;
+			OnPropertyChanged();
+		}
+	} = appDataSize;
+
+	[JsonInclude]
+	[JsonPropertyName("Total Usage")]
+	internal string TotalUsage
+	{
+		get; set
+		{
+			if (string.Equals(field, value, StringComparison.Ordinal))
+			{
+				return;
+			}
+
+			field = value;
+			OnPropertyChanged();
+		}
+	} = totalUsage;
+
+	[JsonInclude]
+	[JsonPropertyName("IsResourcePackage")]
+	internal string IsResourcePackage => isResourcePackage;
+
+	[JsonInclude]
+	[JsonPropertyName("IsBundle")]
+	internal string IsBundle => isBundle;
+
+	[JsonInclude]
+	[JsonPropertyName("IsDevelopmentMode")]
+	internal string IsDevelopmentMode => isDevelopmentMode;
+
+	[JsonInclude]
+	[JsonPropertyName("NonRemovable")]
+	internal string NonRemovable => nonRemovable;
+
+	[JsonInclude]
+	[JsonPropertyName("Dependencies")]
+	internal string Dependencies => dependencies;
+
+	[JsonInclude]
+	[JsonPropertyName("IsPartiallyStaged")]
+	internal string IsPartiallyStaged => isPartiallyStaged;
+
+	[JsonInclude]
+	[JsonPropertyName("SignatureKind")]
+	internal string SignatureKind => signatureKind;
+
+	[JsonInclude]
+	[JsonPropertyName("Status")]
+	internal string Status => status;
+
+	[JsonInclude]
+	[JsonPropertyName("Capabilities")]
+	internal string Capabilities => capabilities;
+
+	[JsonIgnore]
+	internal int CapabilityCount => capabilityCount;
+
 	[JsonIgnore]
 	internal object? VMRef => vmRef;
+
+	[JsonIgnore]
+	internal bool StorageDetailsLoaded { get; private set; }
+
+	[JsonIgnore]
+	internal bool StorageDetailsLoading { get; private set; }
 
 	/// <summary>
 	/// A stable identity for equality and hashing.
 	/// </summary>
 	[JsonIgnore]
 	internal string StableIdentity { get; } = string.Concat(packageFamilyName, "|", architecture);
+
+	internal bool TryBeginStorageDetailsLoad()
+	{
+		if (StorageDetailsLoaded || StorageDetailsLoading)
+		{
+			return false;
+		}
+
+		StorageDetailsLoading = true;
+		return true;
+	}
+
+	internal void SetStorageDetails(string newAppSize, string newAppDataSize, string newTotalUsage)
+	{
+		AppSize = newAppSize;
+		AppDataSize = newAppDataSize;
+		TotalUsage = newTotalUsage;
+		StorageDetailsLoaded = true;
+		StorageDetailsLoading = false;
+	}
+
+	internal void SetStorageDetailsLoading(string newAppSize, string newAppDataSize, string newTotalUsage)
+	{
+		AppSize = newAppSize;
+		AppDataSize = newAppDataSize;
+		TotalUsage = newTotalUsage;
+	}
+
+	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
 /// <summary>

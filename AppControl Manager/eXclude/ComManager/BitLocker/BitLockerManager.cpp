@@ -153,6 +153,10 @@ namespace BitLocker {
 		}
 		wstringstream ss;
 		ss << L"BitLocker: Operation failed (ReturnValue=" << code << L")";
+		if (code == 2150694960UL)
+		{
+			ss << L" - FVE_E_BOOTABLE_CDDVD: A bootable CD/DVD or mounted bootable ISO is present. Remove or eject it and restart the computer before enabling TPM-based OS drive protection.";
+		}
 		if (!contextMsg.empty()) ss << L" - " << contextMsg;
 		LogError(ss.str());
 		return false;
@@ -1900,6 +1904,10 @@ namespace BitLocker {
 	{
 		wstringstream ss;
 		ss << L"(ReturnValue=" << code << L", 0x" << hex << uppercase << code << L")";
+		if (code == 2150694960UL)
+		{
+			ss << L" FVE_E_BOOTABLE_CDDVD: remove or eject the bootable CD/DVD or mounted bootable ISO, then restart the computer";
+		}
 		return ss.str();
 	}
 

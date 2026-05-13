@@ -15,20 +15,34 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using CommonCore.Interop;
 using Windows.ApplicationModel;
+using Windows.Management.Core;
 using Windows.Management.Deployment;
 
 namespace CommonCore.Others;
 
 internal static class GetAppsList
 {
+	private readonly record struct PackagedAppStorageDetails(long? AppSizeInBytes, long? AppDataSizeInBytes)
+	{
+		internal long? TotalUsageInBytes => AppSizeInBytes.HasValue && AppDataSizeInBytes.HasValue ? checked(AppSizeInBytes.Value + AppDataSizeInBytes.Value) : null;
+	}
+
+	private readonly record struct PackagedAppManifestDetails(string Capabilities, int CapabilityCount);
 
 	// Package Manager object used by the PFN section
 	private static readonly PackageManager packageManager = new();
@@ -52,31 +66,32 @@ internal static class GetAppsList
 			using BinaryReader reader = new(stream);
 
 			// Read first few bytes to determine file type
-			byte[] header = reader.ReadBytes(8);
+			Span<byte> header = stackalloc byte[8];
+			int bytesRead = stream.Read(header);
 			_ = stream.Seek(0, SeekOrigin.Begin);
 
 			// PNG signature: 89 50 4E 47 0D 0A 1A 0A
-			if (header.Length >= 8 && header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47)
+			if (bytesRead >= 8 && header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47)
 			{
 				return ReadPngDimensions(reader);
 			}
 			// JPEG signature: FF D8 FF
-			else if (header.Length >= 3 && header[0] == 0xFF && header[1] == 0xD8 && header[2] == 0xFF)
+			else if (bytesRead >= 3 && header[0] == 0xFF && header[1] == 0xD8 && header[2] == 0xFF)
 			{
 				return ReadJpegDimensions(reader);
 			}
 			// BMP signature: 42 4D
-			else if (header.Length >= 2 && header[0] == 0x42 && header[1] == 0x4D)
+			else if (bytesRead >= 2 && header[0] == 0x42 && header[1] == 0x4D)
 			{
 				return ReadBmpDimensions(reader);
 			}
 			// GIF signature: 47 49 46 38
-			else if (header.Length >= 4 && header[0] == 0x47 && header[1] == 0x49 && header[2] == 0x46 && header[3] == 0x38)
+			else if (bytesRead >= 4 && header[0] == 0x47 && header[1] == 0x49 && header[2] == 0x46 && header[3] == 0x38)
 			{
 				return ReadGifDimensions(reader);
 			}
 			// ICO signature: 00 00 01 00
-			else if (header.Length >= 4 && header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x01 && header[3] == 0x00)
+			else if (bytesRead >= 4 && header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x01 && header[3] == 0x00)
 			{
 				return ReadIcoDimensions(reader);
 			}
@@ -180,8 +195,9 @@ internal static class GetAppsList
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static int ReadBigEndianInt32(BinaryReader reader)
 	{
-		byte[] bytes = reader.ReadBytes(4);
-		return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+		Span<byte> bytes = stackalloc byte[sizeof(int)];
+		reader.BaseStream.ReadExactly(bytes);
+		return BinaryPrimitives.ReadInt32BigEndian(bytes);
 	}
 
 	/// <summary>
@@ -242,6 +258,8 @@ internal static class GetAppsList
 		{
 			// The list to return as output
 			List<PackagedAppView> apps = [];
+			string deferredSizeText = Atlas.GetStr("UnavailableOrUnknown");
+			string notApplicableText = Atlas.GetStr("NAText");
 
 			// Get all of the packages on the system if running elevated, otherwise get packages for the current user only.
 			IEnumerable<Package> allApps = Atlas.IsElevated ? packageManager.FindPackages() : packageManager.FindPackagesForUser(string.Empty);
@@ -251,6 +269,14 @@ internal static class GetAppsList
 			{
 				try
 				{
+					PackagedAppManifestDetails manifestDetails = GetPackageManifestDetails(item);
+					Windows.ApplicationModel.PackageStatus packageStatus = item.Status;
+					PackageId packageId = item.Id;
+					string installLocation = GetInstallLocation(item);
+
+					string? driveRoot = Path.GetPathRoot(installLocation);
+					string installDrive = string.IsNullOrEmpty(driveRoot) ? notApplicableText : driveRoot;
+
 					// Try get the logo string
 					string? logoStr = item.Logo?.ToString();
 
@@ -266,16 +292,32 @@ internal static class GetAppsList
 					// Create a new instance of the class that displays each app in the ListView
 					apps.Add(new PackagedAppView(
 						displayName: item.DisplayName,
-						version: $"{item.Id.Version.Major}.{item.Id.Version.Minor}.{item.Id.Version.Build}.{item.Id.Version.Revision}",
-						packageFamilyName: item.Id.FamilyName,
+						version: FormatPackageVersion(packageId.Version),
+						packageFamilyName: packageId.FamilyName,
 						logo: logoStr,
 						publisher: item.PublisherDisplayName,
-						architecture: item.Id.Architecture.ToString(),
-						publisherID: item.Id.PublisherId,
-						fullName: item.Id.FullName,
+						architecture: packageId.Architecture.ToString(),
+						publisherID: packageId.PublisherId,
+						fullName: packageId.FullName,
 						description: string.IsNullOrEmpty(item.Description) ? "N/A" : item.Description,
-						installLocation: item.InstalledLocation.Path,
+						installLocation: installLocation,
+						installDrive: installDrive,
 						installedDate: item.InstalledDate.ToLocalTime().ToString(CultureInfo.CurrentCulture),
+						isFramework: item.IsFramework ? bool.TrueString : bool.FalseString,
+						packageUserInformation: GetPackageUserInformation(item),
+						appSize: deferredSizeText,
+						appDataSize: deferredSizeText,
+						totalUsage: deferredSizeText,
+						isResourcePackage: item.IsResourcePackage ? bool.TrueString : bool.FalseString,
+						isBundle: item.IsBundle ? bool.TrueString : bool.FalseString,
+						isDevelopmentMode: item.IsDevelopmentMode ? bool.TrueString : bool.FalseString,
+						nonRemovable: GetPackageNonRemovable(item) is bool nonRemovableValue ? (nonRemovableValue ? bool.TrueString : bool.FalseString) : notApplicableText,
+						dependencies: FormatPackageDependencies(item),
+						isPartiallyStaged: packageStatus.IsPartiallyStaged ? bool.TrueString : bool.FalseString,
+						signatureKind: item.SignatureKind.ToString(),
+						status: FormatPackageStatus(packageStatus),
+						capabilities: manifestDetails.Capabilities,
+						capabilityCount: manifestDetails.CapabilityCount,
 						vmRef: VVMRef
 					));
 				}
@@ -304,32 +346,502 @@ internal static class GetAppsList
 
 	}
 
+	internal static async Task PopulateStorageDetailsAsync(PackagedAppView app)
+	{
+		if (app.StorageDetailsLoaded)
+		{
+			return;
+		}
+
+		if (!app.TryBeginStorageDetailsLoad())
+		{
+			while (app.StorageDetailsLoading)
+			{
+				await Task.Delay(50);
+			}
+
+			return;
+		}
+
+		app.SetStorageDetailsLoading("…", "…", "…");
+
+		try
+		{
+			PackagedAppStorageDetails storageDetails = await Task.Run(() =>
+			{
+				long? appSizeInBytes = GetDirectorySizeInBytes(app.InstallLocation);
+				long? appDataSizeInBytes = GetAppDataSizeInBytes(app.PackageFamilyName);
+				return new PackagedAppStorageDetails(appSizeInBytes, appDataSizeInBytes);
+			});
+
+			app.SetStorageDetails(
+				FormatByteSize(storageDetails.AppSizeInBytes),
+				FormatByteSize(storageDetails.AppDataSizeInBytes),
+				FormatByteSize(storageDetails.TotalUsageInBytes));
+		}
+		catch
+		{
+			app.SetStorageDetails(
+				Atlas.GetStr("UnavailableOrUnknown"),
+				Atlas.GetStr("UnavailableOrUnknown"),
+				Atlas.GetStr("UnavailableOrUnknown"));
+		}
+	}
+
+	private static bool? GetPackageNonRemovable(Package package)
+	{
+		if (package.SignatureKind is PackageSignatureKind.System)
+		{
+			return true;
+		}
+
+		try
+		{
+			bool isPresent = false;
+			int errorCode = NativeMethods.IsPackageFamilyInUninstallBlocklist(package.Id.FamilyName, ref isPresent);
+			if (errorCode < 0)
+			{
+				Marshal.ThrowExceptionForHR(errorCode);
+			}
+
+			return isPresent;
+		}
+		catch
+		{
+			return null;
+		}
+	}
+
+	private static string FormatPackageDependencies(Package package)
+	{
+		StringBuilder builder = new();
+		bool hasValue = false;
+
+		foreach (Package dependency in package.Dependencies)
+		{
+			hasValue = AppendDisplayListValue(builder, hasValue, dependency.Id.FullName);
+		}
+
+		return hasValue ? builder.ToString() : Atlas.GetStr("NAText");
+	}
+
+	private static string FormatDisplayList(IEnumerable<string> values)
+	{
+		StringBuilder builder = new();
+		bool hasValue = false;
+
+		foreach (string value in values)
+		{
+			hasValue = AppendDisplayListValue(builder, hasValue, value);
+		}
+
+		return hasValue ? builder.ToString() : Atlas.GetStr("NAText");
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private static bool AppendDisplayListValue(StringBuilder builder, bool hasValue, string value)
+	{
+		ReadOnlySpan<char> trimmedValue = value.AsSpan().Trim();
+		if (trimmedValue.IsEmpty)
+		{
+			return hasValue;
+		}
+
+		if (hasValue)
+		{
+			_ = builder.AppendLine();
+		}
+
+		_ = builder.Append(trimmedValue);
+		return true;
+	}
+
+	private static readonly XmlReaderSettings ReaderSettings = new()
+	{
+		DtdProcessing = DtdProcessing.Prohibit,
+		IgnoreComments = true,
+		IgnoreWhitespace = true
+	};
+
+	private static string FormatPackageStatus(Windows.ApplicationModel.PackageStatus packageStatus)
+	{
+		if (packageStatus.VerifyIsOK())
+		{
+			return "Ok";
+		}
+
+		List<string> activeStates = [];
+
+		if (packageStatus.DataOffline) activeStates.Add("DataOffline");
+		if (packageStatus.DependencyIssue) activeStates.Add("DependencyIssue");
+		if (packageStatus.DeploymentInProgress) activeStates.Add("DeploymentInProgress");
+		if (packageStatus.Disabled) activeStates.Add("Disabled");
+		if (packageStatus.IsPartiallyStaged) activeStates.Add("IsPartiallyStaged");
+		if (packageStatus.LicenseIssue) activeStates.Add("LicenseIssue");
+		if (packageStatus.Modified) activeStates.Add("Modified");
+		if (packageStatus.NeedsRemediation) activeStates.Add("NeedsRemediation");
+		if (packageStatus.NotAvailable) activeStates.Add("NotAvailable");
+		if (packageStatus.PackageOffline) activeStates.Add("PackageOffline");
+		if (packageStatus.Servicing) activeStates.Add("Servicing");
+		if (packageStatus.Tampered) activeStates.Add("Tampered");
+
+		return activeStates.Count > 0 ? string.Join(", ", activeStates) : Atlas.GetStr("NAText");
+	}
+
+	private static PackagedAppManifestDetails GetPackageManifestDetails(Package package)
+	{
+		try
+		{
+			string manifestPath = Path.Combine(package.InstalledLocation.Path, "AppxManifest.xml");
+			if (!File.Exists(manifestPath))
+			{
+				return new PackagedAppManifestDetails(Atlas.GetStr("NAText"), 0);
+			}
+
+			HashSet<string> capabilities = new(StringComparer.OrdinalIgnoreCase);
+			bool readingCapabilities = false;
+
+			using FileStream manifestStream = new(manifestPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+			using XmlReader reader = XmlReader.Create(manifestStream, ReaderSettings);
+
+			while (reader.Read())
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					if (string.Equals(reader.LocalName, "Capabilities", StringComparison.Ordinal))
+					{
+						readingCapabilities = !reader.IsEmptyElement;
+						continue;
+					}
+
+					if (readingCapabilities)
+					{
+						string capabilityValue = reader.GetAttribute("Name") ?? reader.LocalName;
+						if (!string.IsNullOrWhiteSpace(capabilityValue))
+						{
+							_ = capabilities.Add(capabilityValue.Trim());
+						}
+
+						continue;
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement &&
+					string.Equals(reader.LocalName, "Capabilities", StringComparison.Ordinal))
+				{
+					readingCapabilities = false;
+				}
+			}
+
+			if (capabilities.Count == 0)
+			{
+				return new PackagedAppManifestDetails(Atlas.GetStr("NAText"), 0);
+			}
+
+			List<string> orderedCapabilities = [.. capabilities];
+			orderedCapabilities.Sort(StringComparer.OrdinalIgnoreCase);
+
+			return new PackagedAppManifestDetails(FormatDisplayList(orderedCapabilities), orderedCapabilities.Count);
+		}
+		catch
+		{
+			return new PackagedAppManifestDetails(Atlas.GetStr("NAText"), 0);
+		}
+	}
+
+	private static string GetInstallLocation(Package package)
+	{
+		try
+		{
+			string effectivePath = package.EffectivePath;
+			if (!string.IsNullOrWhiteSpace(effectivePath))
+			{
+				return effectivePath;
+			}
+		}
+		catch
+		{
+		}
+
+		return package.InstalledLocation.Path;
+	}
+
+	private static string GetPackageUserInformation(Package package)
+	{
+		if (!Atlas.IsElevated)
+		{
+			return "{}";
+		}
+
+		List<PackageUserInformation> packageUsers;
+
+		try
+		{
+			packageUsers = [.. packageManager.FindUsers(package.Id.FullName)];
+		}
+		catch
+		{
+			return "{}";
+		}
+
+		if (packageUsers.Count is 0)
+		{
+			return "{}";
+		}
+
+		List<string> formattedUserInformation = new(packageUsers.Count);
+
+		foreach (PackageUserInformation packageUser in CollectionsMarshal.AsSpan(packageUsers))
+		{
+			formattedUserInformation.Add(FormatPackageUserInformation(packageUser, package.Id.FullName));
+		}
+
+		return string.Concat("{", string.Join(", ", formattedUserInformation), "}");
+	}
+
+	private static string FormatPackageUserInformation(PackageUserInformation packageUser, string packageFullName)
+	{
+		string userSecurityId = packageUser.UserSecurityId;
+		string userName;
+
+		try
+		{
+			SecurityIdentifier securityIdentifier = new(userSecurityId);
+			userName = securityIdentifier.Translate(typeof(NTAccount)).Value;
+		}
+		catch
+		{
+			userName = userSecurityId;
+		}
+
+		string installState = packageUser.InstallState.ToString();
+		if ((int)packageUser.InstallState == 2)
+		{
+			bool isPackageEndOfLife = false;
+			int errorCode = NativeMethods.IsPackageEndOfLife(userSecurityId, packageFullName, ref isPackageEndOfLife);
+			if (errorCode < 0)
+			{
+				Marshal.ThrowExceptionForHR(errorCode);
+				Logger.Write($"Received error code '{errorCode}' when querying end of life status of '{packageFullName}'");
+			}
+
+			if (isPackageEndOfLife)
+			{
+				installState = string.Concat(installState, "(pending removal)");
+			}
+		}
+
+		return string.Concat(userName, ": ", installState);
+	}
+
+	/// <summary>
+	/// Gets the total size of the package data folders that are exposed through ApplicationDataManager.
+	/// </summary>
+	private static long? GetAppDataSizeInBytes(string packageFamilyName)
+	{
+		try
+		{
+			using Windows.Storage.ApplicationData applicationData = ApplicationDataManager.CreateForPackageFamily(packageFamilyName);
+			HashSet<string> folderPaths = new(StringComparer.OrdinalIgnoreCase);
+
+			AddFolderPath(folderPaths, applicationData.LocalFolder?.Path);
+			AddFolderPath(folderPaths, applicationData.LocalCacheFolder?.Path);
+			AddFolderPath(folderPaths, applicationData.RoamingFolder?.Path);
+			AddFolderPath(folderPaths, applicationData.SharedLocalFolder?.Path);
+			AddFolderPath(folderPaths, applicationData.TemporaryFolder?.Path);
+
+			long totalSizeInBytes = 0;
+
+			foreach (string folderPath in folderPaths)
+			{
+				long? currentFolderSize = GetDirectorySizeInBytes(folderPath);
+				if (!currentFolderSize.HasValue)
+				{
+					continue;
+				}
+
+				totalSizeInBytes = SafeAdd(totalSizeInBytes, currentFolderSize.Value);
+			}
+
+			return totalSizeInBytes;
+		}
+		catch
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
+	/// Adds a folder path to the set if it is available.
+	/// </summary>
+	private static void AddFolderPath(HashSet<string> folderPaths, string? folderPath)
+	{
+		if (!string.IsNullOrWhiteSpace(folderPath))
+		{
+			_ = folderPaths.Add(folderPath);
+		}
+	}
+
+	private static readonly EnumerationOptions EnumerationOptions = new()
+	{
+		AttributesToSkip = FileAttributes.ReparsePoint,
+		IgnoreInaccessible = true,
+		RecurseSubdirectories = true,
+		ReturnSpecialDirectories = false
+	};
+
+	/// <summary>
+	/// Recursively computes the size of a directory while ignoring inaccessible entries and reparse points.
+	/// </summary>
+	private static long? GetDirectorySizeInBytes(string? directoryPath)
+	{
+		if (string.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath))
+		{
+			return 0;
+		}
+
+		try
+		{
+			long totalSizeInBytes = 0;
+
+			FileSystemEnumerable<long> fileSizes = new(
+				directoryPath,
+				static (ref entry) => entry.Length,
+				EnumerationOptions)
+			{
+				ShouldIncludePredicate = static (ref entry) => !entry.IsDirectory,
+				ShouldRecursePredicate = static (ref entry) => (entry.Attributes & FileAttributes.ReparsePoint) == 0
+			};
+
+			foreach (long fileSize in fileSizes)
+			{
+				totalSizeInBytes = SafeAdd(totalSizeInBytes, fileSize);
+			}
+
+			return totalSizeInBytes;
+		}
+		catch
+		{
+			return null;
+		}
+	}
+
+	private static readonly string[] Suffixes = ["B", "KB", "MB", "GB", "TB"];
+
+	/// <summary>
+	/// Formats a byte count using the app's existing size formatting style.
+	/// </summary>
+	private static string FormatByteSize(long? sizeInBytes)
+	{
+		if (!sizeInBytes.HasValue)
+		{
+			return Atlas.GetStr("UnavailableOrUnknown");
+		}
+
+		int suffixIndex = 0;
+		double size = sizeInBytes.Value;
+
+		while (size >= 1024D && suffixIndex < Suffixes.Length - 1)
+		{
+			size /= 1024D;
+			suffixIndex++;
+		}
+
+		return $"{size:F2} {Suffixes[suffixIndex]}";
+	}
+
+	/// <summary>
+	/// Safely adds two byte counts and saturates at <see cref="long.MaxValue"/>.
+	/// </summary>
+	private static long SafeAdd(long left, long right)
+	{
+		if (right > 0 && left > long.MaxValue - right)
+		{
+			return long.MaxValue;
+		}
+
+		return left + right;
+	}
+
+	private static string FormatPackageVersion(PackageVersion version)
+	{
+		int majorLength = CountDigits(version.Major);
+		int minorLength = CountDigits(version.Minor);
+		int buildLength = CountDigits(version.Build);
+		int revisionLength = CountDigits(version.Revision);
+		int totalLength = majorLength + minorLength + buildLength + revisionLength + 3;
+
+		return string.Create(totalLength, version, static (span, currentVersion) =>
+		{
+			int written = currentVersion.Major.TryFormat(span, out int charsWritten) ? charsWritten : 0;
+			span[written++] = '.';
+			_ = currentVersion.Minor.TryFormat(span[written..], out charsWritten);
+			written += charsWritten;
+			span[written++] = '.';
+			_ = currentVersion.Build.TryFormat(span[written..], out charsWritten);
+			written += charsWritten;
+			span[written++] = '.';
+			_ = currentVersion.Revision.TryFormat(span[written..], out _);
+		});
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private static int CountDigits(ushort value)
+	{
+		if (value >= 10000)
+		{
+			return 5;
+		}
+
+		if (value >= 1000)
+		{
+			return 4;
+		}
+
+		if (value >= 100)
+		{
+			return 3;
+		}
+
+		return value >= 10 ? 2 : 1;
+	}
+
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
 	internal static async Task<(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>)> GetContactsGroupedAsync(object? VMRef = null)
 	{
-		// Grab Apps objects from pre-existing list
-		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await Get(VMRef)
+		List<PackagedAppView> apps = await Get(VMRef);
+		Dictionary<string, List<PackagedAppView>> groupedApps = new(StringComparer.Ordinal);
 
-															 // Ensure DisplayName is not null before grouping
-															 // This also prevents apps without a DisplayName to exist in the returned apps list
-															 where !string.IsNullOrWhiteSpace(item.DisplayName)
+		foreach (PackagedAppView item in CollectionsMarshal.AsSpan(apps))
+		{
+			if (string.IsNullOrWhiteSpace(item.DisplayName))
+			{
+				continue;
+			}
 
-															 // Group the items returned from the query, sort and select the ones you want to keep
-															 group item by item.DisplayName[..1].ToUpperInvariant() into g
-															 orderby g.Key
+			string key = item.DisplayName[..1].ToUpperInvariant();
+			ref List<PackagedAppView>? currentGroup = ref CollectionsMarshal.GetValueRefOrAddDefault(groupedApps, key, out _);
+			currentGroup ??= [];
+			currentGroup.Add(item);
+		}
 
-															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
-															 // a key attribute. The IGrouping-typed variable g now holds the App objects,
-															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
-															 select new GroupInfoListForPackagedAppView(items: g, key: g.Key);
+		List<string> orderedKeys = [.. groupedApps.Keys];
+		orderedKeys.Sort(StringComparer.Ordinal);
 
-		return (new(query), new(query));
+		List<GroupInfoListForPackagedAppView> groupedResults = new(orderedKeys.Count);
+		foreach (string key in CollectionsMarshal.AsSpan(orderedKeys))
+		{
+			groupedResults.Add(new GroupInfoListForPackagedAppView(items: groupedApps[key], key: key));
+		}
+
+		return (new(groupedResults), groupedResults);
 	}
 
 	/// <summary>
 	/// Event handler for when the search box of apps list changes. Used by all ViewModels that perform searches among installed packaged apps.
+	/// Used by AppControl Manager only.
+	/// TODO: Consolidate this with GetFilteredAppsListItemsSource in the InstalledAppsManagementVM.
 	/// </summary>
 	internal static ObservableCollection<GroupInfoListForPackagedAppView> PFNAppFilteringTextBox_TextChanged(string? query, List<GroupInfoListForPackagedAppView> fullList)
 	{
@@ -349,6 +861,8 @@ internal static class GetAppsList
 				app.PackageFamilyName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
 				app.Publisher.Contains(query, StringComparison.OrdinalIgnoreCase) ||
 				app.InstallLocation.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.Dependencies.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+				app.Capabilities.Contains(query, StringComparison.OrdinalIgnoreCase) ||
 				app.PublisherID.Contains(query, StringComparison.OrdinalIgnoreCase)
 				), key: group.Key)).Where(group => group.Any()).ToList();
 

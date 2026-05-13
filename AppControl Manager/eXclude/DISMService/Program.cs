@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DISMService;
@@ -32,6 +33,10 @@ internal static class Program
 	private static BinaryWriter? _writer;
 	private static BinaryReader? _reader;
 	private static string? _currentItemName;
+	private static readonly Lock _writerLock = new();
+	private static readonly Lock _operationLock = new();
+	private static ManualResetEvent? _currentCancelEvent;
+	private static bool _operationInProgress;
 
 	internal const string OnlineImage = "DISM_{53BFAE52-B167-4E2F-A258-0A37B57FF845}";
 
@@ -144,19 +149,23 @@ internal static class Program
 						break;
 
 					case Command.AddCapability:
-						await Task.Run(HandleAddCapability);
+						HandleAddCapability();
 						break;
 
 					case Command.RemoveCapability:
-						await Task.Run(HandleRemoveCapability);
+						HandleRemoveCapability();
 						break;
 
 					case Command.EnableFeature:
-						await Task.Run(HandleEnableFeature);
+						HandleEnableFeature();
 						break;
 
 					case Command.DisableFeature:
-						await Task.Run(HandleDisableFeature);
+						HandleDisableFeature();
+						break;
+
+					case Command.CancelCurrentOperation:
+						HandleCancelCurrentOperation();
 						break;
 
 					case Command.Shutdown:
@@ -301,7 +310,6 @@ internal static class Program
 		try
 		{
 			string name = ReadString();
-			_currentItemName = name;
 			bool limitAccess = _reader!.ReadBoolean();
 			int sourcePathCount = _reader.ReadInt32();
 			string[]? sourcePaths = null;
@@ -315,18 +323,28 @@ internal static class Program
 				}
 			}
 
-			bool success = Methods.AddCapability(name, limitAccess, sourcePaths);
+			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			{
+				SendError("Another DISM operation is already in progress.");
+				return;
+			}
 
-			SendResponse(Response.OperationComplete);
-			_writer!.Write(success);
+			_ = Task.Run(() =>
+			{
+				try
+				{
+					Methods.OperationExecutionState operationState = Methods.AddCapability(name, limitAccess, sourcePaths, cancelEvent.SafeWaitHandle.DangerousGetHandle());
+					SendOperationComplete(operationState);
+				}
+				finally
+				{
+					EndOperation(cancelEvent);
+				}
+			});
 		}
 		catch (Exception ex)
 		{
 			SendError($"AddCapability error: {ex.Message}");
-		}
-		finally
-		{
-			_currentItemName = null;
 		}
 	}
 
@@ -335,19 +353,29 @@ internal static class Program
 		try
 		{
 			string name = ReadString();
-			_currentItemName = name;
-			bool success = Methods.RemoveCapability(name);
 
-			SendResponse(Response.OperationComplete);
-			_writer!.Write(success);
+			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			{
+				SendError("Another DISM operation is already in progress.");
+				return;
+			}
+
+			_ = Task.Run(() =>
+			{
+				try
+				{
+					Methods.OperationExecutionState operationState = Methods.RemoveCapability(name, cancelEvent.SafeWaitHandle.DangerousGetHandle());
+					SendOperationComplete(operationState);
+				}
+				finally
+				{
+					EndOperation(cancelEvent);
+				}
+			});
 		}
 		catch (Exception ex)
 		{
 			SendError($"RemoveCapability error: {ex.Message}");
-		}
-		finally
-		{
-			_currentItemName = null;
 		}
 	}
 
@@ -356,7 +384,6 @@ internal static class Program
 		try
 		{
 			string name = ReadString();
-			_currentItemName = name;
 			int sourcePathCount = _reader!.ReadInt32();
 			string[]? sourcePaths = null;
 
@@ -369,18 +396,28 @@ internal static class Program
 				}
 			}
 
-			bool success = Methods.EnableFeature(name, sourcePaths);
+			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			{
+				SendError("Another DISM operation is already in progress.");
+				return;
+			}
 
-			SendResponse(Response.OperationComplete);
-			_writer!.Write(success);
+			_ = Task.Run(() =>
+			{
+				try
+				{
+					Methods.OperationExecutionState operationState = Methods.EnableFeature(name, sourcePaths, cancelEvent.SafeWaitHandle.DangerousGetHandle());
+					SendOperationComplete(operationState);
+				}
+				finally
+				{
+					EndOperation(cancelEvent);
+				}
+			});
 		}
 		catch (Exception ex)
 		{
 			SendError($"EnableFeature error: {ex.Message}");
-		}
-		finally
-		{
-			_currentItemName = null;
 		}
 	}
 
@@ -389,19 +426,80 @@ internal static class Program
 		try
 		{
 			string name = ReadString();
-			_currentItemName = name;
-			bool success = Methods.DisableFeature(name);
 
-			SendResponse(Response.OperationComplete);
-			_writer!.Write(success);
+			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			{
+				SendError("Another DISM operation is already in progress.");
+				return;
+			}
+
+			_ = Task.Run(() =>
+			{
+				try
+				{
+					Methods.OperationExecutionState operationState = Methods.DisableFeature(name, cancelEvent.SafeWaitHandle.DangerousGetHandle());
+					SendOperationComplete(operationState);
+				}
+				finally
+				{
+					EndOperation(cancelEvent);
+				}
+			});
 		}
 		catch (Exception ex)
 		{
 			SendError($"DisableFeature error: {ex.Message}");
 		}
-		finally
+	}
+
+	private static bool TryBeginOperation(string itemName, out ManualResetEvent cancelEvent)
+	{
+		lock (_operationLock)
 		{
-			_currentItemName = null;
+			if (_operationInProgress)
+			{
+				cancelEvent = null!;
+				return false;
+			}
+
+			cancelEvent = new ManualResetEvent(false);
+			_currentCancelEvent = cancelEvent;
+			_currentItemName = itemName;
+			_operationInProgress = true;
+			return true;
+		}
+	}
+
+	private static void EndOperation(ManualResetEvent cancelEvent)
+	{
+		lock (_operationLock)
+		{
+			if (ReferenceEquals(_currentCancelEvent, cancelEvent))
+			{
+				_currentCancelEvent = null;
+				_currentItemName = null;
+				_operationInProgress = false;
+			}
+		}
+
+		cancelEvent.Dispose();
+	}
+
+	private static void HandleCancelCurrentOperation()
+	{
+		bool cancellationRequested = false;
+		lock (_operationLock)
+		{
+			if (_operationInProgress && _currentCancelEvent != null)
+			{
+				_ = _currentCancelEvent.Set();
+				cancellationRequested = true;
+			}
+		}
+
+		if (cancellationRequested)
+		{
+			SendLog("Cancellation requested for the active DISM item.", LogTypeIntel.Warning);
 		}
 	}
 
@@ -420,15 +518,31 @@ internal static class Program
 
 	private static void SendResponse(Response response)
 	{
-		_writer!.Write((byte)response);
-		_writer.Flush();
+		lock (_writerLock)
+		{
+			_writer!.Write((byte)response);
+			_writer.Flush();
+		}
+	}
+
+	private static void SendOperationComplete(Methods.OperationExecutionState operationState)
+	{
+		lock (_writerLock)
+		{
+			_writer!.Write((byte)Response.OperationComplete);
+			_writer.Write((byte)operationState);
+			_writer.Flush();
+		}
 	}
 
 	private static void SendError(string message)
 	{
-		_writer!.Write((byte)Response.Error);
-		WriteString(message);
-		_writer.Flush();
+		lock (_writerLock)
+		{
+			_writer!.Write((byte)Response.Error);
+			WriteString(message);
+			_writer.Flush();
+		}
 	}
 
 	private static void SendItemProgress(string itemName, uint current, uint total)
@@ -437,11 +551,14 @@ internal static class Program
 		{
 			if (_writer != null && _pipeServer?.IsConnected == true)
 			{
-				_writer.Write((byte)Response.ItemProgress);
-				WriteString(itemName);
-				_writer.Write(current);
-				_writer.Write(total);
-				_writer.Flush();
+				lock (_writerLock)
+				{
+					_writer.Write((byte)Response.ItemProgress);
+					WriteString(itemName);
+					_writer.Write(current);
+					_writer.Write(total);
+					_writer.Flush();
+				}
 			}
 		}
 		catch
@@ -456,10 +573,13 @@ internal static class Program
 		{
 			if (_writer != null && _pipeServer?.IsConnected == true)
 			{
-				_writer.Write((byte)Response.Log);
-				WriteString(message);
-				_writer.Write((int)logType);
-				_writer.Flush();
+				lock (_writerLock)
+				{
+					_writer.Write((byte)Response.Log);
+					WriteString(message);
+					_writer.Write((int)logType);
+					_writer.Flush();
+				}
 			}
 		}
 		catch
@@ -523,7 +643,8 @@ internal enum Command : byte
 	EnableFeature = 6,
 	DisableFeature = 7,
 	Shutdown = 8,
-	Exit = 9
+	Exit = 9,
+	CancelCurrentOperation = 10
 }
 
 internal enum Response : byte

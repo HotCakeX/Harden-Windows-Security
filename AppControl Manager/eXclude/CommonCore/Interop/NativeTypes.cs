@@ -1928,3 +1928,52 @@ internal enum WM_SYSCOMMAND : int
 	SC_VSCROLL = 0xF070,
 	SCF_ISSECURE = 0x0001
 }
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct INPUT
+{
+	internal uint type;
+	internal INPUTUNION U;
+}
+
+[StructLayout(LayoutKind.Explicit)]
+internal struct INPUTUNION
+{
+	[FieldOffset(0)]
+	internal MOUSEINPUT mi;
+
+	[FieldOffset(0)]
+	internal KEYBDINPUT ki;
+
+	[FieldOffset(0)]
+	internal HARDWAREINPUT hi;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct MOUSEINPUT
+{
+	internal int dx;
+	internal int dy;
+	internal uint mouseData;
+	internal uint dwFlags;
+	internal uint time;
+	internal nuint dwExtraInfo;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct KEYBDINPUT
+{
+	internal ushort wVk;
+	internal ushort wScan;
+	internal uint dwFlags;
+	internal uint time;
+	internal nuint dwExtraInfo;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct HARDWAREINPUT
+{
+	internal uint uMsg;
+	internal ushort wParamL;
+	internal ushort wParamH;
+}

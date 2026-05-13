@@ -7552,4 +7552,44 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Open or close the Sidebar's pane.</value>
   </data>
+  <!--NEW-->
+  <data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>App Size</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>App Data</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>Total Usage</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>Is Resource Package</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>Is Bundle</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>Is Development Mode</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>Non Removable</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>Dependencies</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>Is Partially Staged</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>Signature Kind</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>Capabilities</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>Is Framework</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>User Information</value>
+</data>
 </root>

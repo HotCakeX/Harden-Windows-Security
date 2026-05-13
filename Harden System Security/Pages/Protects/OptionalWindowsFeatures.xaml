@@ -33,7 +33,6 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- Name and Type -->
@@ -44,112 +43,140 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0"
-                           Text="{x:Bind Name, Mode=OneWay}"
-                           ToolTipService.ToolTip="{x:Bind Name, Mode=OneWay}"
-                           AutomationProperties.HelpText="{x:Bind Name, Mode=OneWay}"
-                           TextWrapping="WrapWholeWords"
-                           x:Phase="1"
-                           Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                                       Margin="0,0,5,0"
+                                       Text="{x:Bind Name, Mode=OneWay}"
+                                       ToolTipService.ToolTip="{x:Bind Name, Mode=OneWay}"
+                                       AutomationProperties.HelpText="{x:Bind Name, Mode=OneWay}"
+                                       TextWrapping="Wrap"
+                                       x:Phase="1"
+                                       Style="{ThemeResource SubtitleTextBlockStyle}"/>
 
                             <!-- Type Label -->
                             <Border Grid.Column="1"
-                        CornerRadius="14"
-                        Padding="10,6"
-                        VerticalAlignment="Center"
-                        Background="{ThemeResource AppOverlayBackgroundBrush}"
-                        BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
-                        BorderThickness="1">
+                                    CornerRadius="14"
+                                    Padding="10,6"
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource AppOverlayBackgroundBrush}"
+                                    BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+                                    BorderThickness="1">
                                 <TextBlock Text="{x:Bind TypeDisplayName, Mode=OneWay}"
-                               FontSize="11"
-                               FontWeight="SemiBold"/>
+                                           FontSize="11"
+                                           FontWeight="SemiBold"/>
                             </Border>
                         </Grid>
 
                         <!-- State -->
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" Spacing="10">
-                            <TextBlock Text="State:"
-                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <CCToolKit:WrapPanel Grid.Row="1"
+                                             Orientation="Horizontal"
+                                             VerticalAlignment="Center"
+                                             HorizontalSpacing="10"
+                                             VerticalSpacing="10">
 
-                            <!-- State pill -->
-                            <Border Background="{x:Bind StateBadgeBrush, Mode=OneWay}"
-                        Padding="10,4"
-                        CornerRadius="12"
-                        HorizontalAlignment="Left">
-                                <TextBlock Text="{x:Bind StateDisplayName, Mode=OneWay}"
-                               Foreground="White"
-                               FontSize="12"
-                               FontWeight="SemiBold"/>
-                            </Border>
-                        </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center" >
+                                <TextBlock Text="State:"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,10,0"
+                                           Style="{ThemeResource BodyTextBlockStyle}"/>
+
+                                <!-- State pill -->
+                                <Border Background="{x:Bind StateBadgeBrush, Mode=OneWay}"
+                                        Padding="10,4"                                    
+                                        VerticalAlignment="Center"
+                                        CornerRadius="12"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock Text="{x:Bind StateDisplayName, Mode=OneWay}"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- Action Buttons -->
+                            <Button Click="{x:Bind EnableItem}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                              Glyph="&#xE73E;"
+                                              FontSize="14"/>
+                                    <TextBlock Text="Enable"
+                                               FontSize="12"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Click="{x:Bind DisableItem}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                              Glyph="&#xE74D;"
+                                              FontSize="14"/>
+                                    <TextBlock Text="Disable"
+                                               FontSize="12"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Click="{x:Bind CancelItem}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="{x:Bind CancelButtonVisibility, Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                              Glyph="&#xE711;"
+                                              FontSize="14"/>
+                                    <TextBlock Text="Cancel"
+                                               FontSize="12"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                        </CCToolKit:WrapPanel>
 
                         <!-- Description -->
-                        <Grid Grid.Row="2" Margin="0,0,0,6">
+                        <Grid Grid.Row="2" Margin="0,5,0,6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0"
-                           Text="Description:"
-                           Style="{ThemeResource BodyTextBlockStyle}"
-                           VerticalAlignment="Top"
-                           Margin="0,0,10,0"/>
+                                       Text="Description:"
+                                       Style="{ThemeResource BodyTextBlockStyle}"
+                                       VerticalAlignment="Top"
+                                       Margin="0,0,10,0"/>
 
                             <TextBlock Grid.Column="1"
-                           Text="{x:Bind Description, Mode=OneWay}"
-                           TextWrapping="WrapWholeWords"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                                       Text="{x:Bind Description, Mode=OneWay}"
+                                       TextWrapping="WrapWholeWords"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Style="{ThemeResource BodyTextBlockStyle}"/>
                         </Grid>
 
                         <!-- Per-item progress -->
                         <StackPanel Grid.Row="3"
-                        Orientation="Horizontal"
-                        Spacing="8"
-                        VerticalAlignment="Center"
-                        Visibility="{x:Bind ProgressBarVisibility, Mode=OneWay}">
+                                    Orientation="Horizontal"
+                                    Spacing="8"
+                                    VerticalAlignment="Center"
+                                    Visibility="{x:Bind ProgressBarVisibility, Mode=OneWay}">
                             <ProgressBar Width="200"
-                             Height="12"
-                             Minimum="0"
-                             Maximum="100"
-                             IsIndeterminate="{x:Bind IsProgressIndeterminate, Mode=OneWay}"
-                             Value="{x:Bind ProgressPercentage, Mode=OneWay}"/>
+                                         Height="12"
+                                         Minimum="0"
+                                         Maximum="100"
+                                         IsIndeterminate="{x:Bind IsProgressIndeterminate, Mode=OneWay}"
+                                         Value="{x:Bind ProgressPercentage, Mode=OneWay}"/>
                             <TextBlock Text="{x:Bind ProgressPercentageFormatted, Mode=OneWay}"
-                           VerticalAlignment="Center"
-                           Style="{ThemeResource CaptionTextBlockStyle}"
-                           Visibility="{x:Bind ProgressTextVisibility, Mode=OneWay}"/>
-                        </StackPanel>
-
-                        <!-- Action Buttons -->
-                        <StackPanel Grid.Row="4"
-                        Orientation="Horizontal"
-                        Spacing="8"
-                        HorizontalAlignment="Right">
-                            <Button Click="{x:Bind EnableItem}"
-                        IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
-                                <StackPanel Orientation="Horizontal" Spacing="4">
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                  Glyph="&#xE73E;"
-                                  FontSize="14"/>
-                                    <TextBlock Text="Enable"
-                                   FontSize="12"
-                                   FontWeight="SemiBold"
-                                   VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            <Button Click="{x:Bind DisableItem}"
-                        IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
-                                <StackPanel Orientation="Horizontal" Spacing="4">
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                  Glyph="&#xE74D;"
-                                  FontSize="14"/>
-                                    <TextBlock Text="Disable"
-                                   FontSize="12"
-                                   FontWeight="SemiBold"
-                                   VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
+                                       VerticalAlignment="Center"
+                                       Style="{ThemeResource CaptionTextBlockStyle}"
+                                       Visibility="{x:Bind ProgressTextVisibility, Mode=OneWay}"/>
                         </StackPanel>
 
                     </Grid>
@@ -162,10 +189,10 @@
         </Grid.Resources>
 
         <customUI:InfoBarV2 Grid.Row="0"
-                    IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
-                    Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
-                    Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
-                    IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
+                            IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
 
         <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
             <Expander.Header>
@@ -181,16 +208,16 @@
 
                     <!-- Search TextBox -->
                     <TextBox x:Uid="SearchFeatureCapabilityPlaceHolder"
-                         Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" />
+                             Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" />
 
                     <!-- Total and Displayed Count -->
                     <Border Background="{ThemeResource SubtleFillColorSecondaryBrush}"
-                        CornerRadius="6"
-                        Padding="12,8">
+                            CornerRadius="6"
+                            Padding="12,8">
                         <TextBlock VerticalAlignment="Center"
-                               FontSize="14"
-                               FontWeight="SemiBold">
+                                   FontSize="14"
+                                   FontWeight="SemiBold">
                         <Run x:Uid="TotalText"/>
                         <Run Text="{x:Bind ViewModel.TotalItemsCount, Mode=OneWay}"/>
                         <Run Text=" | Displayed: "/>
@@ -200,11 +227,11 @@
 
                     <!-- Progress Ring -->
                     <ProgressRing IsActive="True"
-                              Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
-                              VerticalAlignment="Center" />
+                                  Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
+                                  VerticalAlignment="Center" />
 
                     <SplitButton IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                             Click="{x:Bind ViewModel.LoadAll}">
+                                 Click="{x:Bind ViewModel.LoadAll}">
 
                         <SplitButton.Content>
                             <StackPanel Orientation="Horizontal" Spacing="4">
@@ -214,8 +241,8 @@
                                     </AnimatedIcon.Source>
                                 </AnimatedIcon>
                                 <TextBlock x:Uid="RetrieveAllOptionalsButtonText"
-                                       FontWeight="SemiBold"
-                                       VerticalAlignment="Center"/>
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
                         </SplitButton.Content>
 
@@ -225,7 +252,7 @@
                                     <MicaBackdrop Kind="BaseAlt"/>
                                 </MenuFlyout.SystemBackdrop>
                                 <MenuFlyoutItem x:Uid="RetrieveRecommendedOnlyMenuFlyoutItem"
-                                            Click="{x:Bind ViewModel.EnsureRecommendedItemsRetrievedAndGroupAsync_Click}"/>
+                                                Click="{x:Bind ViewModel.EnsureRecommendedItemsRetrievedAndGroupAsync_Click}"/>
                             </MenuFlyout>
 
                         </SplitButton.Flyout>
@@ -291,7 +318,7 @@
                     <!-- Manage Selections Dropdown -->
                     <DropDownButton x:Uid="ManageSelectionsDropDownButton">
                         <DropDownButton.Flyout>
-                            <MenuFlyout Placement="Bottom">
+                            <customUI:MenuFlyoutV2 Placement="Bottom">
                                 <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.SelectAll_Click}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8B3;"/>
@@ -317,6 +344,23 @@
                                         <FontIcon Glyph="&#xE710;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
+
+                                <MenuFlyoutSeparator/>
+
+                                <MenuFlyoutSubItem Text="Filter by status" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE71C;"/>
+                                    </MenuFlyoutSubItem.Icon>
+                                    <ToggleMenuFlyoutItem Text="Not Present" IsChecked="{x:Bind ViewModel.ShowNotPresentState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Uninstall Pending" IsChecked="{x:Bind ViewModel.ShowUninstallPendingState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Staged" IsChecked="{x:Bind ViewModel.ShowStagedState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Removed" IsChecked="{x:Bind ViewModel.ShowRemovedState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Installed" IsChecked="{x:Bind ViewModel.ShowInstalledState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Install Pending" IsChecked="{x:Bind ViewModel.ShowInstallPendingState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Superseded" IsChecked="{x:Bind ViewModel.ShowSupersededState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Partially Installed" IsChecked="{x:Bind ViewModel.ShowPartiallyInstalledState, Mode=TwoWay}"/>
+                                    <ToggleMenuFlyoutItem Text="Not Available On System" IsChecked="{x:Bind ViewModel.ShowNotAvailableOnSystemState, Mode=TwoWay}"/>
+                                </MenuFlyoutSubItem>
 
                                 <MenuFlyoutSeparator/>
 
@@ -356,7 +400,7 @@
                                     </MenuFlyoutSubItem>
                                 </MenuFlyoutSubItem>
 
-                            </MenuFlyout>
+                            </customUI:MenuFlyoutV2>
                         </DropDownButton.Flyout>
                     </DropDownButton>
 

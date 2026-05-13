@@ -18,10 +18,13 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AnimatedVisuals;
 using AppControlManager.CustomUIElements;
 using AppControlManager.WindowComponents;
+using CommonCore.Interop;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -740,6 +743,107 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Whether the button for configuring nested virtualizations on Sidebar is enabled.
 	/// </summary>
 	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
+
+	/// <summary>
+	/// Whether the button for sending the graphics driver reset shortcut on Sidebar is enabled.
+	/// </summary>
+	internal bool IsResetGraphicsDriverButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Sends the Win + Ctrl + Shift + B shortcut after confirming with the user.
+	/// </summary>
+	internal async void ResetGraphicsDriverShortcut()
+	{
+		try
+		{
+			IsResetGraphicsDriverButtonEnabled = false;
+
+			using ContentDialogV2 confirmationDialog = new()
+			{
+				Title = Atlas.GetStr("ResetGraphicsDriverShortcutDialogTitle"),
+				Content = new TextBlock
+				{
+					Text = Atlas.GetStr("ResetGraphicsDriverShortcutDialogContent"),
+					TextWrapping = TextWrapping.Wrap
+				},
+				PrimaryButtonText = Atlas.GetStr("Continue"),
+				SecondaryButtonText = Atlas.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Secondary
+			};
+
+			ContentDialogResult dialogResult = await confirmationDialog.ShowAsync();
+			if (dialogResult is not ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			MainInfoBar.WriteInfo(Atlas.GetStr("SendingGraphicsDriverResetShortcut"));
+
+			await Task.Run(SendGraphicsDriverResetShortcutInternal);
+
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullySentGraphicsDriverResetShortcut"));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsResetGraphicsDriverButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Synthesizes the Win + Ctrl + Shift + B shortcut sequence.
+	/// </summary>
+	private static unsafe void SendGraphicsDriverResetShortcutInternal()
+	{
+		INPUT[] inputs =
+		[
+			CreateKeyboardInput(NativeMethods.VK_LWIN, keyUp: false),
+			CreateKeyboardInput(NativeMethods.VK_CONTROL, keyUp: false),
+			CreateKeyboardInput(NativeMethods.VK_SHIFT, keyUp: false),
+			CreateKeyboardInput(NativeMethods.VK_KEY_B, keyUp: false),
+			CreateKeyboardInput(NativeMethods.VK_KEY_B, keyUp: true),
+			CreateKeyboardInput(NativeMethods.VK_SHIFT, keyUp: true),
+			CreateKeyboardInput(NativeMethods.VK_CONTROL, keyUp: true),
+			CreateKeyboardInput(NativeMethods.VK_LWIN, keyUp: true)
+		];
+
+		uint sentInputCount = NativeMethods.SendInput((uint)inputs.Length, inputs, sizeof(INPUT));
+		if (sentInputCount != (uint)inputs.Length)
+		{
+			int lastError = Marshal.GetLastPInvokeError();
+			throw new Win32Exception(lastError);
+		}
+	}
+
+	/// <summary>
+	/// Creates a keyboard INPUT entry for SendInput.
+	/// </summary>
+	private static INPUT CreateKeyboardInput(ushort virtualKey, bool keyUp)
+	{
+		KEYBDINPUT keyboardInput = new()
+		{
+			wVk = virtualKey,
+			wScan = 0,
+			dwFlags = keyUp ? NativeMethods.KEYEVENTF_KEYUP : 0,
+			time = 0,
+			dwExtraInfo = 0
+		};
+
+		INPUTUNION inputUnion = new()
+		{
+			ki = keyboardInput
+		};
+
+		return new INPUT
+		{
+			type = NativeMethods.INPUT_KEYBOARD,
+			U = inputUnion
+		};
+	}
 
 	internal async void EnableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(true);
 	internal async void DisableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(false);

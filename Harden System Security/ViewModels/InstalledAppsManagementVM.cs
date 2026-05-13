@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
 using Windows.Management.Deployment;
+using Windows.System;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -391,18 +392,40 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		SelectedItemsCount = AppsListItemsSourceSelectedItems.Count;
 	}
 
+	private readonly Lock SettingsLock = new();
+
 	/// <summary>
 	/// Event handler for when the search box of apps list changes
 	/// </summary>
 	private void PFNAppFilteringTextBox_TextChanged()
 	{
-		if (string.IsNullOrWhiteSpace(SearchKeyword))
+		lock (SettingsLock)
 		{
+
+			if (string.IsNullOrWhiteSpace(SearchKeyword))
+			{
+				_isUpdatingItemsSource = true;
+				try
+				{
+					// If the filter is cleared, restore the original collection
+					AppsListItemsSource = new(AppsListItemsSourceBackingList);
+					UpdateCounts();
+				}
+				finally
+				{
+					_isUpdatingItemsSource = false;
+				}
+
+				// Restore selection after clearing search
+				RestoreSelectionFromViewModel();
+				return;
+			}
+
 			_isUpdatingItemsSource = true;
 			try
 			{
-				// If the filter is cleared, restore the original collection
-				AppsListItemsSource = new(AppsListItemsSourceBackingList);
+				// Update the ListView source with the filtered data
+				AppsListItemsSource = GetFilteredAppsListItemsSource();
 				UpdateCounts();
 			}
 			finally
@@ -410,25 +433,10 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				_isUpdatingItemsSource = false;
 			}
 
-			// Restore selection after clearing search
+			// Restore selection after filtering (only items that match search will be selected)
 			RestoreSelectionFromViewModel();
-			return;
-		}
 
-		_isUpdatingItemsSource = true;
-		try
-		{
-			// Update the ListView source with the filtered data
-			AppsListItemsSource = GetFilteredAppsListItemsSource();
-			UpdateCounts();
 		}
-		finally
-		{
-			_isUpdatingItemsSource = false;
-		}
-
-		// Restore selection after filtering (only items that match search will be selected)
-		RestoreSelectionFromViewModel();
 	}
 
 	/// <summary>
@@ -450,7 +458,11 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 					(app.FullName?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
 					(app.Description?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
 					(app.InstallLocation?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.InstalledDate?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true)
+					(app.InstalledDate?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.AppSize?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.AppDataSize?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.Capabilities?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
+					(app.Dependencies?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true)
 				),
 				key: group.Key))
 			.Where(group => group.Any())
@@ -458,6 +470,27 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			.ToList();
 
 		return new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
+	}
+
+	/// <summary>
+	/// Loads expensive storage-size details only when the user opens an app's details area.
+	/// This keeps the initial apps list retrieval fast and avoids unnecessary full directory scans.
+	/// </summary>
+	internal async void AppDetailsExpander_Expanding(Expander sender, ExpanderExpandingEventArgs args)
+	{
+		try
+		{
+			if (sender.DataContext is not PackagedAppView app)
+			{
+				return;
+			}
+
+			await GetAppsList.PopulateStorageDetailsAsync(app);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
 	}
 
 	/// <summary>
@@ -653,6 +686,103 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			ElementsAreEnabled = true;
 			MainInfoBar.IsClosable = true;
 		}
+	}
+
+	/// <summary>
+	/// Event handler for terminating a single running packaged app from the context menu.
+	/// </summary>
+	internal async void TerminateApp_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PackagedAppView? targetApp = GetPackagedAppFromMenuFlyoutSender(sender);
+			if (targetApp is null)
+			{
+				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppToTerminate"));
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
+			MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("StartingTerminationOfApp"), targetApp.DisplayName));
+
+			bool error = await TerminateAppAsync(targetApp);
+			if (!error)
+			{
+				MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("SuccessfullyTerminatedApp"), targetApp.DisplayName));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Terminates all running resource groups for the selected packaged app.
+	/// </summary>
+	private async Task<bool> TerminateAppAsync(PackagedAppView package)
+	{
+		try
+		{
+			IReadOnlyList<AppResourceGroupInfo> resourceGroups = await GetRunningAppResourceGroupsAsync(package);
+
+			foreach (AppResourceGroupInfo resourceGroup in resourceGroups)
+			{
+				AppExecutionStateChangeResult terminationResult = await resourceGroup.StartTerminateAsync();
+				Exception? extendedError = terminationResult.ExtendedError;
+
+				if (extendedError is not null)
+				{
+					throw extendedError;
+				}
+			}
+
+			return false;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteWarning(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("AppTerminationFailed"), package.FullName, $"0x{ex.HResult:X8}", ex.Message));
+			return true;
+		}
+	}
+
+	/// <summary>
+	/// Gets all running resource groups for a packaged app after validating diagnostic access.
+	/// </summary>
+	private static async Task<IReadOnlyList<AppResourceGroupInfo>> GetRunningAppResourceGroupsAsync(PackagedAppView package)
+	{
+		DiagnosticAccessStatus diagnosticAccessStatus = await AppDiagnosticInfo.RequestAccessAsync();
+		bool isCurrentPackage = string.Equals(package.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase);
+
+		if (diagnosticAccessStatus is DiagnosticAccessStatus.Denied or DiagnosticAccessStatus.Unspecified ||
+			(diagnosticAccessStatus is DiagnosticAccessStatus.Limited && !isCurrentPackage))
+		{
+			throw new InvalidOperationException(Atlas.GetStr("AppDiagnosticsAccessDenied"));
+		}
+
+		IList<AppDiagnosticInfo> diagnosticInfos = await AppDiagnosticInfo.RequestInfoForPackageAsync(package.PackageFamilyName);
+		List<AppResourceGroupInfo> resourceGroups = [];
+
+		foreach (AppDiagnosticInfo diagnosticInfo in diagnosticInfos)
+		{
+			foreach (AppResourceGroupInfo resourceGroup in diagnosticInfo.GetResourceGroups())
+			{
+				resourceGroups.Add(resourceGroup);
+			}
+		}
+
+		if (resourceGroups.Count == 0)
+		{
+			throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("AppIsNotCurrentlyRunning"), package.DisplayName));
+		}
+
+		return resourceGroups;
 	}
 
 	/// <summary>
@@ -1030,7 +1160,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
-	internal void CopyAppDetails_Click(object sender, RoutedEventArgs e)
+	internal async void CopyAppDetails_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
@@ -1060,6 +1190,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppDetailsToCopy"));
 				return;
 			}
+
+			await GetAppsList.PopulateStorageDetailsAsync(targetApp);
 
 			ListViewHelper.ConvertRowToText([targetApp], ListViewHelper.PackagedAppPropertyMappings);
 		}
@@ -1105,6 +1237,11 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			{
 				MainInfoBar.WriteWarning(Atlas.GetStr("NoInstalledAppsForExport"));
 				return;
+			}
+
+			foreach (PackagedAppView item in itemsToExport)
+			{
+				await GetAppsList.PopulateStorageDetailsAsync(item);
 			}
 
 			DateTime now = DateTime.Now;

@@ -708,6 +708,34 @@
                                                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                                       BorderThickness="1"/>
 
+                                    <Button x:Uid="ResetGraphicsDriverButton"
+                                            HorizontalAlignment="Center"
+                                            Click="{x:Bind ViewModel.ResetGraphicsDriverShortcut}"
+                                            IsEnabled="{x:Bind ViewModel.IsResetGraphicsDriverButtonEnabled, Mode=OneWay}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xE7F4;"
+                                                              FontFamily="Segoe Fluent Icons"
+                                                              FontSize="16"/>
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
                                     <Button HorizontalAlignment="Center"
                                               x:Uid="OptimizeMemoryButton"
                                              IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"

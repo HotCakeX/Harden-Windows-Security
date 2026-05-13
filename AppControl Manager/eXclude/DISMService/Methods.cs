@@ -44,8 +44,40 @@ internal static class Methods
 	/// Handle "item not found/not applicable" from DISM/CBS gracefully across all operations.
 	/// </summary>
 	private const int HRESULT_CBS_E_ITEM_NOT_FOUND = unchecked((int)0x800F080C);
+	private const int HRESULT_ERROR_CANCELLED = unchecked((int)0x800704C7);
 
-	internal static unsafe bool EnableFeature(string featureName, string[]? sourcePaths = null)
+	internal enum OperationExecutionState : byte
+	{
+		Failed = 0,
+		Succeeded = 1,
+		Cancelled = 2
+	}
+
+	private static OperationExecutionState EvaluateOperationResult(int hr, string action, string targetName)
+	{
+		if (hr == 0)
+		{
+			Logger.Write($"Successfully {action}: {targetName}", LogTypeIntel.Information);
+			return OperationExecutionState.Succeeded;
+		}
+
+		// 3010 == ERROR_SUCCESS_REBOOT_REQUIRED
+		if (hr == 3010)
+		{
+			Logger.Write($"Successfully {action}, Reboot required: {targetName}", LogTypeIntel.Information);
+			return OperationExecutionState.Succeeded;
+		}
+
+		if (hr == HRESULT_ERROR_CANCELLED)
+		{
+			Logger.Write($"The operation was cancelled for: {targetName}", LogTypeIntel.Warning);
+			return OperationExecutionState.Cancelled;
+		}
+
+		return OperationExecutionState.Failed;
+	}
+
+	internal static unsafe OperationExecutionState EnableFeature(string featureName, string[]? sourcePaths = null, IntPtr cancelEvent = default)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -59,11 +91,11 @@ internal static class Methods
 			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
 			{
 				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping enable.", LogTypeIntel.Information);
-				return true;
+				return OperationExecutionState.Succeeded;
 			}
 
 			Logger.Write($"Failed to get feature info for '{featureName}'. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-			return false;
+			return OperationExecutionState.Failed;
 		}
 
 		try
@@ -76,7 +108,7 @@ internal static class Methods
 			else if (featureInfo.FeatureState is DismPackageFeatureState.DismStateInstalled)
 			{
 				Logger.Write($"Feature '{featureName}' is already enabled.", LogTypeIntel.Information);
-				return true;
+				return OperationExecutionState.Succeeded;
 			}
 			else if (featureInfo.FeatureState is DismPackageFeatureState.DismStateStaged)
 			{
@@ -118,31 +150,26 @@ internal static class Methods
 				sourcePathsPtr,
 				sourcePathCount,
 				true,
-				IntPtr.Zero,
+				cancelEvent,
 				DismProgressCallbackPtr,
 				IntPtr.Zero);
 
-			if (hr == 0)
+			OperationExecutionState operationState = EvaluateOperationResult(hr, "enabled feature", featureName);
+			if (operationState is not OperationExecutionState.Failed)
 			{
-				Logger.Write($"Successfully enabled feature: {featureName}. Restart may be required.", LogTypeIntel.Information);
-				return true;
-			}
-			if (hr == 3010)
-			{
-				Logger.Write($"Successfully enabled feature, Reboot required: {featureName}", LogTypeIntel.Information);
-				return true;
+				return operationState;
 			}
 			// If the feature is not available on this system, treat as a no-op success.
 			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
 			{
 				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping enable.", LogTypeIntel.Information);
-				return true;
+				return OperationExecutionState.Succeeded;
 			}
 			else
 			{
 				// Error code: 0xC004000D | this is for when we try to enable a feature that requires other dependencies to be enabled/installed first.
 				Logger.Write($"Failed to enable feature: {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return false;
+				return OperationExecutionState.Failed;
 			}
 		}
 		finally
@@ -166,7 +193,7 @@ internal static class Methods
 		}
 	}
 
-	internal static bool DisableFeature(string featureName)
+	internal static OperationExecutionState DisableFeature(string featureName, IntPtr cancelEvent = default)
 	{
 		try
 		{
@@ -181,31 +208,25 @@ internal static class Methods
 				featureName,
 				null,
 				true,                 // RemovePayload: ensure payload is removed
-				IntPtr.Zero,          // CancelEvent
+				cancelEvent,          // CancelEvent
 				DismProgressCallbackPtr,
 				IntPtr.Zero);         // UserData
 
-			if (hr == 0)
+			OperationExecutionState operationState = EvaluateOperationResult(hr, "disabled feature", featureName);
+			if (operationState is not OperationExecutionState.Failed)
 			{
-				Logger.Write($"Successfully disabled feature: {featureName}. Restart may be required.", LogTypeIntel.Information);
-				return true;
-			}
-			if (hr == 3010)
-			{
-				// 3010 == ERROR_SUCCESS_REBOOT_REQUIRED
-				Logger.Write($"Successfully disabled feature, Reboot required: {featureName}", LogTypeIntel.Information);
-				return true;
+				return operationState;
 			}
 			// If the feature does not exist or is not applicable on this system, treat as no-op success.
 			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
 			{
 				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping disable.", LogTypeIntel.Information);
-				return true;
+				return OperationExecutionState.Succeeded;
 			}
 			else
 			{
 				Logger.Write($"Failed to disable feature (payload removal requested): {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return false;
+				return OperationExecutionState.Failed;
 			}
 		}
 		finally
@@ -328,7 +349,7 @@ internal static class Methods
 	}
 
 	// To remove a capability
-	internal static bool RemoveCapability(string capabilityName)
+	internal static OperationExecutionState RemoveCapability(string capabilityName, IntPtr cancelEvent = default)
 	{
 		try
 		{
@@ -338,27 +359,22 @@ internal static class Methods
 
 			Logger.Write($"Attempting to remove capability: {capabilityName}", LogTypeIntel.Information);
 
-			int hr = NativeMethods.DismRemoveCapability(CurrentDISMSession, capabilityName, IntPtr.Zero, DismProgressCallbackPtr, IntPtr.Zero);
-			if (hr == 0)
+			int hr = NativeMethods.DismRemoveCapability(CurrentDISMSession, capabilityName, cancelEvent, DismProgressCallbackPtr, IntPtr.Zero);
+			OperationExecutionState operationState = EvaluateOperationResult(hr, "removed capability", capabilityName);
+			if (operationState is not OperationExecutionState.Failed)
 			{
-				Logger.Write($"Successfully removed capability: {capabilityName}", LogTypeIntel.Information);
-				return true;
-			}
-			if (hr == 3010)
-			{
-				Logger.Write($"Successfully removed capability, Reboot required: {capabilityName}", LogTypeIntel.Information);
-				return true;
+				return operationState;
 			}
 			// If the capability does not exist or is not applicable on this system, treat as no-op success.
 			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
 			{
 				Logger.Write($"Capability '{capabilityName}' is not available on this system (0x{hr:X8}); skipping remove.", LogTypeIntel.Information);
-				return true;
+				return OperationExecutionState.Succeeded;
 			}
 			else
 			{
 				Logger.Write($"Failed to remove capability: {capabilityName}, Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return false;
+				return OperationExecutionState.Failed;
 			}
 		}
 		finally
@@ -369,7 +385,7 @@ internal static class Methods
 
 	// to add a capability
 	// e.g.: AddCapability("App.StepsRecorder~~~~0.0.1.0", false, null);
-	internal static unsafe bool AddCapability(string capabilityName, bool limitAccess = false, string[]? sourcePaths = null)
+	internal static unsafe OperationExecutionState AddCapability(string capabilityName, bool limitAccess = false, string[]? sourcePaths = null, IntPtr cancelEvent = default)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -404,31 +420,26 @@ internal static class Methods
 				limitAccess,
 				sourcePathsPtr,
 				sourcePathCount,
-				IntPtr.Zero, // CancelEvent
+				cancelEvent, // CancelEvent
 				DismProgressCallbackPtr,
 				IntPtr.Zero  // UserData
 			);
 
-			if (hr == 0)
+			OperationExecutionState operationState = EvaluateOperationResult(hr, "added capability", capabilityName);
+			if (operationState is not OperationExecutionState.Failed)
 			{
-				Logger.Write($"Successfully added capability: {capabilityName}", LogTypeIntel.Information);
-				return true;
-			}
-			if (hr == 3010)
-			{
-				Logger.Write($"Successfully added capability, Reboot required: {capabilityName}", LogTypeIntel.Information);
-				return true;
+				return operationState;
 			}
 			// If the capability does not exist or is not applicable on this system, treat as no-op success.
 			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
 			{
 				Logger.Write($"Capability '{capabilityName}' is not available on this system (0x{hr:X8}); skipping add.", LogTypeIntel.Information);
-				return true;
+				return OperationExecutionState.Succeeded;
 			}
 			else
 			{
 				Logger.Write($"Failed to add capability: {capabilityName}, Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return false;
+				return OperationExecutionState.Failed;
 			}
 		}
 		finally

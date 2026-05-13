@@ -6305,4 +6305,86 @@ Thumbprint: {3}</value>
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>The selected host folder is mounted inside the sandbox in the C: drive using the same folder name.</value>
   </data>
+<!--NEW-->
+  <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>Reset Graphics Driver</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Send the Win + Ctrl + Shift + B shortcut to ask Windows to reset the graphics driver. Your screen may briefly flicker.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Send the Win + Ctrl + Shift + B shortcut to ask Windows to reset the graphics driver. Your screen may briefly flicker.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>Reset graphics driver?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>This sends the Win + Ctrl + Shift + B shortcut to Windows. Your display may flicker, the system may beep once, and open apps may briefly pause while the graphics driver resets.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Sending the graphics driver reset shortcut...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Sent the graphics driver reset shortcut.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>Terminate</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>Could not determine which app to terminate.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>Starting termination of the app: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>Successfully terminated the app: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Windows did not grant the appDiagnostics capability for this package, so this app cannot terminate that target application.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} is not currently running.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>Terminate failed for '{0}'. Error code: {1} - Error Text: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>App Size</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>App Data</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>Total Usage</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>Is Resource Package</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>Is Bundle</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>Is Development Mode</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>Non Removable</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>Dependencies</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>Is Partially Staged</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>Signature Kind</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>Capabilities</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>Is Framework</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>User Information</value>
+</data>
 </root>

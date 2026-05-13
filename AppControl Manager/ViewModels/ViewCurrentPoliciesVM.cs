@@ -798,19 +798,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Event handler to prevent the MenuFlyout to automatically close immediately after selecting a checkbox or any button in it
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	internal void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
-	{
-		if (sender is MenuFlyoutV2 { IsPointerOver: true })
-		{
-			args.Cancel = true;
-		}
-	}
-
-	/// <summary>
 	/// Path to the directory where unsigned Code Integrity policies are located.
 	/// </summary>
 	private static readonly string UnsignedPoliciesPath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity", "CIPolicies", "Active");

@@ -97,7 +97,7 @@
                                     </customUI:ButtonV2.ContentTemplate>
 
                                     <customUI:ButtonV2.Flyout>
-                                        <customUI:MenuFlyoutV2 Placement="Bottom" Closing="{x:Bind ViewModel.MenuFlyout_Closing}">
+                                        <customUI:MenuFlyoutV2 Placement="Bottom">
 
                                             <MenuFlyout.SystemBackdrop>
                                                 <MicaBackdrop Kind="BaseAlt"/>

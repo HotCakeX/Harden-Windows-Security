@@ -609,12 +609,28 @@ internal static partial class ListViewHelper
 			["Version"] = (Atlas.GetStr("PFNVersionLabel/Text"), app => app.Version),
 			["Architecture"] = (Atlas.GetStr("PFNArchitectureLabel/Text"), app => app.Architecture),
 			["Publisher"] = (Atlas.GetStr("PFNPublisherLabel/Text"), app => app.Publisher),
+			["Description"] = (Atlas.GetStr("PFNDescription/Text"), app => app.Description),
+			["InstallDrive"] = ("Install Drive", app => app.InstallDrive),
 			["InstalledDate"] = (Atlas.GetStr("PFNInstalledDateLabel/Text"), app => app.InstalledDate),
+			["AppSize"] = (Atlas.GetStr("PFNAppSizeLabel/Text"), app => app.AppSize),
+			["AppDataSize"] = (Atlas.GetStr("PFNAppDataSizeLabel/Text"), app => app.AppDataSize),
+			["TotalUsage"] = (Atlas.GetStr("PFNAppTotalUsageLabel/Text"), app => app.TotalUsage),
+			["IsFramework"] = (Atlas.GetStr("PFNIsFrameworkLabel/Text"), app => app.IsFramework),
+			["PackageUserInformation"] = ("Package User Information", app => app.PackageUserInformation),
+			["IsResourcePackage"] = (Atlas.GetStr("PFNIsResourcePackageLabel/Text"), app => app.IsResourcePackage),
+			["IsBundle"] = (Atlas.GetStr("PFNIsBundleLabel/Text"), app => app.IsBundle),
+			["IsDevelopmentMode"] = (Atlas.GetStr("PFNIsDevelopmentModeLabel/Text"), app => app.IsDevelopmentMode),
+			["NonRemovable"] = (Atlas.GetStr("PFNNonRemovableLabel/Text"), app => app.NonRemovable),
+			["IsPartiallyStaged"] = (Atlas.GetStr("PFNIsPartiallyStagedLabel/Text"), app => app.IsPartiallyStaged),
+			["SignatureKind"] = (Atlas.GetStr("PFNSignatureKindLabel/Text"), app => app.SignatureKind),
+			["Status"] = (Atlas.GetStr("StatusHeader/Text"), app => app.Status),
 			["PackageFamilyName"] = (Atlas.GetStr("PFNLabel/Text"), app => app.PackageFamilyName),
 			["PublisherID"] = (Atlas.GetStr("PFNPublisherID/Text"), app => app.PublisherID),
-			["Description"] = (Atlas.GetStr("PFNDescription/Text"), app => app.Description),
+			["FullName"] = (Atlas.GetStr("PFNFullNameLabel/Text"), app => app.FullName),
 			["InstallLocation"] = (Atlas.GetStr("PFNInstallLocation/Text"), app => app.InstallLocation),
-			["FullName"] = (Atlas.GetStr("PFNFullNameLabel/Text"), app => app.FullName)
+			["Dependencies"] = (Atlas.GetStr("PFNDependenciesLabel/Text"), app => app.Dependencies),
+			["CapabilityCount"] = (Atlas.GetStr("PFNCapabilitiesLabel/Text") + " Count", app => app.CapabilityCount),
+			["Capabilities"] = (Atlas.GetStr("PFNCapabilitiesLabel/Text"), app => app.Capabilities)
 		}.ToFrozenDictionary();
 
 

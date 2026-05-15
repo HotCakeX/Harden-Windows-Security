@@ -1866,7 +1866,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			PFNElementsAreEnabled = false;
 
 			// Get the data first and store in ObservableCollection
-			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
+			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetAppsGroupedAsync(this);
 			PFNBasedAppsListItemsSource = results.Item1;
 			// Store the same data on the FullList used for searching
 			PFNBasedAppsFullList = results.Item2;
@@ -1943,7 +1943,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				PFNElementsAreEnabled = false;
 
 				// Get the data first and store in ObservableCollection
-				(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
+				(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetAppsGroupedAsync(this);
 				PFNBasedAppsListItemsSource = results.Item1;
 				// Store the same data on the FullList used for searching
 				PFNBasedAppsFullList = results.Item2;

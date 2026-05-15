@@ -16,6 +16,7 @@
 //
 
 using System.Buffers.Binary;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -46,6 +47,8 @@ internal static class GetAppsList
 
 	// Package Manager object used by the PFN section
 	private static readonly PackageManager packageManager = new();
+
+	internal static readonly ConcurrentDictionary<string, string> SIDToNameDictionary = new(StringComparer.Ordinal);
 
 	#region Image size detection
 
@@ -272,10 +275,6 @@ internal static class GetAppsList
 					PackagedAppManifestDetails manifestDetails = GetPackageManifestDetails(item);
 					Windows.ApplicationModel.PackageStatus packageStatus = item.Status;
 					PackageId packageId = item.Id;
-					string installLocation = GetInstallLocation(item);
-
-					string? driveRoot = Path.GetPathRoot(installLocation);
-					string installDrive = string.IsNullOrEmpty(driveRoot) ? notApplicableText : driveRoot;
 
 					// Try get the logo string
 					string? logoStr = item.Logo?.ToString();
@@ -300,8 +299,7 @@ internal static class GetAppsList
 						publisherID: packageId.PublisherId,
 						fullName: packageId.FullName,
 						description: string.IsNullOrEmpty(item.Description) ? "N/A" : item.Description,
-						installLocation: installLocation,
-						installDrive: installDrive,
+						installLocation: GetInstallLocation(item),
 						installedDate: item.InstalledDate.ToLocalTime().ToString(CultureInfo.CurrentCulture),
 						isFramework: item.IsFramework ? bool.TrueString : bool.FalseString,
 						packageUserInformation: GetPackageUserInformation(item),
@@ -558,9 +556,7 @@ internal static class GetAppsList
 				return effectivePath;
 			}
 		}
-		catch
-		{
-		}
+		catch { }
 
 		return package.InstalledLocation.Path;
 	}
@@ -601,20 +597,24 @@ internal static class GetAppsList
 	private static string FormatPackageUserInformation(PackageUserInformation packageUser, string packageFullName)
 	{
 		string userSecurityId = packageUser.UserSecurityId;
-		string userName;
 
-		try
+		if (!SIDToNameDictionary.TryGetValue(userSecurityId, out string? userName))
 		{
-			SecurityIdentifier securityIdentifier = new(userSecurityId);
-			userName = securityIdentifier.Translate(typeof(NTAccount)).Value;
-		}
-		catch
-		{
-			userName = userSecurityId;
+			try
+			{
+				SecurityIdentifier securityIdentifier = new(userSecurityId);
+				userName = securityIdentifier.Translate(typeof(NTAccount)).Value;
+			}
+			catch
+			{
+				userName = userSecurityId;
+			}
+
+			SIDToNameDictionary[userSecurityId] = userName;
 		}
 
 		string installState = packageUser.InstallState.ToString();
-		if ((int)packageUser.InstallState == 2)
+		if (packageUser.InstallState == PackageInstallState.Installed)
 		{
 			bool isPackageEndOfLife = false;
 			int errorCode = NativeMethods.IsPackageEndOfLife(userSecurityId, packageFullName, ref isPackageEndOfLife);
@@ -641,17 +641,18 @@ internal static class GetAppsList
 		try
 		{
 			using Windows.Storage.ApplicationData applicationData = ApplicationDataManager.CreateForPackageFamily(packageFamilyName);
-			HashSet<string> folderPaths = new(StringComparer.OrdinalIgnoreCase);
 
-			AddFolderPath(folderPaths, applicationData.LocalFolder?.Path);
-			AddFolderPath(folderPaths, applicationData.LocalCacheFolder?.Path);
-			AddFolderPath(folderPaths, applicationData.RoamingFolder?.Path);
-			AddFolderPath(folderPaths, applicationData.SharedLocalFolder?.Path);
-			AddFolderPath(folderPaths, applicationData.TemporaryFolder?.Path);
+			ReadOnlySpan<string?> appsRelatedDirectories = [
+				applicationData.LocalFolder?.Path,
+				applicationData.LocalCacheFolder?.Path,
+				applicationData.RoamingFolder?.Path,
+				applicationData.SharedLocalFolder?.Path,
+				applicationData.TemporaryFolder?.Path
+				];
 
 			long totalSizeInBytes = 0;
 
-			foreach (string folderPath in folderPaths)
+			foreach (string? folderPath in appsRelatedDirectories)
 			{
 				long? currentFolderSize = GetDirectorySizeInBytes(folderPath);
 				if (!currentFolderSize.HasValue)
@@ -670,16 +671,6 @@ internal static class GetAppsList
 		}
 	}
 
-	/// <summary>
-	/// Adds a folder path to the set if it is available.
-	/// </summary>
-	private static void AddFolderPath(HashSet<string> folderPaths, string? folderPath)
-	{
-		if (!string.IsNullOrWhiteSpace(folderPath))
-		{
-			_ = folderPaths.Add(folderPath);
-		}
-	}
 
 	private static readonly EnumerationOptions EnumerationOptions = new()
 	{
@@ -694,7 +685,7 @@ internal static class GetAppsList
 	/// </summary>
 	private static long? GetDirectorySizeInBytes(string? directoryPath)
 	{
-		if (string.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath))
+		if (!Directory.Exists(directoryPath))
 		{
 			return 0;
 		}
@@ -808,7 +799,7 @@ internal static class GetAppsList
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
-	internal static async Task<(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>)> GetContactsGroupedAsync(object? VMRef = null)
+	internal static async Task<(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>)> GetAppsGroupedAsync(object? VMRef = null)
 	{
 		List<PackagedAppView> apps = await Get(VMRef);
 		Dictionary<string, List<PackagedAppView>> groupedApps = new(StringComparer.Ordinal);

@@ -154,7 +154,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			ElementsAreEnabled = false;
 
 			// Get the new data first
-			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetContactsGroupedAsync(this);
+			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetAppsGroupedAsync(this);
 
 			// Suppress selection change side effects while replacing ItemsSource to preserve persisted selection
 			_isUpdatingItemsSource = true;
@@ -401,7 +401,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		lock (SettingsLock)
 		{
-
 			if (string.IsNullOrWhiteSpace(SearchKeyword))
 			{
 				_isUpdatingItemsSource = true;
@@ -435,7 +434,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			// Restore selection after filtering (only items that match search will be selected)
 			RestoreSelectionFromViewModel();
-
 		}
 	}
 

@@ -610,7 +610,6 @@ internal static partial class ListViewHelper
 			["Architecture"] = (Atlas.GetStr("PFNArchitectureLabel/Text"), app => app.Architecture),
 			["Publisher"] = (Atlas.GetStr("PFNPublisherLabel/Text"), app => app.Publisher),
 			["Description"] = (Atlas.GetStr("PFNDescription/Text"), app => app.Description),
-			["InstallDrive"] = ("Install Drive", app => app.InstallDrive),
 			["InstalledDate"] = (Atlas.GetStr("PFNInstalledDateLabel/Text"), app => app.InstalledDate),
 			["AppSize"] = (Atlas.GetStr("PFNAppSizeLabel/Text"), app => app.AppSize),
 			["AppDataSize"] = (Atlas.GetStr("PFNAppDataSizeLabel/Text"), app => app.AppDataSize),

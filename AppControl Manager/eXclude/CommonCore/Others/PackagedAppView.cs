@@ -37,7 +37,6 @@ internal sealed partial class PackagedAppView(
 	string fullName,
 	string description,
 	string installLocation,
-	string installDrive,
 	string installedDate,
 	string isFramework,
 	string packageUserInformation,
@@ -97,9 +96,6 @@ internal sealed partial class PackagedAppView(
 	[JsonPropertyName("Install Location")]
 	internal string InstallLocation => installLocation;
 
-	[JsonInclude]
-	[JsonPropertyName("Install Drive")]
-	internal string InstallDrive => installDrive;
 
 	[JsonInclude]
 	[JsonPropertyName("Installed Date")]

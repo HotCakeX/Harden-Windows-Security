@@ -343,7 +343,7 @@ internal sealed partial class Main : ViewModelBase
 	} = true;
 
 	/// <summary>
-	/// Selected language for the application
+	/// Selected language for the application. Empty by default so it will be detected from the system.
 	/// </summary>
 	internal string ApplicationGlobalLanguage
 	{
@@ -354,7 +354,7 @@ internal sealed partial class Main : ViewModelBase
 				SaveValue(nameof(ApplicationGlobalLanguage), field);
 			}
 		}
-	} = "en-US";
+	} = string.Empty;
 
 	/// <summary>
 	/// Whether the User Interface flow direction is Left-to-Right or Right-to-Left

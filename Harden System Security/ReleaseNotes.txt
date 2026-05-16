@@ -1,22 +1,7 @@
-* When enabling BitLocker encryption for the OS drive and a CD/DVD or mounted ISO file exists, there will be a message displayed, guiding users what to do next to remedy the situation.
+* You can now specify any custom PowerShell commands to run either before or after the custom program launch in the Windows Sandbox maker page. This enables you to create more complex and customized Sandboxes by running scripts that set up the environments exactly as needed before you start working in them.
 
-* When interacting with BitLocker management page on a Windows Server OS and BitLocker component is not installed, it will be automatically installed and a notice will be displayed to the user.
+* Improved the "Manage Installed Apps" page's retrieval performance and the way user information is displayed for each app.
 
-* Made multiple improvements to the Optional Windows Features page:
+* The Harden System Security app now detects the system languages and if it supports any of them, it will configure its language accordingly. This only happens once at startup when the app is launched on a system for the first time. If user explicitly sets a different language in the app's settings then it will be respected.
 
-    1. Improved the design of the items by utilizing the unused spaces better and compacting the UI a little.
-    2. You can now filter the results based on their status.
-    3. You can now cancel an enablement or disablement operation you start on an optional feature or Windows capability, improving user experience.
-
-* Added multiple features to the Installed Apps Management page:
-
-    1. The ability to terminate an app and all of its associated processes.
-    2. View the size of the apps and their cache data.
-    3. See which apps are allowed by the OS to be removed.
-    4. See which users the apps are installed for.
-    5. See the capabilities of every single app.
-    6. See the dependencies of every single app.
-    7. See the status of each app to see whether they are OK or have problems.
-    8. See the kind of signature each app was signed with.
-    9. See which apps are bundled apps, resource packages, frameworks or in development mode.
-    10. See which apps are partially staged (not fully installed).
+* Improved localizations.

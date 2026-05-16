@@ -66,8 +66,8 @@ public sealed partial class App : Application
 		// Capture the dispatcher queue as early as possible.
 		Atlas.AppDispatcher = DispatcherQueue.GetForCurrentThread();
 
-		// Set the language of the application to the user's preferred language
-		ApplicationLanguages.PrimaryLanguageOverride = Atlas.Settings.ApplicationGlobalLanguage;
+		// Detect and set the language of the application.
+		SettingsVM.SetLanguageOnStartup();
 
 		// Initialize logging system
 		Logger.Configure(logsDirectory: Atlas.LogsDirectory, appName: Atlas.AppName);

@@ -603,7 +603,16 @@ internal static class GetAppsList
 			try
 			{
 				SecurityIdentifier securityIdentifier = new(userSecurityId);
-				userName = securityIdentifier.Translate(typeof(NTAccount)).Value;
+				string accountName = securityIdentifier.Translate(typeof(NTAccount)).Value;
+
+				// NTAccount.Value returns "COMPUTERNAME\\Username" or "DOMAIN\\Username".
+				// This keeps only the username portion.
+				ReadOnlySpan<char> accountNameSpan = accountName.AsSpan();
+				int separatorIndex = accountNameSpan.LastIndexOfAny('\\', '/');
+
+				userName = separatorIndex >= 0 && separatorIndex < accountName.Length - 1
+					? accountName[(separatorIndex + 1)..]
+					: accountName;
 			}
 			catch
 			{

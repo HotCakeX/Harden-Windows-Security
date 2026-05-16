@@ -97,6 +97,12 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		.ThenBy(static option => option.RegionName, StringComparer.Ordinal)
 	];
 
+	internal static readonly List<WindowsSandboxCustomPowerShellTimingOption> CustomPowerShellLaunchTimingOptions =
+	[
+		new("Before mapped program launch", WindowsSandboxCustomPowerShellLaunchTiming.BeforeMappedProgramLaunch),
+		new("After mapped program launch", WindowsSandboxCustomPowerShellLaunchTiming.AfterMappedProgramLaunch)
+	];
+
 	internal readonly InfoBarSettings MainInfoBar = new();
 	internal readonly ObservableCollection<WindowsSandboxProgramOption> AvailableProgramExecutables = [];
 	internal readonly ObservableCollection<WindowsSandboxSavedDefinition> SavedSandboxes = [];
@@ -116,7 +122,9 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 
 	internal WindowsSandboxTimeZoneOption SelectedTimeZone { get; set => SP(ref field, value); } = TimeZoneOptions[0];
 	internal WindowsSandboxProgramOption? SelectedProgramExecutable { get; set => SP(ref field, value); }
+	internal WindowsSandboxCustomPowerShellTimingOption SelectedCustomPowerShellLaunchTiming { get; set => SP(ref field, value); } = CustomPowerShellLaunchTimingOptions[0];
 	internal string? SelectedProgramFolderPath { get; private set => SP(ref field, value); }
+	internal string? CustomPowerShellCode { get; set => SP(ref field, value); }
 
 	internal bool HasProgramFolderSelection { get; private set => SP(ref field, value); }
 	internal bool HasProgramExecutableChoices { get; private set => SP(ref field, value); }
@@ -141,6 +149,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 	internal bool EnableProtectedClient { get; set => SP(ref field, value); } = true;
 	internal bool IsProgramFolderReadOnly { get; set => SP(ref field, value); } = true;
 	internal bool RunMappedProgramOnStartup { get; set => SP(ref field, value); }
+	internal bool RunCustomPowerShellOnStartup { get; set => SP(ref field, value); }
 
 	internal readonly double MaxAllowedSelectedRAM = DefaultMaximumAllowedSelectedRAM;
 
@@ -428,6 +437,14 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		return timeZoneOption?.OffsetLabel ?? timeZoneId;
 	}
 
+	internal static string GetCustomPowerShellLaunchTimingDisplayLabel(WindowsSandboxCustomPowerShellLaunchTiming customPowerShellLaunchTiming)
+	{
+		WindowsSandboxCustomPowerShellTimingOption? launchTimingOption = CustomPowerShellLaunchTimingOptions.FirstOrDefault(option =>
+			option.LaunchTiming == customPowerShellLaunchTiming);
+
+		return launchTimingOption?.DisplayName ?? CustomPowerShellLaunchTimingOptions[0].DisplayName;
+	}
+
 	private void ApplyDefinitionToEditor(WindowsSandboxSavedDefinition definition)
 	{
 		SandboxName = definition.Name;
@@ -441,8 +458,12 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		EnableProtectedClient = definition.EnableProtectedClient;
 		IsProgramFolderReadOnly = definition.IsProgramFolderReadOnly;
 		RunMappedProgramOnStartup = definition.RunMappedProgramOnStartup;
+		RunCustomPowerShellOnStartup = definition.RunCustomPowerShellOnStartup;
+		CustomPowerShellCode = DecodeCustomPowerShellCodeFromStorage(definition.CustomPowerShellCode);
 		SelectedTimeZone = TimeZoneOptions.FirstOrDefault(option =>
 			string.Equals(option.TimeZoneId, definition.TimeZoneId, StringComparison.Ordinal)) ?? TimeZoneOptions[0];
+		SelectedCustomPowerShellLaunchTiming = CustomPowerShellLaunchTimingOptions.FirstOrDefault(option =>
+			option.LaunchTiming == definition.CustomPowerShellLaunchTiming) ?? CustomPowerShellLaunchTimingOptions[0];
 
 		SelectedProgramFolderPath = definition.ProgramFolderPath;
 		RefreshProgramExecutables(definition.ProgramExecutableRelativePath);
@@ -563,6 +584,9 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 			ProgramExecutableRelativePath = SelectedProgramExecutable?.RelativePath,
 			IsProgramFolderReadOnly = IsProgramFolderReadOnly,
 			RunMappedProgramOnStartup = RunMappedProgramOnStartup,
+			RunCustomPowerShellOnStartup = RunCustomPowerShellOnStartup,
+			CustomPowerShellCode = EncodeCustomPowerShellCodeForStorage(CustomPowerShellCode),
+			CustomPowerShellLaunchTiming = SelectedCustomPowerShellLaunchTiming.LaunchTiming,
 			SavedAtUtc = DateTimeOffset.UtcNow
 		};
 	}
@@ -647,6 +671,11 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 				throw new FileNotFoundException($"The selected executable does not exist: {hostExecutablePath}", hostExecutablePath);
 			}
 		}
+
+		if (RunCustomPowerShellOnStartup && string.IsNullOrWhiteSpace(CustomPowerShellCode))
+		{
+			throw new InvalidOperationException("Enter custom PowerShell code to run at sandbox startup, or turn off custom PowerShell startup code.");
+		}
 	}
 
 	private void ValidateDefinition(WindowsSandboxSavedDefinition definition)
@@ -673,6 +702,13 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 			{
 				throw new FileNotFoundException($"The selected executable does not exist: {hostExecutablePath}", hostExecutablePath);
 			}
+		}
+
+		string? decodedCustomPowerShellCode = DecodeCustomPowerShellCodeFromStorage(definition.CustomPowerShellCode);
+
+		if (definition.RunCustomPowerShellOnStartup && string.IsNullOrWhiteSpace(decodedCustomPowerShellCode))
+		{
+			throw new InvalidOperationException("The saved sandbox has custom PowerShell startup enabled, but no PowerShell code is configured.");
 		}
 	}
 
@@ -731,6 +767,8 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 			startupCommands.Add($"Set-TimeZone -Id {ToPowerShellLiteral(definition.TimeZoneId)}");
 		}
 
+		string? mappedProgramLaunchCommand = null;
+
 		if (!string.IsNullOrWhiteSpace(definition.ProgramFolderPath) &&
 			!string.IsNullOrWhiteSpace(definition.ProgramExecutableRelativePath))
 		{
@@ -752,8 +790,31 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 
 			if (definition.RunMappedProgramOnStartup)
 			{
-				startupCommands.Add($"Start-Process -FilePath {ToPowerShellLiteral(sandboxExecutablePath)} -WorkingDirectory {ToPowerShellLiteral(sandboxWorkingDirectory)}");
+				mappedProgramLaunchCommand = $"Start-Process -FilePath {ToPowerShellLiteral(sandboxExecutablePath)} -WorkingDirectory {ToPowerShellLiteral(sandboxWorkingDirectory)}";
 			}
+		}
+
+		string? customPowerShellCode = DecodeCustomPowerShellCodeFromStorage(definition.CustomPowerShellCode);
+
+		if (definition.RunCustomPowerShellOnStartup &&
+			!string.IsNullOrWhiteSpace(customPowerShellCode) &&
+			definition.CustomPowerShellLaunchTiming == WindowsSandboxCustomPowerShellLaunchTiming.BeforeMappedProgramLaunch)
+		{
+			// The custom script is appended as-is because the final startup script is encoded for PowerShell.
+			startupCommands.Add(customPowerShellCode);
+		}
+
+		if (!string.IsNullOrWhiteSpace(mappedProgramLaunchCommand))
+		{
+			startupCommands.Add(mappedProgramLaunchCommand);
+		}
+
+		if (definition.RunCustomPowerShellOnStartup &&
+			!string.IsNullOrWhiteSpace(customPowerShellCode) &&
+			definition.CustomPowerShellLaunchTiming == WindowsSandboxCustomPowerShellLaunchTiming.AfterMappedProgramLaunch)
+		{
+			// When no mapped program is launched, this still runs during sandbox startup after the built-in setup commands.
+			startupCommands.Add(customPowerShellCode);
 		}
 
 		if (startupCommands.Count == 0)
@@ -798,6 +859,36 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		};
 
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Windows Sandbox could not be started from the generated configuration file.");
+	}
+
+	private static string? EncodeCustomPowerShellCodeForStorage(string? customPowerShellCode)
+	{
+		if (string.IsNullOrWhiteSpace(customPowerShellCode))
+		{
+			return null;
+		}
+
+		byte[] customPowerShellCodeBytes = Utf8WithoutBom.GetBytes(customPowerShellCode);
+		return Convert.ToBase64String(customPowerShellCodeBytes);
+	}
+
+	internal static string? DecodeCustomPowerShellCodeFromStorage(string? storedCustomPowerShellCode)
+	{
+		if (string.IsNullOrWhiteSpace(storedCustomPowerShellCode))
+		{
+			return null;
+		}
+
+		try
+		{
+			byte[] customPowerShellCodeBytes = Convert.FromBase64String(storedCustomPowerShellCode);
+			return Utf8WithoutBom.GetString(customPowerShellCodeBytes);
+		}
+		catch (FormatException ex)
+		{
+			Logger.Write($"Saved custom PowerShell code could not be decoded from Base64: {ex}");
+			return null;
+		}
 	}
 
 	private static string ToPowerShellLiteral(string value) => $"'{value.Replace("'", "''", StringComparison.Ordinal)}'";
@@ -896,6 +987,18 @@ internal sealed class WindowsSandboxProgramOption(string displayName, string rel
 	internal string RelativePath => relativePath;
 }
 
+internal sealed class WindowsSandboxCustomPowerShellTimingOption(string displayName, WindowsSandboxCustomPowerShellLaunchTiming launchTiming)
+{
+	internal string DisplayName => displayName;
+	internal WindowsSandboxCustomPowerShellLaunchTiming LaunchTiming => launchTiming;
+}
+
+internal enum WindowsSandboxCustomPowerShellLaunchTiming
+{
+	BeforeMappedProgramLaunch,
+	AfterMappedProgramLaunch
+}
+
 internal sealed class WindowsSandboxSavedDefinition
 {
 	public string Name { get; set; } = string.Empty;
@@ -912,6 +1015,9 @@ internal sealed class WindowsSandboxSavedDefinition
 	public string? ProgramExecutableRelativePath { get; set; }
 	public bool IsProgramFolderReadOnly { get; set; } = true;
 	public bool RunMappedProgramOnStartup { get; set; }
+	public bool RunCustomPowerShellOnStartup { get; set; }
+	public string? CustomPowerShellCode { get; set; }
+	public WindowsSandboxCustomPowerShellLaunchTiming CustomPowerShellLaunchTiming { get; set; }
 	public DateTimeOffset SavedAtUtc { get; set; }
 
 	[JsonIgnore]
@@ -935,6 +1041,22 @@ internal sealed class WindowsSandboxSavedDefinition
 	}
 
 	[JsonIgnore]
+	internal string CustomPowerShellDisplayText
+	{
+		get
+		{
+			string? decodedCustomPowerShellCode = SandboxMakerVM.DecodeCustomPowerShellCodeFromStorage(CustomPowerShellCode);
+
+			if (!RunCustomPowerShellOnStartup || string.IsNullOrWhiteSpace(decodedCustomPowerShellCode))
+			{
+				return "Not configured";
+			}
+
+			return SandboxMakerVM.GetCustomPowerShellLaunchTimingDisplayLabel(CustomPowerShellLaunchTiming);
+		}
+	}
+
+	[JsonIgnore]
 	internal string MemoryDisplayText => MemoryInMb >= 1024D && Math.Abs(MemoryInMb % 1024D) < 0.01D
 		? (MemoryInMb / 1024D).ToString("0.#", CultureInfo.CurrentCulture) + " GB"
 		: MemoryInMb.ToString("0", CultureInfo.CurrentCulture) + " MB";
@@ -944,6 +1066,7 @@ internal sealed class WindowsSandboxSavedDefinition
 }
 
 [JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(WindowsSandboxCustomPowerShellLaunchTiming))]
 [JsonSerializable(typeof(WindowsSandboxSavedDefinition))]
 [JsonSerializable(typeof(List<WindowsSandboxSavedDefinition>))]
 internal sealed partial class SandboxMakerDefinitionsJsonContext : JsonSerializerContext

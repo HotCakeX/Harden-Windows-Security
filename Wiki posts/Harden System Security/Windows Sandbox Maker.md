@@ -4,7 +4,7 @@
 
 <br>
 
-The **Sandbox Maker** page in the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) is a refined workspace for making, preserving, and launching Windows Sandbox environments. It brings identity, resource allocation, device-integration controls, time-zone tailoring, optional host-folder mapping, and saved-profile management into one coherent dashboard so you can prepare disposable environments with both precision and ease.
+The **Sandbox Maker** page in the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) is a refined workspace for making, preserving, and launching Windows Sandbox environments. It brings identity, resource allocation, device-integration controls, time-zone tailoring, optional host-folder mapping, custom startup scripting, and saved-profile management into one coherent dashboard so you can prepare disposable environments with both precision and ease.
 
 ## What This Page Offers
 
@@ -14,8 +14,9 @@ The page is designed to support the full Sandbox lifecycle:
 2. Choose a time zone for the guest environment.
 3. Configure resource and redirection settings.
 4. Optionally map a host folder and select its main executable.
-5. Save the profile for future use.
-6. Launch the sandbox immediately or start any previously saved profile later.
+5. Optionally provide custom PowerShell code to run when the sandbox starts.
+6. Save the profile for future use.
+7. Launch the sandbox immediately or start any previously saved profile later.
 
 Each saved profile produces its own `.wsb` configuration file, while the saved definitions are preserved separately so they can be reloaded into the page whenever the app is opened again.
 
@@ -84,6 +85,31 @@ Two additional toggles govern how the mapped program behaves:
 
 Even when automatic launch is not enabled, the page still prepares a desktop shortcut for the selected executable inside the sandbox, giving you a convenient entry point once the environment has started.
 
+## Custom PowerShell Startup Code
+
+The **Custom PowerShell startup code** section lets you attach your own PowerShell instructions to the sandbox startup process. This is useful for preparing the guest environment, creating files or folders, applying temporary settings, launching auxiliary tools, or performing any other initialization task that should happen automatically when the sandbox starts.
+
+This feature is independent from the optional mapped program. You can use custom PowerShell startup code whether or not a mapped program is configured, and whether or not that mapped program is set to launch automatically.
+
+### Startup Script Control
+
+The section provides a dedicated toggle to enable or disable custom PowerShell execution at sandbox startup.
+
+When enabled, you can enter multiline PowerShell code directly into the editor. The supplied code is incorporated into the sandbox logon command and runs inside the sandbox environment during startup.
+
+### Execution Order
+
+When a mapped program is configured and set to launch automatically, the page lets you choose where the custom PowerShell code should run in relation to that mapped program launch:
+
+- **Before mapped program launch** - prepares the sandbox first, then starts the selected mapped program.
+- **After mapped program launch** - starts the selected mapped program first, then runs the custom PowerShell code.
+
+If no mapped program is configured, or if the mapped program is not set to launch automatically, the custom PowerShell code still runs during sandbox startup. In that case, the selected ordering simply defines its position relative to the built-in startup preparation steps.
+
+### Preservation in Saved Profiles
+
+Custom PowerShell startup code is saved with the sandbox profile. To preserve the script completely, the app stores the custom PowerShell code in the JSON definitions file as Base64 encoded UTF-8 text. This ensures that spacing, quotation marks, double quotation marks, line breaks, and unusual characters remain intact when the profile is saved and loaded again.
+
 ## Save and Start Workflow
 
 The command bar above the saved profiles area offers two principal actions:
@@ -100,10 +126,11 @@ Each saved item displays:
 - **Sandbox name**
 - **RAM**
 - **Mapped program**
+- **Custom PowerShell**
 - **Date**
 - **Timezone**
 
-If the mapped program is configured to run automatically at startup, that detail is reflected directly in the saved item summary.
+If the mapped program is configured to run automatically at startup, that detail is reflected directly in the saved item summary. If custom PowerShell startup code is configured, the summary also indicates its selected execution position.
 
 ### Per-Profile Actions
 
@@ -127,6 +154,8 @@ Windows Sandbox Maker preserves its state with two complementary artifacts:
 
 These files are stored within the app's local cache area under the Sandbox Maker storage folder. This gives the feature durable persistence while keeping the generated artifacts neatly contained within the app's own storage boundary. These data are deleted when the Harden System Security app is uninstalled from the system. You can manually copy the data in order to restore them later on the same system or another one.
 
+The JSON definitions file stores profile settings such as identity, memory, device redirection choices, time-zone selection, mapped program details, and custom PowerShell startup configuration. Custom PowerShell code is stored as Base64 encoded UTF-8 text so the original script content remains pristine across save and load cycles.
+
 ## Practical Workflow
 
 A typical workflow on this page is pleasantly straightforward:
@@ -137,11 +166,13 @@ A typical workflow on this page is pleasantly straightforward:
 4. Optionally map a host folder and select its main executable.
 5. Decide whether the folder should be read-only.
 6. Decide whether the mapped program should launch on startup.
-7. Save the profile, or start it at once.
-8. Revisit the saved profile later to load, amend, relaunch, or remove it.
+7. Optionally enable custom PowerShell startup code.
+8. Choose whether custom PowerShell code should run before or after the mapped program launch.
+9. Save the profile, or start it at once.
+10. Revisit the saved profile later to load, amend, relaunch, or remove it.
 
 This arrangement makes the page suitable both for ephemeral experimentation and for maintaining a carefully curated library of reusable sandbox profiles.
 
 ## Closing Notes
 
-Windows Sandbox Maker transforms Windows Sandbox configuration from a raw file-editing exercise into a composed and intelligible experience. Instead of authoring `.wsb` documents by hand, you can shape disposable environments through a deliberate visual workflow, preserve them as named profiles, and return to them whenever a familiar scenario is needed again.
+Windows Sandbox Maker transforms Windows Sandbox configuration from a raw file-editing exercise into a composed and intelligible experience. Instead of authoring `.wsb` documents by hand, you can shape disposable environments through a deliberate visual workflow, enrich them with mapped program support and custom startup automation, preserve them as named profiles, and return to them whenever a familiar scenario is needed again.

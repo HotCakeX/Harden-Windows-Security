@@ -428,6 +428,49 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="10"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Custom PowerShell startup code"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                    <TextBlock Text="Optionally run custom PowerShell code when the sandbox starts. If a mapped program is configured and set to auto-launch, choose whether the custom code runs before or after that launch."
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <ToggleSwitch Header="Run custom PowerShell code when the sandbox starts"
+                                  IsOn="{x:Bind ViewModel.RunCustomPowerShellOnStartup, Mode=TwoWay}" />
+
+                    <ComboBox ItemsSource="{x:Bind vm:SandboxMakerVM.CustomPowerShellLaunchTimingOptions, Mode=OneTime}"
+                              SelectedItem="{x:Bind ViewModel.SelectedCustomPowerShellLaunchTiming, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ViewModel.RunCustomPowerShellOnStartup, Mode=OneWay}"
+                              MaxWidth="420"
+                              HorizontalAlignment="Stretch">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:WindowsSandboxCustomPowerShellTimingOption">
+                                <TextBlock Text="{x:Bind DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBox Text="{x:Bind ViewModel.CustomPowerShellCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{x:Bind ViewModel.RunCustomPowerShellOnStartup, Mode=OneWay}"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             MinHeight="100"
+                             MaxHeight="350"
+                             HorizontalAlignment="Stretch"
+                             PlaceholderText="Enter PowerShell code or paste a PowerShell script here to run inside the sandbox at startup."
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.VerticalScrollMode="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollMode="Auto" />
+                </StackPanel>
+            </Border>
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
                     Padding="5">
 
                 <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
@@ -546,6 +589,16 @@
                                                            FontSize="12"
                                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                                 <TextBlock Text="{x:Bind ProgramDisplayText}"
+                                                           FontWeight="SemiBold"
+                                                           TextWrapping="WrapWholeWords"
+                                                           MaxWidth="250" />
+                                            </StackPanel>
+
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Custom PowerShell"
+                                                           FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind CustomPowerShellDisplayText}"
                                                            FontWeight="SemiBold"
                                                            TextWrapping="WrapWholeWords"
                                                            MaxWidth="250" />

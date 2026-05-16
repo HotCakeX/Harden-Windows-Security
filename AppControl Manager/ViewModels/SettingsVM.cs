@@ -136,6 +136,80 @@ internal sealed partial class SettingsVM : ViewModelBase
 		 "ja"
 	];
 
+	/// <summary>
+	/// Runs very early at app startup to detect and set the app's language.
+	/// </summary>
+	internal static void SetLanguageOnStartup()
+	{
+		try
+		{
+			// If a language has already been assigned then use it.
+			if (!string.IsNullOrEmpty(Atlas.Settings.ApplicationGlobalLanguage))
+			{
+				// Set the language of the application to the user's preferred language
+				ApplicationLanguages.PrimaryLanguageOverride = Atlas.Settings.ApplicationGlobalLanguage;
+
+				return;
+			}
+
+			// Get the language(s) that user has added to the system.
+			IReadOnlyList<string> systemLanguages = ApplicationLanguages.Languages;
+
+			Logger.Write($"Detected system languages: {string.Join(", ", systemLanguages)}");
+
+			// The first item in the list is the user's primary language or the first language added to the system.
+			foreach (string language in systemLanguages)
+			{
+				// See if the same exact language is supported by the app.
+				if (SupportedLanguages.ContainsKey(language))
+				{
+					// Set the app's language
+					ApplicationLanguages.PrimaryLanguageOverride = language;
+
+					// Save the configuration to the app's settings.
+					Atlas.Settings.ApplicationGlobalLanguage = language;
+
+					return;
+				}
+
+				int separatorIndex = language.IndexOf('-', StringComparison.OrdinalIgnoreCase);
+				if (separatorIndex > 0)
+				{
+					string neutralLanguage = language[..separatorIndex];
+
+					if (SupportedLanguages.ContainsKey(neutralLanguage))
+					{
+						// Set the app's language
+						ApplicationLanguages.PrimaryLanguageOverride = neutralLanguage;
+
+						// Save the configuration to the app's settings.
+						Atlas.Settings.ApplicationGlobalLanguage = neutralLanguage;
+
+						return;
+					}
+				}
+			}
+
+			// Set the app's language to en-US if we couldn't determine the language from the system.
+			ApplicationLanguages.PrimaryLanguageOverride = "en-US";
+
+			// Save the configuration to the app's settings.
+			Atlas.Settings.ApplicationGlobalLanguage = "en-US";
+
+			return;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+
+			// Set the language to en-US if there was an error.
+			ApplicationLanguages.PrimaryLanguageOverride = "en-US";
+
+			// Save the configuration to the app's settings.
+			Atlas.Settings.ApplicationGlobalLanguage = "en-US";
+		}
+	}
+
 	internal int LanguageComboBoxSelectedIndex
 	{
 		get; set

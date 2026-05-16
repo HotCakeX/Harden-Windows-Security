@@ -6305,4 +6305,85 @@ Empreinte : {3}</value>
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>Le dossier hôte sélectionné est monté dans le sandbox sur le lecteur C: en utilisant le même nom de dossier.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>Réinitialiser le pilote graphique</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Envoyez le raccourci Win + Ctrl + Shift + B pour demander à Windows de réinitialiser le pilote graphique. Votre écran peut scintiller brièvement.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Envoyez le raccourci Win + Ctrl + Shift + B pour demander à Windows de réinitialiser le pilote graphique. Votre écran peut scintiller brièvement.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>Réinitialiser le pilote graphique ?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>Cela envoie le raccourci Win + Ctrl + Shift + B à Windows. Votre affichage peut scintiller, le système peut émettre un bip, et les applications ouvertes peuvent se mettre brièvement en pause pendant la réinitialisation du pilote graphique.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Envoi du raccourci de réinitialisation du pilote graphique...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Le raccourci de réinitialisation du pilote graphique a été envoyé.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>Terminer</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>Impossible de déterminer quelle application terminer.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>Démarrage de la terminaison de l’application : {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>Application terminée avec succès : {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Windows n’a pas accordé la capacité appDiagnostics pour ce package, cette application ne peut donc pas terminer l’application cible.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} n’est pas en cours d’exécution.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>La terminaison de '{0}' a échoué. Code d’erreur : {1} - Texte de l’erreur : {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>Taille de l’application</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>Données de l’application</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>Utilisation totale</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>Est un package de ressources</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>Est un bundle</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>Est en mode développement</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>Non amovible</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>Dépendances</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>Est partiellement préparée</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>Type de signature</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>Capacités</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>Est un framework</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>Informations utilisateur</value>
+</data>
 </root>

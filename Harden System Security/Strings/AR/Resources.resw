@@ -6305,4 +6305,85 @@
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>يتم تحميل مجلد المضيف المحدد داخل Sandbox على محرك الأقراص C: باستخدام اسم المجلد نفسه.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>إعادة تعيين برنامج تشغيل الرسومات</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إرسال الاختصار Win + Ctrl + Shift + B لطلب إعادة تعيين برنامج تشغيل الرسومات من Windows. قد تومض الشاشة لفترة وجيزة.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إرسال الاختصار Win + Ctrl + Shift + B لطلب إعادة تعيين برنامج تشغيل الرسومات من Windows. قد تومض الشاشة لفترة وجيزة.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>هل تريد إعادة تعيين برنامج تشغيل الرسومات؟</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>سيؤدي هذا إلى إرسال الاختصار Win + Ctrl + Shift + B إلى Windows. قد تومض الشاشة، وقد يصدر النظام صوت تنبيه مرة واحدة، وقد تتوقف التطبيقات المفتوحة لفترة وجيزة أثناء إعادة تعيين برنامج تشغيل الرسومات.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>جار إرسال اختصار إعادة تعيين برنامج تشغيل الرسومات...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>تم إرسال اختصار إعادة تعيين برنامج تشغيل الرسومات.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>إنهاء</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>تعذر تحديد التطبيق المراد إنهاؤه.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>بدء إنهاء التطبيق: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>تم إنهاء التطبيق بنجاح: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>لم يمنح Windows إمكانية appDiagnostics لهذه الحزمة، لذلك لا يمكن لهذا التطبيق إنهاء التطبيق الهدف.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} غير قيد التشغيل حاليًا.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>فشل إنهاء '{0}'. رمز الخطأ: {1} - نص الخطأ: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>حجم التطبيق</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>بيانات التطبيق</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>إجمالي الاستخدام</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>حزمة موارد</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>حزمة مجمعة</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>وضع التطوير</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>غير قابل للإزالة</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>التبعيات</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>تم تجهيزه جزئيًا</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>نوع التوقيع</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>الإمكانات</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>إطار عمل</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>معلومات المستخدم</value>
+</data>
 </root>

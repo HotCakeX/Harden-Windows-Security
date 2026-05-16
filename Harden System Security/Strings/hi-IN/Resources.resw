@@ -6305,4 +6305,85 @@
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>चयनित होस्ट फ़ोल्डर को उसी फ़ोल्डर नाम के साथ सैंडबॉक्स के भीतर C: ड्राइव में माउंट किया जाता है.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>ग्राफ़िक्स ड्राइवर रीसेट करें</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows से ग्राफ़िक्स ड्राइवर रीसेट करने का अनुरोध करने के लिए Win + Ctrl + Shift + B शॉर्टकट भेजें. आपकी स्क्रीन कुछ क्षण के लिए झिलमिला सकती है.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows से ग्राफ़िक्स ड्राइवर रीसेट करने का अनुरोध करने के लिए Win + Ctrl + Shift + B शॉर्टकट भेजें. आपकी स्क्रीन कुछ क्षण के लिए झिलमिला सकती है.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>ग्राफ़िक्स ड्राइवर रीसेट करें?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>यह Windows को Win + Ctrl + Shift + B शॉर्टकट भेजता है. आपका डिस्प्ले झिलमिला सकता है, सिस्टम एक बार बीप कर सकता है, और ग्राफ़िक्स ड्राइवर रीसेट होते समय खुले हुए ऐप्स कुछ क्षण के लिए रुक सकते हैं.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>ग्राफ़िक्स ड्राइवर रीसेट शॉर्टकट भेजा जा रहा है...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>ग्राफ़िक्स ड्राइवर रीसेट शॉर्टकट भेज दिया गया.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>समाप्त करें</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>यह निर्धारित नहीं किया जा सका कि किस ऐप को समाप्त करना है.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>ऐप को समाप्त करना शुरू किया जा रहा है: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>ऐप सफलतापूर्वक समाप्त किया गया: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Windows ने इस पैकेज के लिए appDiagnostics क्षमता प्रदान नहीं की, इसलिए यह ऐप लक्षित एप्लिकेशन को समाप्त नहीं कर सकता.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} अभी चल नहीं रहा है.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>'{0}' को समाप्त करना विफल रहा. त्रुटि कोड: {1} - त्रुटि पाठ: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>ऐप का आकार</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>ऐप डेटा</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>कुल उपयोग</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>संसाधन पैकेज है</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>बंडल है</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>डेवलपमेंट मोड है</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>हटाने योग्य नहीं</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>निर्भरताएँ</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>आंशिक रूप से स्टेज किया गया है</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>हस्ताक्षर प्रकार</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>क्षमताएँ</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>फ़्रेमवर्क है</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>उपयोगकर्ता जानकारी</value>
+</data>
 </root>

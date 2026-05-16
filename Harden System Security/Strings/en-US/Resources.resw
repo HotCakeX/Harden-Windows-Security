@@ -6305,7 +6305,6 @@ Thumbprint: {3}</value>
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>The selected host folder is mounted inside the sandbox in the C: drive using the same folder name.</value>
   </data>
-<!--NEW-->
   <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
     <value>Reset Graphics Driver</value>
   </data>

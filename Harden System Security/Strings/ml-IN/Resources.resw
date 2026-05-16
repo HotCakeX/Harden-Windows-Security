@@ -6305,4 +6305,85 @@
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>തെരഞ്ഞെടുത്ത ഹോസ്റ്റ് ഫോൾഡർ അതേ ഫോൾഡർ നാമം ഉപയോഗിച്ച് സാൻഡ്ബോക്സിനകത്ത് C: ഡ്രൈവിൽ മൗണ്ട് ചെയ്യപ്പെടും.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>ഗ്രാഫിക്സ് ഡ്രൈവർ റീസെറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഗ്രാഫിക്സ് ഡ്രൈവർ റീസെറ്റ് ചെയ്യാൻ Windows-നോട് ആവശ്യപ്പെടുന്നതിന് Win + Ctrl + Shift + B ഷോർട്ട്കട്ട് അയയ്ക്കുക. നിങ്ങളുടെ സ്ക്രീൻ കുറച്ച് നേരം മിന്നിയേക്കാം.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഗ്രാഫിക്സ് ഡ്രൈവർ റീസെറ്റ് ചെയ്യാൻ Windows-നോട് ആവശ്യപ്പെടുന്നതിന് Win + Ctrl + Shift + B ഷോർട്ട്കട്ട് അയയ്ക്കുക. നിങ്ങളുടെ സ്ക്രീൻ കുറച്ച് നേരം മിന്നിയേക്കാം.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>ഗ്രാഫിക്സ് ഡ്രൈവർ റീസെറ്റ് ചെയ്യണോ?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>ഇത് Windows-ലേക്ക് Win + Ctrl + Shift + B ഷോർട്ട്കട്ട് അയയ്ക്കുന്നു. നിങ്ങളുടെ ഡിസ്പ്ലേ മിന്നിയേക്കാം, സിസ്റ്റം ഒരിക്കൽ ബീപ് ചെയ്തേക്കാം, ഗ്രാഫിക്സ് ഡ്രൈവർ റീസെറ്റ് ചെയ്യുമ്പോൾ തുറന്നിരിക്കുന്ന ആപ്പുകൾ കുറച്ച് നേരം നിർത്തിയേക്കാം.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>ഗ്രാഫിക്സ് ഡ്രൈവർ റീസെറ്റ് ഷോർട്ട്കട്ട് അയയ്ക്കുന്നു...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>ഗ്രാഫിക്സ് ഡ്രൈവർ റീസെറ്റ് ഷോർട്ട്കട്ട് അയച്ചു.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>അവസാനിപ്പിക്കുക</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>ഏത് ആപ്പാണ് അവസാനിപ്പിക്കേണ്ടതെന്ന് നിർണ്ണയിക്കാൻ കഴിഞ്ഞില്ല.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>ആപ്പ് അവസാനിപ്പിക്കൽ ആരംഭിക്കുന്നു: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>ആപ്പ് വിജയകരമായി അവസാനിപ്പിച്ചു: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Windows ഈ പാക്കേജിന് appDiagnostics ശേഷി അനുവദിച്ചിട്ടില്ല, അതിനാൽ ഈ ആപ്പിന് ലക്ഷ്യ ആപ്ലിക്കേഷൻ അവസാനിപ്പിക്കാൻ കഴിയില്ല.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} ഇപ്പോൾ പ്രവർത്തിക്കുന്നില്ല.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>'{0}' അവസാനിപ്പിക്കൽ പരാജയപ്പെട്ടു. പിശക് കോഡ്: {1} - പിശക് ടെക്സ്റ്റ്: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>ആപ്പിന്റെ വലുപ്പം</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>ആപ്പ് ഡാറ്റ</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>ആകെ ഉപയോഗം</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>റിസോഴ്സ് പാക്കേജാണ്</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>ബണ്ടിലാണ്</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>ഡെവലപ്മെന്റ് മോഡാണ്</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>നീക്കം ചെയ്യാനാവാത്തത്</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>ഡിപൻഡൻസികൾ</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>ഭാഗികമായി സ്റ്റേജ് ചെയ്തിരിക്കുന്നു</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>സിഗ്നേച്ചർ തരം</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>ശേഷികൾ</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>ഫ്രെയിംവർക്കാണ്</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>ഉപയോക്തൃ വിവരങ്ങൾ</value>
+</data>
 </root>

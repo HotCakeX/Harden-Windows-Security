@@ -6305,4 +6305,85 @@ Odcisk Palca: {3}</value>
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>Wybrany folder hosta jest montowany wewnątrz piaskownicy na dysku C: z użyciem tej samej nazwy folderu.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>Zresetuj sterownik graficzny</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyślij skrót Win + Ctrl + Shift + B, aby poprosić system Windows o zresetowanie sterownika graficznego. Ekran może na chwilę zamigotać.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyślij skrót Win + Ctrl + Shift + B, aby poprosić system Windows o zresetowanie sterownika graficznego. Ekran może na chwilę zamigotać.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>Zresetować sterownik graficzny?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>Spowoduje to wysłanie do systemu Windows skrótu Win + Ctrl + Shift + B. Ekran może zamigotać, system może wydać pojedynczy sygnał dźwiękowy, a otwarte aplikacje mogą na chwilę wstrzymać działanie podczas resetowania sterownika graficznego.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Wysyłanie skrótu resetowania sterownika graficznego...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Wysłano skrót resetowania sterownika graficznego.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>Zakończ</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>Nie można ustalić, którą aplikację należy zakończyć.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>Rozpoczynanie kończenia działania aplikacji: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>Pomyślnie zakończono działanie aplikacji: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>System Windows nie przyznał temu pakietowi możliwości appDiagnostics, dlatego ta aplikacja nie może zakończyć działania aplikacji docelowej.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} nie jest obecnie uruchomiona.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>Nie udało się zakończyć działania aplikacji '{0}'. Kod błędu: {1} - Tekst błędu: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>Rozmiar aplikacji</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>Dane aplikacji</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>Całkowite użycie</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>Jest pakietem zasobów</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>Jest pakietem zbiorczym</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>Jest w trybie deweloperskim</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>Nieusuwalna</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>Zależności</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>Jest częściowo przygotowana</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>Typ podpisu</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>Możliwości</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>Jest strukturą</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>Informacje o użytkowniku</value>
+</data>
 </root>

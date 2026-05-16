@@ -6305,4 +6305,85 @@
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>Ο επιλεγμένος φάκελος κεντρικού υπολογιστή προσαρτάται μέσα στο Sandbox στη μονάδα C: χρησιμοποιώντας το ίδιο όνομα φακέλου.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>Επαναφορά προγράμματος οδήγησης γραφικών</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Στείλτε τη συντόμευση Win + Ctrl + Shift + B για να ζητήσετε από τα Windows να επαναφέρουν το πρόγραμμα οδήγησης γραφικών. Η οθόνη σας μπορεί να τρεμοπαίξει στιγμιαία.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Στείλτε τη συντόμευση Win + Ctrl + Shift + B για να ζητήσετε από τα Windows να επαναφέρουν το πρόγραμμα οδήγησης γραφικών. Η οθόνη σας μπορεί να τρεμοπαίξει στιγμιαία.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>Επαναφορά του προγράμματος οδήγησης γραφικών;</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>Αυτό στέλνει τη συντόμευση Win + Ctrl + Shift + B στα Windows. Η οθόνη σας μπορεί να τρεμοπαίξει, το σύστημα μπορεί να εκπέμψει έναν σύντομο ήχο και οι ανοιχτές εφαρμογές μπορεί να παγώσουν στιγμιαία κατά την επαναφορά του προγράμματος οδήγησης γραφικών.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Αποστολή της συντόμευσης επαναφοράς του προγράμματος οδήγησης γραφικών...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Η συντόμευση επαναφοράς του προγράμματος οδήγησης γραφικών στάλθηκε.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>Τερματισμός</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>Δεν ήταν δυνατό να προσδιοριστεί ποια εφαρμογή θα τερματιστεί.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>Έναρξη τερματισμού της εφαρμογής: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>Η εφαρμογή τερματίστηκε με επιτυχία: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Τα Windows δεν παραχώρησαν τη δυνατότητα appDiagnostics για αυτό το πακέτο, επομένως αυτή η εφαρμογή δεν μπορεί να τερματίσει την εφαρμογή προορισμού.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>Η εφαρμογή {0} δεν εκτελείται αυτήν τη στιγμή.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>Ο τερματισμός της εφαρμογής '{0}' απέτυχε. Κωδικός σφάλματος: {1} - Κείμενο σφάλματος: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>Μέγεθος εφαρμογής</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>Δεδομένα εφαρμογής</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>Συνολική χρήση</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>Είναι πακέτο πόρων</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>Είναι δέσμη</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>Είναι λειτουργία ανάπτυξης</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>Μη αφαιρούμενη</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>Εξαρτήσεις</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>Είναι μερικώς προετοιμασμένη</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>Τύπος υπογραφής</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>Δυνατότητες</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>Είναι πλαίσιο</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>Πληροφορίες χρήστη</value>
+</data>
 </root>

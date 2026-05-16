@@ -6305,4 +6305,85 @@ Huella Digital: {3}</value>
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>La carpeta de host seleccionada se monta dentro del sandbox en la unidad C: usando el mismo nombre de carpeta.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>Restablecer controlador de gráficos</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Envía el atajo Win + Ctrl + Shift + B para solicitar a Windows que restablezca el controlador de gráficos. Es posible que la pantalla parpadee brevemente.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Envía el atajo Win + Ctrl + Shift + B para solicitar a Windows que restablezca el controlador de gráficos. Es posible que la pantalla parpadee brevemente.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>¿Restablecer el controlador de gráficos?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>Esto envía el atajo Win + Ctrl + Shift + B a Windows. Es posible que la pantalla parpadee, que el sistema emita un pitido una vez y que las aplicaciones abiertas se pausen brevemente mientras se restablece el controlador de gráficos.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Enviando el atajo para restablecer el controlador de gráficos...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Se envió el atajo para restablecer el controlador de gráficos.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>Finalizar</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>No se pudo determinar qué aplicación se debe finalizar.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>Iniciando la finalización de la aplicación: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>La aplicación se finalizó correctamente: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Windows no concedió la funcionalidad appDiagnostics para este paquete, por lo que esta aplicación no puede finalizar la aplicación de destino.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} no se está ejecutando actualmente.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>No se pudo finalizar '{0}'. Código de error: {1} - Texto del error: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>Tamaño de la aplicación</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>Datos de la aplicación</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>Uso total</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>Es paquete de recursos</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>Es paquete agrupado</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>Es modo de desarrollo</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>No removible</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>Dependencias</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>Está parcialmente preparada</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>Tipo de firma</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>Funcionalidades</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>Es framework</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>Información del usuario</value>
+</data>
 </root>

@@ -6305,4 +6305,85 @@ Fingerabdruck: {3}</value>
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>Der ausgewählte Hostordner wird innerhalb der Sandbox auf Laufwerk C: unter demselben Ordnernamen eingebunden.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>Grafiktreiber zurücksetzen</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sendet die Tastenkombination Win + Ctrl + Shift + B, um Windows aufzufordern, den Grafiktreiber zurückzusetzen. Der Bildschirm kann kurz flackern.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sendet die Tastenkombination Win + Ctrl + Shift + B, um Windows aufzufordern, den Grafiktreiber zurückzusetzen. Der Bildschirm kann kurz flackern.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>Grafiktreiber zurücksetzen?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>Dadurch wird die Tastenkombination Win + Ctrl + Shift + B an Windows gesendet. Die Anzeige kann flackern, das System kann einmal piepen, und geöffnete Apps können kurz angehalten werden, während der Grafiktreiber zurückgesetzt wird.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Tastenkombination zum Zurücksetzen des Grafiktreibers wird gesendet...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>Tastenkombination zum Zurücksetzen des Grafiktreibers wurde gesendet.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>Beenden</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>Es konnte nicht ermittelt werden, welche App beendet werden soll.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>Beenden der App wird gestartet: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>App erfolgreich beendet: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Windows hat die appDiagnostics-Funktion für dieses Paket nicht gewährt, daher kann diese App die Zielanwendung nicht beenden.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} wird derzeit nicht ausgeführt.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>Beenden von '{0}' fehlgeschlagen. Fehlercode: {1} - Fehlertext: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>App-Größe</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>App-Daten</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>Gesamtnutzung</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>Ist Ressourcenpaket</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>Ist Bundle</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>Ist Entwicklungsmodus</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>Nicht entfernbar</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>Abhängigkeiten</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>Ist teilweise bereitgestellt</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>Signaturtyp</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>Funktionen</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>Ist Framework</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>Benutzerinformationen</value>
+</data>
 </root>

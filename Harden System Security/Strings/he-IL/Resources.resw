@@ -6305,4 +6305,85 @@
   <data name="OptionalMappedProgramLongerDescription.Text" xml:space="preserve">
     <value>תיקיית המארח שנבחרה ממופה בתוך ה-Sandbox בכונן C: באמצעות אותו שם תיקייה.</value>
   </data>
+    <data name="ResetGraphicsDriverButton.Content" xml:space="preserve">
+    <value>איפוס מנהל התקן הגרפיקה</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שלח את קיצור המקשים Win + Ctrl + Shift + B כדי לבקש מ-Windows לאפס את מנהל התקן הגרפיקה. המסך עשוי להבהב לרגע.</value>
+  </data>
+  <data name="ResetGraphicsDriverButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שלח את קיצור המקשים Win + Ctrl + Shift + B כדי לבקש מ-Windows לאפס את מנהל התקן הגרפיקה. המסך עשוי להבהב לרגע.</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogTitle" xml:space="preserve">
+    <value>לאפס את מנהל התקן הגרפיקה?</value>
+  </data>
+  <data name="ResetGraphicsDriverShortcutDialogContent" xml:space="preserve">
+    <value>פעולה זו שולחת ל-Windows את קיצור המקשים Win + Ctrl + Shift + B. התצוגה עשויה להבהב, המערכת עשויה להשמיע צפצוף אחד, ואפליקציות פתוחות עשויות להיעצר לרגע בזמן איפוס מנהל התקן הגרפיקה.</value>
+  </data>
+  <data name="SendingGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>שולח את קיצור המקשים לאיפוס מנהל התקן הגרפיקה...</value>
+  </data>
+  <data name="SuccessfullySentGraphicsDriverResetShortcut" xml:space="preserve">
+    <value>קיצור המקשים לאיפוס מנהל התקן הגרפיקה נשלח.</value>
+  </data>
+    <data name="TerminateAppText.Text" xml:space="preserve">
+    <value>סיום</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToTerminate" xml:space="preserve">
+  <value>לא ניתן לקבוע איזו אפליקציה לסיים.</value>
+</data>
+<data name="StartingTerminationOfApp" xml:space="preserve">
+  <value>מתחיל לסיים את האפליקציה: {0}...</value>
+</data>
+<data name="SuccessfullyTerminatedApp" xml:space="preserve">
+  <value>האפליקציה הסתיימה בהצלחה: {0}</value>
+</data>
+<data name="AppDiagnosticsAccessDenied" xml:space="preserve">
+  <value>Windows לא העניקה לחבילה זו את היכולת appDiagnostics, ולכן אפליקציה זו אינה יכולה לסיים את אפליקציית היעד.</value>
+</data>
+<data name="AppIsNotCurrentlyRunning" xml:space="preserve">
+  <value>{0} אינה פועלת כעת.</value>
+</data>
+<data name="AppTerminationFailed" xml:space="preserve">
+  <value>סיום '{0}' נכשל. קוד שגיאה: {1} - טקסט שגיאה: {2}</value>
+</data>
+<data name="PFNAppSizeLabel.Text" xml:space="preserve">
+  <value>גודל האפליקציה</value>
+</data>
+<data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+  <value>נתוני האפליקציה</value>
+</data>
+<data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+  <value>שימוש כולל</value>
+</data>
+<data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+  <value>חבילת משאבים</value>
+</data>
+<data name="PFNIsBundleLabel.Text" xml:space="preserve">
+  <value>חבילה מאוגדת</value>
+</data>
+<data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+  <value>מצב פיתוח</value>
+</data>
+<data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+  <value>לא ניתן להסרה</value>
+</data>
+<data name="PFNDependenciesLabel.Text" xml:space="preserve">
+  <value>יחסי תלות</value>
+</data>
+<data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+  <value>הותקן חלקית בשלבים</value>
+</data>
+<data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+  <value>סוג חתימה</value>
+</data>
+<data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+  <value>יכולות</value>
+</data>
+<data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+  <value>מסגרת עבודה</value>
+</data>
+<data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+  <value>פרטי משתמש</value>
+</data>
 </root>

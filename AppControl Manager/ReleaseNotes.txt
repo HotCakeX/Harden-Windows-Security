@@ -1,3 +1,5 @@
 * Updated dependencies to the latest versions.
 
 * The AppControl Manager now detects the system languages and if it supports any of them, it will configure its language accordingly. This only happens once at startup when the app is launched on a system for the first time. If user explicitly sets a different language in the app's settings then it will be respected.
+
+* You can now delete each previous log files directly from the combobox in the Logs page via the newly added delete button.

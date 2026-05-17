@@ -15,12 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -79,7 +80,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// List of log file paths for the ComboBox.
 	/// </summary>
-	internal readonly List<FileInfo> LogFiles = [];
+	internal readonly ObservableCollection<FileInfo> LogFiles = [];
 
 	/// <summary>
 	/// Incremental collection for the ListView.
@@ -149,23 +150,117 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// Loads log file names from the logs directory into the ComboBox.
 	/// Only files matching the name pattern are included.
 	/// </summary>
-	internal void LoadLogFiles()
+	internal void LoadLogFiles() => LoadLogFilesCore(preferredSelectedLogFilePath: null);
+
+	/// <summary>
+	/// Determines whether the specified log file can be deleted.
+	/// The currently active log file is excluded because it may still be in use by the logger.
+	/// </summary>
+	/// <param name="filePath">The full path of the log file.</param>
+	/// <returns><see langword="true"/> when the file can be deleted.</returns>
+	internal bool CanDeleteLogFile(string? filePath) => !string.IsNullOrWhiteSpace(filePath) && !string.Equals(filePath, Logger.LogFileName, StringComparison.OrdinalIgnoreCase);
+
+	/// <summary>
+	/// Deletes a previously generated log file after confirmation and refreshes the list.
+	/// </summary>
+	/// <param name="sender">The delete button that carries the selected <see cref="FileInfo"/> in its Tag.</param>
+	/// <param name="e">The routed event data.</param>
+	internal async void DeleteLogFile_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
-			// Get files matching the pattern
+			if (sender is not Button { Tag: FileInfo logFile })
+			{
+				return;
+			}
+
+			if (!CanDeleteLogFile(logFile.FullName))
+			{
+				return;
+			}
+
+			using ContentDialogV2 dialog = new()
+			{
+				Title = Atlas.GetStr("WarningTitle"),
+				Content = new TextBlock
+				{
+					Text = $"Delete '{logFile.Name}' from the logs directory? This action cannot be undone.",
+					TextWrapping = TextWrapping.WrapWholeWords
+				},
+				PrimaryButtonText = Atlas.GetStr("DeleteCertificateDialogPrimaryButton"),
+				CloseButtonText = Atlas.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			if (await dialog.ShowAsync() is not ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			string? preferredSelectedLogFilePath = SelectedLogFile is not null &&
+				!string.Equals(SelectedLogFile.FullName, logFile.FullName, StringComparison.OrdinalIgnoreCase)
+					? SelectedLogFile.FullName
+					: null;
+
+			if (File.Exists(logFile.FullName))
+			{
+				if (SelectedLogFile is not null &&
+					string.Equals(SelectedLogFile.FullName, logFile.FullName, StringComparison.OrdinalIgnoreCase))
+				{
+					SelectedLogFile = null;
+					await ClearDisplayedLogDataAsync(resetSearchText: false);
+				}
+
+				File.Delete(logFile.FullName);
+			}
+
+			LoadLogFilesCore(preferredSelectedLogFilePath);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Loads log file names from the logs directory into the ComboBox.
+	/// Only files matching the name pattern are included.
+	/// </summary>
+	/// <param name="preferredSelectedLogFilePath">A specific log file path to reselect when it still exists.</param>
+	private void LoadLogFilesCore(string? preferredSelectedLogFilePath)
+	{
+		try
+		{
 			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(Atlas.LogsDirectory, LogFilePattern)
 				.Select(static f => new FileInfo(f))
 				.OrderByDescending(static f => f.CreationTime);
 
-			// Clear and fill the ObservableCollection
 			LogFiles.Clear();
 
-			LogFiles.AddRange(logFiles);
+			foreach (FileInfo logFile in logFiles)
+			{
+				LogFiles.Add(logFile);
+			}
 
-			// If files were found, select the first one
-			if (LogFiles.Count > 0)
-				SelectedLogFile = LogFiles[0];
+			FileInfo? selectedLogFile = null;
+
+			if (!string.IsNullOrWhiteSpace(preferredSelectedLogFilePath))
+			{
+				selectedLogFile = LogFiles.FirstOrDefault(logFile =>
+					string.Equals(logFile.FullName, preferredSelectedLogFilePath, StringComparison.OrdinalIgnoreCase));
+			}
+
+			if (selectedLogFile is null && LogFiles.Count > 0)
+			{
+				selectedLogFile = LogFiles[0];
+			}
+
+			SelectedLogFile = selectedLogFile;
+
+			if (selectedLogFile is null)
+			{
+				_ = ClearDisplayedLogDataAsync(resetSearchText: true);
+			}
 		}
 		catch (Exception ex)
 		{
@@ -319,6 +414,27 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Clears the currently displayed log data after the selected file is removed or no files remain.
+	/// </summary>
+	/// <param name="resetSearchText">Resets the search box when no log file remains selected.</param>
+	private async Task ClearDisplayedLogDataAsync(bool resetSearchText)
+	{
+		if (_isDisposed)
+		{
+			return;
+		}
+
+		await LogCollection.ClearAllData();
+
+		IsLoading = false;
+
+		if (resetSearchText)
+		{
+			SearchText = string.Empty;
 		}
 	}
 

@@ -7552,4 +7552,124 @@
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>サイドバーのペインを開くか閉じます。</value>
   </data>
+  <data name="PFNAppSizeLabel.Text" xml:space="preserve">
+    <value>アプリのサイズ</value>
+  </data>
+  <data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+    <value>アプリ データ</value>
+  </data>
+  <data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+    <value>アプリの合計使用量</value>
+  </data>
+  <data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+    <value>リソース パッケージかどうか</value>
+  </data>
+  <data name="PFNIsBundleLabel.Text" xml:space="preserve">
+    <value>バンドルかどうか</value>
+  </data>
+  <data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+    <value>開発モードかどうか</value>
+  </data>
+  <data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+    <value>削除不可</value>
+  </data>
+  <data name="PFNDependenciesLabel.Text" xml:space="preserve">
+    <value>依存関係</value>
+  </data>
+  <data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+    <value>部分的にステージ済みかどうか</value>
+  </data>
+  <data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+    <value>署名の種類</value>
+  </data>
+  <data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+    <value>機能</value>
+  </data>
+  <data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+    <value>フレームワークかどうか</value>
+  </data>
+  <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+    <value>ユーザー情報</value>
+  </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>アプリ設定のバックアップと復元</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>バックアップと復元</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>アプリ設定をインポート、エクスポート、または既定値に復元します。</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アプリ設定をインポート、エクスポート、または既定値に復元します。</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>アプリ設定をインポート、エクスポート、または既定値に復元します。</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>設定を JSON にエクスポート</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>すべてのアプリ設定と現在の値を JSON ファイルにエクスポートします。</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>すべてのアプリ設定と現在の値を JSON ファイルにエクスポートします。</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>JSON から設定をインポート</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アプリ設定を含む JSON バックアップをインポートします。</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>アプリ設定を含む JSON バックアップをインポートします。</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>現在のアプリ設定</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingValueColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>現在の値</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>許容される形式</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>アプリ設定を JSON にエクスポートしています...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>{0} 個の設定を JSON に正常にエクスポートしました: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>アプリ設定を JSON にエクスポートできませんでした。</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>JSON からアプリ設定をインポートしています...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>JSON から {0} 個の設定を正常にインポートして適用しました: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>アプリ設定を JSON からインポートできませんでした。</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>設定を既定値にリセット</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>すべてのアプリ設定を既定値にリセットします。</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>すべてのアプリ設定を既定値にリセットします。</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>アプリ設定を既定値にリセットしています...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>{0} 個の設定を既定値に正常にリセットしました。</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>アプリ設定を既定値にリセットできませんでした。</value>
+  </data>
 </root>

@@ -190,6 +190,7 @@
 		<Compile Include="..\AppControl Manager\Pages\Home.xaml.cs" Link="Pages\Home.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Pages\Logs.xaml.cs" Link="Pages\Logs.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Pages\Settings.xaml.cs" Link="Pages\Settings.xaml.cs" />
+		<Compile Include="..\AppControl Manager\Pages\SettingsBackupRestore.xaml.cs" Link="Pages\SettingsBackupRestore.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Pages\UpdatePage.xaml.cs" Link="Pages\UpdatePage.xaml.cs" />
 		<Compile Include="..\AppControl Manager\ViewModels\HomeVM.cs" Link="ViewModels\HomeVM.cs" />
 		<Compile Include="..\AppControl Manager\ViewModels\LogsVM.cs" Link="ViewModels\LogsVM.cs" />

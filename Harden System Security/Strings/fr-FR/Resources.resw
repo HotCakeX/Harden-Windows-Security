@@ -6386,4 +6386,82 @@ Empreinte : {3}</value>
 <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
   <value>Informations utilisateur</value>
 </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Sauvegarde et restauration des paramètres de l’application</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>Sauvegarde et restauration</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>Importez, exportez ou rétablissez les paramètres de l’application à leurs valeurs par défaut.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importez, exportez ou rétablissez les paramètres de l’application à leurs valeurs par défaut.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importez, exportez ou rétablissez les paramètres de l’application à leurs valeurs par défaut.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>Exporter les paramètres vers JSON</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exportez chaque paramètre de l’application et sa valeur actuelle vers un fichier JSON.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exportez chaque paramètre de l’application et sa valeur actuelle vers un fichier JSON.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>Importer les paramètres depuis JSON</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importez une sauvegarde JSON contenant les paramètres de l’application.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importez une sauvegarde JSON contenant les paramètres de l’application.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>Paramètres actuels de l’application</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Paramètre</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Format accepté</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>Exportation des paramètres de l’application vers JSON...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>{0} paramètres ont été exportés avec succès vers JSON : {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>Les paramètres de l’application n’ont pas pu être exportés vers JSON.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>Importation des paramètres de l’application depuis JSON...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>{0} paramètres ont été importés et appliqués avec succès depuis JSON : {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>Les paramètres de l’application n’ont pas pu être importés depuis JSON.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>Réinitialiser les paramètres aux valeurs par défaut</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Réinitialisez chaque paramètre de l’application à sa valeur par défaut.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Réinitialisez chaque paramètre de l’application à sa valeur par défaut.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Réinitialisation des paramètres de l’application à leurs valeurs par défaut...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>{0} paramètres ont été réinitialisés avec succès à leurs valeurs par défaut.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Les paramètres de l’application n’ont pas pu être réinitialisés à leurs valeurs par défaut.</value>
+  </data>
 </root>

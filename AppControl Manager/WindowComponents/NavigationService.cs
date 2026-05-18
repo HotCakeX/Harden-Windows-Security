@@ -265,7 +265,7 @@ internal sealed class NavigationService
 		ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
 
 		// Navigate to the new page
-		_ = _frame.Navigate(nextNavPageType, null, new DrillInNavigationTransitionInfo());
+		_ = _frame.Navigate(nextNavPageType, null, new ContinuumNavigationTransitionInfo());
 
 #if APP_CONTROL_MANAGER
 		// For page Interface and light augmentation
@@ -300,8 +300,9 @@ internal sealed class NavigationService
 			}
 
 			// Since settings page doesn't have content when it is in Top mode (it only has Tag property)
-			// And also content for the auto-created Settings page varies based on localization, adding an explicit check for it here
-			if (Equals(currentPageType, typeof(Pages.Settings)))
+			// And also content for the auto-created Settings page varies based on localization, adding an explicit check for it here.
+			// This must also apply to sub-pages that belong to the Settings breadcrumb path because SettingsItem is not part of allNavigationItems.
+			if (Equals(info.Pages[0], typeof(Pages.Settings)))
 			{
 				// Set the selected item in the MainNavigation to the Settings page
 				mainWindowVM.NavViewSelectedItem = MainNavigation?.SettingsItem;
@@ -381,7 +382,7 @@ internal sealed class NavigationService
 			ElementSoundPlayer.Play(ElementSoundKind.GoBack);
 
 			// Go back to the previous page
-			_frame.GoBack(new DrillInNavigationTransitionInfo());
+			_frame.GoBack(new ContinuumNavigationTransitionInfo());
 
 			// Get the current page after navigating back
 			Type currentPage = _frame.CurrentSourcePageType;

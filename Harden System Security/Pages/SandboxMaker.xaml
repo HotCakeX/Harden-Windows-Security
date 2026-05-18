@@ -71,7 +71,8 @@
                     BorderThickness="1"
                     CornerRadius="10"
                     Padding="16">
-                <StackPanel Spacing="12">
+                <StackPanel Spacing="12"
+                            XYFocusKeyboardNavigation="Enabled">
                     <TextBlock x:Uid="TimeZone"
                                Style="{StaticResource SubtitleTextBlockStyle}" />
 
@@ -364,7 +365,8 @@
 
                     <CCToolKit:WrapPanel Orientation="Horizontal"
                                          HorizontalSpacing="10"
-                                         VerticalSpacing="10">
+                                         VerticalSpacing="10"
+                                         XYFocusKeyboardNavigation="Enabled">
                         <TextBox Width="460"
                                  Text="{x:Bind ViewModel.SelectedProgramFolderPath, Mode=OneWay}"
                                  PlaceholderText="No program folder selected."
@@ -473,7 +475,8 @@
                     CornerRadius="10"
                     Padding="5">
 
-                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+                <CCToolKit:WrapPanel Style="{StaticResource UnifiedToolbarStyle}"
+                                     XYFocusKeyboardNavigation="Enabled">
                     <Button x:Uid="SaveSandboxProfileButton"
                             Click="{x:Bind ViewModel.SaveSandbox_Click}">
                         <Button.ContentTemplate>

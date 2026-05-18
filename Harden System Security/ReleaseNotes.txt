@@ -7,3 +7,5 @@
 * Improved localizations.
 
 * You can now delete each previous log files directly from the combobox in the Logs page via the newly added delete button.
+
+* You can now export app settings to a JSON file or import them from a JSON file. You can also view all of the app settings in a new dedicated page and reset them back to their default values. This is useful when you've configured the app's settings according to your preferences and you want to apply the same settings on other devices, or you want to backup your settings in order to restore them after app uninstallation and reinstallation. The exported settings file is compatible with both apps and you can use the same settings file for AppControl Manager and Harden System Security app.

@@ -6386,4 +6386,82 @@
 <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
   <value>उपयोगकर्ता जानकारी</value>
 </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>ऐप सेटिंग्स का बैकअप और पुनर्स्थापना</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>बैकअप और पुनर्स्थापना</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>ऐप सेटिंग्स को आयात करें, निर्यात करें या उन्हें उनके डिफ़ॉल्ट मानों पर पुनर्स्थापित करें.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप सेटिंग्स को आयात करें, निर्यात करें या उन्हें उनके डिफ़ॉल्ट मानों पर पुनर्स्थापित करें.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप सेटिंग्स को आयात करें, निर्यात करें या उन्हें उनके डिफ़ॉल्ट मानों पर पुनर्स्थापित करें.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>सेटिंग्स को JSON में निर्यात करें</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रत्येक ऐप सेटिंग और उसके वर्तमान मान को JSON फ़ाइल में निर्यात करें.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>प्रत्येक ऐप सेटिंग और उसके वर्तमान मान को JSON फ़ाइल में निर्यात करें.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>JSON से सेटिंग्स आयात करें</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप सेटिंग्स वाली JSON बैकअप फ़ाइल आयात करें.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप सेटिंग्स वाली JSON बैकअप फ़ाइल आयात करें.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>वर्तमान ऐप सेटिंग्स</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>सेटिंग</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>स्वीकृत प्रारूप</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>ऐप सेटिंग्स को JSON में निर्यात किया जा रहा है...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>{0} सेटिंग्स सफलतापूर्वक JSON में निर्यात की गईं: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>ऐप सेटिंग्स को JSON में निर्यात नहीं किया जा सका.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>ऐप सेटिंग्स को JSON से आयात किया जा रहा है...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>{0} सेटिंग्स सफलतापूर्वक JSON से आयात और लागू की गईं: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>ऐप सेटिंग्स को JSON से आयात नहीं किया जा सका.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>सेटिंग्स को डिफ़ॉल्ट पर रीसेट करें</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रत्येक ऐप सेटिंग को उसके डिफ़ॉल्ट मान पर रीसेट करें.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>प्रत्येक ऐप सेटिंग को उसके डिफ़ॉल्ट मान पर रीसेट करें.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>ऐप सेटिंग्स को उनके डिफ़ॉल्ट मानों पर रीसेट किया जा रहा है...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>{0} सेटिंग्स सफलतापूर्वक उनके डिफ़ॉल्ट मानों पर रीसेट की गईं.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>ऐप सेटिंग्स को उनके डिफ़ॉल्ट मानों पर रीसेट नहीं किया जा सका.</value>
+  </data>
 </root>

@@ -16,6 +16,7 @@
 //
 
 using AppControlManager.ViewModels;
+using CommonCore.AppSettings;
 using HardenSystemSecurity.WindowComponents;
 
 namespace HardenSystemSecurity.ViewModels;
@@ -147,6 +148,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<SandboxMakerVM> _sandboxMakerVM = new(() =>
 		new SandboxMakerVM(), false);
 
+	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(() =>
+		new SettingsBackupRestoreVM(), false);
+
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
 	internal static MainWindowVM MainWindowVM => _mainWindowVM.Value;
@@ -189,6 +193,7 @@ internal static class ViewModelProvider
 	internal static BootableDriveMakerVM BootableDriveMakerVM => _bootableDriveMakerVM.Value;
 	internal static ExploitMitigationsVM ExploitMitigationsVM => _exploitMitigationsVM.Value;
 	internal static SandboxMakerVM SandboxMakerVM => _sandboxMakerVM.Value;
+	internal static SettingsBackupRestoreVM SettingsBackupRestore => _settingsBackupRestore.Value;
 
 	/// <summary>
 	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>

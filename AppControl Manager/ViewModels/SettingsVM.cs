@@ -85,7 +85,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	} = string.Equals(Atlas.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase);
 
-	private enum NavViewLocation
+	internal enum NavViewLocation
 	{
 		Left = 0,
 		Top = 1
@@ -107,7 +107,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	private static readonly Dictionary<string, int> SupportedLanguages = new(StringComparer.OrdinalIgnoreCase)
+	internal static readonly Dictionary<string, int> SupportedLanguages = new(StringComparer.OrdinalIgnoreCase)
 	{
 		{ "en-US", 0 },
 		{ "he", 1 },
@@ -122,7 +122,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ "ja", 10 }
 	};
 
-	private static readonly string[] SupportedLanguagesReverse = [
+	internal static readonly string[] SupportedLanguagesReverse = [
 		 "en-US",
 		 "he",
 		 "el",
@@ -235,13 +235,13 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// </summary>
 	internal readonly List<LanguageOption> LanguageOptions = [];
 
-	private static readonly Dictionary<string, int> AppThemes = new(StringComparer.OrdinalIgnoreCase)
+	internal static readonly Dictionary<string, int> AppThemes = new(StringComparer.OrdinalIgnoreCase)
 	{
 		{"Use System Setting", 0 },
 		{"Dark", 1 },
 		{"Light", 2 }
 	};
-	private static readonly string[] AppThemesReverse = [
+	internal static readonly string[] AppThemesReverse = [
 		"Use System Setting",
 		"Dark" ,
 		"Light"
@@ -261,14 +261,14 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	} = AppThemes.TryGetValue(Atlas.Settings.AppTheme, out int x) ? x : 0;
 
-	private static readonly Dictionary<string, int> IconsStyles = new(StringComparer.OrdinalIgnoreCase)
+	internal static readonly Dictionary<string, int> IconsStyles = new(StringComparer.OrdinalIgnoreCase)
 	{
 		{"Animated", 0 },
 		{"Windows Accent", 1 },
 		{"Monochromatic" , 2 }
 	};
 
-	private static readonly string[] IconsStylesReverse = [
+	internal static readonly string[] IconsStylesReverse = [
 		"Animated",
 		"Windows Accent",
 		"Monochromatic"
@@ -479,15 +479,20 @@ internal sealed partial class SettingsVM : ViewModelBase
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog("Pictures|*.JPG;*.JPEG;*.PNG;*.HEIC;*.WEBP;*.GIF;*.ICO;*.BMP");
 
+		if (selectedFile is not null && ValidateBackdropImage(selectedFile))
+		{
+			Atlas.Settings.BackdropCustomBrushPictureSelection = selectedFile;
+		}
+	}
+
+	internal static bool ValidateBackdropImage(string filePath)
+	{
 		UriCreationOptions options = new()
 		{
 			DangerousDisablePathAndQueryCanonicalization = false
 		};
 
-		if (Uri.TryCreate(selectedFile, options, out Uri? _))
-		{
-			Atlas.Settings.BackdropCustomBrushPictureSelection = selectedFile;
-		}
+		return System.IO.Path.IsPathRooted(filePath) && Uri.TryCreate(filePath, options, out Uri? _);
 	}
 
 	internal void ClearBackdropCustomBrushPictureSelection() => Atlas.Settings.BackdropCustomBrushPictureSelection = string.Empty;
@@ -678,4 +683,5 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	internal async void OpenWindowsSettings() => await OpenFileInDefaultFileHandler("ms-settings:personalization-colors");
 
+	internal async void OpenSettingsBackupRestorePage() => await ViewModelProvider.NavigationService.Navigate(typeof(AppControlManager.Pages.SettingsBackupRestore), null);
 }

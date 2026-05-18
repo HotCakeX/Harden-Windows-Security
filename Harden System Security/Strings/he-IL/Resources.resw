@@ -6386,4 +6386,82 @@
 <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
   <value>פרטי משתמש</value>
 </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>גיבוי ושחזור הגדרות האפליקציה</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>גיבוי ושחזור</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>ייבוא, ייצוא או שחזור של הגדרות האפליקציה לערכי ברירת המחדל שלהן.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ייבוא, ייצוא או שחזור של הגדרות האפליקציה לערכי ברירת המחדל שלהן.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ייבוא, ייצוא או שחזור של הגדרות האפליקציה לערכי ברירת המחדל שלהן.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>ייצוא הגדרות ל-JSON</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ייצא כל הגדרת אפליקציה ואת הערך הנוכחי שלה לקובץ JSON.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ייצא כל הגדרת אפליקציה ואת הערך הנוכחי שלה לקובץ JSON.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>ייבוא הגדרות מ-JSON</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ייבא גיבוי JSON המכיל את הגדרות האפליקציה.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ייבא גיבוי JSON המכיל את הגדרות האפליקציה.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>הגדרות האפליקציה הנוכחיות</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>הגדרה</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>תבנית נתמכת</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>מייצא את הגדרות האפליקציה ל-JSON...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>בוצע ייצוא מוצלח של {0} הגדרות ל-JSON: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>לא הייתה אפשרות לייצא את הגדרות האפליקציה ל-JSON.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>מייבא את הגדרות האפליקציה מ-JSON...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>בוצע ייבוא והחלה מוצלחים של {0} הגדרות מ-JSON: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>לא הייתה אפשרות לייבא את הגדרות האפליקציה מ-JSON.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>איפוס הגדרות לברירות המחדל</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אפס כל הגדרת אפליקציה לערך ברירת המחדל שלה.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אפס כל הגדרת אפליקציה לערך ברירת המחדל שלה.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>מאפס את הגדרות האפליקציה לערכי ברירת המחדל שלהן...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>בוצע איפוס מוצלח של {0} הגדרות לערכי ברירת המחדל שלהן.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>לא הייתה אפשרות לאפס את הגדרות האפליקציה לערכי ברירת המחדל שלהן.</value>
+  </data>
 </root>

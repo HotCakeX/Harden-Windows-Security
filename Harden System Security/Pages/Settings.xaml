@@ -24,11 +24,21 @@
                                 IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
 
             <StackPanel HorizontalAlignment="Stretch"
-                    Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1">
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1">
                 <StackPanel.ChildrenTransitions>
                     <EntranceThemeTransition FromVerticalOffset="50" />
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
+
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="BackupAndRestoreSettingsSectionHeader" />
+                <CCToolKit:SettingsCard x:Uid="SettingsBackupRestoreSettingsCard"
+                                        IsClickEnabled="True"
+                                        IsActionIconVisible="True"
+                                        Click="{x:Bind ViewModel.OpenSettingsBackupRestorePage}">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xED10;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                </CCToolKit:SettingsCard>
 
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />

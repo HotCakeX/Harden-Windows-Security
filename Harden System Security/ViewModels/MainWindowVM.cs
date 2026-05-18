@@ -92,8 +92,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.Settings)] = new PageTitleMap
 		(
-			titles: [Atlas.GetStr("SettingsNavItem/Content")],
-			pages: [typeof(Pages.Settings)]
+			titles: [Atlas.GetStr("SettingsNavItem/Content"), Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header")],
+			pages: [typeof(Pages.Settings), typeof(AppControlManager.Pages.SettingsBackupRestore)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.GroupPolicyEditor)] = new PageTitleMap
@@ -299,6 +299,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [Atlas.GetStr("SandboxMakerNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.SandboxMaker)]
 		);
+
+		breadCrumbMappingsV2[typeof(AppControlManager.Pages.SettingsBackupRestore)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("SettingsNavItem/Content"), Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header")],
+			pages: [typeof(Pages.Settings), typeof(AppControlManager.Pages.SettingsBackupRestore)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -400,6 +406,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.BootableDriveMaker)] = Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ExploitMitigations)] = Atlas.GetStr("ExploitMitigationsNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.SandboxMaker)] = Atlas.GetStr("SandboxMakerNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.SettingsBackupRestore)] = Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header");
 	}
 
 	/// <summary>

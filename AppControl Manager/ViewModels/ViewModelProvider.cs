@@ -18,6 +18,7 @@
 using System.Threading;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
+using CommonCore.AppSettings;
 using Windows.Storage;
 
 namespace AppControlManager.ViewModels;
@@ -122,6 +123,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<SystemShutdownInfoDialogVM> _systemShutdownInfoDialogVM = new(() =>
 		new SystemShutdownInfoDialogVM(), false);
 
+	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(() =>
+		new SettingsBackupRestoreVM(), false);
+
 	// Core Dependencies \\
 	internal static EventLogUtility EventLogUtility => _eventLogUtility.Value;
 
@@ -156,6 +160,7 @@ internal static class ViewModelProvider
 	internal static FirewallSentinelVM FirewallSentinelVM => _firewallSentinelVM.Value;
 	internal static SystemShutdownInfoDialogVM SystemShutdownInfoDialogVM => _systemShutdownInfoDialogVM.Value;
 
+	internal static SettingsBackupRestoreVM SettingsBackupRestore => _settingsBackupRestore.Value;
 
 	/// <summary>
 	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>

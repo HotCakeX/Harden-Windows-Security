@@ -6386,4 +6386,82 @@ Thumbprint: {3}</value>
 <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
   <value>User Information</value>
 </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>App Settings Backup and Restore</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>Backup and Restore</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>Import, export or restore the app settings back to their default values.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Import, export or restore the app settings back to their default values.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Import, export or restore the app settings back to their default values.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>Export Settings to JSON</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Export every app setting and its current value to a JSON file.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Export every app setting and its current value to a JSON file.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>Import Settings from JSON</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Import a JSON backup containing the app settings.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Import a JSON backup containing the app settings.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>Current App Settings</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Accepted Format</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>Exporting app settings to JSON...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>Successfully exported {0} settings to JSON: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>Could not export the app settings to JSON.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>Importing app settings from JSON...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>Successfully imported and applied {0} settings from JSON: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>Could not import the app settings from JSON.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>Reset Settings to Defaults</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reset every app setting to its default value.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reset every app setting to its default value.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Resetting app settings to their default values...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Successfully reset {0} settings to their default values.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Could not reset the app settings to their default values.</value>
+  </data>
 </root>

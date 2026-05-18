@@ -7552,4 +7552,124 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Öffnet oder schließt den Bereich der Seitenleiste.</value>
   </data>
+  <data name="PFNAppSizeLabel.Text" xml:space="preserve">
+    <value>App-Größe</value>
+  </data>
+  <data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+    <value>App-Daten</value>
+  </data>
+  <data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+    <value>Gesamtnutzung</value>
+  </data>
+  <data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+    <value>Ist Ressourcenpaket</value>
+  </data>
+  <data name="PFNIsBundleLabel.Text" xml:space="preserve">
+    <value>Ist Bundle</value>
+  </data>
+  <data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+    <value>Ist Entwicklungsmodus</value>
+  </data>
+  <data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+    <value>Nicht entfernbar</value>
+  </data>
+  <data name="PFNDependenciesLabel.Text" xml:space="preserve">
+    <value>Abhängigkeiten</value>
+  </data>
+  <data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+    <value>Ist teilweise bereitgestellt</value>
+  </data>
+  <data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+    <value>Signaturtyp</value>
+  </data>
+  <data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+    <value>Funktionen</value>
+  </data>
+  <data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+    <value>Ist Framework</value>
+  </data>
+  <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+    <value>Benutzerinformationen</value>
+  </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Sichern und Wiederherstellen der App-Einstellungen</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>Sichern und Wiederherstellen</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>App-Einstellungen importieren, exportieren oder auf ihre Standardwerte zurücksetzen.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>App-Einstellungen importieren, exportieren oder auf ihre Standardwerte zurücksetzen.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>App-Einstellungen importieren, exportieren oder auf ihre Standardwerte zurücksetzen.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>Einstellungen nach JSON exportieren</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exportieren Sie jede App-Einstellung und ihren aktuellen Wert in eine JSON-Datei.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exportieren Sie jede App-Einstellung und ihren aktuellen Wert in eine JSON-Datei.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>Einstellungen aus JSON importieren</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importieren Sie eine JSON-Sicherungskopie mit den App-Einstellungen.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importieren Sie eine JSON-Sicherungskopie mit den App-Einstellungen.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>Aktuelle App-Einstellungen</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Einstellung</value>
+  </data>
+  <data name="SettingValueColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Aktueller Wert</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Zulässiges Format</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>App-Einstellungen werden nach JSON exportiert...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>{0} Einstellungen wurden erfolgreich nach JSON exportiert: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>Die App-Einstellungen konnten nicht nach JSON exportiert werden.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>App-Einstellungen werden aus JSON importiert...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>{0} Einstellungen wurden erfolgreich aus JSON importiert und angewendet: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>Die App-Einstellungen konnten nicht aus JSON importiert werden.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>Einstellungen auf Standardwerte zurücksetzen</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Setzen Sie jede App-Einstellung auf ihren Standardwert zurück.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Setzen Sie jede App-Einstellung auf ihren Standardwert zurück.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>App-Einstellungen werden auf ihre Standardwerte zurückgesetzt...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>{0} Einstellungen wurden erfolgreich auf ihre Standardwerte zurückgesetzt.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Die App-Einstellungen konnten nicht auf ihre Standardwerte zurückgesetzt werden.</value>
+  </data>
 </root>

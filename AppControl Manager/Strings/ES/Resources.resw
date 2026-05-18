@@ -7552,4 +7552,124 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Abre o cierra el panel de la barra lateral.</value>
   </data>
+  <data name="PFNAppSizeLabel.Text" xml:space="preserve">
+    <value>Tamaño de la aplicación</value>
+  </data>
+  <data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+    <value>Datos de la aplicación</value>
+  </data>
+  <data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+    <value>Uso total</value>
+  </data>
+  <data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+    <value>Es paquete de recursos</value>
+  </data>
+  <data name="PFNIsBundleLabel.Text" xml:space="preserve">
+    <value>Es paquete agrupado</value>
+  </data>
+  <data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+    <value>Es modo de desarrollo</value>
+  </data>
+  <data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+    <value>No removible</value>
+  </data>
+  <data name="PFNDependenciesLabel.Text" xml:space="preserve">
+    <value>Dependencias</value>
+  </data>
+  <data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+    <value>Está parcialmente preparada</value>
+  </data>
+  <data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+    <value>Tipo de firma</value>
+  </data>
+  <data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+    <value>Funcionalidades</value>
+  </data>
+  <data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+    <value>Es framework</value>
+  </data>
+  <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+    <value>Información del usuario</value>
+  </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Copia de seguridad y restauración de la configuración de la aplicación</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>Copia de seguridad y restauración</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>Importe, exporte o restablezca la configuración de la aplicación a sus valores predeterminados.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importe, exporte o restablezca la configuración de la aplicación a sus valores predeterminados.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importe, exporte o restablezca la configuración de la aplicación a sus valores predeterminados.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>Exportar configuración a JSON</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exporte cada configuración de la aplicación y su valor actual a un archivo JSON.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exporte cada configuración de la aplicación y su valor actual a un archivo JSON.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>Importar configuración desde JSON</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Importe una copia de seguridad en JSON que contenga la configuración de la aplicación.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importe una copia de seguridad en JSON que contenga la configuración de la aplicación.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>Configuración actual de la aplicación</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="SettingValueColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Valor actual</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>Formato aceptado</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>Exportando la configuración de la aplicación a JSON...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>Se exportaron correctamente {0} configuraciones a JSON: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>No se pudo exportar la configuración de la aplicación a JSON.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>Importando la configuración de la aplicación desde JSON...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>Se importaron y aplicaron correctamente {0} configuraciones desde JSON: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>No se pudo importar la configuración de la aplicación desde JSON.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>Restablecer configuración a los valores predeterminados</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restablezca cada configuración de la aplicación a su valor predeterminado.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restablezca cada configuración de la aplicación a su valor predeterminado.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Restableciendo la configuración de la aplicación a sus valores predeterminados...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>Se restablecieron correctamente {0} configuraciones a sus valores predeterminados.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>No se pudo restablecer la configuración de la aplicación a sus valores predeterminados.</value>
+  </data>
 </root>

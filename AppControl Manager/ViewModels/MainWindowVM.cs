@@ -269,8 +269,8 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 
 		breadCrumbMappingsV2[typeof(Pages.Settings)] = new PageTitleMap
 		(
-			titles: [Atlas.GetStr("SettingsNavItemContent")],
-			pages: [typeof(Pages.Settings)]
+			titles: [Atlas.GetStr("SettingsNavItemContent"), Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header")],
+			pages: [typeof(Pages.Settings), typeof(AppControlManager.Pages.SettingsBackupRestore)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.SystemInformation)] = new PageTitleMap
@@ -422,6 +422,12 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			titles: [Atlas.GetStr("CreatePolicyFromMDEAHNavItem/Content"), Atlas.GetStr("MDEAdvancedHuntingAnalysisNavItemContent")],
 			pages: [typeof(Pages.MDEAHPolicyCreation), typeof(Pages.Analysis.MDEAdvancedHunting)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.SettingsBackupRestore)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("SettingsNavItemContent"), Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header")],
+			pages: [typeof(Pages.Settings), typeof(Pages.SettingsBackupRestore)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -498,6 +504,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("HomeNavItem/Content")] = typeof(Pages.Home);
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("FirewallSentinelNavItem/Content")] = typeof(Pages.FirewallSentinel);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header")] = typeof(AppControlManager.Pages.SettingsBackupRestore);
 	}
 
 	/// <summary>

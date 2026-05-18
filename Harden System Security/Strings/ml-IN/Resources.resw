@@ -6386,4 +6386,82 @@
 <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
   <value>ഉപയോക്തൃ വിവരങ്ങൾ</value>
 </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങളുടെ ബാക്കപ്പും പുനഃസ്ഥാപനവും</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>ബാക്കപ്പും പുനഃസ്ഥാപനവും</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ ഇറക്കുമതി ചെയ്യുക, കയറ്റുമതി ചെയ്യുക, അല്ലെങ്കിൽ അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ ഇറക്കുമതി ചെയ്യുക, കയറ്റുമതി ചെയ്യുക, അല്ലെങ്കിൽ അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ ഇറക്കുമതി ചെയ്യുക, കയറ്റുമതി ചെയ്യുക, അല്ലെങ്കിൽ അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>ക്രമീകരണങ്ങൾ JSON ലേക്ക് കയറ്റുമതി ചെയ്യുക</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഓരോ ആപ്പ് ക്രമീകരണവും അതിന്റെ നിലവിലെ മൂല്യവും JSON ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുക.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഓരോ ആപ്പ് ക്രമീകരണവും അതിന്റെ നിലവിലെ മൂല്യവും JSON ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുക.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>JSON ൽ നിന്ന് ക്രമീകരണങ്ങൾ ഇറക്കുമതി ചെയ്യുക</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ അടങ്ങിയ JSON ബാക്കപ്പ് ഇറക്കുമതി ചെയ്യുക.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ അടങ്ങിയ JSON ബാക്കപ്പ് ഇറക്കുമതി ചെയ്യുക.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>നിലവിലെ ആപ്പ് ക്രമീകരണങ്ങൾ</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>ക്രമീകരണം</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>സ്വീകരിക്കപ്പെടുന്ന ഫോർമാറ്റ്</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ JSON ലേക്ക് കയറ്റുമതി ചെയ്യുന്നു...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>{0} ക്രമീകരണങ്ങൾ വിജയകരമായി JSON ലേക്ക് കയറ്റുമതി ചെയ്തു: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ JSON ലേക്ക് കയറ്റുമതി ചെയ്യാനായില്ല.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ JSON ൽ നിന്ന് ഇറക്കുമതി ചെയ്യുന്നു...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>{0} ക്രമീകരണങ്ങൾ JSON ൽ നിന്ന് വിജയകരമായി ഇറക്കുമതി ചെയ്ത് പ്രയോഗിച്ചു: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ JSON ൽ നിന്ന് ഇറക്കുമതി ചെയ്യാനായില്ല.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>ക്രമീകരണങ്ങളെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസജ്ജമാക്കുക</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഓരോ ആപ്പ് ക്രമീകരണവും അതിന്റെ സ്വതേയുള്ള മൂല്യത്തിലേക്ക് പുനഃസജ്ജമാക്കുക.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഓരോ ആപ്പ് ക്രമീകരണവും അതിന്റെ സ്വതേയുള്ള മൂല്യത്തിലേക്ക് പുനഃസജ്ജമാക്കുക.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങൾ അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസജ്ജമാക്കുന്നു...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>{0} ക്രമീകരണങ്ങൾ വിജയകരമായി അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസജ്ജമാക്കി.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>ആപ്പ് ക്രമീകരണങ്ങളെ അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസജ്ജമാക്കാനായില്ല.</value>
+  </data>
 </root>

@@ -7552,4 +7552,124 @@
   <data name="SidebarTitleBarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>فتح أو إغلاق جزء الشريط الجانبي.</value>
   </data>
+  <data name="PFNAppSizeLabel.Text" xml:space="preserve">
+    <value>حجم التطبيق</value>
+  </data>
+  <data name="PFNAppDataSizeLabel.Text" xml:space="preserve">
+    <value>بيانات التطبيق</value>
+  </data>
+  <data name="PFNAppTotalUsageLabel.Text" xml:space="preserve">
+    <value>إجمالي الاستخدام</value>
+  </data>
+  <data name="PFNIsResourcePackageLabel.Text" xml:space="preserve">
+    <value>حزمة موارد</value>
+  </data>
+  <data name="PFNIsBundleLabel.Text" xml:space="preserve">
+    <value>حزمة مجمعة</value>
+  </data>
+  <data name="PFNIsDevelopmentModeLabel.Text" xml:space="preserve">
+    <value>وضع التطوير</value>
+  </data>
+  <data name="PFNNonRemovableLabel.Text" xml:space="preserve">
+    <value>غير قابل للإزالة</value>
+  </data>
+  <data name="PFNDependenciesLabel.Text" xml:space="preserve">
+    <value>التبعيات</value>
+  </data>
+  <data name="PFNIsPartiallyStagedLabel.Text" xml:space="preserve">
+    <value>تم تجهيزه جزئيًا</value>
+  </data>
+  <data name="PFNSignatureKindLabel.Text" xml:space="preserve">
+    <value>نوع التوقيع</value>
+  </data>
+  <data name="PFNCapabilitiesLabel.Text" xml:space="preserve">
+    <value>الإمكانات</value>
+  </data>
+  <data name="PFNIsFrameworkLabel.Text" xml:space="preserve">
+    <value>إطار عمل</value>
+  </data>
+  <data name="PFNPackageUserInformationLabel.Text" xml:space="preserve">
+    <value>معلومات المستخدم</value>
+  </data>
+  <data name="BackupAndRestoreSettingsSectionHeader.Text" xml:space="preserve">
+    <value>النسخ الاحتياطي لإعدادات التطبيق واستعادتها</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Header" xml:space="preserve">
+    <value>نسخ احتياطي واستعادة</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.Description" xml:space="preserve">
+    <value>قم باستيراد إعدادات التطبيق أو تصديرها أو استعادتها إلى قيمها الافتراضية.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم باستيراد إعدادات التطبيق أو تصديرها أو استعادتها إلى قيمها الافتراضية.</value>
+  </data>
+  <data name="SettingsBackupRestoreSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم باستيراد إعدادات التطبيق أو تصديرها أو استعادتها إلى قيمها الافتراضية.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.Content" xml:space="preserve">
+    <value>تصدير الإعدادات إلى JSON</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتصدير كل إعداد من إعدادات التطبيق وقيمته الحالية إلى ملف JSON.</value>
+  </data>
+  <data name="ExportSettingsToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتصدير كل إعداد من إعدادات التطبيق وقيمته الحالية إلى ملف JSON.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.Content" xml:space="preserve">
+    <value>استيراد الإعدادات من JSON</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم باستيراد نسخة احتياطية بتنسيق JSON تحتوي على إعدادات التطبيق.</value>
+  </data>
+  <data name="ImportSettingsFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم باستيراد نسخة احتياطية بتنسيق JSON تحتوي على إعدادات التطبيق.</value>
+  </data>
+  <data name="SettingsBackupRestoreCurrentValuesSectionHeader.Text" xml:space="preserve">
+    <value>إعدادات التطبيق الحالية</value>
+  </data>
+  <data name="SettingNameColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>الإعداد</value>
+  </data>
+  <data name="SettingValueColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>القيمة الحالية</value>
+  </data>
+  <data name="SettingAcceptedFormatColumnHeaderTextBlock.Text" xml:space="preserve">
+    <value>التنسيق المقبول</value>
+  </data>
+  <data name="ExportingSettingsToJsonMessage" xml:space="preserve">
+    <value>جارٍ تصدير إعدادات التطبيق إلى JSON...</value>
+  </data>
+  <data name="SuccessfullyExportedSettingsToJsonMessage" xml:space="preserve">
+    <value>تم تصدير {0} إعدادًا إلى JSON بنجاح: {1}</value>
+  </data>
+  <data name="CouldNotExportSettingsToJsonMessage" xml:space="preserve">
+    <value>تعذر تصدير إعدادات التطبيق إلى JSON.</value>
+  </data>
+  <data name="ImportingSettingsFromJsonMessage" xml:space="preserve">
+    <value>جارٍ استيراد إعدادات التطبيق من JSON...</value>
+  </data>
+  <data name="SuccessfullyImportedSettingsFromJsonMessage" xml:space="preserve">
+    <value>تم استيراد {0} إعدادًا من JSON وتطبيقها بنجاح: {1}</value>
+  </data>
+  <data name="CouldNotImportSettingsFromJsonMessage" xml:space="preserve">
+    <value>تعذر استيراد إعدادات التطبيق من JSON.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.Content" xml:space="preserve">
+    <value>إعادة تعيين الإعدادات إلى القيم الافتراضية</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أعد تعيين كل إعداد من إعدادات التطبيق إلى قيمته الافتراضية.</value>
+  </data>
+  <data name="ResetSettingsToDefaultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أعد تعيين كل إعداد من إعدادات التطبيق إلى قيمته الافتراضية.</value>
+  </data>
+  <data name="ResettingSettingsToDefaultsMessage" xml:space="preserve">
+    <value>جارٍ إعادة تعيين إعدادات التطبيق إلى قيمها الافتراضية...</value>
+  </data>
+  <data name="SuccessfullyResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>تمت إعادة تعيين {0} إعدادًا إلى قيمها الافتراضية بنجاح.</value>
+  </data>
+  <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
+    <value>تعذر إعادة تعيين إعدادات التطبيق إلى قيمها الافتراضية.</value>
+  </data>
 </root>

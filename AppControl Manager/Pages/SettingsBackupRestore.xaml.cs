@@ -1,0 +1,47 @@
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using CommonCore.AppSettings;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+namespace AppControlManager.Pages;
+
+internal sealed partial class SettingsBackupRestore : Page, CommonCore.UI.IPageHeaderProvider
+{
+
+#if APP_CONTROL_MANAGER
+	private SettingsBackupRestoreVM ViewModel => AppControlManager.ViewModels.ViewModelProvider.SettingsBackupRestore;
+#else
+	private SettingsBackupRestoreVM ViewModel => HardenSystemSecurity.ViewModels.ViewModelProvider.SettingsBackupRestore;
+#endif
+
+	internal SettingsBackupRestore()
+	{
+		InitializeComponent();
+		DataContext = ViewModel;
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+	}
+
+	protected override void OnNavigatedTo(NavigationEventArgs e)
+	{
+		base.OnNavigatedTo(e);
+		ViewModel.RefreshDisplayedSettings();
+	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SettingsBackupRestoreSettingsCard/Description");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
+}

@@ -33,6 +33,8 @@ namespace CommonCore.AppSettings;
 /// </summary>
 internal sealed partial class Main : ViewModelBase
 {
+	internal const string DefaultCustomBrushAppPackageBackgroundPicture = "ms-appx:///Assets/TileImages/flower.jpg";
+
 	// Single shared lock for all property setters
 	private readonly Lock SettingsLock = new();
 
@@ -43,9 +45,20 @@ internal sealed partial class Main : ViewModelBase
 
 	private readonly ApplicationDataContainer _localSettings;
 
-	internal Main(ApplicationDataContainer LocalSettings)
+	internal Main(ApplicationDataContainer LocalSettings) : this(LocalSettings, true)
+	{
+	}
+
+	internal static Main CreateDefaultSettingsSnapshot() => new(ApplicationData.Current.LocalSettings, false);
+
+	private Main(ApplicationDataContainer LocalSettings, bool loadPersistedValues)
 	{
 		_localSettings = LocalSettings;
+
+		if (!loadPersistedValues)
+		{
+			return;
+		}
 
 		// Load each setting from App storage (if present) or use the default value.
 		SoundSetting = ReadValue(nameof(SoundSetting), SoundSetting);
@@ -882,7 +895,7 @@ internal sealed partial class Main : ViewModelBase
 			// Since this is used as the ImageSource, it cannot be null or empty string.
 			if (!System.IO.Path.Exists(value))
 			{
-				value = "ms-appx:///Assets/TileImages/flower.jpg";
+				value = DefaultCustomBrushAppPackageBackgroundPicture;
 			}
 
 			if (SP(ref field, value))
@@ -890,5 +903,5 @@ internal sealed partial class Main : ViewModelBase
 				SaveValue(nameof(BackdropCustomBrushPictureSelection), field);
 			}
 		}
-	} = "ms-appx:///Assets/TileImages/flower.jpg";
+	} = DefaultCustomBrushAppPackageBackgroundPicture;
 }

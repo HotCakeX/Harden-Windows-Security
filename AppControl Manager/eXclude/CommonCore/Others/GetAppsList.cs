@@ -29,7 +29,6 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using CommonCore.Interop;
 using Windows.ApplicationModel;
 using Windows.Management.Core;
 using Windows.Management.Deployment;

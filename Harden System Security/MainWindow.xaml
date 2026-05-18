@@ -920,6 +920,33 @@
                                         </Button.ContentTemplate>
                                     </Button>
 
+                                    <Button x:Uid="RestoreMicrosoftPrintToPdfButton"
+                                            HorizontalAlignment="Center"
+                                            Click="{x:Bind ViewModel.RestoreMicrosoftPrintToPdfPrinter}"
+                                            IsEnabled="{x:Bind ViewModel.IsRestoreMicrosoftPrintToPdfButtonEnabled, Mode=OneWay}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xE749;"
+                                                              FontSize="16"/>
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
                                 </CCToolKit:WrapPanel>
 
                             </ScrollViewer>

@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
-using Microsoft.Windows.Globalization;
 using Windows.Graphics;
 using Microsoft.UI.Dispatching;
 

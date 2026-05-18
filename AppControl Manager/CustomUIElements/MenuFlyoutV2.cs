@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;

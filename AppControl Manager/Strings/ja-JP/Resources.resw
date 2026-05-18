@@ -5715,7 +5715,7 @@
     <value>危険なスクリプトホストブロッキングポリシーを作成</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>メモリ最適化</value>
+    <value>アプリのメモリを最適化</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>未使用のマネージドメモリ（大きなオブジェクトを含む）を収集して圧縮することで、メモリ使用量を削減します。OSはRAMを徐々に解放する可能性があるため、変更がすぐに表示されない場合があります。詳細については、このボタンを押した後にログを確認してください。</value>

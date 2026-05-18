@@ -3597,7 +3597,7 @@
     <value>Ορισμένες λειτουργίες του λειτουργικού συστήματος θα καταστούν μη διαθέσιμες.</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Βελτιστοποίηση μνήμης</value>
+    <value>Βελτιστοποίηση μνήμης εφαρμογής</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Προσπάθεια μείωσης της χρήσης μνήμης μέσω συλλογής και συμπίεσης μη χρησιμοποιούμενης διαχειριζόμενης μνήμης (συμπεριλαμβανομένων μεγάλων αντικειμένων). Το λειτουργικό σύστημα ενδέχεται να αποδεσμεύει τη RAM σταδιακά, οπότε οι αλλαγές ίσως να μην εμφανιστούν αμέσως. Ελέγξτε τα αρχεία καταγραφής μετά το πάτημα αυτού του κουμπιού για περισσότερες λεπτομέρειες.</value>
@@ -6463,5 +6463,32 @@
   </data>
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>Δεν ήταν δυνατή η επαναφορά των ρυθμίσεων της εφαρμογής στις προεπιλεγμένες τιμές τους.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.Content" xml:space="preserve">
+    <value>Επαναφορά του Microsoft Print to PDF</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθέστε ξανά τον ενσωματωμένο εκτυπωτή Microsoft Print to PDF, αν έχει καταργηθεί από τα Windows.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθέστε ξανά τον ενσωματωμένο εκτυπωτή Microsoft Print to PDF, αν έχει καταργηθεί από τα Windows.</value>
+  </data>
+  <data name="CheckingForMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Έλεγχος αν ο εκτυπωτής Microsoft Print to PDF είναι ήδη εγκατεστημένος...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterAlreadyInstalled" xml:space="preserve">
+    <value>Το Microsoft Print to PDF είναι ήδη εγκατεστημένο.</value>
+  </data>
+  <data name="RestoringMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Γίνεται επαναφορά του εκτυπωτή Microsoft Print to PDF...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestored" xml:space="preserve">
+    <value>Το Microsoft Print to PDF επαναφέρθηκε.</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestoreRequiresRestart" xml:space="preserve">
+    <value>Η αλλαγή της δυνατότητας Microsoft Print to PDF εκκρεμεί. Κάντε επανεκκίνηση των Windows και δοκιμάστε ξανά τον εκτυπωτή.</value>
+  </data>
+  <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Η επαναφορά του Microsoft Print to PDF απέτυχε.</value>
   </data>
 </root>

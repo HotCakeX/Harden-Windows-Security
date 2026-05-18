@@ -5715,7 +5715,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Create the Dangerous Script Hosts Blocking Policy</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Optimize Memory</value>
+    <value>Optimize App Memory</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Attempt to reduce memory usage by collecting and compacting unused managed memory (including large objects). The OS may release RAM gradually, so changes might not show immediately. Check Logs after pressing this button for more details.</value>

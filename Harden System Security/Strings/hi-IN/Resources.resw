@@ -3597,7 +3597,7 @@
     <value>OS की कुछ विशेषताएँ उपलब्ध नहीं रहेंगी।</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>मेमोरी अनुकूलित करें</value>
+    <value>ऐप मेमोरी अनुकूलित करें</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>अप्रयुक्त प्रबंधित मेमोरी (बड़े ऑब्जेक्ट सहित) को एकत्रित और कॉम्पैक्ट करके मेमोरी उपयोग कम करने का प्रयास। OS RAM को धीरे-धीरे रिलीज़ कर सकता है, इसलिए परिवर्तन तुरंत दिखाई नहीं भी दें। इस बटन को दबाने के बाद अधिक विवरण के लिए लॉग्स देखें।</value>
@@ -6463,5 +6463,32 @@
   </data>
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>ऐप सेटिंग्स को उनके डिफ़ॉल्ट मानों पर रीसेट नहीं किया जा सका.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.Content" xml:space="preserve">
+    <value>Microsoft Print to PDF को पुनर्स्थापित करें</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यदि अंतर्निहित Microsoft Print to PDF प्रिंटर Windows से हटा दिया गया है, तो उसे फिर से जोड़ें।</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यदि अंतर्निहित Microsoft Print to PDF प्रिंटर Windows से हटा दिया गया है, तो उसे फिर से जोड़ें।</value>
+  </data>
+  <data name="CheckingForMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>यह जाँचा जा रहा है कि Microsoft Print to PDF प्रिंटर पहले से स्थापित है या नहीं...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterAlreadyInstalled" xml:space="preserve">
+    <value>Microsoft Print to PDF पहले से स्थापित है।</value>
+  </data>
+  <data name="RestoringMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Microsoft Print to PDF प्रिंटर को पुनर्स्थापित किया जा रहा है...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestored" xml:space="preserve">
+    <value>Microsoft Print to PDF पुनर्स्थापित कर दिया गया है।</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestoreRequiresRestart" xml:space="preserve">
+    <value>Microsoft Print to PDF सुविधा में किया गया परिवर्तन लंबित है। Windows को पुनरारंभ करें, फिर प्रिंटर को दोबारा आज़माएँ।</value>
+  </data>
+  <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Microsoft Print to PDF को पुनर्स्थापित नहीं किया जा सका।</value>
   </data>
 </root>

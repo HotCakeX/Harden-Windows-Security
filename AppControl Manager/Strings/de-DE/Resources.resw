@@ -5715,7 +5715,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Die Richtlinie zum Blockieren gefährlicher Script-Hosts erstellen</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Arbeitsspeicher optimieren</value>
+    <value>App-Speicher optimieren</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Versucht, die Speichernutzung zu reduzieren, indem ungenutzter verwalteter Speicher (einschließlich großer Objekte) gesammelt und kompaktiert wird. Das Betriebssystem gibt RAM möglicherweise schrittweise frei, daher sind Änderungen unter Umständen nicht sofort sichtbar. Prüfen Sie nach dem Drücken dieser Schaltfläche die Protokolle für weitere Details.</value>

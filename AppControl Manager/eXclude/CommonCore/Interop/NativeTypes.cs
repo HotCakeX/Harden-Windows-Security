@@ -1977,3 +1977,37 @@ internal struct HARDWAREINPUT
 	internal ushort wParamL;
 	internal ushort wParamH;
 }
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct PRINTER_INFO_4W
+{
+	internal nint pPrinterName;
+	internal nint pServerName;
+	internal uint Attributes;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct PRINTER_INFO_2W
+{
+	internal nint pServerName;
+	internal nint pPrinterName;
+	internal nint pShareName;
+	internal nint pPortName;
+	internal nint pDriverName;
+	internal nint pComment;
+	internal nint pLocation;
+	internal nint pDevMode;
+	internal nint pSepFile;
+	internal nint pPrintProcessor;
+	internal nint pDatatype;
+	internal nint pParameters;
+	internal nint pSecurityDescriptor;
+	internal uint Attributes;
+	internal uint Priority;
+	internal uint DefaultPriority;
+	internal uint StartTime;
+	internal uint UntilTime;
+	internal uint Status;
+	internal uint cJobs;
+	internal uint AveragePPM;
+}

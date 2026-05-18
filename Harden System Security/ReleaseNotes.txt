@@ -1,9 +1,1 @@
-* You can now specify any custom PowerShell commands to run either before or after the custom program launch in the Windows Sandbox maker page. This enables you to create more complex and customized Sandboxes by running scripts that set up the environments exactly as needed before you start working in them.
-
-* Improved the "Manage Installed Apps" page's retrieval performance and the way user information is displayed for each app.
-
-* The Harden System Security app now detects the system languages and if it supports any of them, it will configure its language accordingly. This only happens once at startup when the app is launched on a system for the first time. If user explicitly sets a different language in the app's settings then it will be respected.
-
-* You can now delete each previous log files directly from the combobox in the Logs page via the newly added delete button.
-
-* You can now export app settings to a JSON file or import them from a JSON file. You can also view all of the app settings in a new dedicated page and reset them back to their default values. This is useful when you've configured the app's settings according to your preferences and you want to apply the same settings on other devices, or you want to backup your settings in order to restore them after app uninstallation and reinstallation. The exported settings file is compatible with both apps and you can use the same settings file for AppControl Manager and Harden System Security app.
+* Added a new button to the Sidebar called "Restore Microsoft Print to PDF". The "Microsoft Print to PDF" is a built-in printer that exists in Windows by default. If users accidentally or intentionally remove it, there is no straightforward way to add it back; But now adding it back is as easy as pressing a button.

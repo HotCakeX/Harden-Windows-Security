@@ -46,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Others\LanguageOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\NoValidFilesSelectedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Power\PowerPlan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Printer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\BinaryProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\Helpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceManagement.cs" />

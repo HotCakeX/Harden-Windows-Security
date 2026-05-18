@@ -5715,7 +5715,7 @@
     <value>צור את מדיניות חסימת מארחי סקריפטים מסוכנים</value>
   </data>
     <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>מיטוב הזיכרון</value>
+    <value>מיטוב זיכרון האפליקציה</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>ניסיון להפחית את השימוש בזיכרון באמצעות איסוף ודחיסה של זיכרון מנוהל שאינו בשימוש (כולל אובייקטים גדולים). מערכת ההפעלה עשויה לשחרר RAM בהדרגה, ולכן ייתכן שהשינויים לא יופיעו מיד. עיין ביומנים לאחר לחיצה על כפתור זה לקבלת פרטים נוספים.</value>

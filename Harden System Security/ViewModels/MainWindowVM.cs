@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using AnimatedVisuals;
 using AppControlManager.CustomUIElements;
 using AppControlManager.WindowComponents;
+using CommonCore.DISM;
 using CommonCore.Interop;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -1028,6 +1029,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	internal bool IsGenerateBatteryReportButtonEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
+	/// Whether the button for restoring the Microsoft Print to PDF printer is enabled.
+	/// </summary>
+	internal bool IsRestoreMicrosoftPrintToPdfButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
+
+	/// <summary>
 	/// Generates a battery report and saves it to a user-selected location.
 	/// </summary>
 	internal async void GenerateBatteryReport()
@@ -1070,4 +1076,98 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 	}
 
+	/// <summary>
+	/// Retrieves the current state of the Microsoft Print to PDF optional Windows feature.
+	/// </summary>
+	private static async Task<DismPackageFeatureState> GetPrintToPdfFeatureStateAsync(DismServiceClient dismServiceClient)
+	{
+		List<DISMOutput> featureResults = await dismServiceClient.GetSpecificFeaturesAsync([Printer.MicrosoftPrintToPdfFeatureName]);
+		return featureResults.Count > 0 ? featureResults[0].State : DismPackageFeatureState.DismStateNotPresent;
+	}
+
+	/// <summary>
+	/// Restores the Microsoft Print to PDF printer when it has been removed from the system.
+	/// </summary>
+	internal async void RestoreMicrosoftPrintToPdfPrinter()
+	{
+		try
+		{
+			IsRestoreMicrosoftPrintToPdfButtonEnabled = false;
+
+			MainInfoBar.WriteInfo(Atlas.GetStr("CheckingForMicrosoftPrintToPdfPrinter"));
+
+			if (Printer.IsPrinterInstalled(Printer.MicrosoftPrintToPdfPrinterName))
+			{
+				MainInfoBar.WriteSuccess(Atlas.GetStr("MicrosoftPrintToPdfPrinterAlreadyInstalled"));
+				return;
+			}
+
+			using DismServiceClient dismServiceClient = new();
+			if (!await dismServiceClient.StartServiceAsync(DismServiceClient.DISMServiceLocationInPackage))
+			{
+				throw new InvalidOperationException(Atlas.GetStr("FailedToStartDISMServiceAdministrator"));
+			}
+
+			MainInfoBar.WriteInfo(Atlas.GetStr("RestoringMicrosoftPrintToPdfPrinter"));
+
+			DismPackageFeatureState printToPdfFeatureState = await GetPrintToPdfFeatureStateAsync(dismServiceClient);
+			if (printToPdfFeatureState is not DismPackageFeatureState.DismStateInstalled and not DismPackageFeatureState.DismStateInstallPending)
+			{
+				bool enabled = await dismServiceClient.EnableFeatureAsync(Printer.MicrosoftPrintToPdfFeatureName);
+				if (!enabled)
+				{
+					throw new InvalidOperationException(Atlas.GetStr("FailedToRestoreMicrosoftPrintToPdfPrinter"));
+				}
+
+				printToPdfFeatureState = await GetPrintToPdfFeatureStateAsync(dismServiceClient);
+			}
+
+			bool printerRestored = await Printer.WaitForPrinterInstallationAsync(Printer.MicrosoftPrintToPdfPrinterName);
+			Exception? addPrinterException = null;
+
+			if (!printerRestored)
+			{
+				try
+				{
+					await Task.Run(Printer.AddMicrosoftPrintToPdfPrinterInternal);
+				}
+				catch (Exception ex)
+				{
+					addPrinterException = ex;
+					Logger.Write(ex);
+				}
+
+				printerRestored = await Printer.WaitForPrinterInstallationAsync(Printer.MicrosoftPrintToPdfPrinterName);
+			}
+
+			if (printerRestored)
+			{
+				MainInfoBar.WriteSuccess(Atlas.GetStr("MicrosoftPrintToPdfPrinterRestored"));
+				return;
+			}
+
+			printToPdfFeatureState = await GetPrintToPdfFeatureStateAsync(dismServiceClient);
+			if (printToPdfFeatureState is DismPackageFeatureState.DismStateInstallPending or DismPackageFeatureState.DismStateUninstallPending)
+			{
+				MainInfoBar.WriteWarning(Atlas.GetStr("MicrosoftPrintToPdfPrinterRestoreRequiresRestart"));
+				return;
+			}
+
+			if (addPrinterException is not null)
+			{
+				throw new InvalidOperationException(Atlas.GetStr("FailedToRestoreMicrosoftPrintToPdfPrinter"), addPrinterException);
+			}
+
+			throw new InvalidOperationException(Atlas.GetStr("FailedToRestoreMicrosoftPrintToPdfPrinter"));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsRestoreMicrosoftPrintToPdfButtonEnabled = true;
+		}
+	}
 }

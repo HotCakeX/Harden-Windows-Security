@@ -5715,7 +5715,7 @@
     <value>إنشاء سياسة حظر مضيفات البرامج النصية الخطيرة</value>
   </data>
     <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>تحسين الذاكرة</value>
+    <value>تحسين ذاكرة التطبيق</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>محاولة تقليل استهلاك الذاكرة عبر جمع الذاكرة المُدارة غير المستخدمة وضغطها (بما في ذلك الكائنات الكبيرة). قد يقوم نظام التشغيل بإطلاق ذاكرة RAM تدريجياً، لذا قد لا تظهر التغييرات مباشرة. راجع السجلات بعد الضغط على هذا الزر لمزيد من التفاصيل.</value>

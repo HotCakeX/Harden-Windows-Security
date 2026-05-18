@@ -27,8 +27,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
-using CommonCore.Interop;
-using CommonCore.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 

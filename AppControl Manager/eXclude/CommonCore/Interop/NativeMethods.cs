@@ -3162,4 +3162,21 @@ internal static unsafe partial class NativeMethods
 		string packageFamilyName,
 		[MarshalAs(UnmanagedType.Bool)] ref bool isPresent);
 
+
+	[LibraryImport("winspool.drv", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool EnumPrintersW(uint flags, string? name, uint level, nint printerEnum, uint cbBuf, out uint pcbNeeded, out uint pcReturned);
+
+
+	[LibraryImport("winspool.drv", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint AddPrinterW(string? name, uint level, nint printer);
+
+
+	[LibraryImport("winspool.drv")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool ClosePrinter(nint printer);
+
 }

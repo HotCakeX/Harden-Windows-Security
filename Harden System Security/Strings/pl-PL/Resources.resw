@@ -3597,7 +3597,7 @@ Odcisk Palca: {3}</value>
     <value>Niektóre funkcje systemu operacyjnego staną się niedostępne.</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Optymalizuj pamięć</value>
+    <value>Optymalizuj pamięć aplikacji</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Próba zmniejszenia użycia pamięci poprzez zebranie i skompaktowanie nieużywanej pamięci zarządzanej (w tym dużych obiektów). System operacyjny może zwalniać pamięć RAM stopniowo, dlatego zmiany mogą nie być widoczne od razu. Sprawdź dzienniki po naciśnięciu tego przycisku, aby uzyskać więcej szczegółów.</value>
@@ -6463,5 +6463,32 @@ Odcisk Palca: {3}</value>
   </data>
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>Nie można przywrócić ustawień aplikacji do ich wartości domyślnych.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.Content" xml:space="preserve">
+    <value>Przywróć Microsoft Print to PDF</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przywróć wbudowaną drukarkę Microsoft Print to PDF, jeśli została usunięta z systemu Windows.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przywróć wbudowaną drukarkę Microsoft Print to PDF, jeśli została usunięta z systemu Windows.</value>
+  </data>
+  <data name="CheckingForMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Sprawdzanie, czy drukarka Microsoft Print to PDF jest już zainstalowana...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterAlreadyInstalled" xml:space="preserve">
+    <value>Microsoft Print to PDF jest już zainstalowany.</value>
+  </data>
+  <data name="RestoringMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Trwa przywracanie drukarki Microsoft Print to PDF...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestored" xml:space="preserve">
+    <value>Przywrócono Microsoft Print to PDF.</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestoreRequiresRestart" xml:space="preserve">
+    <value>Zmiana funkcji Microsoft Print to PDF oczekuje na zastosowanie. Uruchom ponownie system Windows, a następnie spróbuj ponownie użyć drukarki.</value>
+  </data>
+  <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Nie udało się przywrócić Microsoft Print to PDF.</value>
   </data>
 </root>

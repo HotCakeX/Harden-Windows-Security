@@ -5715,7 +5715,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Utwórz zasady blokowania niebezpiecznych hostów skryptów</value>
   </data>
     <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Optymalizuj pamięć</value>
+    <value>Optymalizuj pamięć aplikacji</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Próba zmniejszenia użycia pamięci poprzez zebranie i skompaktowanie nieużywanej pamięci zarządzanej (w tym dużych obiektów). System operacyjny może zwalniać pamięć RAM stopniowo, dlatego zmiany mogą nie być widoczne od razu. Sprawdź dzienniki po naciśnięciu tego przycisku, aby uzyskać więcej szczegółów.</value>

@@ -3597,7 +3597,7 @@
     <value>ستصبح بعض ميزات نظام التشغيل غير متاحة.</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>تحسين الذاكرة</value>
+    <value>تحسين ذاكرة التطبيق</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>محاولة تقليل استهلاك الذاكرة عبر جمع الذاكرة المُدارة غير المستخدمة وضغطها (بما في ذلك الكائنات الكبيرة). قد يقوم نظام التشغيل بإطلاق ذاكرة RAM تدريجياً، لذا قد لا تظهر التغييرات مباشرة. راجع السجلات بعد الضغط على هذا الزر لمزيد من التفاصيل.</value>
@@ -6463,5 +6463,32 @@
   </data>
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>تعذر إعادة تعيين إعدادات التطبيق إلى قيمها الافتراضية.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.Content" xml:space="preserve">
+    <value>استعادة Microsoft Print to PDF</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أعد إضافة طابعة Microsoft Print to PDF المضمنة إذا تمت إزالتها من Windows.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أعد إضافة طابعة Microsoft Print to PDF المضمنة إذا تمت إزالتها من Windows.</value>
+  </data>
+  <data name="CheckingForMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>جارٍ التحقق مما إذا كانت طابعة Microsoft Print to PDF مثبتة بالفعل...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterAlreadyInstalled" xml:space="preserve">
+    <value>Microsoft Print to PDF مثبت بالفعل.</value>
+  </data>
+  <data name="RestoringMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>جارٍ استعادة طابعة Microsoft Print to PDF...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestored" xml:space="preserve">
+    <value>تمت استعادة Microsoft Print to PDF.</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestoreRequiresRestart" xml:space="preserve">
+    <value>لا يزال تغيير ميزة Microsoft Print to PDF قيد الانتظار. أعد تشغيل Windows ثم حاول استخدام الطابعة مرة أخرى.</value>
+  </data>
+  <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>تعذر استعادة Microsoft Print to PDF.</value>
   </data>
 </root>

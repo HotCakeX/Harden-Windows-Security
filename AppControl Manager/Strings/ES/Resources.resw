@@ -5715,7 +5715,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Crear la política de bloqueo de hosts de scripts peligrosos</value>
   </data>
     <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Optimizar memoria</value>
+    <value>Optimizar la memoria de la aplicación</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Intento de reducir el uso de memoria recopilando y compactando memoria administrada no utilizada (incluidos objetos grandes). El sistema operativo puede liberar la RAM gradualmente, por lo que los cambios podrían no mostrarse de inmediato. Revisa los registros después de presionar este botón para más detalles.</value>

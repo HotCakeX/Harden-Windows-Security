@@ -3597,7 +3597,7 @@
     <value>חלק מתכונות מערכת ההפעלה יהפכו לבלתי זמינות.</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>מטב זיכרון</value>
+    <value>מיטוב זיכרון האפליקציה</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>נסה להפחית שימוש בזיכרון על ידי איסוף ודחיסת זיכרון מנוהל שאינו בשימוש (כולל אובייקטים גדולים). מערכת ההפעלה עשויה לשחרר RAM בהדרגה, לכן השינויים לא בהכרח יופיעו מיד. בדוק יומנים לאחר לחיצה על לחצן זה לפרטים נוספים.</value>
@@ -6463,5 +6463,32 @@
   </data>
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>לא הייתה אפשרות לאפס את הגדרות האפליקציה לערכי ברירת המחדל שלהן.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.Content" xml:space="preserve">
+    <value>שחזר את Microsoft Print to PDF</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף מחדש את המדפסת המובנית Microsoft Print to PDF אם היא הוסרה מ-Windows.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף מחדש את המדפסת המובנית Microsoft Print to PDF אם היא הוסרה מ-Windows.</value>
+  </data>
+  <data name="CheckingForMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>בודק אם המדפסת Microsoft Print to PDF כבר מותקנת...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterAlreadyInstalled" xml:space="preserve">
+    <value>Microsoft Print to PDF כבר מותקן.</value>
+  </data>
+  <data name="RestoringMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>משחזר את המדפסת Microsoft Print to PDF...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestored" xml:space="preserve">
+    <value>Microsoft Print to PDF שוחזר.</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestoreRequiresRestart" xml:space="preserve">
+    <value>השינוי בתכונה Microsoft Print to PDF ממתין להשלמה. הפעל מחדש את Windows ולאחר מכן נסה שוב את המדפסת.</value>
+  </data>
+  <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>שחזור Microsoft Print to PDF נכשל.</value>
   </data>
 </root>

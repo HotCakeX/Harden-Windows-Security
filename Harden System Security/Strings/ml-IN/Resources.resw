@@ -3597,7 +3597,7 @@
     <value>ചില OS സവിശേഷതകൾ ലഭ്യമാകില്ല.</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>മെമ്മറി ഓപ്റ്റിമൈസ് ചെയ്യുക</value>
+    <value>ആപ്പ് മെമ്മറി ഓപ്റ്റിമൈസ് ചെയ്യുക</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>ഉപയോഗത്തിലില്ലാത്ത മാനേജുചെയ്യുന്ന മെമ്മറി (വലുതായ ഒബ്ജക്റ്റുകൾ ഉൾപ്പെടെ) ശേഖരിച്ചു കമ്പാക്റ്റ് ചെയ്ത് മെമ്മറി ഉപയോഗം കുറയ്ക്കാനുള്ള ശ്രമം. ഓ.എസ്. RAM ക്രമേണ റിലീസ് ചെയ്യാൻ സാധ്യതയുണ്ട്, അതിനാൽ മാറ്റങ്ങൾ ഉടൻ പ്രകടമാകണമെന്നില്ല. കൂടുതൽ വിവരങ്ങൾക്ക് ഈ ബട്ടൺ അമർത്തിയതിന് ശേഷം ലോഗുകൾ പരിശോധിക്കുക.</value>
@@ -6463,5 +6463,32 @@
   </data>
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>ആപ്പ് ക്രമീകരണങ്ങളെ അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസജ്ജമാക്കാനായില്ല.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.Content" xml:space="preserve">
+    <value>Microsoft Print to PDF പുനഃസ്ഥാപിക്കുക</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows-ൽ നിന്ന് നീക്കം ചെയ്തിട്ടുണ്ടെങ്കിൽ ഉൾനിർമ്മിത Microsoft Print to PDF പ്രിന്റർ വീണ്ടും ചേർക്കുക.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows-ൽ നിന്ന് നീക്കം ചെയ്തിട്ടുണ്ടെങ്കിൽ ഉൾനിർമ്മിത Microsoft Print to PDF പ്രിന്റർ വീണ്ടും ചേർക്കുക.</value>
+  </data>
+  <data name="CheckingForMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Microsoft Print to PDF പ്രിന്റർ ഇതിനകം ഇൻസ്റ്റാൾ ചെയ്തിട്ടുണ്ടോ എന്ന് പരിശോധിക്കുന്നു...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterAlreadyInstalled" xml:space="preserve">
+    <value>Microsoft Print to PDF ഇതിനകം ഇൻസ്റ്റാൾ ചെയ്തിട്ടുണ്ട്.</value>
+  </data>
+  <data name="RestoringMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Microsoft Print to PDF പ്രിന്റർ പുനഃസ്ഥാപിക്കുന്നു...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestored" xml:space="preserve">
+    <value>Microsoft Print to PDF പുനഃസ്ഥാപിച്ചു.</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestoreRequiresRestart" xml:space="preserve">
+    <value>Microsoft Print to PDF സവിശേഷതയിലെ മാറ്റം പ്രാബല്യത്തിൽ വരാനുണ്ട്. Windows പുനരാരംഭിച്ച് ശേഷം പ്രിന്റർ വീണ്ടും പരീക്ഷിക്കുക.</value>
+  </data>
+  <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Microsoft Print to PDF പുനഃസ്ഥാപിക്കാൻ സാധിച്ചില്ല.</value>
   </data>
 </root>

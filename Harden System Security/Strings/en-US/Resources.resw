@@ -3597,7 +3597,7 @@ Thumbprint: {3}</value>
     <value>Some OS features will become unavailable.</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Optimize Memory</value>
+    <value>Optimize App Memory</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Attempt to reduce memory usage by collecting and compacting unused managed memory (including large objects). The OS may release RAM gradually, so changes might not show immediately. Check Logs after pressing this button for more details.</value>
@@ -6463,5 +6463,32 @@ Thumbprint: {3}</value>
   </data>
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>Could not reset the app settings to their default values.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.Content" xml:space="preserve">
+    <value>Restore Microsoft Print to PDF</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add the built-in Microsoft Print to PDF printer back if it has been removed from Windows.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add the built-in Microsoft Print to PDF printer back if it has been removed from Windows.</value>
+  </data>
+  <data name="CheckingForMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Checking whether the Microsoft Print to PDF printer is already installed...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterAlreadyInstalled" xml:space="preserve">
+    <value>Microsoft Print to PDF is already installed.</value>
+  </data>
+  <data name="RestoringMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Restoring the Microsoft Print to PDF printer...</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestored" xml:space="preserve">
+    <value>Microsoft Print to PDF has been restored.</value>
+  </data>
+  <data name="MicrosoftPrintToPdfPrinterRestoreRequiresRestart" xml:space="preserve">
+    <value>The Microsoft Print to PDF feature change is pending. Restart Windows, then try the printer again.</value>
+  </data>
+  <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
+    <value>Failed to restore Microsoft Print to PDF.</value>
   </data>
 </root>

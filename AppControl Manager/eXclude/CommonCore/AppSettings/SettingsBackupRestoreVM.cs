@@ -20,15 +20,9 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
-using AppControlManager.CustomUIElements;
 using System.Threading.Tasks;
 using CommonCore.MicrosoftGraph;
-using CommonCore.Others;
-using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.Windows.AppNotifications;
-using Microsoft.Windows.Globalization;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity;
@@ -37,6 +31,7 @@ using HardenSystemSecurity.ViewModels;
 #else
 using AppControlManager;
 using AppControlManager.ViewModels;
+using AppControlManager.CustomUIElements;
 #endif
 
 namespace CommonCore.AppSettings;
@@ -142,7 +137,7 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 		NavigationViewLocationManager.OnNavigationViewLocationChanged(Atlas.Settings.NavViewPaneDisplayMode);
 		AppThemeManager.OnAppThemeChanged(Atlas.Settings.AppTheme);
 		ListViewHelper.UpdateFontFamily(Atlas.Settings.ListViewFontFamily);
-		SettingsVM.SetLanguageOnStartup(); // Automatically detects and sets the language of the app.
+		SettingsVM.SetLanguageOnStartup(); // Automatically detects and sets the language of the app after it's been assigned to the "Atlas.Settings.ApplicationGlobalLanguage" below.
 		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Atlas.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase)
 		? FlowDirection.LeftToRight
 		: FlowDirection.RightToLeft);

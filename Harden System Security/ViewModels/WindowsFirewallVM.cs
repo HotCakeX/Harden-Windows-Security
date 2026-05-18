@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using CommonCore.GroupPolicy;
 using CommonCore.IncrementalCollection;
@@ -31,7 +30,6 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace HardenSystemSecurity.ViewModels;
 

@@ -5715,7 +5715,7 @@
     <value>Créer la Politique de Blocage des Hôtes de Script Dangereux</value>
   </data>
   <data name="OptimizeMemoryButton.Content" xml:space="preserve">
-    <value>Optimiser la Mémoire</value>
+    <value>Optimiser la mémoire de l’application</value>
   </data>
   <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Tenter de réduire l'utilisation de la mémoire en collectant et en compactant la mémoire gérée inutilisée (y compris les objets volumineux). L'OS peut libérer la RAM progressivement, donc les changements peuvent ne pas apparaître immédiatement. Vérifiez les journaux après avoir appuyé sur ce bouton pour plus de détails.</value>

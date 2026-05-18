@@ -118,7 +118,9 @@ internal static class MUnitDependencyRegistry
 		ref List<MUnitDependency>? listRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_dependencies, primaryMUnitId, out _);
 		listRef ??= [];
 		listRef.Add(new(dependentMUnitId, type, timing));
+#if Debug
 		Logger.Write(string.Format(Atlas.GetStr("JSONDependencyRegistered"), primaryMUnitId, dependentMUnitId, type, timing));
+#endif
 	}
 
 	/// <summary>

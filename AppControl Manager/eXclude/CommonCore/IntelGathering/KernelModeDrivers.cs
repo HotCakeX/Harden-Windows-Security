@@ -15,10 +15,14 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Buffers;
+using System.Buffers.Binary;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
+using System.Text;
 
 #pragma warning disable CS0649
 
@@ -38,11 +42,12 @@ internal static class KernelModeDrivers
 	// When a binary (such as a .exe or .dll) imports any of these user-mode libraries, it indicates that the binary relies on user-space functions, which are designed for normal applications.
 	// E.g., functions like CreateFile, MessageBox, or CreateWindow etc. are provided by kernel32.dll and user32.dll for user-mode applications, not for code running in kernel mode.
 	// Kernel-mode components do not interact with these user-mode DLLs. Instead, they access the kernel directly through SysCalls and low-level APIs.
-
 	private static readonly FrozenSet<string> UserModeDlls = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
 	{
 		"kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"
 	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+
+	private const int ExportDirectorySize = 40;
 
 	[StructLayout(LayoutKind.Sequential)]
 	private struct IMAGE_IMPORT_DESCRIPTOR
@@ -70,10 +75,204 @@ internal static class KernelModeDrivers
 		return fileHandle;
 	}
 
+	/// <summary>
+	/// Reads the PE export directory and returns both named and ordinal-only exports.
+	/// </summary>
+	/// <exception cref="InvalidDataException">Thrown when the export table is malformed.</exception>
+	internal static IReadOnlyList<PortableExecutableExport> GetExportedFunctions(string filePath)
+	{
+		// Some files use a .dll extension without being real PE images, so filter them out
+		// before invoking PEReader to avoid exception-heavy scans and noisy log output.
+		if (!LooksLikePortableExecutable(filePath))
+		{
+			return [];
+		}
+
+		using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, FileOptions.SequentialScan);
+
+		long fileLengthLong = fileStream.Length;
+
+		if (fileLengthLong <= 0 || fileLengthLong > int.MaxValue)
+		{
+			return [];
+		}
+
+		int fileLength = checked((int)fileLengthLong);
+
+		// Rent the buffer to avoid allocating a brand-new byte[] for every scanned file.
+		byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(fileLength);
+
+		try
+		{
+			fileStream.ReadExactly(rentedBuffer.AsSpan(0, fileLength));
+
+			using MemoryStream memoryStream = new(rentedBuffer, 0, fileLength, writable: false, publiclyVisible: true);
+			using PEReader peReader = new(memoryStream, PEStreamOptions.LeaveOpen);
+
+			PEHeaders peHeaders = peReader.PEHeaders;
+			PEHeader? peHeader = peHeaders.PEHeader;
+
+			if (peHeader is null)
+			{
+				return [];
+			}
+
+			ReadOnlySpan<byte> imageBytes = rentedBuffer.AsSpan(0, fileLength);
+			DirectoryEntry exportDirectory = peHeader.ExportTableDirectory;
+			if (exportDirectory.RelativeVirtualAddress is 0 || exportDirectory.Size < ExportDirectorySize)
+			{
+				return [];
+			}
+
+			int exportDirectoryOffset = TranslateRvaToOffset(peHeaders, exportDirectory.RelativeVirtualAddress, imageBytes.Length);
+			ReadOnlySpan<byte> exportDirectoryData = imageBytes.Slice(exportDirectoryOffset, ExportDirectorySize);
+
+			uint ordinalBase = BinaryPrimitives.ReadUInt32LittleEndian(exportDirectoryData[16..20]);
+			uint addressTableEntries = BinaryPrimitives.ReadUInt32LittleEndian(exportDirectoryData[20..24]);
+			uint numberOfNamePointers = BinaryPrimitives.ReadUInt32LittleEndian(exportDirectoryData[24..28]);
+			uint exportAddressTableRva = BinaryPrimitives.ReadUInt32LittleEndian(exportDirectoryData[28..32]);
+			uint namePointerRva = BinaryPrimitives.ReadUInt32LittleEndian(exportDirectoryData[32..36]);
+			uint ordinalTableRva = BinaryPrimitives.ReadUInt32LittleEndian(exportDirectoryData[36..40]);
+
+			if (addressTableEntries is 0)
+			{
+				return [];
+			}
+
+			Dictionary<int, string> exportNamesByIndex = new((int)numberOfNamePointers);
+
+			for (int i = 0; i < numberOfNamePointers; i++)
+			{
+				int currentNamePointerOffset = TranslateRvaToOffset(peHeaders, checked((int)namePointerRva + (i * sizeof(uint))), imageBytes.Length);
+				uint currentNameRva = BinaryPrimitives.ReadUInt32LittleEndian(imageBytes.Slice(currentNamePointerOffset, sizeof(uint)));
+				int currentOrdinalOffset = TranslateRvaToOffset(peHeaders, checked((int)ordinalTableRva + (i * sizeof(ushort))), imageBytes.Length);
+				ushort exportIndex = BinaryPrimitives.ReadUInt16LittleEndian(imageBytes.Slice(currentOrdinalOffset, sizeof(ushort)));
+
+				if (exportIndex >= addressTableEntries)
+				{
+					throw new InvalidDataException("The PE export table contains an out-of-range ordinal index.");
+				}
+
+				int currentNameOffset = TranslateRvaToOffset(peHeaders, checked((int)currentNameRva), imageBytes.Length);
+				exportNamesByIndex[exportIndex] = ReadAnsiString(imageBytes, currentNameOffset);
+			}
+
+			List<PortableExecutableExport> exportedFunctions = new((int)addressTableEntries);
+
+			for (int i = 0; i < addressTableEntries; i++)
+			{
+				int currentAddressOffset = TranslateRvaToOffset(peHeaders, checked((int)exportAddressTableRva + (i * sizeof(uint))), imageBytes.Length);
+				uint exportTargetRva = BinaryPrimitives.ReadUInt32LittleEndian(imageBytes.Slice(currentAddressOffset, sizeof(uint)));
+				uint ordinal = ordinalBase + (uint)i;
+				string exportName = exportNamesByIndex.TryGetValue(i, out string? namedExport) ? namedExport : $"#{ordinal}";
+
+				string? forwarderName = null;
+				int exportDirectoryEnd = checked(exportDirectory.RelativeVirtualAddress + exportDirectory.Size);
+
+				if (exportTargetRva >= exportDirectory.RelativeVirtualAddress && exportTargetRva < exportDirectoryEnd)
+				{
+					int forwarderOffset = TranslateRvaToOffset(peHeaders, checked((int)exportTargetRva), imageBytes.Length);
+					forwarderName = ReadAnsiString(imageBytes, forwarderOffset);
+				}
+
+				exportedFunctions.Add(new PortableExecutableExport(exportName, ordinal, forwarderName));
+			}
+
+			return exportedFunctions;
+		}
+		catch (BadImageFormatException)
+		{
+			return [];
+		}
+		finally
+		{
+			ArrayPool<byte>.Shared.Return(rentedBuffer, clearArray: false);
+		}
+	}
+
+	private static bool LooksLikePortableExecutable(string filePath)
+	{
+		Span<byte> header = stackalloc byte[64];
+
+		using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 1, FileOptions.SequentialScan);
+
+		if (fileStream.Read(header) < header.Length)
+		{
+			return false;
+		}
+
+		if (header[0] != (byte)'M' || header[1] != (byte)'Z')
+		{
+			return false;
+		}
+
+		int peHeaderOffset = BinaryPrimitives.ReadInt32LittleEndian(header[0x3C..0x40]);
+
+		if (peHeaderOffset < 0 || peHeaderOffset + 4 > fileStream.Length)
+		{
+			return false;
+		}
+
+		fileStream.Position = peHeaderOffset;
+
+		Span<byte> peSignature = stackalloc byte[4];
+
+		return fileStream.Read(peSignature) == peSignature.Length &&
+			peSignature[0] == (byte)'P' &&
+			peSignature[1] == (byte)'E' &&
+			peSignature[2] == 0 &&
+			peSignature[3] == 0;
+	}
+
+	private static int TranslateRvaToOffset(PEHeaders peHeaders, int relativeVirtualAddress, int imageLength)
+	{
+		foreach (SectionHeader sectionHeader in peHeaders.SectionHeaders)
+		{
+			int sectionStart = sectionHeader.VirtualAddress;
+			int sectionLength = Math.Max(sectionHeader.VirtualSize, sectionHeader.SizeOfRawData);
+			int relativeOffset = relativeVirtualAddress - sectionStart;
+
+			if (relativeOffset < 0 || relativeOffset >= sectionLength)
+			{
+				continue;
+			}
+
+			long rawOffset = (long)sectionHeader.PointerToRawData + relativeOffset;
+			if (rawOffset < 0 || rawOffset > imageLength - 1L)
+			{
+				break;
+			}
+
+			return (int)rawOffset;
+		}
+
+		if (relativeVirtualAddress >= 0 && relativeVirtualAddress < imageLength)
+		{
+			return relativeVirtualAddress;
+		}
+
+		throw new InvalidDataException("The PE export table contains an RVA outside of the image.");
+	}
+
+	private static string ReadAnsiString(ReadOnlySpan<byte> imageBytes, int offset)
+	{
+		if (offset < 0 || offset >= imageBytes.Length)
+		{
+			throw new InvalidDataException("The PE export table contains an invalid string offset.");
+		}
+
+		int end = offset;
+		while (end < imageBytes.Length && imageBytes[end] != 0)
+		{
+			end++;
+		}
+
+		return Encoding.ASCII.GetString(imageBytes[offset..end]);
+	}
+
 
 	internal static KernelUserVerdict CheckKernelUserModeStatus(string filePath)
 	{
-
 		// To store the import names - Pre-allocate with an average capacity for better performance
 		List<string> importNames = new(8);
 
@@ -420,4 +619,11 @@ internal static class KernelModeDrivers
 			}
 		}
 	}
+}
+
+internal sealed class PortableExecutableExport(string name, uint ordinal, string? forwarderName)
+{
+	internal string Name => name;
+	internal uint Ordinal => ordinal;
+	internal string? ForwarderName => forwarderName;
 }

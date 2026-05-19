@@ -295,6 +295,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			pages: [typeof(HardenSystemSecurity.Pages.ExploitMitigations)]
 		);
 
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ViewExportedFunctions)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("ExploitMitigationsNavItem/Content"), Atlas.GetStr("ViewExportedFunctionsButton/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.ExploitMitigations), typeof(HardenSystemSecurity.Pages.ViewExportedFunctions)]
+		);
+
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.SandboxMaker)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("SandboxMakerNavItem/Content")],
@@ -406,6 +412,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ServiceManager)] = Atlas.GetStr("ServiceManagerNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.BootableDriveMaker)] = Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ExploitMitigations)] = Atlas.GetStr("ExploitMitigationsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.ViewExportedFunctions)] = Atlas.GetStr("ViewExportedFunctionsButton/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.SandboxMaker)] = Atlas.GetStr("SandboxMakerNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.SettingsBackupRestore)] = Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header");
 	}

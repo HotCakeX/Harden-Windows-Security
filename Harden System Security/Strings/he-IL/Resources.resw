@@ -6155,15 +6155,6 @@
   <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>הסר את כל ההגנות המומלצות מפני ניצול חולשות.</value>
   </data>
-  <data name="BrowseFoldersButton.Content" xml:space="preserve">
-    <value>עיין בתיקיות</value>
-  </data>
-  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בתיקיה אחת או יותר.</value>
-  </data>
-  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בתיקיה אחת או יותר.</value>
-  </data>
   <data name="ScanSelectionsButton.Content" xml:space="preserve">
     <value>סרוק את הבחירות</value>
   </data>
@@ -6490,5 +6481,50 @@
   </data>
   <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
     <value>שחזור Microsoft Print to PDF נכשל.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.Content" xml:space="preserve">
+    <value>הצג פונקציות מיוצאות</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקובצי DLL כדי לבדוק את הפונקציות המיוצאות שלהם.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקובצי DLL כדי לבדוק את הפונקציות המיוצאות שלהם.</value>
+  </data>
+  <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>עמודות</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל את הנראות של העמודות ברשת הנתונים.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל את הנראות של העמודות ברשת הנתונים.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>בטל בחירה של הכול</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל בחירה של הכול</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל בחירה של הכול</value>
+  </data>
+  <data name="SelectAllButton.Content" xml:space="preserve">
+    <value>בחר הכול</value>
+  </data>
+  <data name="SelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר הכול</value>
+  </data>
+  <data name="SelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר הכול</value>
+  </data>
+  <data name="BrowseForFilesButton.Content" xml:space="preserve">
+    <value>עיין בקבצים</value>
+  </data>
+  <data name="BrowseForFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקבצים לבחירה.</value>
+  </data>
+  <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקבצים לבחירה.</value>
   </data>
 </root>

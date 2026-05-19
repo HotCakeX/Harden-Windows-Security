@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.ViewExportedFunctions"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:vm="using:HardenSystemSecurity.ViewModels"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <customUI:InfoBarV2 Grid.Row="0"
+                            IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
+
+        <Border Grid.Row="1"
+                Margin="0,5,0,5"
+                Padding="12"
+                Style="{StaticResource GridCardStyle}">
+            <CCToolKit:WrapPanel Orientation="Horizontal"
+                                 HorizontalSpacing="10"
+                                 VerticalSpacing="10">
+                <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
+                              VerticalAlignment="Center"
+                              IsIndeterminate="True" />
+
+                <!-- Select Files -->
+                <customUI:SplitButtonV2 x:Uid="BrowseForFilesButton"
+                                        VerticalAlignment="Center"
+                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                        ObservedData="{x:Bind ViewModel.SelectedFiles.Count, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.BrowseForFiles_Click}">
+                    <customUI:SplitButtonV2.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </customUI:SplitButtonV2.ContentTemplate>
+                    <customUI:SplitButtonV2.Flyout>
+                        <Flyout>
+                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <Button x:Uid="ClearButton"
+                                            Click="{x:Bind ViewModel.ClearSelectedFiles}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                                <TextBlock x:Uid="ViewSelectedFilesTextBlock"
+                                               TextWrapping="WrapWholeWords"/>
+                                <customUI:ListBoxV2 MinWidth="400"
+                                                    SelectionMode="Single"
+                                                    ItemsSource="{x:Bind ViewModel.SelectedFiles, Mode=OneWay}" />
+                            </CCToolKit:WrapPanel>
+                        </Flyout>
+                    </customUI:SplitButtonV2.Flyout>
+                </customUI:SplitButtonV2>
+
+                <!-- Select Folders -->
+                <customUI:SplitButtonV2 x:Uid="BrowseForFoldersButton"
+                                        VerticalAlignment="Center"
+                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                        ObservedData="{x:Bind ViewModel.SelectedDirectories.Count, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.BrowseForDirectories_Click}">
+                    <customUI:SplitButtonV2.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </customUI:SplitButtonV2.ContentTemplate>
+                    <customUI:SplitButtonV2.Flyout>
+                        <Flyout>
+                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <Button x:Uid="ClearButton"
+                                            Click="{x:Bind ViewModel.ClearSelectedDirectories}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                                <TextBlock x:Uid="ViewSelectedFilesTextBlock"
+                                               TextWrapping="WrapWholeWords"/>
+                                <customUI:ListBoxV2 MinWidth="400"
+                                                    SelectionMode="Single"
+                                                    ItemsSource="{x:Bind ViewModel.SelectedDirectories, Mode=OneWay}" />
+                            </CCToolKit:WrapPanel>
+                        </Flyout>
+                    </customUI:SplitButtonV2.Flyout>
+                </customUI:SplitButtonV2>
+
+                <!-- Scan -->
+                <Button x:Uid="ScanSelectionsButton"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource AccentButtonStyle}"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.StartScan}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEE6F;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <!-- Export to JSON -->
+                <Button x:Uid="ExportToJsonButton"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ExportToJson_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEDE1;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <!-- Clear Data -->
+                <Button x:Uid="ClearButton"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ClearAll_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <!-- Search Box -->
+                <TextBox x:Uid="SearchBoxTextBox"
+                         VerticalAlignment="Center"
+                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                         Text="{x:Bind ViewModel.ExportSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" />
+
+                <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
+                                         VerticalAlignment="Center"
+                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" />
+
+                <Border CornerRadius="8"
+                        VerticalAlignment="Center"
+                        Padding="10,6"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                                <Run Text="Exports: " />
+                                <Run Text="{x:Bind ViewModel.ExportedFunctions.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </CCToolKit:WrapPanel>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Border Style="{StaticResource GridCardStyle}"
+                    Padding="16"
+                    Visibility="{x:Bind ViewModel.EmptyStateVisibility, Mode=OneWay}">
+                <StackPanel Spacing="8"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            MaxWidth="520">
+                    <FontIcon Glyph="&#xE7C3;"
+                              HorizontalAlignment="Center"
+                              FontSize="40" />
+                    <TextBlock Text="No exported functions are available for the current DLL selection or search."
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
+                    <TextBlock Text="Select one or more DLL files or directories to populate the export list."
+                               TextWrapping="WrapWholeWords"
+                               TextAlignment="Center"
+                               Opacity="0.75" />
+                </StackPanel>
+            </Border>
+
+            <customUI:ListViewV2 Visibility="{x:Bind ViewModel.ResultsVisibility, Mode=OneWay}"
+                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                 ItemsSource="{x:Bind ViewModel.ExportedFunctions, Mode=OneWay}"
+                                 RegistryKey="ViewExportedFunctions"
+                                 SelectionMode="None">
+                <customUI:ListViewV2.Header>
+                    <Border CornerRadius="5"
+                            Background="Black"
+                            customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[0].Width, Mode=TwoWay}" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[1].Width, Mode=TwoWay}" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[2].Width, Mode=TwoWay}" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnManager.ColumnWidths[3].Width, Mode=TwoWay}" />
+                            </Grid.ColumnDefinitions>
+                            <Button Content="DLL"
+                                    Tag="DllName"
+                                    Grid.Column="0"
+                                    Style="{StaticResource ListViewHeaderButton}"
+                                    Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"
+                                    Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[0], Mode=OneWay}" />
+                            <Button Content="Export"
+                                    Tag="ExportName"
+                                    Grid.Column="1"
+                                    Style="{StaticResource ListViewHeaderButton}"
+                                    Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"
+                                    Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[1], Mode=OneWay}" />
+                            <Button Content="Ordinal"
+                                    Tag="Ordinal"
+                                    Grid.Column="2"
+                                    Style="{StaticResource ListViewHeaderButton}"
+                                    Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"
+                                    Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[2], Mode=OneWay}" />
+                            <Button Content="Forwarder"
+                                    Tag="ForwarderText"
+                                    Grid.Column="3"
+                                    Style="{StaticResource ListViewHeaderButton}"
+                                    Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"
+                                    Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[3], Mode=OneWay}" />
+                            <CCToolKit:GridSplitter Grid.Column="1" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[5], Mode=OneWay}" />
+                            <CCToolKit:GridSplitter Grid.Column="2" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[6], Mode=OneWay}" />
+                            <CCToolKit:GridSplitter Grid.Column="3" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[7], Mode=OneWay}" />
+                        </Grid>
+                    </Border>
+                </customUI:ListViewV2.Header>
+                <customUI:ListViewV2.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ExportedFunctionDisplayEntry" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnWidths[0].Width, Mode=OneWay}"/>
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnWidths[1].Width, Mode=OneWay}"/>
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnWidths[2].Width, Mode=OneWay}"/>
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnWidths[3].Width, Mode=OneWay}"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                        Text="{x:Bind DllName}"
+                                        IsTextSelectionEnabled="True"
+                                        Style="{StaticResource ListViewCellTextBlock}"
+                                        FontFamily="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                        Visibility="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnVisibilities[0], Mode=OneWay}" />
+                            <TextBlock Grid.Column="1"
+                                        Text="{x:Bind ExportName}"
+                                        IsTextSelectionEnabled="True"
+                                        Style="{StaticResource ListViewCellTextBlock}"
+                                        FontFamily="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                        Visibility="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnVisibilities[1], Mode=OneWay}" />
+                            <TextBlock Grid.Column="2"
+                                        Text="{x:Bind OrdinalText}"
+                                        IsTextSelectionEnabled="True"
+                                        Style="{StaticResource ListViewCellTextBlock}"
+                                        FontFamily="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                        Visibility="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnVisibilities[2], Mode=OneWay}" />
+                            <TextBlock Grid.Column="3"
+                                        Text="{x:Bind ForwarderText}"
+                                        IsTextSelectionEnabled="True"
+                                        Style="{StaticResource ListViewCellTextBlock}"
+                                        FontFamily="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                        Visibility="{x:Bind VMs:ViewModelProvider.ViewExportedFunctionsVM.ColumnManager.ColumnVisibilities[3], Mode=OneWay}" />
+                        </Grid>
+                    </DataTemplate>
+                </customUI:ListViewV2.ItemTemplate>
+            </customUI:ListViewV2>
+        </Grid>
+    </Grid>
+</Page>

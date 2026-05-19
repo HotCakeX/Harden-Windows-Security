@@ -6155,15 +6155,6 @@
   <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Καταργεί όλα τα προτεινόμενα μέτρα μετριασμού exploit.</value>
   </data>
-  <data name="BrowseFoldersButton.Content" xml:space="preserve">
-    <value>Περιήγηση σε φακέλους</value>
-  </data>
-  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Περιηγείται σε έναν ή περισσότερους φακέλους.</value>
-  </data>
-  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Περιηγείται σε έναν ή περισσότερους φακέλους.</value>
-  </data>
   <data name="ScanSelectionsButton.Content" xml:space="preserve">
     <value>Σάρωση επιλογών</value>
   </data>
@@ -6490,5 +6481,50 @@
   </data>
   <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
     <value>Η επαναφορά του Microsoft Print to PDF απέτυχε.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.Content" xml:space="preserve">
+    <value>Προβολή εξαγόμενων συναρτήσεων</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε αρχεία DLL για να ελέγξετε τις εξαγόμενες συναρτήσεις τους.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε αρχεία DLL για να ελέγξετε τις εξαγόμενες συναρτήσεις τους.</value>
+  </data>
+  <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Στήλες</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχειριστείτε την ορατότητα των στηλών στο πλέγμα δεδομένων.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχειριστείτε την ορατότητα των στηλών στο πλέγμα δεδομένων.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>Αποεπιλογή όλων</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποεπιλογή όλων</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποεπιλογή όλων</value>
+  </data>
+  <data name="SelectAllButton.Content" xml:space="preserve">
+    <value>Επιλογή όλων</value>
+  </data>
+  <data name="SelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλογή όλων</value>
+  </data>
+  <data name="SelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλογή όλων</value>
+  </data>
+  <data name="BrowseForFilesButton.Content" xml:space="preserve">
+    <value>Αναζήτηση αρχείων</value>
+  </data>
+  <data name="BrowseForFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε αρχεία για επιλογή.</value>
+  </data>
+  <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε αρχεία για επιλογή.</value>
   </data>
 </root>

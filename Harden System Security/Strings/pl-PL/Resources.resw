@@ -6155,15 +6155,6 @@ Odcisk Palca: {3}</value>
   <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Usuwa wszystkie zalecane mitygacje exploitów.</value>
   </data>
-  <data name="BrowseFoldersButton.Content" xml:space="preserve">
-    <value>Przeglądaj foldery</value>
-  </data>
-  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przegląda co najmniej jeden folder.</value>
-  </data>
-  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przegląda co najmniej jeden folder.</value>
-  </data>
   <data name="ScanSelectionsButton.Content" xml:space="preserve">
     <value>Skanuj zaznaczone</value>
   </data>
@@ -6490,5 +6481,50 @@ Odcisk Palca: {3}</value>
   </data>
   <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
     <value>Nie udało się przywrócić Microsoft Print to PDF.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.Content" xml:space="preserve">
+    <value>Wyświetl eksportowane funkcje</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj pliki DLL, aby sprawdzić ich eksportowane funkcje.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj pliki DLL, aby sprawdzić ich eksportowane funkcje.</value>
+  </data>
+  <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>Kolumny</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj widocznością kolumn w siatce danych.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj widocznością kolumn w siatce danych.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>Odznacz wszystko</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odznacz wszystko</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odznacz wszystko</value>
+  </data>
+  <data name="SelectAllButton.Content" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="SelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="SelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="BrowseForFilesButton.Content" xml:space="preserve">
+    <value>Przeglądaj pliki</value>
+  </data>
+  <data name="BrowseForFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj pliki do wybrania.</value>
+  </data>
+  <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj pliki do wybrania.</value>
   </data>
 </root>

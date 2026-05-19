@@ -151,6 +151,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(() =>
 		new SettingsBackupRestoreVM(), false);
 
+	private static readonly Lazy<ViewExportedFunctionsVM> _viewExportedFunctionsVM = new(() =>
+		new ViewExportedFunctionsVM(), false);
+
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
 	internal static MainWindowVM MainWindowVM => _mainWindowVM.Value;
@@ -194,6 +197,7 @@ internal static class ViewModelProvider
 	internal static ExploitMitigationsVM ExploitMitigationsVM => _exploitMitigationsVM.Value;
 	internal static SandboxMakerVM SandboxMakerVM => _sandboxMakerVM.Value;
 	internal static SettingsBackupRestoreVM SettingsBackupRestore => _settingsBackupRestore.Value;
+	internal static ViewExportedFunctionsVM ViewExportedFunctionsVM => _viewExportedFunctionsVM.Value;
 
 	/// <summary>
 	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>

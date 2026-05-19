@@ -6155,15 +6155,6 @@
   <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ശുപാർശ ചെയ്ത എല്ലാ എക്സ്പ്ലോയിറ്റ് ശമനങ്ങളും നീക്കുക.</value>
   </data>
-  <data name="BrowseFoldersButton.Content" xml:space="preserve">
-    <value>ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക</value>
-  </data>
-  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഒരു അല്ലെങ്കിൽ ഒന്നിലധികം ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
-  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഒരു അല്ലെങ്കിൽ ഒന്നിലധികം ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
   <data name="ScanSelectionsButton.Content" xml:space="preserve">
     <value>തെരഞ്ഞെടുത്തവ സ്കാൻ ചെയ്യുക</value>
   </data>
@@ -6490,5 +6481,50 @@
   </data>
   <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
     <value>Microsoft Print to PDF പുനഃസ്ഥാപിക്കാൻ സാധിച്ചില്ല.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.Content" xml:space="preserve">
+    <value>എക്സ്പോർട്ട് ചെയ്ത ഫങ്ഷനുകൾ കാണുക</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>DLL ഫയലുകളുടെ എക്സ്പോർട്ട് ചെയ്ത ഫങ്ഷനുകൾ പരിശോധിക്കാൻ അവ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>DLL ഫയലുകളുടെ എക്സ്പോർട്ട് ചെയ്ത ഫങ്ഷനുകൾ പരിശോധിക്കാൻ അവ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>നിരകൾ</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡാറ്റ ഗ്രിഡിലെ നിരകളുടെ ദൃശ്യത നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡാറ്റ ഗ്രിഡിലെ നിരകളുടെ ദൃശ്യത നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുക്കൽ റദ്ദാക്കുക</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുക്കൽ റദ്ദാക്കുക</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുക്കൽ റദ്ദാക്കുക</value>
+  </data>
+  <data name="SelectAllButton.Content" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="BrowseForFilesButton.Content" xml:space="preserve">
+    <value>ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseForFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കാനായി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കാനായി ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
   </data>
 </root>

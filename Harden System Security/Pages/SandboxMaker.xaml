@@ -373,7 +373,7 @@
                                  IsReadOnly="True"
                                  TextWrapping="Wrap"/>
 
-                        <Button x:Uid="BrowseFoldersButton"
+                        <Button x:Uid="BrowseForFoldersButton"
                                 Click="{x:Bind ViewModel.BrowseProgramFolder_Click}">
                             <Button.ContentTemplate>
                                 <DataTemplate x:DataType="x:String">

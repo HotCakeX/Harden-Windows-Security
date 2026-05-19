@@ -6155,15 +6155,6 @@
   <data name="RemoveAllMitigationsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>सभी अनुशंसित एक्सप्लॉइट शमन हटाएँ।</value>
   </data>
-  <data name="BrowseFoldersButton.Content" xml:space="preserve">
-    <value>फ़ोल्डर ब्राउज़ करें</value>
-  </data>
-  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>एक या अधिक फ़ोल्डर ब्राउज़ करें।</value>
-  </data>
-  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>एक या अधिक फ़ोल्डर ब्राउज़ करें।</value>
-  </data>
   <data name="ScanSelectionsButton.Content" xml:space="preserve">
     <value>चयन स्कैन करें</value>
   </data>
@@ -6490,5 +6481,50 @@
   </data>
   <data name="FailedToRestoreMicrosoftPrintToPdfPrinter" xml:space="preserve">
     <value>Microsoft Print to PDF को पुनर्स्थापित नहीं किया जा सका।</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.Content" xml:space="preserve">
+    <value>निर्यात किए गए फ़ंक्शन देखें</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>DLL फ़ाइलों के निर्यात किए गए फ़ंक्शनों की जाँच करने के लिए उन्हें ब्राउज़ करें.</value>
+  </data>
+  <data name="ViewExportedFunctionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>DLL फ़ाइलों के निर्यात किए गए फ़ंक्शनों की जाँच करने के लिए उन्हें ब्राउज़ करें.</value>
+  </data>
+  <data name="ColumnsDropDownButton.Content" xml:space="preserve">
+    <value>स्तंभ</value>
+  </data>
+  <data name="ColumnsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डेटा ग्रिड में स्तंभों की दृश्यता प्रबंधित करें.</value>
+  </data>
+  <data name="ColumnsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डेटा ग्रिड में स्तंभों की दृश्यता प्रबंधित करें.</value>
+  </data>
+  <data name="DeSelectAllButton.Content" xml:space="preserve">
+    <value>सभी का चयन हटाएँ</value>
+  </data>
+  <data name="DeSelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी का चयन हटाएँ</value>
+  </data>
+  <data name="DeSelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी का चयन हटाएँ</value>
+  </data>
+  <data name="SelectAllButton.Content" xml:space="preserve">
+    <value>सभी का चयन करें</value>
+  </data>
+  <data name="SelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी का चयन करें</value>
+  </data>
+  <data name="SelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी का चयन करें</value>
+  </data>
+  <data name="BrowseForFilesButton.Content" xml:space="preserve">
+    <value>फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseForFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयन करने के लिए फ़ाइलें ब्राउज़ करें.</value>
+  </data>
+  <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयन करने के लिए फ़ाइलें ब्राउज़ करें.</value>
   </data>
 </root>

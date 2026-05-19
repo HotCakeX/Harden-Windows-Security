@@ -206,7 +206,8 @@
 		<Compile Include="..\AppControl Manager\Pages\IntuneDeploymentDetails.xaml.cs" Link="Pages\IntuneDeploymentDetails.xaml.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\OpenPortsDialog.xaml.cs" Link="CustomUIElements\OpenPortsDialog.xaml.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\SystemShutdownInfoDialog.xaml.cs" Link="CustomUIElements\SystemShutdownInfoDialog.xaml.cs" />
-
+        <Compile Include="..\AppControl Manager\CustomUIElements\ColumnSelector.xaml.cs" Link="CustomUIElements\ColumnSelector.xaml.cs" />
+        
 		<!-- For Home Page's Carousel -->
 		<Compile Include="..\AppControl Manager\CustomUIElements\HomePageCarousel\Lights\AmbLight.cs" Link="CustomUIElements\HomePageCarousel\Lights\AmbLight.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\HomePageCarousel\Lights\HoverLight.cs" Link="CustomUIElements\HomePageCarousel\Lights\HoverLight.cs" />

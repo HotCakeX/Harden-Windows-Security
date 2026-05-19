@@ -78,7 +78,8 @@ internal static partial class ListViewHelper
 		OnlineIntuneDeviceConfigs = 10013,
 		CSPData = 10014,
 		Firewall_Management = 10015,
-		DuplicatePhotoFinder = 10016
+		DuplicatePhotoFinder = 10016,
+		ViewExportedFunctions = 10017
 	}
 
 	/// <summary>

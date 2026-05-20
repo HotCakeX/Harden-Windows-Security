@@ -6527,4 +6527,19 @@ Empreinte : {3}</value>
   <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Parcourir les fichiers à sélectionner.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Toujours au premier plan</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Maintenir la fenêtre de l’application au-dessus des autres fenêtres</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Maintenir la fenêtre de l’application au-dessus des autres fenêtres</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Masquer la fenêtre de l’application dans la zone de notification</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Masquer la fenêtre de l’application dans la zone de notification</value>
+  </data>
 </root>

@@ -36,6 +36,33 @@ internal static unsafe partial class NativeMethods
 	/// https://learn.microsoft.com/windows/win32/procthread/process-creation-flags
 	/// </summary>
 	internal const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
+	internal const uint SWP_NOSIZE = 0x0001;
+	internal const uint SWP_NOMOVE = 0x0002;
+	internal const uint SWP_NOACTIVATE = 0x0010;
+	internal const uint NIM_ADD = 0x00000000;
+	internal const uint NIM_MODIFY = 0x00000001;
+	internal const uint NIM_DELETE = 0x00000002;
+	internal const uint NIM_SETVERSION = 0x00000004;
+	internal const uint NIF_MESSAGE = 0x00000001;
+	internal const uint NIF_ICON = 0x00000002;
+	internal const uint NIF_TIP = 0x00000004;
+	internal const uint NIF_SHOWTIP = 0x00000080;
+	internal const uint NOTIFYICON_VERSION_4 = 4;
+	internal const uint SHGFI_ICON = 0x000000100;
+	internal const uint SHGFI_SMALLICON = 0x000000001;
+	internal const uint MF_STRING = 0x00000000;
+	internal const uint MF_SEPARATOR = 0x00000800;
+	internal const uint MIIM_BITMAP = 0x00000080;
+	internal const uint TPM_LEFTALIGN = 0x0000;
+	internal const uint TPM_BOTTOMALIGN = 0x0020;
+	internal const uint TPM_RIGHTBUTTON = 0x0002;
+	internal const uint TPM_NONOTIFY = 0x0080;
+	internal const uint TPM_RETURNCMD = 0x0100;
+	internal const int GCLP_HICON = -14;
+	internal const int GCLP_HICONSM = -34;
+	internal const int ICON_SMALL = 0;
+	internal const int ICON_BIG = 1;
+	internal const int ICON_SMALL2 = 2;
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute
@@ -45,6 +72,10 @@ internal static unsafe partial class NativeMethods
 	internal const uint PROCESS_CREATION_DESKTOP_APP_BREAKAWAY_OVERRIDE = 0x04;
 
 	internal static readonly IntPtr INVALID_HANDLE_VALUE = new(-1);
+	internal static readonly IntPtr HWND_TOPMOST = new(-1);
+	internal static readonly IntPtr HWND_NOTOPMOST = new(-2);
+	internal static readonly IntPtr HBMMENU_POPUP_CLOSE = new(8);
+	internal static readonly IntPtr HBMMENU_POPUP_RESTORE = new(9);
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecontextw
@@ -208,6 +239,178 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CloseHandle(IntPtr hObject);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowpos
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetWindowPos(
+		IntPtr hWnd,
+		IntPtr hWndInsertAfter,
+		int X,
+		int Y,
+		int cx,
+		int cy,
+		uint uFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw
+	/// </summary>
+	[LibraryImport("shell32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool Shell_NotifyIconW(uint dwMessage, ref NOTIFYICONDATAW lpData);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setforegroundwindow
+	/// </summary>
+	[LibraryImport("user32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetForegroundWindow(IntPtr hWnd);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-postmessagew
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool PostMessageW(
+		IntPtr hWnd,
+		WinMsg Msg,
+		UIntPtr wParam,
+		IntPtr lParam);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-createpopupmenu
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CreatePopupMenu();
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-appendmenuw
+	/// </summary>
+	[LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool AppendMenuW(
+		IntPtr hMenu,
+		uint uFlags,
+		UIntPtr uIDNewItem,
+		string? lpNewItem);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-trackpopupmenuex
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint TrackPopupMenuEx(
+		IntPtr hMenu,
+		uint uFlags,
+		int x,
+		int y,
+		IntPtr hWnd,
+		IntPtr lptpm);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setmenuiteminfow
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetMenuItemInfoW(
+		IntPtr hMenu,
+		uint item,
+		int fByPosition,
+		ref MENUITEMINFOW lpmii);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-destroymenu
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DestroyMenu(IntPtr hMenu);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-destroyicon
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DestroyIcon(IntPtr hIcon);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getclasslongptrw
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr GetClassLongPtrW(IntPtr hWnd, int nIndex);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createbitmap
+	/// </summary>
+	[LibraryImport("gdi32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CreateBitmap(
+		int nWidth,
+		int nHeight,
+		uint cPlanes,
+		uint cBitsPerPel,
+		IntPtr lpvBits);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-createiconindirect
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CreateIconIndirect(ref ICONINFO piconinfo);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-deleteobject
+	/// </summary>
+	[LibraryImport("gdi32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DeleteObject(IntPtr ho);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-registerwindowmessagew
+	/// </summary>
+	[LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint RegisterWindowMessageW(string lpString);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
+	/// </summary>
+	[LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr SHGetFileInfoW(
+		string pszPath,
+		uint dwFileAttributes,
+		ref SHFILEINFOW psfi,
+		uint cbFileInfo,
+		uint uFlags);
 
 
 	/// <summary>

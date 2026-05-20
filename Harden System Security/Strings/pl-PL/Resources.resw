@@ -6527,4 +6527,19 @@ Odcisk Palca: {3}</value>
   <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przeglądaj pliki do wybrania.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zawsze na wierzchu</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utrzymuj okno aplikacji nad innymi oknami</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utrzymuj okno aplikacji nad innymi oknami</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ukryj okno aplikacji w obszarze powiadomień</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ukryj okno aplikacji w obszarze powiadomień</value>
+  </data>
 </root>

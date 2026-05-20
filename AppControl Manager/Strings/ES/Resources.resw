@@ -7672,4 +7672,19 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>No se pudo restablecer la configuración de la aplicación a sus valores predeterminados.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Siempre visible</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mantener la ventana de la aplicación por encima de otras ventanas</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Mantener la ventana de la aplicación por encima de otras ventanas</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ocultar la ventana de la aplicación en el área de notificación</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ocultar la ventana de la aplicación en el área de notificación</value>
+  </data>
 </root>

@@ -6527,4 +6527,19 @@
   <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>עיין בקבצים לבחירה.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>תמיד מעל</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השאר את חלון היישום מעל חלונות אחרים</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השאר את חלון היישום מעל חלונות אחרים</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסתר את חלון היישום לאזור ההודעות</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסתר את חלון היישום לאזור ההודעות</value>
+  </data>
 </root>

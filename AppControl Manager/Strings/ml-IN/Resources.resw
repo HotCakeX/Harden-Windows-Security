@@ -7672,4 +7672,19 @@
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>ആപ്പ് ക്രമീകരണങ്ങളെ അവയുടെ സ്വതേയുള്ള മൂല്യങ്ങളിലേക്ക് പുനഃസജ്ജമാക്കാനായില്ല.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എപ്പോഴും മുകളിൽ</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയെ മറ്റ് വിൻഡോകൾക്ക് മുകളിൽ നിലനിർത്തുക</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയെ മറ്റ് വിൻഡോകൾക്ക് മുകളിൽ നിലനിർത്തുക</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയെ അറിയിപ്പ് പ്രദേശത്തേക്ക് മറയ്ക്കുക</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയെ അറിയിപ്പ് പ്രദേശത്തേക്ക് മറയ്ക്കുക</value>
+  </data>
 </root>

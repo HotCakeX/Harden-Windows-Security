@@ -60,6 +60,75 @@ internal struct STARTUPINFOEX
 	internal IntPtr lpAttributeList;
 }
 
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/shellapi/ns-shellapi-notifyicondataw
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct NOTIFYICONDATAW
+{
+	internal uint cbSize;
+	internal IntPtr hWnd;
+	internal uint uID;
+	internal uint uFlags;
+	internal uint uCallbackMessage;
+	internal IntPtr hIcon;
+	internal fixed char szTip[128];
+	internal uint dwState;
+	internal uint dwStateMask;
+	internal fixed char szInfo[256];
+	internal uint uVersion;
+	internal fixed char szInfoTitle[64];
+	internal uint dwInfoFlags;
+	internal Guid guidItem;
+	internal IntPtr hBalloonIcon;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/shellapi/ns-shellapi-shfileinfow
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct SHFILEINFOW
+{
+	internal IntPtr hIcon;
+	internal int iIcon;
+	internal uint dwAttributes;
+	internal fixed char szDisplayName[260];
+	internal fixed char szTypeName[80];
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-menuiteminfow
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct MENUITEMINFOW
+{
+	internal uint cbSize;
+	internal uint fMask;
+	internal uint fType;
+	internal uint fState;
+	internal uint wID;
+	internal IntPtr hSubMenu;
+	internal IntPtr hbmpChecked;
+	internal IntPtr hbmpUnchecked;
+	internal nuint dwItemData;
+	internal IntPtr dwTypeData;
+	internal uint cch;
+	internal IntPtr hbmpItem;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-iconinfo
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct ICONINFO
+{
+	internal int fIcon;
+	internal uint xHotspot;
+	internal uint yHotspot;
+	internal IntPtr hbmMask;
+	internal IntPtr hbmColor;
+}
+
 [StructLayout(LayoutKind.Sequential)]
 internal struct STARTUPINFO
 {

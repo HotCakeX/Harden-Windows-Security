@@ -1,3 +1,7 @@
 * Added a new button to the Sidebar called "Restore Microsoft Print to PDF". The "Microsoft Print to PDF" is a built-in printer that exists in Windows by default. If users accidentally or intentionally remove it, there is no straightforward way to add it back; But now adding it back is as easy as pressing a button.
 
 * In the Exploit Mitigations page's Binary Scan section, there is a new page that lets you scan DLLs for export names (even undocumented ones) to analyze them and see which functions they export. Mostly suitable for advanced use-cases only.
+
+* You can now set the app's window to stay on top of any other windows by right-clicking on the title bar and selecting "stay on top".
+
+* You can now minimize the app to the notifications area (system tray) by using the newly added button on the title bar.

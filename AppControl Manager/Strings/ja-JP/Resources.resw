@@ -7672,4 +7672,19 @@
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>アプリ設定を既定値にリセットできませんでした。</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>最前面に表示</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アプリ ウィンドウを他のウィンドウより前面に表示したままにします</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>アプリ ウィンドウを他のウィンドウより前面に表示したままにします</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アプリ ウィンドウを通知領域に隠します</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>アプリ ウィンドウを通知領域に隠します</value>
+  </data>
 </root>

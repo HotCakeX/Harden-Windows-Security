@@ -6527,4 +6527,19 @@
   <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αναζητήστε αρχεία για επιλογή.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Πάντα στην κορυφή</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διατήρηση του παραθύρου της εφαρμογής πάνω από άλλα παράθυρα</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διατήρηση του παραθύρου της εφαρμογής πάνω από άλλα παράθυρα</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Απόκρυψη του παραθύρου της εφαρμογής στην περιοχή ειδοποιήσεων</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Απόκρυψη του παραθύρου της εφαρμογής στην περιοχή ειδοποιήσεων</value>
+  </data>
 </root>

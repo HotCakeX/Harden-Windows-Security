@@ -74,6 +74,14 @@
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
 
+                <ToggleMenuFlyoutItem x:Uid="StayOnTopTitleBarToggleMenuFlyoutItem"
+                                      Click="{x:Bind ToggleWindowAlwaysOnTop_Click}"
+                                      IsChecked="{x:Bind IsWindowAlwaysOnTop, Mode=OneWay}">
+                    <ToggleMenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE840;" />
+                    </ToggleMenuFlyoutItem.Icon>
+                </ToggleMenuFlyoutItem>
+
                 <!-- In case other languages have longer texts, we set minimum here instead of just Width.
                      MenuFlyout itself doesn't have any Width related properties. -->
                 <MenuFlyoutSeparator MinWidth="215" />
@@ -182,9 +190,11 @@
                 <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="SearchColumn" Width="3*"/>
                 <ColumnDefinition x:Name="RightDragColumn" Width="*" />
-                <ColumnDefinition x:Name="ElevationContextSwitchButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="SidebarAndElevationContextSwitchButtonPadding" Width="30"/>
+                <ColumnDefinition x:Name="ElevationContextSwitchButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="SidebarButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="MinimizeToNotificationAreaButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="CaptionButtonsSeparatorColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
 
@@ -321,15 +331,42 @@
                 </StackPanel>
             </Grid>
 
+            <!-- Sidebar access point -->
+            <Button x:Name="SidebarButton"
+                    x:Uid="SidebarButton"
+                    Click="{x:Bind ViewModel.SidebarButton_Click}"
+                    Grid.Column="9"
+                    Width="40"
+                    Height="40"              
+                    Background="Transparent"
+                    BorderThickness="0">
+
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="S" Modifiers="Control" Invoked="{x:Bind ViewModel.SidebarButtonKeyboardAccelerator_Invoked}"/>
+                </Button.KeyboardAccelerators>
+
+                <Button.Content>
+                    <AnimatedIcon Height="30" Width="30" Margin="-9,-9,-9,-9">
+                        <AnimatedIcon.Source>
+                            <animatedvisuals:Sidebar/>
+                        </AnimatedIcon.Source>
+                    </AnimatedIcon>
+                </Button.Content>
+            </Button>
+
             <!-- Elevation Context Switch Button -->
             <Button x:Name="ElevationContextSwitchButton"
                     x:Uid="ElevationContextSwitchButton"
                     Click="{x:Bind ElevationContextSwitchButton_Click}"
                     RightTapped="{x:Bind ElevationContextSwitchButton_RightTapped}"
-                    Grid.Column="8">
+                    Background="Transparent"
+                    Width="40"
+                    Height="40"  
+                    BorderThickness="0"                   
+                    Grid.Column="10">
                 <Button.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
-                        <FontIcon Glyph="&#xE748;" FontSize="16"/>
+                        <FontIcon Glyph="&#xE748;" FontSize="18"/>
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
@@ -344,33 +381,27 @@
                 </TeachingTip.IconSource>
             </TeachingTip>
 
-            <!-- Sidebar access point -->
-            <Button x:Name="SidebarButton"
-                    x:Uid="SidebarButton"
-                    Click="{x:Bind ViewModel.SidebarButton_Click}"
-                    Grid.Column="10"
-                    Height="32"
-                    Margin="5,0,30,0"
+
+            <Button x:Name="MinimizeToNotificationAreaButton"
+                    x:Uid="MinimizeToNotificationAreaButton"
+                    Click="{x:Bind MinimizeToNotificationAreaButton_Click}"
+                    Width="40"
+                    Height="40"  
+                    Grid.Column="11"                    
                     Background="Transparent"
                     BorderThickness="0">
-
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="S" Modifiers="Control" Invoked="{x:Bind ViewModel.SidebarButtonKeyboardAccelerator_Invoked}"/>
-                </Button.KeyboardAccelerators>
-
                 <Button.Content>
-                    <CCToolKit:WrapPanel Orientation="Horizontal">
-
-                        <AnimatedIcon Height="35" Width="35" Margin="-9,-9,-9,-9">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:Sidebar/>
-                            </AnimatedIcon.Source>
-                        </AnimatedIcon>
-
-                    </CCToolKit:WrapPanel>
+                    <FontIcon Glyph="&#xF5EF;" FontSize="18"/>
                 </Button.Content>
-
             </Button>
+
+            <Rectangle Grid.Column="12"
+                       Width="1"
+                       Height="24"
+                       Margin="8,0,8,0"
+                       Fill="{ThemeResource ControlStrokeColorDefaultBrush}"
+                       IsHitTestVisible="False"
+                       VerticalAlignment="Center" />
 
         </Grid>
 

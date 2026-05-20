@@ -7672,4 +7672,19 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>Could not reset the app settings to their default values.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Stay on top</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Keep the app window above other windows</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Keep the app window above other windows</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hide the app window to the notification area</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Hide the app window to the notification area</value>
+  </data>
 </root>

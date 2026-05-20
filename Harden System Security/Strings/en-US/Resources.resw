@@ -6527,4 +6527,19 @@ Thumbprint: {3}</value>
   <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Browse for Files to select.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Stay on top</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Keep the app window above other windows</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Keep the app window above other windows</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hide the app window to the notification area</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Hide the app window to the notification area</value>
+  </data>
 </root>

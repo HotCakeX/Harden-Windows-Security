@@ -113,6 +113,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	private readonly ContentCoordinateConverter? contentCoordinateConverter;
 	private readonly OverlappedPresenter overlappedPresenter;
 	internal bool IsWindowMaximized { get; set => this.SP(ref field, value); }
+	internal bool IsWindowAlwaysOnTop { get; set => this.SP(ref field, value); }
 	private static MainWindow? Instance { get; set; }
 
 	/// <summary>
@@ -263,6 +264,26 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private void MaximizeWindow_Click(object sender, RoutedEventArgs args) => overlappedPresenter.Maximize();
 
+	private void ToggleWindowAlwaysOnTop_Click(object sender, RoutedEventArgs args)
+	{
+		if (sender is not ToggleMenuFlyoutItem toggleMenuFlyoutItem)
+		{
+			return;
+		}
+
+		bool shouldStayOnTop = toggleMenuFlyoutItem.IsChecked;
+		IntPtr hWndInsertAfter = shouldStayOnTop ? NativeMethods.HWND_TOPMOST : NativeMethods.HWND_NOTOPMOST;
+
+		if (NativeMethods.SetWindowPos(Atlas.hWnd, hWndInsertAfter, 0, 0, 0, 0, NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE | NativeMethods.SWP_NOACTIVATE))
+		{
+			IsWindowAlwaysOnTop = shouldStayOnTop;
+		}
+		else
+		{
+			toggleMenuFlyoutItem.IsChecked = IsWindowAlwaysOnTop;
+		}
+	}
+
 	private async void CloseWindow_Click(object sender, RoutedEventArgs args)
 	{
 		// If we should always ask for confirmation
@@ -316,9 +337,16 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			return NativeMethods.DefSubclassProc(hWnd, Msg, wParam, lParam);
 		}
 
+		if (instance.TryHandleNotificationAreaWindowMessage(hWnd, Msg, wParam, lParam, out IntPtr notificationAreaResult))
+		{
+			return notificationAreaResult;
+		}
+
 		// Clean up subclass to prevent memory leaks.
 		if (Msg == WinMsg.WM_NCDESTROY)
 		{
+			instance.RemoveNotificationAreaIcon();
+
 			IntPtr mainWindowSubclassProcPtr;
 			unsafe
 			{
@@ -511,6 +539,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		RectInt32 menuRect = MainWindowVM.CalculatePixelRect(HamburgerMenuButton, scale);
 		RectInt32 searchRect = MainWindowVM.CalculatePixelRect(TitleBarSearchBox, scale);
 		RectInt32 elevationButtonRect = MainWindowVM.CalculatePixelRect(ElevationContextSwitchButton, scale);
+		RectInt32 notificationAreaButtonRect = MainWindowVM.CalculatePixelRect(MinimizeToNotificationAreaButton, scale);
 		RectInt32 sidebarRect = MainWindowVM.CalculatePixelRect(SidebarButton, scale);
 
 		// If RTL, flip X around the full window width in pixels
@@ -522,6 +551,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			menuRect = MainWindowVM.FlipHorizontally(menuRect, windowWidthPx);
 			searchRect = MainWindowVM.FlipHorizontally(searchRect, windowWidthPx);
 			elevationButtonRect = MainWindowVM.FlipHorizontally(elevationButtonRect, windowWidthPx);
+			notificationAreaButtonRect = MainWindowVM.FlipHorizontally(notificationAreaButtonRect, windowWidthPx);
 			sidebarRect = MainWindowVM.FlipHorizontally(sidebarRect, windowWidthPx);
 		}
 
@@ -531,7 +561,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 		nonClient.SetRegionRects(
 			NonClientRegionKind.Passthrough,
-			[backRect, menuRect, searchRect, elevationButtonRect, sidebarRect]
+			[backRect, menuRect, searchRect, elevationButtonRect, notificationAreaButtonRect, sidebarRect]
 		);
 	}
 
@@ -609,6 +639,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 					break;
 				}
 		}
+
+		// The title-bar passthrough map depends on the current button visibility.
+		// Recompute it after any NavigationView location change that shows or hides title-bar buttons.
+		SetRegionsForCustomTitleBar();
 	}
 
 	#region Custom Acrylic Backdrop details

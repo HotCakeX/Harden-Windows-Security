@@ -7672,4 +7672,19 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CouldNotResetSettingsToDefaultsMessage" xml:space="preserve">
     <value>Nie można przywrócić ustawień aplikacji do ich wartości domyślnych.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zawsze na wierzchu</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utrzymuj okno aplikacji nad innymi oknami</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utrzymuj okno aplikacji nad innymi oknami</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ukryj okno aplikacji w obszarze powiadomień</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ukryj okno aplikacji w obszarze powiadomień</value>
+  </data>
 </root>

@@ -6527,4 +6527,19 @@
   <data name="BrowseForFilesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>चयन करने के लिए फ़ाइलें ब्राउज़ करें.</value>
   </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सबसे ऊपर रखें</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप विंडो को अन्य विंडो के ऊपर रखें</value>
+  </data>
+  <data name="StayOnTopTitleBarToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप विंडो को अन्य विंडो के ऊपर रखें</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप विंडो को सूचना क्षेत्र में छिपाएँ</value>
+  </data>
+  <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप विंडो को सूचना क्षेत्र में छिपाएँ</value>
+  </data>
 </root>

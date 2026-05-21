@@ -5,3 +5,5 @@
 * You can now set the app's window to stay on top of any other windows by right-clicking on the title bar and selecting "stay on top".
 
 * You can now minimize the app to the notifications area (system tray) by using the newly added button on the title bar.
+
+* Updated dependencies to the latest versions.

@@ -55,7 +55,7 @@
                             </Grid.RowDefinitions>
 
                             <!-- Actions -->
-                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                            <Border Margin="0,5,0,5" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
                                 <CCToolKit:WrapPanel Orientation="Horizontal"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"
@@ -210,13 +210,13 @@
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth6, Mode=OneWay}" />
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth7, Mode=OneWay}" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                            <TextBlock Text="{x:Bind AlgorithmType}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                            <TextBlock Text="{x:Bind Flags}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                                            <TextBlock Text="{x:Bind IsOpenable}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                                            <TextBlock Text="{x:Bind IsPostQuantum}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                                            <TextBlock Text="{x:Bind SupportsKeyGeneration}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                                            <TextBlock Text="{x:Bind SupportedParameterSets.Count}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind AlgorithmType}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind Flags}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind IsOpenable}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3"/>
+                                            <TextBlock Text="{x:Bind IsPostQuantum}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4"/>
+                                            <TextBlock Text="{x:Bind SupportsKeyGeneration}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="5"/>
+                                            <TextBlock Text="{x:Bind SupportedParameterSets.Count}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="6"/>
                                         </Grid>
                                     </DataTemplate>
                                 </customUI:ListViewV2.ItemTemplate>
@@ -242,7 +242,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                            <Border Margin="0,5,0,5" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
                                 <CCToolKit:WrapPanel Orientation="Horizontal"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"
@@ -360,9 +360,9 @@
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CNG_ColumnWidth2, Mode=OneWay}" />
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CNG_ColumnWidth3, Mode=OneWay}" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                            <TextBlock Text="{x:Bind Oid}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                            <TextBlock Text="{x:Bind PublicKeyLengthBits}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind Oid}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind PublicKeyLengthBits}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2"/>
                                         </Grid>
                                     </DataTemplate>
                                 </customUI:ListViewV2.ItemTemplate>
@@ -389,7 +389,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                            <Border Margin="0,5,0,5" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
                                 <CCToolKit:WrapPanel Orientation="Horizontal"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"
@@ -525,11 +525,11 @@
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.SSL_ColumnWidth4, Mode=OneWay}" />
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.SSL_ColumnWidth5, Mode=OneWay}" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                            <TextBlock Text="{x:Bind Oid}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                            <TextBlock Text="{x:Bind PublicKeyLengthBits}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                                            <TextBlock Text="{x:Bind CurveType}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                                            <TextBlock Text="{x:Bind Flags}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind Oid}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind PublicKeyLengthBits}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind CurveType}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3"/>
+                                            <TextBlock Text="{x:Bind Flags}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4"/>
                                         </Grid>
                                     </DataTemplate>
                                 </customUI:ListViewV2.ItemTemplate>
@@ -556,7 +556,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                            <Border Margin="0,5,0,5" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
                                 <CCToolKit:WrapPanel Orientation="Horizontal"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"
@@ -769,19 +769,19 @@
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth12, Mode=OneWay}" />
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth13, Mode=OneWay}" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                            <TextBlock Text="{x:Bind Cipher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                            <TextBlock Text="{x:Bind CipherSuiteHex}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                                            <TextBlock Text="{x:Bind BaseCipherSuiteHex}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                                            <TextBlock Text="{x:Bind Hash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                                            <TextBlock Text="{x:Bind Exchange}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                                            <TextBlock Text="{x:Bind Certificate}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                                            <TextBlock Text="{x:Bind CipherLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                                            <TextBlock Text="{x:Bind CipherBlockLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                                            <TextBlock Text="{x:Bind HashLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                                            <TextBlock Text="{x:Bind MinimumExchangeLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                                            <TextBlock Text="{x:Bind MaximumExchangeLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                                            <TextBlock Text="{x:Bind KeyType}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind Cipher}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind CipherSuiteHex}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind BaseCipherSuiteHex}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3"/>
+                                            <TextBlock Text="{x:Bind Hash}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4"/>
+                                            <TextBlock Text="{x:Bind Exchange}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="5"/>
+                                            <TextBlock Text="{x:Bind Certificate}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="6"/>
+                                            <TextBlock Text="{x:Bind CipherLength}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="7"/>
+                                            <TextBlock Text="{x:Bind CipherBlockLength}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="8"/>
+                                            <TextBlock Text="{x:Bind HashLength}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="9"/>
+                                            <TextBlock Text="{x:Bind MinimumExchangeLength}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="10"/>
+                                            <TextBlock Text="{x:Bind MaximumExchangeLength}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="11"/>
+                                            <TextBlock Text="{x:Bind KeyType}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="12"/>
                                         </Grid>
                                     </DataTemplate>
                                 </customUI:ListViewV2.ItemTemplate>
@@ -808,7 +808,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                            <Border Margin="0,5,0,5" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
                                 <CCToolKit:WrapPanel Orientation="Horizontal"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"
@@ -908,7 +908,7 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.REG_ColumnWidth1, Mode=OneWay}" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{x:Bind}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
                                         </Grid>
                                     </DataTemplate>
                                 </customUI:ListViewV2.ItemTemplate>

@@ -67,7 +67,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Border Margin="0,10,0,10"
+                        <Border Margin="0,5,0,5"
                                 Grid.Row="0"
                                 Style="{StaticResource GridCardStyle}" Padding="8">
                             <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
@@ -228,8 +228,8 @@
                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftDefenderVM.EXColWidth1, Mode=OneWay}"/>
                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftDefenderVM.EXColWidth2, Mode=OneWay}"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{x:Bind Target}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                        <TextBlock Text="{x:Bind SourceFriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                        <TextBlock Text="{x:Bind Target}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.MicrosoftDefenderVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                                        <TextBlock Text="{x:Bind SourceFriendlyName}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.MicrosoftDefenderVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
                                     </Grid>
                                 </DataTemplate>
                             </customUI:ListViewV2.ItemTemplate>

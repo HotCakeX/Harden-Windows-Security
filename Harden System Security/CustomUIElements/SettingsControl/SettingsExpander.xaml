@@ -368,7 +368,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                     <VisualState.Setters>
-                                        <Setter Target="ExpandCollapseChevron.(muxc:AnimatedIcon.State)" Value="PointerOverOff" />
+                                        <Setter Target="ExpandCollapseChevron.(AnimatedIcon.State)" Value="PointerOverOff" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -395,7 +395,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                     <VisualState.Setters>
-                                        <Setter Target="ExpandCollapseChevron.(muxc:AnimatedIcon.State)" Value="PressedOff" />
+                                        <Setter Target="ExpandCollapseChevron.(AnimatedIcon.State)" Value="PressedOff" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
@@ -441,7 +441,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                     <VisualState.Setters>
-                                        <Setter Target="ExpandCollapseChevron.(muxc:AnimatedIcon.State)" Value="NormalOn" />
+                                        <Setter Target="ExpandCollapseChevron.(AnimatedIcon.State)" Value="NormalOn" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="CheckedPointerOver">
@@ -468,7 +468,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                     <VisualState.Setters>
-                                        <Setter Target="ExpandCollapseChevron.(muxc:AnimatedIcon.State)" Value="PointerOverOn" />
+                                        <Setter Target="ExpandCollapseChevron.(AnimatedIcon.State)" Value="PointerOverOn" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="CheckedPressed">
@@ -495,7 +495,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                     <VisualState.Setters>
-                                        <Setter Target="ExpandCollapseChevron.(muxc:AnimatedIcon.State)" Value="PressedOn" />
+                                        <Setter Target="ExpandCollapseChevron.(AnimatedIcon.State)" Value="PressedOn" />
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -518,7 +518,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                     <VisualState.Setters>
-                                        <Setter Target="ExpandCollapseChevron.(muxc:AnimatedIcon.State)" Value="NormalOn" />
+                                        <Setter Target="ExpandCollapseChevron.(AnimatedIcon.State)" Value="NormalOn" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Indeterminate" />

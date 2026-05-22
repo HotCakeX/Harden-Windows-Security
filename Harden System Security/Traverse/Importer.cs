@@ -283,24 +283,21 @@ internal static class Importer
 	/// <param name="category">The MUnit category.</param>
 	/// <returns>The ViewModel that manages that category.</returns>
 	/// <exception cref="InvalidOperationException">If the category is not MUnit based or unsupported here.</exception>
-	private static IMUnitListViewModel ResolveViewModel(Categories category)
+	private static IMUnitListViewModel ResolveViewModel(Categories category) => category switch
 	{
-		return category switch
-		{
-			Categories.MicrosoftDefender => ViewModelProvider.MicrosoftDefenderVM,
-			Categories.BitLockerSettings => ViewModelProvider.BitLockerVM,
-			Categories.TLSSecurity => ViewModelProvider.TLSVM,
-			Categories.LockScreen => ViewModelProvider.LockScreenVM,
-			Categories.UserAccountControl => ViewModelProvider.UACVM,
-			Categories.DeviceGuard => ViewModelProvider.DeviceGuardVM,
-			Categories.WindowsFirewall => ViewModelProvider.WindowsFirewallVM,
-			Categories.WindowsNetworking => ViewModelProvider.WindowsNetworkingVM,
-			Categories.MiscellaneousConfigurations => ViewModelProvider.MiscellaneousConfigsVM,
-			Categories.WindowsUpdateConfigurations => ViewModelProvider.WindowsUpdateVM,
-			Categories.EdgeBrowserConfigurations => ViewModelProvider.EdgeVM,
-			Categories.NonAdminCommands => ViewModelProvider.NonAdminVM,
-			Categories.MSFTSecBaselines_OptionalOverrides => ViewModelProvider.MicrosoftBaseLinesOverridesVM,
-			_ => throw new InvalidOperationException($"Category '{category}' is not supported for MUnit import/apply workflow.")
-		};
-	}
+		Categories.MicrosoftDefender => ViewModelProvider.MicrosoftDefenderVM,
+		Categories.BitLockerSettings => ViewModelProvider.BitLockerVM,
+		Categories.TLSSecurity => ViewModelProvider.TLSVM,
+		Categories.LockScreen => ViewModelProvider.LockScreenVM,
+		Categories.UserAccountControl => ViewModelProvider.UACVM,
+		Categories.DeviceGuard => ViewModelProvider.DeviceGuardVM,
+		Categories.WindowsFirewall => ViewModelProvider.WindowsFirewallVM,
+		Categories.WindowsNetworking => ViewModelProvider.WindowsNetworkingVM,
+		Categories.MiscellaneousConfigurations => ViewModelProvider.MiscellaneousConfigsVM,
+		Categories.WindowsUpdateConfigurations => ViewModelProvider.WindowsUpdateVM,
+		Categories.EdgeBrowserConfigurations => ViewModelProvider.EdgeVM,
+		Categories.NonAdminCommands => ViewModelProvider.NonAdminVM,
+		Categories.MSFTSecBaselines_OptionalOverrides => ViewModelProvider.MicrosoftBaseLinesOverridesVM,
+		_ => throw new InvalidOperationException($"Category '{category}' is not supported for MUnit import/apply workflow.")
+	};
 }

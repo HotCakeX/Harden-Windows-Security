@@ -430,6 +430,8 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				return;
 			}
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			await Task.Run(() =>
 			{
 				foreach (string file in SelectedFiles)
@@ -529,6 +531,8 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 		try
 		{
 			ManagementUIIsEnabled = false;
+
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 			await Task.Run(() =>
 			{

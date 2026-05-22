@@ -229,7 +229,7 @@
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                         <VisualState.Setters>
-                                            <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="PointerOver" />
+                                            <Setter Target="PART_RootGrid.(AnimatedIcon.State)" Value="PointerOver" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
@@ -261,7 +261,7 @@
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                         <VisualState.Setters>
-                                            <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="Pressed" />
+                                            <Setter Target="PART_RootGrid.(AnimatedIcon.State)" Value="Pressed" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
@@ -289,7 +289,7 @@
                                         </Storyboard>
                                         <VisualState.Setters>
                                             <!--  DisabledVisual Should be handled by the control, not the animated icon.  -->
-                                            <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="Normal" />
+                                            <Setter Target="PART_RootGrid.(AnimatedIcon.State)" Value="Normal" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>

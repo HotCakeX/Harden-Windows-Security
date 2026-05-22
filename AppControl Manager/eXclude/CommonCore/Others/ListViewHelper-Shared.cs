@@ -79,7 +79,8 @@ internal static partial class ListViewHelper
 		CSPData = 10014,
 		Firewall_Management = 10015,
 		DuplicatePhotoFinder = 10016,
-		ViewExportedFunctions = 10017
+		ViewExportedFunctions = 10017,
+		ExploitMitigations_Registry = 10018
 	}
 
 	/// <summary>

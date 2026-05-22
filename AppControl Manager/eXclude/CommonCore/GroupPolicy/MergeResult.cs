@@ -24,9 +24,7 @@ namespace CommonCore.GroupPolicy;
 /// </summary>
 /// <param name="mergedFile">The main object that is the result of the merge operation.</param>
 /// <param name="operations">Details of the merge operation.</param>
-internal sealed class MergeResult(
-	RegistryPolicyFile mergedFile,
-	List<MergeOperation> operations)
+internal sealed class MergeResult(RegistryPolicyFile mergedFile, List<MergeOperation> operations)
 {
 	internal RegistryPolicyFile MergedFile => mergedFile;
 	internal List<MergeOperation> Operations => operations;

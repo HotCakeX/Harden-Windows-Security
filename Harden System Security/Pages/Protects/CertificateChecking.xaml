@@ -421,12 +421,12 @@
                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.RootSha256ColumnWidth, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{x:Bind StoreLocationString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind StoreNameString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock Text="{x:Bind Subject}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock Text="{x:Bind Issuer}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind LeafThumbprintSha1}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock Text="{x:Bind RootSubject}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock Text="{x:Bind StoreLocationString}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind StoreNameString}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind Subject}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2"/>
+                        <TextBlock Text="{x:Bind Issuer}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind LeafThumbprintSha1}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4"/>
+                        <TextBlock Text="{x:Bind RootSubject}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="5"/>
                         <TextBlock Text="{x:Bind RootSha256Hex}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6" FontFamily="Consolas"/>
                     </Grid>
                 </DataTemplate>

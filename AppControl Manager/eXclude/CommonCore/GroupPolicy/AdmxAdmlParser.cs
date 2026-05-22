@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Xml;
 
 namespace CommonCore.GroupPolicy;
@@ -39,9 +40,9 @@ internal static class AdmxAdmlParser
 	/// Parse ADML/ADMX (en-US only) once per call and fill missing FriendlyName values in-place.
 	/// </summary>
 	/// <param name="entries"></param>
-	internal static void PopulateFriendlyNames(IReadOnlyCollection<RegistryPolicyEntry> entries)
+	internal static void PopulateFriendlyNames(List<RegistryPolicyEntry> entries)
 	{
-		if (entries == null || entries.Count == 0)
+		if (entries.Count == 0)
 		{
 			return; // Nothing to do
 		}
@@ -50,7 +51,7 @@ internal static class AdmxAdmlParser
 		HashSet<string> neededCompositeKeys = new(StringComparer.OrdinalIgnoreCase);
 		HashSet<string> neededKeyOnly = new(StringComparer.OrdinalIgnoreCase);
 
-		foreach (RegistryPolicyEntry entry in entries)
+		foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(entries))
 		{
 			if (!string.IsNullOrWhiteSpace(entry.FriendlyName))
 			{
@@ -84,7 +85,7 @@ internal static class AdmxAdmlParser
 		BuildAdmxLookup(stringResources, out Dictionary<string, string> policyIndex, out Dictionary<string, string> keyOnlyIndex);
 
 		// Apply resolved names to the original entries
-		foreach (RegistryPolicyEntry entry in entries)
+		foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(entries))
 		{
 			if (!string.IsNullOrWhiteSpace(entry.FriendlyName))
 			{
@@ -360,6 +361,16 @@ internal static class AdmxAdmlParser
 		return attributeValue;
 	}
 
+	private static readonly string[] HivePrefixes =
+	[
+		"HKEY_LOCAL_MACHINE\\",
+		"HKLM\\",
+		"HKEY_CURRENT_USER\\",
+		"HKCU\\",
+		"MACHINE\\",
+		"USER\\"
+	];
+
 	// Normalize registry key: remove hive, unify slashes, lowercase
 	private static string NormalizeRegistryKey(string keyPath)
 	{
@@ -370,19 +381,9 @@ internal static class AdmxAdmlParser
 
 		string normalized = keyPath.Replace('/', '\\').Trim();
 
-		string[] hivePrefixes =
-		[
-			"HKEY_LOCAL_MACHINE\\",
-			"HKLM\\",
-			"HKEY_CURRENT_USER\\",
-			"HKCU\\",
-			"MACHINE\\",
-			"USER\\"
-		];
-
-		for (int i = 0; i < hivePrefixes.Length; i++)
+		for (int i = 0; i < HivePrefixes.Length; i++)
 		{
-			string prefix = hivePrefixes[i];
+			string prefix = HivePrefixes[i];
 			if (normalized.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
 			{
 				normalized = normalized[prefix.Length..];

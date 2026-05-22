@@ -215,6 +215,8 @@ internal sealed partial class ViewExportedFunctionsVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
 
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 			MainInfoBar.WriteInfo("Searching for DLL files among the selected files and directories.");
 
 			(List<ExportedFunctionDisplayEntry> Entries, List<string> Failures, int totalDlls) = await Task.Run(() =>

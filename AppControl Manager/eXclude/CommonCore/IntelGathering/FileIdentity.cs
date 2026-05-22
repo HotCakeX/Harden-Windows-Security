@@ -319,8 +319,7 @@ internal sealed class FileIdentity
 		IEnumerable<FileIdentity> fileIdentities,
 		InfoBarSettings infoBarSettings)
 	{
-		DateTime now = DateTime.Now;
-		string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
+		string formattedDateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 		string fileName = $"AppControlManager_Data_Export_{formattedDateTime}.json";
 
 		string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, fileName);

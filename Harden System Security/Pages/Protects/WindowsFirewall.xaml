@@ -67,7 +67,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Border Margin="0,10,0,10"
+                        <Border Margin="0,5,0,5"
                                 Grid.Row="0"
                                 Style="{StaticResource GridCardStyle}" Padding="8">
 
@@ -471,9 +471,9 @@
                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.FWRuleColWidth3, Mode=OneWay}"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Text="{x:Bind DisplayString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                        <TextBlock Text="{x:Bind Direction}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                        <TextBlock Text="{x:Bind Action}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                        <TextBlock Text="{x:Bind DisplayString}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0"/>
+                                        <TextBlock Text="{x:Bind Direction}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1"/>
+                                        <TextBlock Text="{x:Bind Action}" Style="{StaticResource ListViewCellTextBlock}" FontFamily="{x:Bind VMs:ViewModelProvider.WindowsFirewallVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2"/>
                                     </Grid>
                                 </DataTemplate>
                             </customUI:ListViewV2.ItemTemplate>

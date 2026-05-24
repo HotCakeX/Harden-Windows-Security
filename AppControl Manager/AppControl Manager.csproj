@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/Microsoft.Windows.CsWinRT.targets -->
+    <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/Microsoft.Windows.CsWinRT.targets -->
 
-	<!-- Global -->
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<RootNamespace>AppControlManager</RootNamespace>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<UseWinUI>true</UseWinUI>
-		<EnableMsixTooling>true</EnableMsixTooling>
+    <!-- Global -->
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <RootNamespace>AppControlManager</RootNamespace>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <UseWinUI>true</UseWinUI>
+        <EnableMsixTooling>true</EnableMsixTooling>
 
-		<!-- https://learn.microsoft.com/microsoft-edge/webview2/how-to/static -->
-		<WebView2LoaderPreference>Static</WebView2LoaderPreference>
+        <!-- https://learn.microsoft.com/microsoft-edge/webview2/how-to/static -->
+        <WebView2LoaderPreference>Static</WebView2LoaderPreference>
 
-		<!-- CsWinRT has certain requirements for it: https://github.com/microsoft/CsWinRT
+        <!-- CsWinRT has certain requirements for it: https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
@@ -21,9 +21,9 @@
         By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especailly the perview versions.
         If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
         -->
-		<WindowsSdkPackageVersion>10.0.26100.84</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.84</WindowsSdkPackageVersion>
 
-		<!--
+        <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
         so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK
 
@@ -31,65 +31,65 @@
         and satisfy the requirements of the MSIX installer.
         https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads
         -->
-		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
-		<Description>A modern secure application that simplifies management of Application Control in Windows.</Description>
+        <Description>A modern secure application that simplifies management of Application Control in Windows.</Description>
 
-		<PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
-		<PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
+        <PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
+        <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
 
-		<!-- Automatically created for packing -->
-		<!-- https://learn.microsoft.com/windows/msix/app-installer/create-appinstallerfile-vs -->
-		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-		<AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
-		<!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
-		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+        <!-- Automatically created for packing -->
+        <!-- https://learn.microsoft.com/windows/msix/app-installer/create-appinstallerfile-vs -->
+        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+        <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+        <!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
+        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 
-		<!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
-		<!-- Defining it in each publish profile -->
-		<!-- <AppxPackageDir>MSIXOutputX64\</AppxPackageDir> -->
+        <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
+        <!-- Defining it in each publish profile -->
+        <!-- <AppxPackageDir>MSIXOutputX64\</AppxPackageDir> -->
 
-		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+        <GenerateTestArtifacts>True</GenerateTestArtifacts>
 
-		<!-- We create the bundle ourselves -->
-		<AppxBundle>Never</AppxBundle>
+        <!-- We create the bundle ourselves -->
+        <AppxBundle>Never</AppxBundle>
 
-		<AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
-		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-		<AssemblyName>AppControlManager</AssemblyName>
-		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
+        <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
+        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+        <AssemblyName>AppControlManager</AssemblyName>
+        <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.713.0</FileVersion>
-		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <FileVersion>2.0.713.0</FileVersion>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <AssemblyProduct>AppControlManager</AssemblyProduct>
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
         <AssemblyTitle>AppControlManager</AssemblyTitle>
         <AssemblyDescription>Application Control for Business Management</AssemblyDescription>
 
-		<StartupObject>AppControlManager.Program</StartupObject>
+        <StartupObject>AppControlManager.Program</StartupObject>
 
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
-		<Version>$(FileVersion)</Version>
-		<Copyright>© 2024-Present</Copyright>
-		<Title>AppControl Manager</Title>
+        <Version>$(FileVersion)</Version>
+        <Copyright>© 2024-Present</Copyright>
+        <Title>AppControl Manager</Title>
 
-		<!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc -->
-		<!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/background-gc -->
-		<!-- https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector -->
+        <!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc -->
+        <!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/background-gc -->
+        <!-- https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector -->
 
-		<!--
+        <!--
         <ServerGarbageCollection>true</ServerGarbageCollection>
         <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
         -->
 
-		<Configurations>Debug;Release</Configurations>
-	</PropertyGroup>
+        <Configurations>Debug;Release</Configurations>
+    </PropertyGroup>
 
-	<!--
+    <!--
     https://learn.microsoft.com/dotnet/core/deploying/native-aot/interop
 
     If we define a DirectPInvoke, then all DllImport/LibraryImport referencing that library name will be bound by the OS loader and not by the .NET probing mechanism.
@@ -97,53 +97,53 @@
     So if we do a direct P/invoke, we can ignore the CA5392 warning, or better yet, delete the DefaultDllImportSearchPath.
     Without the DirectPInvoke, .NET will use the complex probing rules and override mechanism that exist to load the appropriate DLL.
     -->
-	<ItemGroup Condition="'$(Platform)' == 'x64' OR '$(RuntimeIdentifier)' == 'win-x64'">
-		<DirectPInvoke Include="rust_interop" />
-		<NativeLibrary Include="./eXclude/Rust Interop Library/target/x86_64-pc-windows-msvc/release/rust_interop.lib" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(Platform)' == 'x64' OR '$(RuntimeIdentifier)' == 'win-x64'">
+        <DirectPInvoke Include="rust_interop" />
+        <NativeLibrary Include="./eXclude/Rust Interop Library/target/x86_64-pc-windows-msvc/release/rust_interop.lib" />
+    </ItemGroup>
 
-	<ItemGroup Condition="'$(Platform)' == 'arm64' OR '$(RuntimeIdentifier)' == 'win-arm64'">
-		<DirectPInvoke Include="rust_interop" />
-		<NativeLibrary Include="./eXclude/Rust Interop Library/target/aarch64-pc-windows-msvc/release/rust_interop.lib" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(Platform)' == 'arm64' OR '$(RuntimeIdentifier)' == 'win-arm64'">
+        <DirectPInvoke Include="rust_interop" />
+        <NativeLibrary Include="./eXclude/Rust Interop Library/target/aarch64-pc-windows-msvc/release/rust_interop.lib" />
+    </ItemGroup>
 
-	<!-- Only for Debug -->
-	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <!-- Only for Debug -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 
-		<EnableXAMLDiagnostics>true</EnableXAMLDiagnostics>
-		<NuGetAudit>false</NuGetAudit>
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <EnableXAMLDiagnostics>true</EnableXAMLDiagnostics>
+        <NuGetAudit>false</NuGetAudit>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 
-		<!--
+        <!--
              https://learn.microsoft.com/visualstudio/code-quality/disable-code-analysis
              This project utilizes extensive and comprehensive analyzers that can take a lot of time to complete.
              So we disable them for debug/design time and only run them during release configuration.
 		-->
 
-		<RunAnalyzers>false</RunAnalyzers>
+        <RunAnalyzers>false</RunAnalyzers>
 
-	</PropertyGroup>
+    </PropertyGroup>
 
-	<!-- Only for Release -->
-	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- Only for Release -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
 
-		<NuGetAudit>true</NuGetAudit>
+        <NuGetAudit>true</NuGetAudit>
 
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-		<!-- There should be absolutely no trim warnings before this can be enabled
+        <!-- There should be absolutely no trim warnings before this can be enabled
         Otherwise there is no guarantee that the app will work as expected at all times -->
-		<!-- https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options -->
-		<PublishTrimmed>True</PublishTrimmed>
-		<TrimMode>full</TrimMode>
-		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-		<ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-		<TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <!-- https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options -->
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
 
-		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
 
-		<!--
+        <!--
         Will cause the "Fold identical method bodies" feature to be implicitly enabled which can also be enabled by supplying "- -methodbodyfolding" to the ILC.exe .
         It also won't use "System.Private.StackTraceMetadata" during static code gen; supplying "- -methodbodyfolding" to the ILC.exe would not have this effect.
         Compared to that parameter, this option reduces package size even more but removes stack trace info.
@@ -153,189 +153,189 @@
 
         This is the only supported way to enable folding. Disabling stack traces means I don't care about stack, feel free to fold method bodies.
         -->
-		<StackTraceSupport>true</StackTraceSupport>
+        <StackTraceSupport>true</StackTraceSupport>
 
-		<PublishAot>True</PublishAot>
-		<OptimizationPreference>Speed</OptimizationPreference>
-		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-		<NuGetAuditMode>all</NuGetAuditMode>
-		<NuGetAuditLevel>low</NuGetAuditLevel>
+        <PublishAot>True</PublishAot>
+        <OptimizationPreference>Speed</OptimizationPreference>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <NuGetAuditMode>all</NuGetAuditMode>
+        <NuGetAuditLevel>low</NuGetAuditLevel>
 
-		<DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
+        <DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
 
-		<!-- Don't need this -->
-		<GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
+        <!-- Don't need this -->
+        <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
 
-		<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
-		<!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
-		<AnalysisModeDocumentation>All</AnalysisModeDocumentation>
-		<AnalysisModeGlobalization>All</AnalysisModeGlobalization>
-		<AnalysisModePerformance>All</AnalysisModePerformance>
-		<AnalysisModeInteroperability>All</AnalysisModeInteroperability>
+        <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
+        <AnalysisModeDocumentation>All</AnalysisModeDocumentation>
+        <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
+        <AnalysisModePerformance>All</AnalysisModePerformance>
+        <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
 
-	</PropertyGroup>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<DirectPInvoke Include="USER32" />
-		<DirectPInvoke Include="ADVAPI32" />
-		<DirectPInvoke Include="OLE32" />
-		<DirectPInvoke Include="NTDLL" />
-		<DirectPInvoke Include="BCRYPT" />
-	</ItemGroup>
+    <ItemGroup>
+        <DirectPInvoke Include="USER32" />
+        <DirectPInvoke Include="ADVAPI32" />
+        <DirectPInvoke Include="OLE32" />
+        <DirectPInvoke Include="NTDLL" />
+        <DirectPInvoke Include="BCRYPT" />
+    </ItemGroup>
 
-	<!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    <!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK NuGet
     package has not yet been restored. -->
-	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-		<ProjectCapability Include="Msix" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+        <ProjectCapability Include="Msix" />
+    </ItemGroup>
 
-	<!-- NuGet packages
+    <!-- NuGet packages
     All transitive/nested packages under the main packages are added as well
     so they can be updated separately and receive bug/security vulnerability fixes faster
     https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
     -->
-	<ItemGroup>
+    <ItemGroup>
 
-		<!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
-		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.84.1" />
-		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.84.1" />
-		<PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.84.1" />
-		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.8" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.0.12" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.8" />
+        <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.84.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.84.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.84.1" />
+        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.8" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.1.0" />
+        <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.8" />
 
-		<!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.18.0" />
+        <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
+        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.18.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3967.48" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
-		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.4" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.3" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.0.20" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.0.12" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260501103">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
+        <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.4" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.0.21" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.0.13" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260518100">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.8" />
 
-	</ItemGroup>
+    </ItemGroup>
 
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);APP_CONTROL_MANAGER</DefineConstants>
-	</PropertyGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);APP_CONTROL_MANAGER</DefineConstants>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<Content Include="CppInterop\ComManager.exe">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\Allow All Policy.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\Allow Microsoft Template.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\Blocking RMMs - Remote Monitor and Management.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\Dangerous-Script-Hosts-Blocking.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\Default Windows Template.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\Downloads-Defense-Measures.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\ISGBasedSupplementalPolicy.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\StrictKernelMode.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\StrictKernelMode_NoFlightRoots.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Shell\Shell.dll">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<None Include="..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
+    <ItemGroup>
+        <Content Include="CppInterop\ComManager.exe">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Allow All Policy.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Allow Microsoft Template.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Blocking RMMs - Remote Monitor and Management.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Dangerous-Script-Hosts-Blocking.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Default Windows Template.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Downloads-Defense-Measures.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\ISGBasedSupplementalPolicy.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\StrictKernelMode.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\StrictKernelMode_NoFlightRoots.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Shell\Shell.dll">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <None Include="..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
-	<!-- Only need this for Debug mode since we don't run the linker every time to absorb the static library -->
-	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<Content Include="RustInterop\rust_interop.dll">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-	<!-- Remove the rust_interop.dll from the Release build output -->
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<Compile Remove="RustInterop\rust_interop.dll" />
-		<Content Remove="RustInterop\rust_interop.dll" />
-		<None Remove="RustInterop\rust_interop.dll" />
-	</ItemGroup>
+    <!-- Only need this for Debug mode since we don't run the linker every time to absorb the static library -->
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <Content Include="RustInterop\rust_interop.dll">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <!-- Remove the rust_interop.dll from the Release build output -->
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <Compile Remove="RustInterop\rust_interop.dll" />
+        <Content Remove="RustInterop\rust_interop.dll" />
+        <None Remove="RustInterop\rust_interop.dll" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<Manifest Include="$(ApplicationManifest)" />
-	</ItemGroup>
+    <ItemGroup>
+        <Manifest Include="$(ApplicationManifest)" />
+    </ItemGroup>
 
-	<!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
-	<ItemGroup>
-		<Compile Remove="ReleaseNotes.txt" />
-		<Content Remove="ReleaseNotes.txt" />
-		<None Remove="ReleaseNotes.txt" />
+    <!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
+    <ItemGroup>
+        <Compile Remove="ReleaseNotes.txt" />
+        <Content Remove="ReleaseNotes.txt" />
+        <None Remove="ReleaseNotes.txt" />
 
-		<Compile Remove="version.txt" />
-		<Content Remove="version.txt" />
-		<None Remove="version.txt" />
+        <Compile Remove="version.txt" />
+        <Content Remove="version.txt" />
+        <None Remove="version.txt" />
 
-		<Compile Remove="MSIXBundleDownloadURL.txt" />
-		<Content Remove="MSIXBundleDownloadURL.txt" />
-		<None Remove="MSIXBundleDownloadURL.txt" />
+        <Compile Remove="MSIXBundleDownloadURL.txt" />
+        <Content Remove="MSIXBundleDownloadURL.txt" />
+        <None Remove="MSIXBundleDownloadURL.txt" />
 
-		<Compile Remove="ARM64MSBuildLog.binlog" />
-		<Content Remove="ARM64MSBuildLog.binlog" />
-		<None Remove="ARM64MSBuildLog.binlog" />
+        <Compile Remove="ARM64MSBuildLog.binlog" />
+        <Content Remove="ARM64MSBuildLog.binlog" />
+        <None Remove="ARM64MSBuildLog.binlog" />
 
-		<Compile Remove="X64MSBuildLog.binlog" />
-		<Content Remove="X64MSBuildLog.binlog" />
-		<None Remove="X64MSBuildLog.binlog" />
+        <Compile Remove="X64MSBuildLog.binlog" />
+        <Content Remove="X64MSBuildLog.binlog" />
+        <None Remove="X64MSBuildLog.binlog" />
 
-		<Compile Remove="MSIXOutputX64\**" />
-		<Content Remove="MSIXOutputX64\**" />
-		<None Remove="MSIXOutputX64\**" />
+        <Compile Remove="MSIXOutputX64\**" />
+        <Content Remove="MSIXOutputX64\**" />
+        <None Remove="MSIXOutputX64\**" />
 
-		<Compile Remove="MSIXOutputARM64\**" />
-		<Content Remove="MSIXOutputARM64\**" />
-		<None Remove="MSIXOutputARM64\**" />
+        <Compile Remove="MSIXOutputARM64\**" />
+        <Content Remove="MSIXOutputARM64\**" />
+        <None Remove="MSIXOutputARM64\**" />
 
-		<Compile Remove="MSIXBundleOutput\**" />
-		<Content Remove="MSIXBundleOutput\**" />
-		<None Remove="MSIXBundleOutput\**" />
+        <Compile Remove="MSIXBundleOutput\**" />
+        <Content Remove="MSIXBundleOutput\**" />
+        <None Remove="MSIXBundleOutput\**" />
 
-		<Compile Remove="Animated Icon Sources\**" />
-		<Content Remove="Animated Icon Sources\**" />
-		<None Remove="Animated Icon Sources\**" />
+        <Compile Remove="Animated Icon Sources\**" />
+        <Content Remove="Animated Icon Sources\**" />
+        <None Remove="Animated Icon Sources\**" />
 
-		<Compile Remove="eXclude\**" />
-		<Content Remove="eXclude\**" />
-		<None Remove="eXclude\**" />
+        <Compile Remove="eXclude\**" />
+        <Content Remove="eXclude\**" />
+        <None Remove="eXclude\**" />
 
-		<Compile Remove="target\**" />
-		<Content Remove="target\**" />
-		<None Remove="target\**" />
-	</ItemGroup>
+        <Compile Remove="target\**" />
+        <Content Remove="target\**" />
+        <None Remove="target\**" />
+    </ItemGroup>
 
-	<!-- Imports the Common Core -->
-	<Import Project="eXclude\CommonCore\CommonCore.projitems" Label="Shared" />
+    <!-- Imports the Common Core -->
+    <Import Project="eXclude\CommonCore\CommonCore.projitems" Label="Shared" />
 
 </Project>

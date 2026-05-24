@@ -3,3 +3,11 @@
 * You can now delete multiple exploit mitigations in the Exploit Mitigations page.
 
 * All list views in the app now respect the selected font family in the app's settings and when choosing font families, you can preview them in real time as you pick them.
+
+* Updated dependencies to the latest versions.
+
+* Updated the Microsoft Baseline page by adding the new Windows Server security baseline v2602 and removing the old v2506.
+
+* Removed the Microsoft Security baseline for Windows 11 22H2 entry because it no longer exists.
+
+* Added Microsoft Edge v139 Security Baseline to the Microsoft Baseline page. That means you can now apply the latest security baseline for Microsoft Edge to your devices, verify your system's compliance against it and removing them if you want. Moving forward, Microsoft Edge security baselines will continue to be supported in the app.

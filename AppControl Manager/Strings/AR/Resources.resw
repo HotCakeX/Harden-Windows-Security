@@ -7687,4 +7687,13 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>إخفاء نافذة التطبيق في منطقة الإعلام</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>غير متوفر</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>غير متوفر أو غير معروف</value>
+</data>
 </root>

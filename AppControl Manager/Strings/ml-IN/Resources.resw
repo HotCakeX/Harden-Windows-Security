@@ -7687,4 +7687,13 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ആപ്പ് വിൻഡോയെ അറിയിപ്പ് പ്രദേശത്തേക്ക് മറയ്ക്കുക</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>നില</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>ലഭ്യമല്ല</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>ലഭ്യമല്ല അല്ലെങ്കിൽ അറിയില്ല</value>
+</data>
 </root>

@@ -7687,4 +7687,13 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>הסתר את חלון היישום לאזור ההודעות</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>סטטוס</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>לא זמין</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>לא זמין או לא ידוע</value>
+</data>
 </root>

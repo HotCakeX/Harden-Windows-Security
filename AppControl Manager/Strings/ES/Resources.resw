@@ -7687,4 +7687,13 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ocultar la ventana de la aplicación en el área de notificación</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>No disponible o desconocido</value>
+</data>
 </root>

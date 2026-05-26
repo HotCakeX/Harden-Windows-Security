@@ -7687,4 +7687,13 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Masquer la fenêtre de l’application dans la zone de notification</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>Indisponible ou inconnu</value>
+</data>
 </root>

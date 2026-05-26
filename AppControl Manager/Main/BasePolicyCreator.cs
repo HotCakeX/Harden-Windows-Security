@@ -46,8 +46,8 @@ internal static partial class BasePolicyCreator
 		const string command = """
 -NoProfile -WindowStyle Hidden -Command ""try { Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile 'VulnerableDriverBlockList.zip' -ErrorAction Stop } catch { exit 1 };
 Expand-Archive -Path '.\VulnerableDriverBlockList.zip' -DestinationPath 'VulnerableDriverBlockList' -Force;
-$SiPolicy_EnforcedFile = Get-ChildItem -Recurse -File -Path '.\VulnerableDriverBlockList' -Filter 'SiPolicy_Enforced.p7b' | Select-Object -First 1;
-Move-Item -Path $SiPolicy_EnforcedFile.FullName -Destination ($env:SystemDrive + '\Windows\System32\CodeIntegrity\SiPolicy.p7b') -Force;
+$SiPolicy_EnforcedFile = Get-ChildItem -Recurse -File -Path '.\VulnerableDriverBlockList' -Filter '*cip' | Select-Object -First 1;
+CiTool.exe --update-policy $SiPolicy_EnforcedFile.FullName -json;
 $null = CiTool.exe --refresh -json;
 Remove-Item -Path '.\VulnerableDriverBlockList' -Recurse -Force;
 Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
@@ -121,15 +121,14 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		}
 	}
 
+	private const string MSDriverBlockListName = "Microsoft Recommended Driver Block Rules";
+
 	/// <summary>
 	/// A method to retrieve the Vulnerable Driver Block List from the Microsoft servers and deploy it to the system.
 	/// </summary>
 	/// <returns>The policy that was downloaded and created.</returns>
 	internal static PolicyFileRepresent DeployDriversBlockRules()
 	{
-		// Initialize the final destination of the SiPolicy file
-		string SiPolicyFinalDestination = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
-
 		// Download the zip file
 		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(Atlas.MSFTRecommendedDriverBlockRulesURL)
 								 .GetAwaiter().GetResult();
@@ -138,28 +137,34 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		using MemoryStream zipStream = new(fileBytes);
 		using ZipArchive zipArchive = new(zipStream, ZipArchiveMode.Read);
 
-		// Locate the SiPolicy_Enforced.p7b file within the zip archive
-		ZipArchiveEntry? siPolicyEntry = zipArchive.Entries.FirstOrDefault(entry => entry.Name.Equals("SiPolicy_Enforced.p7b", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("SiPolicy_Enforced.p7b was not found in the downloaded zip file.");
+		// Locate the current XML policy file in the archive so this method can still return a PolicyFileRepresent obj.
+		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(entry =>
+			string.Equals(entry.Name, "DriverPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase))
+			?? throw new FileNotFoundException("DriverPolicy_Enforced.xml was not found in the downloaded Vulnerable Driver Block List zip file.");
 
-		// Locate the SiPolicy_Enforced.xml file within the zip archive
-		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(entry => entry.Name.Equals("SiPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("SiPolicy_Enforced.xml was not found in the downloaded zip file.");
-
-		// Load the content of the XML file into an XmlDocument
 		XmlDocument xmlDoc = new();
-		using Stream xmlStream = xmlEntry.Open();
 
-		xmlDoc.Load(xmlStream);
+		using (Stream xmlStream = xmlEntry.Open())
+		{
+			xmlDoc.Load(xmlStream);
+		}
 
-		// Extract the SiPolicy file directly to the final destination, overwriting if it exists
-		siPolicyEntry.ExtractToFile(SiPolicyFinalDestination, true);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(null, xmlDoc);
+
+		// Set the policy name
+		PolicySettingsManager.SetPolicyName(policyObj, MSDriverBlockListName);
+
+		// Remove the audit mode rule option from it if it has it.
+		// Add rule so it can be deployed and enforced without reboot.
+		policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToRemove: [OptionType.EnabledAuditMode], rulesToAdd: [OptionType.EnabledUpdatePolicyNoReboot]);
 
 		Logger.Write(Atlas.GetStr("DeployDriversBlockRulesRefreshPoliciesMessage"));
 
-		CiToolHelper.RefreshPolicy();
+		CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
 
 		Logger.Write(Atlas.GetStr("DeployDriversBlockRulesDeployedMessage"));
 
-		return new(Management.Initialize(null, xmlDoc));
+		return new(policyObj);
 	}
 
 	/// <summary>
@@ -169,8 +174,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <returns>the the Microsoft recommended driver block rules base policy</returns>
 	internal static PolicyFileRepresent GetDriversBlockRules()
 	{
-		const string name = "Microsoft Recommended Driver Block Rules";
-
 		// Download the zip file
 		byte[] fileBytes = SecHttpClient.Instance.GetByteArrayAsync(Atlas.MSFTRecommendedDriverBlockRulesURL)
 								 .GetAwaiter().GetResult();
@@ -179,8 +182,8 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		using MemoryStream zipStream = new(fileBytes);
 		using ZipArchive zipArchive = new(zipStream, ZipArchiveMode.Read);
 
-		// Locate the SiPolicy_Enforced.xml file within the zip archive
-		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(entry => entry.Name.Equals("SiPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("SiPolicy_Enforced.xml was not found in the downloaded zip file.");
+		// Locate the DriverPolicy_Enforced.xml file within the zip archive
+		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(entry => entry.Name.Equals("DriverPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("DriverPolicy_Enforced.xml was not found in the downloaded zip file.");
 
 		// Load the content of the XML file into an XmlDocument
 		XmlDocument xmlDoc = new();
@@ -191,10 +194,11 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		SiPolicy.SiPolicy policyObj = Management.Initialize(null, xmlDoc);
 
 		// Set the policy name
-		PolicySettingsManager.SetPolicyName(policyObj, name);
+		PolicySettingsManager.SetPolicyName(policyObj, MSDriverBlockListName);
 
-		// Remove the audit mode rule option from it if it has it
-		policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToRemove: [OptionType.EnabledAuditMode]);
+		// Remove the audit mode rule option from it if it has it.
+		// Add rule so it can be deployed and enforced without reboot.
+		policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToRemove: [OptionType.EnabledAuditMode], rulesToAdd: [OptionType.EnabledUpdatePolicyNoReboot]);
 
 		return new(policyObj);
 	}

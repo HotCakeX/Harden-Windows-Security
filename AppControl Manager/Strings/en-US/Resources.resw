@@ -7687,4 +7687,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Hide the app window to the notification area</value>
   </data>
+  <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>Unavailable or Unknown</value>
+</data>
 </root>

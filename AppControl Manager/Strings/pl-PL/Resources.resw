@@ -7687,4 +7687,13 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ukryj okno aplikacji w obszarze powiadomień</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>Nie dotyczy</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>Niedostępne lub nieznane</value>
+</data>
 </root>

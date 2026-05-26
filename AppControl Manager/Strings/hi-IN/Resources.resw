@@ -7687,4 +7687,13 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ऐप विंडो को सूचना क्षेत्र में छिपाएँ</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>स्थिति</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>लागू नहीं</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>अनुपलब्ध या अज्ञात</value>
+</data>
 </root>

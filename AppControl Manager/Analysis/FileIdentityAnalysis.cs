@@ -329,19 +329,23 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		}
 	}
 
+	// Path.Data cannot bind to an empty string because WinUI must convert the value to Geometry.
+	// A zero-length path keeps empty charts blank while still providing valid geometry.
+	private const string EmptyLineChartPathData = "M 0,0 L 0,0";
+
 	// Chart Properties
 	internal List<PieSliceData> Chart_PieSlices { get; set => SP(ref field, value); } = [];
 
 	// Blocked Line Chart Properties
 	internal List<LinePointData> BlockedChart_LinePoints { get; set => SP(ref field, value); } = [];
-	internal string BlockedChart_LinePathData { get; set => SP(ref field, value); } = string.Empty;
+	internal string BlockedChart_LinePathData { get; set => SP(ref field, value); } = EmptyLineChartPathData;
 	internal List<AxisLabel> BlockedChart_YAxisLabels { get; set => SP(ref field, value); } = [];
 	internal List<AxisLabel> BlockedChart_XAxisLabels { get; set => SP(ref field, value); } = [];
 	internal List<ChartGridLine> BlockedChart_YGridLines { get; set => SP(ref field, value); } = [];
 
 	// Allowed Line Chart Properties
 	internal List<LinePointData> AllowedChart_LinePoints { get; set => SP(ref field, value); } = [];
-	internal string AllowedChart_LinePathData { get; set => SP(ref field, value); } = string.Empty;
+	internal string AllowedChart_LinePathData { get; set => SP(ref field, value); } = EmptyLineChartPathData;
 	internal List<AxisLabel> AllowedChart_YAxisLabels { get; set => SP(ref field, value); } = [];
 	internal List<AxisLabel> AllowedChart_XAxisLabels { get; set => SP(ref field, value); } = [];
 	internal List<ChartGridLine> AllowedChart_YGridLines { get; set => SP(ref field, value); } = [];
@@ -648,7 +652,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			if (isAllowed)
 			{
 				AllowedChart_LinePoints = [];
-				AllowedChart_LinePathData = string.Empty;
+				AllowedChart_LinePathData = EmptyLineChartPathData;
 				AllowedChart_YAxisLabels = [];
 				AllowedChart_XAxisLabels = [];
 				AllowedChart_YGridLines = [];
@@ -656,7 +660,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			else
 			{
 				BlockedChart_LinePoints = [];
-				BlockedChart_LinePathData = string.Empty;
+				BlockedChart_LinePathData = EmptyLineChartPathData;
 				BlockedChart_YAxisLabels = [];
 				BlockedChart_XAxisLabels = [];
 				BlockedChart_YGridLines = [];

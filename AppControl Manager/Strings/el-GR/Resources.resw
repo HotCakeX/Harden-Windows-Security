@@ -7687,4 +7687,13 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Απόκρυψη του παραθύρου της εφαρμογής στην περιοχή ειδοποιήσεων</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Κατάσταση</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>Μ/Δ</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>Μη διαθέσιμο ή άγνωστο</value>
+</data>
 </root>

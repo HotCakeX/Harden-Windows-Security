@@ -7687,4 +7687,13 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>アプリ ウィンドウを通知領域に隠します</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>ステータス</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>該当なし</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>利用不可または不明</value>
+</data>
 </root>

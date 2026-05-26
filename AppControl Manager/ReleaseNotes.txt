@@ -1,1 +1,7 @@
+* Updated the Microsoft Recommended Driver Block Rules deployment procedure to work with the new file content on the Microsoft's server. If you've used the "Auto Update" button in the "Create Policy" page before to setup a scheduled task to auto-update the blocklist, please press the button again after installing this update so that task will be updated with the new procedure. AppControl Manager always remains up-to-date to stay compatible and work with the latest changes introduced by Microsoft.
+
+* Fixed a bug with a chart in the Analysis page that happened when there were no blocked events to analyze: https://github.com/HotCakeX/Harden-Windows-Security/issues/1159
+
 * Updated dependencies to the latest versions.
+
+* Font family changes in the settings page can now be previewed in real time.

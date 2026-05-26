@@ -7687,4 +7687,13 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Appfenster in den Infobereich ausblenden</value>
   </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="NAText" xml:space="preserve">
+    <value>N/V</value>
+  </data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>Nicht verfügbar oder unbekannt</value>
+</data>
 </root>

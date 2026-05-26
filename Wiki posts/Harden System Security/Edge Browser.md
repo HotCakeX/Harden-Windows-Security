@@ -80,7 +80,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
     - [Microsoft Edge Beta channel change log](https://learn.microsoft.com/deployedge/microsoft-edge-relnote-beta-channel)
     - [Microsoft Edge Mobile stable channel change log](https://learn.microsoft.com/deployedge/microsoft-edge-relnote-mobile-stable-channel)
     - [Edge Insider for Beta/Dev/Canary channels](https://www.microsoft.com/en-us/edge/download/insider)
-    - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first
-        - [Reason why this app doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
+    - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first.
+        - **You can apply them via the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines#microsoft-edge-security-baseline)**.
 
 <br>

@@ -58,3 +58,9 @@ Each security measure has the following details:
 >
 
 <br>
+
+## Microsoft Edge Security Baseline
+
+Use this page to apply the latest Microsoft Edge Security Baseline to your devices, verify compliance with the baseline, or remove the baseline policies from your system. You can choose to apply or remove the entire Microsoft Edge Security Baseline, or manage individual policies one by one.
+
+<br>

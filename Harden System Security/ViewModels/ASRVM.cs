@@ -170,6 +170,14 @@ internal sealed partial class ASRVM : ViewModelBase
 
 	internal static readonly string JSONConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "AttackSurfaceReductionRules.json");
 
+	private static readonly string[] RequiredASROnlyExclusions =
+	[
+		CreatePackagedAppExclusionPath("HardenSystemSecurity.exe"),
+		CreatePackagedAppExclusionPath("QuantumRelayHSS.exe"),
+		CreatePackagedAppExclusionPath("DISMService.exe"),
+		CreatePackagedAppExclusionPath("CppInterop", "ComManager.exe")
+	];
+
 	/// <summary>
 	/// The parent policy that must be always applied when any rule or all rules are being applied and must be removed if all rules are going to be removed and set to NotConfigured.
 	/// </summary>
@@ -218,6 +226,40 @@ internal sealed partial class ASRVM : ViewModelBase
 			ASRItemsLVBound.Add(entry);
 			AllASRRules.Add(entry);
 		}
+	}
+
+	/// <summary>
+	/// Ensures the packaged HSS binaries stay in Defender's ASR-only exclusion list whenever ASR rules are applied from this VM.
+	/// https://github.com/HotCakeX/Harden-Windows-Security/issues/1158
+	/// Duplicates are not added/kept by the OS so it's okay to add the same paths multiple times without checking if they exist first.
+	/// </summary>
+	private static void AddRequiredASROnlyExclusions()
+	{
+		foreach (string item in RequiredASROnlyExclusions)
+		{
+			_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{item}\"");
+		}
+	}
+
+	/// <summary>
+	/// Builds an exclusion path from the current app layout and replaces only the versioned package directory with a wildcard,
+	/// so package updates continue matching without hardcoding the full WindowsApps path.
+	/// </summary>
+	private static string CreatePackagedAppExclusionPath(params string[] relativeSegments)
+	{
+		string packageDirectory = Path.TrimEndingDirectorySeparator(Path.GetFullPath(AppContext.BaseDirectory));
+		string[] pathSegments = [packageDirectory, .. relativeSegments];
+		string absoluteTargetPath = Path.GetFullPath(Path.Combine(pathSegments));
+		string? packageRootDirectory = Directory.GetParent(packageDirectory)?.FullName;
+
+		if (string.IsNullOrWhiteSpace(packageRootDirectory) ||
+			!string.Equals(Path.GetFileName(Path.TrimEndingDirectorySeparator(packageRootDirectory)), "WindowsApps", StringComparison.OrdinalIgnoreCase))
+		{
+			return absoluteTargetPath;
+		}
+
+		string relativePath = Path.GetRelativePath(packageDirectory, absoluteTargetPath);
+		return Path.Combine(packageRootDirectory, "*", relativePath);
 	}
 
 	/// <summary>
@@ -322,6 +364,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 				// Apply the policies to the system
 				RegistryPolicyParser.AddPoliciesToSystem(policiesToApply, GroupPolicyContext.Machine);
+				AddRequiredASROnlyExclusions();
 
 			});
 
@@ -381,6 +424,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				}
 
 				RegistryPolicyParser.AddPoliciesToSystem(policiesToApply, GroupPolicyContext.Machine);
+				AddRequiredASROnlyExclusions();
 
 			});
 
@@ -492,6 +536,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			await Task.Run(() =>
 			{
 				RegistryPolicyParser.AddPoliciesToSystem(ASRPolicyFromJSON, GroupPolicyContext.Machine);
+				AddRequiredASROnlyExclusions();
 			});
 
 			// Update UI to reflect the recommended states
@@ -757,6 +802,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				if (batch.Count > 0)
 				{
 					RegistryPolicyParser.AddPoliciesToSystem(batch, GroupPolicyContext.Machine);
+					AddRequiredASROnlyExclusions();
 				}
 
 			}, cancellationToken);

@@ -212,7 +212,7 @@
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.18.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3967.48" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
-        <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.4" />
+        <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.0.21" />
         <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.0.13" />

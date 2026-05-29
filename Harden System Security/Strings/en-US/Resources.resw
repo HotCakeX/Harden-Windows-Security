@@ -6542,4 +6542,244 @@ Thumbprint: {3}</value>
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Hide the app window to the notification area</value>
   </data>
+  <data name="DownloadManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>Download Manager</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Download files with parallel connections to accelerate download speeds and access advanced management features.</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Download files with parallel connections to accelerate download speeds and access advanced management features.</value>
+  </data>
+  <data name="DownloadManagerSettingsPageTitle" xml:space="preserve">
+    <value>Download Manager Settings</value>
+  </data>
+  <data name="DownloadManagerSettingsPageDescription" xml:space="preserve">
+    <value>Configure the download manager's settings based on your preferences.</value>
+  </data>
+  <data name="DownloadManagerStorageSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Header" xml:space="preserve">
+    <value>Save location</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Description" xml:space="preserve">
+    <value>Choose where completed downloads are saved. You can switch to another folder at any time and restore the operating system's default Downloads folder whenever you want.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choose where completed downloads are saved. You can switch to another folder at any time and restore the operating system's default Downloads folder whenever you want.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choose where completed downloads are saved. You can switch to another folder at any time and restore the operating system's default Downloads folder whenever you want.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Header" xml:space="preserve">
+    <value>Download Manager storage</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Description" xml:space="preserve">
+    <value>Download history, resumable progress, and resilient checkpoint data are stored in the app-local Download Manager storage.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Download history, resumable progress, and resilient checkpoint data are stored in the app-local Download Manager storage.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Download history, resumable progress, and resilient checkpoint data are stored in the app-local Download Manager storage.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.Content" xml:space="preserve">
+    <value>Restore default</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restore the default Downloads folder location.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restore the default Downloads folder location.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.Content" xml:space="preserve">
+    <value>Open storage location</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the location where the Download Manager stores its data.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the location where the Download Manager stores its data.</value>
+  </data>
+  <data name="DownloadManagerTransfersSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Transfers</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Header" xml:space="preserve">
+    <value>Simultaneous downloads</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Description" xml:space="preserve">
+    <value>Limit how many downloads may actively run at the same time. Remaining items stay queued and start automatically when a slot is available.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Limit how many downloads may actively run at the same time. Remaining items stay queued and start automatically when a slot is available.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Limit how many downloads may actively run at the same time. Remaining items stay queued and start automatically when a slot is available.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Header" xml:space="preserve">
+    <value>Parallel connections per download</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Description" xml:space="preserve">
+    <value>On supported servers, each download can be split into multiple resumable parts and fetched in parallel for higher throughput.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>On supported servers, each download can be split into multiple resumable parts and fetched in parallel for higher throughput.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>On supported servers, each download can be split into multiple resumable parts and fetched in parallel for higher throughput.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Header" xml:space="preserve">
+    <value>After downloads finish</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Description" xml:space="preserve">
+    <value>Choose whether the device stays on, sleeps, hibernates, or shuts down after every active and queued download has completed.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choose whether the device stays on, sleeps, hibernates, or shuts down after every active and queued download has completed.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choose whether the device stays on, sleeps, hibernates, or shuts down after every active and queued download has completed.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Header" xml:space="preserve">
+    <value>Existing download behavior</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Description" xml:space="preserve">
+    <value>Control what happens when the target file already exists on disk or is already tracked in the Download Manager.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Control what happens when the target file already exists on disk or is already tracked in the Download Manager.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Control what happens when the target file already exists on disk or is already tracked in the Download Manager.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Header" xml:space="preserve">
+    <value>Auto-remove completed items</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Description" xml:space="preserve">
+    <value>When enabled, finished downloads are removed from the Download Manager list and history automatically after completion while their downloaded files stay in the selected folder.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>When enabled, finished downloads are removed from the Download Manager list and history automatically after completion while their downloaded files stay in the selected folder.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>When enabled, finished downloads are removed from the Download Manager list and history automatically after completion while their downloaded files stay in the selected folder.</value>
+  </data>
+  <data name="DownloadManagerPresetsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Presets</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Header" xml:space="preserve">
+    <value>Slow preset (KB/s)</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Description" xml:space="preserve">
+    <value>Target speed for the Slow preset. Use it to keep downloads gentle on the connection while still preserving resumable progress.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Target speed for the Slow preset. Use it to keep downloads gentle on the connection while still preserving resumable progress.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Target speed for the Slow preset. Use it to keep downloads gentle on the connection while still preserving resumable progress.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Header" xml:space="preserve">
+    <value>Medium preset (KB/s)</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Description" xml:space="preserve">
+    <value>Target speed for the Medium preset when you want a balanced transfer rate without fully saturating the connection.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Target speed for the Medium preset when you want a balanced transfer rate without fully saturating the connection.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Target speed for the Medium preset when you want a balanced transfer rate without fully saturating the connection.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Header" xml:space="preserve">
+    <value>Full preset (KB/s)</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Description" xml:space="preserve">
+    <value>Choose whether the Full preset runs uncapped or uses its own saved limit.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choose whether the Full preset runs uncapped or uses its own saved limit.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choose whether the Full preset runs uncapped or uses its own saved limit.</value>
+  </data>
+  <data name="DownloadManagerFullPresetUnlimitedCheckBox.Content" xml:space="preserve">
+    <value>Use unlimited speed for the Full preset</value>
+  </data>
+  <data name="AddLinksAppBarButton.Label" xml:space="preserve">
+    <value>Add links</value>
+  </data>
+  <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add links to files to be downlaoded.</value>
+  </data>
+  <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add links to files to be downlaoded.</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the Download Manager settings page</value>
+  </data>
+  <data name="SettingsAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the Download Manager settings page</value>
+  </data>
+  <data name="AdjustDownloadPresetLimits.Text" xml:space="preserve">
+    <value>Adjust preset limits in settings</value>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>Slow</value>
+  </data>
+  <data name="Medium.Text" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="Full.Text" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="PauseAppBarButton.Label" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="PauseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pause the selected downloads</value>
+  </data>
+  <data name="PauseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pause the selected downloads</value>
+  </data>
+  <data name="ResumeAppBarButton.Label" xml:space="preserve">
+    <value>Resume</value>
+  </data>
+  <data name="ResumeAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Resume the selected downloads</value>
+  </data>
+  <data name="ResumeAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Resume the selected downloads</value>
+  </data>
+  <data name="DeleteAppBarButton.Label" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete the selected downloads and their files.</value>
+  </data>
+  <data name="DeleteAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete the selected downloads and their files.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.Label" xml:space="preserve">
+    <value>Remove from list</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove the selected downloads only from the list without deleting their files.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove the selected downloads only from the list without deleting their files.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Change download link</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Change the download link if the current one is expired or no longer available. The new link must point to the same file.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Change the download link if the current one is expired or no longer available. The new link must point to the same file.</value>
+  </data>
 </root>

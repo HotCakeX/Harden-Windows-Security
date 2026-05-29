@@ -246,6 +246,30 @@ internal static class SettingsBackupRestoreSerializer
 			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
 			$"'{nameof(Main.CustomSidebarPoliciesLibraryCacheLocation)}' must be empty or an absolute path."),
 
+		CreateStringWithCustomValidation(nameof(Main.DownloadManagerDirectory), "Absolute path or empty string", settings => settings.DownloadManagerDirectory, (settings, value) => settings.DownloadManagerDirectory = value,
+			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
+			$"'{nameof(Main.DownloadManagerDirectory)}' must be empty or an absolute path."),
+
+		CreateInt(nameof(Main.DownloadManagerMaximumSimultaneousDownloads), "Integer in range 1-16", 1, 16, settings => settings.DownloadManagerMaximumSimultaneousDownloads, (settings, value) => settings.DownloadManagerMaximumSimultaneousDownloads = value),
+
+		CreateInt(nameof(Main.DownloadManagerParallelConnectionsPerDownload), "Integer in range 1-32", 1, 32, settings => settings.DownloadManagerParallelConnectionsPerDownload, (settings, value) => settings.DownloadManagerParallelConnectionsPerDownload = value),
+
+		CreateInt(nameof(Main.DownloadManagerSlowPresetKilobytesPerSecond), "Integer in range 1-1048576", 1, 1_048_576, settings => settings.DownloadManagerSlowPresetKilobytesPerSecond, (settings, value) => settings.DownloadManagerSlowPresetKilobytesPerSecond = value),
+
+		CreateInt(nameof(Main.DownloadManagerMediumPresetKilobytesPerSecond), "Integer in range 1-1048576", 1, 1_048_576, settings => settings.DownloadManagerMediumPresetKilobytesPerSecond, (settings, value) => settings.DownloadManagerMediumPresetKilobytesPerSecond = value),
+
+		CreateInt(nameof(Main.DownloadManagerFullPresetKilobytesPerSecond), "Integer in range 1-1048576", 1, 1_048_576, settings => settings.DownloadManagerFullPresetKilobytesPerSecond, (settings, value) => settings.DownloadManagerFullPresetKilobytesPerSecond = value),
+
+		CreateInt(nameof(Main.DownloadManagerSelectedSpeedPreset), "Integer in range 0-2", 0, 2, settings => settings.DownloadManagerSelectedSpeedPreset, (settings, value) => settings.DownloadManagerSelectedSpeedPreset = value),
+
+		CreateBoolean(nameof(Main.DownloadManagerIsFullPresetUnlimited), settings => settings.DownloadManagerIsFullPresetUnlimited, (settings, value) => settings.DownloadManagerIsFullPresetUnlimited = value),
+
+		CreateInt(nameof(Main.DownloadManagerCompletionAction), "Integer in range 0-3", 0, 3, settings => settings.DownloadManagerCompletionAction, (settings, value) => settings.DownloadManagerCompletionAction = value),
+
+		CreateInt(nameof(Main.DownloadManagerExistingDownloadConflictBehavior), "Integer in range 0-2", 0, 2, settings => settings.DownloadManagerExistingDownloadConflictBehavior, (settings, value) => settings.DownloadManagerExistingDownloadConflictBehavior = value),
+
+		CreateBoolean(nameof(Main.DownloadManagerRemoveCompletedItemsFromList), settings => settings.DownloadManagerRemoveCompletedItemsFromList, (settings, value) => settings.DownloadManagerRemoveCompletedItemsFromList = value),
+
 		CreateFloat(nameof(Main.AcrylicThinLuminosityOpacity), "Number in range 0-1", 0F, 1F, settings => settings.AcrylicThinLuminosityOpacity, (settings, value) => settings.AcrylicThinLuminosityOpacity = value),
 
 		CreateFloat(nameof(Main.AcrylicThinTintOpacity), "Number in range 0-1", 0F, 1F, settings => settings.AcrylicThinTintOpacity, (settings, value) => settings.AcrylicThinTintOpacity = value),

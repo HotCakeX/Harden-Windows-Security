@@ -388,14 +388,22 @@ internal static class SpecializedStrategiesRegistry
 	internal static readonly Dictionary<string, ISpecializedVerificationStrategy> _verificationStrategies = new(StringComparer.OrdinalIgnoreCase);
 	internal static readonly Dictionary<string, List<ISpecializedApplyStrategy>> _applyStrategies = new(StringComparer.OrdinalIgnoreCase);
 	internal static readonly Dictionary<string, List<ISpecializedRemoveStrategy>> _removeStrategies = new(StringComparer.OrdinalIgnoreCase);
+	private static readonly Lock _registrationLock = new();
 
 	/// <summary>
 	/// Registers a specialized verification strategy for a specific policy.
 	/// </summary>
 	/// <param name="policyKey">The policy key in format "KeyName|ValueName"</param>
 	/// <param name="strategy">The specialized verification strategy</param>
-	internal static void RegisterSpecializedVerification(string policyKey, ISpecializedVerificationStrategy strategy) =>
-		_verificationStrategies[policyKey] = strategy;
+	internal static void RegisterSpecializedVerification(string policyKey, ISpecializedVerificationStrategy strategy)
+	{
+		// Search/catalog initialization can trigger multiple ViewModel-specific registration paths at the same time.
+		// Serialize writes to the shared strategy dictionaries so those parallel lazy initializers cannot corrupt them.
+		lock (_registrationLock)
+		{
+			_verificationStrategies[policyKey] = strategy;
+		}
+	}
 
 	/// <summary>
 	/// Registers a specialized apply strategy for a specific policy.
@@ -404,9 +412,12 @@ internal static class SpecializedStrategiesRegistry
 	/// <param name="strategy">The specialized apply strategy</param>
 	internal static void RegisterSpecializedApply(string policyKey, ISpecializedApplyStrategy strategy)
 	{
-		ref List<ISpecializedApplyStrategy>? applyListRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_applyStrategies, policyKey, out _);
-		applyListRef ??= new(2);
-		applyListRef.Add(strategy);
+		lock (_registrationLock)
+		{
+			ref List<ISpecializedApplyStrategy>? applyListRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_applyStrategies, policyKey, out _);
+			applyListRef ??= new(2);
+			applyListRef.Add(strategy);
+		}
 	}
 
 	/// <summary>
@@ -416,9 +427,12 @@ internal static class SpecializedStrategiesRegistry
 	/// <param name="strategy">The specialized remove strategy</param>
 	internal static void RegisterSpecializedRemove(string policyKey, ISpecializedRemoveStrategy strategy)
 	{
-		ref List<ISpecializedRemoveStrategy>? removeListRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_removeStrategies, policyKey, out _);
-		removeListRef ??= [];
-		removeListRef.Add(strategy);
+		lock (_registrationLock)
+		{
+			ref List<ISpecializedRemoveStrategy>? removeListRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_removeStrategies, policyKey, out _);
+			removeListRef ??= [];
+			removeListRef.Add(strategy);
+		}
 	}
 
 	/// <summary>

@@ -53,6 +53,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(AppControlManager.Pages.IntuneDeploymentDetails),
 		typeof(Pages.Extras.DuplicatePhotoFinder),
 		typeof(Pages.Extras.EXIFManager),
+		typeof(Pages.Extras.DownloadManager),
+		typeof(Pages.Extras.DownloadManagerSettings),
 		typeof(Pages.SandboxMaker)
 		];
 
@@ -277,6 +279,18 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			pages: [typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)]
 		);
 
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.DownloadManager)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("DownloadManagerNavigationViewItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.Extras.DownloadManager)]
+		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.DownloadManagerSettings)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("DownloadManagerNavigationViewItem/Content"), Atlas.GetStr("DownloadManagerSettingsPageTitle")],
+			pages: [typeof(HardenSystemSecurity.Pages.Extras.DownloadManager), typeof(HardenSystemSecurity.Pages.Extras.DownloadManagerSettings)]
+		);
+
 		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ServiceManager)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("ServiceManagerNavItem/Content")],
@@ -358,6 +372,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "CSP", typeof(Pages.CSP) },
 		{ "DuplicatePhotosFinder", typeof(Pages.Extras.DuplicatePhotoFinder) },
 		{ "EXIFManager", typeof(Pages.Extras.EXIFManager) },
+		{ "DownloadManager", typeof(Pages.Extras.DownloadManager) },
 		{ "ServiceManager", typeof(Pages.ServiceManager) },
 		{ "BootableDriveMaker", typeof(Pages.Extras.BootableDriveMaker) },
 		{ "ExploitMitigations", typeof(Pages.ExploitMitigations) },
@@ -409,6 +424,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePageCustomMSIXPath)] = Atlas.GetStr("UpdatePageCustomMSIXPath");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DuplicatePhotoFinder)] = Atlas.GetStr("DuplicatePhotosFinderNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.EXIFManager)] = Atlas.GetStr("EXIFManagerNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DownloadManager)] = Atlas.GetStr("DownloadManagerNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DownloadManagerSettings)] = Atlas.GetStr("DownloadManagerSettingsPageTitle");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ServiceManager)] = Atlas.GetStr("ServiceManagerNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.BootableDriveMaker)] = Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ExploitMitigations)] = Atlas.GetStr("ExploitMitigationsNavItem/Content");
@@ -508,6 +525,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the EXIF Manager navigation item.
 	/// </summary>
 	internal IconElement? EXIFManagerIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Download Manager navigation item.
+	/// </summary>
+	internal IconElement? DownloadManagerIcon { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Icon for the Service Manager navigation item.
@@ -621,6 +643,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Paint_roller()
 					};
 
+					DownloadManagerIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -8, -8, -8),
+						Source = new Document()
+					};
+
 					ServiceManagerIcon = new AnimatedIcon
 					{
 						Margin = new Thickness(0, -6, -6, -6),
@@ -718,6 +746,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					DownloadManagerIcon = new FontIcon
+					{
+						Glyph = "\uE896",
+						Foreground = accentBrush
+					};
+
 					ServiceManagerIcon = new FontIcon
 					{
 						Glyph = "\uEC7A",
@@ -743,6 +777,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					DuplicatePhotosFinderIcon = new FontIcon { Glyph = "\uF584" };
 					ExtrasIcon = new FontIcon { Glyph = "\uF6BA" };
 					EXIFManagerIcon = new FontIcon { Glyph = "\uEC5A" };
+					DownloadManagerIcon = new FontIcon { Glyph = "\uE896" };
 					ServiceManagerIcon = new FontIcon { Glyph = "\uEC7A" };
 					break;
 				}

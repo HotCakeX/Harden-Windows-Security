@@ -94,6 +94,17 @@ internal sealed partial class Main : ViewModelBase
 		FirewallSentinelPinnedPolicyID = ReadValue(nameof(FirewallSentinelPinnedPolicyID), FirewallSentinelPinnedPolicyID);
 		CacheAuthenticationTokensLocally = ReadValue(nameof(CacheAuthenticationTokensLocally), CacheAuthenticationTokensLocally);
 		CustomSidebarPoliciesLibraryCacheLocation = ReadValue(nameof(CustomSidebarPoliciesLibraryCacheLocation), CustomSidebarPoliciesLibraryCacheLocation);
+		DownloadManagerDirectory = ReadValue(nameof(DownloadManagerDirectory), DownloadManagerDirectory);
+		DownloadManagerMaximumSimultaneousDownloads = ReadValue(nameof(DownloadManagerMaximumSimultaneousDownloads), DownloadManagerMaximumSimultaneousDownloads);
+		DownloadManagerParallelConnectionsPerDownload = ReadValue(nameof(DownloadManagerParallelConnectionsPerDownload), DownloadManagerParallelConnectionsPerDownload);
+		DownloadManagerSlowPresetKilobytesPerSecond = ReadValue(nameof(DownloadManagerSlowPresetKilobytesPerSecond), DownloadManagerSlowPresetKilobytesPerSecond);
+		DownloadManagerMediumPresetKilobytesPerSecond = ReadValue(nameof(DownloadManagerMediumPresetKilobytesPerSecond), DownloadManagerMediumPresetKilobytesPerSecond);
+		DownloadManagerFullPresetKilobytesPerSecond = ReadValue(nameof(DownloadManagerFullPresetKilobytesPerSecond), DownloadManagerFullPresetKilobytesPerSecond);
+		DownloadManagerSelectedSpeedPreset = ReadValue(nameof(DownloadManagerSelectedSpeedPreset), DownloadManagerSelectedSpeedPreset);
+		DownloadManagerIsFullPresetUnlimited = ReadValue(nameof(DownloadManagerIsFullPresetUnlimited), DownloadManagerIsFullPresetUnlimited);
+		DownloadManagerCompletionAction = ReadValue(nameof(DownloadManagerCompletionAction), DownloadManagerCompletionAction);
+		DownloadManagerExistingDownloadConflictBehavior = ReadValue(nameof(DownloadManagerExistingDownloadConflictBehavior), DownloadManagerExistingDownloadConflictBehavior);
+		DownloadManagerRemoveCompletedItemsFromList = ReadValue(nameof(DownloadManagerRemoveCompletedItemsFromList), DownloadManagerRemoveCompletedItemsFromList);
 		AcrylicThinLuminosityOpacity = ReadValue(nameof(AcrylicThinLuminosityOpacity), AcrylicThinLuminosityOpacity);
 		AcrylicThinTintOpacity = ReadValue(nameof(AcrylicThinTintOpacity), AcrylicThinTintOpacity);
 		AcrylicThinTintColor = ReadValue(nameof(AcrylicThinTintColor), AcrylicThinTintColor);
@@ -631,6 +642,160 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// Optional custom directory for the Download Manager. Empty string means the OS Downloads directory.
+	/// </summary>
+	internal string DownloadManagerDirectory
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerDirectory), field);
+			}
+		}
+	} = string.Empty;
+
+	/// <summary>
+	/// Maximum number of simultaneous downloads the Download Manager can run.
+	/// </summary>
+	internal int DownloadManagerMaximumSimultaneousDownloads
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerMaximumSimultaneousDownloads), field);
+			}
+		}
+	} = 3;
+
+	/// <summary>
+	/// Maximum number of parallel connections each download can use when the source supports byte ranges.
+	/// </summary>
+	internal int DownloadManagerParallelConnectionsPerDownload
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerParallelConnectionsPerDownload), field);
+			}
+		}
+	} = 4;
+
+	/// <summary>
+	/// Slow preset download speed in kilobytes per second.
+	/// </summary>
+	internal int DownloadManagerSlowPresetKilobytesPerSecond
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerSlowPresetKilobytesPerSecond), field);
+			}
+		}
+	} = 100;
+
+	/// <summary>
+	/// Medium preset download speed in kilobytes per second.
+	/// </summary>
+	internal int DownloadManagerMediumPresetKilobytesPerSecond
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerMediumPresetKilobytesPerSecond), field);
+			}
+		}
+	} = 1000;
+
+	/// <summary>
+	/// Full preset download speed in kilobytes per second when unlimited mode is disabled.
+	/// </summary>
+	internal int DownloadManagerFullPresetKilobytesPerSecond
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerFullPresetKilobytesPerSecond), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Currently selected Download Manager speed preset.
+	/// </summary>
+	internal int DownloadManagerSelectedSpeedPreset
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerSelectedSpeedPreset), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the Full preset should run without a speed limit.
+	/// </summary>
+	internal bool DownloadManagerIsFullPresetUnlimited
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerIsFullPresetUnlimited), field);
+			}
+		}
+	} = true;
+
+	/// <summary>
+	/// What the Download Manager should do after all downloads finish.
+	/// </summary>
+	internal int DownloadManagerCompletionAction
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerCompletionAction), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// What to do when a matching download already exists.
+	/// </summary>
+	internal int DownloadManagerExistingDownloadConflictBehavior
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerExistingDownloadConflictBehavior), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether completed downloads should be removed from the Download Manager list after they finish.
+	/// </summary>
+	internal bool DownloadManagerRemoveCompletedItemsFromList
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DownloadManagerRemoveCompletedItemsFromList), field);
+			}
+		}
+	}
 
 	/// <summary>
 	/// The Luminosity Opacity of the Acrylic Thin backdrop.

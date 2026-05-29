@@ -6542,4 +6542,244 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>إخفاء نافذة التطبيق في منطقة الإعلام</value>
   </data>
+  <data name="DownloadManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>مدير التنزيلات</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نزّل الملفات باستخدام اتصالات متوازية لتسريع سرعات التنزيل والوصول إلى ميزات إدارة متقدمة.</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نزّل الملفات باستخدام اتصالات متوازية لتسريع سرعات التنزيل والوصول إلى ميزات إدارة متقدمة.</value>
+  </data>
+  <data name="DownloadManagerSettingsPageTitle" xml:space="preserve">
+    <value>إعدادات مدير التنزيلات</value>
+  </data>
+  <data name="DownloadManagerSettingsPageDescription" xml:space="preserve">
+    <value>قم بتكوين إعدادات مدير التنزيلات وفقاً لتفضيلاتك.</value>
+  </data>
+  <data name="DownloadManagerStorageSettingsSectionHeader.Text" xml:space="preserve">
+    <value>التخزين</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Header" xml:space="preserve">
+    <value>موقع الحفظ</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Description" xml:space="preserve">
+    <value>اختر المكان الذي يتم حفظ التنزيلات المكتملة فيه. يمكنك التبديل إلى مجلد آخر في أي وقت واستعادة مجلد التنزيلات الافتراضي لنظام التشغيل متى أردت.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر المكان الذي يتم حفظ التنزيلات المكتملة فيه. يمكنك التبديل إلى مجلد آخر في أي وقت واستعادة مجلد التنزيلات الافتراضي لنظام التشغيل متى أردت.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر المكان الذي يتم حفظ التنزيلات المكتملة فيه. يمكنك التبديل إلى مجلد آخر في أي وقت واستعادة مجلد التنزيلات الافتراضي لنظام التشغيل متى أردت.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Header" xml:space="preserve">
+    <value>تخزين مدير التنزيلات</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Description" xml:space="preserve">
+    <value>يتم تخزين سجل التنزيلات والتقدم القابل للاستئناف وبيانات نقاط التحقق المتينة في التخزين المحلي للتطبيق الخاص بمدير التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يتم تخزين سجل التنزيلات والتقدم القابل للاستئناف وبيانات نقاط التحقق المتينة في التخزين المحلي للتطبيق الخاص بمدير التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يتم تخزين سجل التنزيلات والتقدم القابل للاستئناف وبيانات نقاط التحقق المتينة في التخزين المحلي للتطبيق الخاص بمدير التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.Content" xml:space="preserve">
+    <value>استعادة الافتراضي</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعادة الموقع الافتراضي لمجلد التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعادة الموقع الافتراضي لمجلد التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.Content" xml:space="preserve">
+    <value>فتح موقع التخزين</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>افتح الموقع الذي يخزن فيه مدير التنزيلات بياناته.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>افتح الموقع الذي يخزن فيه مدير التنزيلات بياناته.</value>
+  </data>
+  <data name="DownloadManagerTransfersSettingsSectionHeader.Text" xml:space="preserve">
+    <value>عمليات النقل</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Header" xml:space="preserve">
+    <value>التنزيلات المتزامنة</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Description" xml:space="preserve">
+    <value>حدد عدد التنزيلات التي يمكن أن تعمل بشكل نشط في الوقت نفسه. تبقى العناصر المتبقية في قائمة الانتظار وتبدأ تلقائياً عند توفر خانة.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد عدد التنزيلات التي يمكن أن تعمل بشكل نشط في الوقت نفسه. تبقى العناصر المتبقية في قائمة الانتظار وتبدأ تلقائياً عند توفر خانة.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد عدد التنزيلات التي يمكن أن تعمل بشكل نشط في الوقت نفسه. تبقى العناصر المتبقية في قائمة الانتظار وتبدأ تلقائياً عند توفر خانة.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Header" xml:space="preserve">
+    <value>الاتصالات المتوازية لكل تنزيل</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Description" xml:space="preserve">
+    <value>على الخوادم المدعومة، يمكن تقسيم كل تنزيل إلى عدة أجزاء قابلة للاستئناف وجلبها بالتوازي لتحقيق معدل نقل أعلى.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>على الخوادم المدعومة، يمكن تقسيم كل تنزيل إلى عدة أجزاء قابلة للاستئناف وجلبها بالتوازي لتحقيق معدل نقل أعلى.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>على الخوادم المدعومة، يمكن تقسيم كل تنزيل إلى عدة أجزاء قابلة للاستئناف وجلبها بالتوازي لتحقيق معدل نقل أعلى.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Header" xml:space="preserve">
+    <value>بعد انتهاء التنزيلات</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Description" xml:space="preserve">
+    <value>اختر ما إذا كان الجهاز سيبقى قيد التشغيل أو سينتقل إلى السكون أو الإسبات أو سيتم إيقاف تشغيله بعد اكتمال كل التنزيلات النشطة والموجودة في قائمة الانتظار.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر ما إذا كان الجهاز سيبقى قيد التشغيل أو سينتقل إلى السكون أو الإسبات أو سيتم إيقاف تشغيله بعد اكتمال كل التنزيلات النشطة والموجودة في قائمة الانتظار.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر ما إذا كان الجهاز سيبقى قيد التشغيل أو سينتقل إلى السكون أو الإسبات أو سيتم إيقاف تشغيله بعد اكتمال كل التنزيلات النشطة والموجودة في قائمة الانتظار.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Header" xml:space="preserve">
+    <value>سلوك التنزيلات الموجودة</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Description" xml:space="preserve">
+    <value>تحكم فيما يحدث عندما يكون الملف الهدف موجوداً بالفعل على القرص أو تتم متابعته بالفعل في مدير التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحكم فيما يحدث عندما يكون الملف الهدف موجوداً بالفعل على القرص أو تتم متابعته بالفعل في مدير التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحكم فيما يحدث عندما يكون الملف الهدف موجوداً بالفعل على القرص أو تتم متابعته بالفعل في مدير التنزيلات.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Header" xml:space="preserve">
+    <value>إزالة العناصر المكتملة تلقائياً</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Description" xml:space="preserve">
+    <value>عند التمكين، تتم إزالة التنزيلات المكتملة تلقائياً من قائمة مدير التنزيلات وسجله بعد اكتمالها، بينما تبقى الملفات التي تم تنزيلها في المجلد المحدد.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عند التمكين، تتم إزالة التنزيلات المكتملة تلقائياً من قائمة مدير التنزيلات وسجله بعد اكتمالها، بينما تبقى الملفات التي تم تنزيلها في المجلد المحدد.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عند التمكين، تتم إزالة التنزيلات المكتملة تلقائياً من قائمة مدير التنزيلات وسجله بعد اكتمالها، بينما تبقى الملفات التي تم تنزيلها في المجلد المحدد.</value>
+  </data>
+  <data name="DownloadManagerPresetsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>الإعدادات المسبقة</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Header" xml:space="preserve">
+    <value>الإعداد المسبق البطيء (KB/s)</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Description" xml:space="preserve">
+    <value>السرعة المستهدفة للإعداد المسبق البطيء. استخدمه للحفاظ على تأثير التنزيلات لطيفاً على الاتصال مع الاستمرار في الاحتفاظ بالتقدم القابل للاستئناف.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>السرعة المستهدفة للإعداد المسبق البطيء. استخدمه للحفاظ على تأثير التنزيلات لطيفاً على الاتصال مع الاستمرار في الاحتفاظ بالتقدم القابل للاستئناف.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>السرعة المستهدفة للإعداد المسبق البطيء. استخدمه للحفاظ على تأثير التنزيلات لطيفاً على الاتصال مع الاستمرار في الاحتفاظ بالتقدم القابل للاستئناف.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Header" xml:space="preserve">
+    <value>الإعداد المسبق المتوسط (KB/s)</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Description" xml:space="preserve">
+    <value>السرعة المستهدفة للإعداد المسبق المتوسط عندما تريد معدل نقل متوازناً من دون تشبع الاتصال بالكامل.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>السرعة المستهدفة للإعداد المسبق المتوسط عندما تريد معدل نقل متوازناً من دون تشبع الاتصال بالكامل.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>السرعة المستهدفة للإعداد المسبق المتوسط عندما تريد معدل نقل متوازناً من دون تشبع الاتصال بالكامل.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Header" xml:space="preserve">
+    <value>الإعداد المسبق الكامل (KB/s)</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Description" xml:space="preserve">
+    <value>اختر ما إذا كان الإعداد المسبق الكامل سيعمل من دون حد أو سيستخدم الحد المحفوظ الخاص به.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر ما إذا كان الإعداد المسبق الكامل سيعمل من دون حد أو سيستخدم الحد المحفوظ الخاص به.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر ما إذا كان الإعداد المسبق الكامل سيعمل من دون حد أو سيستخدم الحد المحفوظ الخاص به.</value>
+  </data>
+  <data name="DownloadManagerFullPresetUnlimitedCheckBox.Content" xml:space="preserve">
+    <value>استخدام سرعة غير محدودة للإعداد المسبق الكامل</value>
+  </data>
+  <data name="AddLinksAppBarButton.Label" xml:space="preserve">
+    <value>إضافة روابط</value>
+  </data>
+  <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أضف روابط إلى الملفات المطلوب تنزيلها.</value>
+  </data>
+  <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أضف روابط إلى الملفات المطلوب تنزيلها.</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="SettingsAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح صفحة إعدادات مدير التنزيلات</value>
+  </data>
+  <data name="SettingsAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح صفحة إعدادات مدير التنزيلات</value>
+  </data>
+  <data name="AdjustDownloadPresetLimits.Text" xml:space="preserve">
+    <value>ضبط حدود الإعدادات المسبقة في الإعدادات</value>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>بطيء</value>
+  </data>
+  <data name="Medium.Text" xml:space="preserve">
+    <value>متوسط</value>
+  </data>
+  <data name="Full.Text" xml:space="preserve">
+    <value>كامل</value>
+  </data>
+  <data name="PauseAppBarButton.Label" xml:space="preserve">
+    <value>إيقاف مؤقت</value>
+  </data>
+  <data name="PauseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إيقاف التنزيلات المحددة مؤقتاً</value>
+  </data>
+  <data name="PauseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إيقاف التنزيلات المحددة مؤقتاً</value>
+  </data>
+  <data name="ResumeAppBarButton.Label" xml:space="preserve">
+    <value>استئناف</value>
+  </data>
+  <data name="ResumeAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استئناف التنزيلات المحددة</value>
+  </data>
+  <data name="ResumeAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استئناف التنزيلات المحددة</value>
+  </data>
+  <data name="DeleteAppBarButton.Label" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="DeleteAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>احذف التنزيلات المحددة وملفاتها.</value>
+  </data>
+  <data name="DeleteAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>احذف التنزيلات المحددة وملفاتها.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.Label" xml:space="preserve">
+    <value>إزالة من القائمة</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أزل التنزيلات المحددة من القائمة فقط من دون حذف ملفاتها.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أزل التنزيلات المحددة من القائمة فقط من دون حذف ملفاتها.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تغيير رابط التنزيل</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>غيّر رابط التنزيل إذا كان الرابط الحالي منتهي الصلاحية أو لم يعد متاحاً. يجب أن يشير الرابط الجديد إلى الملف نفسه.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>غيّر رابط التنزيل إذا كان الرابط الحالي منتهي الصلاحية أو لم يعد متاحاً. يجب أن يشير الرابط الجديد إلى الملف نفسه.</value>
+  </data>
 </root>

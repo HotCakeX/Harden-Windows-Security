@@ -2392,6 +2392,17 @@ internal static unsafe partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool ExitWindowsEx(uint uFlags, uint dwReason);
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/powrprof/nf-powrprof-setsuspendstate
+	/// </summary>
+	[LibraryImport("powrprof.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetSuspendState(
+		[MarshalAs(UnmanagedType.Bool)] bool Hibernate,
+		[MarshalAs(UnmanagedType.Bool)] bool ForceCritical,
+		[MarshalAs(UnmanagedType.Bool)] bool DisableWakeEvent);
+
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-setcomputernameexw

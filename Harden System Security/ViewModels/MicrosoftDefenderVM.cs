@@ -1235,8 +1235,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 
 		// Validate characters (no invalid file name characters allowed)
-		char[] invalidChars = Path.GetInvalidFileNameChars();
-		if (extension.IndexOfAny(invalidChars) >= 0)
+		if (extension.IndexOfAny(Atlas.InvalidFileNameChars.Value) >= 0)
 		{
 			throw new InvalidOperationException(Atlas.GetStr("FileExtensionHasInvalidCharsMsg"));
 		}
@@ -1346,8 +1345,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 
 		// Validate characters (no invalid file name characters allowed)
-		char[] invalidChars = Path.GetInvalidFileNameChars();
-		if (name.IndexOfAny(invalidChars) >= 0)
+		if (name.IndexOfAny(Atlas.InvalidFileNameChars.Value) >= 0)
 		{
 			throw new InvalidOperationException(Atlas.GetStr("ProcessNameHasInvalidCharsMsg"));
 		}

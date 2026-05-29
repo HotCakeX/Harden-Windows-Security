@@ -1110,6 +1110,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			AutomationProperties.SetHelpText(EXIFManagerNavigationViewItem, Atlas.GetStr("EXIFManagerNavigationViewItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(EXIFManagerNavigationViewItem, Atlas.GetStr("EXIFManagerNavigationViewItem/ToolTipService/ToolTip"));
 
+			DownloadManagerNavigationViewItem.Content = Atlas.GetStr("DownloadManagerNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(DownloadManagerNavigationViewItem, Atlas.GetStr("DownloadManagerNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(DownloadManagerNavigationViewItem, Atlas.GetStr("DownloadManagerNavigationViewItem/ToolTipService/ToolTip"));
+
 			ServiceManagerNavItem.Content = Atlas.GetStr("ServiceManagerNavItem/Content");
 			AutomationProperties.SetHelpText(ServiceManagerNavItem, Atlas.GetStr("ServiceManagerNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(ServiceManagerNavItem, Atlas.GetStr("ServiceManagerNavItem/ToolTipService/ToolTip"));

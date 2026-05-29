@@ -133,6 +133,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<EXIFManagerVM> _eXIFManagerVM = new(() =>
 		new EXIFManagerVM(), false);
 
+	private static readonly Lazy<DownloadManagerVM> _downloadManagerVM = new(() =>
+		new DownloadManagerVM(), false);
+
 	private static readonly Lazy<ServiceManagerVM> _serviceManagerVM = new(() =>
 		new ServiceManagerVM(), false);
 
@@ -191,6 +194,7 @@ internal static class ViewModelProvider
 	internal static CSPVM CSPVM => _cspVM.Value;
 	internal static DuplicatePhotoFinderVM DuplicatePhotoFinderVM => _duplicateImageFinderVM.Value;
 	internal static EXIFManagerVM EXIFManagerVM => _eXIFManagerVM.Value;
+	internal static DownloadManagerVM DownloadManagerVM => _downloadManagerVM.Value;
 	internal static ServiceManagerVM ServiceManagerVM => _serviceManagerVM.Value;
 	internal static SystemShutdownInfoDialogVM SystemShutdownInfoDialogVM => _systemShutdownInfoDialogVM.Value;
 	internal static BootableDriveMakerVM BootableDriveMakerVM => _bootableDriveMakerVM.Value;

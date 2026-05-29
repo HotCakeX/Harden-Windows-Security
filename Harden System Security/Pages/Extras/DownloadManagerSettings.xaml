@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.Extras.DownloadManagerSettings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <customUI:InfoBarV2 Grid.Row="0"                                
+                                IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
+
+            <StackPanel Grid.Row="1"
+                        Spacing="{StaticResource SettingsCardSpacing}">
+                <TextBlock x:Uid="DownloadManagerStorageSettingsSectionHeader"
+                           Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+
+                <CCToolKit:SettingsCard x:Uid="DownloadManagerSaveLocationSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE74E;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <CCToolKit:WrapPanel HorizontalSpacing="5"
+                                         Orientation="Vertical"
+                                         VerticalAlignment="Center"
+                                         VerticalSpacing="8">
+                        <TextBox Text="{x:Bind ViewModel.ResolvedDownloadDirectory, Mode=OneWay}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 IsReadOnly="True"
+                                 MaxWidth="200" />
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="5">
+                            <Button x:Uid="GenericBrowseButton"
+                                    VerticalAlignment="Center"
+                                    Click="{x:Bind ViewModel.BrowseDownloadDirectoryAsync}" />
+                            <Button x:Uid="DownloadManagerRestoreDefaultFolderButton"
+                                    Click="{x:Bind ViewModel.RestoreDefaultDownloadDirectoryAsync}"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="{x:Bind ViewModel.CanRestoreDefaultDownloadDirectory, Mode=OneWay}" />
+                        </StackPanel>
+                    </CCToolKit:WrapPanel>
+                </CCToolKit:SettingsCard>
+
+                <customUI:SettingsCardV2 x:Uid="DownloadManagerStorageLocationSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE965;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <Button x:Uid="DownloadManagerOpenStorageLocationButton"
+                            HorizontalAlignment="Left"
+                            Click="{x:Bind ViewModel.OpenDownloadManagerStorageLocation}" />
+                </customUI:SettingsCardV2>
+
+                <TextBlock x:Uid="DownloadManagerTransfersSettingsSectionHeader"
+                           Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+
+                <CCToolKit:SettingsCard x:Uid="DownloadManagerSimultaneousDownloadsSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF57D;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <NumberBox Value="{x:Bind ViewModel.MaximumSimultaneousDownloadsValue, Mode=TwoWay}"
+                               Minimum="1"
+                               Maximum="16"
+                               SmallChange="1"
+                               SpinButtonPlacementMode="Inline" />
+                </CCToolKit:SettingsCard>
+
+                <CCToolKit:SettingsCard x:Uid="DownloadManagerParallelConnectionsSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE95A;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <NumberBox Value="{x:Bind ViewModel.ParallelConnectionsPerDownloadValue, Mode=TwoWay}"
+                               Minimum="1"
+                               Maximum="32"
+                               SmallChange="1"
+                               SpinButtonPlacementMode="Inline" />
+                </CCToolKit:SettingsCard>
+
+                <customUI:SettingsCardV2 x:Uid="DownloadManagerAfterFinishSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF1B1;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <ComboBox HorizontalAlignment="Left"
+                              SelectedIndex="{x:Bind ViewModel.CompletionActionValue, Mode=TwoWay}"
+                              ItemsSource="{x:Bind ViewModel.DownloadCompletionActionOptions, Mode=OneWay}" />
+                </customUI:SettingsCardV2>
+
+                <customUI:SettingsCardV2 x:Uid="DownloadManagerExistingBehaviorSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF584;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <ComboBox HorizontalAlignment="Left"
+                              SelectedIndex="{x:Bind ViewModel.ExistingDownloadConflictBehaviorValue, Mode=TwoWay}"
+                              ItemsSource="{x:Bind ViewModel.ExistingDownloadConflictBehaviorOptions, Mode=OneWay}" />
+                </customUI:SettingsCardV2>
+
+                <customUI:SettingsCardV2 x:Uid="DownloadManagerAutoRemoveCompletedSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE74D;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.RemoveCompletedDownloadsFromList, Mode=TwoWay}"
+                                  x:Uid="ToggleSwitchGeneral" />
+                </customUI:SettingsCardV2>
+
+                <TextBlock x:Uid="DownloadManagerPresetsSettingsSectionHeader"
+                           Loaded="{x:Bind ViewModel.DownloadManagerPresetsSectionHeader_Loaded}"
+                           Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+
+                <CCToolKit:SettingsCard x:Uid="DownloadManagerSlowPresetSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xEC48;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <NumberBox Value="{x:Bind ViewModel.SlowPresetKilobytesPerSecondValue, Mode=TwoWay}"
+                               Minimum="1"
+                               Maximum="1048576"
+                               SmallChange="100"
+                               SpinButtonPlacementMode="Inline" />
+                </CCToolKit:SettingsCard>
+
+                <CCToolKit:SettingsCard x:Uid="DownloadManagerMediumPresetSettingsCard">
+                    <CCToolKit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xEC49;" />
+                    </CCToolKit:SettingsCard.HeaderIcon>
+                    <NumberBox Value="{x:Bind ViewModel.MediumPresetKilobytesPerSecondValue, Mode=TwoWay}"
+                               Minimum="1"
+                               Maximum="1048576"
+                               SmallChange="100"
+                               SpinButtonPlacementMode="Inline" />
+                </CCToolKit:SettingsCard>
+
+                <customUI:SettingsCardV2 x:Uid="DownloadManagerFullPresetSettingsCard">
+                    <customUI:SettingsCardV2.HeaderIcon>
+                        <FontIcon Glyph="&#xEC4A;" />
+                    </customUI:SettingsCardV2.HeaderIcon>
+                    <StackPanel Spacing="8">
+                        <CheckBox x:Uid="DownloadManagerFullPresetUnlimitedCheckBox"
+                                  IsChecked="{x:Bind ViewModel.IsFullPresetUnlimited, Mode=TwoWay}" />
+                        <NumberBox Value="{x:Bind ViewModel.FullPresetKilobytesPerSecondValue, Mode=TwoWay}"
+                                   Minimum="1"
+                                   Maximum="1048576"
+                                   SmallChange="100"
+                                   IsEnabled="{x:Bind ViewModel.CanEditFullPresetLimit, Mode=OneWay}"
+                                   SpinButtonPlacementMode="Inline" />
+                    </StackPanel>
+                </customUI:SettingsCardV2>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

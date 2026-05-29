@@ -6542,4 +6542,244 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ऐप विंडो को सूचना क्षेत्र में छिपाएँ</value>
   </data>
+  <data name="DownloadManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>डाउनलोड प्रबंधक</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डाउनलोड गति बढ़ाने और उन्नत प्रबंधन सुविधाओं तक पहुँचने के लिए समानांतर कनेक्शनों के साथ फ़ाइलें डाउनलोड करें।</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डाउनलोड गति बढ़ाने और उन्नत प्रबंधन सुविधाओं तक पहुँचने के लिए समानांतर कनेक्शनों के साथ फ़ाइलें डाउनलोड करें।</value>
+  </data>
+  <data name="DownloadManagerSettingsPageTitle" xml:space="preserve">
+    <value>डाउनलोड प्रबंधक सेटिंग्स</value>
+  </data>
+  <data name="DownloadManagerSettingsPageDescription" xml:space="preserve">
+    <value>अपनी प्राथमिकताओं के अनुसार डाउनलोड प्रबंधक की सेटिंग्स कॉन्फ़िगर करें।</value>
+  </data>
+  <data name="DownloadManagerStorageSettingsSectionHeader.Text" xml:space="preserve">
+    <value>स्टोरेज</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Header" xml:space="preserve">
+    <value>सहेजने का स्थान</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Description" xml:space="preserve">
+    <value>चुनें कि पूर्ण हो चुके डाउनलोड कहाँ सहेजे जाएँ। आप किसी भी समय किसी अन्य फ़ोल्डर पर स्विच कर सकते हैं और जब चाहें ऑपरेटिंग सिस्टम के डिफ़ॉल्ट Downloads फ़ोल्डर को पुनर्स्थापित कर सकते हैं।</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चुनें कि पूर्ण हो चुके डाउनलोड कहाँ सहेजे जाएँ। आप किसी भी समय किसी अन्य फ़ोल्डर पर स्विच कर सकते हैं और जब चाहें ऑपरेटिंग सिस्टम के डिफ़ॉल्ट Downloads फ़ोल्डर को पुनर्स्थापित कर सकते हैं।</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चुनें कि पूर्ण हो चुके डाउनलोड कहाँ सहेजे जाएँ। आप किसी भी समय किसी अन्य फ़ोल्डर पर स्विच कर सकते हैं और जब चाहें ऑपरेटिंग सिस्टम के डिफ़ॉल्ट Downloads फ़ोल्डर को पुनर्स्थापित कर सकते हैं।</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Header" xml:space="preserve">
+    <value>डाउनलोड प्रबंधक स्टोरेज</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Description" xml:space="preserve">
+    <value>डाउनलोड इतिहास, फिर से शुरू की जा सकने वाली प्रगति और मज़बूत चेकपॉइंट डेटा ऐप-लोकल डाउनलोड प्रबंधक स्टोरेज में संग्रहीत किए जाते हैं।</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डाउनलोड इतिहास, फिर से शुरू की जा सकने वाली प्रगति और मज़बूत चेकपॉइंट डेटा ऐप-लोकल डाउनलोड प्रबंधक स्टोरेज में संग्रहीत किए जाते हैं।</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डाउनलोड इतिहास, फिर से शुरू की जा सकने वाली प्रगति और मज़बूत चेकपॉइंट डेटा ऐप-लोकल डाउनलोड प्रबंधक स्टोरेज में संग्रहीत किए जाते हैं।</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.Content" xml:space="preserve">
+    <value>डिफ़ॉल्ट पुनर्स्थापित करें</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डिफ़ॉल्ट Downloads फ़ोल्डर स्थान पुनर्स्थापित करें।</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डिफ़ॉल्ट Downloads फ़ोल्डर स्थान पुनर्स्थापित करें।</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.Content" xml:space="preserve">
+    <value>स्टोरेज स्थान खोलें</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वह स्थान खोलें जहाँ डाउनलोड प्रबंधक अपना डेटा संग्रहीत करता है।</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वह स्थान खोलें जहाँ डाउनलोड प्रबंधक अपना डेटा संग्रहीत करता है।</value>
+  </data>
+  <data name="DownloadManagerTransfersSettingsSectionHeader.Text" xml:space="preserve">
+    <value>स्थानांतरण</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Header" xml:space="preserve">
+    <value>एक साथ डाउनलोड</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Description" xml:space="preserve">
+    <value>सीमित करें कि एक ही समय में कितने डाउनलोड सक्रिय रूप से चल सकते हैं। शेष आइटम कतार में रहते हैं और स्थान उपलब्ध होते ही अपने आप शुरू हो जाते हैं।</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सीमित करें कि एक ही समय में कितने डाउनलोड सक्रिय रूप से चल सकते हैं। शेष आइटम कतार में रहते हैं और स्थान उपलब्ध होते ही अपने आप शुरू हो जाते हैं।</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सीमित करें कि एक ही समय में कितने डाउनलोड सक्रिय रूप से चल सकते हैं। शेष आइटम कतार में रहते हैं और स्थान उपलब्ध होते ही अपने आप शुरू हो जाते हैं।</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Header" xml:space="preserve">
+    <value>प्रति डाउनलोड समानांतर कनेक्शन</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Description" xml:space="preserve">
+    <value>समर्थित सर्वरों पर, प्रत्येक डाउनलोड को कई फिर से शुरू की जा सकने वाली भागों में विभाजित किया जा सकता है और अधिक थ्रूपुट के लिए समानांतर रूप से प्राप्त किया जा सकता है।</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>समर्थित सर्वरों पर, प्रत्येक डाउनलोड को कई फिर से शुरू की जा सकने वाली भागों में विभाजित किया जा सकता है और अधिक थ्रूपुट के लिए समानांतर रूप से प्राप्त किया जा सकता है।</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>समर्थित सर्वरों पर, प्रत्येक डाउनलोड को कई फिर से शुरू की जा सकने वाली भागों में विभाजित किया जा सकता है और अधिक थ्रूपुट के लिए समानांतर रूप से प्राप्त किया जा सकता है।</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Header" xml:space="preserve">
+    <value>डाउनलोड समाप्त होने के बाद</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Description" xml:space="preserve">
+    <value>चुनें कि सभी सक्रिय और कतारबद्ध डाउनलोड पूरे होने के बाद डिवाइस चालू रहे, स्लीप में जाए, हाइबरनेट करे या बंद हो जाए।</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चुनें कि सभी सक्रिय और कतारबद्ध डाउनलोड पूरे होने के बाद डिवाइस चालू रहे, स्लीप में जाए, हाइबरनेट करे या बंद हो जाए।</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चुनें कि सभी सक्रिय और कतारबद्ध डाउनलोड पूरे होने के बाद डिवाइस चालू रहे, स्लीप में जाए, हाइबरनेट करे या बंद हो जाए।</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Header" xml:space="preserve">
+    <value>मौजूदा डाउनलोड का व्यवहार</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Description" xml:space="preserve">
+    <value>नियंत्रित करें कि जब लक्ष्य फ़ाइल पहले से डिस्क पर मौजूद हो या पहले से डाउनलोड प्रबंधक में ट्रैक की जा रही हो तो क्या हो।</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>नियंत्रित करें कि जब लक्ष्य फ़ाइल पहले से डिस्क पर मौजूद हो या पहले से डाउनलोड प्रबंधक में ट्रैक की जा रही हो तो क्या हो।</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>नियंत्रित करें कि जब लक्ष्य फ़ाइल पहले से डिस्क पर मौजूद हो या पहले से डाउनलोड प्रबंधक में ट्रैक की जा रही हो तो क्या हो।</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Header" xml:space="preserve">
+    <value>पूर्ण हुए आइटम अपने आप हटाएँ</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Description" xml:space="preserve">
+    <value>सक्षम होने पर, पूर्ण हुए डाउनलोड पूरे होने के बाद अपने आप डाउनलोड प्रबंधक की सूची और इतिहास से हटा दिए जाते हैं, जबकि उनकी डाउनलोड की गई फ़ाइलें चुने गए फ़ोल्डर में बनी रहती हैं।</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सक्षम होने पर, पूर्ण हुए डाउनलोड पूरे होने के बाद अपने आप डाउनलोड प्रबंधक की सूची और इतिहास से हटा दिए जाते हैं, जबकि उनकी डाउनलोड की गई फ़ाइलें चुने गए फ़ोल्डर में बनी रहती हैं।</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सक्षम होने पर, पूर्ण हुए डाउनलोड पूरे होने के बाद अपने आप डाउनलोड प्रबंधक की सूची और इतिहास से हटा दिए जाते हैं, जबकि उनकी डाउनलोड की गई फ़ाइलें चुने गए फ़ोल्डर में बनी रहती हैं।</value>
+  </data>
+  <data name="DownloadManagerPresetsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>पूर्वनिर्धारण</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Header" xml:space="preserve">
+    <value>धीमा पूर्वनिर्धारण (KB/s)</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Description" xml:space="preserve">
+    <value>धीमे पूर्वनिर्धारण के लिए लक्ष्य गति। इसका उपयोग करें ताकि डाउनलोड कनेक्शन पर हल्का प्रभाव डालें और फिर भी फिर से शुरू की जा सकने वाली प्रगति सुरक्षित रहे।</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>धीमे पूर्वनिर्धारण के लिए लक्ष्य गति। इसका उपयोग करें ताकि डाउनलोड कनेक्शन पर हल्का प्रभाव डालें और फिर भी फिर से शुरू की जा सकने वाली प्रगति सुरक्षित रहे।</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>धीमे पूर्वनिर्धारण के लिए लक्ष्य गति। इसका उपयोग करें ताकि डाउनलोड कनेक्शन पर हल्का प्रभाव डालें और फिर भी फिर से शुरू की जा सकने वाली प्रगति सुरक्षित रहे।</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Header" xml:space="preserve">
+    <value>मध्यम पूर्वनिर्धारण (KB/s)</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Description" xml:space="preserve">
+    <value>मध्यम पूर्वनिर्धारण के लिए लक्ष्य गति, जब आप कनेक्शन को पूरी तरह संतृप्त किए बिना संतुलित स्थानांतरण दर चाहते हैं।</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>मध्यम पूर्वनिर्धारण के लिए लक्ष्य गति, जब आप कनेक्शन को पूरी तरह संतृप्त किए बिना संतुलित स्थानांतरण दर चाहते हैं।</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>मध्यम पूर्वनिर्धारण के लिए लक्ष्य गति, जब आप कनेक्शन को पूरी तरह संतृप्त किए बिना संतुलित स्थानांतरण दर चाहते हैं।</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Header" xml:space="preserve">
+    <value>पूर्ण पूर्वनिर्धारण (KB/s)</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Description" xml:space="preserve">
+    <value>चुनें कि पूर्ण पूर्वनिर्धारण बिना सीमा के चलेगा या अपनी सहेजी गई सीमा का उपयोग करेगा।</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चुनें कि पूर्ण पूर्वनिर्धारण बिना सीमा के चलेगा या अपनी सहेजी गई सीमा का उपयोग करेगा।</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चुनें कि पूर्ण पूर्वनिर्धारण बिना सीमा के चलेगा या अपनी सहेजी गई सीमा का उपयोग करेगा।</value>
+  </data>
+  <data name="DownloadManagerFullPresetUnlimitedCheckBox.Content" xml:space="preserve">
+    <value>पूर्ण पूर्वनिर्धारण के लिए असीमित गति का उपयोग करें</value>
+  </data>
+  <data name="AddLinksAppBarButton.Label" xml:space="preserve">
+    <value>लिंक जोड़ें</value>
+  </data>
+  <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डाउनलोड की जाने वाली फ़ाइलों के लिंक जोड़ें।</value>
+  </data>
+  <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डाउनलोड की जाने वाली फ़ाइलों के लिंक जोड़ें।</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>सेटिंग्स</value>
+  </data>
+  <data name="SettingsAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डाउनलोड प्रबंधक सेटिंग्स पृष्ठ खोलें</value>
+  </data>
+  <data name="SettingsAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डाउनलोड प्रबंधक सेटिंग्स पृष्ठ खोलें</value>
+  </data>
+  <data name="AdjustDownloadPresetLimits.Text" xml:space="preserve">
+    <value>सेटिंग्स में पूर्वनिर्धारण सीमाएँ समायोजित करें</value>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>धीमा</value>
+  </data>
+  <data name="Medium.Text" xml:space="preserve">
+    <value>मध्यम</value>
+  </data>
+  <data name="Full.Text" xml:space="preserve">
+    <value>पूर्ण</value>
+  </data>
+  <data name="PauseAppBarButton.Label" xml:space="preserve">
+    <value>रोकें</value>
+  </data>
+  <data name="PauseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित डाउनलोड रोकें</value>
+  </data>
+  <data name="PauseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित डाउनलोड रोकें</value>
+  </data>
+  <data name="ResumeAppBarButton.Label" xml:space="preserve">
+    <value>फिर शुरू करें</value>
+  </data>
+  <data name="ResumeAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित डाउनलोड फिर शुरू करें</value>
+  </data>
+  <data name="ResumeAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित डाउनलोड फिर शुरू करें</value>
+  </data>
+  <data name="DeleteAppBarButton.Label" xml:space="preserve">
+    <value>हटाएँ</value>
+  </data>
+  <data name="DeleteAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित डाउनलोड और उनकी फ़ाइलें हटाएँ।</value>
+  </data>
+  <data name="DeleteAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित डाउनलोड और उनकी फ़ाइलें हटाएँ।</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.Label" xml:space="preserve">
+    <value>सूची से हटाएँ</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित डाउनलोड को उनकी फ़ाइलें हटाए बिना केवल सूची से हटाएँ।</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित डाउनलोड को उनकी फ़ाइलें हटाए बिना केवल सूची से हटाएँ।</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.Text" xml:space="preserve">
+    <value>डाउनलोड लिंक बदलें</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यदि वर्तमान डाउनलोड लिंक की समय-सीमा समाप्त हो गई है या वह अब उपलब्ध नहीं है, तो उसे बदलें। नया लिंक उसी फ़ाइल की ओर होना चाहिए।</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यदि वर्तमान डाउनलोड लिंक की समय-सीमा समाप्त हो गई है या वह अब उपलब्ध नहीं है, तो उसे बदलें। नया लिंक उसी फ़ाइल की ओर होना चाहिए।</value>
+  </data>
 </root>

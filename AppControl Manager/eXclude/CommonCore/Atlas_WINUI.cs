@@ -159,4 +159,6 @@ internal static partial class Atlas
 	internal static readonly string LogsDirectory = Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
 #endif
 
+
+	internal static readonly Lazy<char[]> InvalidFileNameChars = new(Path.GetInvalidFileNameChars, LazyThreadSafetyMode.None);
 }

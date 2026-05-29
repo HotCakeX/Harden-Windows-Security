@@ -947,7 +947,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 	private static string GetSafeFileName(string sandboxName)
 	{
 		StringBuilder fileNameBuilder = new(sandboxName.Length);
-		HashSet<char> invalidCharacters = [.. Path.GetInvalidFileNameChars()];
+		HashSet<char> invalidCharacters = [.. Atlas.InvalidFileNameChars.Value];
 
 		foreach (char character in sandboxName.Trim())
 		{

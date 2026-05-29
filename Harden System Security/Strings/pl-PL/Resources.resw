@@ -6542,4 +6542,244 @@ Odcisk Palca: {3}</value>
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ukryj okno aplikacji w obszarze powiadomień</value>
   </data>
+  <data name="DownloadManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>Menedżer pobierania</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobieraj pliki za pomocą połączeń równoległych, aby zwiększyć szybkość pobierania i uzyskać dostęp do zaawansowanych funkcji zarządzania.</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobieraj pliki za pomocą połączeń równoległych, aby zwiększyć szybkość pobierania i uzyskać dostęp do zaawansowanych funkcji zarządzania.</value>
+  </data>
+  <data name="DownloadManagerSettingsPageTitle" xml:space="preserve">
+    <value>Ustawienia Menedżera pobierania</value>
+  </data>
+  <data name="DownloadManagerSettingsPageDescription" xml:space="preserve">
+    <value>Skonfiguruj ustawienia menedżera pobierania zgodnie ze swoimi preferencjami.</value>
+  </data>
+  <data name="DownloadManagerStorageSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Magazyn</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Header" xml:space="preserve">
+    <value>Lokalizacja zapisu</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz, gdzie mają być zapisywane ukończone pobrania. W każdej chwili możesz przełączyć się na inny folder i przywrócić domyślny folder Pobrane systemu operacyjnego.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz, gdzie mają być zapisywane ukończone pobrania. W każdej chwili możesz przełączyć się na inny folder i przywrócić domyślny folder Pobrane systemu operacyjnego.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz, gdzie mają być zapisywane ukończone pobrania. W każdej chwili możesz przełączyć się na inny folder i przywrócić domyślny folder Pobrane systemu operacyjnego.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Header" xml:space="preserve">
+    <value>Magazyn Menedżera pobierania</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Description" xml:space="preserve">
+    <value>Historia pobierania, wznawialny postęp i odporne dane punktów kontrolnych są przechowywane w lokalnym magazynie Menedżera pobierania aplikacji.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Historia pobierania, wznawialny postęp i odporne dane punktów kontrolnych są przechowywane w lokalnym magazynie Menedżera pobierania aplikacji.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Historia pobierania, wznawialny postęp i odporne dane punktów kontrolnych są przechowywane w lokalnym magazynie Menedżera pobierania aplikacji.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.Content" xml:space="preserve">
+    <value>Przywróć domyślne</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przywróć domyślną lokalizację folderu Pobrane.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przywróć domyślną lokalizację folderu Pobrane.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.Content" xml:space="preserve">
+    <value>Otwórz lokalizację magazynu</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz lokalizację, w której Menedżer pobierania przechowuje swoje dane.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz lokalizację, w której Menedżer pobierania przechowuje swoje dane.</value>
+  </data>
+  <data name="DownloadManagerTransfersSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Transfery</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Header" xml:space="preserve">
+    <value>Pobierania jednoczesne</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Description" xml:space="preserve">
+    <value>Ogranicz liczbę pobrań, które mogą aktywnie działać w tym samym czasie. Pozostałe elementy pozostaną w kolejce i rozpoczną się automatycznie, gdy zwolni się miejsce.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ogranicz liczbę pobrań, które mogą aktywnie działać w tym samym czasie. Pozostałe elementy pozostaną w kolejce i rozpoczną się automatycznie, gdy zwolni się miejsce.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ogranicz liczbę pobrań, które mogą aktywnie działać w tym samym czasie. Pozostałe elementy pozostaną w kolejce i rozpoczną się automatycznie, gdy zwolni się miejsce.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Header" xml:space="preserve">
+    <value>Połączenia równoległe na pobranie</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Description" xml:space="preserve">
+    <value>Na obsługiwanych serwerach każde pobranie może zostać podzielone na wiele wznawialnych części i pobierane równolegle, aby uzyskać wyższą przepustowość.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Na obsługiwanych serwerach każde pobranie może zostać podzielone na wiele wznawialnych części i pobierane równolegle, aby uzyskać wyższą przepustowość.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Na obsługiwanych serwerach każde pobranie może zostać podzielone na wiele wznawialnych części i pobierane równolegle, aby uzyskać wyższą przepustowość.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Header" xml:space="preserve">
+    <value>Po zakończeniu pobierania</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz, czy urządzenie ma pozostać włączone, przejść w stan uśpienia, hibernacji lub wyłączyć się po zakończeniu wszystkich aktywnych i oczekujących pobrań.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz, czy urządzenie ma pozostać włączone, przejść w stan uśpienia, hibernacji lub wyłączyć się po zakończeniu wszystkich aktywnych i oczekujących pobrań.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz, czy urządzenie ma pozostać włączone, przejść w stan uśpienia, hibernacji lub wyłączyć się po zakończeniu wszystkich aktywnych i oczekujących pobrań.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Header" xml:space="preserve">
+    <value>Zachowanie dla istniejących pobrań</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Description" xml:space="preserve">
+    <value>Określ, co ma się stać, gdy plik docelowy już istnieje na dysku lub jest już śledzony w Menedżerze pobierania.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Określ, co ma się stać, gdy plik docelowy już istnieje na dysku lub jest już śledzony w Menedżerze pobierania.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Określ, co ma się stać, gdy plik docelowy już istnieje na dysku lub jest już śledzony w Menedżerze pobierania.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Header" xml:space="preserve">
+    <value>Automatycznie usuwaj ukończone elementy</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Description" xml:space="preserve">
+    <value>Po włączeniu tej opcji ukończone pobrania są automatycznie usuwane z listy i historii Menedżera pobierania po zakończeniu, a pobrane pliki pozostają w wybranym folderze.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Po włączeniu tej opcji ukończone pobrania są automatycznie usuwane z listy i historii Menedżera pobierania po zakończeniu, a pobrane pliki pozostają w wybranym folderze.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Po włączeniu tej opcji ukończone pobrania są automatycznie usuwane z listy i historii Menedżera pobierania po zakończeniu, a pobrane pliki pozostają w wybranym folderze.</value>
+  </data>
+  <data name="DownloadManagerPresetsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Ustawienia wstępne</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Header" xml:space="preserve">
+    <value>Ustawienie wstępne Wolne (KB/s)</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Description" xml:space="preserve">
+    <value>Docelowa prędkość dla ustawienia wstępnego Wolne. Użyj jej, aby łagodnie obciążać łącze i nadal zachować możliwość wznawiania postępu.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Docelowa prędkość dla ustawienia wstępnego Wolne. Użyj jej, aby łagodnie obciążać łącze i nadal zachować możliwość wznawiania postępu.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Docelowa prędkość dla ustawienia wstępnego Wolne. Użyj jej, aby łagodnie obciążać łącze i nadal zachować możliwość wznawiania postępu.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Header" xml:space="preserve">
+    <value>Ustawienie wstępne Średnie (KB/s)</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Description" xml:space="preserve">
+    <value>Docelowa prędkość dla ustawienia wstępnego Średnie, gdy chcesz uzyskać zrównoważoną szybkość transferu bez pełnego nasycania łącza.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Docelowa prędkość dla ustawienia wstępnego Średnie, gdy chcesz uzyskać zrównoważoną szybkość transferu bez pełnego nasycania łącza.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Docelowa prędkość dla ustawienia wstępnego Średnie, gdy chcesz uzyskać zrównoważoną szybkość transferu bez pełnego nasycania łącza.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Header" xml:space="preserve">
+    <value>Ustawienie wstępne Pełne (KB/s)</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz, czy ustawienie wstępne Pełne ma działać bez limitu, czy używać własnego zapisanego limitu.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz, czy ustawienie wstępne Pełne ma działać bez limitu, czy używać własnego zapisanego limitu.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz, czy ustawienie wstępne Pełne ma działać bez limitu, czy używać własnego zapisanego limitu.</value>
+  </data>
+  <data name="DownloadManagerFullPresetUnlimitedCheckBox.Content" xml:space="preserve">
+    <value>Użyj nieograniczonej prędkości dla ustawienia wstępnego Pełne</value>
+  </data>
+  <data name="AddLinksAppBarButton.Label" xml:space="preserve">
+    <value>Dodaj linki</value>
+  </data>
+  <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj linki do plików do pobrania.</value>
+  </data>
+  <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj linki do plików do pobrania.</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="SettingsAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz stronę ustawień Menedżera pobierania</value>
+  </data>
+  <data name="SettingsAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz stronę ustawień Menedżera pobierania</value>
+  </data>
+  <data name="AdjustDownloadPresetLimits.Text" xml:space="preserve">
+    <value>Dostosuj limity ustawień wstępnych w ustawieniach</value>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>Wolne</value>
+  </data>
+  <data name="Medium.Text" xml:space="preserve">
+    <value>Średnie</value>
+  </data>
+  <data name="Full.Text" xml:space="preserve">
+    <value>Pełne</value>
+  </data>
+  <data name="PauseAppBarButton.Label" xml:space="preserve">
+    <value>Wstrzymaj</value>
+  </data>
+  <data name="PauseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wstrzymaj wybrane pobrania</value>
+  </data>
+  <data name="PauseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wstrzymaj wybrane pobrania</value>
+  </data>
+  <data name="ResumeAppBarButton.Label" xml:space="preserve">
+    <value>Wznów</value>
+  </data>
+  <data name="ResumeAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wznów wybrane pobrania</value>
+  </data>
+  <data name="ResumeAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wznów wybrane pobrania</value>
+  </data>
+  <data name="DeleteAppBarButton.Label" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="DeleteAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wybrane pobrania i ich pliki.</value>
+  </data>
+  <data name="DeleteAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wybrane pobrania i ich pliki.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.Label" xml:space="preserve">
+    <value>Usuń z listy</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wybrane pobrania tylko z listy bez usuwania ich plików.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wybrane pobrania tylko z listy bez usuwania ich plików.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zmień link pobierania</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zmień link pobierania, jeśli obecny wygasł lub nie jest już dostępny. Nowy link musi wskazywać ten sam plik.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zmień link pobierania, jeśli obecny wygasł lub nie jest już dostępny. Nowy link musi wskazywać ten sam plik.</value>
+  </data>
 </root>

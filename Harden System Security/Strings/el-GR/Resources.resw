@@ -6542,4 +6542,244 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Απόκρυψη του παραθύρου της εφαρμογής στην περιοχή ειδοποιήσεων</value>
   </data>
+  <data name="DownloadManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>Διαχειριστής λήψεων</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κάντε λήψη αρχείων με παράλληλες συνδέσεις για ταχύτερες ταχύτητες λήψης και πρόσβαση σε προηγμένες δυνατότητες διαχείρισης.</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κάντε λήψη αρχείων με παράλληλες συνδέσεις για ταχύτερες ταχύτητες λήψης και πρόσβαση σε προηγμένες δυνατότητες διαχείρισης.</value>
+  </data>
+  <data name="DownloadManagerSettingsPageTitle" xml:space="preserve">
+    <value>Ρυθμίσεις Διαχειριστή λήψεων</value>
+  </data>
+  <data name="DownloadManagerSettingsPageDescription" xml:space="preserve">
+    <value>Ρυθμίστε τις επιλογές του διαχειριστή λήψεων σύμφωνα με τις προτιμήσεις σας.</value>
+  </data>
+  <data name="DownloadManagerStorageSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Αποθήκευση</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Header" xml:space="preserve">
+    <value>Τοποθεσία αποθήκευσης</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε πού αποθηκεύονται οι ολοκληρωμένες λήψεις. Μπορείτε να αλλάξετε σε άλλο φάκελο οποιαδήποτε στιγμή και να επαναφέρετε τον προεπιλεγμένο φάκελο Λήψεις του λειτουργικού συστήματος όποτε θέλετε.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε πού αποθηκεύονται οι ολοκληρωμένες λήψεις. Μπορείτε να αλλάξετε σε άλλο φάκελο οποιαδήποτε στιγμή και να επαναφέρετε τον προεπιλεγμένο φάκελο Λήψεις του λειτουργικού συστήματος όποτε θέλετε.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε πού αποθηκεύονται οι ολοκληρωμένες λήψεις. Μπορείτε να αλλάξετε σε άλλο φάκελο οποιαδήποτε στιγμή και να επαναφέρετε τον προεπιλεγμένο φάκελο Λήψεις του λειτουργικού συστήματος όποτε θέλετε.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Header" xml:space="preserve">
+    <value>Αποθήκευση Διαχειριστή λήψεων</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Description" xml:space="preserve">
+    <value>Το ιστορικό λήψεων, η επαναλήψιμη πρόοδος και τα ανθεκτικά δεδομένα σημείων ελέγχου αποθηκεύονται στον τοπικό χώρο αποθήκευσης του Διαχειριστή λήψεων της εφαρμογής.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το ιστορικό λήψεων, η επαναλήψιμη πρόοδος και τα ανθεκτικά δεδομένα σημείων ελέγχου αποθηκεύονται στον τοπικό χώρο αποθήκευσης του Διαχειριστή λήψεων της εφαρμογής.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το ιστορικό λήψεων, η επαναλήψιμη πρόοδος και τα ανθεκτικά δεδομένα σημείων ελέγχου αποθηκεύονται στον τοπικό χώρο αποθήκευσης του Διαχειριστή λήψεων της εφαρμογής.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.Content" xml:space="preserve">
+    <value>Επαναφορά προεπιλογής</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφορά της προεπιλεγμένης τοποθεσίας του φακέλου Λήψεις.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφορά της προεπιλεγμένης τοποθεσίας του φακέλου Λήψεις.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.Content" xml:space="preserve">
+    <value>Άνοιγμα τοποθεσίας αποθήκευσης</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε την τοποθεσία όπου ο Διαχειριστής λήψεων αποθηκεύει τα δεδομένα του.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε την τοποθεσία όπου ο Διαχειριστής λήψεων αποθηκεύει τα δεδομένα του.</value>
+  </data>
+  <data name="DownloadManagerTransfersSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Μεταφορές</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Header" xml:space="preserve">
+    <value>Ταυτόχρονες λήψεις</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Description" xml:space="preserve">
+    <value>Περιορίστε πόσες λήψεις μπορούν να εκτελούνται ενεργά ταυτόχρονα. Τα υπόλοιπα στοιχεία παραμένουν σε ουρά και ξεκινούν αυτόματα όταν υπάρχει διαθέσιμη θέση.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Περιορίστε πόσες λήψεις μπορούν να εκτελούνται ενεργά ταυτόχρονα. Τα υπόλοιπα στοιχεία παραμένουν σε ουρά και ξεκινούν αυτόματα όταν υπάρχει διαθέσιμη θέση.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Περιορίστε πόσες λήψεις μπορούν να εκτελούνται ενεργά ταυτόχρονα. Τα υπόλοιπα στοιχεία παραμένουν σε ουρά και ξεκινούν αυτόματα όταν υπάρχει διαθέσιμη θέση.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Header" xml:space="preserve">
+    <value>Παράλληλες συνδέσεις ανά λήψη</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Description" xml:space="preserve">
+    <value>Σε υποστηριζόμενους διακομιστές, κάθε λήψη μπορεί να χωριστεί σε πολλαπλά επαναλήψιμα τμήματα και να ληφθεί παράλληλα για υψηλότερη απόδοση.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Σε υποστηριζόμενους διακομιστές, κάθε λήψη μπορεί να χωριστεί σε πολλαπλά επαναλήψιμα τμήματα και να ληφθεί παράλληλα για υψηλότερη απόδοση.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Σε υποστηριζόμενους διακομιστές, κάθε λήψη μπορεί να χωριστεί σε πολλαπλά επαναλήψιμα τμήματα και να ληφθεί παράλληλα για υψηλότερη απόδοση.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Header" xml:space="preserve">
+    <value>Μετά την ολοκλήρωση των λήψεων</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε αν η συσκευή θα παραμείνει ενεργή, θα τεθεί σε αναστολή λειτουργίας, θα αδρανοποιηθεί ή θα τερματιστεί αφού ολοκληρωθούν όλες οι ενεργές και οι λήψεις σε ουρά.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε αν η συσκευή θα παραμείνει ενεργή, θα τεθεί σε αναστολή λειτουργίας, θα αδρανοποιηθεί ή θα τερματιστεί αφού ολοκληρωθούν όλες οι ενεργές και οι λήψεις σε ουρά.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε αν η συσκευή θα παραμείνει ενεργή, θα τεθεί σε αναστολή λειτουργίας, θα αδρανοποιηθεί ή θα τερματιστεί αφού ολοκληρωθούν όλες οι ενεργές και οι λήψεις σε ουρά.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Header" xml:space="preserve">
+    <value>Συμπεριφορά υπαρχουσών λήψεων</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Description" xml:space="preserve">
+    <value>Ελέγξτε τι συμβαίνει όταν το αρχείο προορισμού υπάρχει ήδη στον δίσκο ή παρακολουθείται ήδη από τον Διαχειριστή λήψεων.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ελέγξτε τι συμβαίνει όταν το αρχείο προορισμού υπάρχει ήδη στον δίσκο ή παρακολουθείται ήδη από τον Διαχειριστή λήψεων.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ελέγξτε τι συμβαίνει όταν το αρχείο προορισμού υπάρχει ήδη στον δίσκο ή παρακολουθείται ήδη από τον Διαχειριστή λήψεων.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Header" xml:space="preserve">
+    <value>Αυτόματη αφαίρεση ολοκληρωμένων στοιχείων</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Description" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, οι ολοκληρωμένες λήψεις αφαιρούνται αυτόματα από τη λίστα και το ιστορικό του Διαχειριστή λήψεων μετά την ολοκλήρωση, ενώ τα αρχεία που λήφθηκαν παραμένουν στον επιλεγμένο φάκελο.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, οι ολοκληρωμένες λήψεις αφαιρούνται αυτόματα από τη λίστα και το ιστορικό του Διαχειριστή λήψεων μετά την ολοκλήρωση, ενώ τα αρχεία που λήφθηκαν παραμένουν στον επιλεγμένο φάκελο.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, οι ολοκληρωμένες λήψεις αφαιρούνται αυτόματα από τη λίστα και το ιστορικό του Διαχειριστή λήψεων μετά την ολοκλήρωση, ενώ τα αρχεία που λήφθηκαν παραμένουν στον επιλεγμένο φάκελο.</value>
+  </data>
+  <data name="DownloadManagerPresetsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Προρυθμίσεις</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Header" xml:space="preserve">
+    <value>Αργή προρύθμιση (KB/s)</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Description" xml:space="preserve">
+    <value>Ταχύτητα στόχος για την αργή προρύθμιση. Χρησιμοποιήστε την για να διατηρείτε τις λήψεις ήπιες για τη σύνδεση, διατηρώντας παράλληλα επαναλήψιμη πρόοδο.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ταχύτητα στόχος για την αργή προρύθμιση. Χρησιμοποιήστε την για να διατηρείτε τις λήψεις ήπιες για τη σύνδεση, διατηρώντας παράλληλα επαναλήψιμη πρόοδο.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ταχύτητα στόχος για την αργή προρύθμιση. Χρησιμοποιήστε την για να διατηρείτε τις λήψεις ήπιες για τη σύνδεση, διατηρώντας παράλληλα επαναλήψιμη πρόοδο.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Header" xml:space="preserve">
+    <value>Μεσαία προρύθμιση (KB/s)</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Description" xml:space="preserve">
+    <value>Ταχύτητα στόχος για τη μεσαία προρύθμιση όταν θέλετε ισορροπημένο ρυθμό μεταφοράς χωρίς να κορέσετε πλήρως τη σύνδεση.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ταχύτητα στόχος για τη μεσαία προρύθμιση όταν θέλετε ισορροπημένο ρυθμό μεταφοράς χωρίς να κορέσετε πλήρως τη σύνδεση.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ταχύτητα στόχος για τη μεσαία προρύθμιση όταν θέλετε ισορροπημένο ρυθμό μεταφοράς χωρίς να κορέσετε πλήρως τη σύνδεση.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Header" xml:space="preserve">
+    <value>Πλήρης προρύθμιση (KB/s)</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε αν η πλήρης προρύθμιση θα εκτελείται χωρίς όριο ή θα χρησιμοποιεί το δικό της αποθηκευμένο όριο.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε αν η πλήρης προρύθμιση θα εκτελείται χωρίς όριο ή θα χρησιμοποιεί το δικό της αποθηκευμένο όριο.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε αν η πλήρης προρύθμιση θα εκτελείται χωρίς όριο ή θα χρησιμοποιεί το δικό της αποθηκευμένο όριο.</value>
+  </data>
+  <data name="DownloadManagerFullPresetUnlimitedCheckBox.Content" xml:space="preserve">
+    <value>Χρήση απεριόριστης ταχύτητας για την πλήρη προρύθμιση</value>
+  </data>
+  <data name="AddLinksAppBarButton.Label" xml:space="preserve">
+    <value>Προσθήκη συνδέσμων</value>
+  </data>
+  <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθέστε συνδέσμους σε αρχεία για λήψη.</value>
+  </data>
+  <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθέστε συνδέσμους σε αρχεία για λήψη.</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Ρυθμίσεις</value>
+  </data>
+  <data name="SettingsAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Άνοιγμα της σελίδας ρυθμίσεων του Διαχειριστή λήψεων</value>
+  </data>
+  <data name="SettingsAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Άνοιγμα της σελίδας ρυθμίσεων του Διαχειριστή λήψεων</value>
+  </data>
+  <data name="AdjustDownloadPresetLimits.Text" xml:space="preserve">
+    <value>Προσαρμογή ορίων προρυθμίσεων στις ρυθμίσεις</value>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>Αργό</value>
+  </data>
+  <data name="Medium.Text" xml:space="preserve">
+    <value>Μεσαίο</value>
+  </data>
+  <data name="Full.Text" xml:space="preserve">
+    <value>Πλήρες</value>
+  </data>
+  <data name="PauseAppBarButton.Label" xml:space="preserve">
+    <value>Παύση</value>
+  </data>
+  <data name="PauseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Παύση των επιλεγμένων λήψεων</value>
+  </data>
+  <data name="PauseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Παύση των επιλεγμένων λήψεων</value>
+  </data>
+  <data name="ResumeAppBarButton.Label" xml:space="preserve">
+    <value>Συνέχιση</value>
+  </data>
+  <data name="ResumeAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Συνέχιση των επιλεγμένων λήψεων</value>
+  </data>
+  <data name="ResumeAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Συνέχιση των επιλεγμένων λήψεων</value>
+  </data>
+  <data name="DeleteAppBarButton.Label" xml:space="preserve">
+    <value>Διαγραφή</value>
+  </data>
+  <data name="DeleteAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε τις επιλεγμένες λήψεις και τα αρχεία τους.</value>
+  </data>
+  <data name="DeleteAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράψτε τις επιλεγμένες λήψεις και τα αρχεία τους.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.Label" xml:space="preserve">
+    <value>Αφαίρεση από τη λίστα</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαιρέστε τις επιλεγμένες λήψεις μόνο από τη λίστα χωρίς να διαγράψετε τα αρχεία τους.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αφαιρέστε τις επιλεγμένες λήψεις μόνο από τη λίστα χωρίς να διαγράψετε τα αρχεία τους.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αλλαγή συνδέσμου λήψης</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αλλάξτε τον σύνδεσμο λήψης αν ο τρέχων έχει λήξει ή δεν είναι πλέον διαθέσιμος. Ο νέος σύνδεσμος πρέπει να οδηγεί στο ίδιο αρχείο.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αλλάξτε τον σύνδεσμο λήψης αν ο τρέχων έχει λήξει ή δεν είναι πλέον διαθέσιμος. Ο νέος σύνδεσμος πρέπει να οδηγεί στο ίδιο αρχείο.</value>
+  </data>
 </root>

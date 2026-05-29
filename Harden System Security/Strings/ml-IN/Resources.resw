@@ -6542,4 +6542,244 @@
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ആപ്പ് വിൻഡോയെ അറിയിപ്പ് പ്രദേശത്തേക്ക് മറയ്ക്കുക</value>
   </data>
+  <data name="DownloadManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>ഡൗൺലോഡ് മാനേജർ</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺലോഡ് വേഗം വർധിപ്പിക്കാനും ഉയർന്ന നിരയിലെ മാനേജ്മെന്റ് സവിശേഷതകൾ ഉപയോഗിക്കാനുമായി സമാന്തര കണക്ഷനുകൾ ഉപയോഗിച്ച് ഫയലുകൾ ഡൗൺലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡൗൺലോഡ് വേഗം വർധിപ്പിക്കാനും ഉയർന്ന നിരയിലെ മാനേജ്മെന്റ് സവിശേഷതകൾ ഉപയോഗിക്കാനുമായി സമാന്തര കണക്ഷനുകൾ ഉപയോഗിച്ച് ഫയലുകൾ ഡൗൺലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="DownloadManagerSettingsPageTitle" xml:space="preserve">
+    <value>ഡൗൺലോഡ് മാനേജർ ക്രമീകരണങ്ങൾ</value>
+  </data>
+  <data name="DownloadManagerSettingsPageDescription" xml:space="preserve">
+    <value>നിങ്ങളുടെ മുൻഗണനകൾ അനുസരിച്ച് ഡൗൺലോഡ് മാനേജറിന്റെ ക്രമീകരണങ്ങൾ സജ്ജമാക്കുക.</value>
+  </data>
+  <data name="DownloadManagerStorageSettingsSectionHeader.Text" xml:space="preserve">
+    <value>സംഭരണം</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Header" xml:space="preserve">
+    <value>സേവ് ചെയ്യുന്ന സ്ഥലം</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Description" xml:space="preserve">
+    <value>പൂർത്തിയായ ഡൗൺലോഡുകൾ എവിടെ സേവ് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക. നിങ്ങൾക്ക് ഏത് സമയത്തും മറ്റൊരു ഫോൾഡറിലേക്ക് മാറാനും ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിന്റെ ഡീഫോൾട്ട് Downloads ഫോൾഡർ വേണമെങ്കിൽ പുനഃസ്ഥാപിക്കാനും കഴിയും.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പൂർത്തിയായ ഡൗൺലോഡുകൾ എവിടെ സേവ് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക. നിങ്ങൾക്ക് ഏത് സമയത്തും മറ്റൊരു ഫോൾഡറിലേക്ക് മാറാനും ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിന്റെ ഡീഫോൾട്ട് Downloads ഫോൾഡർ വേണമെങ്കിൽ പുനഃസ്ഥാപിക്കാനും കഴിയും.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പൂർത്തിയായ ഡൗൺലോഡുകൾ എവിടെ സേവ് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക. നിങ്ങൾക്ക് ഏത് സമയത്തും മറ്റൊരു ഫോൾഡറിലേക്ക് മാറാനും ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിന്റെ ഡീഫോൾട്ട് Downloads ഫോൾഡർ വേണമെങ്കിൽ പുനഃസ്ഥാപിക്കാനും കഴിയും.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Header" xml:space="preserve">
+    <value>ഡൗൺലോഡ് മാനേജർ സംഭരണം</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Description" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചരിത്രം, വീണ്ടും തുടക്കമിടാൻ കഴിയുന്ന പുരോഗതി, കരുത്തുറ്റ ചെക്ക്പോയിന്റ് ഡാറ്റ എന്നിവ ആപ്പിന്റെ ലോക്കൽ ഡൗൺലോഡ് മാനേജർ സംഭരണത്തിൽ സൂക്ഷിക്കപ്പെടുന്നു.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചരിത്രം, വീണ്ടും തുടക്കമിടാൻ കഴിയുന്ന പുരോഗതി, കരുത്തുറ്റ ചെക്ക്പോയിന്റ് ഡാറ്റ എന്നിവ ആപ്പിന്റെ ലോക്കൽ ഡൗൺലോഡ് മാനേജർ സംഭരണത്തിൽ സൂക്ഷിക്കപ്പെടുന്നു.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചരിത്രം, വീണ്ടും തുടക്കമിടാൻ കഴിയുന്ന പുരോഗതി, കരുത്തുറ്റ ചെക്ക്പോയിന്റ് ഡാറ്റ എന്നിവ ആപ്പിന്റെ ലോക്കൽ ഡൗൺലോഡ് മാനേജർ സംഭരണത്തിൽ സൂക്ഷിക്കപ്പെടുന്നു.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.Content" xml:space="preserve">
+    <value>ഡീഫോൾട്ട് പുനഃസ്ഥാപിക്കുക</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡീഫോൾട്ട് Downloads ഫോൾഡർ സ്ഥാനം പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡീഫോൾട്ട് Downloads ഫോൾഡർ സ്ഥാനം പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.Content" xml:space="preserve">
+    <value>സംഭരണ സ്ഥലം തുറക്കുക</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺലോഡ് മാനേജർ തന്റെ ഡാറ്റ സംഭരിക്കുന്ന സ്ഥലം തുറക്കുക.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡൗൺലോഡ് മാനേജർ തന്റെ ഡാറ്റ സംഭരിക്കുന്ന സ്ഥലം തുറക്കുക.</value>
+  </data>
+  <data name="DownloadManagerTransfersSettingsSectionHeader.Text" xml:space="preserve">
+    <value>ട്രാൻസ്ഫറുകൾ</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Header" xml:space="preserve">
+    <value>ഒരേസമയം നടക്കുന്ന ഡൗൺലോഡുകൾ</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Description" xml:space="preserve">
+    <value>ഒരു സമയത്ത് സജീവമായി പ്രവർത്തിക്കാവുന്ന ഡൗൺലോഡുകളുടെ എണ്ണം പരിമിതപ്പെടുത്തുക. ശേഷിക്കുന്ന ഇനങ്ങൾ ക്യൂവിൽ തുടരും, സ്ലോട്ട് ലഭിക്കുമ്പോൾ സ്വയം ആരംഭിക്കും.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു സമയത്ത് സജീവമായി പ്രവർത്തിക്കാവുന്ന ഡൗൺലോഡുകളുടെ എണ്ണം പരിമിതപ്പെടുത്തുക. ശേഷിക്കുന്ന ഇനങ്ങൾ ക്യൂവിൽ തുടരും, സ്ലോട്ട് ലഭിക്കുമ്പോൾ സ്വയം ആരംഭിക്കും.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു സമയത്ത് സജീവമായി പ്രവർത്തിക്കാവുന്ന ഡൗൺലോഡുകളുടെ എണ്ണം പരിമിതപ്പെടുത്തുക. ശേഷിക്കുന്ന ഇനങ്ങൾ ക്യൂവിൽ തുടരും, സ്ലോട്ട് ലഭിക്കുമ്പോൾ സ്വയം ആരംഭിക്കും.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Header" xml:space="preserve">
+    <value>ഓരോ ഡൗൺലോഡിനും സമാന്തര കണക്ഷനുകൾ</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Description" xml:space="preserve">
+    <value>പിന്തുണയുള്ള സർവറുകളിൽ, ഉയർന്ന ത്രൂപ്പുട്ടിനായി ഓരോ ഡൗൺലോഡും വീണ്ടും തുടക്കമിടാൻ കഴിയുന്ന പല ഭാഗങ്ങളായി വിഭജിച്ച് സമാന്തരമായി നേടാൻ കഴിയും.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിന്തുണയുള്ള സർവറുകളിൽ, ഉയർന്ന ത്രൂപ്പുട്ടിനായി ഓരോ ഡൗൺലോഡും വീണ്ടും തുടക്കമിടാൻ കഴിയുന്ന പല ഭാഗങ്ങളായി വിഭജിച്ച് സമാന്തരമായി നേടാൻ കഴിയും.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പിന്തുണയുള്ള സർവറുകളിൽ, ഉയർന്ന ത്രൂപ്പുട്ടിനായി ഓരോ ഡൗൺലോഡും വീണ്ടും തുടക്കമിടാൻ കഴിയുന്ന പല ഭാഗങ്ങളായി വിഭജിച്ച് സമാന്തരമായി നേടാൻ കഴിയും.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Header" xml:space="preserve">
+    <value>ഡൗൺലോഡുകൾ പൂർത്തിയായ ശേഷം</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Description" xml:space="preserve">
+    <value>എല്ലാ സജീവവും ക്യൂവിലുമുള്ള ഡൗൺലോഡുകളും പൂർത്തിയായ ശേഷം ഉപകരണം ഓണായിരിക്കണോ, സ്ലീപിലേക്കോ ഹൈബർനേഷനിലേക്കോ പോകണോ, അതോ ഓഫാകണോ എന്ന് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ സജീവവും ക്യൂവിലുമുള്ള ഡൗൺലോഡുകളും പൂർത്തിയായ ശേഷം ഉപകരണം ഓണായിരിക്കണോ, സ്ലീപിലേക്കോ ഹൈബർനേഷനിലേക്കോ പോകണോ, അതോ ഓഫാകണോ എന്ന് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ സജീവവും ക്യൂവിലുമുള്ള ഡൗൺലോഡുകളും പൂർത്തിയായ ശേഷം ഉപകരണം ഓണായിരിക്കണോ, സ്ലീപിലേക്കോ ഹൈബർനേഷനിലേക്കോ പോകണോ, അതോ ഓഫാകണോ എന്ന് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Header" xml:space="preserve">
+    <value>നിലവിലുള്ള ഡൗൺലോഡുകളുടെ പ്രവർത്തനം</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Description" xml:space="preserve">
+    <value>ലക്ഷ്യ ഫയൽ ഇതിനകം ഡിസ്കിൽ നിലവിലുണ്ടാകുമ്പോഴോ ഇതിനകം തന്നെ ഡൗൺലോഡ് മാനേജറിൽ ട്രാക്ക് ചെയ്യപ്പെടുമ്പോഴോ എന്ത് സംഭവിക്കണമെന്ന് നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലക്ഷ്യ ഫയൽ ഇതിനകം ഡിസ്കിൽ നിലവിലുണ്ടാകുമ്പോഴോ ഇതിനകം തന്നെ ഡൗൺലോഡ് മാനേജറിൽ ട്രാക്ക് ചെയ്യപ്പെടുമ്പോഴോ എന്ത് സംഭവിക്കണമെന്ന് നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലക്ഷ്യ ഫയൽ ഇതിനകം ഡിസ്കിൽ നിലവിലുണ്ടാകുമ്പോഴോ ഇതിനകം തന്നെ ഡൗൺലോഡ് മാനേജറിൽ ട്രാക്ക് ചെയ്യപ്പെടുമ്പോഴോ എന്ത് സംഭവിക്കണമെന്ന് നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Header" xml:space="preserve">
+    <value>പൂർത്തിയായ ഇനങ്ങൾ സ്വയമേവ നീക്കുക</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Description" xml:space="preserve">
+    <value>പ്രവർത്തനസജ്ജമാക്കിയാൽ, പൂർത്തിയായ ഡൗൺലോഡുകൾ പൂർത്തിയാകുന്നുതന്നെ ഡൗൺലോഡ് മാനേജർ പട്ടികയിലും ചരിത്രത്തിലുമிருந்து സ്വയമേവ നീക്കം ചെയ്യപ്പെടും, എന്നാൽ ഡൗൺലോഡ് ചെയ്ത ഫയലുകൾ തിരഞ്ഞെടുത്ത ഫോൾഡറിൽ തുടരും.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രവർത്തനസജ്ജമാക്കിയാൽ, പൂർത്തിയായ ഡൗൺലോഡുകൾ പൂർത്തിയാകുന്നുതന്നെ ഡൗൺലോഡ് മാനേജർ പട്ടികയിലും ചരിത്രത്തിലുമிருந்து സ്വയമേവ നീക്കം ചെയ്യപ്പെടും, എന്നാൽ ഡൗൺലോഡ് ചെയ്ത ഫയലുകൾ തിരഞ്ഞെടുത്ത ഫോൾഡറിൽ തുടരും.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രവർത്തനസജ്ജമാക്കിയാൽ, പൂർത്തിയായ ഡൗൺലോഡുകൾ പൂർത്തിയാകുന്നുതന്നെ ഡൗൺലോഡ് മാനേജർ പട്ടികയിലും ചരിത്രത്തിലുമிருந்து സ്വയമേവ നീക്കം ചെയ്യപ്പെടും, എന്നാൽ ഡൗൺലോഡ് ചെയ്ത ഫയലുകൾ തിരഞ്ഞെടുത്ത ഫോൾഡറിൽ തുടരും.</value>
+  </data>
+  <data name="DownloadManagerPresetsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>പ്രീസെറ്റുകൾ</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Header" xml:space="preserve">
+    <value>മന്ദഗതിയിലുള്ള പ്രീസെറ്റ് (KB/s)</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Description" xml:space="preserve">
+    <value>മന്ദഗതിയിലുള്ള പ്രീസെറ്റിനുള്ള ലക്ഷ്യ വേഗം. കണക്ഷനിൽ കുറഞ്ഞ ഭാരം നിലനിർത്തിക്കൊണ്ട് വീണ്ടും തുടക്കമിടാവുന്ന പുരോഗതി സംരക്ഷിക്കാൻ ഇത് ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മന്ദഗതിയിലുള്ള പ്രീസെറ്റിനുള്ള ലക്ഷ്യ വേഗം. കണക്ഷനിൽ കുറഞ്ഞ ഭാരം നിലനിർത്തിക്കൊണ്ട് വീണ്ടും തുടക്കമിടാവുന്ന പുരോഗതി സംരക്ഷിക്കാൻ ഇത് ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മന്ദഗതിയിലുള്ള പ്രീസെറ്റിനുള്ള ലക്ഷ്യ വേഗം. കണക്ഷനിൽ കുറഞ്ഞ ഭാരം നിലനിർത്തിക്കൊണ്ട് വീണ്ടും തുടക്കമിടാവുന്ന പുരോഗതി സംരക്ഷിക്കാൻ ഇത് ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Header" xml:space="preserve">
+    <value>ഇടത്തരം പ്രീസെറ്റ് (KB/s)</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Description" xml:space="preserve">
+    <value>കണക്ഷൻ പൂർണമായി നിറയ്ക്കാതെ സമതുലിതമായ ട്രാൻസ്ഫർ നിരക്ക് വേണമെങ്കിൽ ഇടത്തരം പ്രീസെറ്റിനുള്ള ലക്ഷ്യ വേഗം.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കണക്ഷൻ പൂർണമായി നിറയ്ക്കാതെ സമതുലിതമായ ട്രാൻസ്ഫർ നിരക്ക് വേണമെങ്കിൽ ഇടത്തരം പ്രീസെറ്റിനുള്ള ലക്ഷ്യ വേഗം.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കണക്ഷൻ പൂർണമായി നിറയ്ക്കാതെ സമതുലിതമായ ട്രാൻസ്ഫർ നിരക്ക് വേണമെങ്കിൽ ഇടത്തരം പ്രീസെറ്റിനുള്ള ലക്ഷ്യ വേഗം.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Header" xml:space="preserve">
+    <value>പൂർണ്ണ പ്രീസെറ്റ് (KB/s)</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Description" xml:space="preserve">
+    <value>പൂർണ്ണ പ്രീസെറ്റ് പരിമിതിയില്ലാതെ പ്രവർത്തിക്കണമോ, അതോ അതിന്റെ സ്വന്തം സേവ് ചെയ്ത പരിധി ഉപയോഗിക്കണമോ എന്ന് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പൂർണ്ണ പ്രീസെറ്റ് പരിമിതിയില്ലാതെ പ്രവർത്തിക്കണമോ, അതോ അതിന്റെ സ്വന്തം സേവ് ചെയ്ത പരിധി ഉപയോഗിക്കണമോ എന്ന് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പൂർണ്ണ പ്രീസെറ്റ് പരിമിതിയില്ലാതെ പ്രവർത്തിക്കണമോ, അതോ അതിന്റെ സ്വന്തം സേവ് ചെയ്ത പരിധി ഉപയോഗിക്കണമോ എന്ന് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DownloadManagerFullPresetUnlimitedCheckBox.Content" xml:space="preserve">
+    <value>പൂർണ്ണ പ്രീസെറ്റിന് പരിധിയില്ലാത്ത വേഗം ഉപയോഗിക്കുക</value>
+  </data>
+  <data name="AddLinksAppBarButton.Label" xml:space="preserve">
+    <value>ലിങ്കുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചെയ്യാനുള്ള ഫയലുകളിലേക്കുള്ള ലിങ്കുകൾ ചേർക്കുക.</value>
+  </data>
+  <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചെയ്യാനുള്ള ഫയലുകളിലേക്കുള്ള ലിങ്കുകൾ ചേർക്കുക.</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>ക്രമീകരണങ്ങൾ</value>
+  </data>
+  <data name="SettingsAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺലോഡ് മാനേജർ ക്രമീകരണങ്ങളുടെ പേജ് തുറക്കുക</value>
+  </data>
+  <data name="SettingsAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡൗൺലോഡ് മാനേജർ ക്രമീകരണങ്ങളുടെ പേജ് തുറക്കുക</value>
+  </data>
+  <data name="AdjustDownloadPresetLimits.Text" xml:space="preserve">
+    <value>ക്രമീകരണങ്ങളിൽ പ്രീസെറ്റ് പരിധികൾ ക്രമീകരിക്കുക</value>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>മന്ദഗതി</value>
+  </data>
+  <data name="Medium.Text" xml:space="preserve">
+    <value>ഇടത്തരം</value>
+  </data>
+  <data name="Full.Text" xml:space="preserve">
+    <value>പൂർണ്ണം</value>
+  </data>
+  <data name="PauseAppBarButton.Label" xml:space="preserve">
+    <value>താൽക്കാലികമായി നിർത്തുക</value>
+  </data>
+  <data name="PauseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകൾ താൽക്കാലികമായി നിർത്തുക</value>
+  </data>
+  <data name="PauseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകൾ താൽക്കാലികമായി നിർത്തുക</value>
+  </data>
+  <data name="ResumeAppBarButton.Label" xml:space="preserve">
+    <value>തുടരുക</value>
+  </data>
+  <data name="ResumeAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകൾ തുടരുക</value>
+  </data>
+  <data name="ResumeAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകൾ തുടരുക</value>
+  </data>
+  <data name="DeleteAppBarButton.Label" xml:space="preserve">
+    <value>ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeleteAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകളും അവയുടെ ഫയലുകളും ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="DeleteAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകളും അവയുടെ ഫയലുകളും ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.Label" xml:space="preserve">
+    <value>പട്ടികയിൽ നിന്ന് നീക്കുക</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകൾ അവയുടെ ഫയലുകൾ ഇല്ലാതാക്കാതെ പട്ടികയിൽ നിന്ന് മാത്രം നീക്കുക.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡൗൺലോഡുകൾ അവയുടെ ഫയലുകൾ ഇല്ലാതാക്കാതെ പട്ടികയിൽ നിന്ന് മാത്രം നീക്കുക.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ലിങ്ക് മാറ്റുക</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ ഡൗൺലോഡ് ലിങ്കിന്റെ കാലാവധി കഴിഞ്ഞിട്ടുണ്ടെങ്കിൽ അല്ലെങ്കിൽ ഇനി ലഭ്യമല്ലെങ്കിൽ അത് മാറ്റുക. പുതിയ ലിങ്ക് അതേ ഫയലിലേക്കാണ് സൂചിപ്പിക്കേണ്ടത്.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലെ ഡൗൺലോഡ് ലിങ്കിന്റെ കാലാവധി കഴിഞ്ഞിട്ടുണ്ടെങ്കിൽ അല്ലെങ്കിൽ ഇനി ലഭ്യമല്ലെങ്കിൽ അത് മാറ്റുക. പുതിയ ലിങ്ക് അതേ ഫയലിലേക്കാണ് സൂചിപ്പിക്കേണ്ടത്.</value>
+  </data>
 </root>

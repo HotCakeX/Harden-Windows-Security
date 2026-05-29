@@ -6542,4 +6542,244 @@ Huella Digital: {3}</value>
   <data name="MinimizeToNotificationAreaButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ocultar la ventana de la aplicación en el área de notificación</value>
   </data>
+  <data name="DownloadManagerNavigationViewItem.Content" xml:space="preserve">
+    <value>Administrador de descargas</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Descargue archivos con conexiones paralelas para acelerar las velocidades de descarga y acceder a funciones avanzadas de administración.</value>
+  </data>
+  <data name="DownloadManagerNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Descargue archivos con conexiones paralelas para acelerar las velocidades de descarga y acceder a funciones avanzadas de administración.</value>
+  </data>
+  <data name="DownloadManagerSettingsPageTitle" xml:space="preserve">
+    <value>Configuración del Administrador de descargas</value>
+  </data>
+  <data name="DownloadManagerSettingsPageDescription" xml:space="preserve">
+    <value>Configure la configuración del administrador de descargas según sus preferencias.</value>
+  </data>
+  <data name="DownloadManagerStorageSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Almacenamiento</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Header" xml:space="preserve">
+    <value>Ubicación de guardado</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.Description" xml:space="preserve">
+    <value>Elija dónde se guardan las descargas completadas. Puede cambiar a otra carpeta en cualquier momento y restaurar la carpeta Descargas predeterminada del sistema operativo cuando quiera.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija dónde se guardan las descargas completadas. Puede cambiar a otra carpeta en cualquier momento y restaurar la carpeta Descargas predeterminada del sistema operativo cuando quiera.</value>
+  </data>
+  <data name="DownloadManagerSaveLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija dónde se guardan las descargas completadas. Puede cambiar a otra carpeta en cualquier momento y restaurar la carpeta Descargas predeterminada del sistema operativo cuando quiera.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Header" xml:space="preserve">
+    <value>Almacenamiento del Administrador de descargas</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.Description" xml:space="preserve">
+    <value>El historial de descargas, el progreso reanudable y los datos de punto de control resistentes se almacenan en el almacenamiento local del Administrador de descargas de la aplicación.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El historial de descargas, el progreso reanudable y los datos de punto de control resistentes se almacenan en el almacenamiento local del Administrador de descargas de la aplicación.</value>
+  </data>
+  <data name="DownloadManagerStorageLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El historial de descargas, el progreso reanudable y los datos de punto de control resistentes se almacenan en el almacenamiento local del Administrador de descargas de la aplicación.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.Content" xml:space="preserve">
+    <value>Restaurar predeterminado</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restaurar la ubicación predeterminada de la carpeta Descargas.</value>
+  </data>
+  <data name="DownloadManagerRestoreDefaultFolderButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restaurar la ubicación predeterminada de la carpeta Descargas.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.Content" xml:space="preserve">
+    <value>Abrir ubicación de almacenamiento</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abra la ubicación donde el Administrador de descargas almacena sus datos.</value>
+  </data>
+  <data name="DownloadManagerOpenStorageLocationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abra la ubicación donde el Administrador de descargas almacena sus datos.</value>
+  </data>
+  <data name="DownloadManagerTransfersSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Transferencias</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Header" xml:space="preserve">
+    <value>Descargas simultáneas</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.Description" xml:space="preserve">
+    <value>Limite cuántas descargas pueden ejecutarse activamente al mismo tiempo. Los elementos restantes permanecen en cola y se inician automáticamente cuando haya un espacio disponible.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Limite cuántas descargas pueden ejecutarse activamente al mismo tiempo. Los elementos restantes permanecen en cola y se inician automáticamente cuando haya un espacio disponible.</value>
+  </data>
+  <data name="DownloadManagerSimultaneousDownloadsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Limite cuántas descargas pueden ejecutarse activamente al mismo tiempo. Los elementos restantes permanecen en cola y se inician automáticamente cuando haya un espacio disponible.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Header" xml:space="preserve">
+    <value>Conexiones paralelas por descarga</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.Description" xml:space="preserve">
+    <value>En servidores compatibles, cada descarga puede dividirse en varias partes reanudables y obtenerse en paralelo para lograr un mayor rendimiento.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>En servidores compatibles, cada descarga puede dividirse en varias partes reanudables y obtenerse en paralelo para lograr un mayor rendimiento.</value>
+  </data>
+  <data name="DownloadManagerParallelConnectionsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>En servidores compatibles, cada descarga puede dividirse en varias partes reanudables y obtenerse en paralelo para lograr un mayor rendimiento.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Header" xml:space="preserve">
+    <value>Después de que finalicen las descargas</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.Description" xml:space="preserve">
+    <value>Elija si el dispositivo permanece encendido, entra en suspensión, hiberna o se apaga después de que todas las descargas activas y en cola hayan terminado.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija si el dispositivo permanece encendido, entra en suspensión, hiberna o se apaga después de que todas las descargas activas y en cola hayan terminado.</value>
+  </data>
+  <data name="DownloadManagerAfterFinishSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija si el dispositivo permanece encendido, entra en suspensión, hiberna o se apaga después de que todas las descargas activas y en cola hayan terminado.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Header" xml:space="preserve">
+    <value>Comportamiento de descargas existentes</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.Description" xml:space="preserve">
+    <value>Controle lo que sucede cuando el archivo de destino ya existe en el disco o ya está registrado en el Administrador de descargas.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Controle lo que sucede cuando el archivo de destino ya existe en el disco o ya está registrado en el Administrador de descargas.</value>
+  </data>
+  <data name="DownloadManagerExistingBehaviorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Controle lo que sucede cuando el archivo de destino ya existe en el disco o ya está registrado en el Administrador de descargas.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Header" xml:space="preserve">
+    <value>Quitar automáticamente los elementos completados</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.Description" xml:space="preserve">
+    <value>Cuando está habilitado, las descargas terminadas se eliminan automáticamente de la lista y el historial del Administrador de descargas después de completarse, mientras que los archivos descargados permanecen en la carpeta seleccionada.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cuando está habilitado, las descargas terminadas se eliminan automáticamente de la lista y el historial del Administrador de descargas después de completarse, mientras que los archivos descargados permanecen en la carpeta seleccionada.</value>
+  </data>
+  <data name="DownloadManagerAutoRemoveCompletedSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cuando está habilitado, las descargas terminadas se eliminan automáticamente de la lista y el historial del Administrador de descargas después de completarse, mientras que los archivos descargados permanecen en la carpeta seleccionada.</value>
+  </data>
+  <data name="DownloadManagerPresetsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Ajustes preestablecidos</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Header" xml:space="preserve">
+    <value>Preajuste lento (KB/s)</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.Description" xml:space="preserve">
+    <value>Velocidad objetivo para el preajuste lento. Úselo para mantener las descargas suaves sobre la conexión y seguir conservando el progreso reanudable.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Velocidad objetivo para el preajuste lento. Úselo para mantener las descargas suaves sobre la conexión y seguir conservando el progreso reanudable.</value>
+  </data>
+  <data name="DownloadManagerSlowPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Velocidad objetivo para el preajuste lento. Úselo para mantener las descargas suaves sobre la conexión y seguir conservando el progreso reanudable.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Header" xml:space="preserve">
+    <value>Preajuste medio (KB/s)</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.Description" xml:space="preserve">
+    <value>Velocidad objetivo para el preajuste medio cuando desea una velocidad de transferencia equilibrada sin saturar por completo la conexión.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Velocidad objetivo para el preajuste medio cuando desea una velocidad de transferencia equilibrada sin saturar por completo la conexión.</value>
+  </data>
+  <data name="DownloadManagerMediumPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Velocidad objetivo para el preajuste medio cuando desea una velocidad de transferencia equilibrada sin saturar por completo la conexión.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Header" xml:space="preserve">
+    <value>Preajuste completo (KB/s)</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.Description" xml:space="preserve">
+    <value>Elija si el preajuste completo funciona sin límite o usa su propio límite guardado.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija si el preajuste completo funciona sin límite o usa su propio límite guardado.</value>
+  </data>
+  <data name="DownloadManagerFullPresetSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija si el preajuste completo funciona sin límite o usa su propio límite guardado.</value>
+  </data>
+  <data name="DownloadManagerFullPresetUnlimitedCheckBox.Content" xml:space="preserve">
+    <value>Usar velocidad ilimitada para el preajuste completo</value>
+  </data>
+  <data name="AddLinksAppBarButton.Label" xml:space="preserve">
+    <value>Agregar vínculos</value>
+  </data>
+  <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregue vínculos a archivos para descargar.</value>
+  </data>
+  <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregue vínculos a archivos para descargar.</value>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="SettingsAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir la página de configuración del Administrador de descargas</value>
+  </data>
+  <data name="SettingsAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abrir la página de configuración del Administrador de descargas</value>
+  </data>
+  <data name="AdjustDownloadPresetLimits.Text" xml:space="preserve">
+    <value>Ajustar los límites de los preajustes en la configuración</value>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>Lento</value>
+  </data>
+  <data name="Medium.Text" xml:space="preserve">
+    <value>Medio</value>
+  </data>
+  <data name="Full.Text" xml:space="preserve">
+    <value>Completo</value>
+  </data>
+  <data name="PauseAppBarButton.Label" xml:space="preserve">
+    <value>Pausar</value>
+  </data>
+  <data name="PauseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pausar las descargas seleccionadas</value>
+  </data>
+  <data name="PauseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pausar las descargas seleccionadas</value>
+  </data>
+  <data name="ResumeAppBarButton.Label" xml:space="preserve">
+    <value>Reanudar</value>
+  </data>
+  <data name="ResumeAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reanudar las descargas seleccionadas</value>
+  </data>
+  <data name="ResumeAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reanudar las descargas seleccionadas</value>
+  </data>
+  <data name="DeleteAppBarButton.Label" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="DeleteAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar las descargas seleccionadas y sus archivos.</value>
+  </data>
+  <data name="DeleteAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar las descargas seleccionadas y sus archivos.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.Label" xml:space="preserve">
+    <value>Quitar de la lista</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar las descargas seleccionadas solo de la lista sin eliminar sus archivos.</value>
+  </data>
+  <data name="RemoveFromListAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Quitar las descargas seleccionadas solo de la lista sin eliminar sus archivos.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Cambiar vínculo de descarga</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cambie el vínculo de descarga si el actual venció o ya no está disponible. El nuevo vínculo debe apuntar al mismo archivo.</value>
+  </data>
+  <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cambie el vínculo de descarga si el actual venció o ya no está disponible. El nuevo vínculo debe apuntar al mismo archivo.</value>
+  </data>
 </root>

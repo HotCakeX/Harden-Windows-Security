@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -28,6 +30,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
 using CommonCore.Hardware;
+using CommonCore.Others;
 using CommonCore.Power;
 using CommonCore.ThermalMonitors;
 using Microsoft.UI.Dispatching;
@@ -309,6 +312,37 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string? ComputerNameText { get; private set => SP(ref field, value); }
 	internal string? SystemInfoText { get; private set => SP(ref field, value); }
 	internal string? ActivationStatusSummaryText { get; private set => SP(ref field, value); } = "Checking...";
+
+	private static readonly Uri CloudflareTraceUri = new("https://www.cloudflare.com/cdn-cgi/trace");
+	private static readonly Uri AwsCheckIpUri = new("https://checkip.amazonaws.com/");
+	private readonly SemaphoreSlim _publicIpLookupLock = new(1, 1);
+	private bool _hasPublicIpLookupCompletedThisSession;
+
+	internal string PublicIpDisplayText { get; private set => SP(ref field, value); } = "Press to retrieve";
+	internal bool IsPublicIpLookupInProgress
+	{
+		get; private set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(PublicIpLookupProgressRingVisibility));
+			}
+		}
+	}
+	internal bool IsPublicIpTileRevealed
+	{
+		get; private set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(PublicIpPlaceholderVisibility));
+				OnPropertyChanged(nameof(PublicIpValueVisibility));
+			}
+		}
+	}
+	internal Visibility PublicIpLookupProgressRingVisibility => IsPublicIpLookupInProgress ? Visibility.Visible : Visibility.Collapsed;
+	internal Visibility PublicIpPlaceholderVisibility => IsPublicIpTileRevealed ? Visibility.Collapsed : Visibility.Visible;
+	internal Visibility PublicIpValueVisibility => IsPublicIpTileRevealed ? Visibility.Visible : Visibility.Collapsed;
 
 	// Line chart paths and edge labels for the three live home tiles.
 	internal string AppRamChartLinePathData { get; private set => SP(ref field, value); } = DefaultHomeChartPathData;
@@ -1538,7 +1572,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// Handler for the Computer Name button click event.
 	/// Opens a dialog to allow the user to rename the computer.
 	/// </summary>
-	internal async void OnComputerNameClick(object sender, RoutedEventArgs e)
+	internal async void OnComputerNameClick()
 	{
 		try
 		{
@@ -1639,7 +1673,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal async void OnGpuClick(object sender, RoutedEventArgs e)
+	internal async void OnGpuClick()
 	{
 		try
 		{
@@ -1742,7 +1776,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal async void OnActivationInfoClick(object sender, RoutedEventArgs e)
+	internal async void OnActivationInfoClick()
 	{
 		try
 		{
@@ -1964,7 +1998,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// Handler for the USB History button click event.
 	/// Opens a dialog to show details of all USB devices ever connected.
 	/// </summary>
-	internal async void OnUsbDevicesClick(object sender, RoutedEventArgs e)
+	internal async void OnUsbDevicesClick()
 	{
 		try
 		{
@@ -2057,7 +2091,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Event handler to launch the Open Ports viewing ContentDialog when clicking the tile.
 	/// </summary>
-	internal async void OnOpenNetworkPortsClick(object sender, RoutedEventArgs e)
+	internal async void OnOpenNetworkPortsClick()
 	{
 		try
 		{
@@ -2532,7 +2566,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal async void OnUptimeClick(object sender, RoutedEventArgs e)
+	internal async void OnUptimeClick()
 	{
 		try
 		{
@@ -2545,10 +2579,133 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		}
 	}
 
+	internal async Task LoadPublicIpAsync(bool forceRefresh)
+	{
+		if (IsPublicIpLookupInProgress)
+		{
+			return;
+		}
+
+		IsPublicIpLookupInProgress = true;
+		await _publicIpLookupLock.WaitAsync();
+
+		try
+		{
+			if (!forceRefresh && _hasPublicIpLookupCompletedThisSession)
+			{
+				IsPublicIpTileRevealed = true;
+				return;
+			}
+
+			string resolvedIpAddress = await TryResolvePublicIpAsync();
+
+			PublicIpDisplayText = resolvedIpAddress;
+			_hasPublicIpLookupCompletedThisSession = true;
+			IsPublicIpTileRevealed = true;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			PublicIpDisplayText = "Unavailable";
+			IsPublicIpTileRevealed = true;
+		}
+		finally
+		{
+			_ = _publicIpLookupLock.Release();
+			IsPublicIpLookupInProgress = false;
+		}
+	}
+
+	internal async void OnPublicIpTileClick()
+	{
+		if (IsPublicIpLookupInProgress)
+		{
+			return;
+		}
+
+		await LoadPublicIpAsync(forceRefresh: IsPublicIpTileRevealed);
+	}
+
+	private static async Task<string> TryResolvePublicIpAsync()
+	{
+		string? cloudflareIp = await TryGetCloudflarePublicIpAsync().ConfigureAwait(false);
+		if (!string.IsNullOrWhiteSpace(cloudflareIp))
+		{
+			return cloudflareIp;
+		}
+
+		string? awsIp = await TryGetAwsPublicIpAsync().ConfigureAwait(false);
+		if (!string.IsNullOrWhiteSpace(awsIp))
+		{
+			return awsIp;
+		}
+
+		return "Unavailable";
+	}
+
+	private static async Task<string?> TryGetCloudflarePublicIpAsync()
+	{
+		try
+		{
+			using CancellationTokenSource cancellationTokenSource = new(TimeSpan.FromSeconds(10));
+			using HttpResponseMessage response = await SecHttpClient.Instance.GetAsync(CloudflareTraceUri, cancellationTokenSource.Token).ConfigureAwait(false);
+			_ = response.EnsureSuccessStatusCode();
+
+			string responseText = await response.Content.ReadAsStringAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+
+			foreach (string line in responseText.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+			{
+				int separatorIndex = line.IndexOf('=');
+				if (separatorIndex <= 0)
+				{
+					continue;
+				}
+
+				if (!line[..separatorIndex].Equals("ip", StringComparison.Ordinal))
+				{
+					continue;
+				}
+
+				string candidateIp = line[(separatorIndex + 1)..].Trim();
+				if (IPAddress.TryParse(candidateIp, out _))
+				{
+					return candidateIp;
+				}
+			}
+		}
+		catch
+		{
+		}
+
+		return null;
+	}
+
+	private static async Task<string?> TryGetAwsPublicIpAsync()
+	{
+		try
+		{
+			using CancellationTokenSource cancellationTokenSource = new(TimeSpan.FromSeconds(10));
+			using HttpResponseMessage response = await SecHttpClient.Instance.GetAsync(AwsCheckIpUri, cancellationTokenSource.Token).ConfigureAwait(false);
+			_ = response.EnsureSuccessStatusCode();
+
+			string candidateIp = (await response.Content.ReadAsStringAsync(cancellationTokenSource.Token).ConfigureAwait(false)).Trim();
+			if (IPAddress.TryParse(candidateIp, out _))
+			{
+				return candidateIp;
+			}
+		}
+		catch
+		{
+		}
+
+		return null;
+	}
+
 	public void Dispose()
 	{
 		_temperatureSampler?.Dispose();
 		_temperatureSampler = null;
+		_publicIpLookupLock.Dispose();
 	}
 
 }

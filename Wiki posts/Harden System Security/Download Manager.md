@@ -11,6 +11,7 @@ You can add downloads in multiple ways:
 * **Add Links button:** Opens a dialog where you can paste one or more direct HTTP/HTTPS links.
 * **Clipboard-aware input:** If your clipboard already contains links, the dialog preloads them automatically.
 * **Keyboard shortcut:** Press `Ctrl + V` on the page to immediately queue valid links from the clipboard.
+* **Drag and drop:** You can also drag and drop links from a browser or text file directly into the app. (Only works when running unelevated.)
 
 The app detects all valid links in the pasted text and queues them together.
 
@@ -101,7 +102,7 @@ The Download Manager has its own settings page where you can control how transfe
 ### Transfers
 
 * Set the maximum number of simultaneous downloads
-* Set the number of parallel connections per download
+* Set the number of parallel connections per download (does not apply to downloads that are already in progress)
 * Choose an action to run after all downloads finish
   * None
   * Shutdown

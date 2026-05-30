@@ -55,6 +55,26 @@
                 </AppBarButton.Icon>
             </AppBarButton>
 
+            <AppBarButton VerticalAlignment="Center"
+                          Label="Sort"
+                          HorizontalAlignment="Center"
+                          ToolTipService.ToolTip="{x:Bind ViewModel.ActiveSortToolTip, Mode=OneWay}"
+                          AutomationProperties.Name="{x:Bind ViewModel.ActiveSortToolTip, Mode=OneWay}">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xE8CB;" />
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem Text="Name"
+                                        Click="{x:Bind ViewModel.SortByNameMenuFlyoutItem_Click}" />
+                        <MenuFlyoutItem Text="Size"
+                                        Click="{x:Bind ViewModel.SortBySizeMenuFlyoutItem_Click}" />
+                        <MenuFlyoutItem Text="Date added"
+                                        Click="{x:Bind ViewModel.SortByDateAddedMenuFlyoutItem_Click}" />
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+
             <AppBarButton Click="{x:Bind ViewModel.OpenSettingsPageAsync}"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center"
@@ -90,7 +110,7 @@
                             </MenuFlyoutItem>
                             <MenuFlyoutItem x:Uid="Full" Click="{x:Bind ViewModel.ApplyFullPresetMenuFlyoutItem_Click}">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xEC4A;" Foreground="ForestGreen" />
+                                    <FontIcon Glyph="&#xEC4A;" Foreground="SpringGreen" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -104,6 +124,49 @@
                 </DropDownButton>
 
             </AppBarElementContainer>
+
+            <AppBarElementContainer VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
+                <!-- Total chip -->
+                <Border CornerRadius="8"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Padding="10,6"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run x:Uid="TotalText" />
+                            <Run Text="{x:Bind ViewModel.FilteredDownloadItems.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </AppBarElementContainer>
+
+            <AppBarButton VerticalAlignment="Center"
+                          Label="Select all"
+                          HorizontalAlignment="Center"
+                          Click="SelectAllDownloadsAppBarButton_Click"
+                          IsEnabled="{x:Bind ViewModel.CanSelectAllDownloads, Mode=OneWay}"
+                          ToolTipService.ToolTip="Select all downloads"
+                          AutomationProperties.Name="Select all downloads">
+                <AppBarButton.Icon>
+                    <SymbolIcon Symbol="SelectAll" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton VerticalAlignment="Center"
+                          Label="Deselect all"
+                          HorizontalAlignment="Center"
+                          Click="DeselectAllDownloadsAppBarButton_Click"
+                          IsEnabled="{x:Bind ViewModel.CanDeselectAllDownloads, Mode=OneWay}"
+                          ToolTipService.ToolTip="Deselect all downloads"
+                          AutomationProperties.Name="Deselect all downloads">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xE8E6;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
 
             <AppBarButton x:Uid="PauseAppBarButton"
                           Visibility="{x:Bind ViewModel.SelectionActionsVisibility, Mode=OneWay}"
@@ -149,7 +212,8 @@
         </CommandBar>
 
         <Grid Grid.Row="2">
-            <ListView ItemsSource="{x:Bind ViewModel.FilteredDownloadItems, Mode=OneWay}"
+            <ListView x:Name="DownloadItemsListView"
+                      ItemsSource="{x:Bind ViewModel.FilteredDownloadItems, Mode=OneWay}"
                       SelectionMode="Multiple"
                       CanDragItems="True"
                       ScrollViewer.VerticalScrollBarVisibility="Visible"

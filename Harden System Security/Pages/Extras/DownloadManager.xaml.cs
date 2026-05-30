@@ -16,6 +16,7 @@
 //
 
 using HardenSystemSecurity.ViewModels;
+using CommonCore.Others;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Media.Playback;
@@ -31,6 +32,14 @@ internal sealed partial class DownloadManager : Page, CommonCore.UI.IPageHeaderP
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
+	}
+
+	private void SelectAllDownloadsAppBarButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => ListViewHelper.SelectAll(DownloadItemsListView);
+
+	private void DeselectAllDownloadsAppBarButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	{
+		DownloadItemsListView.SelectedItems.Clear();
+		DownloadItemsListView.SelectedItem = null;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DownloadManagerNavigationViewItem/AutomationProperties/HelpText");

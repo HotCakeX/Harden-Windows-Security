@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -38,6 +39,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
+using CommonCore.Others;
 using CommonCore.ToolKits;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -90,8 +92,8 @@ internal enum DownloadSpeedPreset
 
 internal sealed partial class DownloadManagerItem : ViewModelBase
 {
-	internal static readonly Brush CompletedStatusBrush = new SolidColorBrush(Colors.ForestGreen);
-	internal static readonly Brush DownloadingStatusBrush = new SolidColorBrush(Colors.DodgerBlue);
+	internal static readonly Brush CompletedStatusBrush = new SolidColorBrush(Colors.SpringGreen);
+	internal static readonly Brush DownloadingStatusBrush = new SolidColorBrush(Colors.DeepSkyBlue);
 	internal static readonly Brush PausedStatusBrush = new SolidColorBrush(Colors.DarkOrange);
 	internal static readonly Brush FailedStatusBrush = new SolidColorBrush(Colors.IndianRed);
 	internal static readonly Brush InterruptedStatusBrush = new SolidColorBrush(Colors.OrangeRed);
@@ -270,6 +272,17 @@ internal sealed partial class DownloadManagerItem : ViewModelBase
 	}
 
 	internal DateTimeOffset CreatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
+	internal DateTimeOffset? ServerFileTimestampUtc
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(AddedAtText));
+			}
+		}
+	}
+
 	internal DateTimeOffset? CompletedAtUtc
 	{
 		get; set
@@ -326,7 +339,9 @@ internal sealed partial class DownloadManagerItem : ViewModelBase
 	internal Visibility HoverVideoPreviewVisibility => IsVideoPreviewHoverActive && CanHoverPlayVideoPreview ? Visibility.Visible : Visibility.Collapsed;
 	internal MediaSource? HoverVideoPreviewSource => IsVideoPreviewHoverActive && CanHoverPlayVideoPreview ? MediaSource.CreateFromUri(new Uri(FilePath)) : null;
 	internal Visibility VideoPreviewHintVisibility => CanHoverPlayVideoPreview && !IsVideoPreviewHoverActive ? Visibility.Visible : Visibility.Collapsed;
-	internal string AddedAtText => $"Added {CreatedAtUtc.ToLocalTime():g}";
+	internal string AddedAtText => ServerFileTimestampUtc.HasValue
+		? $"Added {CreatedAtUtc.ToLocalTime():g} • Server {ServerFileTimestampUtc.Value.ToLocalTime():g}"
+		: $"Added {CreatedAtUtc.ToLocalTime():g}";
 	internal string DownloadSpeedText => CurrentBytesPerSecond > 0 ? $"{HomeVM.FormatDataSize(CurrentBytesPerSecond)}/s" : "Calculating speed...";
 	internal Brush StatusForeground => State switch
 	{
@@ -445,7 +460,8 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		string temporaryFilePath = "",
 		string checkpointFilePath = "",
 		bool supportsRangeRequests = false,
-		int parallelConnectionsUsed = 1)
+		int parallelConnectionsUsed = 1,
+		DateTimeOffset? serverFileTimestampUtc = null)
 	{
 		public string SourceUrl => sourceUrl;
 		public string DisplayName => displayName;
@@ -461,12 +477,14 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		public string CheckpointFilePath => checkpointFilePath;
 		public bool SupportsRangeRequests => supportsRangeRequests;
 		public int ParallelConnectionsUsed => parallelConnectionsUsed;
+		public DateTimeOffset? ServerFileTimestampUtc => serverFileTimestampUtc;
 	}
 
-	private sealed partial class DownloadMetadataResponse(HttpResponseMessage response, bool canReuseResponseBody) : IDisposable
+	private sealed partial class DownloadMetadataResponse(HttpResponseMessage response, bool canReuseResponseBody, DateTimeOffset? serverFileTimestampUtc) : IDisposable
 	{
 		internal HttpResponseMessage Response => response;
 		internal bool CanReuseResponseBody => canReuseResponseBody;
+		internal DateTimeOffset? ServerFileTimestampUtc => serverFileTimestampUtc;
 
 		public void Dispose() => response.Dispose();
 	}
@@ -482,6 +500,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		public bool SupportsRangeRequests { get; set; }
 		public int ParallelConnectionsUsed { get; set; } = 1;
 		public DateTimeOffset CreatedAtUtc { get; set; }
+		public DateTimeOffset? ServerFileTimestampUtc { get; set; }
 		public DateTimeOffset UpdatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 		public List<DownloadSegmentRecord> Segments { get; set; } = [];
 	}
@@ -645,6 +664,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	private readonly Dictionary<DownloadManagerItem, ActiveDownloadOperation> _activeDownloads = [];
 	private readonly Dictionary<DownloadManagerItem, DownloadRuntimeState> _activeDownloadRuntimes = [];
 	private readonly List<DownloadManagerItem> _selectedDownloadItems = [];
+	private readonly ListViewHelper.SortState _sortState = new();
 	private readonly string _historyFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "DownloadManagerHistory.json");
 	private FrameworkElement? _downloadManagerPresetsSectionHeader;
 	private int _activeDownloadCount;
@@ -886,11 +906,14 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	internal int SelectedDownloadCount => _selectedDownloadItems.Count;
 	internal bool HasSelectedDownloads => SelectedDownloadCount > 0;
 	internal string SelectedDownloadsText => SelectedDownloadCount == 1 ? "1 selected" : $"{SelectedDownloadCount} selected";
+	internal bool CanSelectAllDownloads => FilteredDownloadItems.Count > 0 && SelectedDownloadCount < FilteredDownloadItems.Count;
+	internal bool CanDeselectAllDownloads => SelectedDownloadCount > 0;
 	internal bool CanPauseSelectedDownloads => _selectedDownloadItems.Any(static item => item.State is DownloadState.Running);
 	internal bool CanResumeSelectedDownloads => _selectedDownloadItems.Any(static item => item.CanResumeDownload);
-	internal bool CanDeleteSelectedDownloads => _selectedDownloadItems.Any(static item => item.State is not DownloadState.Deleted);
-	internal bool CanRemoveSelectedDownloads => CanDeleteSelectedDownloads;
+	internal bool CanDeleteSelectedDownloads => HasSelectedDownloads;
+	internal bool CanRemoveSelectedDownloads => HasSelectedDownloads;
 	internal Visibility SelectionActionsVisibility => HasSelectedDownloads ? Visibility.Visible : Visibility.Collapsed;
+	internal string ActiveSortToolTip => GetActiveSortDescription();
 	internal string? SearchText
 	{
 		get; set
@@ -924,10 +947,10 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	internal string ActiveSpeedPresetGlyph => ActiveSpeedPreset switch
 	{
-		DownloadSpeedPreset.Slow => "\uE823",
+		DownloadSpeedPreset.Slow => "\uEC48",
 		DownloadSpeedPreset.Medium => "\uEC49",
-		DownloadSpeedPreset.Full => "\uE896",
-		_ => "\uE896"
+		DownloadSpeedPreset.Full => "\uEC4A",
+		_ => "\uEC4A"
 	};
 
 	internal Brush ActiveSpeedPresetBrush => ActiveSpeedPreset switch
@@ -990,6 +1013,17 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			}
 
 			inputTextBox.TextChanged += (_, _) => UpdateDetectedLinks(inputTextBox.Text);
+			inputTextBox.Paste += async (_, e) =>
+			{
+				e.Handled = true;
+
+				// Only normalize on paste. This keeps manual typing/selection untouched while still fixing
+				// repeated mixed-text pastes by replacing the box contents with freshly extracted links.
+				string normalizedClipboardText = string.Join(Environment.NewLine, ExtractLinks(await GetClipboardTextAsync()).Select(static link => link.AbsoluteUri));
+				inputTextBox.Text = normalizedClipboardText;
+				inputTextBox.SelectionStart = inputTextBox.Text.Length;
+				UpdateDetectedLinks(normalizedClipboardText);
+			};
 
 			if (!string.IsNullOrWhiteSpace(clipboardText))
 			{
@@ -1147,6 +1181,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			string comparableExpectedFileName = SanitizeFileName($"{MyRegex1().Replace(Path.GetFileNameWithoutExtension(expectedFileName), string.Empty)}{Path.GetExtension(expectedFileName)}");
 			string comparableResolvedFileName = SanitizeFileName($"{MyRegex1().Replace(Path.GetFileNameWithoutExtension(resolvedFileName), string.Empty)}{Path.GetExtension(resolvedFileName)}");
 			long? resolvedTotalBytes = metadata.Response.Content.Headers.ContentLength;
+			DateTimeOffset? resolvedServerFileTimestampUtc = metadata.ServerFileTimestampUtc;
 			if (resolvedTotalBytes.HasValue && resolvedTotalBytes.Value <= 0)
 			{
 				resolvedTotalBytes = null;
@@ -1179,6 +1214,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			if (TryLoadCheckpoint(item, out DownloadCheckpointRecord? checkpoint))
 			{
 				checkpoint.SourceUrl = replacementSourceUrl;
+				checkpoint.ServerFileTimestampUtc = resolvedServerFileTimestampUtc ?? checkpoint.ServerFileTimestampUtc;
 				if (resolvedTotalBytes.HasValue)
 				{
 					checkpoint.TotalBytes = resolvedTotalBytes.Value;
@@ -1191,6 +1227,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			await UpdateItemAsync(item, current =>
 			{
 				current.SourceUrl = replacementSourceUrl;
+				current.ServerFileTimestampUtc = resolvedServerFileTimestampUtc ?? current.ServerFileTimestampUtc;
 				if (resolvedTotalBytes.HasValue)
 				{
 					current.TotalBytes = resolvedTotalBytes.Value;
@@ -1396,6 +1433,10 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		await TryScrollPresetsSectionIntoViewAsync();
 	}
 
+	internal void SortByNameMenuFlyoutItem_Click() => ApplySort("Name");
+	internal void SortBySizeMenuFlyoutItem_Click() => ApplySort("Size");
+	internal void SortByDateAddedMenuFlyoutItem_Click() => ApplySort("DateAdded");
+
 	internal void PauseSelectedDownloadsAppBarButton_Click()
 	{
 		int count = 0;
@@ -1443,9 +1484,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	internal async void DeleteSelectedDownloadsAppBarButton_Click()
 	{
-		List<DownloadManagerItem> selectedItems = _selectedDownloadItems
-			.Where(static item => item.State is not DownloadState.Deleted)
-			.ToList();
+		List<DownloadManagerItem> selectedItems = _selectedDownloadItems.ToList();
 		if (selectedItems.Count == 0)
 		{
 			return;
@@ -1457,8 +1496,8 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			Content = new TextBlock
 			{
 				Text = selectedItems.Count == 1
-					? $"Delete '{selectedItems[0].DisplayName}' and its file?"
-					: $"Delete {selectedItems.Count} selected downloads and their files?",
+					? $"Delete '{selectedItems[0].DisplayName}' and its file if it exists?"
+					: $"Delete {selectedItems.Count} selected downloads and their files if they exist?",
 				TextWrapping = TextWrapping.Wrap
 			},
 			PrimaryButtonText = "Delete",
@@ -1472,22 +1511,47 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		}
 
 		int deletedCount = 0;
+		int removedCount = 0;
 
 		foreach (DownloadManagerItem item in selectedItems)
 		{
+			if (item.State is DownloadState.Deleted || !item.IsFileAvailable)
+			{
+				if (await RemoveItemFromListAsync(item, false))
+				{
+					removedCount++;
+				}
+
+				continue;
+			}
+
 			if (await DeleteDownloadedFileAsync(item, false))
 			{
 				deletedCount++;
 			}
 		}
 
-		if (deletedCount == 0)
+		if (deletedCount == 0 && removedCount == 0)
 		{
 			MainInfoBar.WriteWarning("Select one or more downloads to delete.");
 			return;
 		}
 
-		MainInfoBar.WriteSuccess(deletedCount == 1 ? "Deleted 1 selected download." : $"Deleted {deletedCount} selected downloads.");
+		if (deletedCount > 0 && removedCount > 0)
+		{
+			MainInfoBar.WriteSuccess($"Deleted {deletedCount} selected download(s) and removed {removedCount} missing item(s) from the list.");
+			return;
+		}
+
+		if (deletedCount > 0)
+		{
+			MainInfoBar.WriteSuccess(deletedCount == 1 ? "Deleted 1 selected download." : $"Deleted {deletedCount} selected downloads.");
+			return;
+		}
+
+		MainInfoBar.WriteSuccess(removedCount == 1
+			? "Removed 1 missing selected download from the list."
+			: $"Removed {removedCount} missing selected downloads from the list.");
 	}
 
 	internal async void RemoveSelectedDownloadsAppBarButton_Click()
@@ -1659,6 +1723,19 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 			await Atlas.AppDispatcher.EnqueueAsync(async () =>
 			{
+				Button copyButton = new()
+				{
+					Content = new SymbolIcon(Symbol.Copy),
+					HorizontalAlignment = HorizontalAlignment.Right,
+					VerticalAlignment = VerticalAlignment.Center
+				};
+				ToolTipService.SetToolTip(copyButton, "Copy hash");
+				copyButton.Click += (_, _) =>
+				{
+					ClipboardManagement.CopyText(hashText);
+					MainInfoBar.WriteSuccess($"{hashDisplayName} copied to the clipboard.");
+				};
+
 				TextBox hashTextBox = new()
 				{
 					Text = hashText,
@@ -1667,10 +1744,21 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 					AcceptsReturn = true
 				};
 
+				Grid dialogContent = new()
+				{
+					ColumnSpacing = 8
+				};
+				dialogContent.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+				dialogContent.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+				hashTextBox.SetValue(Grid.ColumnProperty, 0);
+				copyButton.SetValue(Grid.ColumnProperty, 1);
+				dialogContent.Children.Add(copyButton);
+				dialogContent.Children.Add(hashTextBox);
+
 				using ContentDialogV2 dialog = new()
 				{
 					Title = hashDisplayName,
-					Content = hashTextBox,
+					Content = dialogContent,
 					CloseButtonText = Atlas.GetStr("OK"),
 					DefaultButton = ContentDialogButton.Close
 				};
@@ -1684,28 +1772,29 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		}
 	}
 
-	private static async Task<byte[]> ComputeFileHashAsync(string filePath, HashAlgorithmName hashAlgorithmName)
-	{
-		const int BufferSize = 1024 * 1024;
-
-		await using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, BufferSize, useAsync: true);
-		using IncrementalHash incrementalHash = IncrementalHash.CreateHash(hashAlgorithmName);
-
-		byte[] buffer = GC.AllocateUninitializedArray<byte>(BufferSize);
-
-		while (true)
+	private static Task<byte[]> ComputeFileHashAsync(string filePath, HashAlgorithmName hashAlgorithmName) =>
+		Task.Run(async () =>
 		{
-			int bytesRead = await fileStream.ReadAsync(buffer.AsMemory(0, buffer.Length)).ConfigureAwait(false);
-			if (bytesRead == 0)
+			const int BufferSize = 1024 * 1024;
+
+			await using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, BufferSize, useAsync: true);
+			using IncrementalHash incrementalHash = IncrementalHash.CreateHash(hashAlgorithmName);
+
+			byte[] buffer = GC.AllocateUninitializedArray<byte>(BufferSize);
+
+			while (true)
 			{
-				break;
+				int bytesRead = await fileStream.ReadAsync(buffer.AsMemory(0, buffer.Length)).ConfigureAwait(false);
+				if (bytesRead == 0)
+				{
+					break;
+				}
+
+				incrementalHash.AppendData(buffer.AsSpan(0, bytesRead));
 			}
 
-			incrementalHash.AppendData(buffer.AsSpan(0, bytesRead));
-		}
-
-		return incrementalHash.GetHashAndReset();
-	}
+			return incrementalHash.GetHashAndReset();
+		});
 
 	internal async Task<bool> ResumeDownloadAsync(DownloadManagerItem item, bool announce = true)
 	{
@@ -1982,6 +2071,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 						SupportsRangeRequests = supportsRangeRequests,
 						ParallelConnectionsUsed = Math.Max(1, effectiveParallelConnections),
 						CreatedAtUtc = item.CreatedAtUtc,
+						ServerFileTimestampUtc = metadata.ServerFileTimestampUtc,
 						UpdatedAtUtc = DateTimeOffset.UtcNow,
 						Segments = segments
 					};
@@ -2030,6 +2120,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				current.BytesReceived = CalculateReceivedBytes(runtime.Checkpoint);
 				current.SupportsRangeRequests = runtime.Checkpoint.SupportsRangeRequests;
 				current.ParallelConnectionsUsed = runtime.Checkpoint.ParallelConnectionsUsed;
+				current.ServerFileTimestampUtc = runtime.Checkpoint.ServerFileTimestampUtc;
 				current.CurrentBytesPerSecond = 0;
 			}).ConfigureAwait(false);
 
@@ -2565,6 +2656,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 					SupportsRangeRequests = record.SupportsRangeRequests,
 					ParallelConnectionsUsed = Math.Max(1, record.ParallelConnectionsUsed > 0 ? record.ParallelConnectionsUsed : ParallelConnectionsPerDownload),
 					CreatedAtUtc = record.CreatedAtUtc,
+					ServerFileTimestampUtc = record.ServerFileTimestampUtc,
 					CompletedAtUtc = record.CompletedAtUtc
 				};
 
@@ -2605,7 +2697,8 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 					item.TemporaryFilePath,
 					item.CheckpointFilePath,
 					item.SupportsRangeRequests,
-					item.ParallelConnectionsUsed)).ToList()).ConfigureAwait(false);
+					item.ParallelConnectionsUsed,
+					item.ServerFileTimestampUtc)).ToList()).ConfigureAwait(false);
 			string json = JsonSerializer.Serialize(records, DownloadManagerJsonContext.Default.ListDownloadHistoryRecord);
 
 			lock (_historyLock)
@@ -2708,6 +2801,10 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		HttpResponseMessage headResponse = await SendDownloadRequestWithRetriesAsync(
 			() => new HttpRequestMessage(HttpMethod.Head, sourceUri),
 			cancellationToken).ConfigureAwait(false);
+		// Different download endpoints are inconsistent about which verb exposes Last-Modified. Capture the
+		// HEAD value up front and carry it forward so we still show the server timestamp even if the later
+		// fallback GET omits it (or vice versa).
+		DateTimeOffset? headServerFileTimestampUtc = GetServerFileTimestampUtc(headResponse);
 		bool canUseHeadResponse;
 		if (!headResponse.IsSuccessStatusCode || headResponse.StatusCode == HttpStatusCode.NoContent)
 		{
@@ -2736,7 +2833,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 		if (canUseHeadResponse)
 		{
-			return new(headResponse, canReuseResponseBody: false);
+			return new(headResponse, canReuseResponseBody: false, headServerFileTimestampUtc);
 		}
 
 		headResponse.Dispose();
@@ -2744,7 +2841,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			() => new HttpRequestMessage(HttpMethod.Get, sourceUri),
 			cancellationToken).ConfigureAwait(false);
 		_ = getResponse.EnsureSuccessStatusCode();
-		return new(getResponse, canReuseResponseBody: true);
+		return new(getResponse, canReuseResponseBody: true, GetServerFileTimestampUtc(getResponse) ?? headServerFileTimestampUtc);
 	}
 
 	private async Task<HttpResponseMessage> SendDownloadRequestWithRetriesAsync(Func<HttpRequestMessage> requestFactory, CancellationToken cancellationToken)
@@ -3263,18 +3360,16 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				|| item.FilePath.Contains(query, StringComparison.OrdinalIgnoreCase)
 				|| item.DestinationDirectory.Contains(query, StringComparison.OrdinalIgnoreCase)
 				|| item.StatusText.Contains(query, StringComparison.OrdinalIgnoreCase));
+		List<DownloadManagerItem> filteredList = ApplyActiveSort(filtered).ToList();
 
 		FilteredDownloadItems.Clear();
-		foreach (DownloadManagerItem item in filtered)
+		foreach (DownloadManagerItem item in filteredList)
 		{
 			FilteredDownloadItems.Add(item);
 		}
 
-		if (_selectedDownloadItems.RemoveAll(item => !FilteredDownloadItems.Contains(item)) > 0)
-		{
-			NotifySelectedDownloadsChanged();
-		}
-
+		_ = _selectedDownloadItems.RemoveAll(item => !FilteredDownloadItems.Contains(item));
+		NotifySelectedDownloadsChanged();
 		UpdateEmptyStateVisibility();
 	}
 
@@ -3283,11 +3378,65 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		OnPropertyChanged(nameof(HasSelectedDownloads));
 		OnPropertyChanged(nameof(SelectedDownloadCount));
 		OnPropertyChanged(nameof(SelectedDownloadsText));
+		OnPropertyChanged(nameof(CanSelectAllDownloads));
+		OnPropertyChanged(nameof(CanDeselectAllDownloads));
 		OnPropertyChanged(nameof(CanPauseSelectedDownloads));
 		OnPropertyChanged(nameof(CanResumeSelectedDownloads));
 		OnPropertyChanged(nameof(CanDeleteSelectedDownloads));
 		OnPropertyChanged(nameof(CanRemoveSelectedDownloads));
 		OnPropertyChanged(nameof(SelectionActionsVisibility));
+	}
+
+	private void ApplySort(string sortKey)
+	{
+		if (string.Equals(_sortState.CurrentSortKey, sortKey, StringComparison.OrdinalIgnoreCase))
+		{
+			_sortState.IsDescending = !_sortState.IsDescending;
+		}
+		else
+		{
+			_sortState.CurrentSortKey = sortKey;
+			_sortState.IsDescending = sortKey is "Size" or "DateAdded";
+		}
+
+		OnPropertyChanged(nameof(ActiveSortToolTip));
+		_ = RefreshFilteredDownloadItemsAsync();
+	}
+
+	private IEnumerable<DownloadManagerItem> ApplyActiveSort(IEnumerable<DownloadManagerItem> items)
+	{
+		Func<DownloadManagerItem, object?>? keySelector = _sortState.CurrentSortKey switch
+		{
+			"Name" => static item => item.DisplayName,
+			"Size" => static item => item.TotalBytes ?? item.BytesReceived,
+			"DateAdded" => static item => item.CreatedAtUtc,
+			_ => null
+		};
+
+		if (keySelector is null)
+		{
+			return items;
+		}
+
+		return _sortState.IsDescending
+			? items.OrderByDescending(keySelector).ThenByDescending(static item => item.CreatedAtUtc)
+			: items.OrderBy(keySelector).ThenBy(static item => item.CreatedAtUtc);
+	}
+
+	private string GetActiveSortDescription()
+	{
+		if (string.IsNullOrWhiteSpace(_sortState.CurrentSortKey))
+		{
+			return "Sort downloads";
+		}
+
+		return _sortState.CurrentSortKey switch
+		{
+			"Name" => _sortState.IsDescending ? "Sorted by name (Z to A)" : "Sorted by name (A to Z)",
+			"Size" => _sortState.IsDescending ? "Sorted by size (largest first)" : "Sorted by size (smallest first)",
+			"DateAdded" => _sortState.IsDescending ? "Sorted by date added (newest first)" : "Sorted by date added (oldest first)",
+			_ => "Sort downloads"
+		};
 	}
 
 	private async Task TryScrollPresetsSectionIntoViewAsync()
@@ -3991,6 +4140,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		SupportsRangeRequests = checkpoint.SupportsRangeRequests,
 		ParallelConnectionsUsed = checkpoint.ParallelConnectionsUsed,
 		CreatedAtUtc = checkpoint.CreatedAtUtc,
+		ServerFileTimestampUtc = checkpoint.ServerFileTimestampUtc,
 		UpdatedAtUtc = checkpoint.UpdatedAtUtc,
 		Segments = checkpoint.Segments.Select(static segment => new DownloadSegmentRecord
 		{
@@ -4091,6 +4241,42 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		return clipboardText ?? string.Empty;
 	}
 
+	private static DateTimeOffset? GetServerFileTimestampUtc(HttpResponseMessage response)
+	{
+		DateTimeOffset? typedLastModified = response.Content.Headers.LastModified;
+		if (typedLastModified.HasValue)
+		{
+			return typedLastModified.Value.ToUniversalTime();
+		}
+
+		return TryGetServerFileTimestampUtc(response.Content.Headers)
+			?? TryGetServerFileTimestampUtc(response.Headers);
+	}
+
+	private static DateTimeOffset? TryGetServerFileTimestampUtc(HttpHeaders headers)
+	{
+		// Some CDNs send a raw Last-Modified header without hydrating the typed header property. Parse the
+		// raw value too so those responses still populate the server-side timestamp in the list view.
+		if (!headers.TryGetValues("Last-Modified", out IEnumerable<string>? values))
+		{
+			return null;
+		}
+
+		foreach (string value in values)
+		{
+			if (DateTimeOffset.TryParse(
+				value,
+				CultureInfo.InvariantCulture,
+				DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+				out DateTimeOffset parsed))
+			{
+				return parsed.ToUniversalTime();
+			}
+		}
+
+		return null;
+	}
+
 	private static bool CanDropLinks(DataPackageView dataView) =>
 		dataView.Contains(StandardDataFormats.WebLink) || dataView.Contains(StandardDataFormats.Text);
 
@@ -4168,22 +4354,31 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		{
 			bool anyChanged = false;
 			int normalized = Math.Clamp(requestedConnections, 1, 32);
+			List<DownloadManagerItem> items = await Atlas.AppDispatcher.EnqueueAsync(() => DownloadItems.ToList()).ConfigureAwait(false);
 
-			foreach (DownloadManagerItem item in await Atlas.AppDispatcher.EnqueueAsync(() => DownloadItems.ToList()).ConfigureAwait(false))
+			foreach (DownloadManagerItem item in items)
 			{
+				bool isActiveDownload;
+
+				lock (_activeDownloadsLock)
+				{
+					isActiveDownload = _activeDownloads.ContainsKey(item) || _activeDownloadRuntimes.ContainsKey(item);
+				}
+
+				// Do not mutate active or already-started downloads. Their checkpoint segment map was created
+				// for the connection count that was active when the download started.
+				if (isActiveDownload || !(item.BytesReceived <= 0 && item.State is DownloadState.Queued or DownloadState.Failed))
+				{
+					continue;
+				}
+
 				int effective = normalized;
 				bool checkpointChanged = false;
-				bool canApplyToActiveDownloadImmediately = false;
-				DownloadCheckpointRecord? activeCheckpointSnapshot = null;
 
 				if (TryLoadCheckpoint(item, out DownloadCheckpointRecord? checkpoint))
 				{
 					checkpointChanged = ApplyParallelConnectionsPreference(checkpoint, normalized);
 					effective = checkpoint.ParallelConnectionsUsed;
-					canApplyToActiveDownloadImmediately = checkpointChanged
-						&& checkpoint.SupportsRangeRequests
-						&& checkpoint.TotalBytes.HasValue
-						&& CalculateReceivedBytes(checkpoint) == 0;
 
 					if (checkpointChanged)
 					{
@@ -4191,47 +4386,10 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 					}
 				}
 
-				lock (_activeDownloadsLock)
-				{
-					if (_activeDownloadRuntimes.TryGetValue(item, out DownloadRuntimeState? runtime))
-					{
-						lock (runtime.SyncRoot)
-						{
-							if (runtime.Checkpoint.ParallelConnectionsUsed != effective)
-							{
-								runtime.Checkpoint.ParallelConnectionsUsed = effective;
-								runtime.Checkpoint.UpdatedAtUtc = DateTimeOffset.UtcNow;
-								activeCheckpointSnapshot = CreateCheckpointSnapshot(runtime.Checkpoint);
-								checkpointChanged = true;
-							}
-						}
-					}
-				}
-
-				if (activeCheckpointSnapshot is not null)
-				{
-					SaveCheckpoint(activeCheckpointSnapshot);
-				}
-
 				bool itemChanged = item.ParallelConnectionsUsed != effective;
 				if (itemChanged)
 				{
 					await UpdateItemAsync(item, current => current.ParallelConnectionsUsed = effective).ConfigureAwait(false);
-				}
-
-				if (itemChanged && item.State is DownloadState.Running && canApplyToActiveDownloadImmediately)
-				{
-					lock (_activeDownloadsLock)
-					{
-						if (_activeDownloads.TryGetValue(item, out ActiveDownloadOperation? activeDownloadOperation))
-						{
-							activeDownloadOperation.PauseRequested = true;
-							activeDownloadOperation.RestartRequested = true;
-#pragma warning disable CA1849 // 'CancellationTokenSource.Cancel()' synchronously blocks. Await 'CancellationTokenSource.CancelAsync()' instead. But we cannot do async in a Lock. 
-							activeDownloadOperation.CancellationTokenSource.Cancel();
-#pragma warning restore CA1849
-						}
-					}
 				}
 
 				anyChanged |= itemChanged || checkpointChanged;
@@ -4256,10 +4414,18 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			return false;
 		}
 
+		// Segment boundaries are created from the original parallel connection count. Once any byte has
+		// been received, changing only ParallelConnectionsUsed would make the checkpoint/history claim a
+		// different connection count than the one actually used by the existing segment map.
+		if (CalculateReceivedBytes(checkpoint) > 0)
+		{
+			return false;
+		}
+
 		checkpoint.ParallelConnectionsUsed = effective;
 		checkpoint.UpdatedAtUtc = DateTimeOffset.UtcNow;
 
-		if (checkpoint.SupportsRangeRequests && checkpoint.TotalBytes.HasValue && checkpoint.TotalBytes.Value > 0 && CalculateReceivedBytes(checkpoint) == 0)
+		if (checkpoint.SupportsRangeRequests && checkpoint.TotalBytes.HasValue && checkpoint.TotalBytes.Value > 0)
 		{
 			checkpoint.Segments = CreateSegments(checkpoint.TotalBytes.Value, effective);
 		}

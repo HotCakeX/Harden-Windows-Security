@@ -3393,4 +3393,29 @@ internal static unsafe partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool ClosePrinter(nint printer);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessmitigationpolicy
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetProcessMitigationPolicy(
+		PROCESS_MITIGATION_POLICY MitigationPolicy,
+		ref PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY lpBuffer,
+		nuint dwLength);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessmitigationpolicy
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetProcessMitigationPolicy(
+		IntPtr hProcess,
+		PROCESS_MITIGATION_POLICY MitigationPolicy,
+		out PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY lpBuffer,
+		nuint dwLength);
+
 }

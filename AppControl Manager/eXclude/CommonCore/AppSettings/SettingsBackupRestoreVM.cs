@@ -316,8 +316,13 @@ internal static class SettingsBackupRestoreSerializer
 			static value => RGBHEX.ToRGB(value, out _, out _, out _),
 			$"'{nameof(Main.BackdropBlurBrushTintColor)}' must be a valid RGB hex color."),
 
-		CreateDouble(nameof(Main.BackdropBlurBrushBlurAmount), "Number in range 1-100", 1D, 100D, settings => settings.BackdropBlurBrushBlurAmount, (settings, value) => settings.BackdropBlurBrushBlurAmount = value)
-	];
+		CreateDouble(nameof(Main.BackdropBlurBrushBlurAmount), "Number in range 1-100", 1D, 100D, settings => settings.BackdropBlurBrushBlurAmount, (settings, value) => settings.BackdropBlurBrushBlurAmount = value),
+
+		CreateBoolean(nameof(Main.ApplySideChannelIsolationMitigationsOnStartup),
+			settings => settings.ApplySideChannelIsolationMitigationsOnStartup,
+			(settings, value) => settings.ApplySideChannelIsolationMitigationsOnStartup = value),
+
+		];
 
 	internal static byte[] Export(Main settings)
 	{

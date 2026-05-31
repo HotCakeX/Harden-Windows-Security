@@ -123,6 +123,7 @@ internal sealed partial class Main : ViewModelBase
 		BackdropBlurBrushTintOpacity = ReadValue(nameof(BackdropBlurBrushTintOpacity), BackdropBlurBrushTintOpacity);
 		BackdropBlurBrushTintColor = ReadValue(nameof(BackdropBlurBrushTintColor), BackdropBlurBrushTintColor);
 		BackdropBlurBrushBlurAmount = ReadValue(nameof(BackdropBlurBrushBlurAmount), BackdropBlurBrushBlurAmount);
+		ApplySideChannelIsolationMitigationsOnStartup = ReadValue(nameof(ApplySideChannelIsolationMitigationsOnStartup), ApplySideChannelIsolationMitigationsOnStartup);
 	}
 
 	/// <summary>
@@ -1069,4 +1070,20 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = DefaultCustomBrushAppPackageBackgroundPicture;
+
+
+	/// <summary>
+	/// Whether the app should apply process side-channel isolation mitigations on startup.
+	/// </summary>
+	internal bool ApplySideChannelIsolationMitigationsOnStartup
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(ApplySideChannelIsolationMitigationsOnStartup), field);
+			}
+		}
+	}
+
 }

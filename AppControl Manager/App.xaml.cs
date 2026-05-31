@@ -43,6 +43,8 @@ namespace AppControlManager;
 /// </summary>
 public sealed partial class App : Application
 {
+	private static ProcessSideChannelIsolationResult SideChannelIsolationStartupResult;
+
 	/// <summary>
 	/// Tracks whether the cleanup logics have been run.
 	/// </summary>
@@ -65,11 +67,23 @@ public sealed partial class App : Application
 		// Capture the dispatcher queue as early as possible.
 		Atlas.AppDispatcher = DispatcherQueue.GetForCurrentThread();
 
+		// Apply Side-channel mitigations at the startup.
+		if (Atlas.Settings.ApplySideChannelIsolationMitigationsOnStartup)
+		{
+			SideChannelIsolationStartupResult = ProcessSideChannelIsolation.ApplyToCurrentProcess();
+		}
+
 		// Detect and set the language of the application.
 		SettingsVM.SetLanguageOnStartup();
 
 		// Initialize logging system
 		Logger.Configure(logsDirectory: Atlas.LogsDirectory, appName: Atlas.AppName);
+
+		// Log the results of side-channel mitigation application.
+		if (Atlas.Settings.ApplySideChannelIsolationMitigationsOnStartup)
+		{
+			Logger.Write(ProcessSideChannelIsolation.FormatStatus(SideChannelIsolationStartupResult));
+		}
 
 		// to handle unhandled exceptions
 		UnhandledException += App_UnhandledException;

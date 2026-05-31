@@ -2080,3 +2080,39 @@ internal struct PRINTER_INFO_2W
 	internal uint cJobs;
 	internal uint AveragePPM;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ne-winnt-process_mitigation_policy
+/// </summary>
+internal enum PROCESS_MITIGATION_POLICY
+{
+	ProcessDEPPolicy,
+	ProcessASLRPolicy,
+	ProcessDynamicCodePolicy,
+	ProcessStrictHandleCheckPolicy,
+	ProcessSystemCallDisablePolicy,
+	ProcessMitigationOptionsMask,
+	ProcessExtensionPointDisablePolicy,
+	ProcessControlFlowGuardPolicy,
+	ProcessSignaturePolicy,
+	ProcessFontDisablePolicy,
+	ProcessImageLoadPolicy,
+	ProcessSystemCallFilterPolicy,
+	ProcessPayloadRestrictionPolicy,
+	ProcessChildProcessPolicy,
+	ProcessSideChannelIsolationPolicy, // This gives us bitfields for all side-channel mitigations that are defined in this struct: https://learn.microsoft.com/he-il/windows/win32/api/winnt/ns-winnt-process_mitigation_side_channel_isolation_policy
+	ProcessUserShadowStackPolicy,
+	ProcessRedirectionTrustPolicy,
+	ProcessUserPointerAuthPolicy,
+	ProcessSEHOPPolicy,
+	MaxProcessMitigationPolicy
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-process_mitigation_side_channel_isolation_policy
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY
+{
+	internal uint Flags;
+}

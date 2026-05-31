@@ -48,7 +48,37 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/DeployEdge/microsoft-edge-policies#dynamiccodesettings) that will disable dynamic code in Edge browser which is a security feature that prevents the browser process from creating dynamic code. The default value of this policy is not explicitly defined, it could be enabled or could be disabled. Setting it explicitly to enabled via this policy ensures that no dynamic code is created by the browser process.
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> [Policy](https://learn.microsoft.com/DeployEdge/microsoft-edge-policies#dynamiccodesettings) that will disable dynamic code in Edge browser which is a security feature that prevents the browser process from creating dynamic code. The default value of this policy is not explicitly defined, it could be enabled or could be disabled. Setting it explicitly to enabled via this policy ensures that no dynamic code is created by the browser process.
+
+    * Please view this related conversation about this security measure: https://github.com/HotCakeX/Harden-Windows-Security/issues/1160
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [Enhanced security mode](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-security-browse-safer) in Microsoft Edge mitigates memory-related vulnerabilities by disabling just-in-time (JIT) JavaScript compilation and enabling additional operating system protections for the browser.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Prevents](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/defaultlocalfontssetting) websites from accessing information about locally installed fonts.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Makes sure that only [Microsoft signed binaries](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/browsercodeintegritysetting) are allowed to load in the Edge process by enabling Code Integrity for Edge.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> [Restricts](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/restrictcoresharingonrenderer) CPU core sharing for renderer process. Helps mitigate side-channel cross-process memory attacks by isolating the renderer process to a dedicated CPU core, preventing other processes from being scheduled on the same core.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Launches [Renderer processes](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/rendererappcontainerenabled) into an App Container for more security benefits.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Microsoft Edge will prefer [the algorithms](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/preferslowkexalgorithms) required for the Commercial National Security Algorithm Suite 2.0 (CNSA 2.0) for TLS 1.3 and QUIC connections.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Configures Microsoft Edge to prefer [ciphers](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/preferslowciphers) required for compliance with the Commercial National Security Algorithm Suite versions 1.0 and 2.0 (CNSA 1.0 and 2.0). Only affects TLS 1.3 and QUIC.
 
 <br>
 

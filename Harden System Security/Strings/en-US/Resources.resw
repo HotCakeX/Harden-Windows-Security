@@ -6782,4 +6782,7 @@ Thumbprint: {3}</value>
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Change the download link if the current one is expired or no longer available. The new link must point to the same file.</value>
   </data>
+  <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>Will also enable Windows Protected Print from the Miscellaneous category. Can cause compatibility issues when printing in the Chromium-based browsers such as Edge.</value>
+  </data>
 </root>

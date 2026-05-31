@@ -82,7 +82,7 @@
 
                                 <!-- State pill -->
                                 <Border Background="{x:Bind StateBadgeBrush, Mode=OneWay}"
-                                        Padding="10,4"                                    
+                                        Padding="10,4"
                                         VerticalAlignment="Center"
                                         CornerRadius="12"
                                         HorizontalAlignment="Left">

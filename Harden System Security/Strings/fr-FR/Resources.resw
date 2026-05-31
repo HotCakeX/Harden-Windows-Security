@@ -6782,4 +6782,7 @@ Empreinte : {3}</value>
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Modifiez le lien de téléchargement si le lien actuel a expiré ou n’est plus disponible. Le nouveau lien doit pointer vers le même fichier.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>Activera également Windows Protected Print depuis la catégorie Miscellaneous. Peut entraîner des problèmes de compatibilité lors de l’impression dans des navigateurs basés sur Chromium, tels qu’Edge.</value>
+  </data>
 </root>

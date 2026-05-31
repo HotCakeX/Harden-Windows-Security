@@ -6782,4 +6782,7 @@
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>غيّر رابط التنزيل إذا كان الرابط الحالي منتهي الصلاحية أو لم يعد متاحاً. يجب أن يشير الرابط الجديد إلى الملف نفسه.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>سيؤدي أيضًا إلى تمكين Windows Protected Print من فئة Miscellaneous. قد يتسبب ذلك في حدوث مشكلات توافق عند الطباعة في المتصفحات المستندة إلى Chromium مثل Edge.</value>
+  </data>
 </root>

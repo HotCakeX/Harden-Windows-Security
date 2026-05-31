@@ -35,5 +35,7 @@ internal enum SubCategories : uint
 	MiscellaneousConfigurations_ReducedTelemetry = 13,
 	CountryIPBlocking_BlockOFACSanctionedCountries = 14,
 	OptionalWindowsFeatures_IncludeEnablements = 15,
-	MiscellaneousConfigurations_DriverLoadPolicyGoodOnly = 16
+	MiscellaneousConfigurations_DriverLoadPolicyGoodOnly = 16,
+	Edge_DynamicCodeSettings = 17,
+	Edge_HardcoreMode = 18 // a collection of policies that significantly improve the security of the Edge browser
 }

@@ -50,6 +50,15 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 			// Register specialized strategies.
 			RegisterSpecializedStrategies();
 
+			// Need to enable Windows Protected Print when enabling DynamicCodeSettings for Edge
+			// https://github.com/HotCakeX/Harden-Windows-Security/issues/1160
+			MUnitDependencyRegistry.RegisterDependency(
+				primaryMUnitId: new("019a8dfa-2460-70c9-8579-bfcf1b4a6122"),
+				dependentMUnitId: new("019a8dfa-25da-7c9a-87e2-07fa9df81fff"),
+				type: DependencyType.Apply,
+				timing: ExecutionTiming.Before
+			);
+
 			return MUnit.CreateMUnitsFromPolicies(Categories.EdgeBrowserConfigurations);
 		}, LazyThreadSafetyMode.ExecutionAndPublication);
 

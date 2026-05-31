@@ -996,7 +996,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 						title: Atlas.GetStr("ProtectCategory_Edge"),
 						subTitle: Atlas.GetStr("ProtectCategory_Description_Edge"),
 						logo: CategoryImages[(int)Categories.EdgeBrowserConfigurations],
-						subCategories: []
+						subCategories: [
+							new SubCategoryDefinition(
+							subCategory:SubCategories.Edge_DynamicCodeSettings,
+							description: Atlas.GetSecurityStr("DynamicCodeSettings-Edge"),
+							tip: Atlas.GetStr("DynamicCodeSettings-Edge-TIP"))
+							]
 						));
 
 					output.Add(new ProtectionCategoryListViewItem(
@@ -1212,7 +1217,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 						title: Atlas.GetStr("ProtectCategory_Edge"),
 						subTitle: Atlas.GetStr("ProtectCategory_Description_Edge"),
 						logo: CategoryImages[(int)Categories.EdgeBrowserConfigurations],
-						subCategories: []
+						subCategories: [
+							new SubCategoryDefinition(
+							subCategory:SubCategories.Edge_DynamicCodeSettings,
+							description: Atlas.GetSecurityStr("DynamicCodeSettings-Edge"),
+							tip: Atlas.GetStr("DynamicCodeSettings-Edge-TIP"))
+							]
 						));
 
 					output.Add(new ProtectionCategoryListViewItem(

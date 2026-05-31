@@ -6782,4 +6782,7 @@ Fingerabdruck: {3}</value>
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Den Download-Link ändern, wenn der aktuelle abgelaufen oder nicht mehr verfügbar ist. Der neue Link muss auf dieselbe Datei verweisen.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>Aktiviert außerdem Windows Protected Print aus der Kategorie Miscellaneous. Kann beim Drucken in Chromium-basierten Browsern wie Edge zu Kompatibilitätsproblemen führen.</value>
+  </data>
 </root>

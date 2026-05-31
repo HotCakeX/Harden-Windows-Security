@@ -814,9 +814,6 @@
 <data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
     <value>דחיית הרשאת ניהול חלונות בכל האתרים כברירת מחדל</value>
 </data>
-<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
-    <value>מניעת תהליך הדפדפן מיצירת קוד דינמי</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>ביטול הצופן החלש עבור Schannel: NULL</value>
 </data>
@@ -987,5 +984,26 @@
 </data>
 <data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
     <value>הגדר את מדיניות ההפעלה של Windows PowerShell ל-Restricted כך שפקודות בודדות יותרו, אך הרצת סקריפטים לא תתאפשר.</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>מצב האבטחה המשופר ב-Microsoft Edge מפחית פגיעויות הקשורות לזיכרון באמצעות השבתת הידור JavaScript מסוג just-in-time (JIT) והפעלת הגנות נוספות של מערכת ההפעלה עבור הדפדפן.</value>
+  </data>
+  <data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>מנע מאתרים גישה למידע על גופנים המותקנים באופן מקומי.</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>שלמות קוד הדפדפן ב-Microsoft Edge מבטיחה שרק קבצים בינאריים החתומים על ידי Microsoft יורשו להיטען בתהליך של Edge, ובכך משפרת את אבטחת הדפדפן.</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>הגבל שיתוף ליבות CPU עבור תהליך ה-Renderer. מסייע בהפחתת מתקפות זיכרון בין-תהליכיות בערוץ צדדי באמצעות בידוד תהליך ה-Renderer לליבת CPU ייעודית, ובכך מונע מתהליכים אחרים להיות מתוזמנים על אותה ליבה.</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>מפעיל תהליכי Renderer בתוך App Container לקבלת יתרונות אבטחה נוספים.</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge יעדיף את האלגוריתמים הנדרשים עבור Commercial National Security Algorithm Suite 2.0 (CNSA 2.0) עבור חיבורי TLS 1.3 ו-QUIC.</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>מגדיר את Microsoft Edge להעדיף צפנים הנדרשים לעמידה בדרישות של Commercial National Security Algorithm Suite בגרסאות 1.0 ו-2.0 (CNSA 1.0 ו-2.0). משפיע רק על TLS 1.3 ו-QUIC.</value>
 </data>
 </root>

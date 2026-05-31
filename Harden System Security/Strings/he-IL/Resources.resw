@@ -6782,4 +6782,7 @@
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>שנה את קישור ההורדה אם הקישור הנוכחי פג תוקף או אינו זמין עוד. הקישור החדש חייב להצביע לאותו קובץ.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>יפעיל גם את Windows Protected Print מקטגוריית Miscellaneous. עלול לגרום לבעיות תאימות בעת הדפסה בדפדפנים מבוססי Chromium כגון Edge.</value>
+  </data>
 </root>

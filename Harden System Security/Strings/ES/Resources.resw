@@ -6782,4 +6782,7 @@ Huella Digital: {3}</value>
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Cambie el vínculo de descarga si el actual venció o ya no está disponible. El nuevo vínculo debe apuntar al mismo archivo.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>También habilitará Windows Protected Print de la categoría Miscellaneous. Puede causar problemas de compatibilidad al imprimir en navegadores basados en Chromium, como Edge.</value>
+  </data>
 </root>

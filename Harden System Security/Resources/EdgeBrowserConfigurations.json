@@ -328,14 +328,155 @@
         "RegValue": "1",
         "Hive": 0,
         "PolicyAction": 0,
-        "FriendlyName": "DynamicCodeSettingsEdge-Edge",
+        "FriendlyName": "DynamicCodeSettings-Edge",
         "URL": "https://learn.microsoft.com/deployedge/microsoft-edge-browser-policies/dynamiccodesettings",
+        "Category": 14,
+        "SubCategory": 17,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ],
+        "ID": "019a8dfa-2460-70c9-8579-bfcf1b4a6122"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
+        "ValueName": "EnhanceSecurityMode",
+        "Type": 4,
+        "Size": 0,
+        "Data": "",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "EnhanceSecurityMode-Edge",
+        "URL": "https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-security-browse-safer",
         "Category": 14,
         "SubCategory": null,
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
         ],
-        "ID": "019a8dfa-2460-70c9-8579-bfcf1b4a6122"
+        "ID": "019e7da1-d1be-7ca9-9d96-a1cb8c43446b"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
+        "ValueName": "DefaultLocalFontsSetting",
+        "Type": 4,
+        "Size": 0,
+        "Data": "",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "DefaultLocalFontsSetting-Edge",
+        "URL": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/defaultlocalfontssetting",
+        "Category": 14,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "019e7da1-9ca1-7b65-beb7-f47703130111"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
+        "ValueName": "BrowserCodeIntegritySetting",
+        "Type": 4,
+        "Size": 0,
+        "Data": "",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "BrowserCodeIntegritySetting-Edge",
+        "URL": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/browsercodeintegritysetting",
+        "Category": 14,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "019e7da1-6853-7d71-aec8-ccd7fcdba29c"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
+        "ValueName": "RestrictCoreSharingOnRenderer",
+        "Type": 4,
+        "Size": 0,
+        "Data": "",
+        "RegValue": "1",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "RestrictCoreSharingOnRenderer-HardcoreMode-Edge",
+        "URL": "https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/restrictcoresharingonrenderer",
+        "Category": 14,
+        "SubCategory": 18,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ],
+        "ID": "019e7e48-b59a-7993-8596-91658a1126a9"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
+        "ValueName": "RendererAppContainerEnabled",
+        "Type": 4,
+        "Size": 0,
+        "Data": "",
+        "RegValue": "1",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "RendererAppContainerEnabled-HardcoreMode-Edge",
+        "URL": "https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/rendererappcontainerenabled",
+        "Category": 14,
+        "SubCategory": 18,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ],
+        "ID": "019e7e4d-a8e8-7baf-968e-ddd6463c312e"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
+        "ValueName": "PreferSlowKexAlgorithms",
+        "Type": 1,
+        "Size": 0,
+        "Data": "",
+        "RegValue": "cnsa2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "PreferSlowKexAlgorithms-HardcoreMode-Edge",
+        "URL": "https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/preferslowkexalgorithms",
+        "Category": 14,
+        "SubCategory": 18,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ],
+        "ID": "019e7e53-494c-74de-89de-744855a95af3"
+    },
+    {
+        "Source": 1,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
+        "ValueName": "PreferSlowCiphers",
+        "Type": 1,
+        "Size": 0,
+        "Data": "",
+        "RegValue": "cnsa",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "PreferSlowCiphers-HardcoreMode-Edge",
+        "URL": "https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies/preferslowciphers",
+        "Category": 14,
+        "SubCategory": 18,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ],
+        "ID": "019e7e53-fd59-72c7-9bce-6d17b7c7c41c"
     }
 ]

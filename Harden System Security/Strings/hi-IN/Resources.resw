@@ -6782,4 +6782,7 @@
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>यदि वर्तमान डाउनलोड लिंक की समय-सीमा समाप्त हो गई है या वह अब उपलब्ध नहीं है, तो उसे बदलें। नया लिंक उसी फ़ाइल की ओर होना चाहिए।</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>यह Miscellaneous श्रेणी से Windows Protected Print को भी सक्षम करेगा। Edge जैसे Chromium-आधारित ब्राउज़रों में प्रिंट करते समय इससे संगतता संबंधी समस्याएँ हो सकती हैं।</value>
+  </data>
 </root>

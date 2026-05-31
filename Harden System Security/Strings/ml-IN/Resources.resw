@@ -6782,4 +6782,7 @@
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>നിലവിലെ ഡൗൺലോഡ് ലിങ്കിന്റെ കാലാവധി കഴിഞ്ഞിട്ടുണ്ടെങ്കിൽ അല്ലെങ്കിൽ ഇനി ലഭ്യമല്ലെങ്കിൽ അത് മാറ്റുക. പുതിയ ലിങ്ക് അതേ ഫയലിലേക്കാണ് സൂചിപ്പിക്കേണ്ടത്.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>Miscellaneous വിഭാഗത്തിൽ നിന്നുള്ള Windows Protected Print ഇതും പ്രവർത്തനക്ഷമമാക്കും. Edge പോലുള്ള Chromium അടിസ്ഥാനമാക്കിയ ബ്രൗസറുകളിൽ പ്രിന്റ് ചെയ്യുമ്പോൾ ഇത് പൊരുത്തക്കേട് പ്രശ്നങ്ങൾക്ക് കാരണമായേക്കാം.</value>
+  </data>
 </root>

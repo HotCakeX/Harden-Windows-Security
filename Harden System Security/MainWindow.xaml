@@ -29,7 +29,7 @@
             <!-- https://learn.microsoft.com/windows/apps/design/layout/depth-shadow -->
             <ThemeShadow x:Name="SharedShadow" />
 
-            <MenuFlyout x:Name="TopBarOverrideMenuFlyout"                        
+            <MenuFlyout x:Name="TopBarOverrideMenuFlyout"
                         Placement="BottomEdgeAlignedLeft">
                 <MenuFlyout.SystemBackdrop>
                     <MicaBackdrop Kind="BaseAlt"/>
@@ -337,7 +337,7 @@
                     Click="{x:Bind ViewModel.SidebarButton_Click}"
                     Grid.Column="9"
                     Width="40"
-                    Height="40"              
+                    Height="40"
                     Background="Transparent"
                     BorderThickness="0">
 
@@ -361,8 +361,8 @@
                     RightTapped="{x:Bind ElevationContextSwitchButton_RightTapped}"
                     Background="Transparent"
                     Width="40"
-                    Height="40"  
-                    BorderThickness="0"                   
+                    Height="40"
+                    BorderThickness="0"
                     Grid.Column="10">
                 <Button.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
@@ -386,8 +386,8 @@
                     x:Uid="MinimizeToNotificationAreaButton"
                     Click="{x:Bind MinimizeToNotificationAreaButton_Click}"
                     Width="40"
-                    Height="40"  
-                    Grid.Column="11"                    
+                    Height="40"
+                    Grid.Column="11"
                     Background="Transparent"
                     BorderThickness="0">
                 <Button.Content>
@@ -911,7 +911,7 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <FontIcon Grid.Column="0"
-                                                              Glyph="&#xE777;"                                                             
+                                                              Glyph="&#xE777;"
                                                               FontSize="16"/>
 
                                                     <TextBlock Grid.Column="1"

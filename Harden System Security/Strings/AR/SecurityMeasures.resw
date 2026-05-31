@@ -814,9 +814,6 @@
 <data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
     <value>رفض إذن إدارة النوافذ على جميع المواقع بشكل افتراضي</value>
 </data>
-<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
-    <value>منع عملية المتصفح من إنشاء رمز ديناميكي</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>تعطيل التشفير الضعيف لـ Schannel: NULL</value>
 </data>
@@ -987,5 +984,26 @@
 </data>
 <data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
     <value>اضبط نهج التنفيذ في Windows PowerShell على Restricted بحيث يُسمح بالأوامر الفردية، ولكن لا يُسمح بتشغيل البرامج النصية.</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>يخفف وضع الأمان المحسّن في Microsoft Edge من الثغرات الأمنية المرتبطة بالذاكرة من خلال تعطيل تجميع JavaScript الفوري (JIT) وتمكين وسائل حماية إضافية من نظام التشغيل للمتصفح.</value>
+  </data>
+  <data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>يمنع مواقع الويب من الوصول إلى معلومات حول الخطوط المثبتة محليًا.</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>تضمن ميزة تكامل تعليمات برمجية المتصفح في Microsoft Edge السماح بتحميل الملفات الثنائية الموقعة من Microsoft فقط داخل عملية Edge، مما يعزز أمان المتصفح.</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>يقيّد مشاركة أنوية وحدة المعالجة المركزية لعملية العرض. يساعد على التخفيف من هجمات الذاكرة عبر العمليات من خلال القنوات الجانبية عبر عزل عملية العرض في نواة مخصصة لوحدة المعالجة المركزية، مما يمنع جدولة عمليات أخرى على النواة نفسها.</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>يشغّل عمليات Renderer داخل App Container للحصول على مزايا أمنية إضافية.</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>سيفضّل Microsoft Edge الخوارزميات المطلوبة لـ Commercial National Security Algorithm Suite 2.0 ‏(CNSA 2.0) لاتصالات TLS 1.3 وQUIC.</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>يُكوّن Microsoft Edge لتفضيل الشفرات المطلوبة للامتثال لإصداري 1.0 و2.0 من Commercial National Security Algorithm Suite ‏(CNSA 1.0 و2.0). يؤثر فقط على TLS 1.3 وQUIC.</value>
 </data>
 </root>

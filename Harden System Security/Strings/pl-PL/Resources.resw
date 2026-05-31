@@ -6782,4 +6782,7 @@ Odcisk Palca: {3}</value>
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Zmień link pobierania, jeśli obecny wygasł lub nie jest już dostępny. Nowy link musi wskazywać ten sam plik.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>Włączy również funkcję Windows Protected Print z kategorii Miscellaneous. Może powodować problemy ze zgodnością podczas drukowania w przeglądarkach opartych na Chromium, takich jak Edge.</value>
+  </data>
 </root>

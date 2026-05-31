@@ -25,7 +25,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <customUI:InfoBarV2 Grid.Row="0"                            
+        <customUI:InfoBarV2 Grid.Row="0"
                             IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
                             Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
@@ -34,7 +34,7 @@
         <CommandBar DefaultLabelPosition="Right"
                     Grid.Row="1"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Top"                    
+                    VerticalAlignment="Top"
                     OverflowButtonVisibility="Auto">
 
             <AppBarElementContainer VerticalAlignment="Center"
@@ -274,10 +274,10 @@
                                                             x:Load="{x:Bind CanHoverPlayVideoPreview, Mode=OneWay}"
                                                             Source="{x:Bind HoverVideoPreviewSource, Mode=OneWay}"
                                                             Stretch="UniformToFill"
-                                                            AutoPlay="True"                                                            
+                                                            AutoPlay="True"
                                                             AreTransportControlsEnabled="False"
                                                             IsHitTestVisible="False"
-                                                            Loaded="{x:Bind vm:DownloadManagerVM.HoverPreviewPlayer_Loaded}"                                                          
+                                                            Loaded="{x:Bind vm:DownloadManagerVM.HoverPreviewPlayer_Loaded}"
                                                             Visibility="{x:Bind HoverVideoPreviewVisibility, Mode=OneWay}" />
                                         <Border VerticalAlignment="Bottom"
                                                 Margin="4"

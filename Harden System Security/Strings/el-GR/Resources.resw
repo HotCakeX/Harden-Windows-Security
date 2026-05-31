@@ -6782,4 +6782,7 @@
   <data name="ChangeDownloadLinkMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αλλάξτε τον σύνδεσμο λήψης αν ο τρέχων έχει λήξει ή δεν είναι πλέον διαθέσιμος. Ο νέος σύνδεσμος πρέπει να οδηγεί στο ίδιο αρχείο.</value>
   </data>
+    <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
+    <value>Θα ενεργοποιήσει επίσης το Windows Protected Print από την κατηγορία Miscellaneous. Μπορεί να προκαλέσει προβλήματα συμβατότητας κατά την εκτύπωση σε προγράμματα περιήγησης που βασίζονται στο Chromium, όπως το Edge.</value>
+  </data>
 </root>

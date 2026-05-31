@@ -32,8 +32,8 @@
                                        TextWrapping="NoWrap"
                                        VerticalAlignment="Center" />
 
-                            <Button Grid.Column="1"                                    
-                                    Style="{StaticResource SubtleButtonStyle}"                                                                   
+                            <Button Grid.Column="1"
+                                    Style="{StaticResource SubtleButtonStyle}"
                                     IsEnabled="{x:Bind VMs:ViewModelProvider.LogsVM.CanDeleteLogFile(FullName), Mode=OneWay}"
                                     Click="{x:Bind VMs:ViewModelProvider.LogsVM.DeleteLogFile_Click}"
                                     Tag="{x:Bind}">

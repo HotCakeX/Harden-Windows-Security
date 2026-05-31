@@ -814,9 +814,6 @@
 <data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
     <value>Odmów uprawnień zarządzania oknami domyślnie we wszystkich witrynach</value>
 </data>
-<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
-    <value>Zapobiegaj generowaniu kodu dynamicznego przez proces przeglądarki</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>Wyłącz słabe szyfry dla Schannel: NULL</value>
 </data>
@@ -987,5 +984,26 @@
 </data>
 <data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
     <value>Ustaw zasady wykonywania w Windows PowerShell na Restricted, aby pojedyncze polecenia były dozwolone, ale uruchamianie skryptów nie było dozwolone.</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>Rozszerzony tryb zabezpieczeń w przeglądarce Microsoft Edge ogranicza luki związane z pamięcią przez wyłączenie kompilacji JavaScript just-in-time (JIT) oraz włączenie dodatkowych mechanizmów ochrony systemu operacyjnego dla przeglądarki.</value>
+  </data>
+    <data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>Uniemożliwia witrynom dostęp do informacji o lokalnie zainstalowanych czcionkach.</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>Funkcja Browser Code Integrity w Microsoft Edge zapewnia, że do procesu Edge mogą być ładowane wyłącznie pliki binarne podpisane przez firmę Microsoft, co zwiększa bezpieczeństwo przeglądarki.</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>Ogranicza współdzielenie rdzeni CPU dla procesu renderera. Pomaga ograniczyć ataki na pamięć między procesami z wykorzystaniem kanałów bocznych poprzez izolowanie procesu renderera do dedykowanego rdzenia CPU, uniemożliwiając planowanie innych procesów na tym samym rdzeniu.</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>Uruchamia procesy renderera w kontenerze aplikacji, zapewniając dodatkowe korzyści w zakresie bezpieczeństwa.</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge będzie preferować algorytmy wymagane przez Commercial National Security Algorithm Suite 2.0 (CNSA 2.0) dla połączeń TLS 1.3 i QUIC.</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>Konfiguruje Microsoft Edge tak, aby preferował szyfry wymagane do zgodności z Commercial National Security Algorithm Suite w wersjach 1.0 i 2.0 (CNSA 1.0 i 2.0). Dotyczy wyłącznie TLS 1.3 i QUIC.</value>
 </data>
 </root>

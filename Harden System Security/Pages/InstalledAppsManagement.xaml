@@ -111,7 +111,7 @@
 
                         <Button Grid.Column="2"
                                 Grid.Row="0"
-                                Style="{ThemeResource AccentButtonStyle}"                              
+                                Style="{ThemeResource AccentButtonStyle}"
                                 CornerRadius="4"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"

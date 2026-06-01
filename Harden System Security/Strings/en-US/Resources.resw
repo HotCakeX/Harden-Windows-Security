@@ -6785,4 +6785,103 @@ Thumbprint: {3}</value>
   <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
     <value>Will also enable Windows Protected Print from the Miscellaneous category. Can cause compatibility issues when printing in the Chromium-based browsers such as Edge.</value>
   </data>
+   <data name="PFNLoopbackExemptionLabel.Text" xml:space="preserve">
+    <value>Loopback Exempt</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.Content" xml:space="preserve">
+    <value>Manage Loopback Exemptions</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View and manage AppContainer loopback exemptions, including orphaned entries.</value>
+  </data>
+  <data name="LoopbackDialogTitle" xml:space="preserve">
+    <value>Manage loopback exemptions</value>
+  </data>
+  <data name="LoopbackDialogCloseButtonText" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="LoopbackDialogRefreshButton.Content" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="LoopbackDialogAddAllButton.Content" xml:space="preserve">
+    <value>Add all apps</value>
+  </data>
+  <data name="LoopbackDialogClearAllButton.Content" xml:space="preserve">
+    <value>Clear all exemptions</value>
+  </data>
+  <data name="LoopbackDialogSidLabel.Text" xml:space="preserve">
+    <value>SID:</value>
+  </data>
+  <data name="LoopbackStatusExempt" xml:space="preserve">
+    <value>Exempt</value>
+  </data>
+  <data name="LoopbackStatusNotExempt" xml:space="preserve">
+    <value>Not exempt</value>
+  </data>
+  <data name="LoopbackStatusUnavailable" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="LoopbackAppContainerNotFound" xml:space="preserve">
+    <value>AppContainer NOT FOUND</value>
+  </data>
+  <data name="LoopbackNoPackageFamilyName" xml:space="preserve">
+    <value>No package family name available</value>
+  </data>
+  <data name="LoopbackInstalledAppEntryType" xml:space="preserve">
+    <value>Installed app</value>
+  </data>
+  <data name="LoopbackOrphanedEntryType" xml:space="preserve">
+    <value>Orphaned entry</value>
+  </data>
+  <data name="LoopbackUnavailableActionText" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="LoopbackRemoveExemptionButtonText" xml:space="preserve">
+    <value>Remove exemption</value>
+  </data>
+  <data name="LoopbackAddExemptionButtonText" xml:space="preserve">
+    <value>Add exemption</value>
+  </data>
+  <data name="LoopbackRemoveEntryButtonText" xml:space="preserve">
+    <value>Remove entry</value>
+  </data>
+  <data name="LoopbackDialogSummaryText" xml:space="preserve">
+    <value>Total exemptions: {0} | Total rows: {1} | Orphaned entries: {2}</value>
+  </data>
+  <data name="LoopbackDialogRefreshSucceeded" xml:space="preserve">
+    <value>Loopback exemptions list refreshed.</value>
+  </data>
+  <data name="LoopbackDialogClearAllSucceeded" xml:space="preserve">
+    <value>All loopback exemptions were removed.</value>
+  </data>
+  <data name="LoopbackDialogAddAllSucceeded" xml:space="preserve">
+    <value>Added loopback exemptions for {0} apps.</value>
+  </data>
+  <data name="LoopbackDialogAppExemptedMessage" xml:space="preserve">
+    <value>{0} is now exempt from loopback isolation.</value>
+  </data>
+  <data name="LoopbackDialogAppRemovedMessage" xml:space="preserve">
+    <value>Loopback exemption removed for {0}.</value>
+  </data>
+  <data name="LoopbackDialogOrphanRemovedMessage" xml:space="preserve">
+    <value>Removed orphaned loopback entry for SID {0}.</value>
+  </data>
+  <data name="LoopbackDialogChangesApplied" xml:space="preserve">
+    <value>Loopback exemption changes were applied.</value>
+  </data>
+  <data name="AddLoopbackExemptionText.Text" xml:space="preserve">
+    <value>Add loopback exemption</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToAddLoopbackExemption" xml:space="preserve">
+    <value>Could not determine which app to add to loopback exemptions.</value>
+  </data>
+  <data name="LoopbackExemptionUnavailableForApp" xml:space="preserve">
+    <value>Could not resolve the AppContainer SID for {0}, so the loopback exemption could not be added.</value>
+  </data>
+  <data name="LoopbackExemptionAlreadyPresent" xml:space="preserve">
+    <value>{0} is already exempt from loopback isolation.</value>
+  </data>
+  <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
+    <value>Loopback exemption added for {0}.</value>
+  </data>
 </root>

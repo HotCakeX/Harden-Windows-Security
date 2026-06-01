@@ -6785,4 +6785,103 @@
     <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
     <value>यह Miscellaneous श्रेणी से Windows Protected Print को भी सक्षम करेगा। Edge जैसे Chromium-आधारित ब्राउज़रों में प्रिंट करते समय इससे संगतता संबंधी समस्याएँ हो सकती हैं।</value>
   </data>
+  <data name="PFNLoopbackExemptionLabel.Text" xml:space="preserve">
+    <value>लूपबैक अपवाद</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.Content" xml:space="preserve">
+    <value>लूपबैक अपवाद प्रबंधित करें</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अनाथ प्रविष्टियों सहित AppContainer लूपबैक अपवादों को देखें और प्रबंधित करें।</value>
+  </data>
+  <data name="LoopbackDialogTitle" xml:space="preserve">
+    <value>लूपबैक अपवाद प्रबंधित करें</value>
+  </data>
+  <data name="LoopbackDialogCloseButtonText" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+  <data name="LoopbackDialogRefreshButton.Content" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="LoopbackDialogAddAllButton.Content" xml:space="preserve">
+    <value>सभी ऐप्स जोड़ें</value>
+  </data>
+  <data name="LoopbackDialogClearAllButton.Content" xml:space="preserve">
+    <value>सभी अपवाद साफ़ करें</value>
+  </data>
+  <data name="LoopbackDialogSidLabel.Text" xml:space="preserve">
+    <value>SID:</value>
+  </data>
+  <data name="LoopbackStatusExempt" xml:space="preserve">
+    <value>अपवादित</value>
+  </data>
+  <data name="LoopbackStatusNotExempt" xml:space="preserve">
+    <value>अपवादित नहीं</value>
+  </data>
+  <data name="LoopbackStatusUnavailable" xml:space="preserve">
+    <value>उपलब्ध नहीं</value>
+  </data>
+  <data name="LoopbackAppContainerNotFound" xml:space="preserve">
+    <value>AppContainer नहीं मिला</value>
+  </data>
+  <data name="LoopbackNoPackageFamilyName" xml:space="preserve">
+    <value>कोई पैकेज फैमिली नाम उपलब्ध नहीं है</value>
+  </data>
+  <data name="LoopbackInstalledAppEntryType" xml:space="preserve">
+    <value>इंस्टॉल किया गया ऐप</value>
+  </data>
+  <data name="LoopbackOrphanedEntryType" xml:space="preserve">
+    <value>अनाथ प्रविष्टि</value>
+  </data>
+  <data name="LoopbackUnavailableActionText" xml:space="preserve">
+    <value>उपलब्ध नहीं</value>
+  </data>
+  <data name="LoopbackRemoveExemptionButtonText" xml:space="preserve">
+    <value>अपवाद हटाएँ</value>
+  </data>
+  <data name="LoopbackAddExemptionButtonText" xml:space="preserve">
+    <value>अपवाद जोड़ें</value>
+  </data>
+  <data name="LoopbackRemoveEntryButtonText" xml:space="preserve">
+    <value>प्रविष्टि हटाएँ</value>
+  </data>
+  <data name="LoopbackDialogSummaryText" xml:space="preserve">
+    <value>कुल अपवाद: {0} | कुल पंक्तियाँ: {1} | अनाथ प्रविष्टियाँ: {2}</value>
+  </data>
+  <data name="LoopbackDialogRefreshSucceeded" xml:space="preserve">
+    <value>लूपबैक अपवादों की सूची ताज़ा कर दी गई।</value>
+  </data>
+  <data name="LoopbackDialogClearAllSucceeded" xml:space="preserve">
+    <value>सभी लूपबैक अपवाद हटा दिए गए।</value>
+  </data>
+  <data name="LoopbackDialogAddAllSucceeded" xml:space="preserve">
+    <value>{0} ऐप्स के लिए लूपबैक अपवाद जोड़े गए।</value>
+  </data>
+  <data name="LoopbackDialogAppExemptedMessage" xml:space="preserve">
+    <value>{0} अब लूपबैक आइसोलेशन से अपवादित है।</value>
+  </data>
+  <data name="LoopbackDialogAppRemovedMessage" xml:space="preserve">
+    <value>{0} के लिए लूपबैक अपवाद हटा दिया गया।</value>
+  </data>
+  <data name="LoopbackDialogOrphanRemovedMessage" xml:space="preserve">
+    <value>SID {0} के लिए अनाथ लूपबैक प्रविष्टि हटा दी गई।</value>
+  </data>
+  <data name="LoopbackDialogChangesApplied" xml:space="preserve">
+    <value>लूपबैक अपवादों में किए गए बदलाव लागू कर दिए गए।</value>
+  </data>
+  <data name="AddLoopbackExemptionText.Text" xml:space="preserve">
+    <value>लूपबैक अपवाद जोड़ें</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToAddLoopbackExemption" xml:space="preserve">
+    <value>यह निर्धारित नहीं किया जा सका कि किस ऐप को लूपबैक अपवादों में जोड़ा जाए।</value>
+  </data>
+  <data name="LoopbackExemptionUnavailableForApp" xml:space="preserve">
+    <value>{0} के लिए AppContainer SID का पता नहीं लगाया जा सका, इसलिए लूपबैक अपवाद जोड़ा नहीं जा सका।</value>
+  </data>
+  <data name="LoopbackExemptionAlreadyPresent" xml:space="preserve">
+    <value>{0} पहले से ही लूपबैक आइसोलेशन से अपवादित है।</value>
+  </data>
+  <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
+    <value>{0} के लिए लूपबैक अपवाद जोड़ दिया गया।</value>
+  </data>
 </root>

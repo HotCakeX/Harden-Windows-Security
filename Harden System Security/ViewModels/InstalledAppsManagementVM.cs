@@ -25,6 +25,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommonCore.Others;
+using HardenSystemSecurity.CustomUIElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -132,6 +134,9 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	private volatile bool _isUpdatingItemsSource;
 
+	private CancellationTokenSource? _searchFilterCancellationTokenSource;
+	private int _searchFilterVersion;
+
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
 	/// </summary>
@@ -152,9 +157,11 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
+			CancelPendingSearchFilter();
 
 			// Get the new data first
 			(ObservableCollection<GroupInfoListForPackagedAppView>, List<GroupInfoListForPackagedAppView>) results = await GetAppsList.GetAppsGroupedAsync(this);
+			AppContainerLoopbackManager.UpdatePackagedAppsLoopbackState(GetAllLoadedApps(results.Item2).ToList());
 
 			// Suppress selection change side effects while replacing ItemsSource to preserve persisted selection
 			_isUpdatingItemsSource = true;
@@ -166,7 +173,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				PruneSelectionToLoadedApps();
 
 				// Keep the current search filter active after retrieval if the search box still contains text.
-				AppsListItemsSource = string.IsNullOrWhiteSpace(SearchKeyword) ? new(AppsListItemsSourceBackingList) : GetFilteredAppsListItemsSource();
+				AppsListItemsSource = string.IsNullOrWhiteSpace(SearchKeyword) ? new(AppsListItemsSourceBackingList) : new(BuildFilteredAppsList(AppsListItemsSourceBackingList, SearchKeyword));
 
 				// Update counts after loading apps
 				UpdateCounts();
@@ -339,9 +346,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// For selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
 	/// Adding the items to <see cref="AppsListItemsSourceSelectedItems"/>.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	internal void SelectAllMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+	internal void SelectAllMenuFlyoutItem_Click()
 	{
 		foreach (GroupInfoListForPackagedAppView group in AppsListItemsSource)
 		{
@@ -358,7 +363,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal void RemoveSelectionsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+	internal void RemoveSelectionsMenuFlyoutItem_Click()
 	{
 		AppsListItemsSourceSelectedItems.Clear();
 		SelectedItemsCount = 0;
@@ -392,82 +397,186 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		SelectedItemsCount = AppsListItemsSourceSelectedItems.Count;
 	}
 
-	private readonly Lock SettingsLock = new();
-
 	/// <summary>
 	/// Event handler for when the search box of apps list changes
 	/// </summary>
-	private void PFNAppFilteringTextBox_TextChanged()
+	private async void PFNAppFilteringTextBox_TextChanged()
 	{
-		lock (SettingsLock)
-		{
-			if (string.IsNullOrWhiteSpace(SearchKeyword))
-			{
-				_isUpdatingItemsSource = true;
-				try
-				{
-					// If the filter is cleared, restore the original collection
-					AppsListItemsSource = new(AppsListItemsSourceBackingList);
-					UpdateCounts();
-				}
-				finally
-				{
-					_isUpdatingItemsSource = false;
-				}
+		CancellationTokenSource searchCancellationTokenSource = BeginSearchFilterOperation();
+		CancellationToken cancellationToken = searchCancellationTokenSource.Token;
+		int filterVersion = Interlocked.Increment(ref _searchFilterVersion);
 
-				// Restore selection after clearing search
-				RestoreSelectionFromViewModel();
+		try
+		{
+			await Task.Delay(millisecondsDelay: 250, cancellationToken);
+
+			string searchKeyword = SearchKeyword?.Trim() ?? string.Empty;
+			List<GroupInfoListForPackagedAppView> filteredGroups = string.IsNullOrWhiteSpace(searchKeyword)
+				? SortPackagedAppGroups(AppsListItemsSourceBackingList)
+				: await Task.Run(() => BuildFilteredAppsList(AppsListItemsSourceBackingList, searchKeyword), cancellationToken);
+
+			if (cancellationToken.IsCancellationRequested || filterVersion != _searchFilterVersion)
+			{
 				return;
 			}
 
-			_isUpdatingItemsSource = true;
-			try
+			ApplyFilteredAppsList(filteredGroups);
+		}
+		catch (OperationCanceledException)
+		{
+			// Intentionally ignored; a newer search request superseded this one.
+		}
+		finally
+		{
+			if (ReferenceEquals(Interlocked.CompareExchange(ref _searchFilterCancellationTokenSource, null, searchCancellationTokenSource), searchCancellationTokenSource))
 			{
-				// Update the ListView source with the filtered data
-				AppsListItemsSource = GetFilteredAppsListItemsSource();
-				UpdateCounts();
+				searchCancellationTokenSource.Dispose();
 			}
-			finally
-			{
-				_isUpdatingItemsSource = false;
-			}
-
-			// Restore selection after filtering (only items that match search will be selected)
-			RestoreSelectionFromViewModel();
 		}
 	}
 
 	/// <summary>
 	/// Filters the backing installed apps list using the current search query.
 	/// </summary>
-	private ObservableCollection<GroupInfoListForPackagedAppView> GetFilteredAppsListItemsSource()
+	private static List<GroupInfoListForPackagedAppView> BuildFilteredAppsList(IEnumerable<GroupInfoListForPackagedAppView> sourceGroups, string searchKeyword)
 	{
-		string searchKeyword = SearchKeyword ?? string.Empty;
-
-		List<GroupInfoListForPackagedAppView> filtered = AppsListItemsSourceBackingList
+		return sourceGroups
 			.Select(group => new GroupInfoListForPackagedAppView(
-				items: group.Where(app =>
-					(app.DisplayName?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Version?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.PackageFamilyName?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Publisher?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Architecture?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.PublisherID?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.FullName?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Description?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.InstallLocation?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.InstalledDate?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.AppSize?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.AppDataSize?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Capabilities?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true) ||
-					(app.Dependencies?.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase) == true)
-				),
+				items: group.Where(app => app.MatchesSearch(searchKeyword)),
 				key: group.Key))
 			.Where(group => group.Any())
 			.OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
 			.ToList();
+	}
 
-		return new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
+	/// <summary>
+	/// Opens the AppContainer loopback exemptions dialog for the currently loaded apps.
+	/// </summary>
+	internal async void OpenLoopbackExemptionsDialog_Click()
+	{
+		try
+		{
+			if (AppsListItemsSourceBackingList.Count == 0)
+			{
+				await RefreshAppsList();
+			}
+
+			List<PackagedAppView> loadedApps = GetAllLoadedApps(AppsListItemsSourceBackingList).ToList();
+
+			using LoopbackExemptionsDialog dialog = new(loadedApps);
+			_ = await dialog.ShowAsync();
+
+			if (dialog.HasChanges)
+			{
+				AppContainerLoopbackManager.UpdatePackagedAppsLoopbackState(loadedApps);
+				ApplyCurrentSearchFilterImmediately();
+				MainInfoBar.WriteSuccess(Atlas.GetStr("LoopbackDialogChangesApplied"));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	internal void AddLoopbackExemption_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PackagedAppView? targetApp = GetPackagedAppFromMenuFlyoutSender(sender);
+			if (targetApp is null)
+			{
+				MainInfoBar.WriteWarning(Atlas.GetStr("CouldNotDetermineWhichAppToAddLoopbackExemption"));
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
+
+			AppContainerLoopbackManager.UpdatePackagedAppsLoopbackState([targetApp]);
+
+			if (!targetApp.HasAppContainerSid)
+			{
+				MainInfoBar.WriteWarning(string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("LoopbackExemptionUnavailableForApp"), targetApp.DisplayName));
+				return;
+			}
+
+			if (targetApp.LoopbackExempt)
+			{
+				MainInfoBar.WriteInfo(string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("LoopbackExemptionAlreadyPresent"), targetApp.DisplayName));
+				return;
+			}
+
+			AppContainerLoopbackManager.SetLoopbackExemption(targetApp.AppContainerSid, true);
+			List<PackagedAppView> loadedApps = GetAllLoadedApps(AppsListItemsSourceBackingList).ToList();
+			AppContainerLoopbackManager.UpdatePackagedAppsLoopbackState(loadedApps);
+			ApplyCurrentSearchFilterImmediately();
+
+			MainInfoBar.WriteSuccess(string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("LoopbackExemptionAddedMessage"), targetApp.DisplayName));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	private CancellationTokenSource BeginSearchFilterOperation()
+	{
+		CancellationTokenSource searchCancellationTokenSource = new();
+		CancellationTokenSource? previousSearchCancellationTokenSource = Interlocked.Exchange(ref _searchFilterCancellationTokenSource, searchCancellationTokenSource);
+		previousSearchCancellationTokenSource?.Cancel();
+		previousSearchCancellationTokenSource?.Dispose();
+		return searchCancellationTokenSource;
+	}
+
+	private void CancelPendingSearchFilter()
+	{
+		CancellationTokenSource? previousSearchCancellationTokenSource = Interlocked.Exchange(ref _searchFilterCancellationTokenSource, null);
+		previousSearchCancellationTokenSource?.Cancel();
+		previousSearchCancellationTokenSource?.Dispose();
+	}
+
+	/// <summary>
+	/// Releases view-specific references when the page unloads so the singleton view model does not retain stale UI state.
+	/// </summary>
+	internal void CleanupTransientViewState()
+	{
+		CancelPendingSearchFilter();
+
+		// The view model outlives the page, so clear the ListView reference to avoid retaining the unloaded visual tree.
+		UIListView = null;
+	}
+
+	private void ApplyCurrentSearchFilterImmediately()
+	{
+		CancelPendingSearchFilter();
+
+		List<GroupInfoListForPackagedAppView> filteredGroups = string.IsNullOrWhiteSpace(SearchKeyword)
+			? SortPackagedAppGroups(AppsListItemsSourceBackingList)
+			: BuildFilteredAppsList(AppsListItemsSourceBackingList, SearchKeyword);
+
+		ApplyFilteredAppsList(filteredGroups);
+	}
+
+	private void ApplyFilteredAppsList(List<GroupInfoListForPackagedAppView> filteredGroups)
+	{
+		_isUpdatingItemsSource = true;
+		try
+		{
+			AppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filteredGroups);
+			UpdateCounts();
+		}
+		finally
+		{
+			_isUpdatingItemsSource = false;
+		}
+
+		RestoreSelectionFromViewModel();
 	}
 
 	/// <summary>
@@ -496,6 +605,9 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	private static List<GroupInfoListForPackagedAppView> SortPackagedAppGroups(IEnumerable<GroupInfoListForPackagedAppView> groups) =>
 		 groups.OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase).ToList();
+
+	private static IEnumerable<PackagedAppView> GetAllLoadedApps(IEnumerable<GroupInfoListForPackagedAppView> groups) =>
+		groups.SelectMany(static group => group);
 
 	/// <summary>
 	/// Gets the group letter displayed in SemanticZoom's zoomed-out view.
@@ -881,9 +993,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// Event handler for uninstalling multiple selected apps from the toolbar button.
 	/// </summary>
-	/// <param name="sender">The Button that was clicked</param>
-	/// <param name="e"></param>
-	internal async void UninstallSelectedApps_Click(object sender, RoutedEventArgs e)
+	internal async void UninstallSelectedApps_Click()
 	{
 		if (AppsListItemsSourceSelectedItems.Count == 0)
 		{
@@ -1208,7 +1318,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// Exports all of the installed apps to a JSON file.
 	/// </summary>
-	internal async void ExportToJson_Click(object sender, RoutedEventArgs e)
+	internal async void ExportToJson_Click()
 	{
 		try
 		{

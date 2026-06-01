@@ -6785,4 +6785,103 @@
     <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
     <value>سيؤدي أيضًا إلى تمكين Windows Protected Print من فئة Miscellaneous. قد يتسبب ذلك في حدوث مشكلات توافق عند الطباعة في المتصفحات المستندة إلى Chromium مثل Edge.</value>
   </data>
+  <data name="PFNLoopbackExemptionLabel.Text" xml:space="preserve">
+    <value>معفى من لوبباك</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.Content" xml:space="preserve">
+    <value>إدارة إعفاءات لوبباك</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض إعفاءات لوبباك الخاصة بـ AppContainer وإدارتها، بما في ذلك الإدخالات اليتيمة.</value>
+  </data>
+  <data name="LoopbackDialogTitle" xml:space="preserve">
+    <value>إدارة إعفاءات لوبباك</value>
+  </data>
+  <data name="LoopbackDialogCloseButtonText" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="LoopbackDialogRefreshButton.Content" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="LoopbackDialogAddAllButton.Content" xml:space="preserve">
+    <value>إضافة جميع التطبيقات</value>
+  </data>
+  <data name="LoopbackDialogClearAllButton.Content" xml:space="preserve">
+    <value>مسح جميع الإعفاءات</value>
+  </data>
+  <data name="LoopbackDialogSidLabel.Text" xml:space="preserve">
+    <value>SID:</value>
+  </data>
+  <data name="LoopbackStatusExempt" xml:space="preserve">
+    <value>معفى</value>
+  </data>
+  <data name="LoopbackStatusNotExempt" xml:space="preserve">
+    <value>غير معفى</value>
+  </data>
+  <data name="LoopbackStatusUnavailable" xml:space="preserve">
+    <value>غير متاح</value>
+  </data>
+  <data name="LoopbackAppContainerNotFound" xml:space="preserve">
+    <value>AppContainer غير موجود</value>
+  </data>
+  <data name="LoopbackNoPackageFamilyName" xml:space="preserve">
+    <value>لا يتوفر اسم عائلة الحزمة</value>
+  </data>
+  <data name="LoopbackInstalledAppEntryType" xml:space="preserve">
+    <value>تطبيق مثبت</value>
+  </data>
+  <data name="LoopbackOrphanedEntryType" xml:space="preserve">
+    <value>إدخال يتيم</value>
+  </data>
+  <data name="LoopbackUnavailableActionText" xml:space="preserve">
+    <value>غير متاح</value>
+  </data>
+  <data name="LoopbackRemoveExemptionButtonText" xml:space="preserve">
+    <value>إزالة الإعفاء</value>
+  </data>
+  <data name="LoopbackAddExemptionButtonText" xml:space="preserve">
+    <value>إضافة الإعفاء</value>
+  </data>
+  <data name="LoopbackRemoveEntryButtonText" xml:space="preserve">
+    <value>إزالة الإدخال</value>
+  </data>
+  <data name="LoopbackDialogSummaryText" xml:space="preserve">
+    <value>إجمالي الإعفاءات: {0} | إجمالي الصفوف: {1} | الإدخالات اليتيمة: {2}</value>
+  </data>
+  <data name="LoopbackDialogRefreshSucceeded" xml:space="preserve">
+    <value>تم تحديث قائمة إعفاءات لوبباك.</value>
+  </data>
+  <data name="LoopbackDialogClearAllSucceeded" xml:space="preserve">
+    <value>تمت إزالة جميع إعفاءات لوبباك.</value>
+  </data>
+  <data name="LoopbackDialogAddAllSucceeded" xml:space="preserve">
+    <value>تمت إضافة إعفاءات لوبباك لـ {0} من التطبيقات.</value>
+  </data>
+  <data name="LoopbackDialogAppExemptedMessage" xml:space="preserve">
+    <value>{0} أصبح الآن معفياً من عزل لوبباك.</value>
+  </data>
+  <data name="LoopbackDialogAppRemovedMessage" xml:space="preserve">
+    <value>تمت إزالة إعفاء لوبباك لـ {0}.</value>
+  </data>
+  <data name="LoopbackDialogOrphanRemovedMessage" xml:space="preserve">
+    <value>تمت إزالة إدخال لوبباك اليتيم للمعرف SID ‏{0}.</value>
+  </data>
+  <data name="LoopbackDialogChangesApplied" xml:space="preserve">
+    <value>تم تطبيق تغييرات إعفاءات لوبباك.</value>
+  </data>
+  <data name="AddLoopbackExemptionText.Text" xml:space="preserve">
+    <value>إضافة إعفاء لوبباك</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToAddLoopbackExemption" xml:space="preserve">
+    <value>تعذر تحديد التطبيق الذي يجب إضافته إلى إعفاءات لوبباك.</value>
+  </data>
+  <data name="LoopbackExemptionUnavailableForApp" xml:space="preserve">
+    <value>تعذر حل SID الخاص بـ AppContainer للتطبيق {0}، لذلك تعذرت إضافة إعفاء لوبباك.</value>
+  </data>
+  <data name="LoopbackExemptionAlreadyPresent" xml:space="preserve">
+    <value>{0} معفى بالفعل من عزل لوبباك.</value>
+  </data>
+  <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
+    <value>تمت إضافة إعفاء لوبباك لـ {0}.</value>
+  </data>
 </root>

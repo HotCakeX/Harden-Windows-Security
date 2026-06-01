@@ -6785,4 +6785,103 @@ Odcisk Palca: {3}</value>
     <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
     <value>Włączy również funkcję Windows Protected Print z kategorii Miscellaneous. Może powodować problemy ze zgodnością podczas drukowania w przeglądarkach opartych na Chromium, takich jak Edge.</value>
   </data>
+  <data name="PFNLoopbackExemptionLabel.Text" xml:space="preserve">
+    <value>Wyjątek loopback</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.Content" xml:space="preserve">
+    <value>Zarządzaj wyjątkami loopback</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetlaj i zarządzaj wyjątkami loopback AppContainer, w tym osieroconymi wpisami.</value>
+  </data>
+  <data name="LoopbackDialogTitle" xml:space="preserve">
+    <value>Zarządzaj wyjątkami loopback</value>
+  </data>
+  <data name="LoopbackDialogCloseButtonText" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="LoopbackDialogRefreshButton.Content" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="LoopbackDialogAddAllButton.Content" xml:space="preserve">
+    <value>Dodaj wszystkie aplikacje</value>
+  </data>
+  <data name="LoopbackDialogClearAllButton.Content" xml:space="preserve">
+    <value>Wyczyść wszystkie wyjątki</value>
+  </data>
+  <data name="LoopbackDialogSidLabel.Text" xml:space="preserve">
+    <value>SID:</value>
+  </data>
+  <data name="LoopbackStatusExempt" xml:space="preserve">
+    <value>Wyjątek</value>
+  </data>
+  <data name="LoopbackStatusNotExempt" xml:space="preserve">
+    <value>Brak wyjątku</value>
+  </data>
+  <data name="LoopbackStatusUnavailable" xml:space="preserve">
+    <value>Niedostępne</value>
+  </data>
+  <data name="LoopbackAppContainerNotFound" xml:space="preserve">
+    <value>NIE ZNALEZIONO AppContainer</value>
+  </data>
+  <data name="LoopbackNoPackageFamilyName" xml:space="preserve">
+    <value>Brak dostępnej nazwy rodziny pakietu</value>
+  </data>
+  <data name="LoopbackInstalledAppEntryType" xml:space="preserve">
+    <value>Zainstalowana aplikacja</value>
+  </data>
+  <data name="LoopbackOrphanedEntryType" xml:space="preserve">
+    <value>Osierocony wpis</value>
+  </data>
+  <data name="LoopbackUnavailableActionText" xml:space="preserve">
+    <value>Niedostępne</value>
+  </data>
+  <data name="LoopbackRemoveExemptionButtonText" xml:space="preserve">
+    <value>Usuń wyjątek</value>
+  </data>
+  <data name="LoopbackAddExemptionButtonText" xml:space="preserve">
+    <value>Dodaj wyjątek</value>
+  </data>
+  <data name="LoopbackRemoveEntryButtonText" xml:space="preserve">
+    <value>Usuń wpis</value>
+  </data>
+  <data name="LoopbackDialogSummaryText" xml:space="preserve">
+    <value>Łączna liczba wyjątków: {0} | Łączna liczba wierszy: {1} | Osierocone wpisy: {2}</value>
+  </data>
+  <data name="LoopbackDialogRefreshSucceeded" xml:space="preserve">
+    <value>Lista wyjątków loopback została odświeżona.</value>
+  </data>
+  <data name="LoopbackDialogClearAllSucceeded" xml:space="preserve">
+    <value>Usunięto wszystkie wyjątki loopback.</value>
+  </data>
+  <data name="LoopbackDialogAddAllSucceeded" xml:space="preserve">
+    <value>Dodano wyjątki loopback dla {0} aplikacji.</value>
+  </data>
+  <data name="LoopbackDialogAppExemptedMessage" xml:space="preserve">
+    <value>{0} jest teraz wyłączona z izolacji loopback.</value>
+  </data>
+  <data name="LoopbackDialogAppRemovedMessage" xml:space="preserve">
+    <value>Usunięto wyjątek loopback dla {0}.</value>
+  </data>
+  <data name="LoopbackDialogOrphanRemovedMessage" xml:space="preserve">
+    <value>Usunięto osierocony wpis loopback dla SID {0}.</value>
+  </data>
+  <data name="LoopbackDialogChangesApplied" xml:space="preserve">
+    <value>Zastosowano zmiany wyjątków loopback.</value>
+  </data>
+  <data name="AddLoopbackExemptionText.Text" xml:space="preserve">
+    <value>Dodaj wyjątek loopback</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToAddLoopbackExemption" xml:space="preserve">
+    <value>Nie udało się określić, którą aplikację dodać do wyjątków loopback.</value>
+  </data>
+  <data name="LoopbackExemptionUnavailableForApp" xml:space="preserve">
+    <value>Nie udało się ustalić SID AppContainer dla {0}, więc nie można było dodać wyjątku loopback.</value>
+  </data>
+  <data name="LoopbackExemptionAlreadyPresent" xml:space="preserve">
+    <value>{0} jest już wyłączona z izolacji loopback.</value>
+  </data>
+  <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
+    <value>Dodano wyjątek loopback dla {0}.</value>
+  </data>
 </root>

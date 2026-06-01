@@ -3418,4 +3418,66 @@ internal static unsafe partial class NativeMethods
 		out PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY lpBuffer,
 		nuint dwLength);
 
+
+	[LibraryImport("FirewallAPI.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint NetworkIsolationGetAppContainerConfig(
+		out uint pdwNumPublicAppCs,
+		out IntPtr appContainerSids);
+
+
+	[LibraryImport("FirewallAPI.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint NetworkIsolationSetAppContainerConfig(
+		uint dwNumPublicAppCs,
+		[In] SID_AND_ATTRIBUTES[] appContainerSids);
+
+
+	[LibraryImport("FirewallAPI.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint NetworkIsolationSetAppContainerConfig(
+		uint dwNumPublicAppCs,
+		IntPtr appContainerSids);
+
+
+	[LibraryImport("FirewallAPI.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint NetworkIsolationEnumAppContainers(
+		uint flags,
+		out uint pdwNumPublicAppCs,
+		out IntPtr appContainers);
+
+
+	[LibraryImport("FirewallAPI.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void NetworkIsolationFreeAppContainers(IntPtr appContainers);
+
+
+	[LibraryImport("userenv.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DeriveAppContainerSidFromAppContainerName(
+		string appContainerName,
+		out IntPtr appContainerSid);
+
+
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool ConvertSidToStringSidW(
+		IntPtr sid,
+		out IntPtr stringSid);
+
+
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool ConvertStringSidToSidW(
+		string stringSid,
+		out IntPtr sid);
+
+
+	[LibraryImport("ADVAPI32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr FreeSid(IntPtr sid);
+
 }

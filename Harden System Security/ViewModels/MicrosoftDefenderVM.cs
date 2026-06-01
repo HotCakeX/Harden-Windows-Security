@@ -923,7 +923,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MD_Exclusions);
 		if (lv is null) return;
 
-		if (_exclusionsMappings.TryGetValue(key, out var map))
+		if (_exclusionsMappings.TryGetValue(key, out (string Label, Func<Exclusions, object?> Getter) map))
 		{
 			// TElement = Exclusions, copy just that one property
 			ListViewHelper.CopyToClipboard<Exclusions>(ci => map.Getter(ci)?.ToString(), lv);

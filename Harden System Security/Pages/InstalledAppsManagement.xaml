@@ -9,7 +9,8 @@
     xmlns:xamlData="using:Microsoft.UI.Xaml.Data"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    xmlns:animatedvisuals="using:AnimatedVisuals">
+    xmlns:animatedvisuals="using:AnimatedVisuals"
+    Unloaded="{x:Bind ViewModel.CleanupTransientViewState}">
 
     <Grid>
 
@@ -140,6 +141,10 @@
                                             <FontIcon Glyph="&#xE71A;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="AddLoopbackExemptionText"
+                                                    Icon="Add"
+                                                    IsEnabled="{x:Bind CanAddLoopbackExemption, Mode=OneWay}"
+                                                    Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).AddLoopbackExemption_Click}"/>
                                     <MenuFlyoutItem x:Uid="OpenLocationText"
                                                      Icon="Folder"
                                                      Click="{x:Bind ((vm:InstalledAppsManagementVM)VMRef).OpenAppLocation_Click}"/>
@@ -218,6 +223,27 @@
                                            Text="{x:Bind InstalledDate}"
                                            Style="{ThemeResource CaptionTextBlockStyle}"
                                            x:Phase="1"/>
+                            </Grid>
+
+                            <Grid>
+                               <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="*"/>
+                               </Grid.ColumnDefinitions>
+                               <TextBlock Grid.Column="0"
+                                          x:Uid="PFNLoopbackExemptionLabel"
+                                          Style="{ThemeResource CaptionTextBlockStyle}"
+                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                               <TextBlock Grid.Column="1"
+                                          Text=":"
+                                          Style="{ThemeResource CaptionTextBlockStyle}"
+                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                          Margin="0,0,4,0"/>
+                               <TextBlock Grid.Column="2"
+                                          Text="{x:Bind LoopbackExemptionStatus, Mode=OneWay}"
+                                          Style="{ThemeResource CaptionTextBlockStyle}"
+                                          x:Phase="1"/>
                             </Grid>
                         </CCToolKit:WrapPanel>
 
@@ -734,6 +760,19 @@
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
+
+                   <Button x:Uid="ManageLoopbackExemptionsButton"
+                           IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                           Click="{x:Bind ViewModel.OpenLoopbackExemptionsDialog_Click}">
+                       <Button.ContentTemplate>
+                           <DataTemplate x:DataType="x:String">
+                               <StackPanel Orientation="Horizontal" Spacing="8">
+                                   <FontIcon Glyph="&#xE7F5;" FontSize="16"/>
+                                   <TextBlock Text="{x:Bind}"/>
+                               </StackPanel>
+                           </DataTemplate>
+                       </Button.ContentTemplate>
+                   </Button>
 
                 </CCToolKit:WrapPanel>
 

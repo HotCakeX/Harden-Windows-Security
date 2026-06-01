@@ -18,6 +18,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -122,6 +123,7 @@ internal sealed partial class PackagedAppView(
 
 			field = value;
 			OnPropertyChanged();
+			RefreshSearchText();
 		}
 	} = appSize;
 
@@ -138,6 +140,7 @@ internal sealed partial class PackagedAppView(
 
 			field = value;
 			OnPropertyChanged();
+			RefreshSearchText();
 		}
 	} = appDataSize;
 
@@ -154,6 +157,7 @@ internal sealed partial class PackagedAppView(
 
 			field = value;
 			OnPropertyChanged();
+			RefreshSearchText();
 		}
 	} = totalUsage;
 
@@ -199,17 +203,96 @@ internal sealed partial class PackagedAppView(
 	[JsonIgnore]
 	internal object? VMRef => vmRef;
 
+	[JsonInclude]
+	[JsonPropertyName("AppContainer SID")]
+	internal string AppContainerSid
+	{
+		get; set
+		{
+			if (string.Equals(field, value, StringComparison.Ordinal))
+			{
+				return;
+			}
+
+			field = value;
+			OnPropertyChanged();
+			OnPropertyChanged(nameof(HasAppContainerSid));
+			OnPropertyChanged(nameof(CanAddLoopbackExemption));
+			RefreshSearchText();
+		}
+	} = string.Empty;
+
+	[JsonInclude]
+	[JsonPropertyName("Loopback Exempt")]
+	internal bool LoopbackExempt
+	{
+		get; set
+		{
+			if (field == value)
+			{
+				return;
+			}
+
+			field = value;
+			OnPropertyChanged();
+			OnPropertyChanged(nameof(CanAddLoopbackExemption));
+			RefreshSearchText();
+		}
+	}
+
+	[JsonIgnore]
+	internal string LoopbackExemptionStatus
+	{
+		get; private set
+		{
+			if (string.Equals(field, value, StringComparison.Ordinal))
+			{
+				return;
+			}
+
+			field = value;
+			OnPropertyChanged();
+			RefreshSearchText();
+		}
+	} = string.Empty;
+
 	[JsonIgnore]
 	internal bool StorageDetailsLoaded { get; private set; }
 
 	[JsonIgnore]
 	internal bool StorageDetailsLoading { get; private set; }
 
+	[JsonIgnore]
+	internal bool HasAppContainerSid => !string.IsNullOrWhiteSpace(AppContainerSid);
+
+	[JsonIgnore]
+	internal bool CanAddLoopbackExemption => HasAppContainerSid && !LoopbackExempt;
+
 	/// <summary>
 	/// A stable identity for equality and hashing.
 	/// </summary>
 	[JsonIgnore]
 	internal string StableIdentity { get; } = string.Concat(packageFamilyName, "|", architecture);
+
+	[JsonIgnore]
+	private string SearchText { get; set; } = BuildSearchText(
+		displayName,
+		version,
+		packageFamilyName,
+		publisher,
+		architecture,
+		publisherID,
+		fullName,
+		description,
+		installLocation,
+		installedDate,
+		appSize,
+		appDataSize,
+		totalUsage,
+		capabilities,
+		dependencies,
+		string.Empty,
+		string.Empty);
 
 	internal bool TryBeginStorageDetailsLoad()
 	{
@@ -237,6 +320,37 @@ internal sealed partial class PackagedAppView(
 		AppDataSize = newAppDataSize;
 		TotalUsage = newTotalUsage;
 	}
+
+	internal void SetLoopbackDetails(string sid, bool isExempt, string statusText)
+	{
+		AppContainerSid = sid;
+		LoopbackExempt = isExempt;
+		LoopbackExemptionStatus = statusText;
+	}
+
+	internal bool MatchesSearch(string searchKeyword) => SearchText.Contains(searchKeyword, StringComparison.OrdinalIgnoreCase);
+
+	private void RefreshSearchText() => SearchText = BuildSearchText(
+		DisplayName,
+		Version,
+		PackageFamilyName,
+		Publisher,
+		Architecture,
+		PublisherID,
+		FullName,
+		Description,
+		InstallLocation,
+		InstalledDate,
+		AppSize,
+		AppDataSize,
+		TotalUsage,
+		Capabilities,
+		Dependencies,
+		LoopbackExemptionStatus,
+		AppContainerSid);
+
+	private static string BuildSearchText(params string?[] values) =>
+		string.Join('\n', values.Where(static value => !string.IsNullOrWhiteSpace(value)));
 
 	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

@@ -2116,3 +2116,38 @@ internal struct PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY
 {
 	internal uint Flags;
 }
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct SID_AND_ATTRIBUTES
+{
+	internal IntPtr Sid;
+	internal uint Attributes;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct INET_FIREWALL_AC_CAPABILITIES
+{
+	internal uint Count;
+	internal IntPtr Capabilities;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct INET_FIREWALL_AC_BINARIES
+{
+	internal uint Count;
+	internal IntPtr Binaries;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct INET_FIREWALL_APP_CONTAINER
+{
+	internal IntPtr AppContainerSid;
+	internal IntPtr UserSid;
+	internal IntPtr AppContainerName;
+	internal IntPtr DisplayName;
+	internal IntPtr Description;
+	internal INET_FIREWALL_AC_CAPABILITIES Capabilities;
+	internal INET_FIREWALL_AC_BINARIES Binaries;
+	internal IntPtr WorkingDirectory;
+	internal IntPtr PackageFullName;
+}

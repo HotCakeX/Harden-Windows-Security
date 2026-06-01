@@ -6785,4 +6785,103 @@
     <data name="DynamicCodeSettings-Edge-TIP" xml:space="preserve">
     <value>Θα ενεργοποιήσει επίσης το Windows Protected Print από την κατηγορία Miscellaneous. Μπορεί να προκαλέσει προβλήματα συμβατότητας κατά την εκτύπωση σε προγράμματα περιήγησης που βασίζονται στο Chromium, όπως το Edge.</value>
   </data>
+  <data name="PFNLoopbackExemptionLabel.Text" xml:space="preserve">
+    <value>Εξαίρεση loopback</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.Content" xml:space="preserve">
+    <value>Διαχείριση εξαιρέσεων loopback</value>
+  </data>
+  <data name="ManageLoopbackExemptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και διαχείριση των εξαιρέσεων loopback του AppContainer, συμπεριλαμβανομένων των ορφανών καταχωρήσεων.</value>
+  </data>
+  <data name="LoopbackDialogTitle" xml:space="preserve">
+    <value>Διαχείριση εξαιρέσεων loopback</value>
+  </data>
+  <data name="LoopbackDialogCloseButtonText" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="LoopbackDialogRefreshButton.Content" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="LoopbackDialogAddAllButton.Content" xml:space="preserve">
+    <value>Προσθήκη όλων των εφαρμογών</value>
+  </data>
+  <data name="LoopbackDialogClearAllButton.Content" xml:space="preserve">
+    <value>Εκκαθάριση όλων των εξαιρέσεων</value>
+  </data>
+  <data name="LoopbackDialogSidLabel.Text" xml:space="preserve">
+    <value>SID:</value>
+  </data>
+  <data name="LoopbackStatusExempt" xml:space="preserve">
+    <value>Εξαιρείται</value>
+  </data>
+  <data name="LoopbackStatusNotExempt" xml:space="preserve">
+    <value>Δεν εξαιρείται</value>
+  </data>
+  <data name="LoopbackStatusUnavailable" xml:space="preserve">
+    <value>Μη διαθέσιμο</value>
+  </data>
+  <data name="LoopbackAppContainerNotFound" xml:space="preserve">
+    <value>ΔΕΝ ΒΡΕΘΗΚΕ AppContainer</value>
+  </data>
+  <data name="LoopbackNoPackageFamilyName" xml:space="preserve">
+    <value>Δεν υπάρχει διαθέσιμο όνομα οικογένειας πακέτου</value>
+  </data>
+  <data name="LoopbackInstalledAppEntryType" xml:space="preserve">
+    <value>Εγκατεστημένη εφαρμογή</value>
+  </data>
+  <data name="LoopbackOrphanedEntryType" xml:space="preserve">
+    <value>Ορφανή καταχώρηση</value>
+  </data>
+  <data name="LoopbackUnavailableActionText" xml:space="preserve">
+    <value>Μη διαθέσιμο</value>
+  </data>
+  <data name="LoopbackRemoveExemptionButtonText" xml:space="preserve">
+    <value>Κατάργηση εξαίρεσης</value>
+  </data>
+  <data name="LoopbackAddExemptionButtonText" xml:space="preserve">
+    <value>Προσθήκη εξαίρεσης</value>
+  </data>
+  <data name="LoopbackRemoveEntryButtonText" xml:space="preserve">
+    <value>Κατάργηση καταχώρησης</value>
+  </data>
+  <data name="LoopbackDialogSummaryText" xml:space="preserve">
+    <value>Σύνολο εξαιρέσεων: {0} | Σύνολο γραμμών: {1} | Ορφανές καταχωρήσεις: {2}</value>
+  </data>
+  <data name="LoopbackDialogRefreshSucceeded" xml:space="preserve">
+    <value>Η λίστα εξαιρέσεων loopback ανανεώθηκε.</value>
+  </data>
+  <data name="LoopbackDialogClearAllSucceeded" xml:space="preserve">
+    <value>Καταργήθηκαν όλες οι εξαιρέσεις loopback.</value>
+  </data>
+  <data name="LoopbackDialogAddAllSucceeded" xml:space="preserve">
+    <value>Προστέθηκαν εξαιρέσεις loopback για {0} εφαρμογές.</value>
+  </data>
+  <data name="LoopbackDialogAppExemptedMessage" xml:space="preserve">
+    <value>Το {0} εξαιρείται πλέον από την απομόνωση loopback.</value>
+  </data>
+  <data name="LoopbackDialogAppRemovedMessage" xml:space="preserve">
+    <value>Η εξαίρεση loopback καταργήθηκε για το {0}.</value>
+  </data>
+  <data name="LoopbackDialogOrphanRemovedMessage" xml:space="preserve">
+    <value>Καταργήθηκε ορφανή καταχώρηση loopback για SID {0}.</value>
+  </data>
+  <data name="LoopbackDialogChangesApplied" xml:space="preserve">
+    <value>Εφαρμόστηκαν οι αλλαγές στις εξαιρέσεις loopback.</value>
+  </data>
+  <data name="AddLoopbackExemptionText.Text" xml:space="preserve">
+    <value>Προσθήκη εξαίρεσης loopback</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToAddLoopbackExemption" xml:space="preserve">
+    <value>Δεν ήταν δυνατό να προσδιοριστεί ποια εφαρμογή θα προστεθεί στις εξαιρέσεις loopback.</value>
+  </data>
+  <data name="LoopbackExemptionUnavailableForApp" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η επίλυση του SID AppContainer για το {0}, επομένως δεν ήταν δυνατή η προσθήκη της εξαίρεσης loopback.</value>
+  </data>
+  <data name="LoopbackExemptionAlreadyPresent" xml:space="preserve">
+    <value>Το {0} εξαιρείται ήδη από την απομόνωση loopback.</value>
+  </data>
+  <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
+    <value>Προστέθηκε εξαίρεση loopback για το {0}.</value>
+  </data>
 </root>

@@ -649,7 +649,8 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 ### Credits
 
-* Many of the icons are from [icons8](https://icons8.com/)
+* Many of the icons are from [**Icons8**](https://icons8.com/).
+    * Disclaimer: [Icons8](https://icons8.com/) graphics used in this open-source project are only licensed to this repository. Extracting, copying, or reusing these graphic assets is strictly prohibited without a valid [Icons8](https://icons8.com/) license. If you would like to include the graphics in your own projects, you will need to obtain the appropriate license directly from [Icons8](https://icons8.com/) .
 * Windows, Azure etc. are trademarks of [Microsoft Corporation](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general)
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell module">

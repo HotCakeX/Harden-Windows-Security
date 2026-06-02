@@ -1,5 +1,11 @@
 # Download Manager | Harden System Security
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/f537691fdb897ce1cb9477a23369b88e132aa92d/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Download%20Manager.png" alt="Download Manager">
+
+</div>
+
 <br>
 
 The **Download Manager** is a dedicated feature in [the Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) under the Extras section. It can accelerate your download speeds and offers many features and capabilities that go beyond the built-in browser download experiences, making it a resilient download manager suitable for any use cases.

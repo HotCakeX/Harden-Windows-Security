@@ -6884,4 +6884,22 @@
   <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
     <value>{0} നുള്ള ലൂപ്പ്‌ബാക്ക് ഒഴിവാക്കൽ ചേർത്തു.</value>
   </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾ</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Update-ുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Update-ുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.Header" xml:space="preserve">
+    <value>മാനേജ്മെന്റ്</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലഭ്യമായ ഓരോ അപ്ഡേറ്റിനെയും കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ കാണുക, ആവശ്യമായ ഏത് അപ്ഡേറ്റും മറയ്ക്കുകയോ വീണ്ടും കാണിക്കുകയോ ചെയ്യുക, അവയുടെ മെറ്റാഡാറ്റ എക്സ്പോർട്ട് ചെയ്യുക.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലഭ്യമായ ഓരോ അപ്ഡേറ്റിനെയും കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ കാണുക, ആവശ്യമായ ഏത് അപ്ഡേറ്റും മറയ്ക്കുകയോ വീണ്ടും കാണിക്കുകയോ ചെയ്യുക, അവയുടെ മെറ്റാഡാറ്റ എക്സ്പോർട്ട് ചെയ്യുക.</value>
+  </data>
 </root>

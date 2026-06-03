@@ -39,6 +39,7 @@
                             <RepositionThemeTransition IsStaggeringEnabled="False" />
                         </Grid.ChildrenTransitions>
 
+                        <!-- Set DisposeOnlyOnExplicitCall + ChildButtonsDisposeOnlyOnExplicitCall to defer disposal to navigation. -->
                         <customUI:MUnitListViewControl
                         x:Name="SecurityMeasuresList"
                         ViewModel="{x:Bind ViewModel}"

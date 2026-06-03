@@ -6884,4 +6884,22 @@ Odcisk Palca: {3}</value>
   <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
     <value>Dodano wyjątek loopback dla {0}.</value>
   </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Środki zabezpieczeń</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj środkami zabezpieczeń związanymi z usługą Windows Update.</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj środkami zabezpieczeń związanymi z usługą Windows Update.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.Header" xml:space="preserve">
+    <value>Zarządzanie</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetl szczegółowe informacje o każdej dostępnej aktualizacji, ukryj lub odkryj dowolną potrzebną aktualizację oraz wyeksportuj jej metadane.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetl szczegółowe informacje o każdej dostępnej aktualizacji, ukryj lub odkryj dowolną potrzebną aktualizację oraz wyeksportuj jej metadane.</value>
+  </data>
 </root>

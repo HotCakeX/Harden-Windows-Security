@@ -1,15 +1,7 @@
-* Added 3 new policies to the Microsoft Edge category:
-    * Enhanced Security Mode for Edge set to Strict.
-    * Preventing websites from accessing information about locally installed fonts.
-    * Making sure that only Microsoft signed binaries are allowed to load in the Edge process by enabling Code Integrity for Edge.
+Added the ability to show or hide Windows Updates and view all of their hidden metadata:
 
-* In the Edge category, the Dynamic Code Security item is now a sub-category. The full conversation led to this decision is available here: https://github.com/HotCakeX/Harden-Windows-Security/issues/1160
+The new management tab in the Windows Update is designed to show available Windows updates that are not currently installed. Users can retrieve the available update list, inspect detailed metadata for each update, hide or unhide selected updates, sort updates by deployment date and export update metadata to JSON.
 
-* Added a new tile to the home page that displays your public IP address. You have to click on it to retrieve it initially and subsequent clicks will retrieve it again. It uses well-known Cloudflare as the primary server and then AWS if Cloudflare fails for any reason, `https://www.cloudflare.com/cdn-cgi/trace` and `https://checkip.amazonaws.com`. The requests sent to those servers are simple GET requests. This feature is only intended to display your public IP address to you, IP info is neither stored nor logged anywhere by the app.
+Being able to hide updates is useful in some scenarios, for example when a specific update is causing issues and you want to prevent it from being installed until a fix is released, or when Windows Update offers an old driver version even if newer version is installed (https://www.intel.com/content/www/us/en/support/articles/000087834/graphics.html). Each hidden update can be unhiden easily via the UI controls.
 
-* Improved the Download Manager:
-    * You can now sort the downloads based on Size, Date or names.
-    * Added select all and de-select all buttons to the toolbar.
-    * You can now view the time the file was created on the remote server in the Download Manager.
-    * Added a copy button to the Hash screen so you can easily copy the displayed hash to the clipboard.
-    * Improved the colors of the UI.
+Updates available in Windows carry a lot of metadata with them but Windows Update in Windows Settings only displays a tiny fraction of it. The management tab in the app allows users to inspect all the metadata for each update, which can be useful to understand what the update is about, its severity, whether it's a security update or not, the link to online articles and so much more. You can also instantly export them to JSON file, which can be useful for further analysis or record-keeping.

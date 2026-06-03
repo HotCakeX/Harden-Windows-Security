@@ -6884,4 +6884,22 @@
   <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
     <value>{0} के लिए लूपबैक अपवाद जोड़ दिया गया।</value>
   </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>सुरक्षा उपाय</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Update से संबंधित सुरक्षा उपायों को प्रबंधित करें.</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Update से संबंधित सुरक्षा उपायों को प्रबंधित करें.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.Header" xml:space="preserve">
+    <value>प्रबंधन</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>हर उपलब्ध अपडेट के बारे में विस्तृत जानकारी देखें, आवश्यक किसी भी अपडेट को छिपाएँ या फिर से दिखाएँ और उसका मेटाडेटा निर्यात करें.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>हर उपलब्ध अपडेट के बारे में विस्तृत जानकारी देखें, आवश्यक किसी भी अपडेट को छिपाएँ या फिर से दिखाएँ और उसका मेटाडेटा निर्यात करें.</value>
+  </data>
 </root>

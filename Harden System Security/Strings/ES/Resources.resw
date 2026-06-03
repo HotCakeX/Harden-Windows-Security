@@ -6884,4 +6884,22 @@ Huella Digital: {3}</value>
   <data name="LoopbackExemptionAddedMessage" xml:space="preserve">
     <value>Se agregó la exención de loopback para {0}.</value>
   </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Medidas de seguridad</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Administra las medidas de seguridad relacionadas con Windows Update.</value>
+  </data>
+  <data name="WindowsUpdateSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Administra las medidas de seguridad relacionadas con Windows Update.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.Header" xml:space="preserve">
+    <value>Administración</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Consulta información detallada sobre cada actualización disponible, oculta o muestra cualquier actualización que necesites y exporta sus metadatos.</value>
+  </data>
+  <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Consulta información detallada sobre cada actualización disponible, oculta o muestra cualquier actualización que necesites y exporta sus metadatos.</value>
+  </data>
 </root>

@@ -4,24 +4,731 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:vm="using:HardenSystemSecurity.ViewModels"
+    xmlns:CommonCore="using:CommonCore"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
-    <Grid>
+    <Page.Resources>
+        <Style x:Key="WindowsUpdateSectionTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyStrongTextBlockStyle}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <Setter Property="Margin" Value="0,4,0,6"/>
+        </Style>
 
+        <Style x:Key="WindowsUpdateLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="IsTextSelectionEnabled" Value="True"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateCompactValueStyle" TargetType="TextBlock" BasedOn="{StaticResource WindowsUpdateValueStyle}">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="IsTextSelectionEnabled" Value="False"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateMonoValueStyle" TargetType="TextBlock" BasedOn="{StaticResource WindowsUpdateValueStyle}">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateStatusPillStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateDetailCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateCompactDetailCardStyle" TargetType="Border" BasedOn="{StaticResource WindowsUpdateDetailCardStyle}">
+            <Setter Property="MinWidth" Value="170"/>
+            <Setter Property="MaxWidth" Value="320"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateDetailFieldStackStyle" TargetType="StackPanel">
+            <Setter Property="Spacing" Value="3"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateDetailSectionStackStyle" TargetType="StackPanel">
+            <Setter Property="Spacing" Value="8"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style x:Key="WindowsUpdateHyperlinkButtonStyle" TargetType="HyperlinkButton">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <DataTemplate x:Key="WindowsUpdateLinkDataTemplate" x:DataType="CommonCore:WindowsUpdateLink">
+            <HyperlinkButton Content="{x:Bind Text}"
+                             NavigateUri="{x:Bind Uri}"
+                             Style="{StaticResource WindowsUpdateHyperlinkButtonStyle}"/>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <customUI:InfoBarV2 Grid.Row="0"
-                    IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
-                    Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
-                    Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
-                    IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
+                            IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
 
-        <customUI:MUnitListViewControl Grid.Row="1"
-                       ViewModel="{x:Bind ViewModel}"
-                       ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
+        <TabView VerticalAlignment="Stretch"
+                 IsAddTabButtonVisible="False"
+                 Grid.Row="1"
+                 TabWidthMode="Equal"
+                 CanReorderTabs="{x:Bind CommonCore:ViewModelBase.IsNotElevated}">
+
+            <!-- Security Measures Tab -->
+            <TabViewItem x:Uid="WindowsUpdateSecurityMeasuresTab" IsClosable="False" MinHeight="40">
+                <TabViewItem.IconSource>
+                    <BitmapIconSource UriSource="/Assets/External/SecurityMeasures.png" ShowAsMonochrome="False" />
+                </TabViewItem.IconSource>
+                <TabViewItem.Content>
+                    <Grid>
+                        <Grid.ChildrenTransitions>
+                            <EntranceThemeTransition FromVerticalOffset="50" />
+                            <RepositionThemeTransition IsStaggeringEnabled="False" />
+                        </Grid.ChildrenTransitions>
+
+                        <!-- Set DisposeOnlyOnExplicitCall + ChildButtonsDisposeOnlyOnExplicitCall to defer disposal to navigation. -->
+                        <customUI:MUnitListViewControl
+                                  x:Name="SecurityMeasuresList"
+                                  DisposeOnlyOnExplicitCall="True"
+                                  ChildButtonsDisposeOnlyOnExplicitCall="True"
+                                  ViewModel="{x:Bind ViewModel}"
+                                  ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
+
+                    </Grid>
+                </TabViewItem.Content>
+            </TabViewItem>
+
+            <!-- Management -->
+            <TabViewItem x:Uid="WindowsUpdateManagementTab" IsClosable="False" MinHeight="40">
+                <TabViewItem.IconSource>
+                    <BitmapIconSource UriSource="/Assets/External/Management.png" ShowAsMonochrome="False" />
+                </TabViewItem.IconSource>
+                <TabViewItem.Content>
+                    <Grid RowSpacing="8" Margin="0,5,0,5">
+
+                        <Grid.ChildrenTransitions>
+                            <EntranceThemeTransition FromVerticalOffset="50" />
+                            <RepositionThemeTransition IsStaggeringEnabled="False" />
+                        </Grid.ChildrenTransitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Toolbar Area -->
+                        <Border CornerRadius="10"
+                                Grid.Row="0"
+                                Padding="6,4"
+                                BorderThickness="1"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                VerticalAlignment="Center">
+                            <CCToolKit:WrapPanel Orientation="Horizontal"
+                                                 HorizontalAlignment="Center"
+                                                 HorizontalSpacing="8"
+                                                 VerticalSpacing="6">
+
+                                <ProgressRing IsActive="{x:Bind ViewModel.ManagementProgressRingIsActive, Mode=OneWay}"
+                                              Visibility="{x:Bind ViewModel.ManagementProgressRingVisibility, Mode=OneWay}"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,8,0" />
+
+                                <Button Style="{StaticResource AccentButtonStyle}"
+                                        VerticalAlignment="Center"
+                                        Content="Retrieve updates"
+                                        Click="{x:Bind ViewModel.RetrieveAvailableUpdates}"
+                                        IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
+                                <Button VerticalAlignment="Center"
+                                        Content="Hide selected"
+                                        Click="{x:Bind HideSelectedUpdates_Click}"
+                                        IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xED1A;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
+                                <Button VerticalAlignment="Center"
+                                        Content="Unhide selected"
+                                        Click="{x:Bind UnhideSelectedUpdates_Click}"
+                                        IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE890;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
+                                <Button VerticalAlignment="Center"
+                                        Content="Export JSON"
+                                        Click="{x:Bind ExportUpdatesToJson_Click}"
+                                        IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
+                                <Button VerticalAlignment="Center"
+                                        Content="{x:Bind ViewModel.DateSortButtonText, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.SortAvailableUpdatesByDate_Click}"
+                                        IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="{x:Bind vm:ViewModelProvider.WindowsUpdateVM.DateSortGlyph, Mode=OneWay}" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
+                                <Button VerticalAlignment="Center"
+                                        Content="Clear"
+                                        Click="{x:Bind ViewModel.ClearAvailableUpdates_Click}"
+                                        IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
+                                <!-- Total chip -->
+                                <Border CornerRadius="8"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Padding="10,6"
+                                        BorderThickness="1"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run x:Uid="TotalText" />
+                                            <Run Text="{x:Bind ViewModel.AvailableUpdates.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+                            </CCToolKit:WrapPanel>
+
+                        </Border>
+
+                        <!-- Main List Area -->
+                        <Grid Grid.Row="1">
+
+                            <ListView x:Name="WindowsUpdatesListView"
+                                      ItemsSource="{x:Bind ViewModel.AvailableUpdates, Mode=OneWay}"
+                                      SelectionMode="Multiple"
+                                      IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}"
+                                      HorizontalContentAlignment="Stretch">
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="CommonCore:WindowsUpdateItem">
+
+                                        <Expander HorizontalAlignment="Stretch"
+                                                  HorizontalContentAlignment="Stretch"
+                                                  Margin="0,4,0,4">
+
+                                            <Expander.Header>
+                                                <Grid Padding="0,6,0,6"
+                                                      HorizontalAlignment="Stretch"
+                                                      RowSpacing="8">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Text="{x:Bind Title}"
+                                                               Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                               TextWrapping="Wrap"
+                                                               ToolTipService.ToolTip="{x:Bind Title}"/>
+
+                                                    <CCToolKit:WrapPanel Grid.Row="1"
+                                                                         Orientation="Horizontal"
+                                                                         HorizontalSpacing="8"
+                                                                         VerticalSpacing="6">
+
+                                                        <Border Style="{StaticResource WindowsUpdateStatusPillStyle}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                <FontIcon Glyph="&#xE946;" FontSize="12"/>
+                                                                <TextBlock Text="{x:Bind Type}"
+                                                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                                                           FontWeight="SemiBold"
+                                                                           TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateStatusPillStyle}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                <FontIcon Glyph="{x:Bind HiddenStateGlyph}" FontSize="12"/>
+                                                                <TextBlock Text="{x:Bind HiddenStateText}"
+                                                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                                                           FontWeight="SemiBold"
+                                                                           TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateStatusPillStyle}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                <FontIcon Glyph="&#xE8EC;" FontSize="12"/>
+                                                                <TextBlock Text="KB:"
+                                                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                                                           FontWeight="SemiBold"
+                                                                           TextWrapping="Wrap"/>
+                                                                <TextBlock Text="{x:Bind KbArticleIds}"
+                                                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                                                           TextWrapping="Wrap"
+                                                                           ToolTipService.ToolTip="{x:Bind KbArticleIds}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateStatusPillStyle}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                <FontIcon Glyph="&#xE787;" FontSize="12"/>
+                                                                <TextBlock Text="Changed:"
+                                                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                                                           FontWeight="SemiBold"
+                                                                           TextWrapping="Wrap"/>
+                                                                <TextBlock Text="{x:Bind LastDeploymentChangeTime}"
+                                                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                                                           TextWrapping="Wrap"
+                                                                           ToolTipService.ToolTip="{x:Bind LastDeploymentChangeTime}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Style="{StaticResource WindowsUpdateStatusPillStyle}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                <FontIcon Glyph="&#xF305;" FontSize="12"/>
+                                                                <TextBlock Text="Requires Reboot:"
+                                                                               Style="{StaticResource CaptionTextBlockStyle}"
+                                                                               FontWeight="SemiBold"
+                                                                               TextWrapping="Wrap"/>
+                                                                <TextBlock Text="{x:Bind RequiresReboot}"
+                                                                               Style="{StaticResource CaptionTextBlockStyle}"
+                                                                               TextWrapping="Wrap"
+                                                                               ToolTipService.ToolTip="{x:Bind RequiresReboot}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                    </CCToolKit:WrapPanel>
+                                                </Grid>
+                                            </Expander.Header>
+
+                                            <Expander.Content>
+                                                <StackPanel Spacing="6">
+
+                                                    <!-- Overview -->
+                                                    <StackPanel Style="{StaticResource WindowsUpdateDetailSectionStackStyle}">
+                                                        <TextBlock Text="Overview" Style="{StaticResource WindowsUpdateSectionTitleStyle}"/>
+
+                                                        <CCToolKit:WrapPanel Orientation="Horizontal"
+                                                                             HorizontalSpacing="8"
+                                                                             VerticalSpacing="8">
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Action" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind DeploymentAction}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Priority" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind DownloadPriority}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Min size" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind MinDownloadSizeDisplay}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Max size" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind MaxDownloadSizeDisplay}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Deadline" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind Deadline}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Downloaded" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind IsDownloaded}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Installed" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind IsInstalled}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Mandatory" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind IsMandatory}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Beta" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind IsBeta}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Browse only" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind BrowseOnly}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="EULA accepted" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind EulaAccepted}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Requires source" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind CanRequireSource}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Auto select" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind AutoSelectOnWebSites}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Severity" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind MsrcSeverity}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Revision" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind RevisionNumberDisplay}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Uninstallable" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind IsUninstallable}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>                                                           
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Recommended CPU" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind RecommendedCpuSpeed}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Recommended memory" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind RecommendedMemory}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Recommended disk" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind RecommendedHardDiskSpace}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Auto download" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind AutoDownload}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Auto selection" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind AutoSelection}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                        </CCToolKit:WrapPanel>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Update ID" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind UpdateId}" Style="{StaticResource WindowsUpdateMonoValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Support URL" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+
+                                                                <ItemsControl ItemsSource="{x:Bind SupportUrlLinks}"
+                                                                              Visibility="{x:Bind SupportUrlLinksVisibility}"
+                                                                              ItemTemplate="{StaticResource WindowsUpdateLinkDataTemplate}"/>
+
+                                                                <TextBlock Text="{x:Bind SupportUrl}"
+                                                                           Visibility="{x:Bind SupportUrlTextVisibility}"
+                                                                           TextWrapping="Wrap"
+                                                                           Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+
+                                                    <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
+
+                                                    <!-- Classification and content -->
+                                                    <StackPanel Style="{StaticResource WindowsUpdateDetailSectionStackStyle}">
+                                                        <TextBlock Text="Classification and content" Style="{StaticResource WindowsUpdateSectionTitleStyle}"/>
+
+                                                        <CCToolKit:WrapPanel Orientation="Horizontal"
+                                                                             HorizontalSpacing="8"
+                                                                             VerticalSpacing="8">
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Bulletins" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind SecurityBulletinIdsDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
+                                                                <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                    <TextBlock Text="Languages" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                    <TextBlock Text="{x:Bind LanguagesDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </CCToolKit:WrapPanel>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Superseded IDs" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind SupersededUpdateIdsDisplay}" Style="{StaticResource WindowsUpdateMonoValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="More info URLs" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+
+                                                                <ItemsControl ItemsSource="{x:Bind MoreInfoUrlLinks}"
+                                                                              Visibility="{x:Bind MoreInfoUrlLinksVisibility}"
+                                                                              ItemTemplate="{StaticResource WindowsUpdateLinkDataTemplate}"/>
+
+                                                                <TextBlock Text="{x:Bind MoreInfoUrlsDisplay}"
+                                                                           Visibility="{x:Bind MoreInfoUrlsTextVisibility}"
+                                                                           TextWrapping="Wrap"
+                                                                           Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Categories" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind CategoriesDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Bundled updates" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind BundledUpdatesDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Download contents" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind DownloadContentsDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Handler ID" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+
+                                                                <ItemsControl ItemsSource="{x:Bind HandlerIdLinks}"
+                                                                              Visibility="{x:Bind HandlerIdLinksVisibility}"
+                                                                              ItemTemplate="{StaticResource WindowsUpdateLinkDataTemplate}"/>
+
+                                                                <TextBlock Text="{x:Bind HandlerId}"
+                                                                           Visibility="{x:Bind HandlerIdTextVisibility}"
+                                                                           TextWrapping="Wrap"
+                                                                           Style="{StaticResource WindowsUpdateMonoValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Release notes" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind ReleaseNotes}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Uninstallation notes" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind UninstallationNotes}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Uninstallation steps" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind UninstallationStepsDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="EULA text" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind EulaText}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Driver details" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind DriverDetailsDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                    </StackPanel>
+
+                                                    <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,4"/>
+
+                                                    <!-- Behavior and description -->
+                                                    <StackPanel Style="{StaticResource WindowsUpdateDetailSectionStackStyle}">
+                                                        <TextBlock Text="Behavior and description" Style="{StaticResource WindowsUpdateSectionTitleStyle}"/>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Install behavior" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind InstallationBehaviorDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Uninstall behavior" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind UninstallationBehaviorDisplay}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+
+                                                        <Border Style="{StaticResource WindowsUpdateDetailCardStyle}">
+                                                            <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
+                                                                <TextBlock Text="Description" Style="{StaticResource WindowsUpdateLabelStyle}"/>
+                                                                <TextBlock Text="{x:Bind Description}" Style="{StaticResource WindowsUpdateValueStyle}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Expander.Content>
+                                        </Expander>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                            <!-- Empty State Placeholder -->
+                            <Border Visibility="{x:Bind ViewModel.EmptyStatePlaceholderVisibility, Mode=OneWay}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="16"
+                                    Padding="40,32"
+                                    BorderThickness="1"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                <StackPanel Spacing="16" HorizontalAlignment="Center">
+                                    <FontIcon Glyph="&#xE895;"
+                                              FontSize="52"
+                                              HorizontalAlignment="Center"
+                                              Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                                    <TextBlock Text="No updates loaded"
+                                               Style="{StaticResource SubtitleTextBlockStyle}"
+                                               HorizontalAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="Click 'Retrieve updates' to fetch available Windows updates."
+                                               Style="{StaticResource BodyTextBlockStyle}"
+                                               HorizontalAlignment="Center"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabViewItem.Content>
+            </TabViewItem>
+
+        </TabView>
 
     </Grid>
 </Page>

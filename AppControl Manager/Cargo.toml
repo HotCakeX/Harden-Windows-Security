@@ -1,10 +1,7 @@
 [workspace]
 members = [
-  "eXclude/exploit_mitigations",
   "eXclude/ResourceValidator",
-  "eXclude/dism_capabilities",
-  "eXclude/Rust Interop Library",
-  "eXclude/group_policy"]
+  "eXclude/Rust Interop Library"]
 resolver = "3"
 
 [workspace.package]

@@ -536,6 +536,21 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal IconElement? ServiceManagerIcon { get; set => SP(ref field, value); }
 
+	/// <summary>
+	/// Icon for the Sandbox Maker navigation item.
+	/// </summary>
+	internal IconElement? SandboxMakerIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Exploit Mitigations navigation item.
+	/// </summary>
+	internal IconElement? ExploitMitigationsIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the CSPI navigation item.
+	/// </summary>
+	internal IconElement? CSPIcon { get; set => SP(ref field, value); }
+
 	#endregion
 
 	/// <summary>
@@ -615,7 +630,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 					CBOMIcon = new AnimatedIcon
 					{
-						Margin = new Thickness(0, 20, -20, -20),
+						Margin = new Thickness(-5, -25, -25, -25),
 						Source = new CBOM()
 					};
 
@@ -646,13 +661,31 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					DownloadManagerIcon = new AnimatedIcon
 					{
 						Margin = new Thickness(0, -8, -8, -8),
-						Source = new Document()
+						Source = new Download()
 					};
 
 					ServiceManagerIcon = new AnimatedIcon
 					{
 						Margin = new Thickness(0, -6, -6, -6),
 						Source = new Service()
+					};
+
+					SandboxMakerIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -6, -6, -6),
+						Source = new Box()
+					};
+
+					ExploitMitigationsIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -25, -25, -25),
+						Source = new Goal()
+					};
+
+					CSPIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -25, -25, -25),
+						Source = new Analytics()
 					};
 
 					break;
@@ -758,6 +791,24 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					SandboxMakerIcon = new FontIcon
+					{
+						Glyph = "\uE990",
+						Foreground = accentBrush
+					};
+
+					ExploitMitigationsIcon = new FontIcon
+					{
+						Glyph = "\uF272",
+						Foreground = accentBrush
+					};
+
+					CSPIcon = new FontIcon
+					{
+						Glyph = "\uE835",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -779,6 +830,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					EXIFManagerIcon = new FontIcon { Glyph = "\uEC5A" };
 					DownloadManagerIcon = new FontIcon { Glyph = "\uE896" };
 					ServiceManagerIcon = new FontIcon { Glyph = "\uEC7A" };
+					SandboxMakerIcon = new FontIcon { Glyph = "\uE990" };
+					ExploitMitigationsIcon = new FontIcon { Glyph = "\uF272" };
+					CSPIcon = new FontIcon { Glyph = "\uE835" };
 					break;
 				}
 		}

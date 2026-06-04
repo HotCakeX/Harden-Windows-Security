@@ -591,30 +591,10 @@
                 <NavigationViewItem x:Name="AuditPoliciesNavItem" x:Uid="AuditPoliciesNavItem" Icon="{x:Bind ViewModel.AuditPoliciesIcon, Mode=OneWay}" Tag="AuditPolicies"/>
                 <NavigationViewItem x:Name="CBOMNavItem" Icon="{x:Bind ViewModel.CBOMIcon, Mode=OneWay}" x:Uid="CBOMNavItem" Tag="CBOM"/>
                 <NavigationViewItem x:Name="IntuneNavItem" Icon="{x:Bind ViewModel.IntuneIcon, Mode=OneWay}" x:Uid="IntuneNavItem" Tag="Intune"/>
-                <NavigationViewItem x:Name="CSPNavItem" x:Uid="CSPNavItem" Tag="CSP">
-                    <NavigationViewItem.Icon>
-                        <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/CSP.png"
-                                    ShowAsMonochrome="False" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
+                <NavigationViewItem x:Name="CSPNavItem" Icon="{x:Bind ViewModel.CSPIcon, Mode=OneWay}" x:Uid="CSPNavItem" Tag="CSP" />
                 <NavigationViewItem x:Name="ServiceManagerNavItem" Icon="{x:Bind ViewModel.ServiceManagerIcon, Mode=OneWay}" x:Uid="ServiceManagerNavItem" Tag="ServiceManager"/>
-                <NavigationViewItem x:Name="ExploitMitigationsNavItem" x:Uid="ExploitMitigationsNavItem" Tag="ExploitMitigations">
-                    <NavigationViewItem.Icon>
-                        <BitmapIcon UriSource="ms-appx:///Assets/Others/Exploit Mitigation Icon.png"
-                                    Margin="-25"
-                                    ShowAsMonochrome="False" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Name="SandboxMakerNavItem"
-                                    x:Uid="SandboxMakerNavItem"
-                                    Tag="SandboxMaker">
-                    <NavigationViewItem.Icon>
-                        <BitmapIcon UriSource="ms-appx:///Assets/Others/Sandbox Maker Icon.png"
-                                    Margin="-25"
-                                    ShowAsMonochrome="False" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                <NavigationViewItem x:Name="ExploitMitigationsNavItem" Icon="{x:Bind ViewModel.ExploitMitigationsIcon, Mode=OneWay}" x:Uid="ExploitMitigationsNavItem" Tag="ExploitMitigations" />
+                <NavigationViewItem x:Name="SandboxMakerNavItem" Icon="{x:Bind ViewModel.SandboxMakerIcon, Mode=OneWay}" x:Uid="SandboxMakerNavItem" Tag="SandboxMaker" />
 
                 <!-- Extras -->
 

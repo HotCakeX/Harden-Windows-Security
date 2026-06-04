@@ -65,7 +65,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		LanguageOptions.Add(new("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
 		LanguageOptions.Add(new("Français", "ms-appx:///Assets/CountryFlags/france-240.png"));
 #if APP_CONTROL_MANAGER
-		LanguageOptions.Add(new("Japanese", "ms-appx:///Assets/CountryFlags/japan-96.png"));
+		LanguageOptions.Add(new("日本語", "ms-appx:///Assets/CountryFlags/japan-96.png"));
 #endif
 	}
 

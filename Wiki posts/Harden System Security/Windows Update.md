@@ -48,7 +48,7 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 ## Management
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/cbf0e2dbbfdcfb78b7891329ef72703bbebfeb04/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Windows%20Update%20Management.png" alt="Windows Update - Harden Windows Security GitHub repository"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/1da7e9cb89f39a10c9a74cadd440ea51dfd33523/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Windows%20Update%20Management.png" alt="Windows Update - Harden Windows Security GitHub repository"></p>
 
 <br>
 

@@ -45,7 +45,7 @@ internal static partial class ISOManager
 
 		bool requiresUninitialize = hrInit >= 0;
 
-		int secHr = NativeMethods.CoInitializeSecurity(IntPtr.Zero, -1, IntPtr.Zero, IntPtr.Zero, 0, 3, IntPtr.Zero, 0, IntPtr.Zero);
+		int secHr = Interop.NativeMethods.CoInitializeSecurity(IntPtr.Zero, -1, IntPtr.Zero, IntPtr.Zero, 0, 3, IntPtr.Zero, 0, IntPtr.Zero);
 		// RPC_E_TOO_LATE = -2147417831 (0x80010119)
 		if (secHr < 0 && secHr != -2147417831)
 		{
@@ -124,7 +124,7 @@ internal static partial class ISOManager
 						}
 						finally
 						{
-							_ = NativeMethods.VariantClear(ref val);
+							_ = Interop.NativeMethods.VariantClear(ref val);
 						}
 					}
 					finally
@@ -148,7 +148,7 @@ internal static partial class ISOManager
 						}
 						finally
 						{
-							_ = NativeMethods.VariantClear(ref val);
+							_ = Interop.NativeMethods.VariantClear(ref val);
 						}
 					}
 					finally
@@ -177,7 +177,7 @@ internal static partial class ISOManager
 						}
 						finally
 						{
-							_ = NativeMethods.VariantClear(ref val);
+							_ = Interop.NativeMethods.VariantClear(ref val);
 						}
 					}
 					finally
@@ -247,7 +247,7 @@ internal static partial class ISOManager
 
 		try
 		{
-			int secHr = NativeMethods.CoInitializeSecurity(IntPtr.Zero, -1, IntPtr.Zero, IntPtr.Zero, 0, 3, IntPtr.Zero, 0, IntPtr.Zero);
+			int secHr = Interop.NativeMethods.CoInitializeSecurity(IntPtr.Zero, -1, IntPtr.Zero, IntPtr.Zero, 0, 3, IntPtr.Zero, 0, IntPtr.Zero);
 			// RPC_E_TOO_LATE = -2147417831 (0x80010119)
 			// This happens if COM security is already initialized for the process (in WinUI 3 apps)
 			if (secHr < 0 && secHr != -2147417831)
@@ -401,7 +401,7 @@ internal static partial class ISOManager
 						}
 						finally
 						{
-							_ = NativeMethods.VariantClear(ref val);
+							_ = Interop.NativeMethods.VariantClear(ref val);
 						}
 					}
 					finally
@@ -431,7 +431,7 @@ internal static partial class ISOManager
 						}
 						finally
 						{
-							_ = NativeMethods.VariantClear(ref val);
+							_ = Interop.NativeMethods.VariantClear(ref val);
 						}
 					}
 					finally
@@ -461,7 +461,7 @@ internal static partial class ISOManager
 						}
 						finally
 						{
-							_ = NativeMethods.VariantClear(ref val);
+							_ = Interop.NativeMethods.VariantClear(ref val);
 						}
 					}
 					finally
@@ -836,7 +836,7 @@ internal static partial class ISOManager
 		}
 		finally
 		{
-			_ = NativeMethods.VariantClear(ref valPath);
+			_ = Interop.NativeMethods.VariantClear(ref valPath);
 
 			if (pathPropName != IntPtr.Zero)
 			{
@@ -930,7 +930,7 @@ internal static partial class ISOManager
 		}
 		finally
 		{
-			_ = NativeMethods.VariantClear(ref valReturn);
+			_ = Interop.NativeMethods.VariantClear(ref valReturn);
 			if (returnValuePtr != IntPtr.Zero) Marshal.FreeBSTR(returnValuePtr);
 			if (objectPathPtr != IntPtr.Zero) Marshal.FreeBSTR(objectPathPtr);
 			if (methodNamePtr != IntPtr.Zero) Marshal.FreeBSTR(methodNamePtr);
@@ -978,7 +978,7 @@ internal static partial class ISOManager
 			{
 				fixed (byte* pZeros = zeros)
 				{
-					bool success = NativeMethods.WriteFile(
+					bool success = Interop.NativeMethods.WriteFile(
 						handle,
 						(IntPtr)pZeros,
 						(uint)zeros.Length,
@@ -1052,7 +1052,7 @@ internal static partial class ISOManager
 		}
 		finally
 		{
-			_ = NativeMethods.VariantClear(ref val);
+			_ = Interop.NativeMethods.VariantClear(ref val);
 
 			if (propName != IntPtr.Zero)
 			{
@@ -1096,7 +1096,7 @@ internal static partial class ISOManager
 
 		try
 		{
-			int secHr = NativeMethods.CoInitializeSecurity(
+			int secHr = Interop.NativeMethods.CoInitializeSecurity(
 				IntPtr.Zero,
 				-1,
 				IntPtr.Zero,
@@ -1284,7 +1284,7 @@ internal static partial class ISOManager
 		// S_OK (0) and S_FALSE (1) indicate success and require balancing with CoUninitialize.
 		bool requiresUninitialize = hrInit >= 0;
 
-		int secHr = NativeMethods.CoInitializeSecurity(
+		int secHr = Interop.NativeMethods.CoInitializeSecurity(
 			IntPtr.Zero,
 			-1,
 			IntPtr.Zero,
@@ -1800,7 +1800,7 @@ internal static partial class ISOManager
 				size = (uint)sizeof(STORAGE_DEVICE_NUMBER);
 			}
 
-			bool success = NativeMethods.DeviceIoControl(
+			bool success = Interop.NativeMethods.DeviceIoControl(
 				handle,
 				NativeMethods.IOCTL_STORAGE_GET_DEVICE_NUMBER,
 				IntPtr.Zero,
@@ -2064,8 +2064,8 @@ internal static partial class ISOManager
 		finally
 		{
 			// Safe cleanup for all allocated pointers, BSTRs and VARIANTs
-			_ = NativeMethods.VariantClear(ref valPath);
-			_ = NativeMethods.VariantClear(ref valReturn);
+			_ = Interop.NativeMethods.VariantClear(ref valPath);
+			_ = Interop.NativeMethods.VariantClear(ref valReturn);
 
 			if (returnValuePtr != IntPtr.Zero) Marshal.FreeBSTR(returnValuePtr);
 			if (volumePathPtr != IntPtr.Zero) Marshal.FreeBSTR(volumePathPtr);
@@ -2095,42 +2095,6 @@ internal static partial class ISOManager
 		internal const uint FILE_SHARE_WRITE = 0x00000002;
 		internal const uint OPEN_EXISTING = 3;
 		internal const uint IOCTL_STORAGE_GET_DEVICE_NUMBER = 0x2D1080;
-
-		[LibraryImport("kernel32.dll")]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		internal static partial bool WriteFile(
-		IntPtr hFile,
-		IntPtr lpBuffer,
-		uint nNumberOfBytesToWrite,
-		out uint lpNumberOfBytesWritten,
-		IntPtr lpOverlapped);
-
-		[LibraryImport("OLE32")]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static partial int CoInitializeSecurity(
-			IntPtr pSecDesc,
-			int cAuthSvc,
-			IntPtr asAuthSvc,
-			IntPtr pReserved1,
-			uint dwAuthnLevel,
-			uint dwImpLevel,
-			IntPtr pAuthList,
-			uint dwCapabilities,
-			IntPtr pReserved3);
-
-		[LibraryImport("kernel32.dll")]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		internal static partial bool DeviceIoControl(
-			IntPtr hDevice,
-			uint dwIoControlCode,
-			IntPtr lpInBuffer,
-			uint nInBufferSize,
-			ref STORAGE_DEVICE_NUMBER lpOutBuffer,
-			uint nOutBufferSize,
-			out uint lpBytesReturned,
-			IntPtr lpOverlapped);
 
 		[LibraryImport("virtdisk.dll", StringMarshalling = StringMarshalling.Utf16)]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -2189,18 +2153,6 @@ internal static partial class ISOManager
 			uint dwImpLevel,
 			IntPtr pAuthInfo,
 			uint dwCapabilities);
-
-		[LibraryImport("oleaut32.dll")]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static partial int VariantClear(ref VARIANT pvarg);
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct STORAGE_DEVICE_NUMBER
-	{
-		internal uint DeviceType;
-		internal uint DeviceNumber;
-		internal uint PartitionNumber;
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/virtdisk/ns-virtdisk-virtual_storage_type
@@ -2351,21 +2303,6 @@ internal static partial class ISOManager
 	internal enum DetachVirtualDiskFlag : int
 	{
 		None = 0x00000000
-	}
-
-	[StructLayout(LayoutKind.Explicit, Size = 24)]
-	internal struct VARIANT
-	{
-		[FieldOffset(0)] internal ushort vt;
-		[FieldOffset(2)] internal ushort wReserved1;
-		[FieldOffset(4)] internal ushort wReserved2;
-		[FieldOffset(6)] internal ushort wReserved3;
-		[FieldOffset(8)] internal IntPtr bstrVal;
-		[FieldOffset(8)] internal long llVal;
-		[FieldOffset(8)] internal int lVal;
-		[FieldOffset(8)] internal uint uintVal;
-		[FieldOffset(8)] internal short boolVal;
-		[FieldOffset(8)] internal ulong ullVal;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

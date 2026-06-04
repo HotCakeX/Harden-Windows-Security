@@ -96,7 +96,7 @@ internal static class ProcessSideChannelIsolation
 			};
 
 			bool setSucceeded = NativeMethods.SetProcessMitigationPolicy(
-				PROCESS_MITIGATION_POLICY.ProcessSideChannelIsolationPolicy,
+				PROCESS_MITIGATION_POLICY.SideChannelIsolation,
 				ref policy,
 				(nuint)sizeof(PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY));
 
@@ -149,21 +149,23 @@ internal static class ProcessSideChannelIsolation
 	/// Queries Windows for the current PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY value.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when Windows fails to return the policy.</exception>
-	private static unsafe PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY QueryCurrentPolicy()
+	private static PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY QueryCurrentPolicy()
 	{
+		int policyFlags = 0;
+
 		bool getSucceeded = NativeMethods.GetProcessMitigationPolicy(
 			NativeMethods.GetCurrentProcess(),
-			PROCESS_MITIGATION_POLICY.ProcessSideChannelIsolationPolicy,
-			out PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY policy,
-			(nuint)sizeof(PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY));
+			PROCESS_MITIGATION_POLICY.SideChannelIsolation,
+			ref policyFlags,
+			sizeof(uint));
 
 		if (!getSucceeded)
 		{
 			int error = Marshal.GetLastPInvokeError();
-			throw new InvalidOperationException($"GetProcessMitigationPolicy(ProcessSideChannelIsolationPolicy) failed with Win32 error {error}.");
+			throw new InvalidOperationException($"GetProcessMitigationPolicy(SideChannelIsolation) failed with Win32 error {error}.");
 		}
 
-		return policy;
+		return new PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY { Flags = unchecked((uint)policyFlags) };
 	}
 
 	/// <summary>

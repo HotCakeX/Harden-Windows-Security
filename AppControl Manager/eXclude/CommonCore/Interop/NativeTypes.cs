@@ -1742,7 +1742,7 @@ internal struct SERVICE_STATUS
 /// <summary>
 /// Raw unmanaged COM VARIANT structure for Native AOT.
 /// </summary>
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout(LayoutKind.Explicit, Size = 24)]
 internal struct VARIANT
 {
 	[FieldOffset(0)] internal ushort vt;
@@ -1752,6 +1752,9 @@ internal struct VARIANT
 	[FieldOffset(8)] internal IntPtr bstrVal;
 	[FieldOffset(8)] internal long llVal;
 	[FieldOffset(8)] internal int lVal;
+	[FieldOffset(8)] internal uint uintVal;
+	[FieldOffset(8)] internal short boolVal;
+	[FieldOffset(8)] internal ulong ullVal;
 }
 
 /// <summary>
@@ -2086,26 +2089,26 @@ internal struct PRINTER_INFO_2W
 /// </summary>
 internal enum PROCESS_MITIGATION_POLICY
 {
-	ProcessDEPPolicy,
-	ProcessASLRPolicy,
-	ProcessDynamicCodePolicy,
-	ProcessStrictHandleCheckPolicy,
-	ProcessSystemCallDisablePolicy,
-	ProcessMitigationOptionsMask,
-	ProcessExtensionPointDisablePolicy,
-	ProcessControlFlowGuardPolicy,
-	ProcessSignaturePolicy,
-	ProcessFontDisablePolicy,
-	ProcessImageLoadPolicy,
-	ProcessSystemCallFilterPolicy,
-	ProcessPayloadRestrictionPolicy,
-	ProcessChildProcessPolicy,
-	ProcessSideChannelIsolationPolicy, // This gives us bitfields for all side-channel mitigations that are defined in this struct: https://learn.microsoft.com/he-il/windows/win32/api/winnt/ns-winnt-process_mitigation_side_channel_isolation_policy
-	ProcessUserShadowStackPolicy,
-	ProcessRedirectionTrustPolicy,
-	ProcessUserPointerAuthPolicy,
-	ProcessSEHOPPolicy,
-	MaxProcessMitigationPolicy
+	DEP,
+	ASLR,
+	DynamicCode,
+	StrictHandleCheck,
+	SystemCallDisable,
+	MitigationOptionsMask,
+	ExtensionPointDisable,
+	ControlFlowGuard,
+	Signature,
+	FontDisable,
+	ImageLoad,
+	SystemCallFilter,
+	PayloadRestriction,
+	ChildProcess,
+	SideChannelIsolation, // This gives us bitfields for all side-channel mitigations that are defined in this struct: https://learn.microsoft.com/he-il/windows/win32/api/winnt/ns-winnt-process_mitigation_side_channel_isolation_policy
+	UserShadowStack,
+	RedirectionTrust,
+	UserPointerAuth,
+	SEHOP,
+	MaxProcessMitigation
 }
 
 /// <summary>
@@ -2150,4 +2153,12 @@ internal struct INET_FIREWALL_APP_CONTAINER
 	internal INET_FIREWALL_AC_BINARIES Binaries;
 	internal IntPtr WorkingDirectory;
 	internal IntPtr PackageFullName;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct STORAGE_DEVICE_NUMBER
+{
+	internal uint DeviceType;
+	internal uint DeviceNumber;
+	internal uint PartitionNumber;
 }

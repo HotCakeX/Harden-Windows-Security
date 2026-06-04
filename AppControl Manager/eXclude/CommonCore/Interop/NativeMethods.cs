@@ -3413,31 +3413,25 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool GetProcessMitigationPolicy(
-		IntPtr hProcess,
-		PROCESS_MITIGATION_POLICY MitigationPolicy,
-		out PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY lpBuffer,
-		nuint dwLength);
+		IntPtr processHandle,
+		PROCESS_MITIGATION_POLICY mitigationPolicy,
+		ref int buffer,
+		uint length);
 
 
 	[LibraryImport("FirewallAPI.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial uint NetworkIsolationGetAppContainerConfig(
-		out uint pdwNumPublicAppCs,
-		out IntPtr appContainerSids);
+	internal static partial uint NetworkIsolationGetAppContainerConfig(out uint pdwNumPublicAppCs, out IntPtr appContainerSids);
 
 
 	[LibraryImport("FirewallAPI.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial uint NetworkIsolationSetAppContainerConfig(
-		uint dwNumPublicAppCs,
-		[In] SID_AND_ATTRIBUTES[] appContainerSids);
+	internal static partial uint NetworkIsolationSetAppContainerConfig(uint dwNumPublicAppCs, [In] SID_AND_ATTRIBUTES[] appContainerSids);
 
 
 	[LibraryImport("FirewallAPI.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial uint NetworkIsolationSetAppContainerConfig(
-		uint dwNumPublicAppCs,
-		IntPtr appContainerSids);
+	internal static partial uint NetworkIsolationSetAppContainerConfig(uint dwNumPublicAppCs, IntPtr appContainerSids);
 
 
 	[LibraryImport("FirewallAPI.dll")]
@@ -3463,21 +3457,87 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool ConvertSidToStringSidW(
-		IntPtr sid,
-		out IntPtr stringSid);
+	internal static partial bool ConvertSidToStringSidW(IntPtr sid, out IntPtr stringSid);
 
 
 	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool ConvertStringSidToSidW(
-		string stringSid,
-		out IntPtr sid);
+	internal static partial bool ConvertStringSidToSidW(string stringSid, out IntPtr sid);
 
 
 	[LibraryImport("ADVAPI32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr FreeSid(IntPtr sid);
+
+
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr GetProcessHeap();
+
+
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nuint HeapSize(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
+
+
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool HeapFree(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
+
+
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool WriteFile(
+		IntPtr hFile,
+		IntPtr lpBuffer,
+		uint nNumberOfBytesToWrite,
+		out uint lpNumberOfBytesWritten,
+		IntPtr lpOverlapped);
+
+
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DeviceIoControl(
+			IntPtr hDevice,
+			uint dwIoControlCode,
+			IntPtr lpInBuffer,
+			uint nInBufferSize,
+			ref STORAGE_DEVICE_NUMBER lpOutBuffer,
+			uint nOutBufferSize,
+			out uint lpBytesReturned,
+			IntPtr lpOverlapped);
+
+
+	[LibraryImport("MitigationConfiguration.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int ExportMitigation(string xmlPath);
+
+
+	[LibraryImport("MitigationConfiguration.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int ImportMitigation(string xmlPath);
+
+
+	[LibraryImport("MitigationConfiguration.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int ValidateXMLFromManaged(string xmlPath, [MarshalAs(UnmanagedType.Bool)] ref bool result);
+
+
+	[LibraryImport("OLE32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoInitializeSecurity(
+		IntPtr pSecDesc,
+		int cAuthSvc,
+		IntPtr asAuthSvc,
+		IntPtr pReserved1,
+		uint dwAuthnLevel,
+		uint dwImpLevel,
+		IntPtr pAuthList,
+		uint dwCapabilities,
+		IntPtr pReserved3);
 
 }

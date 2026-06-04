@@ -21,7 +21,6 @@ namespace CommonCore;
 
 internal static partial class CIManager
 {
-
 	internal static unsafe void Add(ReadOnlySpan<byte> bytes)
 	{
 		// ManageCI's upsert takes a 32-bit size
@@ -153,7 +152,7 @@ internal static partial class CIManager
 	// - Finally the SiPolicyView object itself (0x90 bytes)
 	private static unsafe void FreeSiPolicyView(void* view)
 	{
-		IntPtr heap = NativeMethods.GetProcessHeap();
+		IntPtr heap = Interop.NativeMethods.GetProcessHeap();
 		if (heap == IntPtr.Zero)
 		{
 			Logger.Write("Heap acquisition failed; skipping SiPolicyView free.");
@@ -190,13 +189,13 @@ internal static partial class CIManager
 			}
 
 			// query heap size when available.
-			nuint reported = NativeMethods.HeapSize(heapHandle, 0u, (IntPtr)actualStart);
+			nuint reported = Interop.NativeMethods.HeapSize(heapHandle, 0u, (IntPtr)actualStart);
 			if (reported != nuint.MaxValue)
 			{
 				Logger.Write($"FreeRange: block size={reported} bytes");
 			}
 
-			bool freed = NativeMethods.HeapFree(heapHandle, 0u, (IntPtr)actualStart);
+			bool freed = Interop.NativeMethods.HeapFree(heapHandle, 0u, (IntPtr)actualStart);
 			if (!freed)
 			{
 				Logger.Write("FreeRange: HeapFree failed; block left allocated.");
@@ -256,12 +255,12 @@ internal static partial class CIManager
 			if (wstrBuf != null)
 			{
 				Logger.Write("Freeing heap-backed wstring buffer (friendly name)...");
-				nuint wSize = NativeMethods.HeapSize(heap, 0u, (IntPtr)wstrBuf);
+				nuint wSize = Interop.NativeMethods.HeapSize(heap, 0u, (IntPtr)wstrBuf);
 				if (wSize != nuint.MaxValue)
 				{
 					Logger.Write($"wstring block size={wSize} bytes");
 				}
-				bool freed = NativeMethods.HeapFree(heap, 0u, (IntPtr)wstrBuf);
+				bool freed = Interop.NativeMethods.HeapFree(heap, 0u, (IntPtr)wstrBuf);
 				if (!freed)
 				{
 					Logger.Write("HeapFree failed for wstring buffer; left allocated.");
@@ -275,12 +274,12 @@ internal static partial class CIManager
 		if (side1 != null)
 		{
 			Logger.Write("Freeing side allocation [1] (expected ~0x10 bytes)...");
-			nuint s1Size = NativeMethods.HeapSize(heap, 0u, (IntPtr)side1);
+			nuint s1Size = Interop.NativeMethods.HeapSize(heap, 0u, (IntPtr)side1);
 			if (s1Size != nuint.MaxValue)
 			{
 				Logger.Write($"side[1] block size={s1Size} bytes");
 			}
-			bool freed = NativeMethods.HeapFree(heap, 0u, (IntPtr)side1);
+			bool freed = Interop.NativeMethods.HeapFree(heap, 0u, (IntPtr)side1);
 			if (!freed)
 			{
 				Logger.Write("HeapFree failed for side[1]; left allocated.");
@@ -292,12 +291,12 @@ internal static partial class CIManager
 		if (side0 != null)
 		{
 			Logger.Write("Freeing side allocation [0] (expected ~0x10 bytes)...");
-			nuint s0Size = NativeMethods.HeapSize(heap, 0u, (IntPtr)side0);
+			nuint s0Size = Interop.NativeMethods.HeapSize(heap, 0u, (IntPtr)side0);
 			if (s0Size != nuint.MaxValue)
 			{
 				Logger.Write($"side[0] block size={s0Size} bytes");
 			}
-			bool freed = NativeMethods.HeapFree(heap, 0u, (IntPtr)side0);
+			bool freed = Interop.NativeMethods.HeapFree(heap, 0u, (IntPtr)side0);
 			if (!freed)
 			{
 				Logger.Write("HeapFree failed for side[0]; left allocated.");
@@ -307,12 +306,12 @@ internal static partial class CIManager
 
 		// Finally free the SiPolicyView object itself.
 		IntPtr viewPtr = (IntPtr)view;
-		nuint topSize = NativeMethods.HeapSize(heap, 0u, viewPtr);
+		nuint topSize = Interop.NativeMethods.HeapSize(heap, 0u, viewPtr);
 		if (topSize != nuint.MaxValue)
 		{
 			Logger.Write($"Freeing SiPolicyView object (size={topSize} bytes)...");
 		}
-		bool topFreed = NativeMethods.HeapFree(heap, 0u, viewPtr);
+		bool topFreed = Interop.NativeMethods.HeapFree(heap, 0u, viewPtr);
 		if (!topFreed)
 		{
 			Logger.Write("HeapFree failed for SiPolicyView object; block left allocated.");
@@ -546,14 +545,12 @@ internal static partial class CIManager
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial void ManageCI_Start();
 
-
 		/// <summary>
 		/// Session lifecycle, wraps CodeIntegrity::Management::End
 		/// </summary>
 		[LibraryImport("ManageCI")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial void ManageCI_End();
-
 
 		/// <summary>
 		/// Transaction control, wraps CodeIntegrity::Management::BeginTransaction
@@ -562,7 +559,6 @@ internal static partial class CIManager
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial void ManageCI_BeginTransaction();
 
-
 		/// <summary>
 		/// Transaction control, wraps CodeIntegrity::Management::Commit
 		/// </summary>
@@ -570,14 +566,12 @@ internal static partial class CIManager
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_Commit();
 
-
 		/// <summary>
 		/// Transaction control, wraps CodeIntegrity::Management::Rollback
 		/// </summary>
 		[LibraryImport("ManageCI")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_Rollback();
-
 
 		/// <summary>
 		/// Upsert (add/update) via prefixed wrapper that takes the management 'this' pointer.
@@ -591,14 +585,12 @@ internal static partial class CIManager
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_BeginUpsertCIPolicy(void* managementThis, void* policyBytes, uint size);
 
-
 		/// <summary>
 		/// Pre-parse validation (fast-fail)
 		/// </summary>
 		[LibraryImport("ManageCI")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_ParsePolicy(void* policyBytes, int policySize, out Guid policyId, out Guid basePolicyId, out void* friendlyNamePtr);
-
 
 		/// <summary>
 		/// Non‑prefixed ParsePolicy export (ordinal 19)
@@ -608,7 +600,6 @@ internal static partial class CIManager
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial long ParsePolicy(out void* siPolicyView, void* policyBytes, nuint policySize);
 
-
 		/// <summary>
 		/// Removal queue.
 		/// Wraps CodeIntegrity::Management::BeginRemoveCIPolicy -> SIPolicyPmDeletePolicyBegin
@@ -616,7 +607,6 @@ internal static partial class CIManager
 		[LibraryImport("ManageCI.dll")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_BeginRemoveCIPolicy(Guid* policyId);
-
 
 		/// <summary>
 		/// Pre-check whether removal should be ignored/denied for this policy.
@@ -626,23 +616,5 @@ internal static partial class CIManager
 		[LibraryImport("ManageCI.dll")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_ShouldIgnoreRemoval(Guid* policyId, int kind, byte* shouldIgnore);
-
-
-		[LibraryImport("kernel32.dll")]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static partial IntPtr GetProcessHeap();
-
-
-		[LibraryImport("kernel32.dll", SetLastError = true)]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static partial nuint HeapSize(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
-
-
-		[LibraryImport("kernel32.dll", SetLastError = true)]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		internal static partial bool HeapFree(IntPtr hHeap, uint dwFlags, IntPtr lpMem);
-
 	}
-
 }

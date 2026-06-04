@@ -726,7 +726,7 @@ internal sealed partial class Main : ViewModelBase
 				SaveValue(nameof(DownloadManagerFullPresetKilobytesPerSecond), field);
 			}
 		}
-	}
+	} = 1048576;
 
 	/// <summary>
 	/// Currently selected Download Manager speed preset.

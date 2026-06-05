@@ -1605,9 +1605,11 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	internal void OpenDownloadManagerStorageLocation()
 	{
+		Process? process = null;
+
 		try
 		{
-			_ = Process.Start(new ProcessStartInfo
+			process = Process.Start(new ProcessStartInfo
 			{
 				FileName = Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path).FullName,
 				UseShellExecute = true
@@ -1616,6 +1618,10 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			process?.Dispose();
 		}
 	}
 
@@ -1632,11 +1638,12 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	internal void OpenContainingDirectory(DownloadManagerItem item)
 	{
+		Process? process = null;
 		try
 		{
 			if (item.IsFileAvailable)
 			{
-				_ = Process.Start(new ProcessStartInfo
+				process = Process.Start(new ProcessStartInfo
 				{
 					FileName = "explorer.exe",
 					Arguments = $"/select,\"{item.FilePath}\"",
@@ -1647,7 +1654,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 			if (item.IsDirectoryAvailable)
 			{
-				_ = Process.Start(new ProcessStartInfo
+				process = Process.Start(new ProcessStartInfo
 				{
 					FileName = item.DestinationDirectory,
 					UseShellExecute = true
@@ -1660,6 +1667,10 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			process?.Dispose();
 		}
 	}
 

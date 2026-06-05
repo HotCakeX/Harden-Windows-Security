@@ -385,7 +385,15 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 				processInfo.Verb = "runas";
 			}
 
-			_ = Process.Start(processInfo);
+			Process? process = null;
+			try
+			{
+				process = Process.Start(processInfo);
+			}
+			finally
+			{
+				process?.Dispose();
+			}
 		}
 	}
 

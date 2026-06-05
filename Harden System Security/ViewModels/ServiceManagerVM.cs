@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -295,6 +296,10 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	} = true;
 
 	private volatile bool _isBulkUpdatingFilters;
+	private Thread? _scmNotificationThread;
+	private GCHandle _scmNotificationHandle;
+	private volatile bool _isScmNotificationActive;
+	private int _scmNotificationPending;
 
 	internal bool IsLoading
 	{
@@ -465,6 +470,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	{
 		if (sender is MenuFlyoutItem button && button.Tag is ServiceItemViewModel svm)
 		{
+			Process? process = null;
 			try
 			{
 				// Tell ingregedit.exe to open to the specific service by pre-setting the LastKey value
@@ -478,11 +484,15 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 					UseShellExecute = true,
 					Verb = "runas"
 				};
-				_ = Process.Start(psi);
+				process = Process.Start(psi);
 			}
 			catch (Exception ex)
 			{
 				MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				process?.Dispose();
 			}
 		}
 	}
@@ -656,6 +666,9 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			ApplyFilter();
 
 			MainInfoBar.WriteSuccess($"Successfully loaded {services.Count} services.");
+
+			// Once the services have been retrieved once, subscribe to receive notifications about new services that are added/removed to keep the UI ListView in sync.
+			StartScmNotificationSubscription();
 		}
 		catch (Exception ex)
 		{
@@ -933,6 +946,306 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		return false;
 	}
 
+
+	private sealed class ScmServiceChanges
+	{
+		internal readonly List<string> Created = [];
+		internal readonly List<string> Deleted = [];
+	}
+
+	private void StartScmNotificationSubscription()
+	{
+		if (_isScmNotificationActive)
+		{
+			return;
+		}
+
+		_scmNotificationHandle = GCHandle.Alloc(this);
+		_isScmNotificationActive = true;
+		_scmNotificationThread = new Thread(ScmNotificationThreadProc)
+		{
+			IsBackground = true,
+			Name = "Service Manager SCM Notification Thread"
+		};
+		_scmNotificationThread.Start();
+	}
+
+	private unsafe void ScmNotificationThreadProc()
+	{
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT | NativeMethods.SC_MANAGER_ENUMERATE_SERVICE);
+		if (scManager == IntPtr.Zero)
+		{
+			_isScmNotificationActive = false;
+			if (_scmNotificationHandle.IsAllocated)
+			{
+				_scmNotificationHandle.Free();
+			}
+			return;
+		}
+
+		IntPtr notifyBuffer = (IntPtr)NativeMemory.AllocZeroed((nuint)sizeof(SERVICE_NOTIFY));
+		try
+		{
+			while (_isScmNotificationActive)
+			{
+				SERVICE_NOTIFY* notify = (SERVICE_NOTIFY*)notifyBuffer;
+				notify->dwVersion = NativeMethods.SERVICE_NOTIFY_STATUS_CHANGE;
+				notify->pfnNotifyCallback = (IntPtr)(delegate* unmanaged[Stdcall]<void*, void>)&ServiceManagerVM.ScmNotifyCallback;
+				notify->pContext = GCHandle.ToIntPtr(_scmNotificationHandle);
+				notify->dwNotificationStatus = 0;
+				notify->dwNotificationTriggered = 0;
+				notify->pszServiceNames = null;
+
+				uint notifyResult = NativeMethods.NotifyServiceStatusChangeW(
+					scManager,
+					NativeMethods.SERVICE_NOTIFY_CREATED | NativeMethods.SERVICE_NOTIFY_DELETED,
+					notifyBuffer);
+
+				if (notifyResult != NativeMethods.ERROR_SUCCESS)
+				{
+					break;
+				}
+
+				uint sleepResult = NativeMethods.SleepEx(uint.MaxValue, true);
+				if (!_isScmNotificationActive)
+				{
+					break;
+				}
+
+				if (sleepResult == NativeMethods.WAIT_IO_COMPLETION && Interlocked.Exchange(ref _scmNotificationPending, 0) == 1)
+				{
+					IntPtr serviceNamesToFree = (IntPtr)notify->pszServiceNames;
+					try
+					{
+						ScmServiceChanges changes = ParseScmServiceChanges(notify->pszServiceNames);
+						if (changes.Created.Count > 0 || changes.Deleted.Count > 0)
+						{
+							_ = ReconcileServiceCollectionsAsync(changes);
+						}
+					}
+					finally
+					{
+						if (serviceNamesToFree != IntPtr.Zero)
+						{
+							_ = NativeMethods.LocalFree(serviceNamesToFree);
+							notify->pszServiceNames = null;
+						}
+					}
+				}
+			}
+		}
+		finally
+		{
+			NativeMemory.Free((void*)notifyBuffer);
+			_ = NativeMethods.CloseServiceHandle(scManager);
+			if (_scmNotificationHandle.IsAllocated)
+			{
+				_scmNotificationHandle.Free();
+			}
+			_isScmNotificationActive = false;
+		}
+	}
+
+	[UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
+	private static unsafe void ScmNotifyCallback(void* parameter)
+	{
+		if (parameter == null)
+		{
+			return;
+		}
+
+		SERVICE_NOTIFY* notify = (SERVICE_NOTIFY*)parameter;
+		if (notify->pContext == IntPtr.Zero)
+		{
+			return;
+		}
+
+		GCHandle handle = GCHandle.FromIntPtr(notify->pContext);
+		if (handle.Target is ServiceManagerVM vm)
+		{
+			_ = Interlocked.Exchange(ref vm._scmNotificationPending, 1);
+		}
+	}
+
+	private static unsafe ScmServiceChanges ParseScmServiceChanges(char* multiString)
+	{
+		ScmServiceChanges changes = new();
+		if (multiString == null)
+		{
+			return changes;
+		}
+
+		char* current = multiString;
+		while (*current != '\0')
+		{
+			string serviceName = new(current);
+			if (!string.IsNullOrWhiteSpace(serviceName))
+			{
+				if (serviceName[0] == '/')
+				{
+					string createdServiceName = serviceName.Length > 1 ? serviceName[1..] : string.Empty;
+					if (!string.IsNullOrWhiteSpace(createdServiceName))
+					{
+						changes.Created.Add(createdServiceName);
+					}
+				}
+				else
+				{
+					changes.Deleted.Add(serviceName);
+				}
+			}
+
+			current += serviceName.Length + 1;
+		}
+
+		return changes;
+	}
+
+	private async Task ReconcileServiceCollectionsAsync(ScmServiceChanges changes)
+	{
+		if (AllServices.Count == 0)
+		{
+			return;
+		}
+
+		if (changes.Deleted.Count > 0)
+		{
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
+			{
+				foreach (string serviceName in changes.Deleted)
+				{
+					RemoveServiceFromCollections(serviceName);
+				}
+				TotalServices = FilteredServices.Count;
+			});
+		}
+
+		if (changes.Created.Count > 0)
+		{
+			List<ServiceItemViewModel> createdServices = await Task.Run(() =>
+			{
+				List<ServiceItemViewModel> result = new(changes.Created.Count);
+				foreach (string serviceName in changes.Created)
+				{
+					ServiceItem? service = ServiceManagement.GetServiceByName(serviceName);
+					if (service is not null)
+					{
+						result.Add(new ServiceItemViewModel(service));
+					}
+				}
+				return result;
+			});
+
+			if (createdServices.Count == 0)
+			{
+				return;
+			}
+
+			_ = Atlas.AppDispatcher.TryEnqueue(() =>
+			{
+				foreach (ServiceItemViewModel vm in createdServices)
+				{
+					if (FindServiceIndex(AllServices, vm.Item.ServiceName) != -1)
+					{
+						continue;
+					}
+
+					AllServices.Add(vm);
+					if (ServicePassesCurrentFilter(vm))
+					{
+						InsertServiceIntoFilteredServices(vm);
+					}
+				}
+				TotalServices = FilteredServices.Count;
+			});
+		}
+	}
+
+	private static int FindServiceIndex(RangedObservableCollection<ServiceItemViewModel> services, string serviceName)
+	{
+		for (int i = 0; i < services.Count; i++)
+		{
+			if (string.Equals(services[i].Item.ServiceName, serviceName, StringComparison.OrdinalIgnoreCase))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private void RemoveServiceFromCollections(string serviceName)
+	{
+		int allIndex = FindServiceIndex(AllServices, serviceName);
+		if (allIndex != -1)
+		{
+			AllServices.RemoveAt(allIndex);
+		}
+
+		int filteredIndex = FindServiceIndex(FilteredServices, serviceName);
+		if (filteredIndex != -1)
+		{
+			FilteredServices.RemoveAt(filteredIndex);
+		}
+	}
+
+	private bool ServicePassesCurrentFilter(ServiceItemViewModel service)
+	{
+		HashSet<string> allowedCompanies = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Company", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedStatuses = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Status", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedStartTypes = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Start Type", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedServiceTypes = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Service Type", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedErrorControls = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Error Control", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedLaunchProtected = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Launch Protected", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedServiceFlags = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Service Flags", StringComparison.OrdinalIgnoreCase)));
+
+		string query = SearchText?.Trim() ?? string.Empty;
+		bool hasQuery = !string.IsNullOrWhiteSpace(query);
+		bool passSearch = !hasQuery ||
+			service.Item.ServiceName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+			service.Item.DisplayName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+			service.Item.Description.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+		string companyCategory = string.Equals(service.Item.PeCompany, "Microsoft Corporation", StringComparison.OrdinalIgnoreCase) ? "Microsoft Corporation" : "Other";
+		string statusCat = string.IsNullOrWhiteSpace(service.Item.CurrentState) ? "None" : service.Item.CurrentState.Trim();
+		string startCat = string.IsNullOrWhiteSpace(service.Item.StartType) ? "None" : service.Item.StartType.Trim();
+		string errorCat = string.IsNullOrWhiteSpace(service.Item.ErrorControl) ? "None" : service.Item.ErrorControl.Trim();
+		string launchCat = string.IsNullOrWhiteSpace(service.Item.LaunchProtected) ? "None" : service.Item.LaunchProtected.Trim();
+		string flagsCat = string.IsNullOrWhiteSpace(service.Item.ServiceFlags) ? "None" : service.Item.ServiceFlags.Trim();
+
+		return passSearch &&
+			allowedCompanies.Contains(companyCategory) &&
+			allowedStatuses.Contains(statusCat) &&
+			allowedStartTypes.Contains(startCat) &&
+			allowedErrorControls.Contains(errorCat) &&
+			allowedLaunchProtected.Contains(launchCat) &&
+			allowedServiceFlags.Contains(flagsCat) &&
+			HasAnyIntersection(service.Item.ServiceType, allowedServiceTypes);
+	}
+
+	private void InsertServiceIntoFilteredServices(ServiceItemViewModel service)
+	{
+		int insertIndex = 0;
+		while (insertIndex < FilteredServices.Count && CompareServicesForCurrentSort(FilteredServices[insertIndex], service) <= 0)
+		{
+			insertIndex++;
+		}
+		FilteredServices.Insert(insertIndex, service);
+	}
+
+	private int CompareServicesForCurrentSort(ServiceItemViewModel left, ServiceItemViewModel right)
+	{
+		int comparison = SelectedSortIndex == 1
+			? string.Compare(left.Item.CurrentState, right.Item.CurrentState, StringComparison.OrdinalIgnoreCase)
+			: SelectedSortIndex == 2
+				? string.Compare(left.Item.StartType, right.Item.StartType, StringComparison.OrdinalIgnoreCase)
+				: string.Compare(left.Item.ServiceName, right.Item.ServiceName, StringComparison.OrdinalIgnoreCase);
+		if (comparison != 0)
+		{
+			return IsSortDescending ? -comparison : comparison;
+		}
+
+		return string.Compare(left.Item.ServiceName, right.Item.ServiceName, StringComparison.OrdinalIgnoreCase);
+	}
 	internal async void CopyItem_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is not null)
@@ -1365,7 +1678,6 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 								_ = Atlas.AppDispatcher.TryEnqueue(() =>
 								{
 									MainInfoBar.WriteSuccess($"Successfully deleted service {svm.Item.ServiceName}.");
-									RefreshList();
 								});
 							}
 							else

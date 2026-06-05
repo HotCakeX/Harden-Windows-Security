@@ -2162,3 +2162,18 @@ internal struct STORAGE_DEVICE_NUMBER
 	internal uint DeviceNumber;
 	internal uint PartitionNumber;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_notify_2w
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct SERVICE_NOTIFY
+{
+	internal uint dwVersion;
+	internal IntPtr pfnNotifyCallback;
+	internal IntPtr pContext;
+	internal uint dwNotificationStatus;
+	internal SERVICE_STATUS_PROCESS ServiceStatus;
+	internal uint dwNotificationTriggered;
+	internal char* pszServiceNames;
+}

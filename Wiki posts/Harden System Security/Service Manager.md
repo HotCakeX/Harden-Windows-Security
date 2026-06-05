@@ -28,6 +28,8 @@ To start managing your services, simply press the Load Services button or press 
 
 * **Dynamic Filter Counts:** By default, the app features dynamic filtering. As you check and uncheck filters, the numbers next to every other category automatically update in real-time to show you exactly how many services meet the combined active criteria. If you prefer the numbers to stay static representing the total count regardless of other filters, you can disable this toggle this button off.
 
+* After the services are retrieved once, the UI automatically reflects any services that are created or deleted on the system, without requiring another manual retrieval. This keeps the displayed service list continuously synchronized with the system's actual state.
+
 <br>
 
 ## Search and Sort

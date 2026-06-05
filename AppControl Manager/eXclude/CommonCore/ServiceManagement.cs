@@ -187,7 +187,7 @@ internal unsafe static class ServiceManagement
 		return servicesList;
 	}
 
-	private static ServiceItem? ProcessService(IntPtr scManager, string serviceName, string displayName, SERVICE_STATUS_PROCESS status)
+	internal static ServiceItem? ProcessService(IntPtr scManager, string serviceName, string displayName, SERVICE_STATUS_PROCESS status)
 	{
 		IntPtr hService = NativeMethods.OpenServiceW(scManager, serviceName, SERVICE_QUERY_CONFIG);
 		if (hService == IntPtr.Zero) return null;
@@ -204,6 +204,7 @@ internal unsafe static class ServiceManagement
 					if (NativeMethods.QueryServiceConfigW(hService, configBuffer, bytesNeeded, out bytesNeeded) != 0)
 					{
 						QUERY_SERVICE_CONFIGW* config = (QUERY_SERVICE_CONFIGW*)configBuffer;
+						string resolvedDisplayName = config->lpDisplayName != null ? new string(config->lpDisplayName) : displayName;
 
 						// Base config
 						string rawPath = config->lpBinaryPathName != null ? new string(config->lpBinaryPathName) : string.Empty;
@@ -227,7 +228,7 @@ internal unsafe static class ServiceManagement
 						return new ServiceItem
 						(
 							serviceName: serviceName,
-							displayName: displayName,
+							displayName: resolvedDisplayName,
 							description: string.IsNullOrWhiteSpace(description) ? "None" : description,
 							currentState: GetStateName(status.dwCurrentState),
 							processID: status.dwProcessId,
@@ -277,6 +278,47 @@ internal unsafe static class ServiceManagement
 		return null;
 	}
 
+	internal static ServiceItem? GetServiceByName(string serviceName)
+	{
+		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
+		if (scManager == IntPtr.Zero)
+		{
+			return null;
+		}
+
+		try
+		{
+			IntPtr hService = NativeMethods.OpenServiceW(scManager, serviceName, NativeMethods.SERVICE_QUERY_STATUS);
+			if (hService == IntPtr.Zero)
+			{
+				return null;
+			}
+
+			try
+			{
+				SERVICE_STATUS_PROCESS status = new();
+				if (!NativeMethods.QueryServiceStatusEx(
+					hService,
+					NativeMethods.SC_STATUS_PROCESS_INFO,
+					(IntPtr)(&status),
+					(uint)sizeof(SERVICE_STATUS_PROCESS),
+					out uint _))
+				{
+					return null;
+				}
+
+				return ProcessService(scManager, serviceName, serviceName, status);
+			}
+			finally
+			{
+				_ = NativeMethods.CloseServiceHandle(hService);
+			}
+		}
+		finally
+		{
+			_ = NativeMethods.CloseServiceHandle(scManager);
+		}
+	}
 	private static string GetServiceDescription(IntPtr hService)
 	{
 		if (NativeMethods.QueryServiceConfig2W(hService, SERVICE_CONFIG_DESCRIPTION, IntPtr.Zero, 0, out uint bytesNeeded) == 0 && bytesNeeded > 0)

@@ -1092,6 +1092,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 		Button openLocBtn = new() { Content = new FontIcon() { Glyph = "\uE8DA" } };
 		openLocBtn.Click += (s, args) =>
 		{
+			Process? process = null;
 			try
 			{
 				if (file.FilePath is not null)
@@ -1103,10 +1104,14 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 						UseShellExecute = true
 					};
 
-					_ = Process.Start(processInfo);
+					process = Process.Start(processInfo);
 				}
 			}
 			catch { }
+			finally
+			{
+				process?.Dispose();
+			}
 		};
 
 		ToolTipService.SetToolTip(openLocBtn, "Open the file location in File Explorer");

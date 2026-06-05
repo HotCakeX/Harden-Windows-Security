@@ -1,7 +1,1 @@
-Added the ability to show or hide Windows Updates and view all of their hidden metadata:
-
-The new management tab in the Windows Update is designed to show available Windows updates that are not currently installed. Users can retrieve the available update list, inspect detailed metadata for each update, hide or unhide selected updates, sort updates by deployment date and export update metadata to JSON.
-
-Being able to hide updates is useful in some scenarios, for example when a specific update is causing issues and you want to prevent it from being installed until a fix is released, or when Windows Update offers an old driver version even if newer version is installed (https://www.intel.com/content/www/us/en/support/articles/000087834/graphics.html). Each hidden update can be unhiden easily via the UI controls.
-
-Updates available in Windows carry a lot of metadata with them but Windows Update in Windows Settings only displays a tiny fraction of it. The management tab in the app allows users to inspect all the metadata for each update, which can be useful to understand what the update is about, its severity, whether it's a security update or not, the link to online articles and so much more. You can also instantly export them to JSON file, which can be useful for further analysis or record-keeping.
+In the Service Manager page, after retrieving the services once, any new services that are created or deleted from the system will be instantly visible in the UI without needing to retrieve the services again, keeping the displayed data automatically in sync with the actual state of the system.

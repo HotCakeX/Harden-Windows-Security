@@ -3540,4 +3540,29 @@ internal static unsafe partial class NativeMethods
 		uint dwCapabilities,
 		IntPtr pReserved3);
 
+
+	// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-notifyservicestatuschangew
+	internal const uint SC_MANAGER_ENUMERATE_SERVICE = 0x0004;
+	internal const uint SERVICE_NOTIFY_STATUS_CHANGE = 2;
+	internal const uint SERVICE_NOTIFY_CREATED = 0x00000080;
+	internal const uint SERVICE_NOTIFY_DELETED = 0x00000100;
+	internal const uint ERROR_SUCCESS = 0;
+	internal const uint WAIT_IO_COMPLETION = 0x000000C0;
+
+
+	[LibraryImport("ADVAPI32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint NotifyServiceStatusChangeW(
+		IntPtr hService,
+		uint dwNotifyMask,
+		IntPtr pNotifyBuffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/synchapi/nf-synchapi-sleepex
+	/// </summary>
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint SleepEx(uint dwMilliseconds, [MarshalAs(UnmanagedType.Bool)] bool bAlertable);
+
 }

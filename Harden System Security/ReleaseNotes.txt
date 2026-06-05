@@ -1,1 +1,3 @@
 In the Service Manager page, after retrieving the services once, any new services that are created or deleted from the system will be instantly visible in the UI without needing to retrieve the services again, keeping the displayed data automatically in sync with the actual state of the system.
+
+Updated dependencies to the latest versions.

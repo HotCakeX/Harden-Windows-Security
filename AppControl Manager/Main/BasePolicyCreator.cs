@@ -82,7 +82,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			Uri apiUrl = new($"https://api.github.com/repos/{owner}/{repo}/commits?path={path}");
 
 			using HttpRequestMessage request = new(HttpMethod.Get, apiUrl);
-			request.Headers.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
+			request.Headers.UserAgent.ParseAdd(Atlas.UserAgent);
 
 			using HttpResponseMessage httpResponse = SecHttpClient.Instance.Send(request);
 			string response = httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();

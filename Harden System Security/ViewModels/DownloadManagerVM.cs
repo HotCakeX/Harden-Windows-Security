@@ -27,7 +27,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,7 +38,6 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
-using CommonCore.Others;
 using CommonCore.ToolKits;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -49,7 +47,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Media.Core;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -653,7 +650,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	private const string ShutdownPrivilegeName = "SeShutdownPrivilege";
 	internal static readonly Guid DownloadsFolderGuid = new("374DE290-123F-4565-9164-39C4925E467B");
 
-	static DownloadManagerVM() => DownloadHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0");
+	static DownloadManagerVM() => DownloadHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(Atlas.UserAgent);
 
 	private readonly Queue<DownloadManagerItem> _pendingDownloads = new();
 	private readonly Lock _queueLock = new();

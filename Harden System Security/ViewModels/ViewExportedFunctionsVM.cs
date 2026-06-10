@@ -28,11 +28,8 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using CommonCore.IncrementalCollection;
 using CommonCore.IntelGathering;
-using CommonCore.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 
 namespace HardenSystemSecurity.ViewModels;
 

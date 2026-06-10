@@ -21,7 +21,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using AppControlManager.CustomUIElements;
-using CommonCore.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 

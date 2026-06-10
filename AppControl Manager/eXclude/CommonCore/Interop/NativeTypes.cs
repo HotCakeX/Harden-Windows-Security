@@ -2177,3 +2177,79 @@ internal unsafe struct SERVICE_NOTIFY
 	internal uint dwNotificationTriggered;
 	internal char* pszServiceNames;
 }
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct WLAN_INTERFACE_INFO_LIST
+{
+	internal uint NumberOfItems;
+	internal uint Index;
+}
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+internal unsafe struct WLAN_INTERFACE_INFO
+{
+	internal Guid InterfaceGuid;
+	internal fixed char InterfaceDescription[256];
+	internal WLAN_INTERFACE_STATE InterfaceState;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct WLAN_PROFILE_INFO_LIST
+{
+	internal uint NumberOfItems;
+	internal uint Index;
+}
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+internal unsafe struct WLAN_PROFILE_INFO
+{
+	internal fixed char ProfileName[256];
+	internal uint Flags;
+}
+
+internal enum WLAN_INTERFACE_STATE : uint
+{
+	NotReady = 0,
+	Connected = 1,
+	AdHocNetworkFormed = 2,
+	Disconnecting = 3,
+	Disconnected = 4,
+	Associating = 5,
+	Discovering = 6,
+	Authenticating = 7
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc1
+/// </summary>
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+internal unsafe struct DXGI_ADAPTER_DESC1
+{
+	internal fixed char Description[128];
+	internal uint VendorId;
+	internal uint DeviceId;
+	internal uint SubSysId;
+	internal uint Revision;
+	internal nuint DedicatedVideoMemory;
+	internal nuint DedicatedSystemMemory;
+	internal nuint SharedSystemMemory;
+	internal LUID AdapterLuid;
+	internal uint Flags;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct MEMORYSTATUSEX
+{
+	internal uint dwLength;
+	internal uint dwMemoryLoad;
+	internal ulong ullTotalPhys;
+	internal ulong ullAvailPhys;
+	internal ulong ullTotalPageFile;
+	internal ulong ullAvailPageFile;
+	internal ulong ullTotalVirtual;
+	internal ulong ullAvailVirtual;
+	internal ulong ullAvailExtendedVirtual;
+}

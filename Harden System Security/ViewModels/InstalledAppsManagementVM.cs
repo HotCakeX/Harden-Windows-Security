@@ -25,7 +25,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CommonCore.Others;
 using HardenSystemSecurity.CustomUIElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

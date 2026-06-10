@@ -112,6 +112,11 @@ internal static partial class Atlas
 	/// </summary>
 	internal static readonly string SystemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? "C:";
 
+	/// <summary>
+	/// The User Agent used by the entire app.
+	/// </summary>
+	internal const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0";
+
 #if APP_CONTROL_MANAGER
 
 	static Atlas()

@@ -38,7 +38,6 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 	private ViewModels.HomeVM ViewModel => ViewModels.ViewModelProvider.HomeVM;
 #endif
 
-
 	// This is necessary so that the carousel content wouldn't be visible briefly after navigating to another page by clicking on one of the carousel tiles.
 	protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
 	{
@@ -233,21 +232,6 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 			BackgroundCanvas.Invalidate();
 			_bgNextTwinkleTime = _animationTimeSeconds + 7.5 + _random.NextDouble() * 1.5;
 		}
-	}
-
-	private void OnUnloadedDisposeResources()
-	{
-		DetachRenderHook();
-
-		_bgNodes = null;
-		_bgEdges = null;
-		_bgNodeCount = 0;
-		_bgEdgeCount = 0;
-		_bgStarEdges?.Clear();
-		_bgStarEdges = null;
-
-		// Run the code that needs to run in ViewModel class when page is unloaded.
-		ViewModel.OnHomePageUnLoaded();
 	}
 
 	#region Background Web (static idle, clustered one-frame twinkles)
@@ -1007,7 +991,17 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		}
 		_disposed = true;
 
-		// This detaches render hooks, stops timers, and disposes all CanvasRenderTargets, etc.
-		OnUnloadedDisposeResources();
+		// Detach render hooks, stops timers, and disposes all CanvasRenderTargets, etc.
+		DetachRenderHook();
+
+		_bgNodes = null;
+		_bgEdges = null;
+		_bgNodeCount = 0;
+		_bgEdgeCount = 0;
+		_bgStarEdges?.Clear();
+		_bgStarEdges = null;
+
+		// Run the code that needs to run in ViewModel class when page is unloaded.
+		ViewModel.OnHomePageUnLoaded();
 	}
 }

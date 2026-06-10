@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -29,6 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
+using AppControlManager.Pages;
 using CommonCore.Hardware;
 using CommonCore.Others;
 using CommonCore.Power;
@@ -40,8 +42,22 @@ using Microsoft.Win32;
 
 namespace AppControlManager.ViewModels;
 
+// Core logic of the Home page, Home VM and the Live System Intelligence window.
+// 1. The Home page must not be consuming any resources (polling, timers, animations and such) when user navigates away from it.
+// 2. The Live System Intelligence window must not be consuming any resources(polling, timers, animations and such) when it is closed.
+// 3. If Live System Intelligence window is open but user has navigated away from the Home page, the graphs must continue to be updated correctly in the Live System Intelligence window, however, if that window gets closed as well while user is on another page in the main window, everything related to Home page and the Live System Intelligence window must be disposed so they don't consume any resources.
+
 internal sealed partial class HomeVM : ViewModelBase, IDisposable
 {
+	// Win2D chart sample snapshots used by the Home page compact charts.
+	// These are small collections because the home chart only keeps the last 60 seconds.
+	internal IReadOnlyList<double> AppRamChartSamples => _appRamChartSamples;
+	internal IReadOnlyList<double> CpuTemperatureChartSamples => _cpuTemperatureChartSamples;
+	internal IReadOnlyList<double> StorageTemperatureChartSamples => _storageTemperatureChartSamples;
+	// Tracks how many times the animated heart icon was pressed.
+	internal int HeartIconClickCount { get; set => SP(ref field, value); }
+
+
 	/// <summary>
 	/// Event handler for when the home page is loaded.
 	/// We do not auto-start the heavy edge pulse storyboard, instead we rasterize and pulse in code.
@@ -50,6 +66,8 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <param name="sender"></param>
 	internal void OnHomePageLoaded(object sender)
 	{
+		_isHomePageTelemetryActive = true;
+
 		// Let these finish without waiting for them.
 		_ = Task.Run(() =>
 		{
@@ -261,57 +279,75 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal void OnHomePageUnLoaded()
 	{
-		// Clean up the clock timer
-		if (_clockTimer is not null)
-		{
-			_clockTimer.Stop();
-			_clockTimer.Tick -= OnClockInitialTick;
-			_clockTimer.Tick -= OnClockTick;
-			_clockTimer = null;
-		}
+		_isHomePageTelemetryActive = false;
 
-		// Clean up the app RAM usage and chart sampler timer
-		if (_appRamTimer is not null)
-		{
-			_appRamTimer.Stop();
-			_appRamTimer.Tick -= OnAppRamTick;
-			_appRamTimer = null;
-		}
-
-		// Clean up the open ports timer
-		if (_portsTimer is not null)
-		{
-			_portsTimer.Stop();
-			_portsTimer.Tick -= OnOpenPortsTick;
-			_portsTimer = null;
-		}
-
-		// Dispose CPU temperature sampler if active
-		_temperatureSampler?.Dispose();
-		_temperatureSampler = null;
+		StopHomeOnlyTelemetry();
+		StopSharedTelemetryIfUnused();
 	}
+
+#if HARDEN_SYSTEM_SECURITY
+	/// <summary>
+	/// Releases shared telemetry ownership for the live system intelligence window.
+	/// </summary>
+	internal void OnLiveGraphsWindowClosed(HomeLiveGraphsWindow liveGraphsWindow)
+	{
+		// Ignore callbacks from stale window instances so a closing old window cannot affect a newer tracked window.
+		if (!ReferenceEquals(_liveGraphsWindow, liveGraphsWindow))
+		{
+			return;
+		}
+
+		_liveGraphsWindow = null;
+		_isLiveGraphsTelemetryActive = false;
+		IsLiveGraphsWindowOpen = false;
+		StopSharedTelemetryIfUnused();
+	}
+#endif
 
 	// TextBlock sources bound to the UI for the info tiles.
 	internal string? SystemTimeText { get; private set => SP(ref field, value); }
 	internal string? UserKindText { get; private set => SP(ref field, value); }
 	internal string? UptimeText { get; private set => SP(ref field, value); }
 	internal string? BiosBootTimeText { get; private set => SP(ref field, value); }
-	internal string? SystemRamText { get; private set => SP(ref field, value); }
+	internal string? SystemRamText { get; set => SP(ref field, value); }
 	internal string? AppRamText { get; private set => SP(ref field, value); }
-	internal string? DiskSizeText { get; private set => SP(ref field, value); }
-	internal string? DiskTemperatureText { get; private set => SP(ref field, value); } = "Storage Temp: Unavailable";
+	internal string? DiskSizeText { get; set => SP(ref field, value); }
+	internal string? DiskTemperatureText { get; private set => SP(ref field, value); } = "N/A";
 	internal string? UsbDeviceCountText { get; private set => SP(ref field, value); }
 	internal string? InternetSpeedText { get; private set => SP(ref field, value); }
 	internal string? InternetTotalText { get; private set => SP(ref field, value); } = "Total: 0.0 GB ↓ / 0.0 GB ↑";
-	internal string? CpuTemperatureText { get; private set => SP(ref field, value); } = "CPU Temp: Unavailable";
+	internal string? CpuTemperatureText { get; private set => SP(ref field, value); } = "N/A";
 	internal string? OpenPortsText { get; private set => SP(ref field, value); } = "TCP: 0 / UDP: 0";
 	internal string? PowerPlanText { get; private set => SP(ref field, value); }
 	internal string? OsInfoText { get; private set => SP(ref field, value); }
-	internal string? CpuDetailsText { get; private set => SP(ref field, value); }
-	internal string? GpuNamesText { get; private set => SP(ref field, value); }
-	internal string? ComputerNameText { get; private set => SP(ref field, value); }
-	internal string? SystemInfoText { get; private set => SP(ref field, value); }
+	internal string? CpuDetailsText { get; set => SP(ref field, value); }
+	internal string? GpuNamesText { get; set => SP(ref field, value); }
+	internal string? ComputerNameText { get; set => SP(ref field, value); }
+	internal string? SystemInfoText { get; set => SP(ref field, value); }
 	internal string? ActivationStatusSummaryText { get; private set => SP(ref field, value); } = "Checking...";
+
+#if HARDEN_SYSTEM_SECURITY
+	internal bool IsLiveGraphsWindowOpen
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				if (value)
+				{
+					_liveGraphsWindow ??= new HomeLiveGraphsWindow(this);
+					_liveGraphsWindow.Activate();
+					_isLiveGraphsTelemetryActive = true;
+					StartSharedTelemetryIfNeeded();
+				}
+				else
+				{
+					_liveGraphsWindow?.Close();
+				}
+			}
+		}
+	}
+#endif
 
 	private static readonly Uri CloudflareTraceUri = new("https://www.cloudflare.com/cdn-cgi/trace");
 	private static readonly Uri AwsCheckIpUri = new("https://checkip.amazonaws.com/");
@@ -377,6 +413,23 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private TemperatureSampler? _temperatureSampler;
 
+	/// <summary>
+	/// True while Home is the active page. Home-only timers and compact chart path generation are allowed only while this is true.
+	/// </summary>
+	private bool _isHomePageTelemetryActive;
+
+	/// <summary>
+	/// True while the live system intelligence window needs ViewModel-owned shared telemetry.
+	/// </summary>
+	private bool _isLiveGraphsTelemetryActive;
+
+#if HARDEN_SYSTEM_SECURITY
+	/// <summary>
+	/// Live system intelligence window instance.
+	/// </summary>
+	private HomeLiveGraphsWindow? _liveGraphsWindow;
+#endif
+
 	private const int HomeChartTimeWindowSeconds = 60;
 	private const int HomeChartUpdateIntervalSeconds = 2;
 	private const int HomeChartMaxSamples = (HomeChartTimeWindowSeconds / HomeChartUpdateIntervalSeconds) + 1;
@@ -384,9 +437,62 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	private const double HomeChartHeight = 44.0;
 	private const double HomeChartVerticalPadding = 2.0;
 	private const string DefaultHomeChartPathData = "M 0.00,22.00 L 232.00,22.00";
+
+	private enum HomeCompactChartKind
+	{
+		AppRam,
+		CpuTemperature,
+		StorageTemperature
+	}
 	private readonly List<double> _appRamChartSamples = new(HomeChartMaxSamples);
 	private readonly List<double> _cpuTemperatureChartSamples = new(HomeChartMaxSamples);
 	private readonly List<double> _storageTemperatureChartSamples = new(HomeChartMaxSamples);
+	private readonly StringBuilder _storageTemperatureTextBuilder = new(128);
+
+	private void StartSharedTelemetryIfNeeded()
+	{
+		if (_appRamTimer is null)
+		{
+			InitializeAppRamUpdater();
+		}
+		if (_temperatureSampler is null)
+		{
+			InitializeCpuTemperatureSampler();
+		}
+	}
+
+	private void StopSharedTelemetryIfUnused()
+	{
+		if (_isHomePageTelemetryActive || _isLiveGraphsTelemetryActive)
+		{
+			return;
+		}
+		if (_appRamTimer is not null)
+		{
+			_appRamTimer.Stop();
+			_appRamTimer.Tick -= OnAppRamTick;
+			_appRamTimer = null;
+		}
+		_temperatureSampler?.Dispose();
+		_temperatureSampler = null;
+	}
+
+	private void StopHomeOnlyTelemetry()
+	{
+		if (_clockTimer is not null)
+		{
+			_clockTimer.Stop();
+			_clockTimer.Tick -= OnClockInitialTick;
+			_clockTimer.Tick -= OnClockTick;
+			_clockTimer = null;
+		}
+		if (_portsTimer is not null)
+		{
+			_portsTimer.Stop();
+			_portsTimer.Tick -= OnOpenPortsTick;
+			_portsTimer = null;
+		}
+	}
 
 	/// <summary>
 	/// Sets the current time immediately, then aligns the timer to the next minute boundary.
@@ -394,6 +500,11 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void InitializeSystemTimeUpdater()
 	{
+		if (_clockTimer is not null)
+		{
+			return;
+		}
+
 		// Always set the initial value immediately.
 		UpdateSystemTime();
 
@@ -415,6 +526,11 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void InitializeAppRamUpdater()
 	{
+		if (_appRamTimer is not null)
+		{
+			return;
+		}
+
 		// Always set the initial values immediately.
 		UpdateAppRamUsage();
 		UpdateStorageTemperature();
@@ -431,6 +547,11 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void InitializeOpenPortsUpdater()
 	{
+		if (_portsTimer is not null)
+		{
+			return;
+		}
+
 		// Set initial value
 		OpenPortsText = GetOpenPortsString();
 
@@ -446,6 +567,11 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void InitializeCpuTemperatureSampler()
 	{
+		if (_temperatureSampler is not null)
+		{
+			return;
+		}
+
 		try
 		{
 			_temperatureSampler = new TemperatureSampler();
@@ -489,7 +615,10 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	private void OnAppRamTick(DispatcherQueueTimer sender, object args)
 	{
 		UpdateAppRamUsage();
-		UpdateInternetSpeed(first: false);
+		if (_isHomePageTelemetryActive)
+		{
+			UpdateInternetSpeed(first: false);
+		}
 		UpdateCpuTemperature();
 		UpdateStorageTemperature();
 	}
@@ -533,12 +662,8 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 		CpuTemperatureText = celsius.ToString("0.0", CultureInfo.InvariantCulture) + " °C";
 		AddChartSample(_cpuTemperatureChartSamples, celsius);
-		UpdateChartPathAndLabels(_cpuTemperatureChartSamples, value =>
-		{
-			CpuTemperatureChartLinePathData = value.PathData;
-			CpuTemperatureChartMinLabel = value.MinLabel;
-			CpuTemperatureChartMaxLabel = value.MaxLabel;
-		});
+		UpdateCompactChartPathAndLabelsIfHomeActive(_cpuTemperatureChartSamples, HomeCompactChartKind.CpuTemperature);
+		NotifySharedChartSamplesChanged(nameof(CpuTemperatureChartSamples));
 	}
 
 	/// <summary>
@@ -552,26 +677,41 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			if (temps.Count > 0)
 			{
-				// Join disk temperatures and graph the hottest drive so brief storage spikes remain visible.
-				DiskTemperatureText = string.Join(" - ", temps.Select(t => t.ToString(CultureInfo.InvariantCulture) + " °C"));
-				int hottestTemperature = temps.Max();
-				AddChartSample(_storageTemperatureChartSamples, hottestTemperature);
-				UpdateChartPathAndLabels(_storageTemperatureChartSamples, value =>
+				// Joining disk temperatures and graph the hottest drive so brief storage spikes remain visible.
+				StringBuilder temperatureBuilder = _storageTemperatureTextBuilder;
+				_ = temperatureBuilder.Clear();
+				int hottestTemperature = temps[0];
+
+				for (int index = 0; index < temps.Count; index++)
 				{
-					StorageTemperatureChartLinePathData = value.PathData;
-					StorageTemperatureChartMinLabel = value.MinLabel;
-					StorageTemperatureChartMaxLabel = value.MaxLabel;
-				});
+					int temperature = temps[index];
+					if (temperature > hottestTemperature)
+					{
+						hottestTemperature = temperature;
+					}
+
+					if (index > 0)
+					{
+						_ = temperatureBuilder.Append(" - ");
+					}
+
+					_ = temperatureBuilder.Append(temperature.ToString(CultureInfo.InvariantCulture)).Append(" °C");
+				}
+
+				DiskTemperatureText = temperatureBuilder.ToString();
+				AddChartSample(_storageTemperatureChartSamples, hottestTemperature);
+				UpdateCompactChartPathAndLabelsIfHomeActive(_storageTemperatureChartSamples, HomeCompactChartKind.StorageTemperature);
+				NotifySharedChartSamplesChanged(nameof(StorageTemperatureChartSamples));
 			}
 			else
 			{
-				DiskTemperatureText = "Storage Temp: Unavailable";
+				DiskTemperatureText = "N/A";
 			}
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			DiskTemperatureText = "Storage Temp: Unavailable";
+			DiskTemperatureText = "N/A";
 		}
 	}
 
@@ -677,18 +817,12 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	{
 		ulong appRamBytes = GetAppPrivateWorkingSetBytesNativeValue();
 		AppRamText = ByteToString(appRamBytes);
-
 		const double OneMB = 1024.0 * 1024.0;
 		double appRamMegabytes = appRamBytes / OneMB;
 		AddChartSample(_appRamChartSamples, appRamMegabytes);
-		UpdateChartPathAndLabels(_appRamChartSamples, value =>
-		{
-			AppRamChartLinePathData = value.PathData;
-			AppRamChartMinLabel = value.MinLabel;
-			AppRamChartMaxLabel = value.MaxLabel;
-		});
+		UpdateCompactChartPathAndLabelsIfHomeActive(_appRamChartSamples, HomeCompactChartKind.AppRam);
+		NotifySharedChartSamplesChanged(nameof(AppRamChartSamples));
 	}
-
 	private static void AddChartSample(List<double> samples, double value)
 	{
 		if (samples.Count == HomeChartMaxSamples)
@@ -699,13 +833,12 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		samples.Add(value);
 	}
 
-	private static void UpdateChartPathAndLabels(List<double> samples, Action<(string PathData, string MinLabel, string MaxLabel)> apply)
+	private void UpdateCompactChartPathAndLabelsIfHomeActive(List<double> samples, HomeCompactChartKind chartKind)
 	{
-		if (samples.Count == 0)
+		if (!_isHomePageTelemetryActive || samples.Count == 0)
 		{
 			return;
 		}
-
 		double minValue = samples.Min();
 		double maxValue = samples.Max();
 		double range = maxValue - minValue;
@@ -715,9 +848,42 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			minValue = Math.Max(0.0, center - 0.5);
 			maxValue = center + 0.5;
 		}
-
 		string pathData = BuildChartPath(samples, minValue, maxValue);
-		apply((pathData, minValue.ToString("0.#", CultureInfo.InvariantCulture), maxValue.ToString("0.#", CultureInfo.InvariantCulture)));
+		string minLabel = minValue.ToString("0.#", CultureInfo.InvariantCulture);
+		string maxLabel = maxValue.ToString("0.#", CultureInfo.InvariantCulture);
+		ApplyCompactChartPathAndLabels(chartKind, pathData, minLabel, maxLabel);
+	}
+
+	private void ApplyCompactChartPathAndLabels(HomeCompactChartKind chartKind, string pathData, string minLabel, string maxLabel)
+	{
+		switch (chartKind)
+		{
+			case HomeCompactChartKind.AppRam:
+				AppRamChartLinePathData = pathData;
+				AppRamChartMinLabel = minLabel;
+				AppRamChartMaxLabel = maxLabel;
+				break;
+			case HomeCompactChartKind.CpuTemperature:
+				CpuTemperatureChartLinePathData = pathData;
+				CpuTemperatureChartMinLabel = minLabel;
+				CpuTemperatureChartMaxLabel = maxLabel;
+				break;
+			case HomeCompactChartKind.StorageTemperature:
+				StorageTemperatureChartLinePathData = pathData;
+				StorageTemperatureChartMinLabel = minLabel;
+				StorageTemperatureChartMaxLabel = maxLabel;
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void NotifySharedChartSamplesChanged(string propertyName)
+	{
+		if (_isHomePageTelemetryActive || _isLiveGraphsTelemetryActive)
+		{
+			OnPropertyChanged(propertyName);
+		}
 	}
 
 	private static string BuildChartPath(List<double> samples, double minValue, double maxValue)
@@ -2470,7 +2636,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		/// <summary>
 		/// Get the License status of the Windows, whether it is genuine or not.
 		/// </summary>
-		/// <returns></returns>
 		private static string GetIsWindowsGenuine()
 		{
 			int genuineState = 0;
@@ -2495,7 +2660,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		/// <summary>
 		/// Get the Digital License information.
 		/// </summary>
-		/// <returns></returns>
 		private static bool GetDigitalLicenseStatus()
 		{
 			try
@@ -2564,8 +2728,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// When the Uptime tile is clicked on the page.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void OnUptimeClick()
 	{
 		try
@@ -2652,29 +2814,45 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			_ = response.EnsureSuccessStatusCode();
 
 			string responseText = await response.Content.ReadAsStringAsync(cancellationTokenSource.Token).ConfigureAwait(false);
-
-			foreach (string line in responseText.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+			string? candidateIp = TryParseCloudflareTracePublicIp(responseText);
+			if (!string.IsNullOrWhiteSpace(candidateIp))
 			{
-				int separatorIndex = line.IndexOf('=');
-				if (separatorIndex <= 0)
-				{
-					continue;
-				}
-
-				if (!line[..separatorIndex].Equals("ip", StringComparison.Ordinal))
-				{
-					continue;
-				}
-
-				string candidateIp = line[(separatorIndex + 1)..].Trim();
-				if (IPAddress.TryParse(candidateIp, out _))
-				{
-					return candidateIp;
-				}
+				return candidateIp;
 			}
 		}
-		catch
+		catch { }
+
+		return null;
+	}
+
+	private static string? TryParseCloudflareTracePublicIp(string responseText)
+	{
+		ReadOnlySpan<char> remaining = responseText.AsSpan();
+		while (!remaining.IsEmpty)
 		{
+			int newlineIndex = remaining.IndexOf('\n');
+			ReadOnlySpan<char> line;
+			if (newlineIndex < 0)
+			{
+				line = remaining.Trim();
+				remaining = [];
+			}
+			else
+			{
+				line = remaining[..newlineIndex].Trim();
+				remaining = remaining[(newlineIndex + 1)..];
+			}
+
+			if (!line.StartsWith("ip=".AsSpan(), StringComparison.OrdinalIgnoreCase))
+			{
+				continue;
+			}
+
+			ReadOnlySpan<char> candidateIp = line[3..].Trim();
+			if (IPAddress.TryParse(candidateIp, out _))
+			{
+				return candidateIp.ToString();
+			}
 		}
 
 		return null;
@@ -2703,9 +2881,22 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 	public void Dispose()
 	{
-		_temperatureSampler?.Dispose();
-		_temperatureSampler = null;
+#if HARDEN_SYSTEM_SECURITY
+		HomeLiveGraphsWindow? liveGraphsWindow = _liveGraphsWindow;
+		if (liveGraphsWindow is not null)
+		{
+			_liveGraphsWindow = null;
+			liveGraphsWindow.Close();
+		}
+#endif
+
+		_isHomePageTelemetryActive = false;
+		_isLiveGraphsTelemetryActive = false;
+#if HARDEN_SYSTEM_SECURITY
+		IsLiveGraphsWindowOpen = false;
+#endif
+		StopHomeOnlyTelemetry();
+		StopSharedTelemetryIfUnused();
 		_publicIpLookupLock.Dispose();
 	}
-
 }

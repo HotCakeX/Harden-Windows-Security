@@ -1,3 +1,24 @@
-In the Service Manager page, after retrieving the services once, any new services that are created or deleted from the system will be instantly visible in the UI without needing to retrieve the services again, keeping the displayed data automatically in sync with the actual state of the system.
+The Harden System Security app now includes a new section called "Live System Intelligence", accessible from the Home page. This section opens in a dedicated window and provides a rich set of real-time graphs and system insights, offering a detailed view of your device’s current activity and health.
 
-Updated dependencies to the latest versions.
+The following metrics are presented through interactive graphs:
+
+1. System RAM usage
+2. Application RAM usage
+3. CPU usage
+4. GPU usage for all GPUs available on the system
+5. Disk read and write activity
+6. Network activity, including uploads and downloads
+7. CPU temperature
+8. SSD temperature
+
+There is an additional section that provides several advanced features:
+
+1. Network openness check: Evaluates how open your network is by testing access to websites across multiple categories. The results are displayed in the UI and combined into an overall score.
+
+2. Wi-Fi profiles history: Lets you view detailed information about all Wi-Fi hotspots your device has previously connected to, including profiles that existed before a clean installation of the operating system.
+
+3. Physical orientation: On supported hardware, displays the live physical orientation of your device in 3D space in real time.
+
+4. Compass: On supported hardware, turns your device into an accurate digital compass.
+
+5. Luminosity: On supported hardware, shows the brightness level of your surrounding environment and indicates how much light you are currently exposed to.

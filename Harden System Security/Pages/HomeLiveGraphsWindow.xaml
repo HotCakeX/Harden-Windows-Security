@@ -1,0 +1,851 @@
+<Window
+    x:Class="AppControlManager.Pages.HomeLiveGraphsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:local="using:AppControlManager.Pages"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    Closed="{x:Bind Dispose}"
+    Title="Live System Intelligence">
+    <Grid Background="#000503" Loaded="{x:Bind OnRootGridLoaded}">
+        <!--Animated Backgrounds-->
+        <Grid x:Name="AnimatedBackgroundLayer" IsHitTestVisible="False">
+            <local:AnimatedTesseractBackground x:Name="AnimatedTesseractBackground" />
+            <win2d:CanvasControl x:Name="BlackHoleCanvas" ClearColor="Black" Visibility="Collapsed" CreateResources="{x:Bind EnsureBlackHoleShaderResources}" Draw="{x:Bind OnBlackHoleCanvasDraw}" />
+        </Grid>
+        <Border x:Name="HomeTitleBadgeBorder"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="15,15,15,0"
+                Padding="14,5"
+                CornerRadius="20"
+                Background="#2600130B"
+                BorderBrush="#1AFFFFFF"
+                BorderThickness="1"
+                PointerEntered="{x:Bind OnHomeTitleBadgePointerEntered}"
+                PointerExited="{x:Bind OnHomeTitleBadgePointerExited}">
+            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <Grid Width="28" Height="28" VerticalAlignment="Center">
+                    <Ellipse x:Name="HomeTitlePulseRingOneEllipse"
+                             Width="8"
+                             Height="8"
+                             Fill="#FF00FFB4"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Opacity="0"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <CompositeTransform ScaleX="1" ScaleY="1" />
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+                    <Ellipse x:Name="HomeTitlePulseRingTwoEllipse"
+                             Width="8"
+                             Height="8"
+                             Fill="#FF00FFB4"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Opacity="0"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <CompositeTransform ScaleX="1" ScaleY="1" />
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+                    <Ellipse x:Name="HomeTitlePulseRingThreeEllipse"
+                             Width="8"
+                             Height="8"
+                             Fill="#FF00FFB4"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Opacity="0"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <CompositeTransform ScaleX="1" ScaleY="1" />
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+                    <Ellipse x:Name="HomeTitlePulseDotEllipse"
+                             Width="8"
+                             Height="8"
+                             Fill="#FF00FFB4"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Opacity="1" />
+                </Grid>
+                <Grid x:Name="HomeTitleRollingTextClip"
+                      Height="31"
+                      VerticalAlignment="Center">
+                    <Grid.Clip>
+                        <RectangleGeometry Rect="0,0,380,31" />
+                    </Grid.Clip>
+                    <StackPanel x:Name="HomeTitleLettersPanel"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Top"
+                                Margin="0,3,0,0" />
+                </Grid>
+            </StackPanel>
+        </Border>
+        <Grid Padding="18,70,18,18" RowSpacing="14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="10" HorizontalAlignment="Center" Padding="15,5,15,5">
+                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12" VerticalAlignment="Center">
+                    <ComboBox x:Name="BackgroundTypeComboBox" Header="Background type" Width="150" SelectedIndex="0" SelectionChanged="{x:Bind OnBackgroundTypeComboBoxSelectionChanged}">
+                        <ComboBoxItem Content="Tesseract" />
+                        <ComboBoxItem Content="Black Hole" />
+                    </ComboBox>
+                    <ComboBox x:Name="BackgroundPresetComboBox" Header="Tesseract preset" Width="150" SelectedIndex="0" SelectionChanged="{x:Bind OnBackgroundPresetComboBoxSelectionChanged}">
+                        <ComboBoxItem Content="Green" />
+                        <ComboBoxItem Content="Blue / White" />
+                    </ComboBox>
+                    <Slider Header="Background opacity" Width="170" Minimum="0" Maximum="1" Value="1" StepFrequency="0.01" SmallChange="0.01" LargeChange="0.1" ValueChanged="{x:Bind OnBackgroundOpacitySliderValueChanged}" />
+                    <ComboBox x:Name="GraphSizeComboBox" Header="Graph size" Width="120" SelectedIndex="1" SelectionChanged="{x:Bind OnGraphSizeComboBoxSelectionChanged}">
+                        <ComboBoxItem Content="Small" />
+                        <ComboBoxItem Content="Medium" />
+                        <ComboBoxItem Content="Big" />
+                    </ComboBox>
+                </CCToolKit:WrapPanel>
+            </Border>
+            <ScrollViewer x:Name="LiveGraphsScrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled" SizeChanged="{x:Bind OnLiveGraphsScrollViewerSizeChanged}">
+                <StackPanel Spacing="18">
+                    <VariableSizedWrapGrid x:Name="LiveGraphsWrapGrid" HorizontalAlignment="Center" Orientation="Horizontal" ItemWidth="568" ItemHeight="382">
+                        <VariableSizedWrapGrid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                            </TransitionCollection>
+                        </VariableSizedWrapGrid.ChildrenTransitions>
+                        <Grid x:Name="AppRamCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="AppRamCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#66E87500" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#6613A10E" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#6613A10E" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#66E87500" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="AppRamCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="AppRamGraphRow" Height="236" />
+                                        <RowDefinition x:Name="AppRamGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="AppRamChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="1000 MB" />
+                                        <TextBlock Text="App RAM Usage" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="AppRamLiveGraph"
+                                                            Grid.Row="1"
+                                                            Samples="{x:Bind ViewModel.AppRamChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="App RAM" ValueUnit="MB" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="1000" StrokeColor="#FFE87500" GridColor="#FFC75F00" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="AppRamChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB" />
+                                        <TextBlock x:Name="AppRamChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid x:Name="SystemMemoryUtilizationCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="SystemMemoryUtilizationCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#6676B9ED" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#660078D4" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#660078D4" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#6676B9ED" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="SystemMemoryUtilizationCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="SystemMemoryUtilizationGraphRow" Height="236" />
+                                        <RowDefinition x:Name="SystemMemoryUtilizationGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="SystemMemoryUtilizationChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100%" />
+                                        <TextBlock Text="Memory Utilization" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Name="SystemMemoryUtilizationValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 %" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="SystemMemoryUtilizationLiveGraph" Grid.Row="1" PrimarySeriesName="Memory Utilization" ValueUnit="%" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF76B9ED" GridColor="#FF0078D4" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="SystemMemoryUtilizationChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0%" />
+                                        <TextBlock x:Name="SystemMemoryUtilizationChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid x:Name="StorageTemperatureCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="StorageTemperatureCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#6613A10E" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#6676B9ED" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#6676B9ED" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#6613A10E" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="StorageTemperatureCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="StorageTemperatureGraphRow" Height="236" />
+                                        <RowDefinition x:Name="StorageTemperatureGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="StorageTemperatureChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100 °C" />
+                                        <TextBlock Text="Storage Temperature" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.DiskTemperatureText, Mode=OneWay}" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="StorageTemperatureLiveGraph" Grid.Row="1" Samples="{x:Bind ViewModel.StorageTemperatureChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="Storage Temperature" ValueUnit="°C" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF13A10E" GridColor="#FF10893E" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="StorageTemperatureChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 °C" />
+                                        <TextBlock x:Name="StorageTemperatureChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid x:Name="CpuTemperatureCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="CpuTemperatureCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#6640B6E6" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#660078D4" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#660078D4" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#6640B6E6" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="CpuTemperatureCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="CpuTemperatureGraphRow" Height="236" />
+                                        <RowDefinition x:Name="CpuTemperatureGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="CpuTemperatureChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100 °C" />
+                                        <TextBlock Text="CPU Temperature" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="CpuTemperatureLiveGraph" Grid.Row="1" Samples="{x:Bind ViewModel.CpuTemperatureChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="CPU Temperature" ValueUnit="°C" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF40B6E6" GridColor="#FF0078D4" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="CpuTemperatureChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 °C" />
+                                        <TextBlock x:Name="CpuTemperatureChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid x:Name="CpuUsageCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="CpuUsageCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#66BF5AF2" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#66881798" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#66881798" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#66BF5AF2" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="CpuUsageCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="CpuUsageGraphRow" Height="236" />
+                                        <RowDefinition x:Name="CpuUsageGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="CpuUsageChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100%" />
+                                        <TextBlock Text="CPU Usage" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Name="CpuUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 %" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="CpuUsageLiveGraph" Grid.Row="1" PrimarySeriesName="CPU Usage" ValueUnit="%" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FFBF5AF2" GridColor="#FF881798" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="CpuUsageChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0%" />
+                                        <TextBlock x:Name="CpuUsageChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid x:Name="DiskActivityCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="DiskActivityCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#66FFB900" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#6613A10E" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#6613A10E" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#66FFB900" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="DiskActivityCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="DiskActivityGraphRow" Height="236" />
+                                        <RowDefinition x:Name="DiskActivityGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="DiskActivityMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
+                                        <TextBlock Text="Disk Activity" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Name="DiskActivityValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="210" TextTrimming="CharacterEllipsis" Text="R: 0 B/s - W: 0 B/s" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="DiskActivityLiveGraph" Grid.Row="1" PrimarySeriesName="Write" SecondarySeriesName="Read" ValueUnit="MB/s" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FFFFB900" SecondaryStrokeColor="#FF13A10E" GridColor="#FFFF8C00" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="DiskActivityMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
+                                        <TextBlock x:Name="DiskActivityStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid x:Name="NetworkUsageCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="NetworkUsageCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#6600B7C3" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#66038387" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#66038387" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#6600B7C3" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="NetworkUsageCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="NetworkUsageGraphRow" Height="236" />
+                                        <RowDefinition x:Name="NetworkUsageGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="NetworkUsageChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
+                                        <TextBlock Text="Network Usage" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Name="NetworkUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 Mbps" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="NetworkUsageLiveGraph" Grid.Row="1" PrimarySeriesName="Network Usage" ValueUnit="MB/s" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FF00B7C3" GridColor="#FF038387" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="NetworkUsageChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
+                                        <TextBlock x:Name="NetworkUsageChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </VariableSizedWrapGrid>
+                    <!-- Separator -->
+                    <Grid Margin="0,4,14,0" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Height="1"
+                                VerticalAlignment="Center"
+                                Opacity="0.72">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                    <GradientStop Color="#0013A10E" Offset="0" />
+                                    <GradientStop Color="#7813A10E" Offset="0.55" />
+                                    <GradientStop Color="#AA76B9ED" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                Margin="14,0"
+                                Padding="14,5"
+                                CornerRadius="15"
+                                Background="#220078D4"
+                                BorderBrush="#5576B9ED"
+                                BorderThickness="1">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE9D2;"
+                                          FontSize="12"
+                                          Foreground="#FF76B9ED" />
+                                <TextBlock Text="Additional diagnostics"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Opacity="0.88" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2"
+                                Height="1"
+                                VerticalAlignment="Center"
+                                Opacity="0.72">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                    <GradientStop Color="#AA76B9ED" Offset="0" />
+                                    <GradientStop Color="#7813A10E" Offset="0.45" />
+                                    <GradientStop Color="#0013A10E" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+                    <SelectorBar x:Name="DiagnosticsSelectorBar" SelectionChanged="{x:Bind OnDiagnosticsSelectorBarSelectionChanged}" Margin="0,0,14,0" HorizontalAlignment="Center">
+                        <SelectorBarItem x:Name="NetworkOpennessSelectorBarItem"
+                                         Text="Network Openness"
+                                         ToolTipService.ToolTip="Determine how permissive your network access is."
+                                         IsSelected="True">
+                            <SelectorBarItem.Icon>
+                                <FontIcon Glyph="&#xE704;" />
+                            </SelectorBarItem.Icon>
+                        </SelectorBarItem>
+                        <SelectorBarItem x:Name="WifiProfilesSelectorBarItem"
+                                         ToolTipService.ToolTip="View the history of all of the WIFI hotsots you've connected to in the past."
+                                         Text="Wi-Fi Profiles">
+                            <SelectorBarItem.Icon>
+                                <FontIcon Glyph="&#xE701;" />
+                            </SelectorBarItem.Icon>
+                        </SelectorBarItem>
+                        <SelectorBarItem x:Name="PhysicalOrientationSelectorBarItem"
+                                         ToolTipService.ToolTip="On supported hardware, you can view the physical orientation of youe device."
+                                         Text="Physical Orientation">
+                            <SelectorBarItem.Icon>
+                                <FontIcon Glyph="&#xE805;" />
+                            </SelectorBarItem.Icon>
+                        </SelectorBarItem>
+                        <SelectorBarItem x:Name="CompassSelectorBarItem"
+                                         ToolTipService.ToolTip="On supported hardware, you can use your device's sensors as a compass."
+                                         Text="Compass">
+                            <SelectorBarItem.Icon>
+                                <FontIcon Glyph="&#xE812;" />
+                            </SelectorBarItem.Icon>
+                        </SelectorBarItem>
+                        <SelectorBarItem x:Name="LightSensorSelectorBarItem"
+                                         ToolTipService.ToolTip="On supported hardware, you can see how bright your environment is."
+                                         Text="Light Sensor">
+                            <SelectorBarItem.Icon>
+                                <FontIcon Glyph="&#xE793;" />
+                            </SelectorBarItem.Icon>
+                        </SelectorBarItem>
+                    </SelectorBar>
+                    <Grid x:Name="NetworkOpennessDiagnosticsGrid" Margin="74,0,74,18" HorizontalAlignment="Stretch" Visibility="Visible">
+                        <Border CornerRadius="10" Padding="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1">
+                            <StackPanel Spacing="12">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Network Openness" FontSize="18" FontWeight="SemiBold" />
+                                    <TextBlock Text="Checks whether selected public websites and services are reachable from the current network." Opacity="0.75" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Grid ColumnSpacing="18">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border x:Name="NetworkOpennessScorePillBorder" Width="150" MinHeight="104" CornerRadius="28" Padding="16,12" Background="#30808080" BorderBrush="#78A0A0A0" BorderThickness="1">
+                                        <StackPanel Spacing="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock x:Name="NetworkOpennessScoreTextBlock" Text="--%" FontSize="34" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center" />
+                                            <TextBlock x:Name="NetworkOpennessScoreCaptionTextBlock" Text="Not tested yet" FontSize="12" Opacity="0.78" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="10">
+                                        <TextBlock x:Name="NetworkOpennessSummaryTextBlock" Text="Run the test to measure selected public website and service reachability from this network." Opacity="0.82" TextWrapping="Wrap" />
+                                        <TextBlock x:Name="NetworkOpennessStatusTextBlock" Text="This test is off by default." Opacity="0.72" TextWrapping="Wrap" />
+                                        <ProgressBar x:Name="NetworkOpennessProgressBar" Minimum="0" Maximum="100" Value="0" Height="8" Visibility="Collapsed" />
+                                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                                            <Button x:Name="NetworkOpennessRunButton" Content="Run Network Openness Test" Click="{x:Bind OnNetworkOpennessRunButtonClick}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+                                            <ProgressRing x:Name="NetworkOpennessProgressRing" Width="22" Height="22" IsActive="False" Visibility="Collapsed" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock x:Name="NetworkOpennessCategoryResultsTextBlock" TextWrapping="Wrap" />
+                                <TextBox x:Name="NetworkOpennessDetailsTextBox" Header="Detailed results" Text="Results will appear here after you run the test." IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" Height="200" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Grid x:Name="WifiProfilesDiagnosticsGrid" Margin="74,0,74,18" HorizontalAlignment="Stretch" Visibility="Collapsed">
+                        <Border CornerRadius="12" Padding="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="#3A64FF" BorderThickness="1">
+                            <Grid RowSpacing="12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <FontIcon Glyph="&#xE701;" Foreground="#7AA7FF" FontSize="18" />
+                                            <TextBlock Text="Wi-Fi Profiles" FontSize="18" FontWeight="SemiBold" />
+                                        </StackPanel>
+                                        <TextBlock Text="Select a profile to view details." Opacity="0.72" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
+                                        <Button x:Name="WifiProfilesRunButton" Content="Retrieve" Click="{x:Bind OnWifiProfilesRunButtonClick}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE895;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <ProgressRing x:Name="WifiProfilesProgressRing" Width="22" Height="22" IsActive="False" Visibility="Collapsed" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Grid.Row="1" ColumnSpacing="14" RowSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Profiles" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Text="Selected profile" FontWeight="SemiBold" />
+
+                                    <ListView x:Name="WifiProfilesListView"
+                                              Grid.Row="1"
+                                              MinHeight="260" MaxHeight="380"
+                                              MinWidth="320" MaxWidth="520"
+                                              HorizontalAlignment="Left" VerticalAlignment="Top"
+                                              ItemsSource="{x:Bind WifiProfilesItems, Mode=OneWay}"
+                                              IsItemClickEnabled="True" ItemClick="{x:Bind OnWifiProfilesItemClick}"
+                                              SelectionMode="Single"
+                                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                              ScrollViewer.VerticalScrollMode="Enabled"
+                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                              ScrollViewer.HorizontalScrollMode="Disabled">
+
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="local:WifiProfileRow">
+                                                <Border CornerRadius="10"
+                                                        Background="#1A1E2E"
+                                                        BorderBrush="#3A64FF"
+                                                        BorderThickness="1"
+                                                        Padding="12"
+                                                        Margin="0,5,0,5"
+                                                        HorizontalAlignment="Stretch">
+                                                    <Grid RowSpacing="6" ColumnSpacing="12">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Spacing="2">
+                                                            <TextBlock Text="{x:Bind DisplayProfileName}" FontSize="16" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                        </StackPanel>
+                                                        <Border Grid.Column="1" CornerRadius="4" Padding="10,4" Background="#253B7A" BorderBrush="#4D86FF" BorderThickness="1" VerticalAlignment="Top">
+                                                            <TextBlock Text="{x:Bind SecurityBadge}" FontSize="12" />
+                                                        </Border>
+                                                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="10" Opacity="0.9">
+                                                            <TextBlock Text="{x:Bind InterfaceBadge}" FontSize="12" />
+                                                            <TextBlock Text="•" FontSize="12" />
+                                                            <TextBlock Text="{x:Bind ConnectionBadge}" FontSize="12" />
+                                                            <TextBlock Text="•" FontSize="12" />
+                                                            <TextBlock Text="{x:Bind OneXBadge}" FontSize="12" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+
+                                    <Border Grid.Column="1" Grid.Row="1" CornerRadius="10" Padding="12" Background="#101525" BorderBrush="#2C3A66" BorderThickness="1">
+                                        <StackPanel Spacing="10">
+                                            <StackPanel Spacing="2">
+                                                <TextBlock x:Name="WifiSelectedTitleTextBlock" Text="Select a profile" FontSize="16" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <Grid ColumnSpacing="12" RowSpacing="6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Interface" Grid.Row="0" Opacity="0.7" />
+                                                <TextBlock x:Name="WifiSelectedInterfaceTextBlock" Text="" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="State" Grid.Row="1" Opacity="0.7" />
+                                                <TextBlock x:Name="WifiSelectedInterfaceStateTextBlock" Text="" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="Auth" Grid.Row="2" Opacity="0.7" />
+                                                <TextBlock x:Name="WifiSelectedAuthenticationTextBlock" Text="" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="Encryption" Grid.Row="3" Opacity="0.7" />
+                                                <TextBlock x:Name="WifiSelectedEncryptionTextBlock" Text="" Grid.Row="3" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="Connection" Grid.Row="4" Opacity="0.7" />
+                                                <TextBlock x:Name="WifiSelectedConnectionTextBlock" Text="" Grid.Row="4" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="802.1X" Grid.Row="5" Opacity="0.7" />
+                                                <TextBlock x:Name="WifiSelectedOneXTextBlock" Text="" Grid.Row="5" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="Shared key" Grid.Row="6" Opacity="0.7" />
+                                                <TextBlock x:Name="WifiSelectedSharedKeyTextBlock" Text="" Grid.Row="6" Grid.Column="1" TextWrapping="Wrap" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" Opacity="0.8">
+                                    <TextBlock Text="Total profiles:" />
+                                    <TextBlock Text="{x:Bind WifiProfilesItems.Count}" FontWeight="SemiBold" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Grid x:Name="PhysicalOrientationDiagnosticsGrid" Margin="74,0,74,18" HorizontalAlignment="Stretch" Visibility="Collapsed">
+                        <Border CornerRadius="12" Padding="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="#4BD8B6" BorderThickness="1">
+                            <Grid RowSpacing="12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Spacing="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <FontIcon Glyph="&#xE799;" Foreground="#4BD8B6" FontSize="18" />
+                                        <TextBlock Text="Physical Orientation" FontSize="18" FontWeight="SemiBold" />
+                                    </StackPanel>
+                                    <TextBlock Text="Shows the device attitude in real time using motion sensors exposed by the device firmware and driver." Opacity="0.72" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Grid Grid.Row="1" ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <customUI:HomePhysicalOrientationView x:Name="PhysicalOrientationView" MinHeight="340" />
+                                    <Border Grid.Column="1" CornerRadius="10" Padding="14" Background="#101525" BorderBrush="#2C3A66" BorderThickness="1">
+                                        <StackPanel Spacing="12">
+                                            <TextBlock Text="Live reading" FontSize="16" FontWeight="SemiBold" />
+                                            <Grid ColumnSpacing="12" RowSpacing="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Pitch" Grid.Row="0" Opacity="0.7" />
+                                                <TextBlock x:Name="PhysicalOrientationPitchTextBlock" Text="0.0°" Grid.Row="0" Grid.Column="1" FontWeight="SemiBold" />
+                                                <TextBlock Text="Roll" Grid.Row="1" Opacity="0.7" />
+                                                <TextBlock x:Name="PhysicalOrientationRollTextBlock" Text="0.0°" Grid.Row="1" Grid.Column="1" FontWeight="SemiBold" />
+                                                <TextBlock Text="Yaw" Grid.Row="2" Opacity="0.7" />
+                                                <TextBlock x:Name="PhysicalOrientationYawTextBlock" Text="0.0°" Grid.Row="2" Grid.Column="1" FontWeight="SemiBold" />
+                                                <TextBlock Text="Orientation" Grid.Row="3" Opacity="0.7" />
+                                                <TextBlock x:Name="PhysicalOrientationSimpleTextBlock" Text="Unavailable" Grid.Row="3" Grid.Column="1" FontWeight="SemiBold" />
+                                                <TextBlock Text="Gyro" Grid.Row="4" Opacity="0.7" />
+                                                <TextBlock x:Name="PhysicalOrientationGyroTextBlock" Text="Gyro unavailable" Grid.Row="4" Grid.Column="1" TextWrapping="Wrap" FontWeight="SemiBold" />
+                                                <TextBlock Text="State" Grid.Row="5" Opacity="0.7" />
+                                                <TextBlock x:Name="PhysicalOrientationStatusTextBlock" Text="Initializing sensors..." Grid.Row="5" Grid.Column="1" TextWrapping="Wrap" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid x:Name="CompassDiagnosticsGrid" Margin="74,0,74,18" HorizontalAlignment="Stretch" Visibility="Collapsed">
+                        <Border CornerRadius="12" Padding="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="#FF5252" BorderThickness="1">
+                            <Grid RowSpacing="12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Spacing="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <FontIcon Glyph="&#xE707;" Foreground="#FF5252" FontSize="18" />
+                                        <TextBlock Text="Compass" FontSize="18" FontWeight="SemiBold" />
+                                    </StackPanel>
+                                    <TextBlock Text="Shows magnetic north, true north when the driver provides it, heading accuracy, and a realistic compass face." Opacity="0.72" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Grid Grid.Row="1" ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <customUI:HomeCompassView x:Name="CompassView" MinHeight="360" />
+                                    <Border Grid.Column="1" CornerRadius="10" Padding="14" Background="#101525" BorderBrush="#502C3A" BorderThickness="1">
+                                        <StackPanel Spacing="12">
+                                            <TextBlock Text="Heading" FontSize="16" FontWeight="SemiBold" />
+                                            <Grid ColumnSpacing="12" RowSpacing="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Heading" Grid.Row="0" Opacity="0.7" />
+                                                <TextBlock x:Name="CompassHeadingTextBlock" Text="Unavailable" Grid.Row="0" Grid.Column="1" FontSize="24" FontWeight="SemiBold" />
+                                                <TextBlock Text="Direction" Grid.Row="1" Opacity="0.7" />
+                                                <TextBlock x:Name="CompassDirectionTextBlock" Text="Unavailable" Grid.Row="1" Grid.Column="1" FontWeight="SemiBold" />
+                                                <TextBlock Text="Magnetic" Grid.Row="2" Opacity="0.7" />
+                                                <TextBlock x:Name="CompassMagneticNorthTextBlock" Text="Unavailable" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="True" Grid.Row="3" Opacity="0.7" />
+                                                <TextBlock x:Name="CompassTrueNorthTextBlock" Text="Unavailable" Grid.Row="3" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="Accuracy" Grid.Row="4" Opacity="0.7" />
+                                                <TextBlock x:Name="CompassAccuracyTextBlock" Text="Unavailable" Grid.Row="4" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="Note" Grid.Row="5" Opacity="0.7" />
+                                                <TextBlock x:Name="CompassAdviceTextBlock" Text="Waiting for compass data." Grid.Row="5" Grid.Column="1" TextWrapping="Wrap" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid x:Name="LightSensorDiagnosticsGrid" Margin="74,0,74,18" HorizontalAlignment="Stretch" Visibility="Collapsed">
+                        <Border CornerRadius="12" Padding="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="#FACC15" BorderThickness="1">
+                            <Grid RowSpacing="12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Spacing="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <FontIcon Glyph="&#xE706;" Foreground="#FACC15" FontSize="18" />
+                                        <TextBlock Text="Light Sensor" FontSize="18" FontWeight="SemiBold" />
+                                    </StackPanel>
+                                    <TextBlock Text="Shows ambient illuminance in lux, Microsoft lighting-condition ratings, session min and max, and readability guidance." Opacity="0.72" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Grid Grid.Row="1" ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border CornerRadius="10" Padding="14" Background="#101525" BorderBrush="#4A3A12" BorderThickness="1">
+                                        <StackPanel Spacing="10">
+                                            <TextBlock Text="Ambient light meter" FontSize="16" FontWeight="SemiBold" />
+                                            <customUI:HomeLightSensorMeterView x:Name="LightSensorMeterView" Height="150" />
+                                            <TextBlock x:Name="LightSensorMeterCaptionTextBlock" Text="Visual meter uses a log scale from 0 to 100000 lux." Opacity="0.75" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" CornerRadius="10" Padding="14" Background="#101525" BorderBrush="#4A3A12" BorderThickness="1">
+                                        <StackPanel Spacing="12">
+                                            <TextBlock Text="Live reading" FontSize="16" FontWeight="SemiBold" />
+                                            <Grid ColumnSpacing="12" RowSpacing="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Lux" Grid.Row="0" Opacity="0.7" />
+                                                <TextBlock x:Name="LightSensorLuxTextBlock" Text="Unavailable" Grid.Row="0" Grid.Column="1" FontSize="24" FontWeight="SemiBold" />
+                                                <TextBlock Text="Rating" Grid.Row="1" Opacity="0.7" />
+                                                <TextBlock x:Name="LightSensorRatingTextBlock" Text="Unavailable" Grid.Row="1" Grid.Column="1" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                <TextBlock Text="Session" Grid.Row="2" Opacity="0.7" />
+                                                <TextBlock x:Name="LightSensorMinMaxTextBlock" Text="Session min: unavailable   Session max: unavailable" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" />
+                                                <TextBlock Text="Meaning" Grid.Row="3" Opacity="0.7" />
+                                                <TextBlock x:Name="LightSensorAdviceTextBlock" Text="Waiting for light sensor data." Grid.Row="3" Grid.Column="1" TextWrapping="Wrap" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                                <Border Grid.Row="2" CornerRadius="10" Padding="12" Background="#101525" BorderBrush="#4A3A12" BorderThickness="1">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Microsoft lux rating ranges" FontSize="16" FontWeight="SemiBold" />
+                                        <TextBlock Text="Pitch Black: 0 to 10 lux   Very Dark: 11 to 50 lux   Dark Indoors: 51 to 200 lux   Dim Indoors: 201 to 400 lux   Normal Indoors: 401 to 1000 lux" TextWrapping="Wrap" Opacity="0.85" />
+                                        <TextBlock Text="Bright Indoors: 1001 to 5000 lux   Dim Outdoors: 5001 to 10000 lux   Cloudy Outdoors: 10001 to 30000 lux   Direct Sunlight: 30001 to 100000 lux" TextWrapping="Wrap" Opacity="0.85" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+        <Canvas x:Name="HeartAnimationCanvas" IsHitTestVisible="False" />
+        <Button Width="48" Height="48" Margin="0,0,30,24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="{x:Bind OnHeartBurstButtonClick}" ToolTipService.ToolTip="Show hearts">
+            <TextBlock Text="♥" FontSize="24" Foreground="#F58D9C" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Button>
+    </Grid>
+</Window>

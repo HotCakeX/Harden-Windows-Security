@@ -4,10 +4,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements.HomePageCarousel"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     Loaded="{x:Bind OnInitialLoaded}"
-    Unloaded="{x:Bind OnUnloadedDisposeResources}"
+    Unloaded="{x:Bind Dispose}"
     Background="Transparent">
 
     <Page.Resources>
@@ -116,14 +117,28 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-
                     <!-- System Overview -->
-                    <TextBlock Grid.Row="0"
-                               Margin="2,0,0,8"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               x:Uid="SystemOverview"
-                               TextWrapping="Wrap" />
+                    <CCToolKit:WrapPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10" HorizontalSpacing="10" VerticalSpacing="10">
+                        <TextBlock FontSize="16"
+                                   FontWeight="SemiBold"
+                                   x:Uid="SystemOverview"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"/>
+                        <Border BorderThickness="1" CornerRadius="6">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#FEAC5E" Offset="0.0"/>
+                                    <GradientStop Color="#C779D0" Offset="0.5"/>
+                                    <GradientStop Color="#4BC0C8" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ToggleButton VerticalAlignment="Center"                                          
+                                          IsChecked="{x:Bind ViewModel.IsLiveGraphsWindowOpen, Mode=TwoWay}"                                      
+                                          ToolTipService.ToolTip="Open live system intelligence">
+                                <FontIcon Glyph="&#xEB44;"/>
+                            </ToggleButton>
+                        </Border>
+                    </CCToolKit:WrapPanel>
 
                     <!-- Using ItemsControl with a VariableSizedWrapGrid to allow direct XAML content and wrap layout -->
                     <ItemsControl Grid.Row="1" XYFocusKeyboardNavigation="Enabled">

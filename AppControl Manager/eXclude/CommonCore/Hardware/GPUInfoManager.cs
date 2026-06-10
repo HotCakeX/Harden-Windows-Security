@@ -16,13 +16,16 @@
 //
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace CommonCore.Hardware;
 
 internal static class GPUInfoManager
 {
-	private static readonly List<GpuInfo> GPUsList = [];
+	private static readonly Lock GPUsListLock = new();
+	private static List<GpuInfo>? GPUsList;
 
 	/// <summary>
 	/// Retrieves a list of all GPUs in the system.
@@ -30,66 +33,82 @@ internal static class GPUInfoManager
 	/// <returns></returns>
 	internal static unsafe List<GpuInfo> GetSystemGPUs()
 	{
-		// If the list is already populated, return it.
-		if (GPUsList.Count > 0)
-			return GPUsList;
-
-		IntPtr collectionPtr = IntPtr.Zero;
-
-		try
+		lock (GPUsListLock)
 		{
-			collectionPtr = NativeMethods.detect_system_gpus();
-
-			if (collectionPtr == IntPtr.Zero)
+			// Return a snapshot so callers cannot mutate the shared cache.
+			if (GPUsList is not null)
 			{
-				return GPUsList;
+				return [.. GPUsList];
 			}
 
-			GpuInformationCollection collection = *(GpuInformationCollection*)collectionPtr;
+			List<GpuInfo> detectedGPUs = [];
+			HashSet<string> seenGpuKeys = new(StringComparer.OrdinalIgnoreCase);
+			IntPtr collectionPtr = IntPtr.Zero;
 
-			if (collection.total_count <= 0 || collection.gpu_information == IntPtr.Zero)
+			try
 			{
-				return GPUsList;
+				collectionPtr = NativeMethods.detect_system_gpus();
+
+				if (collectionPtr == IntPtr.Zero)
+				{
+					GPUsList = detectedGPUs;
+					return [.. GPUsList];
+				}
+
+				GpuInformationCollection collection = *(GpuInformationCollection*)collectionPtr;
+
+				if (collection.total_count <= 0 || collection.gpu_information == IntPtr.Zero)
+				{
+					GPUsList = detectedGPUs;
+					return [.. GPUsList];
+				}
+
+				int structSize = sizeof(GpuInformation);
+
+				for (int i = 0; i < collection.total_count; i++)
+				{
+					// Calculate the pointer to the current structure
+					IntPtr currentStructPtr = IntPtr.Add(collection.gpu_information, i * structSize);
+
+					// Marshal the structure
+					GpuInformation gpuInfo = *(GpuInformation*)currentStructPtr;
+
+					GpuInfo managedGpuInfo = new(
+						name: MarshalStringFromPtr(gpuInfo.name),
+						brand: MarshalStringFromPtr(gpuInfo.brand),
+						vendorId: gpuInfo.vendor_id,
+						deviceId: gpuInfo.device_id,
+						description: MarshalStringFromPtr(gpuInfo.description),
+						manufacturer: MarshalStringFromPtr(gpuInfo.manufacturer),
+						pnpDeviceId: MarshalStringFromPtr(gpuInfo.pnp_device_id),
+						adapterRam: gpuInfo.adapter_ram,
+						driverVersion: MarshalStringFromPtr(gpuInfo.driver_version),
+						driverDate: MarshalStringFromPtr(gpuInfo.driver_date),
+						isAvailable: gpuInfo.is_available != 0,
+						configManagerErrorCode: gpuInfo.config_manager_error_code,
+						errorCode: gpuInfo.error_code,
+						errorMessage: MarshalStringFromPtr(gpuInfo.error_message)
+					);
+
+					// The Rust side already deduplicates within a single WMI result set.
+					// Keep a managed safety net here so a native or WMI edge case cannot pollute the cache.
+					string deduplicationKey = GetGpuDeduplicationKey(managedGpuInfo);
+					if (seenGpuKeys.Add(deduplicationKey))
+					{
+						detectedGPUs.Add(managedGpuInfo);
+					}
+				}
+			}
+			finally
+			{
+				// Always release the memory allocated by Rust
+				if (collectionPtr != IntPtr.Zero)
+					NativeMethods.release_gpu_information(collectionPtr);
 			}
 
-			int structSize = sizeof(GpuInformation);
-
-			for (int i = 0; i < collection.total_count; i++)
-			{
-				// Calculate the pointer to the current structure
-				IntPtr currentStructPtr = IntPtr.Add(collection.gpu_information, i * structSize);
-
-				// Marshal the structure
-				GpuInformation gpuInfo = *(GpuInformation*)currentStructPtr;
-
-				GpuInfo managedGpuInfo = new(
-					name: MarshalStringFromPtr(gpuInfo.name),
-					brand: MarshalStringFromPtr(gpuInfo.brand),
-					vendorId: gpuInfo.vendor_id,
-					deviceId: gpuInfo.device_id,
-					description: MarshalStringFromPtr(gpuInfo.description),
-					manufacturer: MarshalStringFromPtr(gpuInfo.manufacturer),
-					pnpDeviceId: MarshalStringFromPtr(gpuInfo.pnp_device_id),
-					adapterRam: gpuInfo.adapter_ram,
-					driverVersion: MarshalStringFromPtr(gpuInfo.driver_version),
-					driverDate: MarshalStringFromPtr(gpuInfo.driver_date),
-					isAvailable: gpuInfo.is_available != 0,
-					configManagerErrorCode: gpuInfo.config_manager_error_code,
-					errorCode: gpuInfo.error_code,
-					errorMessage: MarshalStringFromPtr(gpuInfo.error_message)
-				);
-
-				GPUsList.Add(managedGpuInfo);
-			}
+			GPUsList = detectedGPUs;
+			return [.. GPUsList];
 		}
-		finally
-		{
-			// Always release the memory allocated by Rust
-			if (collectionPtr != IntPtr.Zero)
-				NativeMethods.release_gpu_information(collectionPtr);
-		}
-
-		return GPUsList;
 	}
 
 	/// <summary>
@@ -103,6 +122,36 @@ internal static class GPUInfoManager
 			return string.Empty;
 
 		return Marshal.PtrToStringAnsi(ptr) ?? string.Empty;
+	}
+
+	/// <summary>
+	/// Builds a stable deduplication key for GPU entries returned by the native library.
+	/// </summary>
+	/// <param name="gpu"></param>
+	/// <returns></returns>
+	private static string GetGpuDeduplicationKey(GpuInfo gpu)
+	{
+		string pnpDeviceId = gpu.PnpDeviceId.Trim().ToUpperInvariant();
+		if (!string.IsNullOrWhiteSpace(pnpDeviceId) && !string.Equals(pnpDeviceId, "UNKNOWN", StringComparison.OrdinalIgnoreCase))
+		{
+			return string.Create(CultureInfo.InvariantCulture, $"pnp:{pnpDeviceId}");
+		}
+
+		if (gpu.VendorId != 0U && gpu.DeviceId != 0U)
+		{
+			return string.Create(CultureInfo.InvariantCulture, $"pci:{gpu.VendorId:X4}:{gpu.DeviceId:X4}");
+		}
+
+		string normalizedName = gpu.Name.Trim().ToUpperInvariant();
+		string normalizedManufacturer = gpu.Manufacturer.Trim().ToUpperInvariant();
+		string normalizedDriverVersion = gpu.DriverVersion.Trim().ToUpperInvariant();
+
+		if (!string.IsNullOrWhiteSpace(normalizedName) || !string.IsNullOrWhiteSpace(normalizedManufacturer) || !string.IsNullOrWhiteSpace(normalizedDriverVersion))
+		{
+			return string.Create(CultureInfo.InvariantCulture, $"name:{normalizedName}|manufacturer:{normalizedManufacturer}|driver:{normalizedDriverVersion}");
+		}
+
+		return string.Create(CultureInfo.InvariantCulture, $"fallback:{gpu.Brand.Trim().ToUpperInvariant()}:{gpu.VendorId:X4}:{gpu.DeviceId:X4}:{gpu.AdapterRam}");
 	}
 
 	/// <summary>

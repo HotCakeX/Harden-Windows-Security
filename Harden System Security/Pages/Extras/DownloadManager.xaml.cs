@@ -16,10 +16,8 @@
 //
 
 using HardenSystemSecurity.ViewModels;
-using CommonCore.Others;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.Media.Playback;
 
 namespace HardenSystemSecurity.Pages.Extras;
 

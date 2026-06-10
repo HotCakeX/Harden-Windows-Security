@@ -3565,4 +3565,77 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint SleepEx(uint dwMilliseconds, [MarshalAs(UnmanagedType.Bool)] bool bAlertable);
 
+
+	[LibraryImport("pdh.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhExpandWildCardPathW(string? dataSource, string wildcardPath, [Out] char[]? expandedPathList, ref uint bufferSize, uint flags);
+
+
+	[LibraryImport("wlanapi.dll", SetLastError = false)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint WlanOpenHandle(uint clientVersion, IntPtr reserved, out uint negotiatedVersion, out IntPtr clientHandle);
+
+
+	[LibraryImport("wlanapi.dll", SetLastError = false)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint WlanCloseHandle(IntPtr clientHandle, IntPtr reserved);
+
+
+	[LibraryImport("wlanapi.dll", SetLastError = false)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint WlanEnumInterfaces(IntPtr clientHandle, IntPtr reserved, out IntPtr interfaceList);
+
+
+	[LibraryImport("wlanapi.dll", SetLastError = false)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint WlanGetProfileList(IntPtr clientHandle, ref Guid interfaceGuid, IntPtr reserved, out IntPtr profileList);
+
+
+	[LibraryImport("wlanapi.dll", SetLastError = false, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint WlanGetProfile(
+		IntPtr clientHandle,
+		ref Guid interfaceGuid,
+		string profileName,
+		IntPtr reserved,
+		out IntPtr profileXml,
+		out uint flags,
+		out uint grantedAccess);
+
+
+	[LibraryImport("wlanapi.dll", SetLastError = false)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void WlanFreeMemory(IntPtr memory);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/pdh/nf-pdh-pdhgetformattedcountervalue
+	/// </summary>
+	[LibraryImport("PDH")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhGetFormattedCounterValue(
+		IntPtr hCounter,
+		uint dwFormat,
+		out uint lpdwType,
+		out PDH_FMT_COUNTERVALUE_DOUBLE pValue);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1
+	/// </summary>
+	[LibraryImport("dxgi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CreateDXGIFactory1(
+		in Guid riid,
+		out IntPtr ppFactory);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex
+	/// </summary>
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
+
 }

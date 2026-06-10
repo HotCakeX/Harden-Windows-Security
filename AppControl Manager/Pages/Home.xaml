@@ -7,7 +7,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements.HomePageCarousel"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     Loaded="{x:Bind OnInitialLoaded}"
-    Unloaded="{x:Bind OnUnloadedDisposeResources}"
+    Unloaded="{x:Bind Dispose}"
     Background="Transparent">
 
     <Page.Resources>

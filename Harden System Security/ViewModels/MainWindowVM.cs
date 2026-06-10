@@ -25,7 +25,6 @@ using AnimatedVisuals;
 using AppControlManager.CustomUIElements;
 using AppControlManager.WindowComponents;
 using CommonCore.DISM;
-using CommonCore.Interop;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;

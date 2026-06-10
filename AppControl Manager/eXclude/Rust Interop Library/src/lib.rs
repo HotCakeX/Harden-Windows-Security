@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ffi::{CStr, CString};
 use std::fs::File;
 use std::io::Read;
@@ -1747,13 +1747,18 @@ struct GpuDetectorInternal {
     vendor_ids: HashMap<u32, &'static str>,
 }
 
-// RAII guard for COM cleanup in GPU detection
-struct ComGuardGpu {}
+// RAII guard for COM cleanup in GPU detection.
+// The guard only calls CoUninitialize when this function successfully initialized COM on the current thread.
+struct ComGuardGpu {
+    should_uninitialize: bool,
+}
 
 impl Drop for ComGuardGpu {
     fn drop(&mut self) {
-        unsafe {
-            CoUninitialize();
+        if self.should_uninitialize {
+            unsafe {
+                CoUninitialize();
+            }
         }
     }
 }
@@ -1779,15 +1784,21 @@ impl GpuDetectorInternal {
 
     fn detect_gpus_via_wmi(&self) -> Result<Vec<GpuInformationInternal>> {
         let mut gpus: Vec<GpuInformationInternal> = Vec::new();
+        let mut seen_gpu_keys: HashSet<String> = HashSet::new();
 
         unsafe {
-            // Initialize COM
+            // Initialize COM.
+            // If COM is already initialized in a different apartment, continue without taking ownership of COM teardown.
             let hr: HRESULT = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
-            if hr.is_err() && hr != HRESULT(-2147417850) {
+            let should_uninitialize_com: bool = if hr.is_ok() {
+                true
+            } else if hr == HRESULT(-2147417850) {
+                false
+            } else {
                 return Err(Error::from_thread());
-            }
+            };
 
-            let _com_guard: ComGuardGpu = ComGuardGpu {};
+            let _com_guard: ComGuardGpu = ComGuardGpu { should_uninitialize: should_uninitialize_com };
 
             // Create WMI locator
             let locator: IWbemLocator = CoCreateInstance(&WbemLocator, None, CLSCTX_INPROC_SERVER)?;
@@ -1839,7 +1850,12 @@ impl GpuDetectorInternal {
 
                 if let Some(obj) = &objects[0] {
                     match self.process_gpu_object(obj) {
-                        Ok(Some(gpu)) => gpus.push(gpu),
+                        Ok(Some(gpu)) => {
+                            let deduplication_key: String = self.get_gpu_deduplication_key(&gpu);
+                            if seen_gpu_keys.insert(deduplication_key) {
+                                gpus.push(gpu);
+                            }
+                        }
                         Ok(None) => {}
                         Err(e) => {
                             // Create error GPU entry
@@ -2058,6 +2074,37 @@ impl GpuDetectorInternal {
         }
 
         (vendor_id, device_id)
+    }
+
+    fn get_gpu_deduplication_key(&self, gpu: &GpuInformationInternal) -> String {
+        let pnp_device_id: String = gpu.pnp_device_id.trim().to_ascii_uppercase();
+        if !pnp_device_id.is_empty() && !pnp_device_id.eq_ignore_ascii_case("UNKNOWN") {
+            return format!("pnp:{}", pnp_device_id);
+        }
+
+        if gpu.vendor_id != 0 && gpu.device_id != 0 {
+            return format!("pci:{:04X}:{:04X}", gpu.vendor_id, gpu.device_id);
+        }
+
+        let normalized_name: String = gpu.name.trim().to_ascii_uppercase();
+        let normalized_manufacturer: String = gpu.manufacturer.trim().to_ascii_uppercase();
+        let normalized_driver_version: String = gpu.driver_version.trim().to_ascii_uppercase();
+        if !normalized_name.is_empty() || !normalized_manufacturer.is_empty() || !normalized_driver_version.is_empty() {
+            return format!(
+                "name:{}|manufacturer:{}|driver:{}",
+                normalized_name,
+                normalized_manufacturer,
+                normalized_driver_version
+            );
+        }
+
+        format!(
+            "fallback:{}:{:04X}:{:04X}:{}",
+            gpu.brand.trim().to_ascii_uppercase(),
+            gpu.vendor_id,
+            gpu.device_id,
+            gpu.adapter_ram
+        )
     }
 
     fn determine_brand(&self, name: &str, manufacturer: &str, vendor_id: u32) -> String {

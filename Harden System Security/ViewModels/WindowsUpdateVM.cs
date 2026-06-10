@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -31,7 +30,6 @@ using CommonCore.ToolKits;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.ViewModels;
 

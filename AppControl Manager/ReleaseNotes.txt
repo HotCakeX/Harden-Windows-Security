@@ -1,3 +1,1 @@
 * Updated dependencies to the latest versions.
-
-* Added a new tile to the home page that displays your public IP address. You have to click on it to retreive it initially and subsequent clicks will retreive it again. It uses well-known Cloudflare as the primary server and then AWS if Cloudflare fails for any reason. The following domains will be contacted: `https://www.cloudflare.com/cdn-cgi/trace`, `https://checkip.amazonaws.com`. The requests sent to those servers are simple GET requests. This feature is only intended to display your public IP address to you, IP info is neither stored nor logged anywhere by the app.

@@ -79,7 +79,7 @@ internal sealed partial class HomePhysicalOrientationView : Grid
 		set => SetValue(PitchDegreesProperty, value);
 	}
 
-	internal static readonly DependencyProperty PitchDegreesProperty = DependencyProperty.Register(nameof(PitchDegrees), typeof(double), typeof(HomePhysicalOrientationView), new PropertyMetadata(0.0, OnOrientationPropertyChanged));
+	internal static readonly DependencyProperty PitchDegreesProperty = DependencyProperty.Register(nameof(PitchDegrees), typeof(double), typeof(HomePhysicalOrientationView), new PropertyMetadata(0.0));
 
 	internal double RollDegrees
 	{
@@ -87,7 +87,7 @@ internal sealed partial class HomePhysicalOrientationView : Grid
 		set => SetValue(RollDegreesProperty, value);
 	}
 
-	internal static readonly DependencyProperty RollDegreesProperty = DependencyProperty.Register(nameof(RollDegrees), typeof(double), typeof(HomePhysicalOrientationView), new PropertyMetadata(0.0, OnOrientationPropertyChanged));
+	internal static readonly DependencyProperty RollDegreesProperty = DependencyProperty.Register(nameof(RollDegrees), typeof(double), typeof(HomePhysicalOrientationView), new PropertyMetadata(0.0));
 
 	internal double YawDegrees
 	{
@@ -95,17 +95,33 @@ internal sealed partial class HomePhysicalOrientationView : Grid
 		set => SetValue(YawDegreesProperty, value);
 	}
 
-	internal static readonly DependencyProperty YawDegreesProperty = DependencyProperty.Register(nameof(YawDegrees), typeof(double), typeof(HomePhysicalOrientationView), new PropertyMetadata(0.0, OnOrientationPropertyChanged));
+	internal static readonly DependencyProperty YawDegreesProperty = DependencyProperty.Register(nameof(YawDegrees), typeof(double), typeof(HomePhysicalOrientationView), new PropertyMetadata(0.0));
 
-	internal double AccelerationX { get; set; }
-	internal double AccelerationY { get; set; }
-	internal double AccelerationZ { get; set; }
-	internal double AngularVelocityX { get; set; }
-	internal double AngularVelocityY { get; set; }
-	internal double AngularVelocityZ { get; set; }
-	internal string GyrometerText { get; set; } = "Gyro unavailable";
-	internal string OrientationText { get; set; } = "Unavailable";
-	internal string StatusText { get; set; } = "Initializing sensors...";
+	private double AccelerationX { get; set; }
+	private double AccelerationY { get; set; }
+	private double AccelerationZ { get; set; }
+	private double AngularVelocityX { get; set; }
+	private double AngularVelocityY { get; set; }
+	private double AngularVelocityZ { get; set; }
+	private string GyrometerText { get; set; } = "Gyro unavailable";
+	private string OrientationText { get; set; } = "Unavailable";
+	private string StatusText { get; set; } = "Initializing sensors...";
+	internal void ApplyOrientationSnapshot(double pitchDegrees, double rollDegrees, double yawDegrees, double accelerationX, double accelerationY, double accelerationZ, double angularVelocityX, double angularVelocityY, double angularVelocityZ, string gyrometerText, string orientationText, string statusText)
+	{
+		PitchDegrees = pitchDegrees;
+		RollDegrees = rollDegrees;
+		YawDegrees = yawDegrees;
+		AccelerationX = accelerationX;
+		AccelerationY = accelerationY;
+		AccelerationZ = accelerationZ;
+		AngularVelocityX = angularVelocityX;
+		AngularVelocityY = angularVelocityY;
+		AngularVelocityZ = angularVelocityZ;
+		GyrometerText = gyrometerText;
+		OrientationText = orientationText;
+		StatusText = statusText;
+		RenderOrientation();
+	}
 
 	private void CreateVisuals()
 	{
@@ -182,11 +198,6 @@ internal sealed partial class HomePhysicalOrientationView : Grid
 		}
 	}
 
-	private static void OnOrientationPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-	{
-		HomePhysicalOrientationView view = (HomePhysicalOrientationView)dependencyObject;
-		view.RenderOrientation();
-	}
 
 	private void OnSizeChanged(object sender, SizeChangedEventArgs args) => RenderOrientation();
 

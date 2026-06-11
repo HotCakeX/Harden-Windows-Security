@@ -175,7 +175,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 		_isGraphLayoutReady = true;
 		ApplyGraphSize(_currentGraphSize);
 		UpdateEffectiveMaximumLabels();
-		AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
+		AppWindow.TitleBar.PreferredTheme = TitleBarTheme.Dark; // The window is designed to be used in Dark mode.
 		AppWindow.ResizeClient(new SizeInt32(1120, 840));
 		_liveOnlyMetricTimer.Interval = TimeSpan.FromSeconds(HomeLiveMetricUpdateIntervalSeconds);
 		_liveOnlyMetricTimer.Tick += OnLiveOnlyMetricTimerTick;
@@ -1331,8 +1331,14 @@ internal sealed partial class HomeLiveGraphsWindow
 		internal int DisplayIndex => displayIndex;
 	}
 
-	private void OnRootGridLoaded()
+	private void OnRootGridLoaded(object sender, RoutedEventArgs e)
 	{
+		// The window is created to be used in Dark mode.
+		if (sender is Grid grid)
+		{
+			grid.RequestedTheme = ElementTheme.Dark;
+		}
+
 		InitializeGpuUsageCharts();
 		_ = UpdateGpuDisplayNamesAsync();
 	}
@@ -3013,6 +3019,7 @@ internal sealed partial class HomeLiveGraphsWindow
 			_LightSensor = LightSensor.GetDefault();
 			uint reportInterval = GetSensorsReportInterval(_Accelerometer, _Inclinometer, _Gyrometer, _Compass, _LightSensor);
 			ApplySensorsReportInterval(reportInterval);
+			_LightSensor?.ReadingChanged += OnLightSensorReadingChanged;
 			SensorsTimer.Interval = TimeSpan.FromMilliseconds(reportInterval);
 			SensorsTimer.Tick += OnSensorsTimerTick;
 			SensorsTimer.Start();
@@ -3040,6 +3047,7 @@ internal sealed partial class HomeLiveGraphsWindow
 	{
 		SensorsTimer.Stop();
 		SensorsTimer.Tick -= OnSensorsTimerTick;
+		_LightSensor?.ReadingChanged -= OnLightSensorReadingChanged;
 		ApplySensorsReportInterval(0U);
 	}
 
@@ -3060,7 +3068,6 @@ internal sealed partial class HomeLiveGraphsWindow
 				}
 			case SelectorBarCurrentItem.LightSensor:
 				{
-					UpdateLightSensorSnapshot();
 					break;
 				}
 
@@ -3119,24 +3126,26 @@ internal sealed partial class HomeLiveGraphsWindow
 			}
 			SimpleOrientation simpleOrientation = _SimpleOrientationSensor?.GetCurrentOrientation() ?? SimpleOrientation.NotRotated;
 			string simpleOrientationText = _SimpleOrientationSensor is null ? "Unavailable" : simpleOrientation.ToString();
-			PhysicalOrientationView.PitchDegrees = pitch;
-			PhysicalOrientationView.RollDegrees = roll;
-			PhysicalOrientationView.YawDegrees = yaw;
-			PhysicalOrientationView.AccelerationX = accelerationX;
-			PhysicalOrientationView.AccelerationY = accelerationY;
-			PhysicalOrientationView.AccelerationZ = accelerationZ;
-			PhysicalOrientationView.AngularVelocityX = angularVelocityX;
-			PhysicalOrientationView.AngularVelocityY = angularVelocityY;
-			PhysicalOrientationView.AngularVelocityZ = angularVelocityZ;
-			PhysicalOrientationView.GyrometerText = gyrometerText;
-			PhysicalOrientationView.OrientationText = simpleOrientationText;
-			PhysicalOrientationView.StatusText = BuildPhysicalOrientationAvailabilityText(motionState);
+			string physicalOrientationStatusText = BuildPhysicalOrientationAvailabilityText(motionState);
+			PhysicalOrientationView.ApplyOrientationSnapshot(
+				pitch,
+				roll,
+				yaw,
+				accelerationX,
+				accelerationY,
+				accelerationZ,
+				angularVelocityX,
+				angularVelocityY,
+				angularVelocityZ,
+				gyrometerText,
+				simpleOrientationText,
+				physicalOrientationStatusText);
 			PhysicalOrientationPitchTextBlock.Text = pitch.ToString("0.0", CultureInfo.InvariantCulture) + "°";
 			PhysicalOrientationRollTextBlock.Text = roll.ToString("0.0", CultureInfo.InvariantCulture) + "°";
 			PhysicalOrientationYawTextBlock.Text = yaw.ToString("0.0", CultureInfo.InvariantCulture) + "°";
 			PhysicalOrientationSimpleTextBlock.Text = simpleOrientationText;
 			PhysicalOrientationGyroTextBlock.Text = gyrometerText;
-			PhysicalOrientationStatusTextBlock.Text = PhysicalOrientationView.StatusText;
+			PhysicalOrientationStatusTextBlock.Text = physicalOrientationStatusText;
 		}
 		catch (Exception ex)
 		{
@@ -3178,11 +3187,11 @@ internal sealed partial class HomeLiveGraphsWindow
 		}
 	}
 
-	private void UpdateLightSensorSnapshot()
+	private void UpdateLightSensorSnapshot(LightSensorReading? currentReading = null)
 	{
 		try
 		{
-			LightSensorReading? lightReading = _LightSensor?.GetCurrentReading();
+			LightSensorReading? lightReading = currentReading ?? _LightSensor?.GetCurrentReading();
 			if (lightReading is null)
 			{
 				LightSensorMeterView.Lux = 0.0;
@@ -3221,6 +3230,8 @@ internal sealed partial class HomeLiveGraphsWindow
 			LightSensorLuxTextBlock.Text = "Light sensor reading failed";
 		}
 	}
+
+	private void OnLightSensorReadingChanged(LightSensor sender, LightSensorReadingChangedEventArgs args) => _ = DispatcherQueue.TryEnqueue(() => { if (_SelectorBarSelectedItem == SelectorBarCurrentItem.LightSensor) { UpdateLightSensorSnapshot(args.Reading); } });
 
 	private string BuildPhysicalOrientationAvailabilityText(string motionState)
 	{

@@ -210,13 +210,13 @@
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.19.1" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3967.48" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4022.49" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.1.0" />
         <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.0.15" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260518100">
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260610101">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

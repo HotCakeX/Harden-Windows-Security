@@ -3566,11 +3566,6 @@ internal static unsafe partial class NativeMethods
 	internal static partial uint SleepEx(uint dwMilliseconds, [MarshalAs(UnmanagedType.Bool)] bool bAlertable);
 
 
-	[LibraryImport("pdh.dll", StringMarshalling = StringMarshalling.Utf16)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial uint PdhExpandWildCardPathW(string? dataSource, string wildcardPath, [Out] char[]? expandedPathList, ref uint bufferSize, uint flags);
-
-
 	[LibraryImport("wlanapi.dll", SetLastError = false)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint WlanOpenHandle(uint clientVersion, IntPtr reserved, out uint negotiatedVersion, out IntPtr clientHandle);

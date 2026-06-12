@@ -360,6 +360,43 @@ internal static class Structure
 	/// </summary>
 	internal const uint SPC_INC_PE_PAGE_HASHES_FLAG = 0x00000100;
 
+	/// <summary>
+	/// Requests an RFC 3161 timestamp from SignerSignEx2/SignerSignEx3.
+	/// </summary>
+	internal const uint SIGNER_TIMESTAMP_RFC3161 = 0x00000002;
+
+	/// <summary>
+	/// WININET_E_NAME_NOT_RESOLVED. The server name or address could not be resolved.
+	/// </summary>
+	internal const int WININET_E_NAME_NOT_RESOLVED = unchecked((int)0x80072EE7);
+
+	// Hash algorithm OIDs.
+	internal const string SHA1OID = "1.3.14.3.2.26";
+	internal const string SHA2_256OID = "2.16.840.1.101.3.4.2.1";
+	internal const string SHA2_384OID = "2.16.840.1.101.3.4.2.2";
+	internal const string SHA2_512OID = "2.16.840.1.101.3.4.2.3";
+	internal const string SHA3_256OID = "2.16.840.1.101.3.4.2.8";
+	internal const string SHA3_384OID = "2.16.840.1.101.3.4.2.9";
+	internal const string SHA3_512OID = "2.16.840.1.101.3.4.2.10";
+
+	// RSA PKCS #1 v1.5 signature algorithm OIDs.
+	internal const string RsaPkcs1Sha1OID = "1.2.840.113549.1.1.5";
+	internal const string RsaPkcs1Sha2_256OID = "1.2.840.113549.1.1.11";
+	internal const string RsaPkcs1Sha2_384OID = "1.2.840.113549.1.1.12";
+	internal const string RsaPkcs1Sha2_512OID = "1.2.840.113549.1.1.13";
+	internal const string RsaPkcs1Sha3_256OID = "2.16.840.1.101.3.4.3.14";
+	internal const string RsaPkcs1Sha3_384OID = "2.16.840.1.101.3.4.3.15";
+	internal const string RsaPkcs1Sha3_512OID = "2.16.840.1.101.3.4.3.16";
+
+	// ECDSA signature algorithm OIDs.
+	internal const string EcdsaSha1OID = "1.2.840.10045.4.1";
+	internal const string EcdsaSha2_256OID = "1.2.840.10045.4.3.2";
+	internal const string EcdsaSha2_384OID = "1.2.840.10045.4.3.3";
+	internal const string EcdsaSha2_512OID = "1.2.840.10045.4.3.4";
+	internal const string EcdsaSha3_256OID = "2.16.840.1.101.3.4.3.10";
+	internal const string EcdsaSha3_384OID = "2.16.840.1.101.3.4.3.11";
+	internal const string EcdsaSha3_512OID = "2.16.840.1.101.3.4.3.12";
+
 	internal static readonly Guid FLAT_SIP_GUID = new("C689AAB8-8E78-11D0-8C47-00C04C324A2E");
 
 	/// <summary>

@@ -7696,4 +7696,52 @@
 <data name="UnavailableOrUnknown" xml:space="preserve">
   <value>غير متوفر أو غير معروف</value>
 </data>
+<data name="SigningSettingsExpander.Header" xml:space="preserve">
+    <value>توقيع الملفات</value>
+  </data>
+  <data name="SigningSettingsExpander.Description" xml:space="preserve">
+    <value>استخدم هذا القسم لتوقيع ملفاتك مثل الملفات الثنائية والنصوص البرمجية.</value>
+  </data>
+  <data name="SigningSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استخدم هذا القسم لتوقيع ملفاتك مثل الملفات الثنائية والنصوص البرمجية.</value>
+  </data>
+  <data name="SigningSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استخدم هذا القسم لتوقيع ملفاتك مثل الملفات الثنائية والنصوص البرمجية.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Header" xml:space="preserve">
+    <value>تحديد الملفات والمجلدات</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Description" xml:space="preserve">
+    <value>استعرض وحدد الملفات التي تريد توقيعها أو المجلدات التي توجد فيها الملفات التي تريد توقيعها.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض وحدد الملفات التي تريد توقيعها أو المجلدات التي توجد فيها الملفات التي تريد توقيعها.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض وحدد الملفات التي تريد توقيعها أو المجلدات التي توجد فيها الملفات التي تريد توقيعها.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>تحديد الاسم الشائع</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>حدد الاسم الشائع (CN) للشهادة على نظامك التي تريد استخدامها لتوقيع الملفات المحددة. يجب أن تحتوي الشهادة على مفتاح خاص.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد الاسم الشائع (CN) للشهادة على نظامك التي تريد استخدامها لتوقيع الملفات المحددة. يجب أن تحتوي الشهادة على مفتاح خاص.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد الاسم الشائع (CN) للشهادة على نظامك التي تريد استخدامها لتوقيع الملفات المحددة. يجب أن تحتوي الشهادة على مفتاح خاص.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>عنوان URL للطابع الزمني</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>عنوان URL اختياري لخادم الطابع الزمني RFC 3161 أو Authenticode.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عنوان URL اختياري لخادم الطابع الزمني RFC 3161 أو Authenticode.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عنوان URL اختياري لخادم الطابع الزمني RFC 3161 أو Authenticode.</value>
+  </data>
 </root>

@@ -801,6 +801,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		{
 			case "Light":
 				{
+					// Set the title bar theme
+					AppWindow.TitleBar.PreferredTheme = TitleBarTheme.Light;
+
 					// Set the app's theme
 					RootGrid.RequestedTheme = ElementTheme.Light;
 
@@ -826,6 +829,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 				}
 			case "Dark":
 				{
+					AppWindow.TitleBar.PreferredTheme = TitleBarTheme.Dark;
+
 					RootGrid.RequestedTheme = ElementTheme.Dark;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
@@ -852,6 +857,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			// if System Theme is selected
 			default:
 				{
+					AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
+
 					RootGrid.RequestedTheme = currentColorMode;
 
 					if (currentColorMode is ElementTheme.Dark)

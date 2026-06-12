@@ -7696,4 +7696,52 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 <data name="UnavailableOrUnknown" xml:space="preserve">
   <value>Nicht verfügbar oder unbekannt</value>
 </data>
+<data name="SigningSettingsExpander.Header" xml:space="preserve">
+    <value>Dateisignierung</value>
+  </data>
+  <data name="SigningSettingsExpander.Description" xml:space="preserve">
+    <value>Verwenden Sie diesen Abschnitt, um Ihre Dateien wie Binärdateien und Skripts zu signieren.</value>
+  </data>
+  <data name="SigningSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verwenden Sie diesen Abschnitt, um Ihre Dateien wie Binärdateien und Skripts zu signieren.</value>
+  </data>
+  <data name="SigningSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verwenden Sie diesen Abschnitt, um Ihre Dateien wie Binärdateien und Skripts zu signieren.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Header" xml:space="preserve">
+    <value>Dateien und Ordner auswählen</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Description" xml:space="preserve">
+    <value>Durchsuchen Sie die Dateien und wählen Sie die Dateien aus, die Sie signieren möchten, oder die Ordner, in denen sich die zu signierenden Dateien befinden.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Durchsuchen Sie die Dateien und wählen Sie die Dateien aus, die Sie signieren möchten, oder die Ordner, in denen sich die zu signierenden Dateien befinden.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Durchsuchen Sie die Dateien und wählen Sie die Dateien aus, die Sie signieren möchten, oder die Ordner, in denen sich die zu signierenden Dateien befinden.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>Common Name auswählen</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>Wählen Sie den Common Name (CN) des Zertifikats auf Ihrem System aus, das Sie zum Signieren der ausgewählten Dateien verwenden möchten. Das Zertifikat muss über einen privaten Schlüssel verfügen.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie den Common Name (CN) des Zertifikats auf Ihrem System aus, das Sie zum Signieren der ausgewählten Dateien verwenden möchten. Das Zertifikat muss über einen privaten Schlüssel verfügen.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie den Common Name (CN) des Zertifikats auf Ihrem System aus, das Sie zum Signieren der ausgewählten Dateien verwenden möchten. Das Zertifikat muss über einen privaten Schlüssel verfügen.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>Zeitstempel-URL</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>Optionale URL eines RFC 3161- oder Authenticode-Zeitstempelservers.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Optionale URL eines RFC 3161- oder Authenticode-Zeitstempelservers.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Optionale URL eines RFC 3161- oder Authenticode-Zeitstempelservers.</value>
+  </data>
 </root>

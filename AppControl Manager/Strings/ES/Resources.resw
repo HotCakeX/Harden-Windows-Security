@@ -7696,4 +7696,52 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 <data name="UnavailableOrUnknown" xml:space="preserve">
   <value>No disponible o desconocido</value>
 </data>
+<data name="SigningSettingsExpander.Header" xml:space="preserve">
+    <value>Firma de archivos</value>
+  </data>
+  <data name="SigningSettingsExpander.Description" xml:space="preserve">
+    <value>Use esta sección para firmar sus archivos, como archivos binarios y scripts.</value>
+  </data>
+  <data name="SigningSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use esta sección para firmar sus archivos, como archivos binarios y scripts.</value>
+  </data>
+  <data name="SigningSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Use esta sección para firmar sus archivos, como archivos binarios y scripts.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar archivos y carpetas</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Description" xml:space="preserve">
+    <value>Examine y seleccione los archivos que desea firmar o las carpetas donde se encuentran los archivos que desea firmar.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examine y seleccione los archivos que desea firmar o las carpetas donde se encuentran los archivos que desea firmar.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examine y seleccione los archivos que desea firmar o las carpetas donde se encuentran los archivos que desea firmar.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar nombre común</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione el nombre común (CN) del certificado en su sistema que desea usar para firmar los archivos seleccionados. El certificado debe tener una clave privada.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione el nombre común (CN) del certificado en su sistema que desea usar para firmar los archivos seleccionados. El certificado debe tener una clave privada.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione el nombre común (CN) del certificado en su sistema que desea usar para firmar los archivos seleccionados. El certificado debe tener una clave privada.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>URL de marca de tiempo</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>URL opcional del servidor de marca de tiempo RFC 3161 o Authenticode.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>URL opcional del servidor de marca de tiempo RFC 3161 o Authenticode.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>URL opcional del servidor de marca de tiempo RFC 3161 o Authenticode.</value>
+  </data>
 </root>

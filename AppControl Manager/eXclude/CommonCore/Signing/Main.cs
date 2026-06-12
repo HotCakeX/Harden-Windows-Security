@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -29,53 +30,107 @@ internal static class Main
 	{
 		string signatureAlgorithmOid = certificate.SignatureAlgorithm.Value ?? string.Empty;
 
-		return signatureAlgorithmOid switch
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha1OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha1OID, StringComparison.OrdinalIgnoreCase))
 		{
-			// RSA Signature Algorithms to Hash OIDs
-			"1.2.840.113549.1.1.5" => "1.3.14.3.2.26", // SHA1
-			"1.2.840.113549.1.1.11" => "2.16.840.1.101.3.4.2.1", // SHA-2 256
-			"1.2.840.113549.1.1.12" => "2.16.840.1.101.3.4.2.2", // SHA-2 384
-			"1.2.840.113549.1.1.13" => "2.16.840.1.101.3.4.2.3", // SHA-2 512
+			return Structure.SHA1OID;
+		}
 
-			// ECDSA Signature Algorithms to Hash OIDs
-			"1.2.840.10045.4.1" => "1.3.14.3.2.26", // SHA1
-			"1.2.840.10045.4.3.2" => "2.16.840.1.101.3.4.2.1", // SHA-2 256
-			"1.2.840.10045.4.3.3" => "2.16.840.1.101.3.4.2.2", // SHA-2 384
-			"1.2.840.10045.4.3.4" => "2.16.840.1.101.3.4.2.3", // SHA-2 512
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha2_256OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha2_256OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.SHA2_256OID;
+		}
 
-			_ => throw new NotSupportedException(string.Format(Atlas.GetStr("UnsupportedCertificateSignatureAlgorithmForHashOID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
-		};
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha2_384OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha2_384OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.SHA2_384OID;
+		}
+
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha2_512OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha2_512OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.SHA2_512OID;
+		}
+
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha3_256OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha3_256OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.SHA3_256OID;
+		}
+
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha3_384OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha3_384OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.SHA3_384OID;
+		}
+
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha3_512OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha3_512OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.SHA3_512OID;
+		}
+
+		throw new NotSupportedException(string.Format(Atlas.GetStr("UnsupportedCertificateSignatureAlgorithmForHashOID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName));
 	}
 
 	private static uint GetAlgIdFromCertSignatureAlgorithm(X509Certificate2 certificate)
 	{
 		string signatureAlgorithmOid = certificate.SignatureAlgorithm.Value ?? string.Empty;
-		return signatureAlgorithmOid switch
+
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha1OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha1OID, StringComparison.OrdinalIgnoreCase))
 		{
-			// RSA Signature Algorithms to ALG_ID
+			return Structure.CALG_SHA1;
+		}
 
-			// sha1RSA
-			"1.2.840.113549.1.1.5" => Structure.CALG_SHA1,
-			// sha256RSA
-			"1.2.840.113549.1.1.11" => Structure.CALG_SHA_256,
-			// sha384RSA
-			"1.2.840.113549.1.1.12" => Structure.CALG_SHA_384,
-			// sha512RSA
-			"1.2.840.113549.1.1.13" => Structure.CALG_SHA_512,
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha2_256OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha2_256OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha3_256OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha3_256OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.CALG_SHA_256;
+		}
 
-			// ECDSA Signature Algorithms to ALG_ID
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha2_384OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha2_384OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha3_384OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha3_384OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.CALG_SHA_384;
+		}
 
-			// ecdsa-with-SHA1
-			"1.2.840.10045.4.1" => Structure.CALG_SHA1,
-			// ecdsa-with-SHA256
-			"1.2.840.10045.4.3.2" => Structure.CALG_SHA_256,
-			// ecdsa-with-SHA384
-			"1.2.840.10045.4.3.3" => Structure.CALG_SHA_384,
-			// ecdsa-with-SHA512
-			"1.2.840.10045.4.3.4" => Structure.CALG_SHA_512,
+		if (string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha2_512OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha2_512OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.RsaPkcs1Sha3_512OID, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(signatureAlgorithmOid, Structure.EcdsaSha3_512OID, StringComparison.OrdinalIgnoreCase))
+		{
+			return Structure.CALG_SHA_512;
+		}
 
-			_ => throw new NotSupportedException(string.Format(Atlas.GetStr("UnsupportedCertificateSignatureAlgorithmForALGID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
-		};
+		throw new NotSupportedException(string.Format(Atlas.GetStr("UnsupportedCertificateSignatureAlgorithmForALGID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName));
+	}
+
+	/// <summary>
+	/// Normalizes a timestamp URL for the native signer APIs. Host-only values are treated as HTTP URLs.
+	/// </summary>
+	private static string? NormalizeTimestampUrl(string? timestampUrl)
+	{
+		if (string.IsNullOrWhiteSpace(timestampUrl))
+		{
+			return null;
+		}
+
+		string normalizedTimestampUrl = timestampUrl.Trim();
+
+		if (normalizedTimestampUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+			normalizedTimestampUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+		{
+			return normalizedTimestampUrl;
+		}
+
+		return $"http://{normalizedTimestampUrl}";
 	}
 
 	/// <summary>
@@ -220,17 +275,10 @@ internal static class Main
 	}
 
 	/// <summary>
-	/// Method for signing regular PE files.
+	/// Signs files through Windows Authenticode SIP support. Page hashing is intended for PE files only.
 	/// </summary>
-	/// <param name="FilePath"></param>
-	/// <param name="signingCertificate"></param>
-	/// <param name="timestampUrl"></param>
-	/// <param name="enablePageHashing"></param>
-	/// <exception cref="ArgumentNullException"></exception>
-	/// <exception cref="ArgumentException"></exception>
-	/// <exception cref="Win32Exception"></exception>
-	private static unsafe void SignFilePE(string FilePath,
-								   X509Certificate2 signingCertificate,
+	private static unsafe void SignFileAuthenticode(string FilePath,
+								   X509Certificate2? signingCertificate,
 								   string? timestampUrl = null,
 								   bool enablePageHashing = false)
 	{
@@ -320,6 +368,9 @@ internal static class Main
 			}
 
 			IntPtr pSipData = IntPtr.Zero;
+			string? normalizedTimestampUrl = NormalizeTimestampUrl(timestampUrl);
+			uint timestampFlags = normalizedTimestampUrl is null ? 0 : Structure.SIGNER_TIMESTAMP_RFC3161;
+			string? timestampAlgorithmOid = normalizedTimestampUrl is null ? null : Structure.SHA2_256OID;
 
 			int hr = NativeMethods.SignerSignEx3(
 				dwFlags,
@@ -327,9 +378,9 @@ internal static class Main
 				pSignerCert,
 				pSignerSignatureInfo,
 				IntPtr.Zero,
-				0,
-				null,
-				timestampUrl,
+				timestampFlags,
+				timestampAlgorithmOid,
+				normalizedTimestampUrl,
 				IntPtr.Zero,
 				pSipData,
 				ppSignerContext,
@@ -348,6 +399,8 @@ internal static class Main
 					errorMessage += Atlas.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
 					errorMessage += Atlas.GetStr("ErrorInvalidArg");
+				else if (hr == Structure.WININET_E_NAME_NOT_RESOLVED)
+					errorMessage += " The timestamp server name or address could not be resolved. Check the timestamp URL, DNS, firewall, and Windows proxy settings.";
 
 				throw new Win32Exception(hr, errorMessage);
 			}
@@ -378,12 +431,6 @@ internal static class Main
 	/// <summary>
 	/// Method for signing packaged files (AppX/MSIX)
 	/// </summary>
-	/// <param name="FilePath"></param>
-	/// <param name="signingCertificate"></param>
-	/// <param name="timestampUrl"></param>
-	/// <exception cref="ArgumentNullException"></exception>
-	/// <exception cref="ArgumentException"></exception>
-	/// <exception cref="Win32Exception"></exception>
 	private static unsafe void SignFilePackage(string FilePath,
 										X509Certificate2 signingCertificate,
 										string? timestampUrl = null)
@@ -496,6 +543,9 @@ internal static class Main
 			pSipData = pAppxSipClientData; // Use prepared SIP data
 
 			uint dwFlags = 0; // Page hashing flag not used for packages
+			string? normalizedTimestampUrl = NormalizeTimestampUrl(timestampUrl);
+			uint timestampFlags = normalizedTimestampUrl is null ? 0 : Structure.SIGNER_TIMESTAMP_RFC3161;
+			string? timestampAlgorithmOid = normalizedTimestampUrl is null ? null : Structure.SHA2_256OID;
 
 			int hr = NativeMethods.SignerSignEx3(
 				dwFlags,        // dwFlags
@@ -503,9 +553,9 @@ internal static class Main
 				pSignerCert,
 				pSignerSignatureInfo,
 				IntPtr.Zero,    // pProviderInfo
-				0,              // dwTimestampFlags
-				null,           // pszTimestampAlgorithmOid
-				timestampUrl,   // pwszHttpTimeStamp
+				timestampFlags, // dwTimestampFlags
+				timestampAlgorithmOid, // pszTimestampAlgorithmOid
+				normalizedTimestampUrl, // pwszHttpTimeStamp
 				IntPtr.Zero,    // psRequest
 				pSipData,       // pSipData
 				ppSignerContext,// PSIGNER_CONTEXT*
@@ -524,6 +574,8 @@ internal static class Main
 					errorMessage += Atlas.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
 					errorMessage += Atlas.GetStr("ErrorInvalidArg");
+				else if (hr == Structure.WININET_E_NAME_NOT_RESOLVED)
+					errorMessage += " The timestamp server name or address could not be resolved. Check the timestamp URL, DNS, firewall, and Windows proxy settings.";
 
 				throw new Win32Exception(hr, errorMessage);
 			}
@@ -591,20 +643,23 @@ internal static class Main
 	}
 
 	/// <summary>
-	/// Signs normal PEs.
+	/// Signs normal PEs and scripts.
 	/// </summary>
-	/// <param name="FilePath"></param>
-	/// <param name="Cert"></param>
-	/// <param name="CertCN"></param>
-	/// <exception cref="ArgumentNullException"></exception>
-	internal static void SignPEs(string FilePath, X509Certificate2? Cert, string? CertCN)
+	internal static void SignPEs(List<string> FilePaths, X509Certificate2? Cert, string? CertCN, string? timestampUrl, bool EnablePageHashing)
 	{
 		try
 		{
 			// Use the Cert obj if provided, else find the certificate based on the provided subject CN
 			X509Certificate2? cert = Cert ?? Helper.FindCertificateBySubjectName(CertCN ?? throw new ArgumentNullException(nameof(CertCN)));
 
-			SignFilePE(FilePath, cert!, null, true);
+			foreach (string FilePath in FilePaths)
+			{
+				SignFileAuthenticode(
+					FilePath: FilePath,
+					signingCertificate: cert,
+					timestampUrl: timestampUrl,
+					enablePageHashing: EnablePageHashing);
+			}
 		}
 		catch (Win32Exception w32Ex)
 		{

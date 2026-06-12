@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* You can now sign your PowerShell scripts/modules and binary files using the new Signing section in the AppControl Manager. Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1162

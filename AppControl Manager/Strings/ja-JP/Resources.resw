@@ -7696,4 +7696,52 @@
 <data name="UnavailableOrUnknown" xml:space="preserve">
   <value>利用不可または不明</value>
 </data>
+<data name="SigningSettingsExpander.Header" xml:space="preserve">
+    <value>ファイル署名</value>
+  </data>
+  <data name="SigningSettingsExpander.Description" xml:space="preserve">
+    <value>このセクションを使用して、バイナリやスクリプトなどのファイルに署名します.</value>
+  </data>
+  <data name="SigningSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>このセクションを使用して、バイナリやスクリプトなどのファイルに署名します.</value>
+  </data>
+  <data name="SigningSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>このセクションを使用して、バイナリやスクリプトなどのファイルに署名します.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Header" xml:space="preserve">
+    <value>ファイルとフォルダーの選択</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Description" xml:space="preserve">
+    <value>署名するファイル、または署名するファイルがあるフォルダーを参照して選択します.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>署名するファイル、または署名するファイルがあるフォルダーを参照して選択します.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>署名するファイル、または署名するファイルがあるフォルダーを参照して選択します.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>コモン ネームの選択</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>選択したファイルの署名に使用する、システム上の証明書のコモン ネーム (CN) を選択します. 証明書には秘密キーが必要です.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>選択したファイルの署名に使用する、システム上の証明書のコモン ネーム (CN) を選択します. 証明書には秘密キーが必要です.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>選択したファイルの署名に使用する、システム上の証明書のコモン ネーム (CN) を選択します. 証明書には秘密キーが必要です.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>タイムスタンプ URL</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>省略可能な RFC 3161 または Authenticode タイムスタンプ サーバー URL.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>省略可能な RFC 3161 または Authenticode タイムスタンプ サーバー URL.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>省略可能な RFC 3161 または Authenticode タイムスタンプ サーバー URL.</value>
+  </data>
 </root>

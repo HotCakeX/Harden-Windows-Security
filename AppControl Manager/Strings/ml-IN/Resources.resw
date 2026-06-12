@@ -7696,4 +7696,52 @@
 <data name="UnavailableOrUnknown" xml:space="preserve">
   <value>ലഭ്യമല്ല അല്ലെങ്കിൽ അറിയില്ല</value>
 </data>
+<data name="SigningSettingsExpander.Header" xml:space="preserve">
+    <value>ഫയലുകളിൽ ഒപ്പിടൽ</value>
+  </data>
+  <data name="SigningSettingsExpander.Description" xml:space="preserve">
+    <value>ബൈനറികളും സ്ക്രിപ്റ്റുകളും പോലുള്ള നിങ്ങളുടെ ഫയലുകളിൽ ഒപ്പിടാൻ ഈ വിഭാഗം ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="SigningSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബൈനറികളും സ്ക്രിപ്റ്റുകളും പോലുള്ള നിങ്ങളുടെ ഫയലുകളിൽ ഒപ്പിടാൻ ഈ വിഭാഗം ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="SigningSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബൈനറികളും സ്ക്രിപ്റ്റുകളും പോലുള്ള നിങ്ങളുടെ ഫയലുകളിൽ ഒപ്പിടാൻ ഈ വിഭാഗം ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Header" xml:space="preserve">
+    <value>ഫയലുകളും ഫോൾഡറുകളും തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Description" xml:space="preserve">
+    <value>നിങ്ങൾ ഒപ്പിടാൻ ആഗ്രഹിക്കുന്ന ഫയലുകൾ അല്ലെങ്കിൽ നിങ്ങൾ ഒപ്പിടാൻ ആഗ്രഹിക്കുന്ന ഫയലുകൾ സ്ഥിതിചെയ്യുന്ന ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്ത് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ ഒപ്പിടാൻ ആഗ്രഹിക്കുന്ന ഫയലുകൾ അല്ലെങ്കിൽ നിങ്ങൾ ഒപ്പിടാൻ ആഗ്രഹിക്കുന്ന ഫയലുകൾ സ്ഥിതിചെയ്യുന്ന ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്ത് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങൾ ഒപ്പിടാൻ ആഗ്രഹിക്കുന്ന ഫയലുകൾ അല്ലെങ്കിൽ നിങ്ങൾ ഒപ്പിടാൻ ആഗ്രഹിക്കുന്ന ഫയലുകൾ സ്ഥിതിചെയ്യുന്ന ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്ത് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>കോമൺ നെയിം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഫയലുകളിൽ ഒപ്പിടാൻ നിങ്ങൾ ഉപയോഗിക്കാൻ ആഗ്രഹിക്കുന്ന നിങ്ങളുടെ സിസ്റ്റത്തിലെ സർട്ടിഫിക്കറ്റിന്റെ കോമൺ നെയിം (CN) തിരഞ്ഞെടുക്കുക. സർട്ടിഫിക്കറ്റിന് സ്വകാര്യ കീ ഉണ്ടായിരിക്കണം.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഫയലുകളിൽ ഒപ്പിടാൻ നിങ്ങൾ ഉപയോഗിക്കാൻ ആഗ്രഹിക്കുന്ന നിങ്ങളുടെ സിസ്റ്റത്തിലെ സർട്ടിഫിക്കറ്റിന്റെ കോമൺ നെയിം (CN) തിരഞ്ഞെടുക്കുക. സർട്ടിഫിക്കറ്റിന് സ്വകാര്യ കീ ഉണ്ടായിരിക്കണം.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഫയലുകളിൽ ഒപ്പിടാൻ നിങ്ങൾ ഉപയോഗിക്കാൻ ആഗ്രഹിക്കുന്ന നിങ്ങളുടെ സിസ്റ്റത്തിലെ സർട്ടിഫിക്കറ്റിന്റെ കോമൺ നെയിം (CN) തിരഞ്ഞെടുക്കുക. സർട്ടിഫിക്കറ്റിന് സ്വകാര്യ കീ ഉണ്ടായിരിക്കണം.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>ടൈംസ്റ്റാമ്പ് URL</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>ഐച്ഛികമായ RFC 3161 അല്ലെങ്കിൽ Authenticode ടൈംസ്റ്റാമ്പ് സർവർ URL.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഐച്ഛികമായ RFC 3161 അല്ലെങ്കിൽ Authenticode ടൈംസ്റ്റാമ്പ് സർവർ URL.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഐച്ഛികമായ RFC 3161 അല്ലെങ്കിൽ Authenticode ടൈംസ്റ്റാമ്പ് സർവർ URL.</value>
+  </data>
 </root>

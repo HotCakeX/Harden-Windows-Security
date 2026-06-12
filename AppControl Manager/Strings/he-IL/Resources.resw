@@ -7696,4 +7696,52 @@
 <data name="UnavailableOrUnknown" xml:space="preserve">
   <value>לא זמין או לא ידוע</value>
 </data>
+<data name="SigningSettingsExpander.Header" xml:space="preserve">
+    <value>חתימת קבצים</value>
+  </data>
+  <data name="SigningSettingsExpander.Description" xml:space="preserve">
+    <value>השתמש במקטע זה כדי לחתום על הקבצים שלך, כגון קבצים בינאריים וסקריפטים.</value>
+  </data>
+  <data name="SigningSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השתמש במקטע זה כדי לחתום על הקבצים שלך, כגון קבצים בינאריים וסקריפטים.</value>
+  </data>
+  <data name="SigningSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השתמש במקטע זה כדי לחתום על הקבצים שלך, כגון קבצים בינאריים וסקריפטים.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Header" xml:space="preserve">
+    <value>בחר קבצים ותיקיות</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.Description" xml:space="preserve">
+    <value>עיין ובחר את הקבצים שברצונך לחתום עליהם, או תיקיות שבהן נמצאים הקבצים שברצונך לחתום עליהם.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין ובחר את הקבצים שברצונך לחתום עליהם, או תיקיות שבהן נמצאים הקבצים שברצונך לחתום עליהם.</value>
+  </data>
+  <data name="SelectFilesAndFoldersToSignSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין ובחר את הקבצים שברצונך לחתום עליהם, או תיקיות שבהן נמצאים הקבצים שברצונך לחתום עליהם.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>בחר שם נפוץ</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>בחר את השם הנפוץ (CN) של האישור במערכת שלך שבו ברצונך להשתמש כדי לחתום על הקבצים שנבחרו. לאישור חייב להיות מפתח פרטי.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את השם הנפוץ (CN) של האישור במערכת שלך שבו ברצונך להשתמש כדי לחתום על הקבצים שנבחרו. לאישור חייב להיות מפתח פרטי.</value>
+  </data>
+  <data name="CommonNameSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את השם הנפוץ (CN) של האישור במערכת שלך שבו ברצונך להשתמש כדי לחתום על הקבצים שנבחרו. לאישור חייב להיות מפתח פרטי.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Header" xml:space="preserve">
+    <value>כתובת URL של חותמת זמן</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.Description" xml:space="preserve">
+    <value>כתובת URL אופציונלית של שרת חותמת זמן RFC 3161 או Authenticode.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כתובת URL אופציונלית של שרת חותמת זמן RFC 3161 או Authenticode.</value>
+  </data>
+  <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כתובת URL אופציונלית של שרת חותמת זמן RFC 3161 או Authenticode.</value>
+  </data>
 </root>

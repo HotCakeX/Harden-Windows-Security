@@ -32,7 +32,7 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 
 	internal string? KMCI { get; set => SP(ref field, value); }
 
-	internal ObservableCollection<CodeIntegrityOption> codeIntegrityOptions = [];
+	internal readonly ObservableCollection<CodeIntegrityOption> codeIntegrityOptions = [];
 
 	/// <summary>
 	/// Local method to convert numbers to their actual string values

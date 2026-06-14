@@ -36,8 +36,8 @@ namespace CommonCore.ToolKits;
 internal abstract class SizerBase : UserControl
 {
 	// Visual Elements
-	private protected Grid? _rootGrid;
-	private protected Rectangle? _thumb;
+	private readonly protected Grid? _rootGrid;
+	private readonly protected Rectangle? _thumb;
 
 	// State
 	private bool _pressed;

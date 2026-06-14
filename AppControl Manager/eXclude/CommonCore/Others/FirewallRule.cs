@@ -31,17 +31,17 @@ internal sealed class FirewallRule(string name, string direction, string action)
 	[JsonInclude]
 	[JsonPropertyOrder(0)]
 	[JsonPropertyName("name")]
-	internal string Name = name;
+	internal string Name => name;
 
 	[JsonInclude]
 	[JsonPropertyOrder(1)]
 	[JsonPropertyName("direction")]
-	internal string Direction = direction;
+	internal string Direction => direction;
 
 	[JsonInclude]
 	[JsonPropertyOrder(2)]
 	[JsonPropertyName("action")]
-	internal string Action = action;
+	internal string Action => action;
 
 	[JsonIgnore]
 	internal string DisplayString { get; } = GetDisplayName(name);

@@ -42,7 +42,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// <summary>
 	/// Bound to the max value of NumberBoxes in the XAML.
 	/// </summary>
-	internal string MaxNumberBoxValue = "17592186044000";
+	internal readonly string MaxNumberBoxValue = "17592186044000";
 
 	/// <summary>
 	/// Current maximum log size in megabytes (MB).

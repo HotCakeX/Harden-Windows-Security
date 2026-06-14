@@ -155,7 +155,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 	internal List<RegistryPolicyEntry> ASRPolicyFromJSON { get; set; } = [];
 
-	internal ObservableCollection<ASRRuleEntry> ASRItemsLVBound = [];
+	internal readonly ObservableCollection<ASRRuleEntry> ASRItemsLVBound = [];
 
 	internal bool ElementsAreEnabled
 	{
@@ -828,7 +828,7 @@ internal sealed partial class ASRVM : ViewModelBase
 	private static byte[] GetStateBytes(RegistryValueType type, ASRRuleState state) => type switch
 	{
 		RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)state),
-		RegistryValueType.REG_SZ => Encoding.Unicode.GetBytes(((uint)state).ToString() + "\0"),
+		RegistryValueType.REG_SZ => Encoding.Unicode.GetBytes(((uint)state) + "\0"),
 		_ => BitConverter.GetBytes((uint)state),
 	};
 

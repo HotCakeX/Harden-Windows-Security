@@ -91,7 +91,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// <summary>
 	/// For selected file paths
 	/// </summary>
-	internal UniqueStringObservableCollection FilePaths = [];
+	internal readonly UniqueStringObservableCollection FilePaths = [];
 
 	/// <summary>
 	/// For selected folder paths

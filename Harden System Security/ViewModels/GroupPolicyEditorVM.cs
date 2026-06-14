@@ -1030,7 +1030,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	internal string? SelectedMainPOLFileForMerge { get; set => SP(ref field, value); }
 	internal void ClearSelectedMainPOLFileForMerge_Click() => SelectedMainPOLFileForMerge = null;
 
-	internal UniqueStringObservableCollection SelectedOtherPOLFilesForMerge = [];
+	internal readonly UniqueStringObservableCollection SelectedOtherPOLFilesForMerge = [];
 	internal void ClearSelectedOtherPOLFilesForMerge() => SelectedOtherPOLFilesForMerge.Clear();
 
 	internal void BrowseForMainPolFile()
@@ -1111,7 +1111,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	#region Convert POL to JSON
 
-	internal UniqueStringObservableCollection SelectedPOLFilesForConversionToJSON = [];
+	internal readonly UniqueStringObservableCollection SelectedPOLFilesForConversionToJSON = [];
 	internal void ClearSelectedPOLFilesForConversionToJSON() => SelectedPOLFilesForConversionToJSON.Clear();
 
 	internal string? OutputDirForJsonFilesAfterConversion { get; set => SP(ref field, value); }
@@ -1203,7 +1203,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	internal string? OutputDirForPOLFilesAfterConversion { get; set => SP(ref field, value); }
 	internal void ClearOutputDirForPOLFilesAfterConversion_Click() => OutputDirForPOLFilesAfterConversion = null;
 
-	internal UniqueStringObservableCollection SelectedJSONFilesForConversionToPol = [];
+	internal readonly UniqueStringObservableCollection SelectedJSONFilesForConversionToPol = [];
 	internal void ClearSelectedJSONFilesForConversionToPol() => SelectedJSONFilesForConversionToPol.Clear();
 
 	internal void PickADirectoryForJSONToPOLConversion()
@@ -1281,7 +1281,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	#region Convert Security INF to JSON
 
-	internal UniqueStringObservableCollection SelectedSecurityINFFilesForConversionToJSON = [];
+	internal readonly UniqueStringObservableCollection SelectedSecurityINFFilesForConversionToJSON = [];
 	internal void ClearSelectedSecurityINFFilesForConversionToJSON() => SelectedSecurityINFFilesForConversionToJSON.Clear();
 
 	internal string? OutputDirForSecurityINFToJSONConversion { get; set => SP(ref field, value); }

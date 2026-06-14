@@ -978,22 +978,13 @@ internal static class MSBaseline
 				// Privilege not found on system
 				currentValue = "Not Found";
 
-				if (normalizedExpectedPlain.Length == 0)
-				{
-					// Expected no assignments and privilege not found - this is compliant
-					isCompliant = true;
-				}
-				else
-				{
-					// Expected specific assignments but privilege not found - not compliant
-					isCompliant = false;
-				}
+				// Expected no assignments and privilege not found => this is compliant
+				// Expected specific assignments but privilege not found => not compliant
+				isCompliant = normalizedExpectedPlain.Length == 0;
 			}
 
-			string id = $"Privilege|{expectedPrivilege.Key}";
-
 			results.Add(new VerificationResult(
-				id: id,
+				id: $"Privilege|{expectedPrivilege.Key}",
 				friendlyName: expectedPrivilege.Key,
 				source: SecurityMeasureSource.Privilege,
 				isCompliant: isCompliant,

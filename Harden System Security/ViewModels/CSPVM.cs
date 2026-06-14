@@ -826,7 +826,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			_ = _sb.Append("  <CmdID>").Append(cmdId).Append("</CmdID>\n");
 			_ = _sb.Append("  <Item>\n");
 			_ = _sb.Append("    <Target>\n");
-			_ = _sb.Append("      <LocURI>").Append(EscapeXml(omaUri)).Append("</LocURI>\n");
+			_ = _sb.Append("      <LocURI>").Append(System.Security.SecurityElement.Escape(omaUri) ?? string.Empty).Append("</LocURI>\n");
 			_ = _sb.Append("    </Target>\n");
 			_ = _sb.Append("  </Item>\n");
 			_ = _sb.Append("</Get>\n");
@@ -857,13 +857,10 @@ internal sealed partial class CSPVM : ViewModelBase
 
 			if (rc == 2147549446U) throw new InvalidOperationException("MDM local management needs MTA T Model.");
 			if (resultXml.StartsWith("Error", StringComparison.Ordinal)) throw new InvalidOperationException(resultXml);
-			if (rc != 0U) throw new Win32Exception(unchecked((int)rc), "Unexpected return code: " + rc.ToString());
+			if (rc != 0U) throw new Win32Exception(unchecked((int)rc), "Unexpected return code: " + rc);
 
 			return resultXml;
 		}
-
-		private static string EscapeXml(string value) =>
-			 System.Security.SecurityElement.Escape(value) ?? string.Empty;
 
 		private static int ParseStatusCode(string resultXml)
 		{

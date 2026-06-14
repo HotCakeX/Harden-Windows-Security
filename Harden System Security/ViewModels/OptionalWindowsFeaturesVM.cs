@@ -779,12 +779,12 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal List<DISMOutputEntry> AllItems = [];
+	internal readonly List<DISMOutputEntry> AllItems = [];
 
 	/// <summary>
 	/// Selected Items list in the ListView.
 	/// </summary>
-	internal List<DISMOutputEntry> ItemsSourceSelectedItems = [];
+	internal readonly List<DISMOutputEntry> ItemsSourceSelectedItems = [];
 
 	/// <summary>
 	/// ListView reference of the UI.

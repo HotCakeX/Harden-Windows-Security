@@ -250,7 +250,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Gradient color used for the active border.
 	/// </summary>
-	internal LinearGradientBrush linearGradientBrush = new()
+	internal readonly LinearGradientBrush linearGradientBrush = new()
 	{
 		StartPoint = new Windows.Foundation.Point(0, 0),
 		EndPoint = new Windows.Foundation.Point(1, 1),
@@ -264,7 +264,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Create a ThemeShadow used to highlight the active section/border.
 	/// </summary>
-	internal static Shadow? ThemeShadow = new ThemeShadow();
+	internal static readonly Shadow? ThemeShadow = new ThemeShadow();
 
 	// The default styles when the page is first constructed.
 	internal Brush? Step1Border_Brush { get; set => SP(ref field, value); }

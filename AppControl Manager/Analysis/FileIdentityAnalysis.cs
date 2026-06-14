@@ -64,7 +64,7 @@ internal sealed partial class AnalysisResultItem(string name, string displayName
 
 internal sealed class ColorPalette(string name, SolidColorBrush brush1, SolidColorBrush brush2, SolidColorBrush brush3)
 {
-	internal string Name = name;
+	internal string Name => name;
 	internal SolidColorBrush Brush1 => brush1;
 	internal SolidColorBrush Brush2 => brush2;
 	internal SolidColorBrush Brush3 => brush3;
@@ -452,8 +452,8 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			foreach (KeyValuePair<string, int> kv in allowedPublishers) { allPublishers[kv.Key] = kv.Value; }
 			foreach (KeyValuePair<string, int> kv in blockedPublishers)
 			{
-				if (allPublishers.ContainsKey(kv.Key)) allPublishers[kv.Key] += kv.Value;
-				else allPublishers[kv.Key] = kv.Value;
+				ref int publisherCount = ref CollectionsMarshal.GetValueRefOrAddDefault(allPublishers, kv.Key, out bool exists);
+				publisherCount = exists ? publisherCount + kv.Value : kv.Value;
 			}
 
 			if (allPublishers.Count > 0)

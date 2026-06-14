@@ -51,7 +51,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
-	internal InfoBarSettings MainInfoBar = new();
+	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 

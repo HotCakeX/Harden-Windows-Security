@@ -51,19 +51,16 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button && button.Tag is string key && ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 		{
-			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: ViewModel.StrictKernelModeResultsSearchTextBox,
-					originalList: ViewModel.StrictKernelModeScanResultsList,
-					observableCollection: ViewModel.StrictKernelModeScanResults,
-					sortState: ViewModel.SortStateStrictKernelMode,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
-			}
+			ListViewHelper.SortColumn(
+				keySelector: mapping.Getter,
+				searchBoxText: ViewModel.StrictKernelModeResultsSearchTextBox,
+				originalList: ViewModel.StrictKernelModeScanResultsList,
+				observableCollection: ViewModel.StrictKernelModeScanResults,
+				sortState: ViewModel.SortStateStrictKernelMode,
+				newKey: key,
+				regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
 		}
 	}
 

@@ -171,10 +171,10 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 	#region Signing
 
 	// Paths of files to be signed.
-	internal UniqueStringObservableCollection SelectedFilesToSign = [];
+	internal readonly UniqueStringObservableCollection SelectedFilesToSign = [];
 
 	// Paths of folders where files will be signed.
-	internal UniqueStringObservableCollection SelectedFoldersToSign = [];
+	internal readonly UniqueStringObservableCollection SelectedFoldersToSign = [];
 
 	internal string? SigningCertificateCNToUseForSigning { get; set => SP(ref field, value); }
 

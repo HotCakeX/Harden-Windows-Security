@@ -372,7 +372,7 @@ internal sealed partial class MetadataCategory(string categoryId, string display
 
 internal sealed partial class MetadataContext
 {
-	internal Dictionary<string, MetadataCategory> CategoriesMap = new(StringComparer.OrdinalIgnoreCase);
+	internal readonly Dictionary<string, MetadataCategory> CategoriesMap = new(StringComparer.OrdinalIgnoreCase);
 
 	internal void AddTag(string categoryId, string categoryName, bool isSafeToRemove, string name, string value)
 	{

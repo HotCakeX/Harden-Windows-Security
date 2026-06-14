@@ -122,7 +122,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 	private const string RuleNameForSSOT = "State Sponsors of Terrorism IP range blocking";
 
-	internal List<ComboBoxItemModelForCountryIPBlocking> TargetedLists =
+	internal readonly List<ComboBoxItemModelForCountryIPBlocking> TargetedLists =
 	[
 		new ComboBoxItemModelForCountryIPBlocking
 		(
@@ -159,23 +159,14 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		if (_allCountries.Count == 0)
 			return;
 
-		List<CountryData> filteredCountries;
-
-		if (string.IsNullOrWhiteSpace(CountrySearchText))
-		{
-			// Show all countries if search is empty
-			filteredCountries = _allCountries;
-		}
-		else
-		{
+		// Show all countries if search is empty
+		List<CountryData> filteredCountries = string.IsNullOrWhiteSpace(CountrySearchText) ? _allCountries :
 			// Filter countries by friendly name or alpha codes
-			filteredCountries = _allCountries
-				.Where(country =>
+			_allCountries.Where(country =>
 					country.FriendlyName.Contains(CountrySearchText, StringComparison.OrdinalIgnoreCase) ||
 					country.Alpha2Code.Contains(CountrySearchText, StringComparison.OrdinalIgnoreCase) ||
 					country.Alpha3Code.Contains(CountrySearchText, StringComparison.OrdinalIgnoreCase))
 				.ToList();
-		}
 
 		// Update UI on the dispatcher thread
 		_ = Atlas.AppDispatcher.TryEnqueue(() =>

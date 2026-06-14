@@ -268,7 +268,7 @@ internal sealed partial class FilterItemVM : ViewModelBase
 internal sealed partial class FilterGroupVM(string groupName) : ViewModelBase
 {
 	internal string GroupName => groupName;
-	internal RangedObservableCollection<FilterItemVM> Filters = [];
+	internal readonly RangedObservableCollection<FilterItemVM> Filters = [];
 }
 
 internal sealed partial class ServiceManagerVM : ViewModelBase

@@ -1112,7 +1112,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = PackageMgr.RemovePackageAsync(package.FullName, RemovalOptions.RemoveForAllUsers);
 
 				// This event is signaled when the operation completes
-				ManualResetEvent opCompletedEvent = new(false);
+				using ManualResetEvent opCompletedEvent = new(false);
 
 				// Define the delegate using a statement lambda
 				deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };
@@ -1161,7 +1161,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = PackageMgr.RemovePackageAsync(package.FullName, RemovalOptions.None);
 
 				// This event is signaled when the operation completes
-				ManualResetEvent opCompletedEvent = new(false);
+				using ManualResetEvent opCompletedEvent = new(false);
 
 				// Define the delegate using a statement lambda
 				deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };

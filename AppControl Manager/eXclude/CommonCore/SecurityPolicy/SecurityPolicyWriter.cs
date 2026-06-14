@@ -530,8 +530,6 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_3 currentInfo = *(USER_MODALS_INFO_3*)buffer;
-
 			// Allocate new buffer for setting
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_3), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success || newBuffer == IntPtr.Zero)

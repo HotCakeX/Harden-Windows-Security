@@ -908,7 +908,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 		for (int index = 0; index < count; index++)
 		{
-			double x = count == 1 ? HomeChartWidth : HomeChartWidth * index / (count - 1);
+			double x = HomeChartWidth * index / (count - 1);
 			double normalized = range <= 0.0 ? 0.5 : (samples[index] - minValue) / range;
 			double y = HomeChartVerticalPadding + ((1.0 - normalized) * drawableHeight);
 

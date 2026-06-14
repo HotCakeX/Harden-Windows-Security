@@ -1,10 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-// Source: https://github.com/CommunityToolkit/Windows
-// License: https://github.com/CommunityToolkit/Windows/blob/main/License.md
-// It's been modified to meet the Harden Windows Security repository's requirements.
-
 // MIT License
 //
 // Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
@@ -21,6 +14,13 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
+
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+// Source: https://github.com/CommunityToolkit/Windows
+// License: https://github.com/CommunityToolkit/Windows/blob/main/License.md
+// It's been modified to meet the Harden Windows Security repository's requirements.
 
 /*
 Sourced from the following files:
@@ -264,19 +264,13 @@ public abstract partial class AttachedShadowBase : DependencyObject, IAttachedSh
 	/// Get a <see cref="CompositionBrush"/> in the shape of the element that is casting the shadow.
 	/// </summary>
 	/// <returns>A <see cref="CompositionBrush"/> representing the shape of an element.</returns>
-	protected virtual CompositionBrush? GetShadowMask(AttachedShadowElementContext context)
-	{
-		return null;
-	}
+	protected virtual CompositionBrush? GetShadowMask(AttachedShadowElementContext context) => null;
 
 	/// <summary>
 	/// Get the <see cref="CompositionClip"/> for the shadow's <see cref="SpriteVisual"/>
 	/// </summary>
 	/// <returns>A <see cref="CompositionClip"/> for the extent of the shadowed area.</returns>
-	protected virtual CompositionClip? GetShadowClip(AttachedShadowElementContext context)
-	{
-		return null;
-	}
+	protected virtual CompositionClip? GetShadowClip(AttachedShadowElementContext context) => null;
 
 	/// <summary>
 	/// Update the mask that gives the shadow its shape.
@@ -480,20 +474,11 @@ public sealed class AttachedShadowElementContext
 		ElementVisual = null;
 	}
 
-	private void OnElementUnloaded(object sender, RoutedEventArgs e)
-	{
-		Uninitialize();
-	}
+	private void OnElementUnloaded(object sender, RoutedEventArgs e) => Uninitialize();
 
-	private void OnElementLoaded(object sender, RoutedEventArgs e)
-	{
-		Initialize();
-	}
+	private void OnElementLoaded(object sender, RoutedEventArgs e) => Initialize();
 
-	private void OnElementSizeChanged(object sender, SizeChangedEventArgs e)
-	{
-		Parent.OnSizeChanged(this, e.NewSize, e.PreviousSize);
-	}
+	private void OnElementSizeChanged(object sender, SizeChangedEventArgs e) => Parent.OnSizeChanged(this, e.NewSize, e.PreviousSize);
 
 	/// <summary>
 	/// Adds a resource to this instance's resource dictionary with the specified key
@@ -1142,20 +1127,14 @@ public static class Effects
 	/// </summary>
 	/// <param name="obj">The <see cref="FrameworkElement"/> the <see cref="AttachedShadowBase"/> is attached to.</param>
 	/// <returns>The <see cref="AttachedShadowBase"/> that is attached to the <paramref name="obj">FrameworkElement.</paramref></returns>
-	public static AttachedShadowBase GetShadow(FrameworkElement obj)
-	{
-		return (AttachedShadowBase)obj.GetValue(ShadowProperty);
-	}
+	public static AttachedShadowBase GetShadow(FrameworkElement obj) => (AttachedShadowBase)obj.GetValue(ShadowProperty);
 
 	/// <summary>
 	/// Attaches a shadow to an element by setting the <see cref="ShadowProperty"/> property.
 	/// </summary>
 	/// <param name="obj">The <see cref="FrameworkElement"/> to attach the shadow to.</param>
 	/// <param name="value">The <see cref="AttachedShadowBase"/> that will be attached to the element</param>
-	public static void SetShadow(FrameworkElement obj, AttachedShadowBase value)
-	{
-		obj.SetValue(ShadowProperty, value);
-	}
+	public static void SetShadow(FrameworkElement obj, AttachedShadowBase value) => obj.SetValue(ShadowProperty, value);
 
 	/// <summary>
 	/// Attached <see cref="DependencyProperty"/> for setting an <see cref="AttachedShadowBase"/> to a <see cref="FrameworkElement"/>.
@@ -1230,10 +1209,7 @@ public abstract class PipelineEffect : DependencyObject, IPipelineEffect
 
 	public abstract PipelineBuilder AppendToBuilder(PipelineBuilder builder);
 
-	public virtual void NotifyCompositionBrushInUse(CompositionBrush brush)
-	{
-		Brush = brush;
-	}
+	public virtual void NotifyCompositionBrushInUse(CompositionBrush brush) => Brush = brush;
 }
 
 /// <summary>
@@ -1304,7 +1280,7 @@ public sealed partial class PipelineBuilder
 		string id = ToUppercaseAsciiLetters(Guid.NewGuid());
 
 		sourceProducer = () => new ValueTask<IGraphicsEffectSource>(new CompositionEffectSourceParameter(id));
-		animationProperties = Array.Empty<string>();
+		animationProperties = [];
 		lazyParameters = new Dictionary<string, Func<ValueTask<CompositionBrush>>> { { id, factory } };
 	}
 
@@ -1665,20 +1641,14 @@ public static class UIElementExtensions
 	/// </summary>
 	/// <param name="element">The <see cref="UIElement"/> to get the value for.</param>
 	/// <returns>The retrieved <see cref="AttachedVisualFactoryBase"/> item.</returns>
-	public static AttachedVisualFactoryBase GetVisualFactory(UIElement element)
-	{
-		return (AttachedVisualFactoryBase)element.GetValue(VisualFactoryProperty);
-	}
+	public static AttachedVisualFactoryBase GetVisualFactory(UIElement element) => (AttachedVisualFactoryBase)element.GetValue(VisualFactoryProperty);
 
 	/// <summary>
 	/// Sets the value of <see cref="VisualFactoryProperty"/>.
 	/// </summary>
 	/// <param name="element">The <see cref="UIElement"/> to set the value for.</param>
 	/// <param name="value">The <see cref="AttachedVisualFactoryBase"/> value to set.</param>
-	public static void SetVisualFactory(UIElement element, AttachedVisualFactoryBase value)
-	{
-		element.SetValue(VisualFactoryProperty, value);
-	}
+	public static void SetVisualFactory(UIElement element, AttachedVisualFactoryBase value) => element.SetValue(VisualFactoryProperty, value);
 
 	/// <summary>
 	/// Callback to apply the visual for <see cref="VisualFactoryProperty"/>.

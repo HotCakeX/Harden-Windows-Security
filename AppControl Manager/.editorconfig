@@ -34,8 +34,6 @@ dotnet_separate_import_directive_groups = false:error
 csharp_using_directive_placement = outside_namespace:error
 csharp_prefer_simple_using_statement = true:error
 csharp_new_line_before_members_in_object_initializers = true:error
-csharp_space_after_dot = false:error
-csharp_space_before_comma = false:error
 # csharp_new_line_before_open_brace = all:error
 csharp_new_line_before_else = true:error
 csharp_new_line_before_catch = true:error
@@ -1090,16 +1088,15 @@ dotnet_diagnostic.IDE0330.severity = error
 
 # IDE0304: Use collection expression for builder
 dotnet_diagnostic.IDE0304.severity = error
+
 # https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/language-rules#option-format
-dotnet_style_prefer_collection_expression = when_types_loosely_match:error
+dotnet_style_prefer_collection_expression = when_types_exactly_match:error
 
 # IDE0303: Use collection expression for Create()
 dotnet_diagnostic.IDE0303.severity = error
-dotnet_style_prefer_collection_expression = when_types_loosely_match:error
 
 # IDE0302: Use collection expression for stackalloc
 dotnet_diagnostic.IDE0302.severity = error
-dotnet_style_prefer_collection_expression = when_types_exactly_match:error
 
 # IDE0280: Use 'nameof'
 dotnet_diagnostic.IDE0280.severity = error
@@ -1843,9 +1840,6 @@ dotnet_diagnostic.IDE0350.severity = error
 # IDE0340: Use unbound generic type
 dotnet_diagnostic.IDE0340.severity = error
 
-# IDE0340: Use unbound generic type
-dotnet_diagnostic.IDE0340.severity = error
-
 # IDE3000: Implement with Copilot
 dotnet_diagnostic.IDE3000.severity = error
 
@@ -1921,6 +1915,23 @@ dotnet_diagnostic.IDE0035.severity = error
 # IDE0045: Use conditional expression for assignment
 dotnet_diagnostic.IDE0045.severity = error
 dotnet_style_prefer_conditional_expression_over_assignment = true
+
+# CA2007: Do not directly await a Task
+dotnet_diagnostic.CA2007.severity = none
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = none
+
+# CA5350: Do Not Use Weak Cryptographic Algorithms
+# NOTE: The apps do not actually use weak crypto to secure anything. This exception is to allow the apps to read and parse files that use weak crypto, expanding apps' capabilities and abilities.
+dotnet_diagnostic.CA5350.severity = none
+
+# CA5351: Do Not Use Broken Cryptographic Algorithms
+# NOTE: The apps do not actually use weak crypto to secure anything. This exception is to allow the apps to read and parse files that use weak crypto, expanding apps' capabilities and abilities.
+dotnet_diagnostic.CA5351.severity = none
+
+# CA5381: Ensure certificates are not added to root store
+dotnet_diagnostic.CA5381.severity = none
 
 # All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
 # dotnet_code_quality.dispose_analysis_kind = AllPaths

@@ -115,7 +115,7 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 		}
 	}
 
-	internal void RefreshDrives_Click(object sender, RoutedEventArgs e)
+	internal void RefreshDrives_Click()
 	{
 		RefreshDrives();
 		MainInfoBar.WriteSuccess("Drives refreshed.");
@@ -149,7 +149,7 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 		}
 	}
 
-	internal void BrowseIso_Click(object sender, RoutedEventArgs e)
+	internal void BrowseIso_Click()
 	{
 		string? file = FileDialogHelper.ShowFilePickerDialog("ISO Files|*.iso");
 		if (!string.IsNullOrEmpty(file))
@@ -158,7 +158,7 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 		}
 	}
 
-	internal void BrowseExtractionFolder_Click(object sender, RoutedEventArgs e)
+	internal void BrowseExtractionFolder_Click()
 	{
 		string? folder = FileDialogHelper.ShowDirectoryPickerDialog();
 		if (!string.IsNullOrEmpty(folder))
@@ -180,7 +180,7 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 		}
 	}
 
-	internal async void CreateBootableDrive_Click(object sender, RoutedEventArgs e)
+	internal async void CreateBootableDrive_Click()
 	{
 		if (IsManualMode)
 		{
@@ -245,7 +245,7 @@ internal sealed partial class BootableDriveMakerVM : ViewModelBase
 		}
 	}
 
-	internal async void ExtractIso_Click(object sender, RoutedEventArgs e)
+	internal async void ExtractIso_Click()
 	{
 		if (!File.Exists(IsoPath))
 		{

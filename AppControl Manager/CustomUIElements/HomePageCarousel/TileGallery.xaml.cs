@@ -99,8 +99,6 @@ internal sealed partial class TileGallery : UserControl
 		_ = ScrollBackBtn.Focus(FocusState.Programmatic);
 	}
 
-	private void Scroller_SizeChanged(object sender, SizeChangedEventArgs e)
-	{
+	private void Scroller_SizeChanged(object sender, SizeChangedEventArgs e) =>
 		ScrollForwardBtn.Visibility = scroller.ScrollableWidth > 0 ? Visibility.Visible : Visibility.Collapsed;
-	}
 }

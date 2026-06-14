@@ -148,10 +148,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			GroupNamesCollection.Add(item);
 		}
 
-		if (savedHorizontal.HasValue && sv is not null)
-		{
-			_ = sv.ChangeView(savedHorizontal, null, null, disableAnimation: true);
-		}
+		_ = sv?.ChangeView(savedHorizontal, null, null, disableAnimation: true);
 	}
 
 	#endregion
@@ -685,7 +682,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 				}
 
 				// Light pacing between calls (skip after last).
-				if (i < total && interRequestDelayMilliseconds > 0)
+				if (i < total)
 				{
 					await Task.Delay(interRequestDelayMilliseconds);
 				}

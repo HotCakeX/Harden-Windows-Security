@@ -960,11 +960,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		Exclusions.Clear();
 		Exclusions.AddRange(filteredResults);
 
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-		}
+		// restore horizontal scroll position
+		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 
 		// Adjust column widths after search
 		ComputeColumnWidths();

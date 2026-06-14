@@ -1428,7 +1428,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Enable all selected items in bulk
 	/// </summary>
-	internal async void EnableSelected_Click(object sender, RoutedEventArgs e)
+	internal async void EnableSelected_Click()
 	{
 		if (ItemsSourceSelectedItems.Count == 0)
 		{
@@ -1580,7 +1580,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Disable all selected items in bulk
 	/// </summary>
-	internal async void DisableSelected_Click(object sender, RoutedEventArgs e)
+	internal async void DisableSelected_Click()
 	{
 		if (ItemsSourceSelectedItems.Count == 0)
 		{
@@ -1735,9 +1735,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// For selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
 	/// Adding the items to <see cref="ItemsSourceSelectedItems"/>.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	internal void SelectAll_Click(object sender, RoutedEventArgs e)
+	internal void SelectAll_Click()
 	{
 		if (_isUpdatingSelection) return;
 
@@ -1754,9 +1752,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// For De-selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
 	/// Removing the items from <see cref="ItemsSourceSelectedItems"/>.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	internal void RemoveSelections_Click(object sender, RoutedEventArgs e)
+	internal void RemoveSelections_Click()
 	{
 		if (_isUpdatingSelection) return;
 
@@ -2027,15 +2023,11 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 	private bool WasLastDismOperationCancelled() => _dismServiceClient?.LastOperationWasCancelled == true;
 
-	private void ReportCancelledEntryOperation(DISMOutputEntry entry, string operationName)
-	{
+	private void ReportCancelledEntryOperation(DISMOutputEntry entry, string operationName) =>
 		MainInfoBar.WriteWarning($"{operationName} {entry.TypeDisplayName.ToLowerInvariant()} cancelled: {entry.Name}");
-	}
 
-	private void ReportCancelledConfigOperation(OptionalFeatureConfig config, string operationName)
-	{
+	private void ReportCancelledConfigOperation(OptionalFeatureConfig config, string operationName) =>
 		MainInfoBar.WriteWarning($"{operationName} {config.Type.ToString().ToLowerInvariant()} cancelled: {config.Name}");
-	}
 
 	/// <summary>
 	/// Apply the recommended configs by processing predefined features and capabilities according to their configurations we defined earlier.
@@ -2106,7 +2098,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							successCount++;
 							string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enabled" : "disabled";
-							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteInfo(string.Format("Successfully {0} {1}: {2}", operationName, config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 						else
 						{
@@ -2121,7 +2113,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							failureCount++;
 							string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enable" : "disable";
 							failedItems.Add($"{config.Type}: {config.Name}");
-							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteWarning(string.Format("Failed to {0} {1}: {2}", operationName, config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 					}
 					catch (Exception ex)
@@ -2129,7 +2121,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						failureCount++;
 						string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enabling" : "disabling";
 						failedItems.Add($"{config.Type}: {config.Name}");
-						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
+						MainInfoBar.WriteWarning(string.Format("Error {0} {1}: {2}", operationName, config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
 					}
 					finally
 					{
@@ -2465,7 +2457,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							successCount++;
 							string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restored" : "removed";
-							MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteInfo(string.Format("Successfully {0} {1}: {2}", operationName, config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 						else
 						{
@@ -2480,7 +2472,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							failureCount++;
 							string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restore" : "remove";
 							failedItems.Add($"{config.Type}: {config.Name}");
-							MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
+							MainInfoBar.WriteWarning(string.Format("Failed to {0} {1}: {2}", operationName, config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 					}
 					catch (Exception ex)
@@ -2488,7 +2480,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						failureCount++;
 						string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restoring" : "removing";
 						failedItems.Add($"{config.Type}: {config.Name}");
-						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
+						MainInfoBar.WriteWarning(string.Format("Error {0} {1}: {2}", operationName, config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
 					}
 					finally
 					{

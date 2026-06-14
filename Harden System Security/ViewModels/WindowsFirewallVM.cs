@@ -656,10 +656,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 		ComputeColumnWidths();
 
-		if (sv is not null && savedHorizontal.HasValue)
-		{
-			_ = sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-		}
+		_ = sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 	}
 
 	#endregion
@@ -740,7 +737,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Deletes the selected firewall rules (uses rule.Name, not DisplayString), then refreshes.
 	/// </summary>
-	internal async void DeleteSelectedFirewallRules_Click(object sender, RoutedEventArgs e)
+	internal async void DeleteSelectedFirewallRules_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Firewall_Management);
 

@@ -422,15 +422,9 @@ internal static class DataDump
 		return $"{size:F2} {suffixes[suffixIndex]} ({bytes:N0} bytes)";
 	}
 
-	private static string FormatValue(object? value)
-	{
-		return value?.ToString() ?? "Not configured";
-	}
+	private static string FormatValue(object? value) => value?.ToString() ?? "Not configured";
 
-	private static string FormatStringValue(string? value)
-	{
-		return string.IsNullOrEmpty(value) ? "Not configured" : $"\"{value}\"";
-	}
+	private static string FormatStringValue(string? value) => string.IsNullOrEmpty(value) ? "Not configured" : $"\"{value}\"";
 
 	private static string FormatBooleanValue(object? value)
 	{

@@ -39,15 +39,9 @@ internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ProtectPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect");
 
-	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
-	{
-		AnimateShadowBlur((FrameworkElement)sender, 20.0f);
-	}
+	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e) => AnimateShadowBlur((FrameworkElement)sender, 20.0f);
 
-	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
-	{
-		AnimateShadowBlur((FrameworkElement)sender, 10.0f);
-	}
+	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) => AnimateShadowBlur((FrameworkElement)sender, 10.0f);
 
 	private void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)
 	{

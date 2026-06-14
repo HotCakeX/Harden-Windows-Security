@@ -189,17 +189,10 @@ internal sealed partial class SimulationVM : ViewModelBase
 		).ToList();
 
 		SimulationOutputs.Clear();
+		SimulationOutputs.AddRange(filteredResults);
 
-		foreach (SimulationOutput item in CollectionsMarshal.AsSpan(filteredResults))
-		{
-			SimulationOutputs.Add(item);
-		}
-
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-		}
+		// restore horizontal scroll position
+		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 	}
 
 

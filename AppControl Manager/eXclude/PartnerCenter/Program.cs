@@ -49,41 +49,15 @@ internal sealed partial class ApplicationPackageJsonContext : JsonSerializerCont
 
 internal sealed class ApplicationPackage
 {
-	[JsonInclude]
-	[JsonPropertyName("FileName")]
-	internal string FileName { get; init; } = string.Empty;
-
-	[JsonInclude]
-	[JsonPropertyName("FileStatus")]
-	internal string FileStatus { get; init; } = "PendingUpload";
-
-	[JsonInclude]
-	[JsonPropertyName("MinimumDirectXVersion")]
-	internal string MinimumDirectXVersion { get; init; } = "None";
-
-	[JsonInclude]
-	[JsonPropertyName("MinimumSystemRam")]
-	internal string MinimumSystemRam { get; init; } = "None";
-
-	[JsonInclude]
-	[JsonPropertyName("Id")]
-	internal string? Id { get; init; }
-
-	[JsonInclude]
-	[JsonPropertyName("Version")]
-	internal string? Version { get; init; }
-
-	[JsonInclude]
-	[JsonPropertyName("Architecture")]
-	internal string? Architecture { get; init; }
-
-	[JsonInclude]
-	[JsonPropertyName("Languages")]
-	internal string[]? Languages { get; init; }
-
-	[JsonInclude]
-	[JsonPropertyName("Capabilities")]
-	internal string[]? Capabilities { get; init; }
+	public string FileName { get; init; } = string.Empty;
+	public string FileStatus { get; init; } = "PendingUpload";
+	public string MinimumDirectXVersion { get; init; } = "None";
+	public string MinimumSystemRam { get; init; } = "None";
+	public string? Id { get; init; }
+	public string? Version { get; init; }
+	public string? Architecture { get; init; }
+	public string[]? Languages { get; init; }
+	public string[]? Capabilities { get; init; }
 
 	/// <summary>
 	/// Validates that the JSON object contains exactly the expected properties.
@@ -143,8 +117,6 @@ internal sealed class ApplicationPackage
 	/// </summary>
 	internal static ApplicationPackage FromJsonElement(JsonElement jsonElement)
 	{
-		// ValidateJsonStructure(jsonElement);
-
 		ApplicationPackage? package = JsonSerializer.Deserialize(jsonElement.GetRawText(), ApplicationPackageJsonContext.Default.ApplicationPackage);
 		return package ?? throw new InvalidOperationException("Failed to deserialize ApplicationPackage");
 	}
@@ -906,7 +878,7 @@ internal static class Helpers
 		try
 		{
 			using JsonDocument singleDoc = JsonDocument.Parse(oldest.PackageObject.ToJsonString());
-			ApplicationPackage _ = ApplicationPackage.FromJsonElement(singleDoc.RootElement);
+			_ = ApplicationPackage.FromJsonElement(singleDoc.RootElement);
 			WriteSensitiveLogs($"Oldest active package candidate for marking PendingDelete: {oldest.PackageObject["fileName"]?.GetValue<string>() ?? "<unknown>"}");
 		}
 		catch (Exception ex)

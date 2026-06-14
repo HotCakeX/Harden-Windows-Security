@@ -1912,10 +1912,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
-		PropertyChanged?.Invoke(this, new(propertyName));
-	}
+	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new(propertyName));
 
 	#endregion
 }

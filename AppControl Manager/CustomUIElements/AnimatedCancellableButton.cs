@@ -507,7 +507,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		double transitionProgress = (double)_colorTransitionCounter / COLOR_TRANSITION_DURATION;
 		transitionProgress = Math.Clamp(transitionProgress, 0.0, 1.0);
 
-		double easedProgress = EaseInOutCubic(transitionProgress);
+		double easedProgress = transitionProgress < 0.5 ? 4 * transitionProgress * transitionProgress * transitionProgress : 1 - Math.Pow(-2 * transitionProgress + 2, 3) / 2;
 
 		Color currentColor = _shadowColors[_currentColorIndex];
 		Color nextColor = _shadowColors[_nextColorIndex];
@@ -518,11 +518,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		byte interpolatedB = (byte)(currentColor.B + (nextColor.B - currentColor.B) * easedProgress);
 
 		return Color.FromArgb(interpolatedA, interpolatedR, interpolatedG, interpolatedB);
-	}
-
-	private static double EaseInOutCubic(double t)
-	{
-		return t < 0.5 ? 4 * t * t * t : 1 - Math.Pow(-2 * t + 2, 3) / 2;
 	}
 
 	private void AdvanceToNextShadowColor()

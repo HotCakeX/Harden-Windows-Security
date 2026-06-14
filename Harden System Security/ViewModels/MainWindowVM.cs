@@ -1213,8 +1213,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				{
 					throw new InvalidOperationException(Atlas.GetStr("FailedToRestoreMicrosoftPrintToPdfPrinter"));
 				}
-
-				printToPdfFeatureState = await GetPrintToPdfFeatureStateAsync(dismServiceClient);
 			}
 
 			bool printerRestored = await Printer.WaitForPrinterInstallationAsync(Printer.MicrosoftPrintToPdfPrinterName);

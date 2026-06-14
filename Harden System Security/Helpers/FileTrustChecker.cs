@@ -91,9 +91,6 @@ internal static class FileTrustChecker
 			// If query is successful
 			if (result is 0)
 			{
-				// Parse the trust score based on the enum
-				TrustScore score = (TrustScore)parameters.TrustScore;
-
 				// Output extra info if available
 				if (MpFileTrustExtraInfoCOUNT > 0 && extraInfoPtr != IntPtr.Zero)
 				{

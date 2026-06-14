@@ -163,8 +163,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			(policy.KeyName is not null && policy.KeyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(policy.ValueName is not null && policy.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			policy.ValueDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-			(policy.Category is not null && (policy.Category?.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
-			(policy.SubCategory is not null && (policy.SubCategory?.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
+			(policy.Category is not null && (policy.Category.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
+			(policy.SubCategory is not null && (policy.SubCategory.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
 			(policy.FriendlyName is not null && policy.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			policy.policyAction.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
 		);
@@ -174,11 +174,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 		CalculateColumnWidths();
 
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-		}
+		// restore horizontal scroll position
+		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 
 		return true;
 	}
@@ -459,8 +456,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			}
 
 			// Event handler for textchanged
-			void TextChangedHandler(object sender, TextChangedEventArgs args) =>
-				ValidateInput(inputTextBox.Text ?? string.Empty);
+			void TextChangedHandler(object sender, TextChangedEventArgs args) => ValidateInput(inputTextBox.Text ?? string.Empty);
 
 			// Hook up event
 			inputTextBox.TextChanged += TextChangedHandler;

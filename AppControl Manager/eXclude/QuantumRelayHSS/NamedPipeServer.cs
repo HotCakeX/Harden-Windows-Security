@@ -164,7 +164,6 @@ internal sealed class NamedPipeServer : IDisposable
 					if (sessionCounted)
 					{
 						OnClientDisconnected();
-						sessionCounted = false;
 					}
 				}
 			}

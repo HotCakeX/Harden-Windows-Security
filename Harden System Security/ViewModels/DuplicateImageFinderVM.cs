@@ -115,7 +115,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 		internal ReadOnlyMemory<byte> BackupData => backupData;
 	}
 
-	internal void BrowseFiles_Click(object sender, RoutedEventArgs e)
+	internal void BrowseFiles_Click()
 	{
 		List<string> files = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.AnyFilePickerFilter);
 		foreach (string file in CollectionsMarshal.AsSpan(files))
@@ -126,7 +126,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 
 	internal void ClearSelectedFiles() => SelectedFiles.Clear();
 
-	internal void BrowseFolders_Click(object sender, RoutedEventArgs e)
+	internal void BrowseFolders_Click()
 	{
 		List<string> folders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 		foreach (string folder in CollectionsMarshal.AsSpan(folders))
@@ -173,9 +173,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	/// <summary>
 	/// Initiates the main scan task.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	internal async void StartScan_Click(object sender, RoutedEventArgs e)
+	internal async void StartScan_Click()
 	{
 		if (SelectedFiles.Count == 0 && SelectedFolders.Count == 0)
 		{
@@ -482,7 +480,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 		}
 	}
 
-	internal async void AutoDeleteAll_Click(object sender, RoutedEventArgs e)
+	internal async void AutoDeleteAll_Click()
 	{
 		if (AllDuplicateGroups.Count == 0) return;
 

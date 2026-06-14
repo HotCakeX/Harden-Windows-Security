@@ -143,7 +143,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <summary>
 	/// Handles the Loaded event to configure the ItemsStackPanel with current settings
 	/// </summary>
-	private void MUnitListViewControl_Loaded(object sender, RoutedEventArgs e)
+	private void MUnitListViewControl_Loaded()
 	{
 		// Set the initial value and configure the panel
 		ConfigureItemsStackPanel();
@@ -427,9 +427,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// For selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged(object, SelectionChangedEventArgs)"/> method as well,
 	/// Adding the items to <see cref="IMUnitListViewModel.ItemsSourceSelectedItems"/>.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAllMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+	private void SelectAllMenuFlyoutItem_Click()
 	{
 		if (_isDisposed) return;
 
@@ -446,12 +444,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// For De-selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged(object, SelectionChangedEventArgs)"/> method as well,
 	/// Removing the items from <see cref="IMUnitListViewModel.ItemsSourceSelectedItems"/>.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void RemoveSelectionsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+	private void RemoveSelectionsMenuFlyoutItem_Click()
 	{
 		if (_isDisposed) return;
-
 		MainListView.SelectedItems.Clear();
 	}
 
@@ -850,7 +845,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <summary>
 	/// Handle Unloaded event to clean up resources
 	/// </summary>
-	private void MUnitListViewControl_Unloaded(object sender, RoutedEventArgs e)
+	private void MUnitListViewControl_Unloaded()
 	{
 		// If the host requested explicit disposal, skip automatic disposal here.
 		if (DisposeOnlyOnExplicitCall)
@@ -1110,7 +1105,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <summary>
 	/// Exports all of the security measures that belong to the current category to a JSON file.
 	/// </summary>
-	internal async void ExportToJson_Click(object sender, RoutedEventArgs e)
+	internal async void ExportToJson_Click()
 	{
 		if (_isDisposed || ViewModel is null)
 		{

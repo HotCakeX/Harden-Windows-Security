@@ -367,11 +367,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			AllPolicies.Clear();
 			AllPolicies.AddRange(filteredResults); // Update the ObservableCollection with the filtered results
 
-			if (Sv != null && savedHorizontal.HasValue)
-			{
-				// restore horizontal scroll position
-				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-			}
+			// restore horizontal scroll position
+			_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 		catch (Exception ex)
 		{
@@ -497,7 +494,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// <summary>
 	/// Opens the assignments dialog for the currently selected policy (via Toolbar button)
 	/// </summary>
-	internal void ViewAssignments_Click(object sender, RoutedEventArgs e)
+	internal void ViewAssignments_Click()
 	{
 		if (ListViewSelectedPolicy is not null)
 		{

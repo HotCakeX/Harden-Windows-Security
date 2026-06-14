@@ -206,10 +206,7 @@ internal static partial class SwitchHelpers
 				return result;
 			}
 
-			static object ThrowExceptionForKeyNotFound()
-			{
-				throw new InvalidOperationException("The requested enum value was not present in the provided type.");
-			}
+			static object ThrowExceptionForKeyNotFound() => throw new InvalidOperationException("The requested enum value was not present in the provided type.");
 
 			return ThrowExceptionForKeyNotFound();
 		}
@@ -264,10 +261,7 @@ public sealed partial class SwitchConverter : DependencyObject, IValueConverter
 		return result?.Content!;
 	}
 
-	public object ConvertBack(object value, Type targetType, object parameter, string language)
-	{
-		throw new NotImplementedException();
-	}
+	public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
 }
 
 /// <summary>

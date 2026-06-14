@@ -29,8 +29,5 @@ internal sealed partial class GroupInfoListForPackagedAppView(IEnumerable<Packag
 	// string is the type for Key since it's based on DisplayName[..1] and will always be a string
 	internal string Key => key;
 
-	public override string ToString()
-	{
-		return "Group " + Key;
-	}
+	public override string ToString() => "Group " + Key;
 }

@@ -45,15 +45,15 @@
 
             <Button x:Uid="LoopbackDialogRefreshButton"
                     IsEnabled="{x:Bind ActionsAreEnabled, Mode=OneWay}"
-                    Click="RefreshButton_Click" />
+                    Click="{x:Bind RefreshButton_Click}" />
 
             <Button x:Uid="LoopbackDialogAddAllButton"
                     IsEnabled="{x:Bind ActionsAreEnabled, Mode=OneWay}"
-                    Click="AddAllButton_Click" />
+                    Click="{x:Bind AddAllButton_Click}" />
 
             <Button x:Uid="LoopbackDialogClearAllButton"
                     IsEnabled="{x:Bind ActionsAreEnabled, Mode=OneWay}"
-                    Click="ClearAllButton_Click" />
+                    Click="{x:Bind ClearAllButton_Click}" />
         </CCToolKit:WrapPanel>
 
         <Border Grid.Row="3"

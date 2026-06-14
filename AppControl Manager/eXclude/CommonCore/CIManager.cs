@@ -62,7 +62,7 @@ internal static partial class CIManager
 				// Obtain the management "this" pointer
 				// Calling CodeIntegrity::Management::ParsePolicy(&view, bytes, len) to build a SiPolicyView,
 				// Then passing *(CodeIntegrity::Management**)view as the first argument ("this") to BeginUpsertCIPolicy.
-				long parseStatus = NativeMethods.ParsePolicy(out siPolicyView, pBytes, (nuint)bytes.Length);
+				_ = NativeMethods.ParsePolicy(out siPolicyView, pBytes, (nuint)bytes.Length);
 
 				if (siPolicyView == null)
 				{
@@ -185,7 +185,6 @@ internal static partial class CIManager
 					return; // Avoid freeing if header math looks wrong.
 				}
 				actualStart = headerBase;
-				size += 39UL; // Sized delete adjustment.
 			}
 
 			// query heap size when available.

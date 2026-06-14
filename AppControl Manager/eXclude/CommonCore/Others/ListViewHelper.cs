@@ -183,11 +183,8 @@ internal static partial class ListViewHelper
 			filteredCollection.AddRange(filteredResults);
 		}
 
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-		}
+		// restore horizontal scroll position
+		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 	}
 
 	/// <summary>

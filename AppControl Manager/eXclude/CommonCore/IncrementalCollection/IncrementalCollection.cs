@@ -189,10 +189,7 @@ internal sealed partial class IncrementalCollection<T>(
 	/// Raises the PropertyChanged event.
 	/// </summary>
 	/// <param name="propertyName">The name of the property that changed.</param>
-	private void OnPropertyChanged(string propertyName)
-	{
-		PropertyChanged?.Invoke(this, new(propertyName));
-	}
+	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 
 	/// <summary>
 	/// Occurs when a property value changes.
@@ -203,18 +200,7 @@ internal sealed partial class IncrementalCollection<T>(
 	/// Raises the LoadingStateChanged event.
 	/// </summary>
 	/// <param name="isLoading">Whether loading is currently active.</param>
-	private void OnLoadingStateChanged(bool isLoading)
-	{
-		LoadingStateChanged?.Invoke(this, isLoading);
-	}
-
-	/// <summary>
-	/// Forces property change notification and updates the UI state.
-	/// </summary>
-	private void ForceUIStateUpdate()
-	{
-		OnPropertyChanged(nameof(HasMoreItems));
-	}
+	private void OnLoadingStateChanged(bool isLoading) => LoadingStateChanged?.Invoke(this, isLoading);
 
 	/// <summary>
 	/// Immediately clears all data and UI items to free memory aggressively.
@@ -440,7 +426,7 @@ internal sealed partial class IncrementalCollection<T>(
 				if (currentOperationId == _filterOperationId)
 				{
 					Clear();
-					ForceUIStateUpdate();
+					OnPropertyChanged(nameof(HasMoreItems));
 
 					if (hasItems && !cancellationToken.IsCancellationRequested && !_disposed)
 					{
@@ -464,7 +450,7 @@ internal sealed partial class IncrementalCollection<T>(
 				}
 
 				OnLoadingStateChanged(false);
-				ForceUIStateUpdate();
+				OnPropertyChanged(nameof(HasMoreItems));
 			}
 		}
 		finally
@@ -568,7 +554,7 @@ internal sealed partial class IncrementalCollection<T>(
 						Add(item);
 					}
 
-					ForceUIStateUpdate();
+					OnPropertyChanged(nameof(HasMoreItems));
 
 					return new LoadMoreItemsResult { Count = actualCount };
 				}

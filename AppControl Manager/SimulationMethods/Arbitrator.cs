@@ -310,12 +310,9 @@ internal static class Arbitrator
 							}
 						}
 
-						if (EKUsMatch)
-						{
-							// If the Signer has EKU, it was WHQL EKU (determined early on) but there was no WHQL level match made with the file's properties then skip the current signer
-							// as the rest of the levels are not applicable for a WHQL type of signer
-							continue;
-						}
+						// The signer is WHQL and its EKU matched the file, but no WHQL level matched the file's properties.
+						// Do not fall through to the non-WHQL signer levels for this signer as the rest of the levels are not applicable for a WHQL type of signer.
+						continue;
 					}
 					//else {
 					// If the signer isn't WHQL, just a regular signer with EKU and they matched with the file's EKUs

@@ -92,12 +92,12 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Sortable Headers -->
-                        <Button Content="Port" Tag="Port" Grid.Column="0" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="HeaderSortingButton_Click" />
-                        <Button Content="Protocol" Tag="Protocol" Grid.Column="1" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="HeaderSortingButton_Click" />
-                        <Button Content="Local Address" Tag="LocalAddress" Grid.Column="2" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="HeaderSortingButton_Click" />
-                        <Button Content="Remote Address" Tag="RemoteAddressAndPort" Grid.Column="3" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="HeaderSortingButton_Click" />
-                        <Button Content="State" Tag="State" Grid.Column="4" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="HeaderSortingButton_Click" />
-                        <Button Content="Process" Tag="Process" Grid.Column="5" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="HeaderSortingButton_Click" />
+                        <Button Content="Port" Tag="Port" Grid.Column="0" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="{x:Bind HeaderSortingButton_Click}" />
+                        <Button Content="Protocol" Tag="Protocol" Grid.Column="1" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="{x:Bind HeaderSortingButton_Click}" />
+                        <Button Content="Local Address" Tag="LocalAddress" Grid.Column="2" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="{x:Bind HeaderSortingButton_Click}" />
+                        <Button Content="Remote Address" Tag="RemoteAddressAndPort" Grid.Column="3" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="{x:Bind HeaderSortingButton_Click}" />
+                        <Button Content="State" Tag="State" Grid.Column="4" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="{x:Bind HeaderSortingButton_Click}" />
+                        <Button Content="Process" Tag="Process" Grid.Column="5" Background="Transparent" Foreground="LightGray" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderThickness="0" Click="{x:Bind HeaderSortingButton_Click}" />
                     </Grid>
                 </Border>
             </ListView.Header>

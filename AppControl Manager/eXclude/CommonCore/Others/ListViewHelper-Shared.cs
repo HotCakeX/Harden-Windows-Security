@@ -332,10 +332,7 @@ internal static partial class ListViewHelper
 		observableCollection.AddRange(sortedData);
 
 		// Restore horizontal scroll position
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: true);
-		}
+		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: true);
 	}
 
 	/// <summary>

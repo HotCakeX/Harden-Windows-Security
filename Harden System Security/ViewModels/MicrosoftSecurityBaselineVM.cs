@@ -219,11 +219,8 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		VerificationResults.Clear();
 		VerificationResults.AddRange(filteredResults);
 
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-		}
+		// restore horizontal scroll position
+		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 
 		// Adjust column widths after search
 		CalculateColumnWidths();
@@ -331,7 +328,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 				? new Uri(CustomBaselineFilePath)
 				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
 
-			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
+			_ = await MSBaseline.DownloadAndProcessSecurityBaseline(
 				sourceUri,
 				MSBaseline.Action.Apply,
 				cancellationToken: ApplyAllCancellableButton.Cts?.Token);
@@ -445,7 +442,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 				? new Uri(CustomBaselineFilePath)
 				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
 
-			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
+			_ = await MSBaseline.DownloadAndProcessSecurityBaseline(
 				sourceUri,
 				MSBaseline.Action.Remove,
 				cancellationToken: RemoveAllCancellableButton.Cts?.Token);
@@ -845,7 +842,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		}
 	} = Atlas.Settings.RememberMSSecurityBaselineFilePath;
 
-	internal void Page_Loaded(object sender, RoutedEventArgs e)
+	internal void Page_Loaded()
 	{
 		if (Atlas.Settings.RememberMSSecurityBaselineFilePath && Path.Exists(Atlas.Settings.MSSecurityBaselineFilePath))
 		{

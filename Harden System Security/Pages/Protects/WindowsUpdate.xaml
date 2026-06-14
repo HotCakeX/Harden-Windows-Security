@@ -287,7 +287,7 @@
                                                   Margin="0,4,0,4">
 
                                             <Expander.Header>
-                                                <Grid Padding="0,6,0,6"
+                                                <Grid Padding="0,10,0,10"
                                                       HorizontalAlignment="Stretch"
                                                       RowSpacing="8">
                                                     <Grid.RowDefinitions>

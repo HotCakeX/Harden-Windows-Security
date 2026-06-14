@@ -1491,7 +1491,7 @@ internal static class EXIFScrubber
 		else return;
 
 		ushort magic = isLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(tiffData.Slice(2, 2)) : BinaryPrimitives.ReadUInt16BigEndian(tiffData.Slice(2, 2));
-		if (magic != 42 && magic != 0x002A) return;
+		if (magic != 0x002A) return;
 
 		uint ifdOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(tiffData.Slice(4, 4)) : BinaryPrimitives.ReadUInt32BigEndian(tiffData.Slice(4, 4));
 

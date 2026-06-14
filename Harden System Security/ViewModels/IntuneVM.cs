@@ -146,7 +146,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 
 	private void ApplyFilters()
 	{
-		Microsoft.UI.Xaml.Controls.ScrollViewer? sv =
+		ScrollViewer? sv =
 			CommonCore.Others.ListViewHelper.GetScrollViewerFromCache(CommonCore.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
 		double? savedHorizontal = sv?.HorizontalOffset;
 
@@ -169,10 +169,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		Policies.Clear();
 		Policies.AddRange(filtered);
 
-		if (savedHorizontal.HasValue && sv is not null)
-		{
-			_ = sv.ChangeView(savedHorizontal, null, null, disableAnimation: true);
-		}
+		_ = sv?.ChangeView(savedHorizontal, null, null, disableAnimation: true);
 	}
 
 	/// <summary>

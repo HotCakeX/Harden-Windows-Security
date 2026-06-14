@@ -33,8 +33,5 @@ internal sealed partial class AllFileSigners(SignedCms signerCertificate, IntPtr
 		? new X509Chain()
 		: new X509Chain(chainContext);
 
-	public void Dispose()
-	{
-		Chain.Dispose();
-	}
+	public void Dispose() => Chain.Dispose();
 }

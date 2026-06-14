@@ -173,11 +173,8 @@ internal static class CipherSuiteManager
 							enumState = IntPtr.Zero;
 						}
 
-						if (providerHandle != 0)
-						{
-							_ = NativeMethods.SslFreeObject(providerHandle, 0U);
-							providerHandle = 0;
-						}
+						_ = NativeMethods.SslFreeObject(providerHandle, 0U);
+						providerHandle = 0;
 					}
 
 					NativeMethods.BCryptFreeBuffer(providerRefs);
@@ -426,10 +423,7 @@ internal static class CipherSuiteManager
 		}
 	}
 
-	private static uint ReadUInt32(IntPtr basePtr, int offset)
-	{
-		return unchecked((uint)Marshal.ReadInt32(basePtr, offset));
-	}
+	private static uint ReadUInt32(IntPtr basePtr, int offset) => unchecked((uint)Marshal.ReadInt32(basePtr, offset));
 
 	private static string ReadUnicodeString(IntPtr basePtr, int offset)
 	{

@@ -1426,7 +1426,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
 			MainInfoBar.WriteError(ex);
 		}
 		finally
@@ -1668,14 +1667,14 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 	#endregion
 
-	internal void Page_Unloaded(object sender, RoutedEventArgs e)
+	internal void Page_Unloaded()
 	{
 		// Null the UI references when the page is unloaded.
 		UIListView = null;
 		VerificationResultsPopUp = null;
 	}
 
-	internal void Page_Loaded(object sender, RoutedEventArgs e)
+	internal void Page_Loaded()
 	{
 		if (VerificationPopupIsPending)
 			DisplayVerificationPopup();

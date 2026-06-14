@@ -36,22 +36,22 @@ using Microsoft.Win32;
 namespace HardenSystemSecurity.ViewModels;
 
 internal sealed class CspPolicyEntry(
-	string? name,
-	string? omaUri,
+	string name,
+	string omaUri,
 	string? description,
-	string? format,
+	string format,
 	string? defaultValue,
-	string? accessTypes,
-	string? allowedValues,
+	string accessTypes,
+	string allowedValues,
 	string? scope)
 {
 	[JsonInclude]
 	[JsonPropertyOrder(0)]
-	internal string? Name => name;
+	internal string Name => name;
 
 	[JsonInclude]
 	[JsonPropertyOrder(1)]
-	internal string? OmaUri => omaUri;
+	internal string OmaUri => omaUri;
 
 	[JsonInclude]
 	[JsonPropertyOrder(2)]
@@ -59,7 +59,7 @@ internal sealed class CspPolicyEntry(
 
 	[JsonInclude]
 	[JsonPropertyOrder(3)]
-	internal string? Format => format;
+	internal string Format => format;
 
 	[JsonInclude]
 	[JsonPropertyOrder(4)]
@@ -67,11 +67,11 @@ internal sealed class CspPolicyEntry(
 
 	[JsonInclude]
 	[JsonPropertyOrder(5)]
-	internal string? AccessTypes => accessTypes;
+	internal string AccessTypes => accessTypes;
 
 	[JsonInclude]
 	[JsonPropertyOrder(6)]
-	internal string? AllowedValues => allowedValues;
+	internal string AllowedValues => allowedValues;
 
 	[JsonInclude]
 	[JsonPropertyOrder(7)]
@@ -449,14 +449,14 @@ internal sealed partial class CSPVM : ViewModelBase
 		if (!string.IsNullOrEmpty(term))
 		{
 			query = query.Where(p =>
-				(p.Name?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.OmaUri?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				p.Name.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+				p.OmaUri.Contains(term, StringComparison.OrdinalIgnoreCase) ||
 				(p.Description?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.CurrentValue?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.DefaultValue?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.Format?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.AccessTypes?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.AllowedValues?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				p.Format.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+				p.AccessTypes.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+				p.AllowedValues.Contains(term, StringComparison.OrdinalIgnoreCase) ||
 				(p.Scope?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false)
 			);
 		}
@@ -638,9 +638,9 @@ internal sealed partial class CSPVM : ViewModelBase
 				if (props != null)
 				{
 					XElement? format = props.Element("DFFormat");
-					bool isLeaf = format != null && !format.Elements().Any(e => e.Name.LocalName.Equals("node", StringComparison.OrdinalIgnoreCase));
 
-					if (isLeaf)
+					// this DDF node is a leaf node, not a container node.
+					if (format != null && !format.Elements().Any(e => e.Name.LocalName.Equals("node", StringComparison.OrdinalIgnoreCase)))
 					{
 						bool hasGet = props.Element("AccessType")?.Elements().Any(a => a.Name.LocalName.Equals("Get", StringComparison.OrdinalIgnoreCase)) == true;
 
@@ -652,7 +652,7 @@ internal sealed partial class CSPVM : ViewModelBase
 								nodeName,
 								EnsureDotSlash(currentPath),
 								props.Element("Description")?.Value?.Trim(),
-								format?.Elements().FirstOrDefault()?.Name.LocalName.Trim() ?? Atlas.GetStr("UnknownState"),
+								format.Elements().FirstOrDefault()?.Name.LocalName.Trim() ?? Atlas.GetStr("UnknownState"),
 								props.Element("DefaultValue")?.Value,
 								string.Join(", ", props.Element("AccessType")?.Elements().Select(e => e.Name.LocalName) ?? []),
 								GetAllowedValues(props),

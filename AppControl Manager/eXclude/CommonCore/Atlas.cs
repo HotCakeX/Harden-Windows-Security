@@ -40,7 +40,7 @@ internal static partial class Atlas
 	internal static readonly Uri MSFTRecommendedDriverBlockRulesURL = new("https://aka.ms/VulnerableDriverBlockList");
 
 	// Storing the path to the Code Integrity Schema XSD file
-	internal static readonly string CISchemaPath = Path.Combine(
+	internal static readonly string CISchemaPath = Path.Join(
 		Environment.GetEnvironmentVariable("SystemDrive") + @"\",
 		"Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
 
@@ -78,22 +78,22 @@ internal static partial class Atlas
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
 
 	// Path to the AppControlManagerSpecialPolicyName.xml file
-	internal static readonly string AppControlManagerSpecialPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", $"{AppControlManagerSpecialPolicyName}.xml");
+	internal static readonly string AppControlManagerSpecialPolicyPath = Path.Join(AppContext.BaseDirectory, "Resources", $"{AppControlManagerSpecialPolicyName}.xml");
 
 	// Path to the ISGBasedSupplementalPolicy.xml file
-	internal static readonly string ISGOnlySupplementalPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "ISGBasedSupplementalPolicy.xml");
+	internal static readonly string ISGOnlySupplementalPolicyPath = Path.Join(AppContext.BaseDirectory, "Resources", "ISGBasedSupplementalPolicy.xml");
 
 	// Path to the Allow All template policy file
-	internal static readonly string AllowAllTemplatePolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "Allow All Policy.xml");
+	internal static readonly string AllowAllTemplatePolicyPath = Path.Join(AppContext.BaseDirectory, "Resources", "Allow All Policy.xml");
 
 	// Path to the Allow Microsoft template policy file
-	internal static readonly string AllowMicrosoftTemplatePolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "Allow Microsoft Template.xml");
+	internal static readonly string AllowMicrosoftTemplatePolicyPath = Path.Join(AppContext.BaseDirectory, "Resources", "Allow Microsoft Template.xml");
 
 	// Path to the Default Windows template policy file
-	internal static readonly string DefaultWindowsTemplatePolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "Default Windows Template.xml");
+	internal static readonly string DefaultWindowsTemplatePolicyPath = Path.Join(AppContext.BaseDirectory, "Resources", "Default Windows Template.xml");
 
 	// Path to the Intune hardening policies
-	internal static readonly string HardeningPoliciesPath = Path.Combine(AppContext.BaseDirectory, "Resources", "Intune Files", "Hardening Policies");
+	internal static readonly string HardeningPoliciesPath = Path.Join(AppContext.BaseDirectory, "Resources", "Intune Files", "Hardening Policies");
 
 	// Determine whether the current OS is older than 24H2
 	internal static bool IsOlderThan24H2 = Environment.OSVersion.Version < new Version(10, 0, 26100, 0);
@@ -105,7 +105,7 @@ internal static partial class Atlas
 	internal const string FallBackAppLogoURI = "ms-appx:///Assets/Others/AppWithoutIconPlaceHolder.png";
 
 	// Path to the ComManager program in the App directory
-	internal static readonly string ComManagerProcessPath = Path.Combine(AppContext.BaseDirectory, "CppInterop", "ComManager.exe");
+	internal static readonly string ComManagerProcessPath = Path.Join(AppContext.BaseDirectory, "CppInterop", "ComManager.exe");
 
 	/// <summary>
 	/// To store the path to the system drive

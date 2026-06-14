@@ -1,10 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-// Source: https://github.com/CommunityToolkit/Windows/tree/main/components/SettingsControls/src
-// License: https://github.com/CommunityToolkit/Windows/blob/main/License.md
-// It's been modified to meet the Harden Windows Security repository's requirements.
-
 // MIT License
 //
 // Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
@@ -21,6 +14,13 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
+
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+// Source: https://github.com/CommunityToolkit/Windows/tree/main/components/SettingsControls/src
+// License: https://github.com/CommunityToolkit/Windows/blob/main/License.md
+// It's been modified to meet the Harden Windows Security repository's requirements.
 
 using System.Collections;
 using Microsoft.UI.Xaml;
@@ -487,19 +487,31 @@ internal partial class SettingsCard : ButtonBase
 		{
 			return objCollection.Count == 0;
 		}
-#pragma warning disable IDE0059
 		// Object is not an ICollection, check for an empty IEnumerable
 		if (obj is IEnumerable objEnumerable)
 		{
-			foreach (object? item in objEnumerable)
+			IEnumerator enumerator = objEnumerable.GetEnumerator();
+
+			try
 			{
-				// Found an item, not empty
-				return false;
+				if (enumerator.MoveNext())
+				{
+					_ = enumerator.Current;
+
+					// Found an item, not empty
+					return false;
+				}
+			}
+			finally
+			{
+				if (enumerator is IDisposable disposable)
+				{
+					disposable.Dispose();
+				}
 			}
 
 			return true;
 		}
-#pragma warning restore IDE0059
 
 		// Not null and not a known type to test for emptiness
 		return false;

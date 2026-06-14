@@ -617,12 +617,9 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		List<string> executablePaths = [.. Directory.EnumerateFiles(SelectedProgramFolderPath, "*.exe", enumerationOptions)];
 		executablePaths.Sort(StringComparer.OrdinalIgnoreCase);
 
-		string sandboxMappedProgramRoot = GetSandboxMappedProgramRoot(SelectedProgramFolderPath);
-
 		foreach (string executablePath in executablePaths)
 		{
 			string relativePath = NormalizeWindowsPath(Path.GetRelativePath(SelectedProgramFolderPath, executablePath));
-			string sandboxExecutablePath = CombineWindowsPath(sandboxMappedProgramRoot, relativePath);
 			string displayName = Path.GetFileNameWithoutExtension(executablePath);
 
 			AvailableProgramExecutables.Add(new WindowsSandboxProgramOption(displayName, relativePath));

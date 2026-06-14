@@ -30,7 +30,6 @@ using CommonCore.IntelGathering;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 
@@ -153,7 +152,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			bool ShouldIncludeSupplemental = IncludeSupplementalPoliciesCheckboxState;
 			bool ShouldIncludeAppControlManagerSupplementalPolicy = IncludeAppControlManagerSupplementalPoliciesCheckboxState;
 
-			List<CiPolicyInfo> policies = [];
+			List<CiPolicyInfo> policies;
 
 			// Check if the AppControlManagerSupplementalPolicy checkbox is checked, if it is, show the automatic policy
 			if (ShouldIncludeAppControlManagerSupplementalPolicy)
@@ -714,11 +713,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// Update the ObservableCollection with the filtered results
 			AllPolicies.AddRange(filteredResults);
 
-			if (Sv != null && savedHorizontal.HasValue)
-			{
-				// restore horizontal scroll position
-				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-			}
+			// restore horizontal scroll position
+			_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 		catch (Exception ex)
 		{

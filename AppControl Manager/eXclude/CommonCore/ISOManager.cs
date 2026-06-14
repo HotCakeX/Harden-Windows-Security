@@ -577,12 +577,12 @@ internal static partial class ISOManager
 					// Phase 3: boot.wim to BOOT partition's "sources" folder
 					long isoTotalBytes = CalculateTotalBytes(physicalPath);
 					long sourcesFolderSize = 0L;
-					string sourcesDir = Path.Combine(physicalPath, "sources");
+					string sourcesDir = Path.Join(physicalPath, "sources");
 					if (Directory.Exists(sourcesDir))
 					{
 						sourcesFolderSize = CalculateTotalBytes(sourcesDir);
 					}
-					string bootWimPath = Path.Combine(physicalPath, "sources", "boot.wim");
+					string bootWimPath = Path.Join(physicalPath, "sources", "boot.wim");
 					long bootWimSize = File.Exists(bootWimPath) ? new FileInfo(bootWimPath).Length : 0L;
 					long totalBytesToCopy = isoTotalBytes + (isoTotalBytes - sourcesFolderSize) + bootWimSize;
 
@@ -1218,12 +1218,12 @@ internal static partial class ISOManager
 						// Phase 3: boot.wim to BOOT partition's "sources" folder
 						long isoTotalBytes = CalculateTotalBytes(physicalPath);
 						long sourcesFolderSize = 0L;
-						string sourcesDir = Path.Combine(physicalPath, "sources");
+						string sourcesDir = Path.Join(physicalPath, "sources");
 						if (Directory.Exists(sourcesDir))
 						{
 							sourcesFolderSize = CalculateTotalBytes(sourcesDir);
 						}
-						string bootWimPath = Path.Combine(physicalPath, "sources", "boot.wim");
+						string bootWimPath = Path.Join(physicalPath, "sources", "boot.wim");
 						long bootWimSize = File.Exists(bootWimPath) ? new FileInfo(bootWimPath).Length : 0L;
 						long totalBytesToCopy = isoTotalBytes + (isoTotalBytes - sourcesFolderSize) + bootWimSize;
 						long copiedBytes = 0;
@@ -1462,13 +1462,13 @@ internal static partial class ISOManager
 		FileInfo[] files = directoryInfo.GetFiles();
 		foreach (FileInfo file in files)
 		{
-			string targetFilePath = Path.Combine(destinationDir, file.Name);
+			string targetFilePath = Path.Join(destinationDir, file.Name);
 			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, file.Length, totalBytesToCopy, currentCopiedBytes, progress);
 		}
 
 		foreach (DirectoryInfo subDir in directories)
 		{
-			string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+			string newDestinationDir = Path.Join(destinationDir, subDir.Name);
 			currentCopiedBytes = CopyDirectoryWithProgress(subDir.FullName, newDestinationDir, totalBytesToCopy, currentCopiedBytes, progress);
 		}
 
@@ -1490,7 +1490,7 @@ internal static partial class ISOManager
 		FileInfo[] files = directoryInfo.GetFiles();
 		foreach (FileInfo file in files)
 		{
-			string targetFilePath = Path.Combine(destinationDir, file.Name);
+			string targetFilePath = Path.Join(destinationDir, file.Name);
 			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, file.Length, totalBytesToCopy, currentCopiedBytes, progress);
 		}
 
@@ -1502,7 +1502,7 @@ internal static partial class ISOManager
 				continue;
 			}
 
-			string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+			string newDestinationDir = Path.Join(destinationDir, subDir.Name);
 			// For remaining subdirectories, we can use the normal CopyDirectory method
 			currentCopiedBytes = CopyDirectoryWithProgress(subDir.FullName, newDestinationDir, totalBytesToCopy, currentCopiedBytes, progress);
 		}
@@ -1512,9 +1512,9 @@ internal static partial class ISOManager
 
 	private static long CopyBootWimWithProgress(string sourceDir, string destinationDir, long totalBytesToCopy, long currentCopiedBytes, IProgress<double> progress)
 	{
-		string sourceBootWimPath = Path.Combine(sourceDir, "sources", "boot.wim");
-		string destSourcesDir = Path.Combine(destinationDir, "sources");
-		string destBootWimPath = Path.Combine(destSourcesDir, "boot.wim");
+		string sourceBootWimPath = Path.Join(sourceDir, "sources", "boot.wim");
+		string destSourcesDir = Path.Join(destinationDir, "sources");
+		string destBootWimPath = Path.Join(destSourcesDir, "boot.wim");
 
 		// Create a new folder in the FAT32 partition and name it "sources"
 		_ = Directory.CreateDirectory(destSourcesDir);
@@ -1570,7 +1570,7 @@ internal static partial class ISOManager
 		FileInfo[] files = directoryInfo.GetFiles();
 		foreach (FileInfo file in files)
 		{
-			string targetFilePath = Path.Combine(destinationDir, file.Name);
+			string targetFilePath = Path.Join(destinationDir, file.Name);
 
 			// Calculate size in MB
 			long sizeInMB = file.Length / (1024 * 1024);
@@ -1581,7 +1581,7 @@ internal static partial class ISOManager
 
 		foreach (DirectoryInfo subDir in directories)
 		{
-			string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+			string newDestinationDir = Path.Join(destinationDir, subDir.Name);
 			CopyDirectory(subDir.FullName, newDestinationDir);
 		}
 	}
@@ -1601,7 +1601,7 @@ internal static partial class ISOManager
 		FileInfo[] files = directoryInfo.GetFiles();
 		foreach (FileInfo file in files)
 		{
-			string targetFilePath = Path.Combine(destinationDir, file.Name);
+			string targetFilePath = Path.Join(destinationDir, file.Name);
 
 			long sizeInMB = file.Length / (1024 * 1024);
 			Logger.Write($"Copying to BOOT: {file.Name} ({sizeInMB} MB)...");
@@ -1617,7 +1617,7 @@ internal static partial class ISOManager
 				continue;
 			}
 
-			string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+			string newDestinationDir = Path.Join(destinationDir, subDir.Name);
 
 			// For remaining subdirectories, we can use the normal CopyDirectory method
 			CopyDirectory(subDir.FullName, newDestinationDir);
@@ -1626,9 +1626,9 @@ internal static partial class ISOManager
 
 	internal static void CopyBootWim(string sourceDir, string destinationDir)
 	{
-		string sourceBootWimPath = Path.Combine(sourceDir, "sources", "boot.wim");
-		string destSourcesDir = Path.Combine(destinationDir, "sources");
-		string destBootWimPath = Path.Combine(destSourcesDir, "boot.wim");
+		string sourceBootWimPath = Path.Join(sourceDir, "sources", "boot.wim");
+		string destSourcesDir = Path.Join(destinationDir, "sources");
+		string destBootWimPath = Path.Join(destSourcesDir, "boot.wim");
 
 		// Create a new folder in the FAT32 partition and name it "sources"
 		_ = Directory.CreateDirectory(destSourcesDir);
@@ -1828,7 +1828,7 @@ internal static partial class ISOManager
 		if (drivePath is null)
 			return false;
 
-		string testFilePath = Path.Combine(drivePath, $"write_test_{Guid.CreateVersion7():N}.tmp");
+		string testFilePath = Path.Join(drivePath, $"write_test_{Guid.CreateVersion7():N}.tmp");
 
 		try
 		{
@@ -2310,10 +2310,7 @@ internal static partial class ISOManager
 	{
 		internal void** lpVtbl;
 
-		internal uint Release()
-		{
-			return ((delegate* unmanaged<IWbemLocator*, uint>)lpVtbl[2])((IWbemLocator*)Unsafe.AsPointer(ref this));
-		}
+		internal uint Release() => ((delegate* unmanaged<IWbemLocator*, uint>)lpVtbl[2])((IWbemLocator*)Unsafe.AsPointer(ref this));
 
 		internal int ConnectServer(
 			IntPtr strNetworkResource,
@@ -2338,10 +2335,7 @@ internal static partial class ISOManager
 	{
 		internal void** lpVtbl;
 
-		internal uint Release()
-		{
-			return ((delegate* unmanaged<IWbemServices*, uint>)lpVtbl[2])((IWbemServices*)Unsafe.AsPointer(ref this));
-		}
+		internal uint Release() => ((delegate* unmanaged<IWbemServices*, uint>)lpVtbl[2])((IWbemServices*)Unsafe.AsPointer(ref this));
 
 		internal int GetObject(
 			IntPtr strObjectPath,
@@ -2393,10 +2387,7 @@ internal static partial class ISOManager
 	{
 		internal void** lpVtbl;
 
-		internal uint Release()
-		{
-			return ((delegate* unmanaged<IEnumWbemClassObject*, uint>)lpVtbl[2])((IEnumWbemClassObject*)Unsafe.AsPointer(ref this));
-		}
+		internal uint Release() => ((delegate* unmanaged<IEnumWbemClassObject*, uint>)lpVtbl[2])((IEnumWbemClassObject*)Unsafe.AsPointer(ref this));
 
 		internal int Next(
 			int lTimeout,
@@ -2419,10 +2410,7 @@ internal static partial class ISOManager
 	{
 		internal void** lpVtbl;
 
-		internal uint Release()
-		{
-			return ((delegate* unmanaged<IWbemClassObject*, uint>)lpVtbl[2])((IWbemClassObject*)Unsafe.AsPointer(ref this));
-		}
+		internal uint Release() => ((delegate* unmanaged<IWbemClassObject*, uint>)lpVtbl[2])((IWbemClassObject*)Unsafe.AsPointer(ref this));
 
 		internal int Get(
 			IntPtr wszName,

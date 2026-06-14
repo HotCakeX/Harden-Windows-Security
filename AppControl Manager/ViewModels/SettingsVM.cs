@@ -499,7 +499,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	#endregion
 
-	internal async void RemoveAllToastNotifications(object sender, RoutedEventArgs e) => await AppNotificationManager.Default.RemoveAllAsync();
+	internal async void RemoveAllToastNotifications() => await AppNotificationManager.Default.RemoveAllAsync();
 
 	/// <summary>
 	/// The list of all Font Families for the ComboBox ItemsSource.

@@ -148,7 +148,7 @@
             <AppBarButton VerticalAlignment="Center"
                           Label="Select all"
                           HorizontalAlignment="Center"
-                          Click="SelectAllDownloadsAppBarButton_Click"
+                          Click="{x:Bind SelectAllDownloadsAppBarButton_Click}"
                           IsEnabled="{x:Bind ViewModel.CanSelectAllDownloads, Mode=OneWay}"
                           ToolTipService.ToolTip="Select all downloads"
                           AutomationProperties.Name="Select all downloads">
@@ -159,7 +159,7 @@
             <AppBarButton VerticalAlignment="Center"
                           Label="Deselect all"
                           HorizontalAlignment="Center"
-                          Click="DeselectAllDownloadsAppBarButton_Click"
+                          Click="{x:Bind DeselectAllDownloadsAppBarButton_Click}"
                           IsEnabled="{x:Bind ViewModel.CanDeselectAllDownloads, Mode=OneWay}"
                           ToolTipService.ToolTip="Deselect all downloads"
                           AutomationProperties.Name="Deselect all downloads">

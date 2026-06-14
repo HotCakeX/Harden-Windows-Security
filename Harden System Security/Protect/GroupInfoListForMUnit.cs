@@ -22,9 +22,5 @@ namespace HardenSystemSecurity.Protect;
 internal sealed partial class GroupInfoListForMUnit(IEnumerable<MUnit> items, string key) : List<MUnit>(items)
 {
 	internal string Key => key;
-
-	public override string ToString()
-	{
-		return "Group " + Key;
-	}
+	public override string ToString() => "Group " + Key;
 }

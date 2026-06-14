@@ -138,7 +138,7 @@
             Margin="0,-16,8,0"
             HorizontalAlignment="Right"
             AutomationProperties.Name="Scroll right"
-            Click="ScrollForwardBtn_Click"
+            Click="{x:Bind ScrollForwardBtn_Click}"
             Style="{StaticResource ScrollButtonStyle}"
             ToolTipService.ToolTip="Scroll right">
             <FontIcon FontSize="{ThemeResource FlipViewButtonFontSize}" Glyph="&#xEDDA;" />

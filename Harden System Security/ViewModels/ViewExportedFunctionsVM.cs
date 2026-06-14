@@ -317,10 +317,7 @@ internal sealed partial class ViewExportedFunctionsVM : ViewModelBase
 			ResultsVisibility = ExportedFunctions.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 			EmptyStateVisibility = ExportedFunctions.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
 
-			if (scrollViewer is not null && savedHorizontal.HasValue)
-			{
-				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-			}
+			_ = scrollViewer?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 
 			await Task.Run(() => ColumnManager.CalculateColumnWidths(ExportedFunctions));
 		}

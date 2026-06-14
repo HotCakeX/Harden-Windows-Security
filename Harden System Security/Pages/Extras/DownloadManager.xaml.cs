@@ -32,9 +32,9 @@ internal sealed partial class DownloadManager : Page, CommonCore.UI.IPageHeaderP
 		DataContext = ViewModel;
 	}
 
-	private void SelectAllDownloadsAppBarButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => ListViewHelper.SelectAll(DownloadItemsListView);
+	private void SelectAllDownloadsAppBarButton_Click() => ListViewHelper.SelectAll(DownloadItemsListView);
 
-	private void DeselectAllDownloadsAppBarButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private void DeselectAllDownloadsAppBarButton_Click()
 	{
 		DownloadItemsListView.SelectedItems.Clear();
 		DownloadItemsListView.SelectedItem = null;

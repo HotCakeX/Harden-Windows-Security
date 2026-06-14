@@ -383,10 +383,7 @@ internal static class SecurityINFParser
 			}
 
 			// Hex char check
-			static bool IsHexChar(char c)
-			{
-				return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
-			}
+			static bool IsHexChar(char c) => (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
 
 			// Single token (no commas)
 			string token = s;

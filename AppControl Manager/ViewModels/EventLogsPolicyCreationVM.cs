@@ -918,7 +918,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		args.Handled = true;
 	}
 
-	internal async void DataAnalysisSplitButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
+	internal async void DataAnalysisSplitButton_Click()
 	{
 		if (AllFileIdentities.Count == 0)
 		{

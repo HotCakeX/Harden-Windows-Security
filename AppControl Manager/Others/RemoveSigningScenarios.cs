@@ -75,7 +75,7 @@ internal static class RemoveSigningScenarios
 			}
 
 			// Remove any signing scenario with the value 12 representing User-Mode
-			_ = policyObj.SigningScenarios?.RemoveAll(scenario => scenario.Value == 12);
+			_ = policyObj.SigningScenarios.RemoveAll(scenario => scenario.Value == 12);
 
 			// Remove all Signers that are for User-Mode signing scenario
 			_ = policyObj.Signers?.RemoveAll(s => userModeSignerIDs.Contains(s.ID));
@@ -148,7 +148,7 @@ internal static class RemoveSigningScenarios
 			}
 
 			// Remove any signing scenario with the value 131 representing kernel-Mode
-			_ = policyObj.SigningScenarios?.RemoveAll(scenario => scenario.Value == 131);
+			_ = policyObj.SigningScenarios.RemoveAll(scenario => scenario.Value == 131);
 
 			// Remove all Signers that are for kernel-Mode signing scenario
 			_ = policyObj.Signers?.RemoveAll(s => kernelModeSignerIDs.Contains(s.ID));

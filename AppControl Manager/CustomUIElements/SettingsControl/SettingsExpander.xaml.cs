@@ -1,10 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-// Source: https://github.com/CommunityToolkit/Windows/tree/main/components/SettingsControls/src
-// License: https://github.com/CommunityToolkit/Windows/blob/main/License.md
-// It's been modified to meet the Harden Windows Security repository's requirements.
-
 // MIT License
 //
 // Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
@@ -21,6 +14,13 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
+
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+// Source: https://github.com/CommunityToolkit/Windows/tree/main/components/SettingsControls/src
+// License: https://github.com/CommunityToolkit/Windows/blob/main/License.md
+// It's been modified to meet the Harden Windows Security repository's requirements.
 
 using System.Collections;
 using System.Collections.Generic;

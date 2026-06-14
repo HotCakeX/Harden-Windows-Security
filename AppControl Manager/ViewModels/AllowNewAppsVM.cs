@@ -466,9 +466,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the clear button in the base policy selection button.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	internal void BrowseForXMLPolicyButton_Flyout_Clear_Click(object sender, RoutedEventArgs e) => selectedBasePolicy = null;
+	internal void BrowseForXMLPolicyButton_Flyout_Clear_Click() => selectedBasePolicy = null;
 
 	/// <summary>
 	/// Event handler for the Create Policy button - Step 3
@@ -910,7 +908,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// Execute the main tasks of step 1
 			await Task.Run(() =>
 			{
-				byte[] AuditModeCIP = [];
+				byte[] AuditModeCIP;
 
 				// Make sure it stays unique because we don't want any other command to remove or overwrite it
 				EnforcedModeCIPPath = Path.Combine(Atlas.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7():N}.cip");

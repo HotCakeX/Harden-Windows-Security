@@ -94,7 +94,7 @@ internal sealed partial class LoopbackExemptionsDialog : ContentDialogV2, INPCIm
 		InfoBarMessage = string.Empty;
 	}
 
-	private void RefreshButton_Click(object sender, RoutedEventArgs e)
+	private void RefreshButton_Click()
 	{
 		try
 		{
@@ -116,7 +116,7 @@ internal sealed partial class LoopbackExemptionsDialog : ContentDialogV2, INPCIm
 	/// <summary>
 	/// Adds every eligible installed app to the loopback exemption list in one pass.
 	/// </summary>
-	private void AddAllButton_Click(object sender, RoutedEventArgs e)
+	private void AddAllButton_Click()
 	{
 		try
 		{
@@ -145,7 +145,7 @@ internal sealed partial class LoopbackExemptionsDialog : ContentDialogV2, INPCIm
 		}
 	}
 
-	private void ClearAllButton_Click(object sender, RoutedEventArgs e)
+	private void ClearAllButton_Click()
 	{
 		try
 		{

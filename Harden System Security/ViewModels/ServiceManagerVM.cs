@@ -824,60 +824,46 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			{
 				if (passSearch && passStatus && passStartType && passError && passLaunch && passFlags && passServiceType)
 				{
-					if (dynamicCounts["Company"].TryGetValue(companyCategory, out int value))
-					{
-						dynamicCounts["Company"][companyCategory] = ++value;
-					}
+					ref int count = ref CollectionsMarshal.GetValueRefOrNullRef(dynamicCounts["Company"], companyCategory);
+					if (!Unsafe.IsNullRef(ref count)) count++;
 				}
 
 				if (passSearch && passCompany && passStartType && passError && passLaunch && passFlags && passServiceType)
 				{
-					if (dynamicCounts["Status"].TryGetValue(statusCat, out int value))
-					{
-						dynamicCounts["Status"][statusCat] = ++value;
-					}
+					ref int count = ref CollectionsMarshal.GetValueRefOrNullRef(dynamicCounts["Status"], statusCat);
+					if (!Unsafe.IsNullRef(ref count)) count++;
 				}
 
 				if (passSearch && passCompany && passStatus && passError && passLaunch && passFlags && passServiceType)
 				{
-					if (dynamicCounts["Start Type"].TryGetValue(startCat, out int value))
-					{
-						dynamicCounts["Start Type"][startCat] = ++value;
-					}
+					ref int count = ref CollectionsMarshal.GetValueRefOrNullRef(dynamicCounts["Start Type"], startCat);
+					if (!Unsafe.IsNullRef(ref count)) count++;
 				}
 
 				if (passSearch && passCompany && passStatus && passStartType && passLaunch && passFlags && passServiceType)
 				{
-					if (dynamicCounts["Error Control"].TryGetValue(errorCat, out int value))
-					{
-						dynamicCounts["Error Control"][errorCat] = ++value;
-					}
+					ref int count = ref CollectionsMarshal.GetValueRefOrNullRef(dynamicCounts["Error Control"], errorCat);
+					if (!Unsafe.IsNullRef(ref count)) count++;
 				}
 
 				if (passSearch && passCompany && passStatus && passStartType && passError && passFlags && passServiceType)
 				{
-					if (dynamicCounts["Launch Protected"].TryGetValue(launchCat, out int value))
-					{
-						dynamicCounts["Launch Protected"][launchCat] = ++value;
-					}
+					ref int count = ref CollectionsMarshal.GetValueRefOrNullRef(dynamicCounts["Launch Protected"], launchCat);
+					if (!Unsafe.IsNullRef(ref count)) count++;
 				}
 
 				if (passSearch && passCompany && passStatus && passStartType && passError && passLaunch && passServiceType)
 				{
-					if (dynamicCounts["Service Flags"].TryGetValue(flagsCat, out int value))
-					{
-						dynamicCounts["Service Flags"][flagsCat] = ++value;
-					}
+					ref int count = ref CollectionsMarshal.GetValueRefOrNullRef(dynamicCounts["Service Flags"], flagsCat);
+					if (!Unsafe.IsNullRef(ref count)) count++;
 				}
 
 				if (passSearch && passCompany && passStatus && passStartType && passError && passLaunch && passFlags)
 				{
 					foreach (string part in GetMultiValues(s.Item.ServiceType))
 					{
-						if (dynamicCounts["Service Type"].TryGetValue(part, out int value))
-						{
-							dynamicCounts["Service Type"][part] = ++value;
-						}
+						ref int count = ref CollectionsMarshal.GetValueRefOrNullRef(dynamicCounts["Service Type"], part);
+						if (!Unsafe.IsNullRef(ref count)) count++;
 					}
 				}
 			}
@@ -1803,7 +1789,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
-	internal async void DisableAndStopAllRecommendedServices_Click(object sender, RoutedEventArgs e)
+	internal async void DisableAndStopAllRecommendedServices_Click()
 	{
 		try
 		{
@@ -2293,5 +2279,4 @@ internal sealed partial class ServiceSecurityInformation :
 
 	// Return 5023 because the Service is not a File type.
 	public unsafe int GetInheritSource(uint si, IntPtr pACL, IntPtr* ppInheritArray) => HRESULT_FROM_WIN32(5023);
-
 }

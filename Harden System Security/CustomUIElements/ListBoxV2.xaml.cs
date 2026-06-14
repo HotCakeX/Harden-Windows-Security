@@ -65,16 +65,14 @@ internal sealed partial class ListBoxV2 : UserControl
 			return;
 
 		// Fast path for UniqueStringObservableCollection
-		UniqueStringObservableCollection? uniqueCollection = ItemsSource as UniqueStringObservableCollection;
-		if (uniqueCollection is not null)
+		if (ItemsSource is UniqueStringObservableCollection uniqueCollection)
 		{
 			_ = uniqueCollection.Remove(path);
 			return;
 		}
 
 		// ObservableCollection<string>
-		ObservableCollection<string>? observableStrings = ItemsSource as ObservableCollection<string>;
-		if (observableStrings is not null)
+		if (ItemsSource is ObservableCollection<string> observableStrings)
 		{
 			RemoveFromObservable(observableStrings, path);
 			return;

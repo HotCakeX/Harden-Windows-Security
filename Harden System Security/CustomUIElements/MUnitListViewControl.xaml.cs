@@ -157,11 +157,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		CheckForPendingNavigationHighlight();
 
 		// Subscribe to AppSettings property changes when control is loaded
-		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
-		{
-			notifyPropertyChanged.PropertyChanged -= AppSettings_PropertyChanged; // Ensure no duplicate subscription
-			notifyPropertyChanged.PropertyChanged += AppSettings_PropertyChanged;
-		}
+		AppSettings.PropertyChanged -= AppSettings_PropertyChanged; // Ensure no duplicate subscription
+		AppSettings.PropertyChanged += AppSettings_PropertyChanged;
 
 		// If caller requested propagation to child controls, attempt it now (some may already be realized).
 		if (ChildButtonsDisposeOnlyOnExplicitCall)
@@ -864,10 +861,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		StopHighlightAnimation();
 
 		// Unsubscribe from AppSettings property changes
-		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
-		{
-			notifyPropertyChanged.PropertyChanged -= AppSettings_PropertyChanged;
-		}
+		AppSettings.PropertyChanged -= AppSettings_PropertyChanged;
 
 		// Unsubscribe from all MUnit events
 		UnsubscribeFromAllMUnits();

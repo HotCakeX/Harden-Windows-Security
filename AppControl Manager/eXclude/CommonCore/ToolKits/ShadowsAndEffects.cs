@@ -101,7 +101,6 @@ public interface IAttachedShadow
 	IEnumerable<AttachedShadowElementContext> EnumerateElementContexts();
 }
 
-
 /// <summary>
 /// The base class for attached shadows.
 /// </summary>
@@ -172,10 +171,8 @@ public abstract partial class AttachedShadowBase : DependencyObject, IAttachedSh
 	/// <summary>
 	/// Use this method as the <see cref="PropertyChangedCallback"/> for <see cref="DependencyProperty">DependencyProperties</see> in derived classes.
 	/// </summary>
-	protected static void OnDependencyPropertyChanged(object sender, DependencyPropertyChangedEventArgs args)
-	{
+	protected static void OnDependencyPropertyChanged(object sender, DependencyPropertyChangedEventArgs args) =>
 		(sender as AttachedShadowBase)?.CallPropertyChangedForEachElement(args.Property, args.OldValue, args.NewValue);
-	}
 
 	internal void ConnectElement(FrameworkElement element)
 	{
@@ -244,10 +241,8 @@ public abstract partial class AttachedShadowBase : DependencyObject, IAttachedSh
 	/// Sets <see cref="AttachedShadowElementContext.SpriteVisual"/> as a child visual on <see cref="AttachedShadowElementContext.Element"/>
 	/// </summary>
 	/// <param name="context">The <see cref="AttachedShadowElementContext"/> this operation will be performed on.</param>
-	protected virtual void SetElementChildVisual(AttachedShadowElementContext context)
-	{
+	protected virtual void SetElementChildVisual(AttachedShadowElementContext context) =>
 		ElementCompositionPreview.SetElementChildVisual(context.Element, context.SpriteVisual);
-	}
 
 	private void CallPropertyChangedForEachElement(DependencyProperty property, object oldValue, object newValue)
 	{
@@ -487,8 +482,7 @@ public sealed class AttachedShadowElementContext
 	/// <param name="key">Key to use to lookup the resource later.</param>
 	/// <param name="resource">Object to store within the resource dictionary.</param>
 	/// <returns>The added resource</returns>
-	public T AddResource<T>(string key, T resource)
-		where T : notnull
+	public T AddResource<T>(string key, T resource) where T : notnull
 	{
 		if (_resources.ContainsKey(key))
 		{
@@ -563,8 +557,7 @@ public sealed class AttachedShadowElementContext
 	/// <typeparam name="T">The type of the resource being removed.</typeparam>
 	/// <param name="key">Key to use to lookup the resource.</param>
 	/// <returns>The resource that was removed, if any</returns>
-	public T? RemoveAndDisposeResource<T>(string key)
-		where T : IDisposable
+	public T? RemoveAndDisposeResource<T>(string key) where T : IDisposable
 	{
 		if (_resources.TryGetValue(key, out var objResource))
 		{
@@ -584,8 +577,7 @@ public sealed class AttachedShadowElementContext
 	/// </summary>
 	/// <typeparam name="T">The type of the resource being added.</typeparam>
 	/// <returns>The resource that was added</returns>
-	internal T AddResource<T>(TypedResourceKey<T> key, T resource)
-		where T : notnull => AddResource(key.Key, resource);
+	internal T AddResource<T>(TypedResourceKey<T> key, T resource) where T : notnull => AddResource(key.Key, resource);
 
 	/// <summary>
 	/// Retrieves a resource with the specified key and type if it exists
@@ -640,7 +632,6 @@ public sealed class AttachedShadowElementContext
 /// <param name="key">The resource's key</param>
 internal sealed class TypedResourceKey<TValue>(string key)
 {
-
 	/// <summary>
 	/// Gets the key of the resource to be retrieved.
 	/// </summary>
@@ -1326,11 +1317,15 @@ public sealed partial class PipelineBuilder
 	[Pure]
 	public async Task<CompositionBrush> BuildAsync()
 	{
-
 		Compositor compositor = CompositionTarget.GetCompositorForCurrentThread();
 
 		// Validate the pipeline
-		IGraphicsEffect effect = await sourceProducer() as IGraphicsEffect ?? throw new InvalidOperationException("The pipeline doesn't contain a valid effects sequence");
+		IGraphicsEffectSource source = await sourceProducer();
+
+		if (source is not IGraphicsEffect effect)
+		{
+			throw new InvalidOperationException("The pipeline doesn't contain a valid effects sequence");
+		}
 
 		// Build the effects factory
 		CompositionEffectFactory factory = animationProperties.Count > 0

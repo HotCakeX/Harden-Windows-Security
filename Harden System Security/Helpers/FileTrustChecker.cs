@@ -29,7 +29,7 @@ internal static class FileTrustChecker
 	/// <summary>
 	/// The path to the MpClient.dll file
 	/// </summary>
-	private static readonly string DefenderPath = Path.Combine(
+	private static readonly string DefenderPath = Path.Join(
 		Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
 		"Windows Defender", "MpClient.dll");
 

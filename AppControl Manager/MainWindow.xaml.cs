@@ -1880,7 +1880,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 					}
 
 					// Safely delete the entire color cache file since all policies are cleared
-					string cachePath = Path.Combine(ViewModel.GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+					string cachePath = Path.Join(ViewModel.GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
 					if (File.Exists(cachePath))
 					{
 						File.Delete(cachePath);
@@ -1937,7 +1937,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			{
 				foreach (PolicyFileRepresent item in ViewModelProvider.MainWindowVM.SidebarPoliciesLibrary)
 				{
-					string savePath = Path.Combine(selectedDirectory, $"{item.UniqueObjID}.xml");
+					string savePath = Path.Join(selectedDirectory, $"{item.UniqueObjID}.xml");
 
 					Management.SavePolicyToFile(item.PolicyObj, savePath);
 				}

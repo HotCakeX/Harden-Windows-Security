@@ -21,7 +21,7 @@ namespace AppControlManager.Others;
 
 internal static class SnapBackGuarantee
 {
-	private static readonly string savePath = Path.Combine(Atlas.UserConfigDir, "EnforcedModeSnapBack.cmd");
+	private static readonly string savePath = Path.Join(Atlas.UserConfigDir, "EnforcedModeSnapBack.cmd");
 
 	/// <summary>
 	/// A method that arms the system with a snapback guarantee in case of a reboot during the base policy enforcement process.

@@ -76,15 +76,15 @@ internal static partial class Atlas
 #if HARDEN_SYSTEM_SECURITY
 	// Storing the path to the app's folder in the Program Files
 	// Not actually used by the Harden System Security app. Only here to satisfy the BuildAppControlCertificate's method requirement.
-	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Harden System Security");
+	internal static readonly string UserConfigDir = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Harden System Security");
 #endif
 #if APP_CONTROL_MANAGER
 	// Storing the path to the app's folder in the Program Files
-	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AppControl Manager");
+	internal static readonly string UserConfigDir = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AppControl Manager");
 #endif
 
 	// Storing the path to User Config JSON file in the app's folder in the Program Files
-	internal static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
+	internal static readonly string UserConfigJson = Path.Join(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
 #if HARDEN_SYSTEM_SECURITY
 	internal const string AppName = "HardenSystemSecurity";
@@ -148,15 +148,15 @@ internal static partial class Atlas
 	/// The directory where the logs will be stored
 	/// </summary>
 	internal static readonly string LogsDirectory = IsElevated ?
-		Path.Combine(UserConfigDir, "Logs") :
-		Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
+		Path.Join(UserConfigDir, "Logs") :
+		Path.Join(Path.GetTempPath(), $"{AppName}Logs");
 #endif
 
 #if HARDEN_SYSTEM_SECURITY
 	/// <summary>
 	/// The directory where the logs will be stored
 	/// </summary>
-	internal static readonly string LogsDirectory = Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
+	internal static readonly string LogsDirectory = Path.Join(Path.GetTempPath(), $"{AppName}Logs");
 #endif
 
 

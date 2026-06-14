@@ -1545,12 +1545,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				FileRulesCollection.Add(item);
 			}
 
-			if (Sv1 != null && savedHorizontal1.HasValue)
-			{
-				// restore horizontal scroll position
-				_ = Sv1.ChangeView(savedHorizontal1, null, null, disableAnimation: false);
-			}
-
+			// restore horizontal scroll position
+			_ = Sv1?.ChangeView(savedHorizontal1, null, null, disableAnimation: false);
 
 			List<PolicyEditor.SignatureBasedRulesForListView> filteredResults2 = [];
 
@@ -1575,11 +1571,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				SignatureRulesCollection.Add(item);
 			}
 
-			if (Sv2 != null && savedHorizontal2.HasValue)
-			{
-				// restore horizontal scroll position
-				_ = Sv2.ChangeView(savedHorizontal2, null, null, disableAnimation: false);
-			}
+			// restore horizontal scroll position
+			_ = Sv2?.ChangeView(savedHorizontal2, null, null, disableAnimation: false);
 
 			// Adjust the column widths after performing search
 			SignatureRulesColumnManager.CalculateColumnWidths(SignatureRulesCollection);

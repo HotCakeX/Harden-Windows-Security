@@ -911,7 +911,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				byte[] AuditModeCIP;
 
 				// Make sure it stays unique because we don't want any other command to remove or overwrite it
-				EnforcedModeCIPPath = Path.Combine(Atlas.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7():N}.cip");
+				EnforcedModeCIPPath = Path.Join(Atlas.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7():N}.cip");
 
 				Step1InfoBar.WriteInfo(Atlas.GetStr("DeployingInAuditWait"));
 

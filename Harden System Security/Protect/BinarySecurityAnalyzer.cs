@@ -165,7 +165,7 @@ internal static class BinarySecurityAnalyzer
 	/// <returns></returns>
 	private static List<string> FindIncompatibleGitHubDesktopExes()
 	{
-		string basePath = Path.Combine(Atlas.SystemDrive, "Users", Environment.UserName, "AppData", "Local", "GitHubDesktop");
+		string basePath = Path.Join(Atlas.SystemDrive, "Users", Environment.UserName, "AppData", "Local", "GitHubDesktop");
 
 		if (!Directory.Exists(basePath))
 		{
@@ -208,7 +208,7 @@ internal static class BinarySecurityAnalyzer
 	/// <returns></returns>
 	private static List<string> FindIncompatibleGitExes()
 	{
-		string basePath = Path.Combine(Atlas.SystemDrive, "Program Files", "Git");
+		string basePath = Path.Join(Atlas.SystemDrive, "Program Files", "Git");
 
 		if (!Directory.Exists(basePath))
 		{
@@ -253,8 +253,8 @@ internal static class BinarySecurityAnalyzer
 		// Default MSYS2 installation paths
 		string[] msys2Paths =
 		[
-			Path.Combine(Atlas.SystemDrive, "msys64"),
-			Path.Combine(Atlas.SystemDrive, "msys32")
+			Path.Join(Atlas.SystemDrive, "msys64"),
+			Path.Join(Atlas.SystemDrive, "msys32")
 		];
 
 		List<string> fileList = [];

@@ -39,8 +39,8 @@ internal static class CertificateGenerator
 	internal static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize, HashAlgorithmName hashAlgorithm)
 	{
 		// Paths for .cer and .pfx files
-		string cerFilePath = Path.Combine(Atlas.UserConfigDir, $"{CommonName}.cer");
-		string pfxFilePath = Path.Combine(Atlas.UserConfigDir, $"{CommonName}.pfx");
+		string cerFilePath = Path.Join(Atlas.UserConfigDir, $"{CommonName}.cer");
+		string pfxFilePath = Path.Join(Atlas.UserConfigDir, $"{CommonName}.pfx");
 
 		Logger.Write(string.Format(
 			Atlas.GetStr("AppControlCertCheckExistingMessage"),

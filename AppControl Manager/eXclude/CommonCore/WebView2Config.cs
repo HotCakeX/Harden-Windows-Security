@@ -32,12 +32,12 @@ internal static class WebView2Config
 	/// It is unique to be deleted when the app is closed.
 	/// </summary>
 #if APP_CONTROL_MANAGER
-	private static readonly string WebView2Dir = Path.Combine(
+	private static readonly string WebView2Dir = Path.Join(
 		Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
 				"AppControlManager", "WebView2", Guid.CreateVersion7().ToString("N"));
 #endif
 #if HARDEN_SYSTEM_SECURITY
-	private static readonly string WebView2Dir = Path.Combine(
+	private static readonly string WebView2Dir = Path.Join(
 		Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
 				"HardenSystemSecurity", "WebView2", Guid.CreateVersion7().ToString("N"));
 #endif

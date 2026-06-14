@@ -588,7 +588,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 
 					// Load the color cache before iterating files
 					Dictionary<Guid, string> colorCache = [];
-					string colorCachePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+					string colorCachePath = Path.Join(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
 					if (File.Exists(colorCachePath))
 					{
 						try
@@ -745,7 +745,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		await PoliciesLibraryCacheLock.WaitAsync();
 		try
 		{
-			string cachePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+			string cachePath = Path.Join(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
 			Dictionary<Guid, string> colorCache = [];
 
 			if (File.Exists(cachePath))
@@ -783,7 +783,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The default Local cache of the Sidebar's policies library where policies are kept for persistence.
 	/// </summary>
-	private static readonly string DefaultSidebarPoliciesLibraryCache = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "PoliciesLibraryCache")).FullName;
+	private static readonly string DefaultSidebarPoliciesLibraryCache = Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "PoliciesLibraryCache")).FullName;
 
 	// Returns the Policies Library Cache directory to be used at runtime.
 	// Will return the default path as fallback if any problem happens.
@@ -825,7 +825,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 					foreach (string file in files)
 					{
 						string fileName = Path.GetFileName(file);
-						string pathToCopyTo = Path.Combine(customDirPath.FullName, fileName);
+						string pathToCopyTo = Path.Join(customDirPath.FullName, fileName);
 						File.Move(file, pathToCopyTo, true);
 					}
 				}
@@ -857,7 +857,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 					foreach (string file in files)
 					{
 						string fileName = Path.GetFileName(file);
-						string pathToCopyTo = Path.Combine(DefaultSidebarPoliciesLibraryCache, fileName);
+						string pathToCopyTo = Path.Join(DefaultSidebarPoliciesLibraryCache, fileName);
 						File.Move(file, pathToCopyTo, true);
 					}
 				}
@@ -1044,7 +1044,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			{
 				await Task.Run(() =>
 				{
-					string filePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), $"{policy.UniqueObjID}.xml");
+					string filePath = Path.Join(GetSidebarPoliciesLibraryCacheLocation(), $"{policy.UniqueObjID}.xml");
 
 					XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy.PolicyObj);
 
@@ -1537,7 +1537,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async Task RemoveColorFromCacheInternalAsync(Guid policyId)
 	{
-		string cachePath = Path.Combine(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
+		string cachePath = Path.Join(GetSidebarPoliciesLibraryCacheLocation(), "PolicyColors.json");
 		if (File.Exists(cachePath))
 		{
 			try

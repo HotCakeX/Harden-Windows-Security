@@ -73,7 +73,7 @@ internal sealed class SystemAccessInfo
 
 internal static class SystemAccessDefaults
 {
-	private static readonly string DefaultsFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "SystemAccessDefaults", "DefaultValues.json");
+	private static readonly string DefaultsFilePath = Path.Join(AppContext.BaseDirectory, "Resources", "SystemAccessDefaults", "DefaultValues.json");
 
 	/// <summary>
 	/// Loads the default System Access settings from the JSON file.

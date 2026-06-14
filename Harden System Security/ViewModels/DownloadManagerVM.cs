@@ -611,7 +611,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		PooledConnectionLifetime = TimeSpan.FromMinutes(15)
 	});
 
-	private static readonly string _checkpointDirectoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "DownloadManagerCheckpoints");
+	private static readonly string _checkpointDirectoryPath = Path.Join(ApplicationData.Current.LocalFolder.Path, "DownloadManagerCheckpoints");
 
 	internal static readonly HashSet<string> PictureExtensions = new(StringComparer.OrdinalIgnoreCase) { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp", ".tif", ".tiff" };
 
@@ -662,7 +662,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	private readonly Dictionary<DownloadManagerItem, DownloadRuntimeState> _activeDownloadRuntimes = [];
 	private readonly List<DownloadManagerItem> _selectedDownloadItems = [];
 	private readonly ListViewHelper.SortState _sortState = new();
-	private readonly string _historyFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "DownloadManagerHistory.json");
+	private readonly string _historyFilePath = Path.Join(ApplicationData.Current.LocalFolder.Path, "DownloadManagerHistory.json");
 	private FrameworkElement? _downloadManagerPresetsSectionHeader;
 	private int _activeDownloadCount;
 	private bool _completionActionTriggered;
@@ -3464,7 +3464,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	private async Task<string?> ResolveInitialFilePathAsync(Uri link, string displayName, DownloadManagerItem? itemToIgnore = null)
 	{
-		string preferredPath = Path.Combine(ResolvedDownloadDirectory, SanitizeFileName(displayName));
+		string preferredPath = Path.Join(ResolvedDownloadDirectory, SanitizeFileName(displayName));
 
 		List<DownloadManagerItem> existingItems = await Atlas.AppDispatcher.EnqueueAsync(() => DownloadItems.ToList()).ConfigureAwait(false);
 
@@ -3709,7 +3709,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			}
 		}
 
-		return Path.Combine(UserProfile, "Downloads");
+		return Path.Join(UserProfile, "Downloads");
 	}
 
 	private static string GetDisplayNameFromUri(Uri uri)
@@ -3858,12 +3858,12 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		string sanitizedFileName = SanitizeFileName(fileName);
 		string baseName = Path.GetFileNameWithoutExtension(sanitizedFileName);
 		string extension = Path.GetExtension(sanitizedFileName);
-		string candidate = Path.Combine(directory, sanitizedFileName);
+		string candidate = Path.Join(directory, sanitizedFileName);
 		int suffix = 1;
 
 		while (File.Exists(candidate) || File.Exists(GetTemporaryFilePath(candidate)) || File.Exists(GetCheckpointFilePath(candidate)))
 		{
-			candidate = Path.Combine(directory, $"{baseName} ({suffix++}){extension}");
+			candidate = Path.Join(directory, $"{baseName} ({suffix++}){extension}");
 		}
 
 		return candidate;
@@ -4134,7 +4134,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		string normalizedPath = Path.GetFullPath(finalFilePath).ToUpperInvariant();
 		string hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(normalizedPath)));
 		string fileName = SanitizeFileName(Path.GetFileName(finalFilePath));
-		return Path.Combine(_checkpointDirectoryPath, $"{fileName}.{hash}.hssdownload.json");
+		return Path.Join(_checkpointDirectoryPath, $"{fileName}.{hash}.hssdownload.json");
 	}
 
 	private static DownloadCheckpointRecord CreateCheckpointSnapshot(DownloadCheckpointRecord checkpoint) => new()
@@ -4191,7 +4191,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 		lock (_atomicWriteLock)
 		{
-			string temporaryPath = Path.Combine(directory, $"{Path.GetFileName(path)}.{Guid.CreateVersion7():N}.tmp");
+			string temporaryPath = Path.Join(directory, $"{Path.GetFileName(path)}.{Guid.CreateVersion7():N}.tmp");
 
 			try
 			{

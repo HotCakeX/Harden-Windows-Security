@@ -41,7 +41,7 @@ internal sealed partial class DismServiceClient : IDisposable
 	/// <summary>
 	/// Location of the DISMService.exe in the App package.
 	/// </summary>
-	internal static readonly string DISMServiceLocationInPackage = Path.Combine(AppContext.BaseDirectory, "DISMService.exe");
+	internal static readonly string DISMServiceLocationInPackage = Path.Join(AppContext.BaseDirectory, "DISMService.exe");
 
 	private IntPtr _processHandle = IntPtr.Zero;
 	private NamedPipeClientStream? _pipeClient;

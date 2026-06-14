@@ -23,9 +23,9 @@ namespace HardenSystemSecurity.Helpers;
 internal static class SSHConfigurations
 {
 
-	private static readonly string UserDirectory = Path.Combine(Atlas.SystemDrive, "Users", Environment.UserName);
-	private static readonly string SSHClientUserConfigDirectory = Path.Combine(UserDirectory, ".ssh");
-	private static readonly string SSHClientUserConfigFile = Path.Combine(SSHClientUserConfigDirectory, "config");
+	private static readonly string UserDirectory = Path.Join(Atlas.SystemDrive, "Users", Environment.UserName);
+	private static readonly string SSHClientUserConfigDirectory = Path.Join(UserDirectory, ".ssh");
+	private static readonly string SSHClientUserConfigFile = Path.Join(SSHClientUserConfigDirectory, "config");
 
 	// Secure MACs configurations for SSH
 	private const string sshConfigContent = "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com";
@@ -124,7 +124,7 @@ internal static class SSHConfigurations
 		Logger.Write(Atlas.GetStr("CheckingSecureMACsInSSHClientSystemWideConfiguration"), LogTypeIntel.Information);
 
 		// Check for secure MACs in the system-wide SSH configuration in %programdata%\ssh\ssh_config
-		string programDataSSHConfigFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ssh", "ssh_config");
+		string programDataSSHConfigFile = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ssh", "ssh_config");
 
 		// Check if the system-wide SSH configuration file exists
 		if (File.Exists(programDataSSHConfigFile))

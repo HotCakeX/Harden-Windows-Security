@@ -162,7 +162,7 @@ internal sealed partial class UserConfiguration(
 			}
 
 			// Create User configuration folder in the AppControl Manager folder if it doesn't already exist
-			string UserConfigDir = Path.Combine(Atlas.UserConfigDir, "UserConfigurations");
+			string UserConfigDir = Path.Join(Atlas.UserConfigDir, "UserConfigurations");
 			if (!Directory.Exists(UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(UserConfigDir);

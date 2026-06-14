@@ -562,7 +562,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 		}
 		if (_blackHoleShaderBytecode is null)
 		{
-			string shaderPath = System.IO.Path.Combine(AppContext.BaseDirectory, BlackHoleShaderRelativePath);
+			string shaderPath = System.IO.Path.Join(AppContext.BaseDirectory, BlackHoleShaderRelativePath);
 			_blackHoleShaderBytecode = File.ReadAllBytes(shaderPath);
 		}
 		_blackHoleShaderEffect = new PixelShaderEffect(_blackHoleShaderBytecode);

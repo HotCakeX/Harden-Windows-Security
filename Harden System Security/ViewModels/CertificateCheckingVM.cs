@@ -443,7 +443,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <summary>
 	/// Path to the Certificate file used as the trust anchor.
 	/// </summary>
-	private static readonly string CACertFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "Certificate", "Microsoft Root CA 2010.crt");
+	private static readonly string CACertFilePath = Path.Join(AppContext.BaseDirectory, "Resources", "Certificate", "Microsoft Root CA 2010.crt");
 
 	/// <summary>
 	/// Private method that performs the actual certificate analysis

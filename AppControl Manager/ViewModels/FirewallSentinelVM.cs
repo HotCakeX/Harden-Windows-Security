@@ -122,17 +122,17 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Where Firewall backup files are held.
 	/// </summary>
-	private static readonly string FirewallBackupDirectory = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "FirewallBackup")).FullName;
+	private static readonly string FirewallBackupDirectory = Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "FirewallBackup")).FullName;
 
 	/// <summary>
 	/// Location of the Persistent Store firewall backup.
 	/// </summary>
-	private static readonly string PersistentStoreOriginalFile = Path.Combine(FirewallBackupDirectory, "PersistentStoreOriginal.wfw");
+	private static readonly string PersistentStoreOriginalFile = Path.Join(FirewallBackupDirectory, "PersistentStoreOriginal.wfw");
 
 	/// <summary>
 	/// Location of the GPO store backup.
 	/// </summary>
-	private static readonly string GPOStoreOriginalFile = Path.Combine(FirewallBackupDirectory, "GPOStoreOriginal.wfw");
+	private static readonly string GPOStoreOriginalFile = Path.Join(FirewallBackupDirectory, "GPOStoreOriginal.wfw");
 
 	/// <summary>
 	/// The App ID Tag to use for the deployed policy.

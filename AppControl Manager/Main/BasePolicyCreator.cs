@@ -609,7 +609,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		string fileName = NoFlightRoots ? "StrictKernelMode_NoFlightRoots" : "StrictKernelMode";
 
 		// path of the policy in the app's resources directory
-		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
+		string policyPathInResourcesDir = Path.Join(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
 		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 
@@ -654,7 +654,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		const string fileName = "Blocking RMMs - Remote Monitor and Management";
 
 		// path of the policy in the app's resources directory
-		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
+		string policyPathInResourcesDir = Path.Join(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
 		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 
@@ -690,7 +690,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		Guid FolderDownloads = new("374DE290-123F-4565-9164-39C4925E467B");
 
 		// path of the policy in the app's resources directory
-		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
+		string policyPathInResourcesDir = Path.Join(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
 		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 
@@ -734,7 +734,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			}
 		}
 
-		string pathToUse = Path.Combine(downloadsPath, "*");
+		string pathToUse = Path.Join(downloadsPath, "*");
 
 		policyObj.FileRules?.OfType<Deny>().Where(x => string.Equals(x.FilePath, "To-Be-Detected", StringComparison.OrdinalIgnoreCase))
 			.ToList()
@@ -764,7 +764,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		const string fileName = "Dangerous-Script-Hosts-Blocking";
 
 		// path of the policy in the app's resources directory
-		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
+		string policyPathInResourcesDir = Path.Join(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
 		SiPolicy.SiPolicy policyObj = Management.Initialize(policyPathInResourcesDir, null);
 

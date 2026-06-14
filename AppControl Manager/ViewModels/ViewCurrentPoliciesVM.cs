@@ -796,12 +796,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Path to the directory where unsigned Code Integrity policies are located.
 	/// </summary>
-	private static readonly string UnsignedPoliciesPath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity", "CIPolicies", "Active");
+	private static readonly string UnsignedPoliciesPath = Path.Join(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity", "CIPolicies", "Active");
 
 	/// <summary>
 	/// Path to the directory where the App Control policies in .p7b format are located.
 	/// </summary>
-	private static readonly string P7bPoliciesPath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity");
+	private static readonly string P7bPoliciesPath = Path.Join(Atlas.SystemDrive, "Windows", "System32", "CodeIntegrity");
 
 	/// <summary>
 	/// To avoid querying the EFI partition path multiple times, we store it here after the first successful retrieval.

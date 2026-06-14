@@ -69,7 +69,7 @@ internal static class Logger
 			EmptyDirectory(LogsDirectory);
 		}
 
-		LogFileName = Path.Combine(LogsDirectory, $"{AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+		LogFileName = Path.Join(LogsDirectory, $"{AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
 		_streamWriter = new(
 			new FileStream(

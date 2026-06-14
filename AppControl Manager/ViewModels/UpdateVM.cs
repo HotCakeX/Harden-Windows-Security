@@ -120,7 +120,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 			{
 #if APP_CONTROL_MANAGER
 
-				string stagingArea = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath, "AppUpdate")).FullName;
+				string stagingArea = Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath, "AppUpdate")).FullName;
 
 				try
 				{
@@ -140,7 +140,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 						Uri onlineDownloadURL = new(await SecHttpClient.Instance.GetStringAsync(Atlas.AppUpdateDownloadLinkURL));
 
 						// Location of the MSIXBundle package where it will be saved after downloading it from GitHub
-						string AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
+						string AppControlManagerSavePath = Path.Join(stagingArea, "AppControlManager.msixbundle");
 
 						MainInfoBar.WriteInfo(Atlas.GetStr("DownloadingPackage"));
 
@@ -342,9 +342,9 @@ internal sealed partial class UpdateVM : ViewModelBase
 			string AppControlInstallFolder = AppControlManagerPackage.EffectivePath;
 
 			// Construct the paths to the .exe and .dll files of the AppControl Manager
-			string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
-			string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
-			string path3 = Path.Combine(AppControlInstallFolder, "CppInterop", "ComManager.exe");
+			string path1 = Path.Join(AppControlInstallFolder, "AppControlManager.exe");
+			string path2 = Path.Join(AppControlInstallFolder, "AppControlManager.dll");
+			string path3 = Path.Join(AppControlInstallFolder, "CppInterop", "ComManager.exe");
 
 			// Adding the extra executables included in the package so they will be allowed to run as well
 			_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{path3}\" ");

@@ -1600,16 +1600,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// Since there can be more than one folder due to localizations such as en-US then from each of the folders, the bootres.dll.mui file is added
 
 				// Define the directory path
-				string directoryPath = Path.Combine(Atlas.SystemDrive, "Windows", "Boot", "Resources");
+				string directoryPath = Path.Join(Atlas.SystemDrive, "Windows", "Boot", "Resources");
 
 				// Iterate through each directory in the specified path
 				foreach (string directory in Directory.GetDirectories(directoryPath))
 				{
 					// Add the desired file path to the list
-					kernelModeDriversList.Add(Path.Combine(directory, "bootres.dll.mui"));
+					kernelModeDriversList.Add(Path.Join(directory, "bootres.dll.mui"));
 				}
 
-				string sys32Dir = new(Path.Combine(Atlas.SystemDrive, "Windows", "System32"));
+				string sys32Dir = new(Path.Join(Atlas.SystemDrive, "Windows", "System32"));
 
 				(IEnumerable<string>, int) filesOutput = FileUtility.GetFilesFast(new[] { sys32Dir }, null, [".dll", ".sys"]);
 

@@ -495,7 +495,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 					// If the SignOnlyNoDeployToggleSwitch is on, don't deploy the policy, only create signed CIP
 					if (SignOnlyNoDeployToggleSwitch)
 					{
-						await File.WriteAllBytesAsync(Path.Combine(Atlas.UserConfigDir, $"{file.PolicyIdentifier}.CIP"), cipContent);
+						await File.WriteAllBytesAsync(Path.Join(Atlas.UserConfigDir, $"{file.PolicyIdentifier}.CIP"), cipContent);
 					}
 					else
 					{
@@ -648,7 +648,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 						file
 					));
 
-					string XMLSavePath = Path.Combine(Atlas.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP");
+					string XMLSavePath = Path.Join(Atlas.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP");
 
 					if (File.Exists(XMLSavePath))
 					{

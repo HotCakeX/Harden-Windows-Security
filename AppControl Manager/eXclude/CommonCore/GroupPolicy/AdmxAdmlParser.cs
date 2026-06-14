@@ -27,14 +27,14 @@ internal static class AdmxAdmlParser
 	/// <summary>
 	/// Windows PolicyDefinitions root
 	/// </summary>
-	private static readonly string PolicyDefinitionsPath = Path.Combine(
+	private static readonly string PolicyDefinitionsPath = Path.Join(
 		Environment.GetFolderPath(Environment.SpecialFolder.Windows),
 		"PolicyDefinitions");
 
 	/// <summary>
 	/// en-US resource folder
 	/// </summary>
-	private static readonly string EnUsPath = Path.Combine(PolicyDefinitionsPath, "en-US");
+	private static readonly string EnUsPath = Path.Join(PolicyDefinitionsPath, "en-US");
 
 	/// <summary>
 	/// Parse ADML/ADMX (en-US only) once per call and fill missing FriendlyName values in-place.

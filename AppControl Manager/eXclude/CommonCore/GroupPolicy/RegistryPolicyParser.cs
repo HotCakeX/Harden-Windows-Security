@@ -26,8 +26,8 @@ namespace CommonCore.GroupPolicy;
 
 internal static class RegistryPolicyParser
 {
-	internal static readonly string LocalPolicyMachineFilePath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "GroupPolicy", "Machine", "Registry.pol");
-	internal static readonly string LocalPolicyUserFilePath = Path.Combine(Atlas.SystemDrive, "Windows", "System32", "GroupPolicy", "User", "Registry.pol");
+	internal static readonly string LocalPolicyMachineFilePath = Path.Join(Atlas.SystemDrive, "Windows", "System32", "GroupPolicy", "Machine", "Registry.pol");
+	internal static readonly string LocalPolicyUserFilePath = Path.Join(Atlas.SystemDrive, "Windows", "System32", "GroupPolicy", "User", "Registry.pol");
 
 	/// <summary>
 	/// Lock to synchronize access to the policy file operations.

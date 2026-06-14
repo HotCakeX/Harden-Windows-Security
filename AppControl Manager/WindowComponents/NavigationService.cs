@@ -343,21 +343,28 @@ internal sealed class NavigationService
 	/// <param name="args"></param>
 	internal async void MainNavigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs? args)
 	{
-		// If any other page was invoked
-		if (args?.InvokedItemContainer is not null)
+		try
 		{
-			// The "Content" property of the Settings page is null when NavigationView is in "Top" mode since it has no label/content on the UI
-			// That is why we use the "IsSettingsInvoked" property to check for the Settings page click/tap.
-			// Settings' content is also auto translated on different system localizations so this is also useful for those situations.
-			// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.navigationviewiteminvokedeventargs.issettingsinvoked
-			if (args.IsSettingsInvoked)
+			// If any other page was invoked
+			if (args?.InvokedItemContainer is not null)
 			{
-				await Navigate(typeof(Pages.Settings), null);
+				// The "Content" property of the Settings page is null when NavigationView is in "Top" mode since it has no label/content on the UI
+				// That is why we use the "IsSettingsInvoked" property to check for the Settings page click/tap.
+				// Settings' content is also auto translated on different system localizations so this is also useful for those situations.
+				// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.navigationviewiteminvokedeventargs.issettingsinvoked
+				if (args.IsSettingsInvoked)
+				{
+					await Navigate(typeof(Pages.Settings), null);
+				}
+				else
+				{
+					await Navigate(null, args.InvokedItemContainer.Tag.ToString());
+				}
 			}
-			else
-			{
-				await Navigate(null, args?.InvokedItemContainer.Tag.ToString());
-			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
 		}
 	}
 

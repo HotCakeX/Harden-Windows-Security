@@ -91,7 +91,7 @@ AppDomain.CurrentDomain.BaseDirectory
 So in the example above, the files will be in the following directory
 
 ```csharp
-Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Main", "Resources")
+Path.Join(AppDomain.CurrentDomain.BaseDirectory, "Main", "Resources")
 ```
 
 <br>

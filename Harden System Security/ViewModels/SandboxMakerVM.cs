@@ -43,9 +43,9 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 	private static readonly Encoding Utf8WithoutBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
 	private static readonly string SandboxConfigurationDirectory =
-		Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, SandboxStorageFolderName)).FullName;
+		Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, SandboxStorageFolderName)).FullName;
 
-	private static readonly string DefinitionsFilePath = Path.Combine(SandboxConfigurationDirectory, DefinitionsFileName);
+	private static readonly string DefinitionsFilePath = Path.Join(SandboxConfigurationDirectory, DefinitionsFileName);
 
 
 	internal static readonly List<WindowsSandboxTimeZoneOption> TimeZoneOptions =
@@ -419,7 +419,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 	private static string GetSandboxConfigurationPathCore(string sandboxName)
 	{
 		string safeFileName = GetSafeFileName(sandboxName);
-		return Path.Combine(SandboxConfigurationDirectory, safeFileName + ".wsb");
+		return Path.Join(SandboxConfigurationDirectory, safeFileName + ".wsb");
 	}
 
 	internal static string GetTimeZoneDisplayLabel(string? timeZoneId)
@@ -657,7 +657,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 				throw new InvalidOperationException("Choose the main executable for the selected folder, or clear the program selection.");
 			}
 
-			string hostExecutablePath = Path.Combine(
+			string hostExecutablePath = Path.Join(
 				SelectedProgramFolderPath,
 				SelectedProgramExecutable.RelativePath.Replace('\\', Path.DirectorySeparatorChar));
 
@@ -689,7 +689,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 				throw new InvalidOperationException("The saved sandbox is missing its selected executable.");
 			}
 
-			string hostExecutablePath = Path.Combine(
+			string hostExecutablePath = Path.Join(
 				definition.ProgramFolderPath,
 				definition.ProgramExecutableRelativePath.Replace('\\', Path.DirectorySeparatorChar));
 

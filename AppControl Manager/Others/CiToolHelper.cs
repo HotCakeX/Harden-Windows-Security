@@ -29,8 +29,8 @@ namespace AppControlManager.Others;
 // Any code that wants to use CiTool.exe must go through this class rather than contacting it directly
 internal static class CiToolHelper
 {
-	// Combine the path to CiTool.exe using the system's special folder path
-	private static readonly string CiToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+	// Join the path to CiTool.exe using the system's special folder path
+	private static readonly string CiToolPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
 
 	/// <summary>
 	/// Converts a 64-bit unsigned integer into a version type, used for converting the numbers from CiTool.exe output to proper versions.
@@ -277,7 +277,7 @@ internal static class CiToolHelper
 	/// <summary>
 	/// The location where the CIP files will be copied to be deployed.
 	/// </summary>
-	private static readonly string SecureCIPsPath = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath, "CIPs")).FullName;
+	private static readonly string SecureCIPsPath = Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().MachinePath, "CIPs")).FullName;
 
 	/// <summary>
 	/// Deploys a Code Integrity policy on the system by accepting the CIP content.
@@ -295,7 +295,7 @@ internal static class CiToolHelper
 			return;
 		}
 
-		string tempFilePath = Path.Combine(SecureCIPsPath, $"{Guid.CreateVersion7():N}.cip");
+		string tempFilePath = Path.Join(SecureCIPsPath, $"{Guid.CreateVersion7():N}.cip");
 
 		try
 		{

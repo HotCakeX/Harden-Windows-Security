@@ -168,7 +168,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		}
 	} = true;
 
-	internal static readonly string JSONConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "AttackSurfaceReductionRules.json");
+	internal static readonly string JSONConfigPath = Path.Join(AppContext.BaseDirectory, "Resources", "AttackSurfaceReductionRules.json");
 
 	private static readonly string[] RequiredASROnlyExclusions =
 	[
@@ -249,7 +249,7 @@ internal sealed partial class ASRVM : ViewModelBase
 	{
 		string packageDirectory = Path.TrimEndingDirectorySeparator(Path.GetFullPath(AppContext.BaseDirectory));
 		string[] pathSegments = [packageDirectory, .. relativeSegments];
-		string absoluteTargetPath = Path.GetFullPath(Path.Combine(pathSegments));
+		string absoluteTargetPath = Path.GetFullPath(Path.Join(pathSegments));
 		string? packageRootDirectory = Directory.GetParent(packageDirectory)?.FullName;
 
 		if (string.IsNullOrWhiteSpace(packageRootDirectory) ||
@@ -259,7 +259,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		}
 
 		string relativePath = Path.GetRelativePath(packageDirectory, absoluteTargetPath);
-		return Path.Combine(packageRootDirectory, "*", relativePath);
+		return Path.Join(packageRootDirectory, "*", relativePath);
 	}
 
 	/// <summary>

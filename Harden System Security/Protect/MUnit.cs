@@ -469,7 +469,7 @@ internal static class SpecializedStrategiesRegistry
 		{
 			try
 			{
-				byte[] json = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Resources", "WMI", "WMISettings.json"));
+				byte[] json = File.ReadAllBytes(Path.Join(AppContext.BaseDirectory, "Resources", "WMI", "WMISettings.json"));
 				List<WmiSpecialVerificationItem>? items =
 					JsonSerializer.Deserialize(json, WmiSpecialVerificationJsonContext.Default.ListWmiSpecialVerificationItem);
 
@@ -1485,7 +1485,7 @@ internal sealed partial class MUnit(
 		List<MUnit> temp = [];
 
 		// Build the full path to the JSON file
-		string jsonConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", $"{category}.json");
+		string jsonConfigPath = Path.Join(AppContext.BaseDirectory, "Resources", $"{category}.json");
 
 		// Ensure specialized strategies are registered
 		SpecializedStrategiesRegistry.RegisterWmiSpecializedVerificationsOnceFromFile();

@@ -489,7 +489,7 @@ internal static class GetAppsList
 	{
 		try
 		{
-			string manifestPath = Path.Combine(package.InstalledLocation.Path, "AppxManifest.xml");
+			string manifestPath = Path.Join(package.InstalledLocation.Path, "AppxManifest.xml");
 			if (!File.Exists(manifestPath))
 			{
 				return new PackagedAppManifestDetails(Atlas.GetStr("NAText"), 0);

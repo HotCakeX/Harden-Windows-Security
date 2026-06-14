@@ -33,8 +33,8 @@ internal static class OneDriveDirectories
 		// List to store the OneDrive directories found
 		List<string> directoriesList = [];
 
-		// Combine system drive with "Users" to get the path to the Users directory
-		string usersPath = Path.Combine(Atlas.SystemDrive, "Users");
+		// Join system drive with "Users" to get the path to the Users directory
+		string usersPath = Path.Join(Atlas.SystemDrive, "Users");
 
 		// catch to prevent unnecessary exception
 		if (!Directory.Exists(usersPath))
@@ -51,7 +51,7 @@ internal static class OneDriveDirectories
 				{
 					// Enumerate directories within each user directory that start with "OneDrive"
 					IEnumerable<string> directories = Directory.EnumerateDirectories(userDirectory, "OneDrive*", SearchOption.TopDirectoryOnly)
-											   .Where(dir => dir.StartsWith(Path.Combine(userDirectory, "OneDrive"), StringComparison.OrdinalIgnoreCase));
+											   .Where(dir => dir.StartsWith(Path.Join(userDirectory, "OneDrive"), StringComparison.OrdinalIgnoreCase));
 
 					// Add each found directory to the list
 					directoriesList.AddRange(directories);

@@ -1314,7 +1314,7 @@ internal static partial class CabinetArchiveExtractor
 				return;
 			}
 
-			string destinationFilePath = Path.GetFullPath(Path.Combine(extractionRootDirectoryPath, sanitizedName));
+			string destinationFilePath = Path.GetFullPath(Path.Join(extractionRootDirectoryPath, sanitizedName));
 
 			if (!destinationFilePath.StartsWith(extractionRootDirectoryPath, StringComparison.OrdinalIgnoreCase))
 			{

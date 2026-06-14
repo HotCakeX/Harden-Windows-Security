@@ -105,7 +105,7 @@ internal static class Main
 	private static readonly SemaphoreSlim MetadataFileLock = new(1, 1);
 
 	// The location where token cache and metadata JSON files are saved to.
-	private static readonly string TokenCacheDiskLocation = Directory.CreateDirectory(Path.Combine(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "CachedAuthTokens")).FullName;
+	private static readonly string TokenCacheDiskLocation = Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, "CachedAuthTokens")).FullName;
 
 	/// <summary>
 	/// Lazily creates or gets an IPublicClientApplication configured for the specific Sign In Method and Azure Cloud Environment.
@@ -1618,7 +1618,7 @@ DeviceEvents
 		await MetadataFileLock.WaitAsync();
 		try
 		{
-			string metadataFilePath = Path.Combine(TokenCacheDiskLocation, "AccountsMetadata.json");
+			string metadataFilePath = Path.Join(TokenCacheDiskLocation, "AccountsMetadata.json");
 
 			List<SavedAccountMetadata> metadataList = [];
 
@@ -1762,7 +1762,7 @@ DeviceEvents
 	/// </summary>
 	internal static async Task RestoreCachedAccountsAsync()
 	{
-		string metadataFilePath = Path.Combine(TokenCacheDiskLocation, "AccountsMetadata.json");
+		string metadataFilePath = Path.Join(TokenCacheDiskLocation, "AccountsMetadata.json");
 
 		string json = string.Empty;
 		bool fileExists = false;

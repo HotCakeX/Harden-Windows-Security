@@ -72,9 +72,9 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		List<MUnit> output = [];
 
 		{
-			string OldCustomEventViewsPath = Path.Combine(Atlas.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
-			string NewCustomEventViewsPath = Path.Combine(Atlas.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "HardenSystemSecurity");
-			string SourceDirectory = Path.Combine(AppContext.BaseDirectory, "Resources", "EventViewerCustomViews");
+			string OldCustomEventViewsPath = Path.Join(Atlas.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
+			string NewCustomEventViewsPath = Path.Join(Atlas.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "HardenSystemSecurity");
+			string SourceDirectory = Path.Join(AppContext.BaseDirectory, "Resources", "EventViewerCustomViews");
 
 			// Create custom event viewer views
 			output.Add(new(
@@ -97,7 +97,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 
 					foreach (string file in Directory.GetFiles(SourceDirectory))
 					{
-						File.Copy(file, Path.Combine(NewCustomEventViewsPath, Path.GetFileName(file)), true);
+						File.Copy(file, Path.Join(NewCustomEventViewsPath, Path.GetFileName(file)), true);
 					}
 				}),
 
@@ -112,7 +112,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 
 					foreach (string sourceFile in sourceFiles)
 					{
-						string destinationFile = Path.Combine(NewCustomEventViewsPath, Path.GetFileName(sourceFile));
+						string destinationFile = Path.Join(NewCustomEventViewsPath, Path.GetFileName(sourceFile));
 						if (!File.Exists(destinationFile))
 						{
 							return false;

@@ -149,7 +149,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 	/// <summary>
 	/// The path to the JSON file containing the country data.
 	/// </summary>
-	private static readonly string jsonPath = Path.Combine(AppContext.BaseDirectory, "Resources", "CountryIPsData", "CountriesData.json");
+	private static readonly string jsonPath = Path.Join(AppContext.BaseDirectory, "Resources", "CountryIPsData", "CountriesData.json");
 
 	/// <summary>
 	/// Filters countries based on search text

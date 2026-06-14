@@ -433,7 +433,7 @@ internal static class MSBaseline
 	/// <summary>
 	/// The path to the location on the system where policy templates (ADMX/ADML files) exist.
 	/// </summary>
-	private static readonly string PolicyDefinitionsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "PolicyDefinitions");
+	private static readonly string PolicyDefinitionsPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "PolicyDefinitions");
 
 	/// <summary>
 	/// Copies policy definition templates to <see cref="PolicyDefinitionsPath"> from memory.
@@ -443,7 +443,7 @@ internal static class MSBaseline
 	private static void CopyPolicyDefinitionTemplates(List<InMemoryFile> extractedFiles, string baselineRootPath)
 	{
 		// Find Templates directory files
-		string templatesPrefix = Path.Combine(baselineRootPath, "Templates").Replace('\\', '/');
+		string templatesPrefix = Path.Join(baselineRootPath, "Templates").Replace('\\', '/');
 		if (!templatesPrefix.EndsWith('/'))
 			templatesPrefix += '/';
 
@@ -468,7 +468,7 @@ internal static class MSBaseline
 			string normalizedFilePath = templateFile.RelativePath.Replace('\\', '/');
 			string relativePath = normalizedFilePath[templatesPrefix.Length..];
 
-			string destinationPath = Path.Combine(PolicyDefinitionsPath, relativePath.Replace('/', Path.DirectorySeparatorChar));
+			string destinationPath = Path.Join(PolicyDefinitionsPath, relativePath.Replace('/', Path.DirectorySeparatorChar));
 
 			// Ensure destination directory exists
 			string? destinationDir = Path.GetDirectoryName(destinationPath);
@@ -488,7 +488,7 @@ internal static class MSBaseline
 	private static HashSet<string> FindAllGUIDDirectoryPaths(List<InMemoryFile> items, string baselineRootPath)
 	{
 		// Find GPOs directory path
-		string gposPrefix = Path.Combine(baselineRootPath, "GPOs").Replace('\\', '/');
+		string gposPrefix = Path.Join(baselineRootPath, "GPOs").Replace('\\', '/');
 		if (!gposPrefix.EndsWith('/'))
 			gposPrefix += '/';
 
@@ -503,7 +503,7 @@ internal static class MSBaseline
 				string[] pathParts = remainingPath.Split('/');
 				if (pathParts.Length > 0 && IsGuidDirectory(pathParts[0]))
 				{
-					_ = guidDirectories.Add(Path.Combine(gposPrefix.TrimEnd('/'), pathParts[0]).Replace('/', Path.DirectorySeparatorChar));
+					_ = guidDirectories.Add(Path.Join(gposPrefix.TrimEnd('/'), pathParts[0]).Replace('/', Path.DirectorySeparatorChar));
 				}
 			}
 		}

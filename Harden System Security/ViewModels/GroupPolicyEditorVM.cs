@@ -1163,10 +1163,10 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
 
 					string? saveLoc = OutputDirForJsonFilesAfterConversion is null
-						? Path.Combine(
+						? Path.Join(
 							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".json")
-						: Path.Combine(
+						: Path.Join(
 							OutputDirForJsonFilesAfterConversion,
 							Path.GetFileNameWithoutExtension(item) + ".json");
 
@@ -1254,10 +1254,10 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 							entries: policies);
 
 					string? saveLoc = OutputDirForPOLFilesAfterConversion is null
-						? Path.Combine(
+						? Path.Join(
 							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".pol")
-						: Path.Combine(
+						: Path.Join(
 							OutputDirForPOLFilesAfterConversion,
 							Path.GetFileNameWithoutExtension(item) + ".pol");
 					RegistryPolicyParser.WriteFile(saveLoc, newPolicyFile);
@@ -1330,10 +1330,10 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					List<RegistryPolicyEntry> policies = SecurityINFParser.ParseSecurityINFFile(item);
 
 					string? saveLoc = OutputDirForSecurityINFToJSONConversion is null
-						? Path.Combine(
+						? Path.Join(
 							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".json")
-						: Path.Combine(
+						: Path.Join(
 							OutputDirForSecurityINFToJSONConversion,
 							Path.GetFileNameWithoutExtension(item) + ".json");
 					RegistryPolicyEntry.Save(saveLoc, policies);

@@ -97,6 +97,8 @@ jobs:
                 id: cs/unmanaged-code # The apps in this repository naturally need to interact with the OS and must use unmanaged code, unavoidable, but perfectly OK.
             - exclude:
                 id: cs/too-many-ref-parameters # Some methods or functions need to have many refs, such as OS native API functions.
+            - exclude:
+                id: cs/missed-using-statement # This produces lots of false positives. If "using" keyword is not used and instead the object is properly disposed in a finally block then there is a pretty good reason for it and this detection does not understand that reason.
 
     # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
     # If the analyze step fails for one of the languages you are analyzing with

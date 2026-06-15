@@ -18,13 +18,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Services.Store;
+using Microsoft.Windows.BadgeNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
+using Microsoft.Windows.AppNotifications;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.Others;
 using HardenSystemSecurity.ViewModels;
 namespace HardenSystemSecurity.Others;
 #endif
-
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
 namespace AppControlManager.Others;
@@ -42,6 +44,27 @@ internal static class AppUpdate
 	internal static event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
 
 	private static StoreContext? _StoreContext;
+
+	private static void DisplayAvailableUpdateNotifications()
+	{
+		// Display Toast Notification
+		if (AppNotificationManager.IsSupported())
+		{
+			AppNotification notification = new AppNotificationBuilder()
+					.AddText("New Update Available")
+					.AddText("There is a new update available for the app.")
+					.SetAudioEvent(AppNotificationSoundEvent.Reminder)
+					.SetTimeStamp(DateTime.Now)
+					.SetGroup("New Update")
+					.SetScenario(AppNotificationScenario.Default)
+					.SetAttributionText("Please update to the latest version by opening the Microsoft Store.")
+					.BuildNotification();
+			AppNotificationManager.Default.Show(notification);
+		}
+
+		// Display a badge on the taskbar icon to indicate that an update is available
+		BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Alert);
+	}
 
 	/// <summary>
 	/// Downloads the version file from GitHub,
@@ -68,6 +91,8 @@ internal static class AppUpdate
 			ViewModelProvider.UpdateVM.UpdateButtonContent = string.Format(
 				Atlas.GetStr("InstallVersionMessage"),
 				onlineAvailableVersion);
+
+			DisplayAvailableUpdateNotifications();
 		}
 		else
 		{
@@ -115,6 +140,8 @@ internal static class AppUpdate
 
 			// Set the text for the button in the update page
 			ViewModelProvider.UpdateVM.UpdateButtonContent = Atlas.GetStr("InstallLatestVer");
+
+			DisplayAvailableUpdateNotifications();
 		}
 
 		return new UpdateCheckResponse(

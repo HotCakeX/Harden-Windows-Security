@@ -28,6 +28,7 @@ using HardenSystemSecurity.ViewModels;
 using HardenSystemSecurity.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
+using Microsoft.Windows.BadgeNotifications;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 
@@ -279,7 +280,7 @@ public sealed partial class App : Application
 		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
-		Badge.ClearBadge();
+		BadgeNotificationManager.Current.ClearBadge();
 
 		#region Initial navigation and file activation processing
 

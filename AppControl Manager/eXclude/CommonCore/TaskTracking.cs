@@ -17,6 +17,7 @@
 
 using System.Threading;
 using AppControlManager.ViewModels;
+using Microsoft.Windows.BadgeNotifications;
 
 namespace CommonCore;
 
@@ -59,7 +60,7 @@ internal static class TaskTracking
 			_ = Interlocked.Increment(ref _activeOperationsCount);
 
 			// Set the active badge
-			Taskbar.Badge.SetBadgeAsActive();
+			BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Activity);
 		}
 
 		public void Dispose()
@@ -68,7 +69,7 @@ internal static class TaskTracking
 			if (Interlocked.Decrement(ref _activeOperationsCount) == 0)
 			{
 				// Clear the active badge if no more active operations
-				Taskbar.Badge.ClearBadge();
+				BadgeNotificationManager.Current.ClearBadge();
 			}
 		}
 	}

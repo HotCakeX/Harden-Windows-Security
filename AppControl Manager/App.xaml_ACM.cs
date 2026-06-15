@@ -27,6 +27,7 @@ using AppControlManager.WindowComponents;
 using CommonCore.Taskbar;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
+using Microsoft.Windows.BadgeNotifications;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 
@@ -195,14 +196,13 @@ public sealed partial class App : Application
 		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
-		Badge.ClearBadge();
+		BadgeNotificationManager.Current.ClearBadge();
 
 		#region Initial navigation and file activation processing
 
 		// Handle direct file activation
 		if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
 		{
-
 			Logger.Write(string.Format(Atlas.GetStr("FileActivationLaunchMessage"), _activationFilePath));
 
 			try

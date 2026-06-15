@@ -145,7 +145,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IncrementalCollection\HighPerfIncrementalCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IncrementalCollection\IncrementalCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IncrementalCollection\RangedObservableCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Taskbar\Badge.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Taskbar\JumpListMgr.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Taskbar\TaskBarProgress.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskTracking.cs" />

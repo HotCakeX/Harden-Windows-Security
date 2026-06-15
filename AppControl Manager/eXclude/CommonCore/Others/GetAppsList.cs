@@ -453,13 +453,6 @@ internal static class GetAppsList
 		return true;
 	}
 
-	private static readonly XmlReaderSettings ReaderSettings = new()
-	{
-		DtdProcessing = DtdProcessing.Prohibit,
-		IgnoreComments = true,
-		IgnoreWhitespace = true
-	};
-
 	private static string FormatPackageStatus(Windows.ApplicationModel.PackageStatus packageStatus)
 	{
 		if (packageStatus.VerifyIsOK())
@@ -499,7 +492,7 @@ internal static class GetAppsList
 			bool readingCapabilities = false;
 
 			using FileStream manifestStream = new(manifestPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-			using XmlReader reader = XmlReader.Create(manifestStream, ReaderSettings);
+			using XmlReader reader = XmlReader.Create(manifestStream, Atlas.UniversalXmlReaderSettings.Value);
 
 			while (reader.Read())
 			{

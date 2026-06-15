@@ -137,21 +137,13 @@ internal static class AdmxAdmlParser
 			return stringResources;
 		}
 
-		XmlReaderSettings settings = new()
-		{
-			DtdProcessing = DtdProcessing.Prohibit,
-			IgnoreComments = true,
-			IgnoreWhitespace = true,
-			CloseInput = true
-		};
-
 		for (int i = 0; i < admlFiles.Length; i++)
 		{
 			string file = admlFiles[i];
 			try
 			{
 				using FileStream fs = new(file, FileMode.Open, FileAccess.Read, FileShare.Read, 8192);
-				using XmlReader reader = XmlReader.Create(fs, settings);
+				using XmlReader reader = XmlReader.Create(fs, Atlas.UniversalXmlReaderSettings.Value);
 
 				while (reader.Read())
 				{
@@ -208,21 +200,13 @@ internal static class AdmxAdmlParser
 			return;
 		}
 
-		XmlReaderSettings settings = new()
-		{
-			DtdProcessing = DtdProcessing.Prohibit,
-			IgnoreComments = true,
-			IgnoreWhitespace = true,
-			CloseInput = true
-		};
-
 		for (int i = 0; i < admxFiles.Length; i++)
 		{
 			string filePath = admxFiles[i];
 			try
 			{
 				using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 8192);
-				using XmlReader reader = XmlReader.Create(fs, settings);
+				using XmlReader reader = XmlReader.Create(fs, Atlas.UniversalXmlReaderSettings.Value);
 
 				while (reader.Read())
 				{

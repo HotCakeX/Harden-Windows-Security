@@ -186,6 +186,7 @@ internal static class DoDDoWCertificateMgr
 			}
 		}
 	}
+
 	/// <summary>
 	/// Resolves IPv4 address records for a host by querying Cloudflare's DNS over HTTPS JSON endpoint.
 	/// Because some ISPs or VPN providers might not resolve DoD domains correctly and also this protects against possible poisoned DNS cache.

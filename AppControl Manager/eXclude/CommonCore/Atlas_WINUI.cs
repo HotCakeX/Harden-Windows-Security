@@ -17,6 +17,7 @@
 
 using System.IO;
 using System.Threading;
+using System.Xml;
 using Microsoft.UI.Dispatching;
 using Microsoft.Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel;
@@ -161,4 +162,15 @@ internal static partial class Atlas
 
 
 	internal static readonly Lazy<char[]> InvalidFileNameChars = new(Path.GetInvalidFileNameChars, LazyThreadSafetyMode.None);
+
+	// Secure XML Reader Settings used by the entire app.
+	internal static readonly Lazy<XmlReaderSettings> UniversalXmlReaderSettings = new(() => new XmlReaderSettings()
+	{
+		DtdProcessing = DtdProcessing.Prohibit,
+		IgnoreComments = true,
+		XmlResolver = null,
+		IgnoreWhitespace = true,
+		CloseInput = true
+	}, LazyThreadSafetyMode.None);
+
 }

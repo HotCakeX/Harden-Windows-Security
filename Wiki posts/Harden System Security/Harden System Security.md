@@ -97,6 +97,11 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
+> [!NOTE]\
+> Harden System Security is used by a wide variety of people with different backgrounds, environments, workflows, and security requirements. Because of that, it is completely natural that not every single feature will be used by every single person. If a new feature is added that you do not need, that is perfectly fine. Unused features remain inactive and do not consume any background resources. The app is carefully engineered to remain efficient, lightweight, and respectful of system resources while continuing to serve many different use cases. This app is open source and will always remain open source. Its code is [publicly available](https://github.com/HotCakeX/Harden-Windows-Security) for anyone to review, audit, verify, and contribute to. You do not have to rely on assumptions, guesses, or blind trust. You can inspect the source code yourself, confirm the claims being made, and report any issue you find.
+
+<br>
+
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/Logging.svg" width="35" alt="Comprehensive Logging Capabilities Harden System Security App"> Comprehensive Logging Capabilities
 
 The Harden System Security app includes detailed logging feature that tracks every part of its operations. These logs are helpful for reviewing what actions were taken, making it easier to audit and troubleshoot if necessary. The logs are saved in the following location:

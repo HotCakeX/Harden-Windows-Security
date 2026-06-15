@@ -843,6 +843,69 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
+	/// Whether the button for installing or removing DoD certificates on Sidebar is enabled.
+	/// </summary>
+	internal bool IsDoDCertificatesButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
+
+	/// <summary>
+	/// Downloads the official DoD PKI certificate bundle in memory and installs the CA certificates.
+	/// </summary>
+	internal async void InstallDoDCertificates() => await ConfigureDoDCertificatesAsync(install: true);
+
+	/// <summary>
+	/// Downloads the official DoD PKI certificate bundle in memory and removes the matching CA certificates.
+	/// </summary>
+	internal async void RemoveDoDCertificates() => await ConfigureDoDCertificatesAsync(install: false);
+
+	/// <summary>
+	/// Coordinates the DoD certificate install or removal workflow for the sidebar action.
+	/// </summary>
+	private async Task ConfigureDoDCertificatesAsync(bool install)
+	{
+		try
+		{
+			IsDoDCertificatesButtonEnabled = false;
+
+			using ContentDialogV2 confirmationDialog = new()
+			{
+				Title = install ? "Install DoD/DoW certificates" : "Remove DoD/DoW certificates",
+				Content = new TextBlock
+				{
+					Text = install
+						? "This will download the official DoD/DoW PKI PKCS#7 certificate bundle directly from DoD Cyber Exchange and install them into the local machine certificate stores."
+						: "This will download the official DoD/Dow PKI PKCS#7 certificate bundle directly from DoD Cyber Exchange and remove matching CA certificates from the local machine certificate stores.",
+					TextWrapping = TextWrapping.Wrap
+				},
+				PrimaryButtonText = Atlas.GetStr("Continue"),
+				SecondaryButtonText = Atlas.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Secondary
+			};
+
+			ContentDialogResult dialogResult = await confirmationDialog.ShowAsync();
+			if (dialogResult is not ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			MainInfoBar.WriteInfo(install ? "Downloading and installing DoD certificates..." : "Downloading DoD certificate bundle and removing matching certificates...");
+			DoDDoWCertificateMgr.DoDCertificateOperationResult operationResult = await DoDDoWCertificateMgr.ConfigureDoDCertificatesInternalAsync(install);
+			string message = install
+				? $"DoD/DoW certificate installation completed. Added: {operationResult.ChangedCount}; already present: {operationResult.UnchangedCount}; skipped non-CA certificates: {operationResult.SkippedCount}."
+				: $"DoD/DoW certificate removal completed. Removed: {operationResult.ChangedCount}; not present: {operationResult.UnchangedCount}; skipped non-CA certificates: {operationResult.SkippedCount}.";
+
+			MainInfoBar.WriteSuccess(message);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsDoDCertificatesButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
 	/// Whether the button for configuring nested virtualizations on Sidebar is enabled.
 	/// </summary>
 	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;

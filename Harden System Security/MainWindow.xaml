@@ -850,6 +850,40 @@
 
                                     </DropDownButton>
 
+                                    <DropDownButton Content="DoD/DoW certificates"
+                                                    ToolTipService.ToolTip="Install certificates required to access the Department of War (DoW) websites."
+                                                    HorizontalAlignment="Center"
+                                                    IsEnabled="{x:Bind ViewModel.IsDoDCertificatesButtonEnabled, Mode=OneWay}">
+                                        <DropDownButton.Flyout>
+                                            <MenuFlyout Placement="Bottom">
+                                                <MenuFlyoutItem Text="Install DoD/DoW certificates"
+                                                                Click="{x:Bind ViewModel.InstallDoDCertificates}"/>
+                                                <MenuFlyoutItem Text="Remove DoD/DoW certificates"
+                                                                Click="{x:Bind ViewModel.RemoveDoDCertificates}"/>
+                                            </MenuFlyout>
+                                        </DropDownButton.Flyout>
+                                        <DropDownButton.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xEB95;"
+                                                              FontFamily="Segoe Fluent Icons"
+                                                              FontSize="16"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </DropDownButton.ContentTemplate>
+                                    </DropDownButton>
+
                                     <Button x:Uid="MicrosoftStoreAppUpdatesCheckButton"
                                             HorizontalAlignment="Center"
                                             Click="{x:Bind ViewModel.CheckForAllAppUpdates}"

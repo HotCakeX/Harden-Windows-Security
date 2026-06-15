@@ -132,8 +132,8 @@
                                     <GradientStop Color="#4BC0C8" Offset="1.0"/>
                                 </LinearGradientBrush>
                             </Border.BorderBrush>
-                            <ToggleButton VerticalAlignment="Center"                                          
-                                          IsChecked="{x:Bind ViewModel.IsLiveGraphsWindowOpen, Mode=TwoWay}"                                      
+                            <ToggleButton VerticalAlignment="Center"
+                                          IsChecked="{x:Bind ViewModel.IsLiveGraphsWindowOpen, Mode=TwoWay}"
                                           ToolTipService.ToolTip="Open live system intelligence">
                                 <FontIcon Glyph="&#xEB44;"/>
                             </ToggleButton>

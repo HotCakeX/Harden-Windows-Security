@@ -905,6 +905,30 @@
                                         </Button.ContentTemplate>
                                     </Button>
 
+                                    <Button x:Uid="RebootToRecoveryModeButton"
+                                            HorizontalAlignment="Center"
+                                            Click="{x:Bind ViewModel.RebootToRecoveryMode}"
+                                            IsEnabled="{x:Bind ViewModel.IsRebootToRecoveryModeButtonEnabled, Mode=OneWay}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xE777;"
+                                                              FontSize="16"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
                                     <Button x:Uid="GenerateBatteryReportButton"
                                             HorizontalAlignment="Center"
                                             Click="{x:Bind ViewModel.GenerateBatteryReport}"

@@ -528,16 +528,28 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		CancellationTokenSource searchCancellationTokenSource = new();
 		CancellationTokenSource? previousSearchCancellationTokenSource = Interlocked.Exchange(ref _searchFilterCancellationTokenSource, searchCancellationTokenSource);
-		previousSearchCancellationTokenSource?.Cancel();
-		previousSearchCancellationTokenSource?.Dispose();
+		try
+		{
+			previousSearchCancellationTokenSource?.Cancel();
+		}
+		finally
+		{
+			previousSearchCancellationTokenSource?.Dispose();
+		}
 		return searchCancellationTokenSource;
 	}
 
 	private void CancelPendingSearchFilter()
 	{
 		CancellationTokenSource? previousSearchCancellationTokenSource = Interlocked.Exchange(ref _searchFilterCancellationTokenSource, null);
-		previousSearchCancellationTokenSource?.Cancel();
-		previousSearchCancellationTokenSource?.Dispose();
+		try
+		{
+			previousSearchCancellationTokenSource?.Cancel();
+		}
+		finally
+		{
+			previousSearchCancellationTokenSource?.Dispose();
+		}
 	}
 
 	/// <summary>

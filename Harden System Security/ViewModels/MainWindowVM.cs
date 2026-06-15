@@ -888,7 +888,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
 			MainInfoBar.WriteError(ex);
 		}
 		finally
@@ -1077,6 +1076,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	internal bool IsRebootToUEFIButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
 
 	/// <summary>
+	/// Whether the button for rebooting the system into Windows Recovery Environment is enabled.
+	/// </summary>
+	internal bool IsRebootToRecoveryModeButtonEnabled { get; set => SP(ref field, value); } = Atlas.IsElevated;
+
+	/// <summary>
 	/// Reboots the system directly into the firmware settings UI on supported devices.
 	/// </summary>
 	internal async void RebootToUEFI()
@@ -1108,12 +1112,51 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
 			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
 			IsRebootToUEFIButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Reboots the system directly into Windows Recovery Environment on the next boot.
+	/// </summary>
+	internal async void RebootToRecoveryMode()
+	{
+		try
+		{
+			IsRebootToRecoveryModeButtonEnabled = false;
+
+			using ContentDialogV2 confirmationDialog = new()
+			{
+				Title = Atlas.GetStr("WarningTitle"),
+				Content = new TextBlock
+				{
+					Text = Atlas.GetStr("RebootToRecoveryModeConfirmationDialogContent"),
+					TextWrapping = TextWrapping.Wrap
+				},
+				PrimaryButtonText = Atlas.GetStr("Cancel"),
+				SecondaryButtonText = Atlas.GetStr("OK"),
+				DefaultButton = ContentDialogButton.Primary
+			};
+
+			ContentDialogResult dialogResult = await confirmationDialog.ShowAsync();
+			if (dialogResult is not ContentDialogResult.Secondary)
+			{
+				return;
+			}
+
+			Firmware.RebootToWindowsRecoveryEnvironment();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsRebootToRecoveryModeButtonEnabled = true;
 		}
 	}
 
@@ -1162,7 +1205,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
 			MainInfoBar.WriteError(ex);
 		}
 		finally
@@ -1255,7 +1297,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ex);
 			MainInfoBar.WriteError(ex);
 		}
 		finally

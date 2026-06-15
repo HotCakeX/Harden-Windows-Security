@@ -741,10 +741,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 		}
 
 		// Restore scroll position
-		if (sv != null && verticalOffset.HasValue)
-		{
-			_ = sv.ChangeView(null, verticalOffset.Value, null, true);
-		}
+		_ = sv?.ChangeView(null, verticalOffset, null, true);
 	}
 
 	/// <summary>

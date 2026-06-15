@@ -6902,4 +6902,17 @@ Thumbprint: {3}</value>
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>View detailed information about every available update, hide or unhide any update you need and export their metadata.</value>
   </data>
+  <!--NEW-->
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>Reboot to recovery mode</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restart the device and boot into Windows Recovery Environment on the next startup.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restart the device and boot into Windows Recovery Environment on the next startup.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>This will restart the system and boot directly into Windows Recovery Environment on the next boot. Save your work before continuing.</value>
+</data>
 </root>

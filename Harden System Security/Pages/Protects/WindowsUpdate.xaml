@@ -492,7 +492,7 @@
                                                                     <TextBlock Text="Uninstallable" Style="{StaticResource WindowsUpdateLabelStyle}"/>
                                                                     <TextBlock Text="{x:Bind IsUninstallable}" Style="{StaticResource WindowsUpdateCompactValueStyle}"/>
                                                                 </StackPanel>
-                                                            </Border>                                                           
+                                                            </Border>
                                                             <Border Style="{StaticResource WindowsUpdateCompactDetailCardStyle}">
                                                                 <StackPanel Style="{StaticResource WindowsUpdateDetailFieldStackStyle}">
                                                                     <TextBlock Text="Recommended CPU" Style="{StaticResource WindowsUpdateLabelStyle}"/>

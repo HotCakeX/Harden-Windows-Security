@@ -70,6 +70,7 @@ internal static partial class Firmware
 	private const uint SystemEnvironmentInformation = 2;
 	private const int STATUS_SUCCESS = 0;
 	private const int STATUS_BUFFER_TOO_SMALL = unchecked((int)0xC0000023);
+	private const int STATUS_BUFFER_OVERFLOW = unchecked((int)0x80000005);
 	private const int SE_PRIVILEGE_ENABLED = 0x0002;
 	private const int ERROR_INSUFFICIENT_BUFFER = 122;
 	private const int ERROR_ENVVAR_NOT_FOUND = 203;
@@ -87,6 +88,11 @@ internal static partial class Firmware
 	private const uint ShtdnReasonMajorOperatingSystem = 0x00020000;
 	private const uint ShtdnReasonMinorReconfig = 0x00000004;
 	private const uint ShtdnReasonFlagPlanned = 0x80000000;
+	private const uint BcdLibraryObjectListRecoverySequence = 0x14000008;
+	private const uint BcdBootMgrObjectListBootSequence = 0x24000002;
+	private const uint BcdElementFlagsNone = 0;
+	private static readonly Guid BcdBootManagerGuid = new("9DEA862C-5CDD-4E70-ACC1-F32B344D4795");
+	private static readonly Guid BcdCurrentBootEntryGuid = new("FA926493-6F1C-4193-A414-58F0B2456D1E");
 	private static readonly string EfiGlobalVariableGuidString = $"{{{EfiGlobalVariableGuid:D}}}";
 
 	/// <summary>
@@ -154,6 +160,150 @@ internal static partial class Firmware
 
 			throw new Win32Exception(rebootError, "Failed to reboot after requesting the UEFI firmware settings UI.");
 		}
+	}
+
+	/// <summary>
+	/// Reboots the operating system directly into the configured Windows Recovery Environment on the next boot.
+	/// </summary>
+	internal static void RebootToWindowsRecoveryEnvironment()
+	{
+		Guid[] recoverySequence = GetWindowsRecoveryEnvironmentBootSequence();
+		SetBootManagerOneTimeBootSequence(recoverySequence);
+		EnablePrivilege("SeShutdownPrivilege");
+		if (!NativeMethods.ExitWindowsEx(EwxReboot | EwxForceIfHung, ShtdnReasonMajorOperatingSystem | ShtdnReasonMinorReconfig | ShtdnReasonFlagPlanned))
+		{
+			throw new Win32Exception(Marshal.GetLastPInvokeError(), "Failed to reboot after requesting Windows Recovery Environment.");
+		}
+	}
+
+	/// <summary>
+	/// Retrieves the configured recovery boot applications for the current Windows boot entry from the BCD store.
+	/// </summary>
+	private static Guid[] GetWindowsRecoveryEnvironmentBootSequence()
+	{
+		IntPtr storeHandle = IntPtr.Zero;
+		IntPtr currentBootEntryHandle = IntPtr.Zero;
+		try
+		{
+			ThrowIfBcdFailed(NativeMethods.BcdOpenSystemStore(out storeHandle), "Failed to open the BCD system store.");
+			Guid currentBootEntryGuid = BcdCurrentBootEntryGuid;
+			ThrowIfBcdFailed(NativeMethods.BcdOpenObject(storeHandle, ref currentBootEntryGuid, out currentBootEntryHandle), "Failed to open the current Windows boot entry in the BCD store.");
+			Guid[] recoverySequence = GetBcdGuidListElement(currentBootEntryHandle, BcdLibraryObjectListRecoverySequence, "Windows Recovery Environment is not configured for the current Windows boot entry.");
+			if (recoverySequence.Length == 0)
+			{
+				throw new InvalidOperationException("Windows Recovery Environment is not configured for the current Windows boot entry.");
+			}
+			return recoverySequence;
+		}
+		finally
+		{
+			if (currentBootEntryHandle != IntPtr.Zero)
+			{
+				_ = NativeMethods.BcdCloseObject(currentBootEntryHandle);
+			}
+			if (storeHandle != IntPtr.Zero)
+			{
+				_ = NativeMethods.BcdCloseStore(storeHandle);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Writes the one-time boot sequence on the Windows Boot Manager BCD object.
+	/// </summary>
+	private static unsafe void SetBootManagerOneTimeBootSequence(ReadOnlySpan<Guid> bootSequence)
+	{
+		IntPtr storeHandle = IntPtr.Zero;
+		IntPtr bootManagerHandle = IntPtr.Zero;
+		try
+		{
+			ThrowIfBcdFailed(NativeMethods.BcdOpenSystemStore(out storeHandle), "Failed to open the BCD system store.");
+			Guid bootManagerGuid = BcdBootManagerGuid;
+			ThrowIfBcdFailed(NativeMethods.BcdOpenObject(storeHandle, ref bootManagerGuid, out bootManagerHandle), "Failed to open the Windows Boot Manager BCD object.");
+			int dataSize = checked(bootSequence.Length * 16);
+			IntPtr buffer = Marshal.AllocHGlobal(dataSize);
+			try
+			{
+				Span<byte> data = new((void*)buffer, dataSize);
+				for (int i = 0; i < bootSequence.Length; i++)
+				{
+					if (!bootSequence[i].TryWriteBytes(data.Slice(i * 16, 16)))
+					{
+						throw new InvalidOperationException("Failed to serialize a BCD object identifier.");
+					}
+				}
+				ThrowIfBcdFailed(NativeMethods.BcdSetElementDataWithFlags(bootManagerHandle, BcdBootMgrObjectListBootSequence, BcdElementFlagsNone, buffer, (uint)dataSize), "Failed to set the one-time Windows Boot Manager boot sequence.");
+			}
+			finally
+			{
+				Marshal.FreeHGlobal(buffer);
+			}
+		}
+		finally
+		{
+			if (bootManagerHandle != IntPtr.Zero)
+			{
+				_ = NativeMethods.BcdCloseObject(bootManagerHandle);
+			}
+			if (storeHandle != IntPtr.Zero)
+			{
+				_ = NativeMethods.BcdCloseStore(storeHandle);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Reads a GUID list element from a BCD object.
+	/// </summary>
+	private static unsafe Guid[] GetBcdGuidListElement(IntPtr objectHandle, uint elementType, string missingElementMessage)
+	{
+		uint dataSize = 0;
+		int queryStatus = NativeMethods.BcdGetElementDataWithFlags(objectHandle, elementType, BcdElementFlagsNone, IntPtr.Zero, ref dataSize);
+		if (queryStatus < 0 && queryStatus != STATUS_BUFFER_TOO_SMALL && queryStatus != STATUS_BUFFER_OVERFLOW)
+		{
+			ThrowIfBcdFailed(queryStatus, missingElementMessage);
+		}
+		if (dataSize == 0)
+		{
+			throw new InvalidOperationException(missingElementMessage);
+		}
+		if ((dataSize % 16) != 0)
+		{
+			throw new InvalidOperationException($"BCD element 0x{elementType:X8} returned an invalid GUID list size of {dataSize} bytes.");
+		}
+		IntPtr buffer = Marshal.AllocHGlobal(checked((int)dataSize));
+		try
+		{
+			ThrowIfBcdFailed(NativeMethods.BcdGetElementDataWithFlags(objectHandle, elementType, BcdElementFlagsNone, buffer, ref dataSize), $"Failed to read BCD element 0x{elementType:X8}.");
+			List<Guid> identifiers = [];
+			byte* data = (byte*)buffer;
+			for (int offset = 0; offset < dataSize; offset += 16)
+			{
+				Guid identifier = new(new ReadOnlySpan<byte>(data + offset, 16));
+				if (!identifier.Equals(Guid.Empty))
+				{
+					identifiers.Add(identifier);
+				}
+			}
+			return [.. identifiers];
+		}
+		finally
+		{
+			Marshal.FreeHGlobal(buffer);
+		}
+	}
+
+	/// <summary>
+	/// Throws a Win32Exception when a BCD API returns a failing NTSTATUS value.
+	/// </summary>
+	private static void ThrowIfBcdFailed(int status, string message)
+	{
+		if (status >= 0)
+		{
+			return;
+		}
+		int win32Error = NativeMethods.RtlNtStatusToDosError(status);
+		throw new Win32Exception(win32Error, $"{message} NTSTATUS: 0x{status:X8}.");
 	}
 
 	/// <summary>
@@ -419,7 +569,6 @@ internal static partial class Firmware
 		}
 	}
 
-
 	/// <summary>
 	/// Retrieves contents of a signature list variable (e.g. db, dbx), parsing for both X.509 and SHA-256.
 	/// </summary>
@@ -435,7 +584,6 @@ internal static partial class Firmware
 
 		return ParseEfiSignatureListMixed(data);
 	}
-
 
 	/// <summary>
 	/// Parses EFI_SIGNATURE_LIST for both X.509 certificates and SHA-256 hashes.

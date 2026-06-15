@@ -80,21 +80,21 @@ jobs:
             - uses: security-and-quality
           query-filters:
             - exclude:
-                id: cs/catch-of-all-exceptions
+                id: cs/catch-of-all-exceptions # Catching everything in a Catch block is perfectly fine. In the apps, it is used in Async Void methods of UI event handlers that must never throw. The exceptions are properly logged.
             - exclude:
-                id: cs/invalid-string-formatting
+                id: cs/invalid-string-formatting # This is False Positive when the strings are retrieved from the RESW files. CodeQL just doesn't understand this.
             - exclude:
-                id: cs/empty-catch-block
+                id: cs/empty-catch-block # Empty catch blocks are necessary when we never want to throw.
             - exclude:
-                id: cs/complex-condition
+                id: cs/complex-condition # Some conditions need to be complex. It's perfectly OK.
             - exclude:
-                id: cs/linq/missed-where
+                id: cs/linq/missed-where # Using Where from Linq is only suggested for code readability, not increased performance, reduced allocation or anything good.
             - exclude:
-                id: cs/complex-block
+                id: cs/complex-block # Some code sections and blocks need to be complex. It's perfectly OK.
             - exclude:
-                id: cs/linq/missed-select
+                id: cs/linq/missed-select # Using Select from Linq is only suggested for code readability, not increased performance, reduced allocation or anything good.
             - exclude:
-                id: cs/unmanaged-code
+                id: cs/unmanaged-code # The apps in this repository naturally need to interact with the OS and must use unmanaged code, unavoidable, but perfectly OK.
 
     # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
     # If the analyze step fails for one of the languages you are analyzing with

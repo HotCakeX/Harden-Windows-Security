@@ -6902,7 +6902,6 @@ Thumbprint: {3}</value>
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>View detailed information about every available update, hide or unhide any update you need and export their metadata.</value>
   </data>
-  <!--NEW-->
   <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
   <value>Reboot to recovery mode</value>
 </data>

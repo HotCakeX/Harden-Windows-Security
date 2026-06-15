@@ -6902,4 +6902,16 @@ Empreinte : {3}</value>
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>Affichez des informations détaillées sur chaque mise à jour disponible, masquez ou réaffichez toute mise à jour dont vous avez besoin et exportez ses métadonnées.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>Redémarrer en mode de récupération</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Redémarre l’appareil et démarre dans l’Environnement de récupération Windows au prochain démarrage.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Redémarre l’appareil et démarre dans l’Environnement de récupération Windows au prochain démarrage.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>Cela redémarrera le système et démarrera directement dans l’Environnement de récupération Windows au prochain démarrage. Enregistrez votre travail avant de continuer.</value>
+</data>
 </root>

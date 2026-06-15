@@ -6902,4 +6902,16 @@ Huella Digital: {3}</value>
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>Consulta información detallada sobre cada actualización disponible, oculta o muestra cualquier actualización que necesites y exporta sus metadatos.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>Reiniciar en modo de recuperación</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reinicia el dispositivo e inicia en el Entorno de recuperación de Windows en el siguiente arranque.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reinicia el dispositivo e inicia en el Entorno de recuperación de Windows en el siguiente arranque.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>Esto reiniciará el sistema e iniciará directamente en el Entorno de recuperación de Windows en el siguiente arranque. Guarda tu trabajo antes de continuar.</value>
+</data>
 </root>

@@ -6902,4 +6902,16 @@
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>اعرض معلومات تفصيلية حول كل تحديث متوفر، وأخفِ أو أظهر أي تحديث تحتاج إليه، وصدّر بيانات التعريف الخاصة به.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>إعادة التشغيل إلى وضع الاسترداد</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يعيد تشغيل الجهاز ويقوم بالتمهيد إلى بيئة استرداد Windows عند بدء التشغيل التالي.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يعيد تشغيل الجهاز ويقوم بالتمهيد إلى بيئة استرداد Windows عند بدء التشغيل التالي.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>سيؤدي هذا إلى إعادة تشغيل النظام والتمهيد مباشرة إلى بيئة استرداد Windows عند بدء التشغيل التالي. احفظ عملك قبل المتابعة.</value>
+</data>
 </root>

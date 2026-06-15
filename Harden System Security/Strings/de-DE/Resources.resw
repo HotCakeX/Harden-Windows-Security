@@ -6902,4 +6902,16 @@ Fingerabdruck: {3}</value>
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>Zeigen Sie detaillierte Informationen zu jedem verfügbaren Update an, blenden Sie benötigte Updates ein oder aus und exportieren Sie deren Metadaten.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>Im Wiederherstellungsmodus neu starten</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Startet das Gerät neu und lädt beim nächsten Start die Windows-Wiederherstellungsumgebung.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Startet das Gerät neu und lädt beim nächsten Start die Windows-Wiederherstellungsumgebung.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>Dadurch wird das System neu gestartet und beim nächsten Start direkt die Windows-Wiederherstellungsumgebung geladen. Speichern Sie Ihre Arbeit, bevor Sie fortfahren.</value>
+</data>
 </root>

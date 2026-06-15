@@ -6902,4 +6902,16 @@
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>הצג מידע מפורט על כל עדכון זמין, הסתר או בטל הסתרה של כל עדכון לפי הצורך, וייצא את המטה-נתונים שלו.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>הפעל מחדש למצב שחזור</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל מחדש את המכשיר והעלה את סביבת השחזור של Windows באתחול הבא.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל מחדש את המכשיר והעלה את סביבת השחזור של Windows באתחול הבא.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>פעולה זו תפעיל מחדש את המערכת ותעלה ישירות את סביבת השחזור של Windows באתחול הבא. שמור את עבודתך לפני שתמשיך.</value>
+</data>
 </root>

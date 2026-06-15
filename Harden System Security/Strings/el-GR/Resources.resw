@@ -6902,4 +6902,16 @@
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>Προβάλετε λεπτομερείς πληροφορίες για κάθε διαθέσιμη ενημέρωση, αποκρύψτε ή επανεμφανίστε οποιαδήποτε ενημέρωση χρειάζεστε και εξαγάγετε τα μεταδεδομένα της.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>Επανεκκίνηση σε λειτουργία αποκατάστασης</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επανεκκινεί τη συσκευή και εκκινεί στο Περιβάλλον αποκατάστασης των Windows κατά την επόμενη εκκίνηση.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επανεκκινεί τη συσκευή και εκκινεί στο Περιβάλλον αποκατάστασης των Windows κατά την επόμενη εκκίνηση.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>Αυτό θα επανεκκινήσει το σύστημα και θα εκκινήσει απευθείας στο Περιβάλλον αποκατάστασης των Windows κατά την επόμενη εκκίνηση. Αποθηκεύστε την εργασία σας πριν συνεχίσετε.</value>
+</data>
 </root>

@@ -6902,4 +6902,16 @@
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>हर उपलब्ध अपडेट के बारे में विस्तृत जानकारी देखें, आवश्यक किसी भी अपडेट को छिपाएँ या फिर से दिखाएँ और उसका मेटाडेटा निर्यात करें.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>पुनर्प्राप्ति मोड में रीबूट करें</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डिवाइस को पुनः प्रारंभ करता है और अगले स्टार्टअप पर Windows पुनर्प्राप्ति परिवेश में बूट करता है.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डिवाइस को पुनः प्रारंभ करता है और अगले स्टार्टअप पर Windows पुनर्प्राप्ति परिवेश में बूट करता है.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>यह सिस्टम को पुनः प्रारंभ करेगा और अगले बूट पर सीधे Windows पुनर्प्राप्ति परिवेश में बूट करेगा. जारी रखने से पहले अपना कार्य सहेजें.</value>
+</data>
 </root>

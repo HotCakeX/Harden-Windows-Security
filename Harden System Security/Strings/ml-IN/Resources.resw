@@ -6902,4 +6902,16 @@
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>ലഭ്യമായ ഓരോ അപ്ഡേറ്റിനെയും കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ കാണുക, ആവശ്യമായ ഏത് അപ്ഡേറ്റും മറയ്ക്കുകയോ വീണ്ടും കാണിക്കുകയോ ചെയ്യുക, അവയുടെ മെറ്റാഡാറ്റ എക്സ്പോർട്ട് ചെയ്യുക.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>വീണ്ടെടുക്കൽ മോഡിലേക്ക് റീബൂട്ട് ചെയ്യുക</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഉപകരണം പുനരാരംഭിച്ച് അടുത്ത സ്റ്റാർട്ടപ്പിൽ Windows വീണ്ടെടുക്കൽ പരിസ്ഥിതിയിലേക്ക് ബൂട്ട് ചെയ്യുന്നു.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഉപകരണം പുനരാരംഭിച്ച് അടുത്ത സ്റ്റാർട്ടപ്പിൽ Windows വീണ്ടെടുക്കൽ പരിസ്ഥിതിയിലേക്ക് ബൂട്ട് ചെയ്യുന്നു.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>ഇത് സിസ്റ്റം പുനരാരംഭിക്കുകയും അടുത്ത ബൂട്ടിൽ നേരിട്ട് Windows വീണ്ടെടുക്കൽ പരിസ്ഥിതിയിലേക്ക് ബൂട്ട് ചെയ്യുകയും ചെയ്യും. തുടരുന്നതിന് മുമ്പ് നിങ്ങളുടെ ജോലി സംരക്ഷിക്കുക.</value>
+</data>
 </root>

@@ -6902,4 +6902,16 @@ Odcisk Palca: {3}</value>
   <data name="WindowsUpdateManagementTab.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wyświetl szczegółowe informacje o każdej dostępnej aktualizacji, ukryj lub odkryj dowolną potrzebną aktualizację oraz wyeksportuj jej metadane.</value>
   </data>
+  <data name="RebootToRecoveryModeButton.Content" xml:space="preserve">
+  <value>Uruchom ponownie w trybie odzyskiwania</value>
+</data>
+  <data name="RebootToRecoveryModeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uruchamia ponownie urządzenie i podczas następnego startu ładuje środowisko odzyskiwania systemu Windows.</value>
+  </data>
+  <data name="RebootToRecoveryModeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Uruchamia ponownie urządzenie i podczas następnego startu ładuje środowisko odzyskiwania systemu Windows.</value>
+  </data>
+<data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
+  <value>Spowoduje to ponowne uruchomienie systemu i załadowanie bezpośrednio środowiska odzyskiwania systemu Windows przy następnym rozruchu. Przed kontynuowaniem zapisz swoją pracę.</value>
+</data>
 </root>

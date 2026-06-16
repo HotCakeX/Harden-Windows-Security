@@ -19,6 +19,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AnimatedVisuals;
@@ -1050,6 +1051,106 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Whether the button for configuring Power Plan on Sidebar is enabled.
 	/// </summary>
 	internal bool IsPowerPlanConfigButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Whether the Ultimate Performance power plan is currently active.
+	/// This is used by the sidebar ToggleSplitButton.
+	/// </summary>
+	internal bool IsUltimatePerformancePowerPlanActive { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Refreshes the current Ultimate Performance plan state.
+	/// </summary>
+	internal async void RefreshUltimatePerformancePowerPlanState()
+	{
+		try
+		{
+			IsUltimatePerformancePowerPlanActive = await Task.Run(CommonCore.Power.PowerPlan.IsUltimateSchemeActive);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Toggles the Ultimate Performance power plan on or off depending on the current active state.
+	/// </summary>
+	internal async void ToggleUltimatePerformancePowerPlan()
+	{
+		try
+		{
+			IsPowerPlanConfigButtonEnabled = false;
+
+			if (IsUltimatePerformancePowerPlanActive)
+			{
+				await Task.Run(CommonCore.Power.PowerPlan.DeleteUltimateSchemes);
+				MainInfoBar.WriteSuccess(Atlas.GetStr("UltimatePerfPlanDisabledAndRemoved"));
+			}
+			else
+			{
+				await Task.Run(CommonCore.Power.PowerPlan.EnableUltimateScheme);
+				MainInfoBar.WriteSuccess(Atlas.GetStr("UltimatePerfPlanEnabledAndActive"));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			try
+			{
+				IsUltimatePerformancePowerPlanActive = await Task.Run(CommonCore.Power.PowerPlan.IsUltimateSchemeActive);
+			}
+			catch (Exception ex)
+			{
+				MainInfoBar.WriteError(ex);
+				IsUltimatePerformancePowerPlanActive = false;
+			}
+
+			IsPowerPlanConfigButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Opens the Control Panel Power Options page.
+	/// </summary>
+	internal void OpenControlPanelPowerOptions()
+	{
+		try
+		{
+			_ = Process.Start(new ProcessStartInfo
+			{
+				FileName = "control.exe",
+				Arguments = "/name Microsoft.PowerOptions",
+				UseShellExecute = true
+			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Opens the Windows Settings power page.
+	/// </summary>
+	internal void OpenWindowsSettingsPowerOptions()
+	{
+		try
+		{
+			_ = Process.Start(new ProcessStartInfo
+			{
+				FileName = "ms-settings:powersleep",
+				UseShellExecute = true
+			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
 
 	/// <summary>
 	/// Enables and activates the Ultimate Performance power plan on the system.

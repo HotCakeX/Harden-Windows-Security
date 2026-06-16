@@ -4118,24 +4118,6 @@
   <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ ക്രമീകരിക്കുക. ഊർജസംരക്ഷണ സവിശേഷതകൾ കുറയ്ക്കുകയും പ്രതികരണശേഷിയെ ബാധിക്കാവുന്ന മൈക്രോ-ലാറ്റൻസികൾ പരമാവധി കുറച്ചുകൊണ്ട് പരമാവധി പ്രകടനം നൽകാൻ ഈ പ്ലാൻ രൂപകൽപ്പന ചെയ്തതാണ്.</value>
   </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>പ്രവർത്തനക്ഷമമാക്കുകയും സജീവമാക്കുകയും ചെയ്യുക</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനക്ഷമമാക്കുകയും സജീവമാക്കുകയും ചെയ്യുക.</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനക്ഷമമാക്കുകയും സജീവമാക്കുകയും ചെയ്യുക.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>പ്രവർത്തനരഹിതമാക്കുകയും നിർജീവമാക്കുകയും ചെയ്യുക</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനരഹിതമാക്കുകയും നിർജീവമാക്കുകയും ചെയ്യുക.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനരഹിതമാക്കുകയും നിർജീവമാക്കുകയും ചെയ്യുക.</value>
-  </data>
   <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
   <value>എല്ലാ Hyper-V VM-കൾക്കായി നെസ്റ്റഡ് വർച്വലൈസേഷൻ ക്രമീകരിക്കുന്നു.</value>
 </data>
@@ -6914,4 +6896,163 @@
 <data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
   <value>ഇത് സിസ്റ്റം പുനരാരംഭിക്കുകയും അടുത്ത ബൂട്ടിൽ നേരിട്ട് Windows വീണ്ടെടുക്കൽ പരിസ്ഥിതിയിലേക്ക് ബൂട്ട് ചെയ്യുകയും ചെയ്യും. തുടരുന്നതിന് മുമ്പ് നിങ്ങളുടെ ജോലി സംരക്ഷിക്കുക.</value>
 </data>
+<data name="ResetGraphicsDriverButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ഗ്രാഫിക് കാർഡ് ഡ്രൈവറുകൾ ശരിയായി പ്രവർത്തിക്കുന്നില്ലെങ്കിൽ അവ പുനഃസജ്ജമാക്കുക.</value>
+  </data>
+  <data name="OptimizeMemoryButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ഈ ആപ്പ് ഉപയോഗിക്കുന്ന RAM കോംപാക്റ്റ് ചെയ്യാൻ ശ്രമിക്കുക.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Microsoft Store-ൽ ആപ്പ് അപ്ഡേറ്റുകൾ പരിശോധിച്ച് ലഭ്യമായ ഏതെങ്കിലും അപ്ഡേറ്റുകൾ ഡൗൺലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="GenerateBatteryReportButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഉപകരണത്തിൽ ബാറ്ററിയുണ്ടെങ്കിൽ രോഗനിർണയത്തിനായി വിശദമായ ബാറ്ററി ആരോഗ്യ റിപ്പോർട്ട് സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Hyper-V വെർച്വൽ മെഷീനുകൾക്കായി നെസ്റ്റഡ് വെർച്വലൈസേഷൻ പ്രവർത്തനക്ഷമമാക്കുക അല്ലെങ്കിൽ പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ultimate Performance പവർ പ്ലാൻ ഓൺ അല്ലെങ്കിൽ ഓഫ് ചെയ്യുക.</value>
+  </data>
+  <data name="DoDCertificatesDropDownButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>DoD/DoW വെബ്സൈറ്റ് ആക്സസിനായി ഉപയോഗിക്കുന്ന സർട്ടിഫിക്കറ്റുകൾ ഇൻസ്റ്റാൾ ചെയ്യുക അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="RebootToUEFIButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ഉപകരണം നേരിട്ട് UEFI ഫേംവെയർ ക്രമീകരണങ്ങളിലേക്ക് പുനരാരംഭിക്കുക.</value>
+  </data>
+  <data name="RebootToRecoveryModeButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ഉപകരണം നേരിട്ട് Windows വീണ്ടെടുക്കൽ മോഡിലേക്ക് (WinRE) പുനരാരംഭിക്കുക.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Microsoft Print to PDF പ്രിന്റർ ഫീച്ചർ ലഭ്യമല്ലെങ്കിൽ അല്ലെങ്കിൽ നിങ്ങൾ അത് അബദ്ധത്തിൽ നീക്കം ചെയ്തിട്ടുണ്ടെങ്കിൽ അത് പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>സഹായത്തിനും പിന്തുണയ്ക്കുമായി GitHub ചർച്ചകളുടെ പേജ് തുറക്കുക.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>നിങ്ങളുടെ സിസ്റ്റത്തിലെ Application Control-ന്റെ എല്ലാ മേഖലകളും ഒരു സമർപ്പിതവും പ്രത്യേകമായി രൂപകൽപ്പന ചെയ്തതുമായ ആപ്പ് ഉപയോഗിച്ച് നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Control Panel പവർ പ്ലാനുകൾ തുറക്കുക</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Control Panel പവർ പ്ലാനുകൾ തുറക്കുക</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Control Panel പവർ പ്ലാനുകൾ തുറക്കുക</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Windows Settings പവർ പേജ് തുറക്കുക</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Settings പവർ പേജ് തുറക്കുക</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Settings പവർ പേജ് തുറക്കുക</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.Content" xml:space="preserve">
+    <value>DoD/DoW സർട്ടിഫിക്കറ്റുകൾ</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Department of War (DoW) വെബ്സൈറ്റുകൾ ആക്സസ് ചെയ്യാൻ ആവശ്യമായ സർട്ടിഫിക്കറ്റുകൾ ഇൻസ്റ്റാൾ ചെയ്യുക.</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Department of War (DoW) വെബ്സൈറ്റുകൾ ആക്സസ് ചെയ്യാൻ ആവശ്യമായ സർട്ടിഫിക്കറ്റുകൾ ഇൻസ്റ്റാൾ ചെയ്യുക.</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>DoD/DoW സർട്ടിഫിക്കറ്റുകൾ ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>DoD/DoW സർട്ടിഫിക്കറ്റുകൾ ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>DoD/DoW സർട്ടിഫിക്കറ്റുകൾ ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>DoD/DoW സർട്ടിഫിക്കറ്റുകൾ നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>DoD/DoW സർട്ടിഫിക്കറ്റുകൾ നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>DoD/DoW സർട്ടിഫിക്കറ്റുകൾ നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.Content" xml:space="preserve">
+    <value>AppControl Manager</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ സിസ്റ്റത്തിലെ Application Control-ന്റെ എല്ലാ മേഖലകളും ഒരു സമർപ്പിതവും പ്രത്യേകമായി രൂപകൽപ്പന ചെയ്തതുമായ ആപ്പ് ഉപയോഗിച്ച് നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ സിസ്റ്റത്തിലെ Application Control-ന്റെ എല്ലാ മേഖലകളും ഒരു സമർപ്പിതവും പ്രത്യേകമായി രൂപകൽപ്പന ചെയ്തതുമായ ആപ്പ് ഉപയോഗിച്ച് നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.Content" xml:space="preserve">
+    <value>അപ്ഡേറ്റുകൾ വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows-ക്കും ഡ്രൈവറുകൾക്കും ലഭ്യമായ എല്ലാ അപ്ഡേറ്റുകളും, മറച്ചതോ ഓപ്ഷണലോ ആയ ഏതെങ്കിലും അപ്ഡേറ്റുകൾ ഉൾപ്പെടെ, വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows-ക്കും ഡ്രൈവറുകൾക്കും ലഭ്യമായ എല്ലാ അപ്ഡേറ്റുകളും, മറച്ചതോ ഓപ്ഷണലോ ആയ ഏതെങ്കിലും അപ്ഡേറ്റുകൾ ഉൾപ്പെടെ, വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.Content" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ മറയ്ക്കുക</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത അപ്ഡേറ്റുകൾ മറയ്ക്കുക, അതുവഴി അവ Windows Update-ൽ വീണ്ടും പ്രത്യക്ഷപ്പെടില്ല, അവ ഇൻസ്റ്റാൾ ചെയ്യുന്നത് ഒഴിവാക്കാനും കഴിയും.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത അപ്ഡേറ്റുകൾ മറയ്ക്കുക, അതുവഴി അവ Windows Update-ൽ വീണ്ടും പ്രത്യക്ഷപ്പെടില്ല, അവ ഇൻസ്റ്റാൾ ചെയ്യുന്നത് ഒഴിവാക്കാനും കഴിയും.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.Content" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ വീണ്ടും കാണിക്കുക</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത അപ്ഡേറ്റുകൾ മറച്ചിട്ടുണ്ടെങ്കിൽ അവ വീണ്ടും കാണിക്കുക.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത അപ്ഡേറ്റുകൾ മറച്ചിട്ടുണ്ടെങ്കിൽ അവ വീണ്ടും കാണിക്കുക.</value>
+  </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>കുറുക്കുവഴികൾ</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>ആപ്പ് കുറുക്കുവഴികൾ</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>എളുപ്പത്തിലും വേഗത്തിലും ആക്‌സസ് ചെയ്യാൻ ആപ്പ് Start-ലേക്കോ ടാസ്ക്ബാറിലേക്കോ പിൻ ചെയ്യുക.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എളുപ്പത്തിലും വേഗത്തിലും ആക്‌സസ് ചെയ്യാൻ ആപ്പ് Start-ലേക്കോ ടാസ്ക്ബാറിലേക്കോ പിൻ ചെയ്യുക.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എളുപ്പത്തിലും വേഗത്തിലും ആക്‌സസ് ചെയ്യാൻ ആപ്പ് Start-ലേക്കോ ടാസ്ക്ബാറിലേക്കോ പിൻ ചെയ്യുക.</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>കുറുക്കുവഴി ഓപ്ഷനുകൾ</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് Start-ലേക്കോ ടാസ്ക്ബാറിലേക്കോ പിൻ ചെയ്യാനുള്ള ഓപ്ഷനുകൾ തുറക്കുക.</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് Start-ലേക്കോ ടാസ്ക്ബാറിലേക്കോ പിൻ ചെയ്യാനുള്ള ഓപ്ഷനുകൾ തുറക്കുക.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ടാസ്ക്ബാറിലേക്ക് പിൻ ചെയ്യുക</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വേഗത്തിലുള്ള ആക്‌സസിനായി ആപ്പ് ടാസ്ക്ബാറിലേക്ക് പിൻ ചെയ്യുക.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>വേഗത്തിലുള്ള ആക്‌സസിനായി ആപ്പ് ടാസ്ക്ബാറിലേക്ക് പിൻ ചെയ്യുക.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Start മെനുവിലേക്ക് പിൻ ചെയ്യുക</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എളുപ്പത്തിലുള്ള ആക്‌സസിനായി ആപ്പ് Start മെനുവിലേക്ക് പിൻ ചെയ്യുക.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എളുപ്പത്തിലുള്ള ആക്‌സസിനായി ആപ്പ് Start മെനുവിലേക്ക് പിൻ ചെയ്യുക.</value>
+  </data>
 </root>

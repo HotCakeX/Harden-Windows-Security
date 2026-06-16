@@ -4118,24 +4118,6 @@
   <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>अल्टिमेट परफॉर्मेंस पावर प्लान को कॉन्फ़िगर करें। यह प्लान ऊर्जा-बचत सुविधाओं को कम करके और प्रतिक्रिया क्षमता को प्रभावित करने वाली माइक्रो-लेटेंसी को न्यूनतम करके अधिकतम प्रदर्शन प्रदान करने के लिए डिज़ाइन किया गया है.</value>
   </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>सक्षम करें और सक्रिय करें</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को सक्षम करें और सक्रिय करें.</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को सक्षम करें और सक्रिय करें.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>अक्षम करें और निष्क्रिय करें</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को अक्षम करें और निष्क्रिय करें.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को अक्षम करें और निष्क्रिय करें.</value>
-  </data>
   <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
   <value>सभी Hyper-V VMs के लिए नेस्टेड वर्चुअलाइज़ेशन कॉन्फ़िगर किया जा रहा है.</value>
 </data>
@@ -6914,4 +6896,163 @@
 <data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
   <value>यह सिस्टम को पुनः प्रारंभ करेगा और अगले बूट पर सीधे Windows पुनर्प्राप्ति परिवेश में बूट करेगा. जारी रखने से पहले अपना कार्य सहेजें.</value>
 </data>
+<data name="ResetGraphicsDriverButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>यदि ग्राफ़िक कार्ड ड्राइवर ठीक से काम नहीं कर रहे हैं, तो उन्हें रीसेट करें.</value>
+  </data>
+  <data name="OptimizeMemoryButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>इस ऐप द्वारा उपयोग की जा रही RAM को संकुचित करने का प्रयास करें.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Microsoft Store में ऐप अपडेट की जांच करें और उपलब्ध अपडेट डाउनलोड करें.</value>
+  </data>
+  <data name="GenerateBatteryReportButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>यदि आपके डिवाइस में बैटरी है, तो निदान के लिए बैटरी की स्थिति की विस्तृत रिपोर्ट बनाएं.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Hyper-V वर्चुअल मशीनों के लिए नेस्टेड वर्चुअलाइजेशन सक्षम या अक्षम करें.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ultimate Performance पावर प्लान को चालू या बंद करें.</value>
+  </data>
+  <data name="DoDCertificatesDropDownButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>DoD/DoW वेबसाइट एक्सेस के लिए उपयोग किए जाने वाले प्रमाणपत्र इंस्टॉल करें या निकालें.</value>
+  </data>
+  <data name="RebootToUEFIButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>डिवाइस को सीधे UEFI फ़र्मवेयर सेटिंग्स में पुनरारंभ करें.</value>
+  </data>
+  <data name="RebootToRecoveryModeButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>डिवाइस को सीधे Windows रिकवरी मोड (WinRE) में पुनरारंभ करें.</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>यदि Microsoft Print to PDF प्रिंटर सुविधा उपलब्ध नहीं है या आपने इसे गलती से हटा दिया है, तो उसे पुनर्स्थापित करें.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>सहायता और समर्थन के लिए GitHub चर्चाओं वाला पेज खोलें.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>अपने सिस्टम में Application Control के सभी पहलुओं को एक समर्पित और उद्देश्य-निर्मित ऐप के साथ प्रबंधित करें.</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Control Panel पावर प्लान खोलें</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Control Panel पावर प्लान खोलें</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Control Panel पावर प्लान खोलें</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Windows Settings का पावर पेज खोलें</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows Settings का पावर पेज खोलें</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows Settings का पावर पेज खोलें</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.Content" xml:space="preserve">
+    <value>DoD/DoW प्रमाणपत्र</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Department of War (DoW) वेबसाइटों तक पहुंचने के लिए आवश्यक प्रमाणपत्र इंस्टॉल करें.</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Department of War (DoW) वेबसाइटों तक पहुंचने के लिए आवश्यक प्रमाणपत्र इंस्टॉल करें.</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>DoD/DoW प्रमाणपत्र इंस्टॉल करें</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>DoD/DoW प्रमाणपत्र इंस्टॉल करें</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>DoD/DoW प्रमाणपत्र इंस्टॉल करें</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>DoD/DoW प्रमाणपत्र निकालें</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>DoD/DoW प्रमाणपत्र निकालें</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>DoD/DoW प्रमाणपत्र निकालें</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.Content" xml:space="preserve">
+    <value>AppControl Manager</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अपने सिस्टम में Application Control के सभी पहलुओं को एक समर्पित और उद्देश्य-निर्मित ऐप के साथ प्रबंधित करें.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अपने सिस्टम में Application Control के सभी पहलुओं को एक समर्पित और उद्देश्य-निर्मित ऐप के साथ प्रबंधित करें.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.Content" xml:space="preserve">
+    <value>अपडेट प्राप्त करें</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows और ड्राइवरों के लिए सभी उपलब्ध अपडेट प्राप्त करें, जिनमें कोई भी छिपे हुए या वैकल्पिक अपडेट शामिल हैं.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows और ड्राइवरों के लिए सभी उपलब्ध अपडेट प्राप्त करें, जिनमें कोई भी छिपे हुए या वैकल्पिक अपडेट शामिल हैं.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.Content" xml:space="preserve">
+    <value>चयनित छिपाएं</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित अपडेट छिपाएं ताकि वे फिर से Windows Update में दिखाई न दें और आप उन्हें इंस्टॉल करना छोड़ सकें.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित अपडेट छिपाएं ताकि वे फिर से Windows Update में दिखाई न दें और आप उन्हें इंस्टॉल करना छोड़ सकें.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.Content" xml:space="preserve">
+    <value>चयनित दिखाएं</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यदि चयनित अपडेट छिपे हुए हैं, तो उन्हें फिर से दिखाएं.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यदि चयनित अपडेट छिपे हुए हैं, तो उन्हें फिर से दिखाएं.</value>
+  </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>शॉर्टकट</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>ऐप शॉर्टकट</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>आसान और त्वरित पहुँच के लिए ऐप को Start या टास्कबार पर पिन करें.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आसान और त्वरित पहुँच के लिए ऐप को Start या टास्कबार पर पिन करें.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आसान और त्वरित पहुँच के लिए ऐप को Start या टास्कबार पर पिन करें.</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>शॉर्टकट विकल्प</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप को Start या टास्कबार पर पिन करने के विकल्प खोलें.</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप को Start या टास्कबार पर पिन करने के विकल्प खोलें.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>टास्कबार पर पिन करें</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>त्वरित पहुँच के लिए ऐप को टास्कबार पर पिन करें.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>त्वरित पहुँच के लिए ऐप को टास्कबार पर पिन करें.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Start मेनू पर पिन करें</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आसान पहुँच के लिए ऐप को Start मेनू पर पिन करें.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आसान पहुँच के लिए ऐप को Start मेनू पर पिन करें.</value>
+  </data>
 </root>

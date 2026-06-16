@@ -16,6 +16,10 @@
 //
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.UI.Shell;
+using Windows.UI.StartScreen;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
 using Microsoft.UI.Xaml;
@@ -24,6 +28,7 @@ using CommonCore.AppSettings;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using System.Linq;
+using Windows.ApplicationModel.Core;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.WindowComponents;
@@ -678,6 +683,114 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	internal void StartCustomColorAnimation() => CustomUIElements.AppWindowBorderCustomization.SetBorderColor(R, G, B);
 	internal void StopCustomColorAnimation() => CustomUIElements.AppWindowBorderCustomization.ResetBorderColor();
+
+	#endregion
+
+	#region App Shortcuts
+
+	/// <summary>
+	/// Gets the app list entry for the current package.
+	/// </summary>
+	private static async Task<AppListEntry?> GetCurrentAppListEntry()
+	{
+		IReadOnlyList<AppListEntry> entries = await Package.Current.GetAppListEntriesAsync();
+		return entries.Count > 0 ? entries[0] : null;
+	}
+
+	/// <summary>
+	/// Asks Windows to pin the current app to the taskbar after the user confirms the system prompt.
+	/// </summary>
+	internal async void PinToTaskbar()
+	{
+		try
+		{
+			TaskbarManager taskbarManager = TaskbarManager.GetDefault();
+			if (!taskbarManager.IsSupported)
+			{
+				MainInfoBar.WriteWarning("Taskbar pinning is not supported on this device.");
+				return;
+			}
+
+			if (!taskbarManager.IsPinningAllowed)
+			{
+				MainInfoBar.WriteWarning("Taskbar pinning is disabled by the current Windows configuration or policy.");
+				return;
+			}
+
+			bool isPinned = await taskbarManager.IsCurrentAppPinnedAsync();
+			if (isPinned)
+			{
+				MainInfoBar.WriteInfo("The app is already pinned to the taskbar.");
+				return;
+			}
+
+			bool pinned = await taskbarManager.RequestPinCurrentAppAsync();
+			if (pinned)
+			{
+				MainInfoBar.WriteSuccess("The app was pinned to the taskbar.");
+			}
+			else
+			{
+				MainInfoBar.WriteInfo("The taskbar pin request was not approved.");
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Asks Windows to pin the app to Start after the user confirms the system prompt.
+	/// </summary>
+	internal async void PinToStartMenu()
+	{
+		try
+		{
+			AppListEntry? entry = await GetCurrentAppListEntry();
+			if (entry is null)
+			{
+				MainInfoBar.WriteWarning("The app list entry could not be found, so the app was not pinned to Start.");
+				return;
+			}
+
+			StartScreenManager startScreenManager = StartScreenManager.GetDefault();
+			if (!startScreenManager.SupportsAppListEntry(entry))
+			{
+				MainInfoBar.WriteWarning("Start menu pinning is not supported for this app entry on this device.");
+				return;
+			}
+
+			bool isPinned = await startScreenManager.ContainsAppListEntryAsync(entry);
+			if (isPinned)
+			{
+				MainInfoBar.WriteInfo("The app is already pinned to Start.");
+				return;
+			}
+
+			bool pinned = await startScreenManager.RequestAddAppListEntryAsync(entry);
+			if (pinned)
+			{
+				MainInfoBar.WriteSuccess("The app was pinned to Start.");
+			}
+			else
+			{
+				MainInfoBar.WriteInfo("The Start pin request was not approved.");
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			MainInfoBar.IsClosable = true;
+		}
+	}
 
 	#endregion
 

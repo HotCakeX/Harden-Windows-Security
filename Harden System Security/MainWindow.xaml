@@ -638,10 +638,11 @@
             </NavigationView.FooterMenuItems>
 
             <!-- Split view to create the sidebar -->
-            <SplitView x:Name="SidebarSplitView"
+            <SplitView x:Name="SidebarSplitView"                       
                        PaneBackground="Transparent"
                        IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}"
-                       OpenPaneLength="256"
+                       PaneOpened="{x:Bind ViewModel.RefreshUltimatePerformancePowerPlanState}"
+                       OpenPaneLength="380"
                        CompactPaneLength="48"
                        DisplayMode="{x:Bind SidebarSplitViewDisplayMode, Mode=TwoWay}"
                        PanePlacement="Right"
@@ -651,378 +652,364 @@
                 <SplitView.Pane>
                     <!-- Wrap pane content in a Grid so we can overlay a left-edge sizer -->
                     <Grid>
-                        <Border BorderThickness="1"
-                                x:Name="SidebarBorder"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                CornerRadius="5">
-
-                            <ScrollViewer>
-
-                                <CCToolKit:WrapPanel HorizontalSpacing="15" VerticalSpacing="15" Orientation="Vertical" Margin="10,0,10,10" HorizontalAlignment="Center" XYFocusKeyboardNavigation="Enabled">
-
-                                    <ToggleButton HorizontalAlignment="Right"
-                                                  x:Uid="SidebarSplitViewDisplayModeChangerToggleButton"
-                                                  Margin="0,5,5,-25"
-                                                  IsChecked="{x:Bind SidebarSplitViewDisplayModeChangerButtonIsChecked, Mode=TwoWay}">
-                                        <ToggleButton.ContentTemplate>
-                                            <DataTemplate>
-                                                <FontIcon Glyph="&#xE90C;" FontSize="14"/>
-                                            </DataTemplate>
-                                        </ToggleButton.ContentTemplate>
-                                    </ToggleButton>
-
-                                    <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
-
-                                    <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
-
-                                    <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
-                                                        Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
-                                                        Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
-                                                        IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
-
-                                    <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
-                                                     HorizontalAlignment="Center"
-                                                     HorizontalContentAlignment="Stretch"
-                                                     NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
-                                                     Padding="12,8"
-                                                     CornerRadius="6"
-                                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                     BorderThickness="1">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <FontIcon Grid.Column="0"
-                                                      Glyph="&#xE9CE;"
-                                                      Foreground="Gold"
-                                                      FontSize="16"/>
-
-                                            <TextBlock Grid.Column="1"
-                                                       x:Uid="SidebarHelpHyperlinkTextBlock"
-                                                       x:Name="SidebarHelpHyperlinkTextBlock"
-                                                       Margin="8,0,0,0"
-                                                       VerticalAlignment="Center"
-                                                       FontWeight="SemiBold"
-                                                       TextWrapping="WrapWholeWords"/>
-                                        </Grid>
-                                    </HyperlinkButton>
-
-                                    <HyperlinkButton Content="AppControl Manager"
-                                                      HorizontalAlignment="Center"
-                                                      NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
-                                                      Padding="12,8"
-                                                      CornerRadius="6"
-                                                      Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                      BorderThickness="1"/>
-
-                                    <Button x:Uid="ResetGraphicsDriverButton"
-                                            HorizontalAlignment="Center"
-                                            Click="{x:Bind ViewModel.ResetGraphicsDriverShortcut}"
-                                            IsEnabled="{x:Bind ViewModel.IsResetGraphicsDriverButtonEnabled, Mode=OneWay}">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
+                        <Grid.Resources>
+                            <Style x:Key="SidebarCommandButtonStyle" TargetType="Button">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                            <Style x:Key="SidebarCommandDropDownButtonStyle" TargetType="DropDownButton">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                            <Style x:Key="SidebarCommandToggleSplitButtonStyle" TargetType="ToggleSplitButton">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                            <Style x:Key="SidebarCommandHyperlinkButtonStyle" TargetType="HyperlinkButton">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                            <Style x:Key="SidebarCommandCardBorderStyle" TargetType="Border">
+                                <Setter Property="Padding" Value="14"/>
+                                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+                                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Style>
+                            <Style x:Key="SidebarCommandFontIconStyle" TargetType="FontIcon">
+                                <Setter Property="Width" Value="38"/>
+                                <Setter Property="MinHeight" Value="38"/>
+                                <Setter Property="FontSize" Value="20"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                            <Style x:Key="SidebarCommandTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyStrongTextBlockStyle}">
+                                <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+                            </Style>
+                            <Style x:Key="SidebarCommandDescriptionTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
+                                <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Border BorderThickness="1" x:Name="SidebarBorder" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                            <Grid RowSpacing="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Margin="12,12,12,8" Padding="14" Background="{ThemeResource ControlFillColorSecondaryBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <FontIcon Grid.Column="0" Glyph="&#xE83D;" FontFamily="Segoe Fluent Icons" FontSize="22" Foreground="#60A5FA" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" TextWrapping="WrapWholeWords"/>
+                                            <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
+                                        </StackPanel>
+                                        <ToggleButton Grid.Column="2" x:Uid="SidebarSplitViewDisplayModeChangerToggleButton" Width="36" Height="36" Padding="0" VerticalAlignment="Top" IsChecked="{x:Bind SidebarSplitViewDisplayModeChangerButtonIsChecked, Mode=TwoWay}">
+                                            <ToggleButton.ContentTemplate>
+                                                <DataTemplate>
+                                                    <FontIcon Glyph="&#xE90C;" FontSize="14"/>
+                                                </DataTemplate>
+                                            </ToggleButton.ContentTemplate>
+                                        </ToggleButton>
+                                    </Grid>
+                                </Border>
+                                <ScrollViewer Grid.Row="1" Padding="12,0,12,12" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Spacing="10" XYFocusKeyboardNavigation="Enabled">
+                                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}" Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}" Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}" IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
+                                        <Button x:Uid="ResetGraphicsDriverButton"
+                                                Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind ViewModel.ResetGraphicsDriverShortcut}"
+                                                IsEnabled="{x:Bind ViewModel.IsResetGraphicsDriverButtonEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xE7F4;" FontFamily="Segoe Fluent Icons" Foreground="#4CC2FF" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="ResetGraphicsDriverButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <Button x:Uid="OptimizeMemoryButton"
+                                                Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind ViewModel.OptimizeMemory}"
+                                                IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xEEA0;" FontFamily="Segoe Fluent Icons" Foreground="#A78BFA" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="OptimizeMemoryButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <Button x:Uid="MicrosoftStoreAppUpdatesCheckButton"
+                                                Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind ViewModel.CheckForAllAppUpdates}"
+                                                IsEnabled="{x:Bind ViewModel.IsCheckForAllAppUpdatesButtonEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xECC5;" FontFamily="Segoe Fluent Icons" Foreground="#22C55E" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="MicrosoftStoreAppUpdatesCheckButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <Button x:Uid="GenerateBatteryReportButton"
+                                                Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind ViewModel.GenerateBatteryReport}"
+                                                IsEnabled="{x:Bind ViewModel.IsGenerateBatteryReportButtonEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xF607;" FontFamily="Segoe Fluent Icons" Foreground="#F59E0B" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="GenerateBatteryReportButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <DropDownButton x:Uid="ConfigureHyperVMNestedVirtualizationButton"
+                                                        Style="{StaticResource SidebarCommandDropDownButtonStyle}"
+                                                        IsEnabled="{x:Bind ViewModel.IsHyperVNestedVirtualizationButtonEnabled, Mode=OneWay}">
+                                            <DropDownButton.Flyout>
+                                                <MenuFlyout Placement="Bottom">
+                                                    <MenuFlyoutItem x:Uid="EnableHyperVMNestedVirtualizationMenuFlyoutItem" Click="{x:Bind ViewModel.EnableNestedVirtualizationForVMs}"/>
+                                                    <MenuFlyoutItem x:Uid="DisableHyperVMNestedVirtualizationMenuFlyoutItem" Click="{x:Bind ViewModel.DisableNestedVirtualizationForVMs}"/>
+                                                </MenuFlyout>
+                                            </DropDownButton.Flyout>
+                                            <DropDownButton.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xEEA3;" FontFamily="Segoe Fluent Icons" Foreground="#38BDF8" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="ConfigureHyperVMNestedVirtualizationButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DropDownButton.ContentTemplate>
+                                        </DropDownButton>
+                                        <DropDownButton x:Uid="DoDCertificatesDropDownButton"
+                                                        Style="{StaticResource SidebarCommandDropDownButtonStyle}"
+                                                        IsEnabled="{x:Bind ViewModel.IsDoDCertificatesButtonEnabled, Mode=OneWay}">
+                                            <DropDownButton.Flyout>
+                                                <MenuFlyout Placement="Bottom">
+                                                    <MenuFlyoutItem x:Uid="InstallDoDCertificatesMenuFlyoutItem" Click="{x:Bind ViewModel.InstallDoDCertificates}"/>
+                                                    <MenuFlyoutItem x:Uid="RemoveDoDCertificatesMenuFlyoutItem" Click="{x:Bind ViewModel.RemoveDoDCertificates}"/>
+                                                </MenuFlyout>
+                                            </DropDownButton.Flyout>
+                                            <DropDownButton.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xEB95;" FontFamily="Segoe Fluent Icons" Foreground="#F97316" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="DoDCertificatesDropDownButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DropDownButton.ContentTemplate>
+                                        </DropDownButton>
+                                        <ToggleSplitButton x:Uid="ConfigureUltimatePerformancePowerPlanButton"
+                                                           Style="{StaticResource SidebarCommandToggleSplitButtonStyle}"
+                                                           Click="{x:Bind ViewModel.ToggleUltimatePerformancePowerPlan}"
+                                                           IsChecked="{x:Bind ViewModel.IsUltimatePerformancePowerPlanActive, Mode=OneWay}"
+                                                           IsEnabled="{x:Bind ViewModel.IsPowerPlanConfigButtonEnabled, Mode=OneWay}">
+                                            <ToggleSplitButton.Flyout>
+                                                <MenuFlyout Placement="Bottom">
+                                                    <MenuFlyoutItem x:Uid="OpenControlPanelPowerPlansMenuFlyoutItem" Click="{x:Bind ViewModel.OpenControlPanelPowerOptions}"/>
+                                                    <MenuFlyoutItem x:Uid="OpenWindowsSettingsPowerPageMenuFlyoutItem" Click="{x:Bind ViewModel.OpenWindowsSettingsPowerOptions}"/>
+                                                </MenuFlyout>
+                                            </ToggleSplitButton.Flyout>
+                                            <ToggleSplitButton.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xE7E8;" FontFamily="Segoe Fluent Icons" Foreground="#FB7185" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="ConfigureUltimatePerformancePowerPlanButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ToggleSplitButton.ContentTemplate>
+                                        </ToggleSplitButton>
+                                        <Button x:Uid="RebootToUEFIButton"
+                                                Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind ViewModel.RebootToUEFI}"
+                                                IsEnabled="{x:Bind ViewModel.IsRebootToUEFIButtonEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xE777;" FontFamily="Segoe Fluent Icons" Foreground="#06B6D4" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="RebootToUEFIButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <Button x:Uid="RebootToRecoveryModeButton"
+                                                Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind ViewModel.RebootToRecoveryMode}"
+                                                IsEnabled="{x:Bind ViewModel.IsRebootToRecoveryModeButtonEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xE777;" FontFamily="Segoe Fluent Icons" Foreground="#EC4899" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="RebootToRecoveryModeButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <Button x:Uid="RestoreMicrosoftPrintToPdfButton"
+                                                Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind ViewModel.RestoreMicrosoftPrintToPdfPrinter}"
+                                                IsEnabled="{x:Bind ViewModel.IsRestoreMicrosoftPrintToPdfButtonEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xE749;" FontFamily="Segoe Fluent Icons" Foreground="#14B8A6" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="RestoreMicrosoftPrintToPdfButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
+                                                         Style="{StaticResource SidebarCommandHyperlinkButtonStyle}"
+                                                         NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions">
+                                            <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                <Grid ColumnSpacing="12">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xE7F4;"
-                                                              FontFamily="Segoe Fluent Icons"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
+                                                    <FontIcon Glyph="&#xE9CE;" Foreground="#EAB308" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                        <TextBlock x:Uid="SidebarHelpHyperlinkTextBlock" x:Name="SidebarHelpHyperlinkTextBlock" Style="{StaticResource SidebarCommandTitleTextBlockStyle}" FontWeight="SemiBold"/>
+                                                        <TextBlock x:Uid="SidebarHelpHyperlinkButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                    </StackPanel>
                                                 </Grid>
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
-
-                                    <Button HorizontalAlignment="Center"
-                                              x:Uid="OptimizeMemoryButton"
-                                             IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
-                                             Click="{x:Bind ViewModel.OptimizeMemory}">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xEEA0;"
-                                                              FontFamily="Segoe Fluent Icons"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalTextAlignment="Center"
-                                                               HorizontalAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
-
-                                    <DropDownButton x:Uid="ConfigureHyperVMNestedVirtualizationButton"
-                                                    HorizontalAlignment="Center"
-                                                    IsEnabled="{x:Bind ViewModel.IsHyperVNestedVirtualizationButtonEnabled, Mode=OneWay}">
-                                        <DropDownButton.Flyout>
-                                            <MenuFlyout Placement="Bottom">
-                                                <MenuFlyoutItem x:Uid="EnableHyperVMNestedVirtualizationMenuFlyoutItem"
-                                                                Click="{x:Bind ViewModel.EnableNestedVirtualizationForVMs}"/>
-                                                <MenuFlyoutItem x:Uid="DisableHyperVMNestedVirtualizationMenuFlyoutItem"
-                                                                Click="{x:Bind ViewModel.DisableNestedVirtualizationForVMs}"/>
-                                            </MenuFlyout>
-                                        </DropDownButton.Flyout>
-
-                                        <DropDownButton.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xEEA3;"
-                                                              FontFamily="Segoe Fluent Icons"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </DropDownButton.ContentTemplate>
-
-                                    </DropDownButton>
-
-                                    <DropDownButton x:Uid="ConfigureUltimatePerformancePowerPlanButton"
-                                                    HorizontalAlignment="Center"
-                                                    IsEnabled="{x:Bind ViewModel.IsPowerPlanConfigButtonEnabled, Mode=OneWay}">
-                                        <DropDownButton.Flyout>
-                                            <MenuFlyout Placement="Bottom">
-                                                <MenuFlyoutItem x:Uid="EnableUltimatePerformancePowerPlanMenuFlyoutItem"
-                                                                Click="{x:Bind ViewModel.EnableUltimatePerformancePowerPlan}"/>
-                                                <MenuFlyoutItem x:Uid="DisableUltimatePerformancePowerPlanMenuFlyoutItem"
-                                                                Click="{x:Bind ViewModel.DisableUltimatePerformancePowerPlan}"/>
-                                            </MenuFlyout>
-                                        </DropDownButton.Flyout>
-
-                                        <DropDownButton.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xE7E8;"
-                                                              FontFamily="Segoe Fluent Icons"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </DropDownButton.ContentTemplate>
-
-                                    </DropDownButton>
-
-                                    <DropDownButton Content="DoD/DoW certificates"
-                                                    ToolTipService.ToolTip="Install certificates required to access the Department of War (DoW) websites."
-                                                    HorizontalAlignment="Center"
-                                                    IsEnabled="{x:Bind ViewModel.IsDoDCertificatesButtonEnabled, Mode=OneWay}">
-                                        <DropDownButton.Flyout>
-                                            <MenuFlyout Placement="Bottom">
-                                                <MenuFlyoutItem Text="Install DoD/DoW certificates"
-                                                                Click="{x:Bind ViewModel.InstallDoDCertificates}"/>
-                                                <MenuFlyoutItem Text="Remove DoD/DoW certificates"
-                                                                Click="{x:Bind ViewModel.RemoveDoDCertificates}"/>
-                                            </MenuFlyout>
-                                        </DropDownButton.Flyout>
-                                        <DropDownButton.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xEB95;"
-                                                              FontFamily="Segoe Fluent Icons"
-                                                              FontSize="16"/>
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </DropDownButton.ContentTemplate>
-                                    </DropDownButton>
-
-                                    <Button x:Uid="MicrosoftStoreAppUpdatesCheckButton"
-                                            HorizontalAlignment="Center"
-                                            Click="{x:Bind ViewModel.CheckForAllAppUpdates}"
-                                            IsEnabled="{x:Bind ViewModel.IsCheckForAllAppUpdatesButtonEnabled, Mode=OneWay}">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xECC5;"
-                                                              FontFamily="Segoe Fluent Icons"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
-
-                                    <Button x:Uid="RebootToUEFIButton"
-                                            HorizontalAlignment="Center"
-                                            Click="{x:Bind ViewModel.RebootToUEFI}"
-                                            IsEnabled="{x:Bind ViewModel.IsRebootToUEFIButtonEnabled, Mode=OneWay}">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xE777;"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
-
-                                    <Button x:Uid="RebootToRecoveryModeButton"
-                                            HorizontalAlignment="Center"
-                                            Click="{x:Bind ViewModel.RebootToRecoveryMode}"
-                                            IsEnabled="{x:Bind ViewModel.IsRebootToRecoveryModeButtonEnabled, Mode=OneWay}">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xE777;"
-                                                              FontSize="16"/>
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
-                                    <Button x:Uid="GenerateBatteryReportButton"
-                                            HorizontalAlignment="Center"
-                                            Click="{x:Bind ViewModel.GenerateBatteryReport}"
-                                            IsEnabled="{x:Bind ViewModel.IsGenerateBatteryReportButtonEnabled, Mode=OneWay}">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xF607;"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
-
-                                    <Button x:Uid="RestoreMicrosoftPrintToPdfButton"
-                                            HorizontalAlignment="Center"
-                                            Click="{x:Bind ViewModel.RestoreMicrosoftPrintToPdfPrinter}"
-                                            IsEnabled="{x:Bind ViewModel.IsRestoreMicrosoftPrintToPdfButtonEnabled, Mode=OneWay}">
-                                        <Button.ContentTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <FontIcon Grid.Column="0"
-                                                              Glyph="&#xE749;"
-                                                              FontSize="16"/>
-
-                                                    <TextBlock Grid.Column="1"
-                                                               Margin="8,0,0,0"
-                                                               HorizontalAlignment="Center"
-                                                               HorizontalTextAlignment="Center"
-                                                               TextWrapping="WrapWholeWords"
-                                                               Text="{x:Bind}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </Button.ContentTemplate>
-                                    </Button>
-
-                                </CCToolKit:WrapPanel>
-
-                            </ScrollViewer>
-
+                                            </Border>
+                                        </HyperlinkButton>
+                                        <HyperlinkButton x:Uid="AppControlManagerHyperlinkButton"
+                                                         Style="{StaticResource SidebarCommandHyperlinkButtonStyle}"
+                                                         NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager">
+                                            <HyperlinkButton.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <FontIcon Glyph="&#xE7BE;" Foreground="#60A5FA" Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                                <TextBlock Text="{x:Bind}" Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                                <TextBlock x:Uid="AppControlManagerHyperlinkButtonDescriptionTextBlock" Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </HyperlinkButton.ContentTemplate>
+                                        </HyperlinkButton>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
                         </Border>
-
                         <!-- Invisible sizer along the left edge of the right-hand pane -->
                         <CCToolKit:PropertySizer Width="8"
                                                 HorizontalAlignment="Left"
@@ -1031,7 +1018,7 @@
                                                 Orientation="Vertical"
                                                 IsDragInverted="True"
                                                 Background="Transparent"
-                                                Minimum="200"
+                                                Minimum="280"
                                                 Maximum="1200"
                                                 IsTabStop="False"
                                                 Margin="0"/>

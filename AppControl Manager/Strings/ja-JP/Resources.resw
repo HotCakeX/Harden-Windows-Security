@@ -7744,4 +7744,46 @@
   <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>省略可能な RFC 3161 または Authenticode タイムスタンプ サーバー URL.</value>
   </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>ショートカット</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>アプリのショートカット</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>アプリをスタートまたはタスク バーにピン留めすると、簡単かつすばやくアクセスできます。</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アプリをスタートまたはタスク バーにピン留めすると、簡単かつすばやくアクセスできます。</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>アプリをスタートまたはタスク バーにピン留めすると、簡単かつすばやくアクセスできます。</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>ショートカット オプション</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アプリをスタートまたはタスク バーにピン留めするためのオプションを開きます。</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>アプリをスタートまたはタスク バーにピン留めするためのオプションを開きます。</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>タスク バーにピン留めする</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>すばやくアクセスできるように、アプリをタスク バーにピン留めします。</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>すばやくアクセスできるように、アプリをタスク バーにピン留めします。</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>スタート メニューにピン留めする</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>簡単にアクセスできるように、アプリをスタート メニューにピン留めします。</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>簡単にアクセスできるように、アプリをスタート メニューにピン留めします。</value>
+  </data>
 </root>

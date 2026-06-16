@@ -1,3 +1,3 @@
-* Updated dependencies to the latest versions.
+* Applied lots of code quality and performance improvements in multiple phases to the entire code base, guided by the GitHub advanced CodeQL. The details are available on GitHub.
 
-* You can now sign your PowerShell scripts/modules and binary files using the new Signing section in the AppControl Manager. Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1162
+* Added a new section in the Settings page where you can pin the app to taskbar and start menu for quick access.

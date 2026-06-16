@@ -4118,24 +4118,6 @@
   <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>הגדר את תוכנית צריכת החשמל 'ביצועים מרביים'. תוכנית זו נועדה לספק ביצועים מקסימליים באמצעות צמצום יכולות חיסכון בחשמל ומזעור מיקרו-שהיות שעלולות להשפיע על תגובתיות.</value>
   </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>הפעל והגדר כפעילה</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הפעל והגדר את תוכנית צריכת החשמל 'ביצועים מרביים' כפעילה.</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הפעל והגדר את תוכנית צריכת החשמל 'ביצועים מרביים' כפעילה.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>השבת ובטל הפעלה</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>השבת ובטל הפעלה של תוכנית צריכת החשמל 'ביצועים מרביים'.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>השבת ובטל הפעלה של תוכנית צריכת החשמל 'ביצועים מרביים'.</value>
-  </data>
   <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
   <value>מבצע קביעת תצורה של וירטואליזציה מקוננת עבור כל המכונות הווירטואליות של Hyper-V.</value>
 </data>
@@ -6914,4 +6896,163 @@
 <data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
   <value>פעולה זו תפעיל מחדש את המערכת ותעלה ישירות את סביבת השחזור של Windows באתחול הבא. שמור את עבודתך לפני שתמשיך.</value>
 </data>
+<data name="ResetGraphicsDriverButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>אפס את מנהלי ההתקנים של הכרטיס הגרפי אם הם אינם פועלים כראוי.</value>
+  </data>
+  <data name="OptimizeMemoryButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>נסה לדחוס את זיכרון ה-RAM שמשמש את היישום הזה.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>בדוק אם קיימים עדכוני יישומים ב-Microsoft Store והורד עדכונים זמינים.</value>
+  </data>
+  <data name="GenerateBatteryReportButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>צור דוח מפורט על תקינות הסוללה לצורכי אבחון, אם יש במכשיר שלך סוללה.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>הפעל או השבת וירטואליזציה מקוננת עבור מכונות וירטואליות של Hyper-V.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>הפעל או כבה את תוכנית צריכת החשמל 'ביצועים מרביים'.</value>
+  </data>
+  <data name="DoDCertificatesDropDownButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>התקן או הסר אישורים המשמשים לגישה לאתרי DoD/DoW.</value>
+  </data>
+  <data name="RebootToUEFIButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>הפעל מחדש את המכשיר ישירות אל הגדרות קושחת UEFI.</value>
+  </data>
+  <data name="RebootToRecoveryModeButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>הפעל מחדש את המכשיר ישירות אל מצב השחזור של Windows‏ (WinRE).</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>שחזר את תכונת המדפסת Microsoft Print to PDF אם היא אינה זמינה או אם הסרת אותה בטעות.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>פתח את דף הדיונים ב-GitHub לקבלת עזרה ותמיכה.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>נהל את כל ההיבטים של בקרת יישומים במערכת שלך באמצעות יישום ייעודי שנבנה במיוחד למטרה זו.</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פתח את תוכניות צריכת החשמל בלוח הבקרה</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את תוכניות צריכת החשמל בלוח הבקרה</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את תוכניות צריכת החשמל בלוח הבקרה</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פתח את דף צריכת החשמל בהגדרות Windows</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את דף צריכת החשמל בהגדרות Windows</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את דף צריכת החשמל בהגדרות Windows</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.Content" xml:space="preserve">
+    <value>אישורי DoD/DoW</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התקן את האישורים הדרושים לגישה לאתרי Department of War‏ (DoW).</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התקן את האישורים הדרושים לגישה לאתרי Department of War‏ (DoW).</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>התקן אישורי DoD/DoW</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התקן אישורי DoD/DoW</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התקן אישורי DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הסר אישורי DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר אישורי DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר אישורי DoD/DoW</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.Content" xml:space="preserve">
+    <value>AppControl Manager</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל את כל ההיבטים של בקרת יישומים במערכת שלך באמצעות יישום ייעודי שנבנה במיוחד למטרה זו.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל את כל ההיבטים של בקרת יישומים במערכת שלך באמצעות יישום ייעודי שנבנה במיוחד למטרה זו.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.Content" xml:space="preserve">
+    <value>אחזר עדכונים</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את כל העדכונים הזמינים עבור Windows ומנהלי התקנים, כולל עדכונים מוסתרים או אופציונליים.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את כל העדכונים הזמינים עבור Windows ומנהלי התקנים, כולל עדכונים מוסתרים או אופציונליים.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.Content" xml:space="preserve">
+    <value>הסתר נבחרים</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסתר את העדכונים שנבחרו כדי שלא יופיעו שוב ב-Windows Update ותוכל לדלג על התקנתם.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסתר את העדכונים שנבחרו כדי שלא יופיעו שוב ב-Windows Update ותוכל לדלג על התקנתם.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.Content" xml:space="preserve">
+    <value>בטל הסתרת נבחרים</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל את הסתרת העדכונים שנבחרו אם הם מוסתרים.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל את הסתרת העדכונים שנבחרו אם הם מוסתרים.</value>
+  </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>קיצורי דרך</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>קיצורי דרך לאפליקציה</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה או לשורת המשימות לגישה קלה ומהירה.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה או לשורת המשימות לגישה קלה ומהירה.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה או לשורת המשימות לגישה קלה ומהירה.</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>אפשרויות קיצורי דרך</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח אפשרויות להצמדת האפליקציה לתפריט התחלה או לשורת המשימות.</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח אפשרויות להצמדת האפליקציה לתפריט התחלה או לשורת המשימות.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הצמד לשורת המשימות</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצמד את האפליקציה לשורת המשימות לגישה מהירה.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצמד את האפליקציה לשורת המשימות לגישה מהירה.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הצמד לתפריט התחלה</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה לגישה נוחה.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה לגישה נוחה.</value>
+  </data>
 </root>

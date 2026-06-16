@@ -7744,4 +7744,46 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Optionale URL eines RFC 3161- oder Authenticode-Zeitstempelservers.</value>
   </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Verknüpfungen</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>App-Verknüpfungen</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>Heften Sie die App an „Start“ oder die Taskleiste an, um schnell und einfach darauf zuzugreifen.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Heften Sie die App an „Start“ oder die Taskleiste an, um schnell und einfach darauf zuzugreifen.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Heften Sie die App an „Start“ oder die Taskleiste an, um schnell und einfach darauf zuzugreifen.</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>Verknüpfungsoptionen</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Öffnen Sie Optionen, um die App an „Start“ oder die Taskleiste anzuheften.</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Öffnen Sie Optionen, um die App an „Start“ oder die Taskleiste anzuheften.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>An Taskleiste anheften</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Heften Sie die App für schnellen Zugriff an die Taskleiste an.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Heften Sie die App für schnellen Zugriff an die Taskleiste an.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>An Startmenü anheften</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Heften Sie die App für einfachen Zugriff an das Startmenü an.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Heften Sie die App für einfachen Zugriff an das Startmenü an.</value>
+  </data>
 </root>

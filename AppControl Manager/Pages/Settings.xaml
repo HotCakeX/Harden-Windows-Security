@@ -619,6 +619,36 @@
                                   x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 
+                <!-- Shortcuts section -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
+                           x:Uid="ShortcutsSettingsSectionHeader" />
+
+                <customUI:SettingsCardV2 x:Uid="AppShortcutsSettingsCard">
+                    <customUI:SettingsCardV2.HeaderIcon>
+                        <FontIcon Glyph="&#xE71B;" />
+                    </customUI:SettingsCardV2.HeaderIcon>
+
+                    <Button x:Uid="ShortcutOptionsButton">
+                        <Button.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem x:Uid="PinToTaskbarMenuFlyoutItem"
+                                                Click="{x:Bind ViewModel.PinToTaskbar}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE718;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutItem x:Uid="PinToStartMenuMenuFlyoutItem"
+                                                Click="{x:Bind ViewModel.PinToStartMenu}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE80F;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
+                </customUI:SettingsCardV2>
+
                 <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                            x:Uid="About" />

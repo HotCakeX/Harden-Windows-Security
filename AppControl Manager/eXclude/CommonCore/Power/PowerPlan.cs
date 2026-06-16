@@ -64,6 +64,33 @@ internal static class PowerPlan
 		return "Unavailable";
 	}
 
+	/// <summary>
+	/// Determines whether the specified power plan represents the Ultimate Performance plan.
+	/// </summary>
+	private static bool IsUltimateScheme(Guid schemeGuid)
+	{
+		if (schemeGuid == UltimateBaseSchemeGuid)
+		{
+			return true;
+		}
+
+		string name = ReadSchemeFriendlyName(schemeGuid, out uint rcName);
+		return rcName == ERROR_SUCCESS && string.Equals(name, "Ultimate Performance", StringComparison.OrdinalIgnoreCase);
+	}
+
+	/// <summary>
+	/// Returns true when the currently active power plan is the Ultimate Performance plan.
+	/// </summary>
+	internal static bool IsUltimateSchemeActive()
+	{
+		if (!TryGetActiveScheme(out Guid activeGuid))
+		{
+			return false;
+		}
+
+		return IsUltimateScheme(activeGuid);
+	}
+
 	private static bool TryFindExistingUltimate(out Guid schemeGuid)
 	{
 		schemeGuid = Guid.Empty;
@@ -407,8 +434,7 @@ internal static class PowerPlan
 				continue;
 			}
 
-			string name = ReadSchemeFriendlyName(guid, out uint rcName);
-			if (rcName == 0 && string.Equals(name, "Ultimate Performance", StringComparison.OrdinalIgnoreCase))
+			if (IsUltimateScheme(guid))
 			{
 				targets.Add(guid);
 			}

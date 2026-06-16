@@ -7744,4 +7744,46 @@
   <data name="TimeStampURLSelectionForSigningSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>כתובת URL אופציונלית של שרת חותמת זמן RFC 3161 או Authenticode.</value>
   </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>קיצורי דרך</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>קיצורי דרך לאפליקציה</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה או לשורת המשימות לגישה קלה ומהירה.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה או לשורת המשימות לגישה קלה ומהירה.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה או לשורת המשימות לגישה קלה ומהירה.</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>אפשרויות קיצורי דרך</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח אפשרויות להצמדת האפליקציה לתפריט התחלה או לשורת המשימות.</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח אפשרויות להצמדת האפליקציה לתפריט התחלה או לשורת המשימות.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הצמד לשורת המשימות</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצמד את האפליקציה לשורת המשימות לגישה מהירה.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצמד את האפליקציה לשורת המשימות לגישה מהירה.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הצמד לתפריט התחלה</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה לגישה נוחה.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצמד את האפליקציה לתפריט התחלה לגישה נוחה.</value>
+  </data>
 </root>

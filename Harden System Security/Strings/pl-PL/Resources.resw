@@ -4118,24 +4118,6 @@ Odcisk Palca: {3}</value>
   <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Skonfiguruj plan zasilania „Najwyższa wydajność”. Ten plan został zaprojektowany tak, aby zapewniać maksymalną wydajność poprzez ograniczenie funkcji oszczędzania energii i minimalizację mikroopóźnień, które mogą wpływać na responsywność.</value>
   </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Włącz i ustaw jako aktywny</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Włącz i ustaw jako aktywny plan zasilania „Najwyższa wydajność”.</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Włącz i ustaw jako aktywny plan zasilania „Najwyższa wydajność”.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Wyłącz i dezaktywuj</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Wyłącz i dezaktywuj plan zasilania „Najwyższa wydajność”.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Wyłącz i dezaktywuj plan zasilania „Najwyższa wydajność”.</value>
-  </data>
   <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
   <value>Konfigurowanie zagnieżdżonej wirtualizacji dla wszystkich maszyn Hyper-V.</value>
 </data>
@@ -6914,4 +6896,163 @@ Odcisk Palca: {3}</value>
 <data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
   <value>Spowoduje to ponowne uruchomienie systemu i załadowanie bezpośrednio środowiska odzyskiwania systemu Windows przy następnym rozruchu. Przed kontynuowaniem zapisz swoją pracę.</value>
 </data>
+<data name="ResetGraphicsDriverButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zresetuj sterowniki karty graficznej, jeśli nie działają prawidłowo.</value>
+  </data>
+  <data name="OptimizeMemoryButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Spróbuj skompaktować pamięć RAM używaną przez tę aplikację.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Sprawdź dostępność aktualizacji aplikacji w Microsoft Store i pobierz wszystkie dostępne aktualizacje.</value>
+  </data>
+  <data name="GenerateBatteryReportButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Utwórz szczegółowy raport o kondycji baterii do celów diagnostycznych, jeśli urządzenie ma baterię.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Włącz lub wyłącz zagnieżdżoną wirtualizację dla maszyn wirtualnych Hyper-V.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Przełącz plan zasilania „Najwyższa wydajność”.</value>
+  </data>
+  <data name="DoDCertificatesDropDownButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zainstaluj lub usuń certyfikaty używane do uzyskiwania dostępu do witryn DoD/DoW.</value>
+  </data>
+  <data name="RebootToUEFIButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Uruchom ponownie urządzenie bezpośrednio w ustawieniach oprogramowania układowego UEFI.</value>
+  </data>
+  <data name="RebootToRecoveryModeButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Uruchom ponownie urządzenie bezpośrednio w trybie odzyskiwania systemu Windows (WinRE).</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Przywróć funkcję drukarki Microsoft Print to PDF, jeśli jest niedostępna lub została przypadkowo usunięta.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Otwórz stronę dyskusji w GitHub, aby uzyskać pomoc i wsparcie.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zarządzaj wszystkimi aspektami Kontroli aplikacji w swoim systemie za pomocą dedykowanej aplikacji stworzonej specjalnie do tego celu.</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Otwórz plany zasilania w Panelu sterowania</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz plany zasilania w Panelu sterowania</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz plany zasilania w Panelu sterowania</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Otwórz stronę zasilania w ustawieniach systemu Windows</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz stronę zasilania w ustawieniach systemu Windows</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz stronę zasilania w ustawieniach systemu Windows</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.Content" xml:space="preserve">
+    <value>Certyfikaty DoD/DoW</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zainstaluj certyfikaty wymagane do uzyskiwania dostępu do witryn Department of War (DoW).</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zainstaluj certyfikaty wymagane do uzyskiwania dostępu do witryn Department of War (DoW).</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Zainstaluj certyfikaty DoD/DoW</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zainstaluj certyfikaty DoD/DoW</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zainstaluj certyfikaty DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń certyfikaty DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń certyfikaty DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń certyfikaty DoD/DoW</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.Content" xml:space="preserve">
+    <value>AppControl Manager</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj wszystkimi aspektami Kontroli aplikacji w swoim systemie za pomocą dedykowanej aplikacji stworzonej specjalnie do tego celu.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj wszystkimi aspektami Kontroli aplikacji w swoim systemie za pomocą dedykowanej aplikacji stworzonej specjalnie do tego celu.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.Content" xml:space="preserve">
+    <value>Pobierz aktualizacje</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz wszystkie dostępne aktualizacje systemu Windows i sterowników, w tym aktualizacje ukryte lub opcjonalne.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz wszystkie dostępne aktualizacje systemu Windows i sterowników, w tym aktualizacje ukryte lub opcjonalne.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.Content" xml:space="preserve">
+    <value>Ukryj wybrane</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ukryj wybrane aktualizacje, aby nie pojawiały się ponownie w usłudze Windows Update i aby można było pominąć ich instalację.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ukryj wybrane aktualizacje, aby nie pojawiały się ponownie w usłudze Windows Update i aby można było pominąć ich instalację.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.Content" xml:space="preserve">
+    <value>Odkryj wybrane</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odkryj wybrane aktualizacje, jeśli są ukryte.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odkryj wybrane aktualizacje, jeśli są ukryte.</value>
+  </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Skróty</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>Skróty aplikacji</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>Przypnij aplikację do menu Start lub paska zadań, aby uzyskać łatwy i szybki dostęp.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przypnij aplikację do menu Start lub paska zadań, aby uzyskać łatwy i szybki dostęp.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przypnij aplikację do menu Start lub paska zadań, aby uzyskać łatwy i szybki dostęp.</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>Opcje skrótów</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz opcje przypinania aplikacji do menu Start lub paska zadań.</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz opcje przypinania aplikacji do menu Start lub paska zadań.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Przypnij do paska zadań</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przypnij aplikację do paska zadań, aby uzyskać szybki dostęp.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przypnij aplikację do paska zadań, aby uzyskać szybki dostęp.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Przypnij do menu Start</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przypnij aplikację do menu Start, aby uzyskać łatwy dostęp.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przypnij aplikację do menu Start, aby uzyskać łatwy dostęp.</value>
+  </data>
 </root>

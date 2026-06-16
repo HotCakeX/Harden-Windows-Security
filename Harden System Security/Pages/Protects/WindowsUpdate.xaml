@@ -165,9 +165,9 @@
                                               VerticalAlignment="Center"
                                               Margin="0,0,8,0" />
 
-                                <Button Style="{StaticResource AccentButtonStyle}"
-                                        VerticalAlignment="Center"
-                                        Content="Retrieve updates"
+                                <Button x:Uid="WindowsUpdateRetrieveUpdatesButton"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        VerticalAlignment="Center"       
                                         Click="{x:Bind ViewModel.RetrieveAvailableUpdates}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>
@@ -180,8 +180,8 @@
                                     </Button.ContentTemplate>
                                 </Button>
 
-                                <Button VerticalAlignment="Center"
-                                        Content="Hide selected"
+                                <Button x:Uid="WindowsUpdateHideSelectedButton"
+                                        VerticalAlignment="Center"       
                                         Click="{x:Bind HideSelectedUpdates_Click}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>
@@ -194,8 +194,8 @@
                                     </Button.ContentTemplate>
                                 </Button>
 
-                                <Button VerticalAlignment="Center"
-                                        Content="Unhide selected"
+                                <Button x:Uid="WindowsUpdateUnhideSelectedButton"
+                                        VerticalAlignment="Center"       
                                         Click="{x:Bind UnhideSelectedUpdates_Click}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>
@@ -208,8 +208,8 @@
                                     </Button.ContentTemplate>
                                 </Button>
 
-                                <Button VerticalAlignment="Center"
-                                        Content="Export JSON"
+                                <Button x:Uid="ExportToJsonButton"
+                                        VerticalAlignment="Center"       
                                         Click="{x:Bind ExportUpdatesToJson_Click}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>

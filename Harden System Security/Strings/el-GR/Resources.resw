@@ -4118,24 +4118,6 @@
   <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Διαμορφώστε το σχέδιο ενέργειας Υπέρτατης Απόδοσης. Αυτό το σχέδιο έχει σχεδιαστεί για να προσφέρει μέγιστη απόδοση, μειώνοντας τις λειτουργίες εξοικονόμησης ενέργειας και ελαχιστοποιώντας τις μικροκαθυστερήσεις που μπορεί να επηρεάσουν την απόκριση.</value>
   </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Ενεργοποίηση και ορισμός ως ενεργό</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ενεργοποιήστε και ορίστε ως ενεργό το σχέδιο ενέργειας Υπέρτατης Απόδοσης.</value>
-  </data>
-  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ενεργοποιήστε και ορίστε ως ενεργό το σχέδιο ενέργειας Υπέρτατης Απόδοσης.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Απενεργοποίηση και κατάργηση ενεργοποίησης</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Απενεργοποιήστε και καταργήστε την ενεργοποίηση του σχεδίου ενέργειας Υπέρτατης Απόδοσης.</value>
-  </data>
-  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Απενεργοποιήστε και καταργήστε την ενεργοποίηση του σχεδίου ενέργειας Υπέρτατης Απόδοσης.</value>
-  </data>
   <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
   <value>Γίνεται διαμόρφωση εμφωλευμένης εικονικοποίησης για όλες τις εικονικές μηχανές Hyper-V.</value>
 </data>
@@ -6914,4 +6896,163 @@
 <data name="RebootToRecoveryModeConfirmationDialogContent" xml:space="preserve">
   <value>Αυτό θα επανεκκινήσει το σύστημα και θα εκκινήσει απευθείας στο Περιβάλλον αποκατάστασης των Windows κατά την επόμενη εκκίνηση. Αποθηκεύστε την εργασία σας πριν συνεχίσετε.</value>
 </data>
+<data name="ResetGraphicsDriverButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Επαναφέρετε τα προγράμματα οδήγησης της κάρτας γραφικών, εάν δεν λειτουργούν σωστά.</value>
+  </data>
+  <data name="OptimizeMemoryButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Δοκιμάστε να συμπυκνώσετε τη μνήμη RAM που χρησιμοποιείται από αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ελέγξτε για ενημερώσεις εφαρμογών στο Microsoft Store και πραγματοποιήστε λήψη τυχόν διαθέσιμων ενημερώσεων.</value>
+  </data>
+  <data name="GenerateBatteryReportButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Δημιουργήστε μια λεπτομερή αναφορά εύρυθμης λειτουργίας μπαταρίας για διαγνωστικούς σκοπούς, εάν η συσκευή σας διαθέτει μπαταρία.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ενεργοποιήστε ή απενεργοποιήστε την ένθετη εικονικοποίηση για εικονικές μηχανές Hyper-V.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ενεργοποιήστε ή απενεργοποιήστε το σχέδιο παροχής ενέργειας «Μέγιστες επιδόσεις».</value>
+  </data>
+  <data name="DoDCertificatesDropDownButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Εγκαταστήστε ή καταργήστε πιστοποιητικά που χρησιμοποιούνται για πρόσβαση σε τοποθεσίες web DoD/DoW.</value>
+  </data>
+  <data name="RebootToUEFIButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Επανεκκινήστε τη συσκευή απευθείας στις ρυθμίσεις υλικολογισμικού UEFI.</value>
+  </data>
+  <data name="RebootToRecoveryModeButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Επανεκκινήστε τη συσκευή απευθείας στη λειτουργία αποκατάστασης των Windows (WinRE).</value>
+  </data>
+  <data name="RestoreMicrosoftPrintToPdfButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Επαναφέρετε τη δυνατότητα εκτυπωτή Microsoft Print to PDF, εάν δεν είναι διαθέσιμη ή την καταργήσατε κατά λάθος.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ανοίξτε τη σελίδα συζητήσεων του GitHub για βοήθεια και υποστήριξη.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButtonDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Διαχειριστείτε όλες τις πτυχές του Ελέγχου εφαρμογών στο σύστημά σας με μια αποκλειστική εφαρμογή ειδικά σχεδιασμένη για αυτόν τον σκοπό.</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Άνοιγμα σχεδίων παροχής ενέργειας του Πίνακα Ελέγχου</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Άνοιγμα σχεδίων παροχής ενέργειας του Πίνακα Ελέγχου</value>
+  </data>
+  <data name="OpenControlPanelPowerPlansMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Άνοιγμα σχεδίων παροχής ενέργειας του Πίνακα Ελέγχου</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Άνοιγμα σελίδας παροχής ενέργειας στις Ρυθμίσεις των Windows</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Άνοιγμα σελίδας παροχής ενέργειας στις Ρυθμίσεις των Windows</value>
+  </data>
+  <data name="OpenWindowsSettingsPowerPageMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Άνοιγμα σελίδας παροχής ενέργειας στις Ρυθμίσεις των Windows</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.Content" xml:space="preserve">
+    <value>Πιστοποιητικά DoD/DoW</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εγκαταστήστε τα πιστοποιητικά που απαιτούνται για πρόσβαση στις τοποθεσίες web του Department of War (DoW).</value>
+  </data>
+  <data name="DoDCertificatesDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εγκαταστήστε τα πιστοποιητικά που απαιτούνται για πρόσβαση στις τοποθεσίες web του Department of War (DoW).</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Εγκατάσταση πιστοποιητικών DoD/DoW</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εγκατάσταση πιστοποιητικών DoD/DoW</value>
+  </data>
+  <data name="InstallDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εγκατάσταση πιστοποιητικών DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κατάργηση πιστοποιητικών DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση πιστοποιητικών DoD/DoW</value>
+  </data>
+  <data name="RemoveDoDCertificatesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση πιστοποιητικών DoD/DoW</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.Content" xml:space="preserve">
+    <value>AppControl Manager</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχειριστείτε όλες τις πτυχές του Ελέγχου εφαρμογών στο σύστημά σας με μια αποκλειστική εφαρμογή ειδικά σχεδιασμένη για αυτόν τον σκοπό.</value>
+  </data>
+  <data name="AppControlManagerHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχειριστείτε όλες τις πτυχές του Ελέγχου εφαρμογών στο σύστημά σας με μια αποκλειστική εφαρμογή ειδικά σχεδιασμένη για αυτόν τον σκοπό.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.Content" xml:space="preserve">
+    <value>Ανάκτηση ενημερώσεων</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτήστε όλες τις διαθέσιμες ενημερώσεις για τα Windows και τα προγράμματα οδήγησης, συμπεριλαμβανομένων τυχόν κρυφών ή προαιρετικών ενημερώσεων.</value>
+  </data>
+  <data name="WindowsUpdateRetrieveUpdatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανακτήστε όλες τις διαθέσιμες ενημερώσεις για τα Windows και τα προγράμματα οδήγησης, συμπεριλαμβανομένων τυχόν κρυφών ή προαιρετικών ενημερώσεων.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.Content" xml:space="preserve">
+    <value>Απόκρυψη επιλεγμένων</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποκρύψτε τις επιλεγμένες ενημερώσεις, ώστε να μην εμφανιστούν ξανά στο Windows Update και να μπορείτε να παραλείψετε την εγκατάστασή τους.</value>
+  </data>
+  <data name="WindowsUpdateHideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποκρύψτε τις επιλεγμένες ενημερώσεις, ώστε να μην εμφανιστούν ξανά στο Windows Update και να μπορείτε να παραλείψετε την εγκατάστασή τους.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.Content" xml:space="preserve">
+    <value>Επανεμφάνιση επιλεγμένων</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επανεμφανίστε τις επιλεγμένες ενημερώσεις, εάν είναι κρυφές.</value>
+  </data>
+  <data name="WindowsUpdateUnhideSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επανεμφανίστε τις επιλεγμένες ενημερώσεις, εάν είναι κρυφές.</value>
+  </data>
+  <data name="ShortcutsSettingsSectionHeader.Text" xml:space="preserve">
+    <value>Συντομεύσεις</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Header" xml:space="preserve">
+    <value>Συντομεύσεις εφαρμογής</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.Description" xml:space="preserve">
+    <value>Καρφιτσώστε την εφαρμογή στην Έναρξη ή στη γραμμή εργασιών για εύκολη και γρήγορη πρόσβαση.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καρφιτσώστε την εφαρμογή στην Έναρξη ή στη γραμμή εργασιών για εύκολη και γρήγορη πρόσβαση.</value>
+  </data>
+  <data name="AppShortcutsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καρφιτσώστε την εφαρμογή στην Έναρξη ή στη γραμμή εργασιών για εύκολη και γρήγορη πρόσβαση.</value>
+  </data>
+  <data name="ShortcutOptionsButton.Content" xml:space="preserve">
+    <value>Επιλογές συντομεύσεων</value>
+  </data>
+  <data name="ShortcutOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε επιλογές για να καρφιτσώσετε την εφαρμογή στην Έναρξη ή στη γραμμή εργασιών.</value>
+  </data>
+  <data name="ShortcutOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε επιλογές για να καρφιτσώσετε την εφαρμογή στην Έναρξη ή στη γραμμή εργασιών.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Καρφίτσωμα στη γραμμή εργασιών</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καρφιτσώστε την εφαρμογή στη γραμμή εργασιών για γρήγορη πρόσβαση.</value>
+  </data>
+  <data name="PinToTaskbarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καρφιτσώστε την εφαρμογή στη γραμμή εργασιών για γρήγορη πρόσβαση.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Καρφίτσωμα στο μενού Έναρξη</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καρφιτσώστε την εφαρμογή στο μενού Έναρξη για εύκολη πρόσβαση.</value>
+  </data>
+  <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καρφιτσώστε την εφαρμογή στο μενού Έναρξη για εύκολη πρόσβαση.</value>
+  </data>
 </root>

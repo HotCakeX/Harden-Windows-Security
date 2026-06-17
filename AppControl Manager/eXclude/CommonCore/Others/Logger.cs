@@ -128,11 +128,8 @@ internal static class Logger
 			Console.WriteLine(logEntry);
 
 		// Enqueue the log message for asynchronous writing
-		if (!_logChannel.Writer.TryWrite(logEntry))
-		{
-			//  If TryWrite returns false, falls back to writing directly to the log file asynchronously so no log messages are lost, even if the channel cannot accept new entries.
-			_ = _streamWriter.WriteLineAsync(logEntry);
-		}
+		// The channel is unbounded and is not completed during app lifetime, so TryWrite is expected to succeed.
+		_ = _logChannel.Writer.TryWrite(logEntry);
 	}
 
 	// Overload that takes in Exceptions
@@ -144,11 +141,7 @@ internal static class Logger
 			Console.Error.WriteLine(logEntry);
 
 		// Enqueue the log message for asynchronous writing
-		if (!_logChannel.Writer.TryWrite(logEntry))
-		{
-			//  If TryWrite returns false, falls back to writing directly to the log file asynchronously so no log messages are lost, even if the channel cannot accept new entries.
-			_ = _streamWriter.WriteLineAsync(logEntry);
-		}
+		_ = _logChannel.Writer.TryWrite(logEntry);
 	}
 
 	private static long GetDirectorySize(string directoryPath)

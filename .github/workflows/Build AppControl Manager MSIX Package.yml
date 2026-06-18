@@ -74,7 +74,7 @@ jobs:
 #
 
       - name: Check out the repository code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Building And Packaging the AppControl Manager
         id: main_buildOp
@@ -866,7 +866,7 @@ jobs:
     steps:
 
       - name: Check out the repository code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Updating The MSIXBundle Download Links and Version via Pull Request
         shell: pwsh

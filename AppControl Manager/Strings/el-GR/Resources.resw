@@ -3085,9 +3085,6 @@
   <data name="FileNotExists" xml:space="preserve">
     <value>Το αρχείο δεν υπάρχει.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>Το αρχείο Σχήματος Ακεραιότητας Κώδικα δεν μπόρεσε να βρεθεί στο σύστημα, πιθανότατα επειδή αυτή είναι μια έκδοση Home του λειτουργικού συστήματος. Παρακαλώ πλοηγηθείτε στη σελίδα Ρυθμίσεις για να το αναζητήσετε χειροκίνητα.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>Άκυρο XML: Λείπει το ριζικό στοιχείο.</value>
     <comment>Επικύρωση App Manifest</comment>
@@ -3465,30 +3462,6 @@
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>Το SiPolicy.p7b έχει αναπτυχθεί και οι πολιτικές ανανεώθηκαν.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση για το αρχείο XSD Σχήματος Ακεραιότητας Κώδικα.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση για το αρχείο XSD Σχήματος Ακεραιότητας Κώδικα.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>Αναζήτηση</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση για το αρχείο XSD Σχήματος Ακεραιότητας Κώδικα.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση για το αρχείο XSD Σχήματος Ακεραιότητας Κώδικα.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>Προσαρμοσμένη Διαδρομή Σχήματος</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Αναζήτηση για μια προσαρμοσμένη τοποθεσία για το αρχείο XSD Σχήματος Ακεραιότητας Κώδικα.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>Παράκαμψη Διαδρομής Σχήματος Ακεραιότητας Κώδικα</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ανοίγει τη μικρο-σελίδα του Microsoft Store όπου μπορείτε να αξιολογήσετε και προαιρετικά να γράψετε μια κριτική για το AppControl Manager.</value>
@@ -7785,5 +7758,23 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Καρφιτσώστε την εφαρμογή στο μενού Έναρξη για εύκολη πρόσβαση.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>Αναζήτηση αρχείων</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση αρχείων</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση αρχείων</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Αναζήτηση φακέλων</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση φακέλων</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση φακέλων</value>
   </data>
 </root>

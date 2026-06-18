@@ -3085,9 +3085,6 @@
   <data name="FileNotExists" xml:space="preserve">
     <value>الملف غير موجود.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>تعذر العثور على ملف مخطط تكامل التعليمات البرمجية على النظام، على الأرجح لأن هذا إصدار Home من نظام التشغيل. يرجى الانتقال إلى صفحة الإعدادات لتصفحه يدويًا.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <comment>App Manifest Validation</comment>
     <value>XML غير صالح: العنصر الجذر مفقود.</value>
@@ -3465,30 +3462,6 @@
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>تم نشر SiPolicy.p7b وتحديث السياسات.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>تصفح بحثًا عن ملف XSD لمخطط تكامل التعليمات البرمجية.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>تصفح بحثًا عن ملف XSD لمخطط تكامل التعليمات البرمجية.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>تصفح</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>تصفح بحثًا عن ملف XSD لمخطط تكامل التعليمات البرمجية.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>تصفح بحثًا عن ملف XSD لمخطط تكامل التعليمات البرمجية.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>مسار المخطط المخصص</value>
-  </data>
-    <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>تصفح بحثًا عن موقع مخصص لملف XSD لمخطط تكامل التعليمات البرمجية.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>تجاوز مسار مخطط تكامل التعليمات البرمجية</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>يفتح صفحة متجر Microsoft المصغرة حيث يمكنك تقييم مدير AppControl وكتابة مراجعة له اختياريًا.</value>
@@ -7785,5 +7758,23 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ثبّت التطبيق في قائمة البدء للوصول إليه بسهولة.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>استعراض الملفات</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعراض الملفات</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعراض الملفات</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>استعراض المجلدات</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعراض المجلدات</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعراض المجلدات</value>
   </data>
 </root>

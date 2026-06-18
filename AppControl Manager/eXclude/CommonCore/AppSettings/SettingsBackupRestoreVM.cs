@@ -97,11 +97,20 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 			MainInfoBar.WriteInfo(Atlas.GetStr("ImportingSettingsFromJsonMessage"));
 
 			byte[] jsonPayload = await File.ReadAllBytesAsync(selectedFile);
-			SettingsBackupRestoreSerializer.Import(jsonPayload, Atlas.Settings);
+			SettingsImportResult importResult = SettingsBackupRestoreSerializer.Import(jsonPayload, Atlas.Settings);
 			await ApplyImportedSettingsAsync();
 			RefreshDisplayedSettings();
 
-			MainInfoBar.WriteSuccess(string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("SuccessfullyImportedSettingsFromJsonMessage"), SettingsItems.Count, selectedFile));
+			string successMessage = string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("SuccessfullyImportedSettingsFromJsonMessage"), SettingsItems.Count, selectedFile);
+			if (importResult.HasSkippedSettings)
+			{
+				string importLogMessage = importResult.CreateLogMessage();
+				MainInfoBar.WriteSuccess($"{successMessage}{Environment.NewLine}{importLogMessage}");
+			}
+			else
+			{
+				MainInfoBar.WriteSuccess(successMessage);
+			}
 		}
 		catch (Exception ex)
 		{
@@ -117,7 +126,7 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 
 			Main defaultSettings = Main.CreateDefaultSettingsSnapshot();
 			byte[] jsonPayload = SettingsBackupRestoreSerializer.Export(defaultSettings);
-			SettingsBackupRestoreSerializer.Import(jsonPayload, Atlas.Settings);
+			_ = SettingsBackupRestoreSerializer.Import(jsonPayload, Atlas.Settings);
 			await ApplyImportedSettingsAsync();
 			RefreshDisplayedSettings();
 
@@ -162,6 +171,30 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 	}
 }
 
+internal sealed class SettingsImportResult
+{
+	internal readonly List<string> UnexpectedSettings = [];
+	internal readonly List<string> MissingSettings = [];
+	internal bool HasSkippedSettings => UnexpectedSettings.Count > 0 || MissingSettings.Count > 0;
+
+	internal string CreateLogMessage()
+	{
+		List<string> logLines = [];
+
+		if (UnexpectedSettings.Count > 0)
+		{
+			logLines.Add($"Skipped unknown settings from the JSON file: {string.Join(", ", UnexpectedSettings)}.");
+		}
+
+		if (MissingSettings.Count > 0)
+		{
+			logLines.Add($"Settings missing from the JSON file were left unchanged: {string.Join(", ", MissingSettings)}.");
+		}
+
+		return string.Join(Environment.NewLine, logLines);
+	}
+}
+
 internal static class SettingsBackupRestoreSerializer
 {
 	private const string ExportedAtUtcPropertyName = "exportedAtUtc";
@@ -203,10 +236,6 @@ internal static class SettingsBackupRestoreSerializer
 			$"'{nameof(Main.ApplicationGlobalLanguage)}' must be empty or a supported language token."),
 
 		CreateEnumStringSetting<FlowDirection>(nameof(Main.ApplicationGlobalFlowDirection), settings => settings.ApplicationGlobalFlowDirection, (settings, value) => settings.ApplicationGlobalFlowDirection = value),
-
-		CreateStringWithCustomValidation(nameof(Main.CiPolicySchemaPath), "Absolute path or empty string", settings => settings.CiPolicySchemaPath, (settings, value) => settings.CiPolicySchemaPath = value,
-			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
-			$"'{nameof(Main.CiPolicySchemaPath)}' must be empty or an absolute path."),
 
 		CreateBoolean(nameof(Main.ScreenShield), settings => settings.ScreenShield, (settings, value) => settings.ScreenShield = value),
 
@@ -346,7 +375,7 @@ internal static class SettingsBackupRestoreSerializer
 		return memoryStream.ToArray();
 	}
 
-	internal static void Import(byte[] jsonPayload, Main settings)
+	internal static SettingsImportResult Import(byte[] jsonPayload, Main settings)
 	{
 		using JsonDocument document = JsonDocument.Parse(jsonPayload, new JsonDocumentOptions
 		{
@@ -368,6 +397,7 @@ internal static class SettingsBackupRestoreSerializer
 			throw new InvalidDataException($"'{SettingsPropertyName}' must be a JSON object.");
 		}
 
+		SettingsImportResult importResult = new();
 		Dictionary<string, Action<Main>> assignments = new(StringComparer.OrdinalIgnoreCase);
 		HashSet<string> seenProperties = new(StringComparer.OrdinalIgnoreCase);
 
@@ -378,7 +408,13 @@ internal static class SettingsBackupRestoreSerializer
 				throw new InvalidDataException($"Duplicate setting '{property.Name}' was found in the JSON file.");
 			}
 
-			AppSettingDescriptor? descriptor = GetDescriptor(property.Name) ?? throw new InvalidDataException($"Unexpected setting '{property.Name}' was found in the JSON file.");
+			AppSettingDescriptor? descriptor = GetDescriptor(property.Name);
+			if (descriptor is null)
+			{
+				importResult.UnexpectedSettings.Add(property.Name);
+				continue;
+			}
+
 			DescriptorValidationResult validationResult = descriptor.ValidateAndCreateAssignment(property.Value);
 			if (!validationResult.IsValid || validationResult.Assignment is null)
 			{
@@ -388,25 +424,23 @@ internal static class SettingsBackupRestoreSerializer
 			assignments[property.Name] = validationResult.Assignment;
 		}
 
-		if (seenProperties.Count != Descriptors.Length)
+		foreach (AppSettingDescriptor descriptor in Descriptors)
 		{
-			List<string> missingProperties = [];
-
-			foreach (AppSettingDescriptor descriptor in Descriptors)
+			if (!seenProperties.Contains(descriptor.Name))
 			{
-				if (!seenProperties.Contains(descriptor.Name))
-				{
-					missingProperties.Add(descriptor.Name);
-				}
+				importResult.MissingSettings.Add(descriptor.Name);
 			}
-
-			throw new InvalidDataException($"The JSON file is missing the following required settings: {string.Join(", ", missingProperties)}.");
 		}
 
 		foreach (AppSettingDescriptor descriptor in Descriptors)
 		{
-			assignments[descriptor.Name](settings);
+			if (assignments.TryGetValue(descriptor.Name, out Action<Main>? assignment))
+			{
+				assignment(settings);
+			}
 		}
+
+		return importResult;
 	}
 
 	private static void ValidateRootObject(JsonElement rootElement, out JsonElement settingsElement)

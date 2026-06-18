@@ -3085,9 +3085,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="FileNotExists" xml:space="preserve">
     <value>Plik nie istnieje.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>Nie można znaleźć pliku schematu integralności kodu w systemie, najprawdopodobniej dlatego, że jest to wersja Home systemu operacyjnego. Przejdź do strony Ustawienia, aby ręcznie go wyszukać.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>Nieprawidłowy XML: Brak elementu głównego.</value>
     <comment>App Manifest Validation</comment>
@@ -3465,30 +3462,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>Plik SiPolicy.p7b został wdrożony, a zasady odświeżone.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku XSD schematu integralności kodu.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku XSD schematu integralności kodu.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>Przeglądaj</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku XSD schematu integralności kodu.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku XSD schematu integralności kodu.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>Niestandardowa ścieżka schematu</value>
-  </data>
-    <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu niestandardowej lokalizacji pliku XSD schematu integralności kodu.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>Zastąpienie ścieżki schematu integralności kodu</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Otwiera miniaturową stronę Microsoft Store, na której można ocenić i opcjonalnie napisać recenzję Menedżera AppControl.</value>
@@ -7785,5 +7758,23 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przypnij aplikację do menu Start, aby uzyskać łatwy dostęp.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>Przeglądaj pliki</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu plików</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Przeglądaj foldery</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu folderów</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu folderów</value>
   </data>
 </root>

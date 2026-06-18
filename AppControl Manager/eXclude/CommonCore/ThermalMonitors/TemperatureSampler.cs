@@ -51,6 +51,13 @@ internal sealed partial class TemperatureSampler : IDisposable
 		}
 
 		status = NativeMethods.PdhCollectQueryData(_hQuery);
+		if (status == PDH_NO_DATA)
+		{
+			// Some systems do not expose ACPI thermal zone data such as VMs or regular desktop PCs. 
+			// Leave the CPU temperature as N/A in the Home page and do not throw an exception, since this is not an error condition.
+			Dispose();
+			return;
+		}
 		if (status != ERROR_SUCCESS)
 		{
 			Dispose();
@@ -232,8 +239,10 @@ internal sealed partial class TemperatureSampler : IDisposable
 		}
 	}
 
+	// https://learn.microsoft.com/windows/win32/perfctrs/pdh-error-codes
 	private const uint ERROR_SUCCESS = 0x00000000;
 	private const uint PDH_MORE_DATA = 0x800007D2;
+	private const uint PDH_NO_DATA = 0x800007D5;
 	private const uint PDH_FMT_DOUBLE = 0x00000200;
 	private const uint PDH_CSTATUS_VALID_DATA = 0x00000000;
 	private const uint PDH_CSTATUS_NEW_DATA = 0x00000001;

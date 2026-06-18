@@ -173,6 +173,9 @@
         <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
         <AnalysisModePerformance>All</AnalysisModePerformance>
         <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
+        <AnalysisLevelMaintainability>All</AnalysisLevelMaintainability>
+        <AnalysisLevelSecurity>All</AnalysisLevelSecurity>
+        <AnalysisLevelReliability>All</AnalysisLevelReliability>
 
     </PropertyGroup>
 
@@ -333,6 +336,18 @@
         <Compile Remove="target\**" />
         <Content Remove="target\**" />
         <None Remove="target\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="XSDSchemas\ApplicationManifest.xsd">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="XSDSchemas\cipolicy.xsd">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="XSDSchemas\LICENSE">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <!-- Imports the Common Core -->

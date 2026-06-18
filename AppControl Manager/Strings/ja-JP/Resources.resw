@@ -3085,9 +3085,6 @@
   <data name="FileNotExists" xml:space="preserve">
     <value>ファイルが存在しません。</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>システム上でコード整合性スキーマファイルが見つかりませんでした。おそらく、OSのHomeエディションであるためです。手動で参照するには、設定ページに移動してください。</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>無効なXML：ルート要素がありません。</value>
     <comment>アプリマニフェスト検証</comment>
@@ -3465,30 +3462,6 @@
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7bが展開され、ポリシーが更新されました。</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>コード整合性スキーマXSDファイルを参照します。</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>コード整合性スキーマXSDファイルを参照します。</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>参照</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>コード整合性スキーマXSDファイルを参照します。</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>コード整合性スキーマXSDファイルを参照します。</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>カスタムスキーマパス</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>コード整合性スキーマXSDファイルのカスタム場所を参照します。</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>コード整合性スキーマパスの上書き</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Microsoft Storeのミニページを開き、AppControl Managerの評価とレビューを書くことができます。</value>
@@ -7785,5 +7758,23 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>簡単にアクセスできるように、アプリをスタート メニューにピン留めします。</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>ファイルを参照</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ファイルを参照</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ファイルを参照</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>フォルダーを参照</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>フォルダーを参照</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>フォルダーを参照</value>
   </data>
 </root>

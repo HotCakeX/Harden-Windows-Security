@@ -377,6 +377,51 @@ internal static partial class Merger
 						}
 					}
 				}
+
+				List<AllowedSigner>? artifactAllowedSigners = signingScenario.ArtifactSigners?.AllowedSigners?.AllowedSigner;
+				List<DeniedSigner>? artifactDeniedSigners = signingScenario.ArtifactSigners?.DeniedSigners?.DeniedSigner;
+
+				if (artifactAllowedSigners is { Count: > 0 })
+				{
+					// Process ArtifactSigners AllowedSigners
+					foreach (AllowedSigner item in CollectionsMarshal.AsSpan(artifactAllowedSigners))
+					{
+						if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+						{
+							AddSignerRule(
+								signer,
+								scenarioType,
+								Authorization.Allow,
+								item,
+								null,
+								ciSignerSet,
+								fileAttribDictionary,
+								signerCollection,
+								ekuDictionary);
+						}
+					}
+				}
+
+				if (artifactDeniedSigners is { Count: > 0 })
+				{
+					// Process ArtifactSigners DeniedSigners
+					foreach (DeniedSigner item in CollectionsMarshal.AsSpan(artifactDeniedSigners))
+					{
+						if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+						{
+							AddSignerRule(
+								signer,
+								scenarioType,
+								Authorization.Deny,
+								null,
+								item,
+								ciSignerSet,
+								fileAttribDictionary,
+								signerCollection,
+								ekuDictionary);
+						}
+					}
+				}
 			}
 		}
 
@@ -424,8 +469,10 @@ internal static partial class Merger
 
 		// Gather all associated EKUs
 		List<EKU> associatedEKUs = [];
+		Dictionary<string, CertEKUConditionType?> certEkuConditionById = new(StringComparer.OrdinalIgnoreCase);
 		foreach (CertEKU certEku in CollectionsMarshal.AsSpan(signer.CertEKU))
 		{
+			certEkuConditionById[certEku.ID] = certEku.Condition;
 			if (ekuDictionary.TryGetValue(certEku.ID, out EKU? eku))
 			{
 				associatedEKUs.Add(eku);
@@ -455,6 +502,7 @@ internal static partial class Merger
 					CertPublisher = signer.CertPublisher,
 					CertOemID = signer.CertOemID,
 					FileAttribRef = signer.FileAttribRef,
+					ArtifactRuleRef = signer.ArtifactRuleRef,
 					SignTimeAfter = signer.SignTimeAfter
 				};
 
@@ -524,13 +572,18 @@ internal static partial class Merger
 					string tempID = $"ID_EKU_E_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 					// Clone the EKU to avoid modifying the original object
-					newEKUs.Add(new(
+					EKU newEKU = new(
 						id: tempID,
 						value: item.Value,
 						friendlyName: item.FriendlyName
-					));
+					)
+					{
+						OID = item.OID
+					};
+					newEKUs.Add(newEKU);
 
-					signerCertEKUs.Add(new(id: tempID));
+					_ = certEkuConditionById.TryGetValue(item.ID, out CertEKUConditionType? condition);
+					signerCertEKUs.Add(new(id: tempID) { Condition = condition });
 				}
 
 				// Replace the CertEKUs of the Signer with the new ones
@@ -563,6 +616,7 @@ internal static partial class Merger
 					CertPublisher = signer.CertPublisher,
 					CertOemID = signer.CertOemID,
 					FileAttribRef = signer.FileAttribRef,
+					ArtifactRuleRef = signer.ArtifactRuleRef,
 					SignTimeAfter = signer.SignTimeAfter
 				};
 
@@ -650,6 +704,7 @@ internal static partial class Merger
 				CertPublisher = signer.CertPublisher,
 				CertOemID = signer.CertOemID,
 				FileAttribRef = signer.FileAttribRef,
+				ArtifactRuleRef = signer.ArtifactRuleRef,
 				SignTimeAfter = signer.SignTimeAfter
 			};
 
@@ -686,9 +741,13 @@ internal static partial class Merger
 					id: tempID,
 					value: item.Value,
 					friendlyName: item.FriendlyName
-				));
+				)
+				{
+					OID = item.OID
+				});
 
-				signerCertEKUs.Add(new(id: tempID));
+				_ = certEkuConditionById.TryGetValue(item.ID, out CertEKUConditionType? condition);
+				signerCertEKUs.Add(new(id: tempID) { Condition = condition });
 			}
 
 			// Replace the CertEKUs of the Signer with the new ones
@@ -720,6 +779,7 @@ internal static partial class Merger
 				CertPublisher = signer.CertPublisher,
 				CertOemID = signer.CertOemID,
 				FileAttribRef = signer.FileAttribRef,
+				ArtifactRuleRef = signer.ArtifactRuleRef,
 				SignTimeAfter = signer.SignTimeAfter
 			};
 
@@ -786,6 +846,7 @@ internal static partial class Merger
 					CertPublisher = possibleSupplementalPolicySigner.CertPublisher,
 					CertOemID = possibleSupplementalPolicySigner.CertOemID,
 					FileAttribRef = possibleSupplementalPolicySigner.FileAttribRef,
+					ArtifactRuleRef = possibleSupplementalPolicySigner.ArtifactRuleRef,
 					SignTimeAfter = possibleSupplementalPolicySigner.SignTimeAfter
 				};
 
@@ -829,6 +890,7 @@ internal static partial class Merger
 					CertPublisher = possibleUpdatePolicySigner.CertPublisher,
 					CertOemID = possibleUpdatePolicySigner.CertOemID,
 					FileAttribRef = possibleUpdatePolicySigner.FileAttribRef,
+					ArtifactRuleRef = possibleUpdatePolicySigner.ArtifactRuleRef,
 					SignTimeAfter = possibleUpdatePolicySigner.SignTimeAfter
 				};
 

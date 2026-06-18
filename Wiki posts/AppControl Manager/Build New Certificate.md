@@ -42,3 +42,55 @@ After building the certificate, 2 files will be created in the `C:\Program Files
 > The most secure method of storing code signing certificates is to use a hardware security module (HSM) or a similar device. Furthermore, obtaining certificates from a regulated or publicly trusted certificate authority (CA) requires the use of an HSM. The HSMs must also comply with the Federal Information Processing Standards (FIPS).
 
 <br>
+
+## Signing
+
+The **Signing** section lets you sign selected files directly from the Build New Certificate page by using an existing Code Signing certificate from the Windows certificate stores.
+
+### Signing workflow
+
+1. Select individual files or folders that contain files you want to sign.
+2. Confirm the **Signing Certificate Common Name**.
+   * When a new certificate is built on this page, its common name is automatically copied to the signing common name field.
+   * If the signing common name field is empty, the app loads the certificate common name saved in the user configuration.
+3. Optionally enter a timestamp server URL.
+   * Host-only timestamp values are treated as HTTP URLs.
+   * If a timestamp URL is provided, the signer requests an RFC 3161 timestamp.
+4. Optionally enable **Page Hashing** from the Sign button flyout.
+   * Page hashing is intended for PE files.
+5. Select **Sign** to start the signing process.
+
+### Supported file types
+
+The signing section filters selected files and files from selected folders to the following extensions:
+
+* `.sys`
+* `.exe`
+* `.com`
+* `.dll`
+* `.msi`
+* `.js`
+* `.ps1`
+* `.psm1`
+* `.psd1`
+
+### Certificate requirements
+
+The selected signing certificate must:
+
+* Be available in either the Current User or Local Machine personal certificate store.
+* Match the common name entered in the signing common name field.
+* Include the Code Signing Enhanced Key Usage OID.
+* Have an accessible private key.
+
+### Timestamping
+
+The timestamp URL is optional. If it is supplied, the signing operation normalizes the URL and uses it for RFC 3161 timestamping.
+
+### Page hashing
+
+The **Page Hashing** option enables page hashes during Authenticode signing. This option is intended for PE files such as `.sys`, `.exe`, `.com`, and `.dll` files.
+
+### Signing results
+
+The selected files are signed in place. The page displays progress in the information bar and shows a completion message when signing finishes.

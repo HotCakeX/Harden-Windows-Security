@@ -3085,9 +3085,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="FileNotExists" xml:space="preserve">
     <value>El archivo no existe.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>No se pudo encontrar el archivo de Esquema de Integridad de Código en el sistema, muy probablemente porque esta es una edición Home del SO. Por favor, navegue a la página de Configuración para buscarlo manualmente.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>XML inválido: Falta el elemento raíz.</value>
     <comment>App Manifest Validation</comment>
@@ -3465,30 +3462,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b se ha implementado y las directivas se han actualizado.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Buscar el archivo XSD del Esquema de Integridad de Código.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Buscar el archivo XSD del Esquema de Integridad de Código.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>Examinar</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Buscar el archivo XSD del Esquema de Integridad de Código.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Buscar el archivo XSD del Esquema de Integridad de Código.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>Ruta de Esquema Personalizada</value>
-  </data>
-    <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Buscar una ubicación personalizada para el archivo XSD del Esquema de Integridad de Código.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>Anulación de Ruta del Esquema de Integridad de Código</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Abre la mini página de Microsoft Store donde puede calificar y opcionalmente escribir una reseña para AppControl Manager.</value>
@@ -7785,5 +7758,23 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ancla la aplicación al menú Inicio para acceder fácilmente.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>Examinar archivos</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examinar archivos</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examinar archivos</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Examinar carpetas</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examinar carpetas</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examinar carpetas</value>
   </data>
 </root>

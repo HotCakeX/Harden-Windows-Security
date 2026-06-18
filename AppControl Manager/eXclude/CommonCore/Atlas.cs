@@ -39,11 +39,6 @@ internal static partial class Atlas
 	// Kernel Mode block rules
 	internal static readonly Uri MSFTRecommendedDriverBlockRulesURL = new("https://aka.ms/VulnerableDriverBlockList");
 
-	// Storing the path to the Code Integrity Schema XSD file
-	internal static readonly string CISchemaPath = Path.Join(
-		Environment.GetEnvironmentVariable("SystemDrive") + @"\",
-		"Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
-
 	// The link to the file that contains the download link for the latest version of the AppControl Manager
 	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt");
 
@@ -61,7 +56,6 @@ internal static partial class Atlas
 	// The filters for the file pickers dialogs to select files based on specific extensions
 	internal const string XMLFilePickerFilter = "XML file|*.xml";
 	internal const string ZIPFilePickerFilter = "ZIP file|*.zip";
-	internal const string XSDFilePickerFilter = "XSD file|*.xsd";
 	internal const string XMLAndCIPFilePickerFilter = "XML and CIP files (*.xml;*.cip)|*.xml;*.cip";
 	internal const string AnyFilePickerFilter = "Any file (*.*)|*.*";
 	internal const string ExecutablesPickerFilter = "Executable file|*.exe";

@@ -44,7 +44,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	// ------------ AppIDTags ------------
 	internal GridLength AppIDTagsColumnWidth1 { get; set => SP(ref field, value); }
 	internal GridLength AppIDTagsColumnWidth2 { get; set => SP(ref field, value); }
-	internal GridLength AppIDTagsColumnWidth3 { get; set => SP(ref field, value); }
 
 
 	#endregion
@@ -56,7 +55,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	internal readonly ObservableCollection<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesCollection = [];
 	internal readonly List<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesCollectionList = [];
 
-	internal readonly ObservableCollection<PolicyEditor.AppIDTagsWithContext> AppIDTagsCollection = [];
+	internal readonly ObservableCollection<AppIDTag> AppIDTagsCollection = [];
 
 	/// <summary>
 	/// To store Policy Settings, bound to the UI List View.
@@ -256,25 +255,23 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// For AppIDTags collection and list view.
 	/// Calculates the maximum required width for each column (including header text).
+	/// </summary>
 	private void CalculateAppIDTagsListViewColumnWidths()
 	{
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("KeyHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("ValueHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("ContextHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
-		foreach (PolicyEditor.AppIDTagsWithContext item in AppIDTagsCollection)
+		foreach (AppIDTag item in AppIDTagsCollection)
 		{
-			maxWidth1 = ListViewHelper.MeasureText(item.AppIDTag.Key, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.AppIDTag.Value, maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.Context.ToString(), maxWidth3);
+			maxWidth1 = ListViewHelper.MeasureText(item.Key, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.Value, maxWidth2);
 		}
 
 		// Set the column width properties.
 		AppIDTagsColumnWidth1 = new(maxWidth1);
 		AppIDTagsColumnWidth2 = new(maxWidth2);
-		AppIDTagsColumnWidth3 = new(maxWidth3);
 	}
 
 	/// <summary>
@@ -329,8 +326,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			HashSet<AllowRule> allowRules = [];
 			List<FileRuleRef> kernelModeFileRulesRefs = [];
 			List<FileRuleRef> userModeFileRulesRefs = [];
-			AppIDTags? userModeAppIDTags = null;
-			AppIDTags? kernelModeAppIDTags = null;
+			AppIDTags? AppIDTags = null;
 
 			await Task.Run(() =>
 			{
@@ -371,8 +367,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					ref SignerCollectionCol,
 					ref kernelModeFileRulesRefs,
 					ref userModeFileRulesRefs,
-					ref userModeAppIDTags,
-					ref kernelModeAppIDTags);
+					ref AppIDTags);
 			});
 
 			await Atlas.AppDispatcher.EnqueueAsync(() =>
@@ -653,17 +648,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				}
 
 
-				// Populate the AppIDTags collection UI-bound collection
-
-
-				foreach (AppIDTag item in CollectionsMarshal.AsSpan(userModeAppIDTags?.AppIDTag))
+				// Populate the AppIDTags collection UI-bound collection.
+				// AppID tags are only supported for user-mode signing scenarios, so kernel-mode tags are intentionally ignored.
+				foreach (AppIDTag item in CollectionsMarshal.AsSpan(AppIDTags?.AppIDTag))
 				{
-					AppIDTagsCollection.Add(new(context: SSType.UserMode, appIDTag: item));
-				}
-
-				foreach (AppIDTag item in CollectionsMarshal.AsSpan(kernelModeAppIDTags?.AppIDTag))
-				{
-					AppIDTagsCollection.Add(new(context: SSType.KernelMode, appIDTag: item));
+					AppIDTagsCollection.Add(item);
 				}
 
 				CalculateAppIDTagsListViewColumnWidths();
@@ -919,8 +908,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				HashSet<DeniedSigner> kernelModeDeniedSigners = new(new DeniedSignerComparer());
 				List<SupplementalPolicySigner> supplementalPolicySignersCol = [];
 				List<UpdatePolicySigner> updatePolicySignersCol = [];
-				AppIDTags? userModeAppIDTags = null;
-				AppIDTags? kernelModeAppIDTags = null;
+				AppIDTags? appIDTags = null;
 
 				// Collecting the data from the FileRulesCollectionList that is the backing list of the ObservableCollection
 				// So that the search feature won't affect what will be added to the policy
@@ -1286,58 +1274,28 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				#region AppID Tags gathering from UI collection
 
-				List<AppIDTag> userModeAppIDTagsCollection = [];
-				List<AppIDTag> kernelModeAppIDTagsCollection = [];
-
+				List<AppIDTag> appIDTagsCollection = [];
 				HashSet<string> currentTagKeysUserMode = new(StringComparer.Ordinal);
 
-				HashSet<string> currentTagKeysKernelMode = new(StringComparer.Ordinal);
-
 				SigningScenario? umciScenario = SelectedPolicy.PolicyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 12);
-				SigningScenario? kmciScenario = SelectedPolicy.PolicyObj.SigningScenarios?.FirstOrDefault(s => s.Value == 131);
 
-				// Collect AppIDTags from the UI collection for each signing scenario
-				foreach (PolicyEditor.AppIDTagsWithContext tagPackage in AppIDTagsCollection)
+				// Collect AppIDTags from the UI collection for the user-mode signing scenario only.
+				foreach (AppIDTag appIDTag in AppIDTagsCollection)
 				{
-					// User-Mode Signing Scenario
-					if (tagPackage.Context is SSType.UserMode)
+					// Ensure only unique keys for user-mode will be in the policy.
+					if (currentTagKeysUserMode.Add(appIDTag.Key))
 					{
-						// Ensure only Unique keys for User-mode will be in the policy.
-						if (currentTagKeysUserMode.Add(tagPackage.AppIDTag.Key))
-						{
-							userModeAppIDTagsCollection.Add(tagPackage.AppIDTag);
-						}
-					}
-
-					// kernel-Mode Signing Scenario
-					else if (tagPackage.Context is SSType.KernelMode)
-					{
-						// Ensure only Unique keys for Kernel-mode will be in the policy.
-						if (currentTagKeysKernelMode.Add(tagPackage.AppIDTag.Key))
-						{
-							kernelModeAppIDTagsCollection.Add(tagPackage.AppIDTag);
-						}
+						appIDTagsCollection.Add(appIDTag);
 					}
 				}
 
-
-				if (userModeAppIDTagsCollection.Count > 0)
+				if (appIDTagsCollection.Count > 0)
 				{
-					// Assign the results to the Ref vars
-					userModeAppIDTags = new()
+					// Assign the results to the Ref vars.
+					appIDTags = new()
 					{
 						EnforceDLL = umciScenario?.AppIDTags?.EnforceDLL, // Assign from the loaded policy.
-						AppIDTag = userModeAppIDTagsCollection
-					};
-				}
-
-				if (kernelModeAppIDTagsCollection.Count > 0)
-				{
-					// Assign the results to the Ref vars
-					kernelModeAppIDTags = new()
-					{
-						EnforceDLL = kmciScenario?.AppIDTags?.EnforceDLL, // Assign from the loaded policy.
-						AppIDTag = kernelModeAppIDTagsCollection
+						AppIDTag = appIDTagsCollection
 					};
 				}
 
@@ -1360,8 +1318,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				   kernelModeFileRulesRefs,
 				   userModeFileRulesRefs,
 				   _policySettings,
-				   userModeAppIDTags,
-				   kernelModeAppIDTags
+				   appIDTags
 				   );
 
 				// Save the policy to the XML file path
@@ -1652,7 +1609,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal void AppIDTagsListView_DeleteItems(object sender, RoutedEventArgs e)
 	{
-		if (sender is FrameworkElement { DataContext: PolicyEditor.AppIDTagsWithContext tag })
+		if (sender is FrameworkElement { DataContext: AppIDTag tag })
 		{
 			_ = AppIDTagsCollection.Remove(tag);
 		}
@@ -1741,10 +1698,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		if (string.IsNullOrWhiteSpace(NewAppIDTagKey) || string.IsNullOrWhiteSpace(NewAppIDTagValue)) return;
 
-		PolicyEditor.AppIDTagsWithContext newTag = new(
-			context: SSType.UserMode,
-			appIDTag: new(key: NewAppIDTagKey, value: NewAppIDTagValue)
-		);
+		AppIDTag newTag = new(key: NewAppIDTagKey, value: NewAppIDTagValue);
 
 		AppIDTagsCollection.Add(newTag);
 

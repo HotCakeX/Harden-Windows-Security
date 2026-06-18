@@ -40,7 +40,6 @@ using System.Collections.ObjectModel;
 using CommonCore.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.WindowComponents;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using CommonCore.IncrementalCollection;
 namespace AppControlManager.ViewModels;
@@ -512,17 +511,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal readonly List<string> FontFamilies = [];
 
 #if APP_CONTROL_MANAGER
-
-	/// <summary>
-	/// Opens a file picker for Code Integrity Schema path.
-	/// </summary>
-	internal void BrowseForCISchemaPath()
-	{
-		string? path = FileDialogHelper.ShowFilePickerDialog(Atlas.XSDFilePickerFilter);
-
-		if (path is not null)
-			Atlas.Settings.CiPolicySchemaPath = path;
-	}
 
 	internal string? CertificatePathTextBox { get; set => SP(ref field, value); }
 

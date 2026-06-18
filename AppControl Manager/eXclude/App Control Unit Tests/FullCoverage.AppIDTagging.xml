@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" FriendlyName="Full Coverage AppID Tagging Policy" PolicyType="AppID Tagging Policy">
+  <VersionEx>1.0.0.0</VersionEx>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <PolicyID>{33333333-3333-3333-3333-333333333333}</PolicyID>
+  <BasePolicyID>{33333333-3333-3333-3333-333333333333}</BasePolicyID>
+  <Rules>
+    <Rule><Option>Enabled:Unsigned System Integrity Policy</Option></Rule>
+  </Rules>
+  <Signers>
+    <Signer ID="ID_SIGNER_A_APPID" Name="AppID Signer">
+      <CertRoot Type="TBS" Value="44556677" />
+    </Signer>
+  </Signers>
+  <SigningScenarios>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_APPID_WINDOWS" FriendlyName="AppID User Mode Scenario">
+      <ProductSigners>
+        <AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_APPID" /></AllowedSigners>
+      </ProductSigners>
+      <AppIDTags EnforceDLL="true">
+        <AppIDTag Key="AppId.Tag.One" Value="AppId.Value.One" />
+        <AppIDTag Key="AppId.Tag.Two" Value="AppId.Value.Two" />
+      </AppIDTags>
+    </SigningScenario>
+  </SigningScenarios>
+</SiPolicy>

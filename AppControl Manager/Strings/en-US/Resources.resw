@@ -3085,9 +3085,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="FileNotExists" xml:space="preserve">
     <value>The file does not exist.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>The Code Integrity Schema file could not be found on the system, most likely because this is a Home edition of the OS. Please navigate to the Settings page to browse for it manually.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>Invalid XML: Missing root element.</value>
     <comment>App Manifest Validation</comment>
@@ -3465,30 +3462,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b has been deployed and policies refreshed.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for the Code Integrity Schema XSD file.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for the Code Integrity Schema XSD file.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>Browse</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for the Code Integrity Schema XSD file.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for the Code Integrity Schema XSD file.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>Custom Schema Path</value>
-  </data>
-    <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Browse for a custom location for the Code Integrity Schema XSD file.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>Code Integrity Schema Path Override</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Opens the Microsoft Store mini page where you can rate and optionally write a review for the AppControl Manager.</value>
@@ -7785,5 +7758,23 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pin the app to the Start menu for easy access.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>Browse Files</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for files</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for files</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Browse Folders</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for Folders</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for Folders</value>
   </data>
 </root>

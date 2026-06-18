@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using AppControlManager.Main;
@@ -78,5 +79,90 @@ internal static class Management
 		xmlObj.Save(filePath);
 		CiPolicyTest.TestCiPolicy(filePath);
 	}
+
+	// For Unit testing
+
+#if DEBUG
+
+	/// <summary>
+	/// Verifies every SiPolicy XML file in a directory by using the existing XML validation,
+	/// custom XML deserialization, XML to CIP conversion, CIP to XML conversion, custom XML serialization,
+	/// and stable CIP regeneration logic. A temporary working directory is created and deleted automatically.
+	/// </summary>
+	/// <param name="policyDirectoryPath">Directory that contains SiPolicy XML files.</param>
+	internal static void VerifyPolicyXmlDirectory(string policyDirectoryPath)
+	{
+		string temporaryDirectoryPath = Path.Combine(Path.GetTempPath(), $"SiPolicyXmlVerification_{Guid.NewGuid():N}");
+
+		try
+		{
+			_ = Directory.CreateDirectory(temporaryDirectoryPath);
+
+			foreach (string policyXmlFile in (FileUtility.GetFilesFast([policyDirectoryPath], null, [".xml"])).Item1)
+			{
+				VerifyPolicyXmlRoundTrip(policyXmlFile, temporaryDirectoryPath);
+			}
+		}
+		finally
+		{
+			if (Directory.Exists(temporaryDirectoryPath))
+			{
+				Directory.Delete(temporaryDirectoryPath, true);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Verifies XML validation, custom XML deserialization, XML to CIP conversion, CIP to XML conversion,
+	/// round-trip XML validation, and stable canonical CIP regeneration for one policy XML file.
+	/// </summary>
+	/// <param name="policyXmlPath">Policy XML file to verify.</param>
+	/// <param name="temporaryDirectoryPath">Temporary directory where verification artifacts are written.</param>
+	private static void VerifyPolicyXmlRoundTrip(string policyXmlPath, string temporaryDirectoryPath)
+	{
+		string policyName = Path.GetFileNameWithoutExtension(policyXmlPath);
+		string firstBinaryPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.First.cip");
+		string secondBinaryPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.Second.cip");
+		string firstRoundTripXmlPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.RoundTrip.xml");
+		string secondRoundTripXmlPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.RoundTrip.FixedPoint.xml");
+
+		CiPolicyTest.TestCiPolicy(policyXmlPath);
+
+		SiPolicy firstPolicy = CustomDeserialization.DeserializeSiPolicy(policyXmlPath, null);
+		byte[] firstBinary = ConvertXMLToBinary(firstPolicy);
+		File.WriteAllBytes(firstBinaryPath, firstBinary);
+
+		SiPolicy firstReversedPolicy = BinaryOpsReverse.ConvertBinaryToXmlFile(firstBinaryPath);
+		XmlDocument firstRoundTripXml = CustomSerialization.CreateXmlFromSiPolicy(firstReversedPolicy);
+		firstRoundTripXml.Save(firstRoundTripXmlPath);
+		CiPolicyTest.TestCiPolicy(firstRoundTripXmlPath);
+
+		SiPolicy secondPolicy = CustomDeserialization.DeserializeSiPolicy(firstRoundTripXmlPath, null);
+		byte[] secondBinary = ConvertXMLToBinary(secondPolicy);
+		File.WriteAllBytes(secondBinaryPath, secondBinary);
+
+		SiPolicy secondReversedPolicy = BinaryOpsReverse.ConvertBinaryToXmlFile(secondBinaryPath);
+		XmlDocument secondRoundTripXml = CustomSerialization.CreateXmlFromSiPolicy(secondReversedPolicy);
+		secondRoundTripXml.Save(secondRoundTripXmlPath);
+		CiPolicyTest.TestCiPolicy(secondRoundTripXmlPath);
+
+		SiPolicy thirdPolicy = CustomDeserialization.DeserializeSiPolicy(secondRoundTripXmlPath, null);
+		byte[] thirdBinary = ConvertXMLToBinary(thirdPolicy);
+
+		if (secondBinary.Length != thirdBinary.Length)
+		{
+			throw new InvalidOperationException($"The policy '{policyName}' failed canonical binary stability verification because the binary lengths differ. Second: {secondBinary.Length}, third: {thirdBinary.Length}.");
+		}
+
+		for (int index = 0; index < secondBinary.Length; index++)
+		{
+			if (secondBinary[index] != thirdBinary[index])
+			{
+				throw new InvalidOperationException($"The policy '{policyName}' failed canonical binary stability verification at byte offset {index}.");
+			}
+		}
+	}
+
+#endif
 
 }

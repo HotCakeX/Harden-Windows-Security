@@ -156,6 +156,9 @@
         <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
         <AnalysisModePerformance>All</AnalysisModePerformance>
         <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
+        <AnalysisLevelMaintainability>All</AnalysisLevelMaintainability>
+        <AnalysisLevelSecurity>All</AnalysisLevelSecurity>
+        <AnalysisLevelReliability>All</AnalysisLevelReliability>
 
     </PropertyGroup>
 

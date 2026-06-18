@@ -32,15 +32,7 @@ internal static class CiPolicyTest
 	internal static void TestCiPolicy(string xmlFilePath)
 	{
 		// Get the Code Integrity Schema file path
-		string schemaPath = Atlas.CISchemaPath;
-
-		// Make sure the schema file exists
-		if (!File.Exists(schemaPath))
-		{
-			schemaPath = string.IsNullOrEmpty(Atlas.Settings.CiPolicySchemaPath) || !File.Exists(Atlas.Settings.CiPolicySchemaPath)
-				? throw new FileNotFoundException(Atlas.GetStr("CISchemaNotFound"), schemaPath)
-				: Atlas.Settings.CiPolicySchemaPath;
-		}
+		string schemaPath = Path.Join(AppContext.BaseDirectory, "XSDSchemas", "cipolicy.xsd");
 
 		// Make sure the input XML file exists
 		if (!File.Exists(xmlFilePath))

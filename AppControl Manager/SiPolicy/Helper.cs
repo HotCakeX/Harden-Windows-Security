@@ -345,9 +345,18 @@ internal static class Helper
 	{
 		if (siPolicy.SigningScenarios is null) return;
 
+		HashSet<uint> scenarioValues = new(siPolicy.SigningScenarios.Count);
 		for (int i = 0; i < siPolicy.SigningScenarios.Count; i++)
 		{
-			scenarioIndex2Value[i] = siPolicy.SigningScenarios[i].Value;
+			uint scenarioValue = siPolicy.SigningScenarios[i].Value;
+			// The binary format references SigningScenarios by index, duplicate Value fields must be rejected.
+			// Validate this before writing so direct SiPolicy callers get the same protection as XML based callers.
+			if (!scenarioValues.Add(scenarioValue))
+			{
+				throw new InvalidOperationException($"Duplicate SigningScenario value detected: {scenarioValue}.");
+			}
+
+			scenarioIndex2Value[i] = scenarioValue;
 		}
 	}
 

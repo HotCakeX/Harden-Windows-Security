@@ -3085,9 +3085,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="FileNotExists" xml:space="preserve">
     <value>Die Datei ist nicht vorhanden.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>Die Datei des Codeintegritätsschemas konnte auf dem System nicht gefunden werden, vermutlich weil es sich um die Home-Edition des Betriebssystems handelt. Navigieren Sie bitte zur Einstellungsseite, um manuell danach zu suchen.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>Ungültiges XML: Stammelement fehlt.</value>
     <comment>App Manifest Validation</comment>
@@ -3465,30 +3462,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b wurde bereitgestellt und die Richtlinien wurden aktualisiert.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>Durchsuchen</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>Benutzerdefinierter Schemapfad</value>
-  </data>
-    <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Nach einem benutzerdefinierten Speicherort für die XSD-Datei des Codeintegritätsschemas suchen.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>Codeintegritätsschema – Pfadüberschreibung</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Öffnet die Mini-Seite im Microsoft Store, auf der Sie den AppControl Manager bewerten und optional eine Rezension schreiben können.</value>
@@ -7785,5 +7758,23 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Heften Sie die App für einfachen Zugriff an das Startmenü an.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>Dateien durchsuchen</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nach Dateien suchen</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Nach Dateien suchen</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Ordner durchsuchen</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nach Ordnern suchen</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Nach Ordnern suchen</value>
   </data>
 </root>

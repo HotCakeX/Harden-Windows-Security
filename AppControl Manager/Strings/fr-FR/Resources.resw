@@ -3085,9 +3085,6 @@
   <data name="FileNotExists" xml:space="preserve">
     <value>Le fichier n'existe pas.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>Le fichier de schéma d'intégrité du code est introuvable sur le système, probablement parce qu'il s'agit d'une édition Famille du système d'exploitation. Veuillez naviguer vers la page Paramètres pour le rechercher manuellement.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>XML invalide : élément racine manquant.</value>
     <comment>App Manifest Validation</comment>
@@ -3465,30 +3462,6 @@
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b a été déployé et les politiques actualisées.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rechercher le fichier XSD de schéma d'intégrité du code.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Rechercher le fichier XSD de schéma d'intégrité du code.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>Parcourir</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rechercher le fichier XSD de schéma d'intégrité du code.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Rechercher le fichier XSD de schéma d'intégrité du code.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>Chemin de Schéma Personnalisé</value>
-  </data>
-    <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Rechercher un emplacement personnalisé pour le fichier XSD de schéma d'intégrité du code.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>Remplacement du Chemin du Schéma d'Intégrité du Code</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ouvre la mini page du Microsoft Store où vous pouvez noter et éventuellement rédiger un avis pour AppControl Manager.</value>
@@ -7785,5 +7758,23 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Épinglez l’application au menu Démarrer pour un accès facile.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>Parcourir les fichiers</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Parcourir les fichiers</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Parcourir les fichiers</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>Parcourir les dossiers</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Parcourir les dossiers</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Parcourir les dossiers</value>
   </data>
 </root>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+    targetNamespace="urn:schemas-microsoft-com:windows-defender-application-control"
+    elementFormDefault="qualified"
+    xmlns="urn:schemas-microsoft-com:windows-defender-application-control"
+    xmlns:ps="urn:schemas-microsoft-com:windows-defender-application-control"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:simpleType name="SettingType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Bool"/>
+			<xs:enumeration value="StringList"/>
+			<xs:enumeration value="StringSet"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="SettingDefinition">
+		<xs:attribute name="Name" type="xs:string" use="required" />
+		<xs:attribute name="Type" type="SettingType" use="required" />
+		<xs:attribute name="IgnoreAuditPolicies" type="xs:boolean" use="required" />
+	</xs:complexType>
+
+	<xs:element name="AppManifest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SettingDefinition" type="SettingDefinition" maxOccurs="unbounded" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="Id" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

@@ -45,12 +45,16 @@ internal static class AppUpdate
 
 	private static StoreContext? _StoreContext;
 
+	internal const string UpdateNotificationActionKey = "action";
+	internal const string UpdateNotificationActionValue = "OpenUpdatePage";
+
 	private static void DisplayAvailableUpdateNotifications()
 	{
 		// Display Toast Notification
 		if (AppNotificationManager.IsSupported())
 		{
 			AppNotification notification = new AppNotificationBuilder()
+					.AddArgument(UpdateNotificationActionKey, UpdateNotificationActionValue)
 					.AddText("New Update Available")
 					.AddText("There is a new update available for the app.")
 					.SetAudioEvent(AppNotificationSoundEvent.Reminder)

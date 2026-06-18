@@ -75,14 +75,8 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 		hash.Add(signer.CertOemID?.Value, StringComparer.OrdinalIgnoreCase);
 		hash.Add(signer.CertIssuer?.Value, StringComparer.OrdinalIgnoreCase);
 
-		// Include EKU Values
-		foreach (EKU eku in CollectionsMarshal.AsSpan(obj.Ekus))
-		{
-			if (!eku.Value.IsEmpty)
-			{
-				hash.AddBytes(eku.Value.Span);
-			}
-		}
+		// Include EKU values using the same set semantics as the equality comparison.
+		Merger.AddEKUValuesToHashCode(ref hash, obj.Ekus);
 
 		return hash.ToHashCode();
 	}

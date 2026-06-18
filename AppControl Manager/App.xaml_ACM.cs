@@ -27,6 +27,7 @@ using AppControlManager.WindowComponents;
 using CommonCore.Taskbar;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
+using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.BadgeNotifications;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
@@ -48,6 +49,7 @@ public sealed partial class App : Application
 	private static string? _cliNavTag;
 
 	private static Type? PageTypeToNavTo;
+	private static bool _appNotificationManagerRegistered;
 
 	/// <summary>
 	/// Invoked when the application is launched.
@@ -73,10 +75,26 @@ public sealed partial class App : Application
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
 
 		string[] possibleArgs = Environment.GetCommandLineArgs();
+		bool launchToUpdatePageFromNotification = false;
 
 		try
 		{
 			AppActivationArguments? activatedEventArgs = null;
+
+			try
+			{
+				if (AppNotificationManager.IsSupported() && !_appNotificationManagerRegistered)
+				{
+					// This must happen before GetActivatedEventArgs for notification activations.
+					AppNotificationManager.Default.NotificationInvoked += App_NotificationInvoked;
+					AppNotificationManager.Default.Register();
+					_appNotificationManagerRegistered = true;
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
 			try
 			{   // This won't work if the app is installed for a user with Standard privileges and then launched as Admin (another user that has Admin privilege).
@@ -88,6 +106,28 @@ public sealed partial class App : Application
 #else
 			catch { }
 #endif
+
+			launchToUpdatePageFromNotification = IsUpdateNotificationActivation(activatedEventArgs);
+
+			try
+			{
+				AppInstance notificationTargetInstance = AppInstance.FindOrRegisterForKey("AppControlManager.NotificationActivation");
+
+				if (notificationTargetInstance.IsCurrent)
+				{
+					notificationTargetInstance.Activated += App_Activated;
+				}
+				else if (launchToUpdatePageFromNotification && activatedEventArgs is not null)
+				{
+					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
+					Environment.Exit(0);
+					return;
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
 			if (activatedEventArgs is not null)
 			{
@@ -148,7 +188,7 @@ public sealed partial class App : Application
 					Logger.Write($"Protocol Activation Detected: {eventArgs?.Uri?.OriginalString}");
 					ParseArgs(possibleArgs, eventArgs?.Uri?.OriginalString);
 				}
-				else
+				else if (!launchToUpdatePageFromNotification)
 				{
 					ParseArgs(possibleArgs, null);
 				}
@@ -200,8 +240,13 @@ public sealed partial class App : Application
 
 		#region Initial navigation and file activation processing
 
+		// App notification activation path
+		if (launchToUpdatePageFromNotification)
+		{
+			await ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePage), null);
+		}
 		// Handle direct file activation
-		if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
+		else if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
 		{
 			Logger.Write(string.Format(Atlas.GetStr("FileActivationLaunchMessage"), _activationFilePath));
 
@@ -324,6 +369,77 @@ public sealed partial class App : Application
 
 		// Startup update check
 		AppUpdate.CheckAtStartup();
+	}
+
+	private static bool IsUpdateNotificationActivation(AppActivationArguments? activationArguments)
+	{
+		if (activationArguments is null)
+		{
+			return false;
+		}
+
+		if (activationArguments.Data is AppNotificationActivatedEventArgs appNotificationArgs)
+		{
+			bool isUpdateAction = appNotificationArgs.Arguments.TryGetValue(AppUpdate.UpdateNotificationActionKey, out string? action) &&
+				string.Equals(action, AppUpdate.UpdateNotificationActionValue, StringComparison.OrdinalIgnoreCase);
+
+			return isUpdateAction ||
+				(!string.IsNullOrWhiteSpace(appNotificationArgs.Argument) &&
+				appNotificationArgs.Argument.Contains($"{AppUpdate.UpdateNotificationActionKey}={AppUpdate.UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase));
+		}
+
+		if (activationArguments.Data is IToastNotificationActivatedEventArgs toastNotificationArgs)
+		{
+			return !string.IsNullOrWhiteSpace(toastNotificationArgs.Argument) &&
+				toastNotificationArgs.Argument.Contains($"{AppUpdate.UpdateNotificationActionKey}={AppUpdate.UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase);
+		}
+
+		return false;
+	}
+
+	private static void App_NotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
+	{
+		bool isUpdateAction = args.Arguments.TryGetValue(AppUpdate.UpdateNotificationActionKey, out string? action) &&
+			string.Equals(action, AppUpdate.UpdateNotificationActionValue, StringComparison.OrdinalIgnoreCase);
+
+		if (!isUpdateAction && !string.IsNullOrWhiteSpace(args.Argument))
+		{
+			isUpdateAction = args.Argument.Contains($"{AppUpdate.UpdateNotificationActionKey}={AppUpdate.UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase);
+		}
+
+		if (isUpdateAction)
+		{
+			QueueUpdatePageNavigation();
+		}
+	}
+
+	private static void App_Activated(object? sender, AppActivationArguments args)
+	{
+		if (IsUpdateNotificationActivation(args))
+		{
+			QueueUpdatePageNavigation();
+		}
+	}
+
+	private static void QueueUpdatePageNavigation()
+	{
+		bool wasQueued = Atlas.AppDispatcher.TryEnqueue(async () =>
+		{
+			try
+			{
+				MainWindow?.Activate();
+				await ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePage), null);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		});
+
+		if (!wasQueued)
+		{
+			Logger.Write("Failed to queue update page navigation from notification activation.");
+		}
 	}
 
 	/// <summary>

@@ -103,6 +103,18 @@
       </uap:VisualElements>
 
       <Extensions>
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <!--The GUID is unique to this app-->
+          <!-- https://learn.microsoft.com/en-us/windows/apps/develop/notifications/app-notifications/app-notifications-quickstart -->
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="019EDBF2-C28D-7693-BB1E-44EC0D96DCEF" />
+        </desktop:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="HardenSystemSecurity.exe" Arguments="----AppNotificationActivated:" DisplayName="Harden System Security">
+              <com:Class Id="019EDBF2-C28D-7693-BB1E-44EC0D96DCEF" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
 
         <uap3:Extension Category="windows.appExecutionAlias" Executable="HardenSystemSecurity.exe" EntryPoint="Windows.FullTrustApplication">
           <uap3:AppExecutionAlias>

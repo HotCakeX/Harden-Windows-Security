@@ -3085,9 +3085,6 @@
   <data name="FileNotExists" xml:space="preserve">
     <value>ഫയൽ നിലവിലില്ല.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ കോഡ് ഇന്റഗ്രിറ്റി സ്കീമ ഫയൽ കണ്ടെത്താൻ കഴിഞ്ഞില്ല, മിക്കവാറും ഇത് ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിന്റെ ഹോം പതിപ്പ് ആയതുകൊണ്ടാകാം. ദയവായി ക്രമീകരണ പേജിലേക്ക് നാവിഗേറ്റ് ചെയ്ത് അത് സ്വമേധയാ ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <comment>App Manifest Validation</comment>
     <value>അസാധുവായ XML: റൂട്ട് ഘടകം ലഭ്യമല്ല.</value>
@@ -3465,30 +3462,6 @@
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b വിന്യസിക്കുകയും നയങ്ങൾ പുതുക്കുകയും ചെയ്തു.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>കോഡ് ഇന്റഗ്രിറ്റി സ്കീമ XSD ഫയലിനായി ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>കോഡ് ഇന്റഗ്രിറ്റി സ്കീമ XSD ഫയലിനായി ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>ബ്രൗസ് ചെയ്യുക</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>കോഡ് ഇന്റഗ്രിറ്റി സ്കീമ XSD ഫയലിനായി ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>കോഡ് ഇന്റഗ്രിറ്റി സ്കീമ XSD ഫയലിനായി ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>ഇഷ്ടാനുസൃത സ്കീമ പാത</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>കോഡ് ഇന്റഗ്രിറ്റി സ്കീമ XSD ഫയലിനായി ഒരു ഇഷ്ടാനുസൃത ലൊക്കേഷനായി ബ്രൗസ് ചെയ്യുക.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>കോഡ് ഇന്റഗ്രിറ്റി സ്കീമ പാത ഓവർറൈഡ്</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>ആപ്പ്കൺട്രോൾ മാനേജറിനായി നിങ്ങൾക്ക് റേറ്റ് ചെയ്യാനും ഓപ്ഷണലായി ഒരു അവലോകനം എഴുതാനും കഴിയുന്ന മൈക്രോസോഫ്റ്റ് സ്റ്റോർ മിനി പേജ് തുറക്കുന്നു.</value>
@@ -7785,5 +7758,23 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>എളുപ്പത്തിലുള്ള ആക്‌സസിനായി ആപ്പ് Start മെനുവിലേക്ക് പിൻ ചെയ്യുക.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയലുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക</value>
   </data>
 </root>

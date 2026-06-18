@@ -77,7 +77,8 @@ internal enum OptionType : uint
 	EnabledManagedInstaller = 134217728U,
 	EnabledUpdatePolicyNoReboot = 268435456U,
 	EnabledConditionalWindowsLockdownPolicy = 536870912U,
-	DisabledDefaultWindowsCertificateRemapping
+	// This option is represented in the binary policy as a secure setting, not as a policy option flag.
+	DisabledDefaultWindowsCertificateRemapping = 0U
 }
 
 internal sealed class SettingValueType(object item)
@@ -100,6 +101,12 @@ internal sealed class Setting(SettingValueType value, string provider, string ke
 internal sealed class CertEKU(string id)
 {
 	internal string ID => id;
+	internal CertEKUConditionType? Condition { get; set; }
+}
+
+internal enum CertEKUConditionType
+{
+	Except,
 }
 
 internal sealed class CertOemID(string value)
@@ -192,6 +199,70 @@ internal sealed class FileRuleRef(string ruleID)
 	internal string RuleID => ruleID;
 }
 
+internal sealed class ArtifactRuleRef(string ruleID)
+{
+	internal string RuleID => ruleID;
+}
+
+internal sealed class ArtifactRulesRef(List<ArtifactRuleRef> artifactRuleRef)
+{
+	internal List<ArtifactRuleRef> ArtifactRuleRef => artifactRuleRef;
+	internal string? Workaround { get; set; }
+}
+
+internal sealed class ArtifactSigners
+{
+	internal AllowedSigners? AllowedSigners { get; set; }
+	internal DeniedSigners? DeniedSigners { get; set; }
+	internal ArtifactRulesRef? ArtifactRulesRef { get; set; }
+}
+
+internal enum ArtifactTypeType
+{
+	CIM,
+	Catalog,
+}
+
+internal enum ArtifactActionType
+{
+	Deny,
+	Allow,
+}
+
+internal enum ItemChoiceType
+{
+	sha256,
+	sha384,
+	sha512,
+}
+
+internal sealed class digestType(ReadOnlyMemory<byte> item, ItemChoiceType itemElementName)
+{
+	/// <summary>
+	/// Holds hexBinary for SHA256, SHA384, or SHA512 artifact hashes.
+	/// </summary>
+	internal ReadOnlyMemory<byte> Item { get; set; } = item;
+	internal ItemChoiceType ItemElementName { get; set; } = itemElementName;
+}
+
+internal sealed class ArtifactHashType(digestType hash)
+{
+	internal digestType Hash { get; set; } = hash;
+}
+
+internal sealed class ArtifactRule(string id, ArtifactTypeType artifactType, ArtifactActionType action)
+{
+	internal string ID { get; set; } = id;
+	internal ArtifactTypeType ArtifactType { get; set; } = artifactType;
+	internal ArtifactActionType Action { get; set; } = action;
+	internal string? FriendlyName { get; set; }
+	internal string? ArtifactName { get; set; }
+	internal string? ArtifactDescription { get; set; }
+	internal string? MinimumVersion { get; set; } = "0.0.0.0";
+	internal string? MaximumVersion { get; set; } = "65535.65535.65535.65535";
+	internal ArtifactHashType? ArtifactHash { get; set; }
+}
+
 internal sealed class TestSigners
 {
 	internal AllowedSigners? AllowedSigners { get; set; }
@@ -239,6 +310,8 @@ internal sealed class EKU(string id, ReadOnlyMemory<byte> value, string? friendl
 	internal ReadOnlyMemory<byte> Value => value;
 
 	internal string? FriendlyName => friendlyName;
+
+	internal string? OID { get; set; }
 }
 
 internal sealed class Allow(string id)
@@ -413,6 +486,8 @@ internal sealed class Signer(string id, string name, CertRoot certRoot)
 
 	internal List<FileAttribRef>? FileAttribRef { get; set; }
 
+	internal List<ArtifactRuleRef>? ArtifactRuleRef { get; set; }
+
 	internal string Name { get; set; } = name;
 
 	internal string ID { get; set; } = id;
@@ -423,6 +498,8 @@ internal sealed class Signer(string id, string name, CertRoot certRoot)
 internal sealed class SigningScenario(string id, byte value, ProductSigners productSigners)
 {
 	internal ProductSigners ProductSigners => productSigners;
+
+	internal ArtifactSigners? ArtifactSigners { get; set; }
 
 	internal TestSigners? TestSigners { get; set; }
 
@@ -469,6 +546,8 @@ internal sealed class SiPolicy(
 	/// <see cref="FileAttrib"/>
 	/// <see cref="FileRule"/>
 	internal List<object>? FileRules { get; set; }
+
+	internal List<ArtifactRule>? ArtifactRules { get; set; }
 
 	internal List<Signer>? Signers { get; set; }
 

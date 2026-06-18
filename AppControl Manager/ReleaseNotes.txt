@@ -1,3 +1,15 @@
 * Applied lots of code quality and performance improvements in multiple phases to the entire code base, guided by the GitHub advanced CodeQL. The details are available on GitHub.
 
 * Added a new section in the Settings page where you can pin the app to taskbar and start menu for quick access.
+
+* AppControl Manager now fully supports reverse decoding, forward encoding and processing of the newest policy types (version 11). They include support for Artifact Signers and conditional EKUs (documents for them coming out soon). Application Control for Business (formerly known as WDAC) is actively being developed by Microsoft, and the new policy types are expected to be released in the near future in the stable OS build. AppControl Manager is ready for them.
+
+* AppControl Manager now fully supports Windows Home editions and no longer requires you to supply App Control schema manually on Home editions.
+
+* The import and export of app settings has been improved. You can now import partial setting backup files to only restore specific settings instead of all settings.
+
+* Updated the signing documentation on GitHub Wiki: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate#signing
+
+* Reduced the noise in the logs by no longer printing an error when CPU thermal counters are unavailable when the home page queries them.
+
+* When you click on the toast notification that says a new app update is available, you will be redirected to the update page.

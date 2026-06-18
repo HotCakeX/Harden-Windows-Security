@@ -95,6 +95,8 @@ internal static class CustomSerialization
 					ekuElement.SetAttribute("FriendlyName", eku.FriendlyName);
 
 				ekuElement.SetAttribute("Value", Convert.ToHexString(eku.Value.Span));
+				if (!string.IsNullOrEmpty(eku.OID))
+					ekuElement.SetAttribute("OID", eku.OID);
 				_ = ekusElement.AppendChild(ekuElement);
 			}
 		}
@@ -127,6 +129,41 @@ internal static class CustomSerialization
 			}
 		}
 
+		// ArtifactRules
+		if (policy.ArtifactRules?.Count > 0)
+		{
+			XmlElement artifactRulesElement = xmlDoc.CreateElement("ArtifactRules", Atlas.SiPolicyNamespace);
+			_ = root.AppendChild(artifactRulesElement);
+
+			foreach (ArtifactRule artifactRule in CollectionsMarshal.AsSpan(policy.ArtifactRules))
+			{
+				XmlElement artifactRuleElement = xmlDoc.CreateElement("ArtifactRule", Atlas.SiPolicyNamespace);
+				artifactRuleElement.SetAttribute("ID", artifactRule.ID);
+				artifactRuleElement.SetAttribute("ArtifactType", artifactRule.ArtifactType.ToString());
+				artifactRuleElement.SetAttribute("Action", artifactRule.Action.ToString());
+				if (!string.IsNullOrEmpty(artifactRule.FriendlyName)) artifactRuleElement.SetAttribute("FriendlyName", artifactRule.FriendlyName);
+				if (!string.IsNullOrEmpty(artifactRule.ArtifactName)) artifactRuleElement.SetAttribute("ArtifactName", artifactRule.ArtifactName);
+				if (!string.IsNullOrEmpty(artifactRule.ArtifactDescription)) artifactRuleElement.SetAttribute("ArtifactDescription", artifactRule.ArtifactDescription);
+				if (!string.IsNullOrEmpty(artifactRule.MinimumVersion) && !string.Equals(artifactRule.MinimumVersion, "0.0.0.0", StringComparison.OrdinalIgnoreCase))
+					artifactRuleElement.SetAttribute("MinimumVersion", artifactRule.MinimumVersion);
+				if (!string.IsNullOrEmpty(artifactRule.MaximumVersion) && !string.Equals(artifactRule.MaximumVersion, Helper.DefaultMaxVersion, StringComparison.OrdinalIgnoreCase))
+					artifactRuleElement.SetAttribute("MaximumVersion", artifactRule.MaximumVersion);
+
+				if (artifactRule.ArtifactHash?.Hash is not null && !artifactRule.ArtifactHash.Hash.Item.IsEmpty)
+				{
+					XmlElement artifactHashElement = xmlDoc.CreateElement("ArtifactHash", Atlas.SiPolicyNamespace);
+					XmlElement hashElement = xmlDoc.CreateElement("Hash", Atlas.SiPolicyNamespace);
+					XmlElement digestElement = xmlDoc.CreateElement(artifactRule.ArtifactHash.Hash.ItemElementName.ToString(), Atlas.SiPolicyNamespace);
+					digestElement.InnerText = Convert.ToHexString(artifactRule.ArtifactHash.Hash.Item.Span);
+					_ = hashElement.AppendChild(digestElement);
+					_ = artifactHashElement.AppendChild(hashElement);
+					_ = artifactRuleElement.AppendChild(artifactHashElement);
+				}
+
+				_ = artifactRulesElement.AppendChild(artifactRuleElement);
+			}
+		}
+
 		// Signers
 		if (policy.Signers?.Count > 0)
 		{
@@ -141,7 +178,7 @@ internal static class CustomSerialization
 				XmlElement signerElement = xmlDoc.CreateElement("Signer", Atlas.SiPolicyNamespace);
 				signerElement.SetAttribute("ID", signer.ID);
 				signerElement.SetAttribute("Name", signer.Name);
-				if (signer.SignTimeAfter is not null)
+				if (signer.SignTimeAfter is not null && signer.SignTimeAfter.Value != DateTime.MinValue)
 					signerElement.SetAttribute("SignTimeAfter", signer.SignTimeAfter.Value.ToString("o"));
 
 				// CertRoot
@@ -158,6 +195,8 @@ internal static class CustomSerialization
 					{
 						XmlElement certEkuElement = xmlDoc.CreateElement("CertEKU", Atlas.SiPolicyNamespace);
 						certEkuElement.SetAttribute("ID", certEku.ID);
+						if (certEku.Condition is not null)
+							certEkuElement.SetAttribute("Condition", certEku.Condition.Value.ToString());
 						_ = signerElement.AppendChild(certEkuElement);
 					}
 				}
@@ -197,6 +236,17 @@ internal static class CustomSerialization
 				}
 
 				totalValidSignerElements++;
+
+				// ArtifactRuleRef(s)
+				if (signer.ArtifactRuleRef is { Count: > 0 })
+				{
+					foreach (ArtifactRuleRef artifactRuleRef in CollectionsMarshal.AsSpan(signer.ArtifactRuleRef))
+					{
+						XmlElement artifactRuleRefElement = xmlDoc.CreateElement("ArtifactRuleRef", Atlas.SiPolicyNamespace);
+						artifactRuleRefElement.SetAttribute("RuleID", artifactRuleRef.RuleID);
+						_ = signerElement.AppendChild(artifactRuleRefElement);
+					}
+				}
 				_ = signersElement.AppendChild(signerElement);
 			}
 			// Only append the Signers element to the root if it has valid elements and won't be empty
@@ -222,27 +272,65 @@ internal static class CustomSerialization
 				if (!string.IsNullOrEmpty(scenario.InheritedScenarios))
 					scenarioElement.SetAttribute("InheritedScenarios", scenario.InheritedScenarios);
 
-				string? possibleMinimumHashAlgorithm = scenario.MinimumHashAlgorithm.ToString();
-				if (!string.IsNullOrEmpty(possibleMinimumHashAlgorithm))
-					scenarioElement.SetAttribute("MinimumHashAlgorithm", possibleMinimumHashAlgorithm);
+				if (scenario.MinimumHashAlgorithm is { } minimumHashAlgorithm && minimumHashAlgorithm != 0)
+					scenarioElement.SetAttribute("MinimumHashAlgorithm", minimumHashAlgorithm.ToString());
 
 				// ProductSigners
 				XmlElement prodSigners = xmlDoc.CreateElement("ProductSigners", Atlas.SiPolicyNamespace);
 				AppendProductSigners(xmlDoc, prodSigners, scenario.ProductSigners);
 				_ = scenarioElement.AppendChild(prodSigners);
+
+				// ArtifactSigners
+				if (scenario.ArtifactSigners is not null)
+				{
+					XmlElement artifactSignersElement = xmlDoc.CreateElement("ArtifactSigners", Atlas.SiPolicyNamespace);
+
+					ProductSigners artifactProductSigners = new()
+					{
+						AllowedSigners = scenario.ArtifactSigners.AllowedSigners,
+						DeniedSigners = scenario.ArtifactSigners.DeniedSigners
+					};
+					AppendProductSigners(xmlDoc, artifactSignersElement, artifactProductSigners);
+
+					if (scenario.ArtifactSigners.ArtifactRulesRef is not null)
+					{
+						XmlElement artifactRulesRefElement = xmlDoc.CreateElement("ArtifactRulesRef", Atlas.SiPolicyNamespace);
+						if (!string.IsNullOrEmpty(scenario.ArtifactSigners.ArtifactRulesRef.Workaround))
+							artifactRulesRefElement.SetAttribute("Workaround", scenario.ArtifactSigners.ArtifactRulesRef.Workaround);
+
+						foreach (ArtifactRuleRef artifactRuleRef in CollectionsMarshal.AsSpan(scenario.ArtifactSigners.ArtifactRulesRef.ArtifactRuleRef))
+						{
+							XmlElement artifactRuleRefElement = xmlDoc.CreateElement("ArtifactRuleRef", Atlas.SiPolicyNamespace);
+							artifactRuleRefElement.SetAttribute("RuleID", artifactRuleRef.RuleID);
+							_ = artifactRulesRefElement.AppendChild(artifactRuleRefElement);
+						}
+
+						if (artifactRulesRefElement.HasChildNodes)
+							_ = artifactSignersElement.AppendChild(artifactRulesRefElement);
+					}
+
+					if (artifactSignersElement.HasChildNodes)
+						_ = scenarioElement.AppendChild(artifactSignersElement);
+				}
 				// TestSigners
 				if (scenario.TestSigners is not null)
 				{
 					XmlElement testSigners = xmlDoc.CreateElement("TestSigners", Atlas.SiPolicyNamespace);
 					AppendTestSigners(xmlDoc, testSigners, scenario.TestSigners);
-					_ = scenarioElement.AppendChild(testSigners);
+					// Binary reverse conversion can materialize an empty TestSigners object when the CIP section only contains zero counts.
+					// The XML serializer should omit that empty optional section to match the original XML serialization semantics.
+					if (testSigners.HasChildNodes)
+						_ = scenarioElement.AppendChild(testSigners);
 				}
 				// TestSigningSigners
 				if (scenario.TestSigningSigners is not null)
 				{
 					XmlElement testSigningSigners = xmlDoc.CreateElement("TestSigningSigners", Atlas.SiPolicyNamespace);
 					AppendTestSigningSigners(xmlDoc, testSigningSigners, scenario.TestSigningSigners);
-					_ = scenarioElement.AppendChild(testSigningSigners);
+					// Keep the optional TestSigningSigners section out of the XML when it has no serialized children.
+					// This prevents empty elements from being introduced during CIP to XML normalization.
+					if (testSigningSigners.HasChildNodes)
+						_ = scenarioElement.AppendChild(testSigningSigners);
 				}
 				// AppIDTags
 				if (scenario.AppIDTags is not null)
@@ -397,38 +485,37 @@ internal static class CustomSerialization
 		}
 
 		// AppSettings (AppSettingRegion)
-		if (policy.AppSettings is not null)
+		if (policy.AppSettings is { App.Count: > 0 })
 		{
 			XmlElement appSettingsElement = xmlDoc.CreateElement("AppSettings", Atlas.SiPolicyNamespace);
 			_ = root.AppendChild(appSettingsElement);
-			if (policy.AppSettings.App is not null)
+			foreach (AppRoot app in CollectionsMarshal.AsSpan(policy.AppSettings.App))
 			{
-				foreach (AppRoot app in CollectionsMarshal.AsSpan(policy.AppSettings.App))
+				XmlElement appElement = xmlDoc.CreateElement("App", Atlas.SiPolicyNamespace);
+				if (!string.IsNullOrEmpty(app.Manifest))
+					appElement.SetAttribute("Manifest", app.Manifest);
+				if (app.Setting is { Count: > 0 })
 				{
-					XmlElement appElement = xmlDoc.CreateElement("App", Atlas.SiPolicyNamespace);
-					if (!string.IsNullOrEmpty(app.Manifest))
-						appElement.SetAttribute("Manifest", app.Manifest);
-					if (app.Setting is { Count: > 0 })
+					foreach (AppSetting appSetting in CollectionsMarshal.AsSpan(app.Setting))
 					{
-						foreach (AppSetting appSetting in CollectionsMarshal.AsSpan(app.Setting))
-						{
-							XmlElement settingElem = xmlDoc.CreateElement("Setting", Atlas.SiPolicyNamespace);
+						XmlElement settingElem = xmlDoc.CreateElement("Setting", Atlas.SiPolicyNamespace);
+						// Name is an optional XML attribute in the schema, so omit it when the model has no value.
+						if (!string.IsNullOrEmpty(appSetting.Name))
 							settingElem.SetAttribute("Name", appSetting.Name);
-							if (appSetting.Value is { Count: > 0 })
+						if (appSetting.Value is { Count: > 0 })
+						{
+							foreach (string val in CollectionsMarshal.AsSpan(appSetting.Value))
 							{
-								foreach (string val in CollectionsMarshal.AsSpan(appSetting.Value))
+								if (!AppendTextElement(xmlDoc, settingElem, "Value", val))
 								{
-									if (!AppendTextElement(xmlDoc, settingElem, "Value", val))
-									{
-										continue;
-									}
+									continue;
 								}
 							}
-							_ = appElement.AppendChild(settingElem);
 						}
+						_ = appElement.AppendChild(settingElem);
 					}
-					_ = appSettingsElement.AppendChild(appElement);
 				}
+				_ = appSettingsElement.AppendChild(appElement);
 			}
 		}
 

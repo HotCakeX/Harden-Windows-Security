@@ -3085,9 +3085,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="FileNotExists" xml:space="preserve">
     <value>फ़ाइल मौजूद नहीं है।</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>सिस्टम पर Code Integrity स्कीमा फ़ाइल नहीं मिली, संभवतः क्योंकि यह OS का Home संस्करण है। कृपया सेटिंग्स पेज पर जाकर इसे मैन्युअली ब्राउज़ करें।</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>अमान्य XML: रूट तत्व गायब है।</value>
     <comment>ऐप मैनिफेस्ट मान्यता</comment>
@@ -3465,30 +3462,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b तैनात किया गया और नीतियाँ रिफ्रेश हुईं।</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Code Integrity Schema XSD फ़ाइल के लिए ब्राउज़ करें।</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Code Integrity Schema XSD फ़ाइल के लिए ब्राउज़ करें।</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>ब्राउज़</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Code Integrity Schema XSD फ़ाइल के लिए ब्राउज़ करें।</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Code Integrity Schema XSD फ़ाइल के लिए ब्राउज़ करें।</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>कस्टम स्कीमा पथ</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Code Integrity Schema XSD फ़ाइल के लिए कस्टम स्थान ब्राउज़ करें।</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>Code Integrity Schema पथ ओवरराइड</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Microsoft Store का मिनी पेज खोलता है जहाँ आप AppControl Manager के लिए रेट और समीक्षा लिख सकते हैं।</value>
@@ -7785,5 +7758,23 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>आसान पहुँच के लिए ऐप को Start मेनू पर पिन करें.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ाइलें ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>फ़ोल्डर ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ोल्डर ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ोल्डर ब्राउज़ करें</value>
   </data>
 </root>

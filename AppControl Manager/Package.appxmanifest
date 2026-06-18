@@ -103,6 +103,19 @@
 
       <Extensions>
 
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <!--The GUID is unique to this app-->
+          <!-- https://learn.microsoft.com/en-us/windows/apps/develop/notifications/app-notifications/app-notifications-quickstart -->
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="019EDBF4-AAC1-7E12-BE02-2E786236BDD5" />
+        </desktop:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="AppControlManager.exe" Arguments="----AppNotificationActivated:" DisplayName="AppControl Manager">
+              <com:Class Id="019EDBF4-AAC1-7E12-BE02-2E786236BDD5" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+
         <uap3:Extension Category="windows.appExecutionAlias" Executable="AppControlManager.exe" EntryPoint="Windows.FullTrustApplication">
           <uap3:AppExecutionAlias>
             <desktop:ExecutionAlias Alias="AppControl.exe" />

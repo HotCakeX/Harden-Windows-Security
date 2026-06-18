@@ -6,6 +6,7 @@
     xmlns:CommonCore="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:PolicyEditor="using:AppControlManager.PolicyEditor"
+    xmlns:SiPolicy="using:AppControlManager.SiPolicy"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -697,24 +698,21 @@
                                                             <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
                                                             <ColumnDefinition Width="{x:Bind ViewModel.AppIDTagsColumnWidth1, Mode=TwoWay}" MinWidth="50" />
                                                             <ColumnDefinition Width="{x:Bind ViewModel.AppIDTagsColumnWidth2, Mode=TwoWay}" MinWidth="50" />
-                                                            <ColumnDefinition Width="{x:Bind ViewModel.AppIDTagsColumnWidth3, Mode=TwoWay}" MinWidth="50" />
                                                         </Grid.ColumnDefinitions>
 
                                                         <!-- Header TextBlocks -->
                                                         <TextBlock x:Uid="KeyHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                                         <TextBlock x:Uid="ValueHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                                        <TextBlock x:Uid="ContextHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
 
-                                                        <!-- GridSplitters between columns -->
+                                                        <!-- GridSplitter between columns -->
                                                         <CCToolKit:GridSplitter Grid.Column="1" />
-                                                        <CCToolKit:GridSplitter Grid.Column="2" />
                                                     </Grid>
                                                 </Border>
                                             </ListView.Header>
 
                                             <!-- DataTemplate for ListView items -->
                                             <ListView.ItemTemplate>
-                                                <DataTemplate x:DataType="PolicyEditor:AppIDTagsWithContext" xmlns:VMs="using:AppControlManager.ViewModels">
+                                                <DataTemplate x:DataType="SiPolicy:AppIDTag" xmlns:VMs="using:AppControlManager.ViewModels">
                                                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                                                     <Grid Background="Transparent">
 
@@ -735,11 +733,9 @@
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppIDTagsColumnWidth1, Mode=OneWay}" />
                                                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppIDTagsColumnWidth2, Mode=OneWay}" />
-                                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppIDTagsColumnWidth3, Mode=OneWay}" />
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind AppIDTag.Key}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind AppIDTag.Value}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Context}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Key}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Value}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>

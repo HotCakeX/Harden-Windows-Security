@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -57,20 +58,48 @@ internal static class BinaryOpsReverse
 	private static byte[] ExtractCipContent(string binaryFilePath)
 	{
 		byte[] fileBytes = File.ReadAllBytes(binaryFilePath);
+		SignedCms signedCms = new();
 		try
 		{
-			// Try to parse as PKCS#7 SignedData
-			SignedCms signedCms = new();
+			// Try to parse as PKCS#7 SignedData. If Decode fails, the file is a raw CIP payload.
 			signedCms.Decode(fileBytes);
-
-			Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
-
-			return signedCms.ContentInfo.Content;
 		}
 		catch (CryptographicException)
 		{
-			// Not a signed file, assume it's the raw CIP content
+			// Not a signed file, assume it's the raw CIP content.
 			return fileBytes;
+		}
+
+		Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
+
+		// The SignedData content type must be the Secure Boot policy OID, and the signature must be cryptographically valid.
+		if (!string.Equals(signedCms.ContentInfo.ContentType.Value, CommonCore.Signing.Structure.CodeIntegrityOID, StringComparison.OrdinalIgnoreCase))
+		{
+			throw new InvalidOperationException($"Signed policy content type '{signedCms.ContentInfo.ContentType.Value}' does not match the expected Secure Boot policy OID '{CommonCore.Signing.Structure.CodeIntegrityOID}'.");
+		}
+		signedCms.CheckSignature(true);
+
+		byte[] content = signedCms.ContentInfo.Content;
+		if (content.Length == 0)
+		{
+			throw new InvalidOperationException("Signed policy contains no content.");
+		}
+
+		if (content[0] != 0x04)
+		{
+			return content;
+		}
+
+		try
+		{
+			// Some signed policies wrap the CIP payload in a DER OCTET STRING. Unwrap it before parsing
+			// so signed and unsigned policies feed the same raw binary format into the reverse converter.
+			AsnReader asnReader = new(content, AsnEncodingRules.DER);
+			return asnReader.ReadOctetString();
+		}
+		catch (AsnContentException ex)
+		{
+			throw new InvalidOperationException("Signed policy content appears to be an ASN.1 OCTET STRING but is malformed.", ex);
 		}
 	}
 
@@ -142,19 +171,24 @@ internal static class BinaryOpsReverse
 		policy.EKUs = ekuList;
 
 		// FILERULES SECTION
-		object[] fileRules = new object[fileRuleCount];
-		string[] fileRuleIds = new string[fileRuleCount];
-		for (uint i = 0; i < fileRuleCount; i++)
+		object[] fileRules = new object[(int)fileRuleCount];
+		string[] fileRuleIds = new string[(int)fileRuleCount];
+		ulong[] fileRuleMinimumVersions = new ulong[(int)fileRuleCount];
+		bool[] fileRuleHasHash = new bool[(int)fileRuleCount];
+		for (int i = 0; i < (int)fileRuleCount; i++)
 		{
 			uint type = reader.ReadUInt32();
 			string? fn = ReadStringValue(reader);
 			uint minL = reader.ReadUInt32();
 			uint minH = reader.ReadUInt32();
 			ulong minNum = ((ulong)minH << 32) | minL;
-			string minVer = (minNum is not ulong.MaxValue and not 0)
-				? NumberToStringVersionFixed(minNum)
-				: string.Empty;
 			byte[] hash = ReadCountedAlignedBytes(reader);
+			bool hasHash = hash.Length != 0;
+			fileRuleMinimumVersions[i] = minNum;
+			fileRuleHasHash[i] = hasHash;
+			// Emit a version string for non-hash rules even when the encoded value is 0.0.0.0 or 65535.65535.65535.65535.
+			// Hash rules keep version attributes absent.
+			string? minVer = hasHash ? null : NumberToStringVersionFixed(minNum);
 			string id = type switch
 			{
 				0 => $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
@@ -228,7 +262,8 @@ internal static class BinaryOpsReverse
 			{
 				0 => reader.ReadUInt32() == 1,
 				1 => reader.ReadUInt32(),
-				2 => ReadCountedAlignedBytes(reader),
+				// Keep binary secure settings in the same ReadOnlyMemory<byte> shape used by the SiPolicy model.
+				2 => new ReadOnlyMemory<byte>(ReadCountedAlignedBytes(reader)),
 				3 => ReadStringValue(reader),
 				_ => throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorUnknownSettingType"), t))
 			};
@@ -236,7 +271,38 @@ internal static class BinaryOpsReverse
 			if (prov is null || key is null || valName is null || data is null)
 				continue;
 
-			policy.Settings.Add(new Setting(provider: prov, key: key, valueName: valName, value: new SettingValueType(item: data)));
+			// Some XML rule options are not stored in the CIP option flag field. The forward converter writes them as secure settings instead.
+			// Reverse conversion has to recognize those secure settings and restore the original RuleType, otherwise XML to CIP to XML
+			// would change a rule option into a raw Setting and the policy would no longer round-trip semantically.
+			bool settingMappedToRule = false;
+			foreach (KeyValuePair<OptionType, Setting> mappedRule in Helper.RuleToSettingMapping)
+			{
+				Setting mappedSetting = mappedRule.Value;
+
+				// The mapping represents the rule only when the binary setting is the expected true Boolean value
+				// and its Provider, Key, and ValueName match the forward conversion mapping.
+				if (data is bool boolValue && boolValue &&
+					string.Equals(prov, mappedSetting.Provider, StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(key, mappedSetting.Key, StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(valName, mappedSetting.ValueName, StringComparison.OrdinalIgnoreCase))
+				{
+					// Avoid adding the same rule twice if a future binary contains both a flag and the mapped secure setting.
+					if (!rules.Any(rule => rule.Item == mappedRule.Key))
+					{
+						rules.Add(new RuleType(item: mappedRule.Key));
+					}
+
+					settingMappedToRule = true;
+					break;
+				}
+			}
+
+			// Only keep the setting as a raw Setting when it is not one of the rule-backed settings above.
+			// This prevents duplicated semantics in the final XML.
+			if (!settingMappedToRule)
+			{
+				policy.Settings.Add(new Setting(provider: prov, key: key, valueName: valName, value: new SettingValueType(item: data)));
+			}
 		}
 
 		// Version‐specific blocks:
@@ -249,8 +315,9 @@ internal static class BinaryOpsReverse
 				uint maxL = reader.ReadUInt32();
 				uint maxH = reader.ReadUInt32();
 				ulong maxNum = ((ulong)maxH << 32) | maxL;
-				if (maxNum > 0)
+				if (!fileRuleHasHash[i] && maxNum > fileRuleMinimumVersions[i])
 				{
+					// MaximumFileVersion is emitted only when it is greater than the encoded minimum version.
 					string versionFixed = NumberToStringVersionFixed(maxNum);
 					if (fileRules[i] is Deny d) d.MaximumFileVersion = versionFixed;
 					else if (fileRules[i] is Allow a) a.MaximumFileVersion = versionFixed;
@@ -268,7 +335,8 @@ internal static class BinaryOpsReverse
 				}
 				if (appIds.Count > 0)
 				{
-					string combined = string.Join(",", appIds);
+					// The binary stores multiple AppIDs as adjacent strings and we should concatenate them without separators.
+					string combined = string.Concat(appIds);
 					if (fileRules[i] is Deny d2) d2.AppIDs = combined;
 					else if (fileRules[i] is Allow a2) a2.AppIDs = combined;
 					else if (fileRules[i] is FileAttrib fa2) fa2.AppIDs = combined;
@@ -324,18 +392,28 @@ internal static class BinaryOpsReverse
 				ulong pkgVerNum = ((ulong)pkgVerH << 32) | pkgVerL;
 				if (!string.IsNullOrEmpty(pfn))
 				{
-					if (fileRules[i] is Deny d) d.PackageFamilyName = pfn;
-					else if (fileRules[i] is Allow a) a.PackageFamilyName = pfn;
-					else if (fileRules[i] is FileAttrib fa) fa.PackageFamilyName = pfn;
-					else if (fileRules[i] is FileRule fr) fr.PackageFamilyName = pfn;
-				}
-				if (pkgVerNum > 0)
-				{
+					// PackageVersion is meaningful only when PackageFamilyName is present.
 					string ver = NumberToStringVersionFixed(pkgVerNum);
-					if (fileRules[i] is Deny d) d.PackageVersion = ver;
-					else if (fileRules[i] is Allow a) a.PackageVersion = ver;
-					else if (fileRules[i] is FileAttrib fa) fa.PackageVersion = ver;
-					else if (fileRules[i] is FileRule fr) fr.PackageVersion = ver;
+					if (fileRules[i] is Deny d)
+					{
+						d.PackageFamilyName = pfn;
+						d.PackageVersion = ver;
+					}
+					else if (fileRules[i] is Allow a)
+					{
+						a.PackageFamilyName = pfn;
+						a.PackageVersion = ver;
+					}
+					else if (fileRules[i] is FileAttrib fa)
+					{
+						fa.PackageFamilyName = pfn;
+						fa.PackageVersion = ver;
+					}
+					else if (fileRules[i] is FileRule fr)
+					{
+						fr.PackageFamilyName = pfn;
+						fr.PackageVersion = ver;
+					}
 				}
 			}
 		}
@@ -346,7 +424,7 @@ internal static class BinaryOpsReverse
 			if (tag6 != 6) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV6BlockTagGot"), tag6));
 			policy.PolicyID = new Guid(reader.ReadBytes(16)).ToString("B").ToUpperInvariant();
 			policy.BasePolicyID = new Guid(reader.ReadBytes(16)).ToString("B").ToUpperInvariant();
-			policy.PolicyType = (policy.PolicyID == policy.BasePolicyID)
+			policy.PolicyType = string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase)
 				? PolicyType.BasePolicy
 				: PolicyType.SupplementalPolicy;
 			uint supCount = reader.ReadUInt32();
@@ -382,7 +460,7 @@ internal static class BinaryOpsReverse
 		if (version >= 9)
 		{
 			uint tag9 = reader.ReadUInt32();
-			if (tag9 != 9) throw new InvalidOperationException(string.Format("Expected V8 block tag '8', got '{0}'", tag9));
+			if (tag9 != 9) throw new InvalidOperationException(string.Format("Expected V9 block tag '9', got '{0}'", tag9));
 
 			uint hpCount = reader.ReadUInt32();
 			for (uint i = 0; i < hpCount; i++)
@@ -397,6 +475,96 @@ internal static class BinaryOpsReverse
 					baseRule.RequireHotpatchID = targetRule.ID;
 					targetRule.MinimumHotpatchSequence = minSeq;
 					targetRule.MaximumHotpatchSequence = (maxSeq == uint.MaxValue) ? null : maxSeq;
+				}
+			}
+		}
+
+		if (version >= 10)
+		{
+			uint tag10 = reader.ReadUInt32();
+			if (tag10 != 10) throw new InvalidOperationException(string.Format("Expected V10 block tag '10', got '{0}'", tag10));
+
+			uint artifactRuleCount = reader.ReadUInt32();
+			policy.ArtifactRules = new((int)artifactRuleCount);
+			string[] artifactRuleIds = new string[(int)artifactRuleCount];
+			for (uint i = 0; i < artifactRuleCount; i++)
+			{
+				ArtifactTypeType artifactType = (ArtifactTypeType)reader.ReadUInt32();
+				ArtifactActionType action = (ArtifactActionType)reader.ReadUInt32();
+				string? artifactName = ReadStringValue(reader);
+				string? artifactDescription = ReadStringValue(reader);
+				ulong minimumVersion = reader.ReadUInt64();
+				ulong maximumVersion = reader.ReadUInt64();
+				byte[] artifactHash = ReadCountedAlignedBytes(reader);
+				string id = $"ID_ARTIFACT_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
+				artifactRuleIds[(int)i] = id;
+
+				ArtifactRule artifactRule = new(id, artifactType, action)
+				{
+					ArtifactName = artifactName,
+					ArtifactDescription = artifactDescription,
+					MinimumVersion = NumberToStringVersionFixed(minimumVersion),
+					MaximumVersion = NumberToStringVersionFixed(maximumVersion)
+				};
+				if (artifactHash.Length != 0)
+				{
+					ItemChoiceType itemChoiceType = artifactHash.Length switch
+					{
+						48 => ItemChoiceType.sha384,
+						64 => ItemChoiceType.sha512,
+						_ => ItemChoiceType.sha256
+					};
+					artifactRule.ArtifactHash = new ArtifactHashType(new digestType(artifactHash, itemChoiceType));
+				}
+				policy.ArtifactRules.Add(artifactRule);
+			}
+
+			uint signerArtifactReferenceCount = reader.ReadUInt32();
+			for (uint i = 0; i < signerArtifactReferenceCount; i++)
+			{
+				uint signerIndex = reader.ReadUInt32();
+				if (signerIndex >= policy.Signers.Count)
+					throw new InvalidOperationException($"Invalid signer index {signerIndex} for artifact rule references.");
+
+				policy.Signers[(int)signerIndex].ArtifactRuleRef = ReadArtifactRulesRef(reader, artifactRuleIds);
+			}
+
+			for (int i = 0; i < policy.SigningScenarios.Count; i++)
+			{
+				AllowedSigners allowedSigners = ParseAllowedSigners(reader, signerIds, fileRuleIds);
+				DeniedSigners deniedSigners = ParseDeniedSigners(reader, signerIds, fileRuleIds);
+				List<ArtifactRuleRef> artifactRuleRefs = ReadArtifactRulesRef(reader, artifactRuleIds);
+				policy.SigningScenarios[i].ArtifactSigners = new ArtifactSigners
+				{
+					AllowedSigners = allowedSigners,
+					DeniedSigners = deniedSigners,
+					ArtifactRulesRef = new ArtifactRulesRef(artifactRuleRef: artifactRuleRefs)
+				};
+			}
+		}
+
+		if (version >= 11)
+		{
+			uint tag11 = reader.ReadUInt32();
+			if (tag11 != 11) throw new InvalidOperationException(string.Format("Expected V11 block tag '11', got '{0}'", tag11));
+
+			uint signerCertEkuConditionCount = reader.ReadUInt32();
+			for (uint i = 0; i < signerCertEkuConditionCount; i++)
+			{
+				uint signerIndex = reader.ReadUInt32();
+				if (signerIndex >= policy.Signers.Count)
+					throw new InvalidOperationException($"Invalid signer index {signerIndex} for CertEKU conditions.");
+
+				uint exceptCertEkuCount = reader.ReadUInt32();
+				Signer signer = policy.Signers[(int)signerIndex];
+				signer.CertEKU ??= [];
+				for (uint j = 0; j < exceptCertEkuCount; j++)
+				{
+					uint ekuIndex = reader.ReadUInt32();
+					if (ekuIndex >= ekuIds.Length)
+						throw new InvalidOperationException($"Invalid CertEKU condition index {ekuIndex}.");
+
+					signer.CertEKU.Add(new CertEKU(id: ekuIds[(int)ekuIndex]) { Condition = CertEKUConditionType.Except });
 				}
 			}
 		}
@@ -428,9 +596,35 @@ internal static class BinaryOpsReverse
 			? new CertRoot(type: CertEnumType.TBS, value: certValue)
 			: new CertRoot(type: CertEnumType.Wellknown, value: certValue);
 
-		// ID is populated later in the calling method ParseSiPolicy
-		// Name is empty because CIP binaries don't store names.
-		Signer signer = new(id: string.Empty, name: string.Empty, certRoot: certRoot);
+		// ID is populated later in the calling method ParseSiPolicy.
+		// The binary format stores custom roots as self-signed signer roots and well-known roots as small IDs.	
+		string signerName = ind == 0
+			? "Custom"
+			: certValue[0] switch
+			{
+				3 => "CN=Microsoft Authenticode Root Authority, O=MSFT, C=US",
+				4 => "CN=Microsoft Root Authority 1997, OU=Microsoft Corporation, OU=Copyright (c) 1997 Microsoft Corp.",
+				5 => "CN=Microsoft Root Certificate Authority, DC=microsoft, DC=com",
+				6 => "CN=Microsoft Root Certificate Authority 2010, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+				7 => "CN=Microsoft Root Certificate Authority 2011, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+				8 => "CN=Microsoft Code Verification Root, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+				9 => "CN=Microsoft Test Root Authority, OU=Microsoft Corporation, OU=Copyright (c) 1999 Microsoft Corp.",
+				10 => "CN=Microsoft Testing Root Certificate Authority 2010, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+				11 => "CN=MS Protected Media DMD Test Root",
+				12 => "CN=Microsoft Digital Media Authority 2005",
+				13 => "CN=Microsoft Digital Media Authority 2005 for preview releases",
+				14 => "CN=Microsoft Development Root Certificate Authority 2014, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+				15 => "CN=Microsoft Corporation Third Party Marketplace Root",
+				16 => "CN=Microsoft ECC Testing Root Certificate Authority 2017",
+				17 => "CN=Microsoft ECC Development Root Certificate Authority 2018",
+				18 => "CN=Microsoft ECC Product Root Certificate Authority 2018",
+				19 => "CN=Microsoft ECC Devices Root Certificate Authority 2017",
+				20 => "AuthRoot.STL",
+				21 => "CN=Microsoft OEM Root Cerificate Authority 2017",
+				22 => "CN=Microsoft Identity Verification Root Certificate Authority 2020, O=Microsoft Corporation, C=US",
+				_ => string.Empty
+			};
+		Signer signer = new(id: string.Empty, name: signerName, certRoot: certRoot);
 
 		uint ekuRefCount = reader.ReadUInt32();
 		signer.CertEKU = new((int)ekuRefCount);
@@ -466,15 +660,14 @@ internal static class BinaryOpsReverse
 			signer.FileAttribRef.Add(new FileAttribRef(ruleID: fileRuleIds[ridx]));
 		}
 
-		signer.Name = string.Empty;
-		signer.SignTimeAfter = DateTime.MinValue;
+		signer.SignTimeAfter = null;
 		return signer;
 	}
 
 	private static void ParseSignerV3(BinaryReader reader, Signer signer)
 	{
 		long ft = reader.ReadInt64();
-		signer.SignTimeAfter = ft != 0 ? DateTime.FromFileTime(ft) : DateTime.MinValue;
+		signer.SignTimeAfter = ft != 0 ? DateTime.FromFileTime(ft) : null;
 	}
 
 	/// <summary>
@@ -515,9 +708,9 @@ internal static class BinaryOpsReverse
 
 		// Minimum hash algorithm
 		uint minHash = reader.ReadUInt32();
-		ushort minimumHashAlgorithm = (minHash is not 32780U and <= ushort.MaxValue)
+		ushort? minimumHashAlgorithm = (minHash is not 32780U and <= ushort.MaxValue)
 			? (ushort)minHash
-			: (ushort)0;
+			: null;
 
 		// ProductSigners
 		ProductSigners productSigners = new()
@@ -626,10 +819,17 @@ internal static class BinaryOpsReverse
 	/// <summary>
 	/// Parse the AppSettings region from the binary policy.
 	/// </summary>
-	private static AppSettingRegion ParseAppSettings(BinaryReader reader)
+	private static AppSettingRegion? ParseAppSettings(BinaryReader reader)
 	{
 		uint c = reader.ReadUInt32();
-		AppRoot[] arr = new AppRoot[c];
+		if (c == 0)
+		{
+			// The binary V8 section is present for policy format version 8 and newer even when no app settings exist.
+			// Keep the object null so XML serialization omits the optional AppSettings element entirely.
+			return null;
+		}
+
+		List<AppRoot> apps = new((int)c);
 		for (uint i = 0; i < c; i++)
 		{
 			string? mid = ReadStringValue(reader);
@@ -656,10 +856,29 @@ internal static class BinaryOpsReverse
 				if (filtered.Count == 0) filtered = null;
 				settings.Add(new AppSetting(name: name, value: filtered));
 			}
+			// A missing manifest identifier cannot be represented as a valid App element, so skip it instead of leaving a null entry.
 			if (mid is null) continue;
-			arr[i] = new AppRoot(manifest: mid, setting: settings);
+			apps.Add(new(manifest: mid, setting: settings));
 		}
-		return new AppSettingRegion(app: arr.ToList());
+		return new AppSettingRegion(app: apps);
+	}
+
+	/// <summary>
+	/// Reads artifact rule references from binary and resolves them to XML IDs.
+	/// </summary>
+	private static List<ArtifactRuleRef> ReadArtifactRulesRef(BinaryReader reader, string[] artifactRuleIds)
+	{
+		uint c = reader.ReadUInt32();
+		List<ArtifactRuleRef> artifactRuleRefs = new((int)c);
+		for (uint i = 0; i < c; i++)
+		{
+			uint ruleIndex = reader.ReadUInt32();
+			if (ruleIndex >= artifactRuleIds.Length)
+				throw new InvalidOperationException($"Invalid ArtifactRuleRef index {ruleIndex}.");
+
+			artifactRuleRefs.Add(new ArtifactRuleRef(ruleID: artifactRuleIds[(int)ruleIndex]));
+		}
+		return artifactRuleRefs;
 	}
 
 	/// <summary>

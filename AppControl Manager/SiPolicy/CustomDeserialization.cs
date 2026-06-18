@@ -152,11 +152,14 @@ internal static class CustomDeserialization
 
 					string id = ekuElem.GetAttribute("ID");
 
-					policy.EKUs.Add(new EKU(
+					EKU eku = new(
 						id: id,
 						value: ConvertHexStringToByteArray(ekuElem.GetAttribute("Value")),
 						friendlyName: ekuFriendlyName
-						));
+						);
+					if (ekuElem.HasAttribute("OID"))
+						eku.OID = ekuElem.GetAttribute("OID");
+					policy.EKUs.Add(eku);
 
 					if (!EKUIDsCol.Add(id))
 					{
@@ -200,6 +203,50 @@ internal static class CustomDeserialization
 						default:
 							break;
 					}
+				}
+			}
+		}
+
+		// Deserialize ArtifactRules
+		XmlElement? artifactRulesElement = root["ArtifactRules", Atlas.SiPolicyNamespace];
+		if (artifactRulesElement is not null)
+		{
+			policy.ArtifactRules = new(capacity: artifactRulesElement.ChildNodes.Count);
+			HashSet<string> artifactRuleIDsCol = [];
+
+			foreach (XmlNode node in artifactRulesElement.ChildNodes)
+			{
+				if (node is XmlElement artifactRuleElem && string.Equals(artifactRuleElem.LocalName, "ArtifactRule", StringComparison.OrdinalIgnoreCase))
+				{
+					ArtifactRule artifactRule = new(id: artifactRuleElem.GetAttribute("ID"), artifactType: Enum.Parse<ArtifactTypeType>(artifactRuleElem.GetAttribute("ArtifactType")), action: Enum.Parse<ArtifactActionType>(artifactRuleElem.GetAttribute("Action")))
+					{
+						FriendlyName = string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("FriendlyName")) ? null : artifactRuleElem.GetAttribute("FriendlyName"),
+						ArtifactName = string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("ArtifactName")) ? null : artifactRuleElem.GetAttribute("ArtifactName"),
+						ArtifactDescription = string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("ArtifactDescription")) ? null : artifactRuleElem.GetAttribute("ArtifactDescription"),
+						MinimumVersion = artifactRuleElem.HasAttribute("MinimumVersion") && !string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("MinimumVersion")) ? artifactRuleElem.GetAttribute("MinimumVersion") : "0.0.0.0",
+						MaximumVersion = artifactRuleElem.HasAttribute("MaximumVersion") && !string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("MaximumVersion")) ? artifactRuleElem.GetAttribute("MaximumVersion") : Helper.DefaultMaxVersion
+					};
+
+					XmlElement? hashElement = artifactRuleElem["ArtifactHash", Atlas.SiPolicyNamespace]?["Hash", Atlas.SiPolicyNamespace];
+					if (hashElement is not null)
+					{
+						XmlElement? digestElement = hashElement["sha256", Atlas.SiPolicyNamespace] ?? hashElement["sha384", Atlas.SiPolicyNamespace] ?? hashElement["sha512", Atlas.SiPolicyNamespace];
+						if (digestElement is not null)
+						{
+							ItemChoiceType itemChoiceType = digestElement.LocalName switch
+							{
+								"sha384" => ItemChoiceType.sha384,
+								"sha512" => ItemChoiceType.sha512,
+								_ => ItemChoiceType.sha256
+							};
+							artifactRule.ArtifactHash = new ArtifactHashType(new digestType(ConvertHexStringToByteArray(digestElement.InnerText), itemChoiceType));
+						}
+					}
+
+					if (!artifactRuleIDsCol.Add(artifactRule.ID))
+						throw new InvalidOperationException($"Duplicate ArtifactRule ID detected: {artifactRule.ID}");
+
+					policy.ArtifactRules.Add(artifactRule);
 				}
 			}
 		}
@@ -467,6 +514,10 @@ internal static class CustomDeserialization
 	private static Allow DeserializeAllow(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		Allow allow = new(id: elem.GetAttribute("ID"));
+		if (string.IsNullOrEmpty(allow.ID))
+		{
+			throw new InvalidOperationException($"{Atlas.GetStr("AllowRuleDupIDValidationError")}: {allow.ID}");
+		}
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		allow.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -489,6 +540,11 @@ internal static class CustomDeserialization
 		allow.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		allow.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		if (allow.AppIDs is not null && (allow.InternalName is not null || allow.FileDescription is not null || allow.ProductName is not null || allow.PackageFamilyName is not null))
+		{
+			// Reject per-app rules when these metadata fields are present.
+			throw new InvalidOperationException($"The Allow rule with the ID {allow.ID} has AppIDs with unsupported file metadata fields.");
+		}
 		string filePathValue = elem.GetAttribute("FilePath");
 		allow.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
@@ -547,6 +603,10 @@ internal static class CustomDeserialization
 	private static Deny DeserializeDeny(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		Deny deny = new(id: elem.GetAttribute("ID"));
+		if (string.IsNullOrEmpty(deny.ID))
+		{
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("DenyRuleDupIDValidationError"), deny.ID));
+		}
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		deny.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -569,6 +629,11 @@ internal static class CustomDeserialization
 		deny.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		deny.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		if (deny.AppIDs is not null && (deny.InternalName is not null || deny.FileDescription is not null || deny.ProductName is not null || deny.PackageFamilyName is not null))
+		{
+			// Reject per-app rules when these metadata fields are present.
+			throw new InvalidOperationException($"The Deny rule with the ID {deny.ID} has AppIDs with unsupported file metadata fields.");
+		}
 		string filePathValue = elem.GetAttribute("FilePath");
 		deny.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
@@ -620,6 +685,10 @@ internal static class CustomDeserialization
 	private static FileAttrib DeserializeFileAttrib(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		FileAttrib fa = new(id: elem.GetAttribute("ID"));
+		if (string.IsNullOrEmpty(fa.ID))
+		{
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("FileAttribDupIDValidationError"), fa.ID));
+		}
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		fa.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -642,6 +711,11 @@ internal static class CustomDeserialization
 		fa.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		fa.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		if (fa.AppIDs is not null && (fa.InternalName is not null || fa.FileDescription is not null || fa.ProductName is not null || fa.PackageFamilyName is not null))
+		{
+			// Reject per-app rules when these metadata fields are present.
+			throw new InvalidOperationException($"The FileAttrib rule with the ID {fa.ID} has AppIDs with unsupported file metadata fields.");
+		}
 		string filePathValue = elem.GetAttribute("FilePath");
 		fa.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
@@ -693,6 +767,10 @@ internal static class CustomDeserialization
 	private static FileRule DeserializeFileRule(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		FileRule fr = new(id: elem.GetAttribute("ID"), type: ConvertStringToRuleTypeType(elem.GetAttribute("Type")));
+		if (string.IsNullOrEmpty(fr.ID))
+		{
+			throw new InvalidOperationException($"{Atlas.GetStr("FileRuleDupIDValidationError")}: {fr.ID}");
+		}
 		string friendlyNameValue = elem.GetAttribute("FriendlyName");
 		fr.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
 		string fileNameValue = elem.GetAttribute("FileName");
@@ -715,14 +793,45 @@ internal static class CustomDeserialization
 		fr.Hash = ConvertHexStringToByteArray(hashValue);
 		string appIDsValue = elem.GetAttribute("AppIDs");
 		fr.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		if (fr.AppIDs is not null && (fr.InternalName is not null || fr.FileDescription is not null || fr.ProductName is not null || fr.PackageFamilyName is not null))
+		{
+			// Generic FileRule entries are adapted to Allow, Deny, or FileAttrib before binary conversion.
+			// Apply the same AppIDs restrictions here so generic rules cannot bypass the typed-rule validation.
+			throw new InvalidOperationException($"The FileRule rule with the ID {fr.ID} has AppIDs with unsupported file metadata fields.");
+		}
 		string filePathValue = elem.GetAttribute("FilePath");
 		fr.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
-
 		if (!IDsCollection.Add(fr.ID))
 		{
 			throw new InvalidOperationException($"{Atlas.GetStr("FileRuleDupIDValidationError")}: {fr.ID}");
 		}
-
+		bool APropertyExists = fr.FileName is not null
+						 || fr.FileDescription is not null
+						 || fr.PackageFamilyName is not null
+						 || fr.InternalName is not null
+						 || fr.ProductName is not null
+						 || fr.PackageVersion is not null
+						 || fr.MinimumFileVersion is not null
+						 || fr.MaximumFileVersion is not null
+						 || fr.FilePath is not null;
+		bool NoPropertyExists = fr.FilePath is null
+						&& fr.FileName is null
+						&& fr.InternalName is null
+						&& fr.FileDescription is null
+						&& fr.PackageFamilyName is null
+						&& fr.ProductName is null;
+		if (!fr.Hash.IsEmpty)
+		{
+			if (APropertyExists)
+			{
+				throw new InvalidOperationException($"The FileRule rule with the ID {fr.ID} has Hash property but also has other file properties, making it invalid.");
+			}
+		}
+		else if (NoPropertyExists)
+		{
+			throw new InvalidOperationException($"The FileRule rule with the ID {fr.ID} neither has Hash nor does it have any other file properties, making it invalid.");
+		}
+		ValidateVersionRange(fr.MinimumFileVersion, fr.MaximumFileVersion, fr.ID);
 		return fr;
 	}
 
@@ -763,7 +872,10 @@ internal static class CustomDeserialization
 			{
 				if (node is XmlElement ekuElem)
 				{
-					ekus.Add(new CertEKU(id: ekuElem.GetAttribute("ID")));
+					CertEKU certEKU = new(id: ekuElem.GetAttribute("ID"));
+					if (ekuElem.HasAttribute("Condition"))
+						certEKU.Condition = Enum.Parse<CertEKUConditionType>(ekuElem.GetAttribute("Condition"));
+					ekus.Add(certEKU);
 				}
 			}
 			signer.CertEKU = ekus;
@@ -796,6 +908,19 @@ internal static class CustomDeserialization
 				if (node is XmlElement farElem)
 				{
 					signer.FileAttribRef.Add(new FileAttribRef(ruleID: farElem.GetAttribute("RuleID")));
+				}
+			}
+		}
+
+		XmlNodeList artifactRuleRefNodes = elem.GetElementsByTagName("ArtifactRuleRef", Atlas.SiPolicyNamespace);
+		if (artifactRuleRefNodes.Count > 0)
+		{
+			signer.ArtifactRuleRef = [];
+			foreach (XmlNode node in artifactRuleRefNodes)
+			{
+				if (node is XmlElement artifactRuleRefElem)
+				{
+					signer.ArtifactRuleRef.Add(new ArtifactRuleRef(ruleID: artifactRuleRefElem.GetAttribute("RuleID")));
 				}
 			}
 		}
@@ -846,6 +971,33 @@ internal static class CustomDeserialization
 			scenario.MinimumHashAlgorithm = ushort.Parse(elem.GetAttribute("MinimumHashAlgorithm"), CultureInfo.InvariantCulture);
 		}
 
+		// Deserialize ArtifactSigners
+		XmlElement? artifactSignersElem = elem["ArtifactSigners", Atlas.SiPolicyNamespace];
+		if (artifactSignersElem is not null)
+		{
+			ProductSigners artifactProductSigners = DeserializeProductSigners(artifactSignersElem);
+			ArtifactSigners artifactSigners = new()
+			{
+				AllowedSigners = artifactProductSigners.AllowedSigners,
+				DeniedSigners = artifactProductSigners.DeniedSigners
+			};
+
+			XmlElement? artifactRulesRefElem = artifactSignersElem["ArtifactRulesRef", Atlas.SiPolicyNamespace];
+			if (artifactRulesRefElem is not null)
+			{
+				List<ArtifactRuleRef> artifactRuleRefs = [];
+				foreach (XmlElement artifactRuleRefElem in artifactRulesRefElem.GetElementsByTagName("ArtifactRuleRef", Atlas.SiPolicyNamespace))
+				{
+					artifactRuleRefs.Add(new ArtifactRuleRef(ruleID: artifactRuleRefElem.GetAttribute("RuleID")));
+				}
+				artifactSigners.ArtifactRulesRef = new ArtifactRulesRef(artifactRuleRef: artifactRuleRefs);
+				if (artifactRulesRefElem.HasAttribute("Workaround"))
+					artifactSigners.ArtifactRulesRef.Workaround = artifactRulesRefElem.GetAttribute("Workaround");
+			}
+
+			scenario.ArtifactSigners = artifactSigners;
+		}
+
 		// Deserialize TestSigners
 		XmlElement? testSignersElem = elem["TestSigners", Atlas.SiPolicyNamespace];
 		if (testSignersElem is not null)
@@ -885,7 +1037,7 @@ internal static class CustomDeserialization
 			if (allowedElem.HasAttribute("Workaround"))
 				workAround = allowedElem.GetAttribute("Workaround");
 			List<AllowedSigner> asList = [];
-			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
+			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner", Atlas.SiPolicyNamespace))
 			{
 				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", Atlas.SiPolicyNamespace);
 				List<ExceptDenyRule>? rules = null;
@@ -911,7 +1063,7 @@ internal static class CustomDeserialization
 			if (deniedElem.HasAttribute("Workaround"))
 				workAround = deniedElem.GetAttribute("Workaround");
 			List<DeniedSigner> dsList = [];
-			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
+			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner", Atlas.SiPolicyNamespace))
 			{
 				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", Atlas.SiPolicyNamespace);
 				List<ExceptAllowRule>? rules = null;
@@ -937,7 +1089,7 @@ internal static class CustomDeserialization
 			if (fileRulesRefElem.HasAttribute("Workaround"))
 				workAround = fileRulesRefElem.GetAttribute("Workaround");
 			List<FileRuleRef> frrList = [];
-			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef"))
+			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef", Atlas.SiPolicyNamespace))
 			{
 				frrList.Add(new FileRuleRef(ruleID: frElem.GetAttribute("RuleID")));
 			}
@@ -956,7 +1108,7 @@ internal static class CustomDeserialization
 			if (allowedElem.HasAttribute("Workaround"))
 				workAround = allowedElem.GetAttribute("Workaround");
 			List<AllowedSigner> asList = [];
-			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
+			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner", Atlas.SiPolicyNamespace))
 			{
 				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", Atlas.SiPolicyNamespace);
 				List<ExceptDenyRule>? rules = null;
@@ -982,7 +1134,7 @@ internal static class CustomDeserialization
 			if (deniedElem.HasAttribute("Workaround"))
 				workAround = deniedElem.GetAttribute("Workaround");
 			List<DeniedSigner> dsList = [];
-			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
+			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner", Atlas.SiPolicyNamespace))
 			{
 				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", Atlas.SiPolicyNamespace);
 				List<ExceptAllowRule>? rules = null;
@@ -1008,7 +1160,7 @@ internal static class CustomDeserialization
 			if (fileRulesRefElem.HasAttribute("Workaround"))
 				workAround = fileRulesRefElem.GetAttribute("Workaround");
 			List<FileRuleRef> frrList = [];
-			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef"))
+			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef", Atlas.SiPolicyNamespace))
 			{
 				frrList.Add(new FileRuleRef(ruleID: frElem.GetAttribute("RuleID")));
 			}
@@ -1028,7 +1180,7 @@ internal static class CustomDeserialization
 			if (allowedElem.HasAttribute("Workaround"))
 				workAround = allowedElem.GetAttribute("Workaround");
 			List<AllowedSigner> asList = [];
-			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner"))
+			foreach (XmlElement aSignerElem in allowedElem.GetElementsByTagName("AllowedSigner", Atlas.SiPolicyNamespace))
 			{
 				XmlNodeList edrNodes = aSignerElem.GetElementsByTagName("ExceptDenyRule", Atlas.SiPolicyNamespace);
 				List<ExceptDenyRule>? rules = null;
@@ -1054,7 +1206,7 @@ internal static class CustomDeserialization
 			if (deniedElem.HasAttribute("Workaround"))
 				workAround = deniedElem.GetAttribute("Workaround");
 			List<DeniedSigner> dsList = [];
-			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner"))
+			foreach (XmlElement dSignerElem in deniedElem.GetElementsByTagName("DeniedSigner", Atlas.SiPolicyNamespace))
 			{
 				XmlNodeList earNodes = dSignerElem.GetElementsByTagName("ExceptAllowRule", Atlas.SiPolicyNamespace);
 				List<ExceptAllowRule>? rules = null;
@@ -1080,7 +1232,7 @@ internal static class CustomDeserialization
 			if (fileRulesRefElem.HasAttribute("Workaround"))
 				workAround = fileRulesRefElem.GetAttribute("Workaround");
 			List<FileRuleRef> frrList = [];
-			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef"))
+			foreach (XmlElement frElem in fileRulesRefElem.GetElementsByTagName("FileRuleRef", Atlas.SiPolicyNamespace))
 			{
 				frrList.Add(new FileRuleRef(ruleID: frElem.GetAttribute("RuleID")));
 			}
@@ -1110,7 +1262,7 @@ internal static class CustomDeserialization
 			name = elem.GetAttribute("Name");
 
 		List<string> values = [];
-		foreach (XmlElement valueElem in elem.GetElementsByTagName("Value"))
+		foreach (XmlElement valueElem in elem.GetElementsByTagName("Value", Atlas.SiPolicyNamespace))
 		{
 			values.Add(valueElem.InnerText);
 		}
@@ -1162,8 +1314,8 @@ internal static class CustomDeserialization
 			}
 		}
 
-		// Parse the AppIDTag child elements
-		XmlNodeList appIDTagNodes = elem.GetElementsByTagName("AppIDTag");
+		// Parse the AppIDTag child elements		
+		XmlNodeList appIDTagNodes = elem.GetElementsByTagName("AppIDTag", Atlas.SiPolicyNamespace);
 		List<AppIDTag> tags = [];
 		foreach (XmlElement tagElem in appIDTagNodes)
 		{

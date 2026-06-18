@@ -82,7 +82,6 @@ internal static partial class Merger
 		List<FileRuleRef> kernelModeFileRulesRefs = [];
 		List<FileRuleRef> userModeFileRulesRefs = [];
 		AppIDTags? userModeAppIDTags = null;
-		AppIDTags? kernelModeAppIDTags = null;
 
 		// Deserialize, de-duplicate, merge
 		// Doesn't return anything and only acts on the referenced collections.
@@ -104,8 +103,7 @@ internal static partial class Merger
 		   ref signerCollection,
 		   ref kernelModeFileRulesRefs,
 		   ref userModeFileRulesRefs,
-		   ref userModeAppIDTags,
-		   ref kernelModeAppIDTags
+		   ref userModeAppIDTags
 		   );
 
 
@@ -125,8 +123,7 @@ internal static partial class Merger
 		   kernelModeFileRulesRefs,
 		   userModeFileRulesRefs,
 		   mainPolicy.Settings, // Pass the main policy's Settings for the merge unless there is a need to merge the Settings during a merge operation.
-		   userModeAppIDTags,
-		   kernelModeAppIDTags);
+		   userModeAppIDTags);
 	}
 
 
@@ -168,8 +165,7 @@ internal static partial class Merger
 		ref SignerCollection? signerCollection,
 		ref List<FileRuleRef> kernelModeFileRulesRefs,
 		ref List<FileRuleRef> userModeFileRulesRefs,
-		ref AppIDTags? userModeAppIDTags,
-		ref AppIDTags? kernelModeAppIDTags
+		ref AppIDTags? userModeAppIDTags
 		)
 	{
 		// Data aggregation
@@ -432,24 +428,19 @@ internal static partial class Merger
 		#region AppID Tags
 
 		List<AppIDTag> userModeAppIDTagsCol = [];
-		List<AppIDTag> kernelModeAppIDTagsCol = [];
-
 		bool enforceDllUserMode = false;
-		bool enforceDllKernelMode = false;
-
 		HashSet<string> currentTagKeysUserMode = new(StringComparer.Ordinal);
 
-		HashSet<string> currentTagKeysKernelMode = new(StringComparer.Ordinal);
-
-		// Collect AppIDTags from all policies for each signing scenario
+		// AppIDTags are valid only for the User-Mode Signing Scenario (Value 12).
+		// Kernel-mode AppIDTags are intentionally ignored because they are not valid WDAC AppID tagging semantics.
+		// Kernel-mode drivers cannot be tagged!
 		foreach (SiPolicy policy in CollectionsMarshal.AsSpan(allPolicies))
 		{
 			foreach (SigningScenario sc in CollectionsMarshal.AsSpan(policy.SigningScenarios))
 			{
-				// User-Mode Signing Scenario
 				if (sc.Value == 12)
 				{
-					// Only flip it from false to true
+					// Only flip it from false to true.
 					if (!enforceDllUserMode)
 					{
 						enforceDllUserMode = sc.AppIDTags?.EnforceDLL == true;
@@ -457,53 +448,23 @@ internal static partial class Merger
 
 					foreach (AppIDTag appIDTag in CollectionsMarshal.AsSpan(sc.AppIDTags?.AppIDTag))
 					{
-						// Ensure only Unique keys for User-mode will be in the policy.
+						// Ensure only unique keys for User-mode will be in the policy.
 						if (currentTagKeysUserMode.Add(appIDTag.Key))
 						{
 							userModeAppIDTagsCol.Add(appIDTag);
 						}
 					}
 				}
-
-				// kernel-Mode Signing Scenario
-				if (sc.Value == 131)
-				{
-					// Only flip it from false to true
-					if (!enforceDllKernelMode)
-					{
-						enforceDllKernelMode = sc.AppIDTags?.EnforceDLL == true;
-					}
-
-					foreach (AppIDTag appIDTag in CollectionsMarshal.AsSpan(sc.AppIDTags?.AppIDTag))
-					{
-						// Ensure only Unique keys pairs for Kernel-mode will be in the policy.
-						if (currentTagKeysKernelMode.Add(appIDTag.Key))
-						{
-							kernelModeAppIDTagsCol.Add(appIDTag);
-						}
-					}
-				}
 			}
 		}
 
-
 		if (userModeAppIDTagsCol.Count > 0)
 		{
-			// Assign the results to the Ref vars
+			// Assign the results to the Ref vars.
 			userModeAppIDTags = new()
 			{
 				EnforceDLL = enforceDllUserMode,
 				AppIDTag = userModeAppIDTagsCol
-			};
-		}
-
-		if (kernelModeAppIDTagsCol.Count > 0)
-		{
-			// Assign the results to the Ref vars
-			kernelModeAppIDTags = new()
-			{
-				EnforceDLL = enforceDllKernelMode,
-				AppIDTag = kernelModeAppIDTagsCol
 			};
 		}
 
@@ -542,8 +503,7 @@ internal static partial class Merger
 		List<FileRuleRef> kernelModeFileRulesRefs,
 		List<FileRuleRef> userModeFileRulesRefs,
 		List<Setting>? policySettings,
-		AppIDTags? userModeAppIDTags,
-		AppIDTags? kernelModeAppIDTags
+		AppIDTags? userModeAppIDTags
 		)
 	{
 		// Get any possible SigningScenario from XML1 (main)
@@ -622,8 +582,6 @@ internal static partial class Merger
 		if (mainPolicyKernelModeSigningScenario is { InheritedScenarios: not null })
 			KMCISigningScenario.InheritedScenarios = mainPolicyKernelModeSigningScenario.InheritedScenarios;
 
-		if (kernelModeAppIDTags is not null)
-			KMCISigningScenario.AppIDTags = kernelModeAppIDTags;
 
 		if (mainPolicyKernelModeSigningScenario is { TestSigners: not null })
 			KMCISigningScenario.TestSigners = mainPolicyKernelModeSigningScenario.TestSigners;
@@ -645,6 +603,7 @@ internal static partial class Merger
 			PolicyTypeID = mainPolicy.PolicyTypeID, // Main policy takes priority
 			EKUs = ekusToUse, // Aggregated data
 			FileRules = fileRulesNode, // Aggregated data
+			ArtifactRules = mainPolicy.ArtifactRules, // Main policy takes priority
 			Signers = signers, // Aggregated data
 			SigningScenarios = [UMCISigningScenario, KMCISigningScenario], // Aggregated data
 			UpdatePolicySigners = updatePolicySignersCol, // Aggregated data
@@ -743,11 +702,12 @@ internal static partial class Merger
 					{
 						// Determine the effective ID (either remap it or keep original)
 						string effectiveId = ekuIdRemap.TryGetValue(certEku.ID, out string? newId) ? newId : certEku.ID;
+						string effectiveKey = $"{effectiveId}\0{certEku.Condition}";
 
-						// Only add if we haven't added this ID to this signer yet
-						if (signerCertIds.Add(effectiveId))
+						// Only add if we haven't added this ID and condition combination to this signer yet
+						if (signerCertIds.Add(effectiveKey))
 						{
-							newCertEkuList.Add(new CertEKU(effectiveId));
+							newCertEkuList.Add(new CertEKU(effectiveId) { Condition = certEku.Condition });
 						}
 					}
 
@@ -806,6 +766,27 @@ internal static partial class Merger
 
 		// Compare sets of EKU values
 		return ekuValuesX.SetEquals(ekuValuesY);
+	}
+
+	/// <summary>
+	/// Adds EKU value hash codes to a HashCode using the same order-insensitive set semantics as DoEKUsMatch.
+	/// </summary>
+	internal static void AddEKUValuesToHashCode(ref HashCode hash, List<EKU> ekus)
+	{
+		// WHQL signer equality treats EKU collections as sets, so the hash code must not depend on XML order.
+		HashSet<int> ekuValueHashCodes = [.. ekus.Where(e => !e.Value.IsEmpty).Select(e => {
+					HashCode ekuHash = new();
+					ekuHash.AddBytes(e.Value.Span);
+					return ekuHash.ToHashCode();
+		})];
+
+		List<int> sortedEkuValueHashCodes = [.. ekuValueHashCodes];
+		sortedEkuValueHashCodes.Sort();
+
+		foreach (int ekuValueHashCode in sortedEkuValueHashCodes)
+		{
+			hash.Add(ekuValueHashCode);
+		}
 	}
 
 

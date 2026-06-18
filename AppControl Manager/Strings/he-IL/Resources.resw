@@ -3085,9 +3085,6 @@
   <data name="FileNotExists" xml:space="preserve">
     <value>הקובץ לא קיים.</value>
   </data>
-  <data name="CISchemaNotFound" xml:space="preserve">
-    <value>לא ניתן למצוא את קובץ סכמה של Code Integrity במערכת, סביר להניח משום שמדובר בגרסת Home של מערכת ההפעלה. יש לעבור לדף ההגדרות כדי לאתרו ידנית.</value>
-  </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>XML לא חוקי: חסר תג השורש.</value>
     <comment>App Manifest Validation</comment>
@@ -3465,30 +3462,6 @@
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b נפרסה והמדיניות רועננה.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
-  </data>
-  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
-    <value>עיון</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
-    <value>נתיב סכמה מותאם אישית</value>
-  </data>
-  <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>עיון במיקום מותאם אישית לקובץ XSD של Code Integrity Schema.</value>
-  </data>
-  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
-    <value>החלפת נתיב של Code Integrity Schema</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>פותח את דף המיני של חנות Microsoft, שבו ניתן לדרג ובאופן אופציונלי לכתוב חוות דעת על AppControl Manager.</value>
@@ -7785,5 +7758,23 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>הצמד את האפליקציה לתפריט התחלה לגישה נוחה.</value>
+  </data>
+  <data name="BrowseFilesButton.Content" xml:space="preserve">
+    <value>עיון בקבצים</value>
+  </data>
+  <data name="BrowseFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון לאיתור קבצים</value>
+  </data>
+  <data name="BrowseFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון לאיתור קבצים</value>
+  </data>
+  <data name="BrowseFoldersButton.Content" xml:space="preserve">
+    <value>עיון בתיקיות</value>
+  </data>
+  <data name="BrowseFoldersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון לאיתור תיקיות</value>
+  </data>
+  <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון לאיתור תיקיות</value>
   </data>
 </root>

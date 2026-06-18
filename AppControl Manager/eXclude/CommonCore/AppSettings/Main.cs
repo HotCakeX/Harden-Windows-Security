@@ -77,7 +77,6 @@ internal sealed partial class Main : ViewModelBase
 		AutoCheckForUpdateAtStartup = ReadValue(nameof(AutoCheckForUpdateAtStartup), AutoCheckForUpdateAtStartup);
 		ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), ApplicationGlobalLanguage);
 		ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), ApplicationGlobalFlowDirection);
-		CiPolicySchemaPath = ReadValue(nameof(CiPolicySchemaPath), CiPolicySchemaPath);
 		ScreenShield = ReadValue(nameof(ScreenShield), ScreenShield);
 		PublishUserActivityInTheOS = ReadValue(nameof(PublishUserActivityInTheOS), PublishUserActivityInTheOS);
 		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
@@ -394,21 +393,6 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = "LeftToRight";
-
-	/// <summary>
-	/// The path to the Code Integrity Schema XSD file.
-	/// User can optionally provide a custom path to it. E.g., on Home edition where this file doesn't exist by default.
-	/// </summary>
-	internal string CiPolicySchemaPath
-	{
-		get; set
-		{
-			if (SP(ref field, value))
-			{
-				SaveValue(nameof(CiPolicySchemaPath), field);
-			}
-		}
-	} = string.Empty;
 
 	/// <summary>
 	/// Prevent screen recorders and other apps from recording or taking screenshot of the app's window.

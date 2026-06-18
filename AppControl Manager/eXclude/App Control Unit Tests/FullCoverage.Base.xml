@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" FriendlyName="Full Coverage Base Policy" PolicyType="Base Policy">
+  <VersionEx>10.20.30.40</VersionEx>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <PolicyID>{11111111-1111-1111-1111-111111111111}</PolicyID>
+  <BasePolicyID>{11111111-1111-1111-1111-111111111111}</BasePolicyID>
+  <Rules>
+    <Rule><Option>Enabled:UMCI</Option></Rule>
+    <Rule><Option>Enabled:Boot Menu Protection</Option></Rule>
+    <Rule><Option>Enabled:Intelligent Security Graph Authorization</Option></Rule>
+    <Rule><Option>Enabled:Invalidate EAs on Reboot</Option></Rule>
+    <Rule><Option>Required:WHQL</Option></Rule>
+    <Rule><Option>Enabled:Developer Mode Dynamic Code Trust</Option></Rule>
+    <Rule><Option>Enabled:Allow Supplemental Policies</Option></Rule>
+    <Rule><Option>Disabled:Runtime FilePath Rule Protection</Option></Rule>
+    <Rule><Option>Enabled:Revoked Expired As Unsigned</Option></Rule>
+    <Rule><Option>Enabled:Audit Mode</Option></Rule>
+    <Rule><Option>Disabled:Flight Signing</Option></Rule>
+    <Rule><Option>Enabled:Inherit Default Policy</Option></Rule>
+    <Rule><Option>Enabled:Unsigned System Integrity Policy</Option></Rule>
+    <Rule><Option>Enabled:Dynamic Code Security</Option></Rule>
+    <Rule><Option>Required:EV Signers</Option></Rule>
+    <Rule><Option>Enabled:Boot Audit On Failure</Option></Rule>
+    <Rule><Option>Enabled:Advanced Boot Options Menu</Option></Rule>
+    <Rule><Option>Disabled:Script Enforcement</Option></Rule>
+    <Rule><Option>Required:Enforce Store Applications</Option></Rule>
+    <Rule><Option>Enabled:Secure Setting Policy</Option></Rule>
+    <Rule><Option>Enabled:Managed Installer</Option></Rule>
+    <Rule><Option>Enabled:Update Policy No Reboot</Option></Rule>
+    <Rule><Option>Enabled:Conditional Windows Lockdown Policy</Option></Rule>
+    <Rule><Option>Disabled:Default Windows Certificate Remapping</Option></Rule>
+  </Rules>
+  <EKUs>
+    <EKU ID="ID_EKU_E_CODE_SIGNING" FriendlyName="Code Signing EKU" Value="01082B06010505070303" OID="1.3.6.1.5.5.7.3.3" />
+    <EKU ID="ID_EKU_E_WINDOWS_SYSTEM" FriendlyName="Windows System Component Verification EKU" Value="010A2B0601040182370A0306" OID="1.3.6.1.4.1.311.10.3.6" />
+  </EKUs>
+  <FileRules>
+    <Allow ID="ID_ALLOW_A_HASH" FriendlyName="Allow hash rule" Hash="101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F" />
+    <Allow ID="ID_ALLOW_A_VERSION" FriendlyName="Allow version range" FileName="VersionedAllow.exe" InternalName="VersionedAllow" FileDescription="Versioned allow file" ProductName="Full Coverage Product" MinimumFileVersion="1.2.3.4" MaximumFileVersion="9.8.7.6" />
+    <Allow ID="ID_ALLOW_A_PATH" FriendlyName="Allow file path" FilePath="%WINDIR%\System32\AllowedPath.exe" />
+    <Allow ID="ID_ALLOW_A_APPIDS_LITERAL" FriendlyName="Allow literal AppIDs" FileName="PerAppAllow.exe" AppIDs="^Contoso.TestApp.1.0.0.0.x64.8wekyb3d8bbwe" />
+    <Allow ID="ID_ALLOW_A_APPIDS_MACRO" FriendlyName="Allow macro AppIDs" FileName="MacroAppAllow.exe" AppIDs="$(AppAlpha)$(AppBeta)" />
+    <Allow ID="ID_ALLOW_A_HOTPATCH_BASE" FriendlyName="Allow hotpatch base" FileName="HotpatchBase.exe" RequireHotpatchID="ID_ALLOW_A_HOTPATCH_TARGET" />
+    <Allow ID="ID_ALLOW_A_HOTPATCH_TARGET" FriendlyName="Allow hotpatch target" FileName="HotpatchTarget.exe" MinimumHotpatchSequence="2" MaximumHotpatchSequence="8" />
+    <Deny ID="ID_DENY_A_HASH" FriendlyName="Deny hash rule" Hash="303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F" />
+    <Deny ID="ID_DENY_A_VERSION" FriendlyName="Deny version range" FileName="VersionedDeny.exe" FileDescription="Versioned deny file" MinimumFileVersion="2.0.0.0" MaximumFileVersion="2.5.0.0" />
+    <Deny ID="ID_DENY_A_PATH" FriendlyName="Deny file path" FilePath="%PROGRAMFILES%\Blocked\Blocked.exe" />
+    <Deny ID="ID_DENY_A_APPIDS_LITERAL" FriendlyName="Deny literal AppIDs" FileName="PerAppDeny.exe" AppIDs="^Contoso.BlockedApp.2.0.0.0.x64.8wekyb3d8bbwe" />
+    <FileAttrib ID="ID_FILEATTRIB_A_VERSION" FriendlyName="File attribute version" FileName="PublisherBound.exe" ProductName="Full Coverage Product" MinimumFileVersion="3.0.0.0" MaximumFileVersion="3.1.0.0" />
+    <FileAttrib ID="ID_FILEATTRIB_A_HASH" FriendlyName="File attribute hash" Hash="505152535455565758595A5B5C5D5E5F606162636465666768696A6B6C6D6E6F" />
+    <FileRule ID="ID_FILE_A_GENERIC_MATCH" Type="Match" FriendlyName="Generic match rule" FileName="GenericMatch.exe" MinimumFileVersion="4.0.0.0" MaximumFileVersion="4.4.4.4" />
+    <FileRule ID="ID_FILE_A_GENERIC_EXCLUDE" Type="Exclude" FriendlyName="Generic exclude rule" FilePath="%TEMP%\GenericExclude.exe" />
+    <FileRule ID="ID_FILE_A_GENERIC_ATTRIBUTE" Type="Attribute" FriendlyName="Generic attribute rule" PackageFamilyName="Contoso.GenericPackage_8wekyb3d8bbwe" PackageVersion="5.6.7.8" />
+  </FileRules>
+  <ArtifactRules>
+    <ArtifactRule ID="ID_ARTIFACT_A_SHA256" ArtifactType="CIM" Action="Deny" FriendlyName="CIM deny SHA256" ArtifactName="DeniedCim" ArtifactDescription="Denied CIM artifact" MinimumVersion="1.0.0.0" MaximumVersion="1.0.1.0">
+      <ArtifactHash><Hash><sha256>707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F</sha256></Hash></ArtifactHash>
+    </ArtifactRule>
+    <ArtifactRule ID="ID_ARTIFACT_A_SHA384" ArtifactType="Catalog" Action="Allow" FriendlyName="Catalog allow SHA384" ArtifactName="AllowedCatalog384" ArtifactDescription="Allowed Catalog artifact" MinimumVersion="2.0.0.0" MaximumVersion="2.0.1.0">
+      <ArtifactHash><Hash><sha384>909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBF</sha384></Hash></ArtifactHash>
+    </ArtifactRule>
+    <ArtifactRule ID="ID_ARTIFACT_A_SHA512" ArtifactType="CIM" Action="Allow" FriendlyName="CIM allow SHA512" ArtifactName="AllowedCim512" ArtifactDescription="Allowed CIM artifact" MinimumVersion="3.0.0.0" MaximumVersion="3.0.1.0">
+      <ArtifactHash><Hash><sha512>C0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF</sha512></Hash></ArtifactHash>
+    </ArtifactRule>
+    <ArtifactRule ID="ID_ARTIFACT_A_DEFAULTS" ArtifactType="Catalog" Action="Deny" FriendlyName="Catalog deny default versions" ArtifactName="DefaultVersionCatalog" ArtifactDescription="Artifact rule with default version bounds" />
+  </ArtifactRules>
+  <Signers>
+    <Signer ID="ID_SIGNER_A_TBS" Name="Full Coverage TBS Signer" SignTimeAfter="2024-01-02T03:04:05.0000000Z">
+      <CertRoot Type="TBS" Value="0123456789ABCDEF1032547698BADCFE" />
+      <CertEKU ID="ID_EKU_E_CODE_SIGNING" />
+      <CertEKU ID="ID_EKU_E_WINDOWS_SYSTEM" Condition="Except" />
+      <CertIssuer Value="CN=Full Coverage Issuer" />
+      <CertPublisher Value="CN=Full Coverage Publisher" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_A_VERSION" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_A_HASH" />
+      <FileAttribRef RuleID="ID_FILE_A_GENERIC_ATTRIBUTE" />
+      <ArtifactRuleRef RuleID="ID_ARTIFACT_A_SHA256" />
+      <ArtifactRuleRef RuleID="ID_ARTIFACT_A_SHA384" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_WELLKNOWN" Name="Full Coverage Wellknown Signer">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertOemID Value="OEM-FULL-COVERAGE" />
+      <ArtifactRuleRef RuleID="ID_ARTIFACT_A_SHA512" />
+      <ArtifactRuleRef RuleID="ID_ARTIFACT_A_DEFAULTS" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_UPDATE" Name="Full Coverage Update Signer">
+      <CertRoot Type="TBS" Value="AABBCCDDEEFF0011" />
+      <CertPublisher Value="CN=Update Publisher" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_SUPPLEMENTAL" Name="Full Coverage Supplemental Signer">
+      <CertRoot Type="TBS" Value="21436587A9CBED0F" />
+      <CertIssuer Value="CN=Supplemental Issuer" />
+    </Signer>
+  </Signers>
+  <SigningScenarios>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Code Integrity" InheritedScenarios="ID_SIGNINGSCENARIO_DRIVERS_1" MinimumHashAlgorithm="32772">
+      <ProductSigners>
+        <AllowedSigners>
+          <AllowedSigner SignerId="ID_SIGNER_A_TBS"><ExceptDenyRule DenyRuleID="ID_DENY_A_HASH" /><ExceptDenyRule DenyRuleID="ID_DENY_A_VERSION" /></AllowedSigner>
+          <AllowedSigner SignerId="ID_SIGNER_A_WELLKNOWN" />
+        </AllowedSigners>
+        <DeniedSigners>
+          <DeniedSigner SignerId="ID_SIGNER_A_WELLKNOWN"><ExceptAllowRule AllowRuleID="ID_ALLOW_A_HASH" /><ExceptAllowRule AllowRuleID="ID_ALLOW_A_VERSION" /></DeniedSigner>
+        </DeniedSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_HASH" />
+          <FileRuleRef RuleID="ID_ALLOW_A_VERSION" />
+          <FileRuleRef RuleID="ID_ALLOW_A_APPIDS_LITERAL" />
+          <FileRuleRef RuleID="ID_ALLOW_A_APPIDS_MACRO" />
+          <FileRuleRef RuleID="ID_ALLOW_A_HOTPATCH_BASE" />
+          <FileRuleRef RuleID="ID_ALLOW_A_HOTPATCH_TARGET" />
+          <FileRuleRef RuleID="ID_DENY_A_APPIDS_LITERAL" />
+          <FileRuleRef RuleID="ID_FILE_A_GENERIC_MATCH" />
+        </FileRulesRef>
+      </ProductSigners>
+      <ArtifactSigners>
+        <AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_TBS" /></AllowedSigners>
+        <DeniedSigners><DeniedSigner SignerId="ID_SIGNER_A_WELLKNOWN" /></DeniedSigners>
+        <ArtifactRulesRef><ArtifactRuleRef RuleID="ID_ARTIFACT_A_SHA256" /><ArtifactRuleRef RuleID="ID_ARTIFACT_A_SHA384" /></ArtifactRulesRef>
+      </ArtifactSigners>
+      <TestSigners>
+        <AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_TBS" /></AllowedSigners>
+        <DeniedSigners><DeniedSigner SignerId="ID_SIGNER_A_WELLKNOWN" /></DeniedSigners>
+        <FileRulesRef><FileRuleRef RuleID="ID_ALLOW_A_PATH" /><FileRuleRef RuleID="ID_DENY_A_PATH" /></FileRulesRef>
+      </TestSigners>
+      <TestSigningSigners>
+        <AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_UPDATE" /></AllowedSigners>
+        <DeniedSigners><DeniedSigner SignerId="ID_SIGNER_A_SUPPLEMENTAL" /></DeniedSigners>
+        <FileRulesRef><FileRuleRef RuleID="ID_FILE_A_GENERIC_EXCLUDE" /></FileRulesRef>
+      </TestSigningSigners>
+      <AppIDTags EnforceDLL="true"><AppIDTag Key="Tag.One" Value="Value.One" /><AppIDTag Key="Tag.Two" Value="Value.Two" /></AppIDTags>
+    </SigningScenario>
+    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel Mode Code Integrity" MinimumHashAlgorithm="32772">
+      <ProductSigners>
+        <AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_UPDATE" /><AllowedSigner SignerId="ID_SIGNER_A_SUPPLEMENTAL" /></AllowedSigners>
+        <DeniedSigners><DeniedSigner SignerId="ID_SIGNER_A_TBS"><ExceptAllowRule AllowRuleID="ID_ALLOW_A_PATH" /></DeniedSigner></DeniedSigners>
+        <FileRulesRef><FileRuleRef RuleID="ID_DENY_A_HASH" /><FileRuleRef RuleID="ID_DENY_A_VERSION" /><FileRuleRef RuleID="ID_DENY_A_PATH" /><FileRuleRef RuleID="ID_FILE_A_GENERIC_EXCLUDE" /></FileRulesRef>
+      </ProductSigners>
+      <ArtifactSigners>
+        <AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_UPDATE" /></AllowedSigners>
+        <DeniedSigners><DeniedSigner SignerId="ID_SIGNER_A_SUPPLEMENTAL" /></DeniedSigners>
+        <ArtifactRulesRef><ArtifactRuleRef RuleID="ID_ARTIFACT_A_SHA512" /><ArtifactRuleRef RuleID="ID_ARTIFACT_A_DEFAULTS" /></ArtifactRulesRef>
+      </ArtifactSigners>
+      <TestSigners><AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_UPDATE" /></AllowedSigners><FileRulesRef><FileRuleRef RuleID="ID_ALLOW_A_HASH" /></FileRulesRef></TestSigners>
+      <TestSigningSigners><DeniedSigners><DeniedSigner SignerId="ID_SIGNER_A_TBS" /></DeniedSigners><FileRulesRef><FileRuleRef RuleID="ID_DENY_A_HASH" /></FileRulesRef></TestSigningSigners>
+    </SigningScenario>
+  </SigningScenarios>
+  <UpdatePolicySigners><UpdatePolicySigner SignerId="ID_SIGNER_A_UPDATE" /></UpdatePolicySigners>
+  <CiSigners><CiSigner SignerId="ID_SIGNER_A_TBS" /><CiSigner SignerId="ID_SIGNER_A_WELLKNOWN" /></CiSigners>
+  <HvciOptions>2</HvciOptions>
+  <Settings>
+    <Setting Provider="Provider.Boolean" Key="Key.Boolean" ValueName="Value.Boolean"><Value><Boolean>true</Boolean></Value></Setting>
+    <Setting Provider="Provider.DWord" Key="Key.DWord" ValueName="Value.DWord"><Value><DWord>4294967295</DWord></Value></Setting>
+    <Setting Provider="Provider.Binary" Key="Key.Binary" ValueName="Value.Binary"><Value><Binary>DEADBEEF</Binary></Value></Setting>
+    <Setting Provider="Provider.String" Key="Key.String" ValueName="Value.String"><Value><String>String value with XML characters &lt;&gt;&amp; and Unicode snowman</String></Value></Setting>
+  </Settings>
+  <Macros><Macro Id="AppAlpha" Value="Contoso.AppAlpha_1.0.0.0_x64__8wekyb3d8bbwe" /><Macro Id="AppBeta" Value="Contoso.AppBeta_2.0.0.0_x64__8wekyb3d8bbwe" /></Macros>
+  <SupplementalPolicySigners><SupplementalPolicySigner SignerId="ID_SIGNER_A_SUPPLEMENTAL" /></SupplementalPolicySigners>
+</SiPolicy>

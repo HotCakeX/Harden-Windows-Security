@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" FriendlyName="Full Coverage Supplemental Policy" PolicyType="Supplemental Policy">
+  <VersionEx>1.0.0.0</VersionEx>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <PolicyID>{22222222-2222-2222-2222-222222222222}</PolicyID>
+  <BasePolicyID>{11111111-1111-1111-1111-111111111111}</BasePolicyID>
+  <Rules>
+    <Rule><Option>Enabled:Unsigned System Integrity Policy</Option></Rule>
+    <Rule><Option>Enabled:UMCI</Option></Rule>
+  </Rules>
+  <FileRules>
+    <Allow ID="ID_ALLOW_A_SUPPLEMENTAL_HASH" Hash="0101010101010101010101010101010101010101010101010101010101010101" />
+  </FileRules>
+  <Signers>
+    <Signer ID="ID_SIGNER_A_SUPPLEMENTAL_ONLY" Name="Supplemental Only Signer">
+      <CertRoot Type="Wellknown" Value="07" />
+    </Signer>
+  </Signers>
+  <SigningScenarios>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_SUPPLEMENTAL_WINDOWS">
+      <ProductSigners>
+        <AllowedSigners><AllowedSigner SignerId="ID_SIGNER_A_SUPPLEMENTAL_ONLY" /></AllowedSigners>
+        <FileRulesRef><FileRuleRef RuleID="ID_ALLOW_A_SUPPLEMENTAL_HASH" /></FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+  </SigningScenarios>
+</SiPolicy>

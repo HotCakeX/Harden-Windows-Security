@@ -282,8 +282,68 @@ internal readonly struct ChartGridLine(double offset)
 	internal double Offset => offset;
 }
 
+internal enum AnalysisTimeRangeKind
+{
+	AllTime,
+	Past1Hour,
+	Past12Hours,
+	Past24Hours,
+	PastWeek,
+	PastMonth,
+	Past6Months,
+	PastYear
+}
+
+internal sealed class TimeRangeFilterOption(string displayName, AnalysisTimeRangeKind kind)
+{
+	internal string DisplayName => displayName;
+	internal AnalysisTimeRangeKind Kind => kind;
+	public override string ToString() => DisplayName;
+}
+
 internal sealed partial class FileIdentityAnalysis : ViewModelBase
 {
+	private List<FileIdentity> _allFileIdentities = [];
+	private bool _suppressTimeRangeRefresh;
+
+	internal FileIdentityAnalysis()
+	{
+		_suppressTimeRangeRefresh = true;
+		Analysis_SelectedTimeRange = Analysis_TimeRangeOptions[0];
+		_suppressTimeRangeRefresh = false;
+	}
+
+	internal readonly List<TimeRangeFilterOption> Analysis_TimeRangeOptions =
+	[
+		new("All time (entire range)", AnalysisTimeRangeKind.AllTime),
+		new("Past 1 hour", AnalysisTimeRangeKind.Past1Hour),
+		new("Past 12 hours", AnalysisTimeRangeKind.Past12Hours),
+		new("Past 24 hours", AnalysisTimeRangeKind.Past24Hours),
+		new("Past week", AnalysisTimeRangeKind.PastWeek),
+		new("Past month", AnalysisTimeRangeKind.PastMonth),
+		new("Past 6 months", AnalysisTimeRangeKind.Past6Months),
+		new("Past year", AnalysisTimeRangeKind.PastYear)
+	];
+
+	internal TimeRangeFilterOption? Analysis_SelectedTimeRange { get; set => SP(ref field, value); }
+
+	internal bool Analysis_IsRecalculating
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(Analysis_RecalculationProgressVisibility));
+				OnPropertyChanged(nameof(Analysis_ContentOpacity));
+				OnPropertyChanged(nameof(Analysis_ContentIsHitTestVisible));
+			}
+		}
+	}
+
+	internal Visibility Analysis_RecalculationProgressVisibility => Analysis_IsRecalculating ? Visibility.Visible : Visibility.Collapsed;
+	internal double Analysis_ContentOpacity => Analysis_IsRecalculating ? 0.45 : 1.0;
+	internal bool Analysis_ContentIsHitTestVisible => !Analysis_IsRecalculating;
+
 	internal string? Analysis_TotalAllowed { get; set => SP(ref field, value); }
 	internal string? Analysis_TotalBlocked { get; set => SP(ref field, value); }
 
@@ -352,6 +412,73 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 
 	// Main method called from ViewModels.
 	internal async Task PrepareAnalysis(List<FileIdentity> AllFileIdentities)
+	{
+		_allFileIdentities = AllFileIdentities;
+		await RecalculateAnalysisForSelectedTimeRangeAsync();
+	}
+
+	internal async void TimeRangeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (_suppressTimeRangeRefresh || _allFileIdentities.Count == 0)
+		{
+			return;
+		}
+
+		await RecalculateAnalysisForSelectedTimeRangeAsync();
+	}
+
+	private async Task RecalculateAnalysisForSelectedTimeRangeAsync()
+	{
+		TimeRangeFilterOption? selectedTimeRange = Analysis_SelectedTimeRange;
+
+		Analysis_IsRecalculating = true;
+
+		try
+		{
+			List<FileIdentity> filteredFileIdentities = await Task.Run(() => GetFileIdentitiesForTimeRange(selectedTimeRange));
+			await PrepareAnalysisCore(filteredFileIdentities);
+		}
+		finally
+		{
+			Analysis_IsRecalculating = false;
+		}
+	}
+
+	private List<FileIdentity> GetFileIdentitiesForTimeRange(TimeRangeFilterOption? selectedTimeRange)
+	{
+		if (selectedTimeRange is null || selectedTimeRange.Kind == AnalysisTimeRangeKind.AllTime)
+		{
+			return new List<FileIdentity>(_allFileIdentities);
+		}
+
+		DateTime now = DateTime.Now;
+		DateTime threshold = GetThresholdForTimeRange(selectedTimeRange.Kind, now);
+		List<FileIdentity> filteredFileIdentities = new(_allFileIdentities.Count);
+
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(_allFileIdentities))
+		{
+			if (item.TimeCreated.HasValue && item.TimeCreated.Value >= threshold && item.TimeCreated.Value <= now)
+			{
+				filteredFileIdentities.Add(item);
+			}
+		}
+
+		return filteredFileIdentities;
+	}
+
+	private static DateTime GetThresholdForTimeRange(AnalysisTimeRangeKind timeRangeKind, DateTime now) => timeRangeKind switch
+	{
+		AnalysisTimeRangeKind.Past1Hour => now.AddHours(-1),
+		AnalysisTimeRangeKind.Past12Hours => now.AddHours(-12),
+		AnalysisTimeRangeKind.Past24Hours => now.AddHours(-24),
+		AnalysisTimeRangeKind.PastWeek => now.AddDays(-7),
+		AnalysisTimeRangeKind.PastMonth => now.AddMonths(-1),
+		AnalysisTimeRangeKind.Past6Months => now.AddMonths(-6),
+		AnalysisTimeRangeKind.PastYear => now.AddYears(-1),
+		_ => DateTime.MinValue
+	};
+
+	private async Task PrepareAnalysisCore(List<FileIdentity> AllFileIdentities)
 	{
 		await Task.Run(async () =>
 		{
@@ -560,7 +687,11 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	private void GeneratePieChartData(int allowed, int blocked)
 	{
 		double total = allowed + blocked;
-		if (total == 0) return;
+		if (total == 0)
+		{
+			Chart_PieSlices = [];
+			return;
+		}
 
 		List<PieSliceData> slices = [];
 		double currentAngle = 0;

@@ -1,1 +1,3 @@
 * Updated dependencies to the latest version.
+
+* You can now dynamically change the time range in the Analysis page available for MDE Advanced Hunting data and Event Logs data. The charts and graphs will be dynamically generated based on the time range you choose.

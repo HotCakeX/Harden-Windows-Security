@@ -168,542 +168,572 @@
 
     </Page.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Padding="20" Spacing="30">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-            <!-- Data Summary Section -->
-            <Border CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
-                <StackPanel Spacing="10">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <FontIcon Glyph="&#xE8F3;" Foreground="{ThemeResource SystemAccentColor}" FontSize="18" />
-                        <TextBlock x:Uid="DataSummary" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
-                    </StackPanel>
-                    <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_SummaryText, Mode=OneWay}" IsTextSelectionEnabled="True" TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        <!-- Time range control area. -->
+        <Border Grid.Row="0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="16">
+            <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="12" VerticalSpacing="8">
+                <StackPanel Spacing="4" MinWidth="260">
+                    <TextBlock Text="Time range" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
+                    <ComboBox MinWidth="260"
+                              ItemsSource="{x:Bind ViewModel.AnalysisResults.Analysis_TimeRangeOptions, Mode=OneWay}"
+                              SelectedItem="{x:Bind ViewModel.AnalysisResults.Analysis_SelectedTimeRange, Mode=TwoWay}"
+                              SelectionChanged="{x:Bind ViewModel.AnalysisResults.TimeRangeComboBox_SelectionChanged}" />
                 </StackPanel>
-            </Border>
-
-            <!-- Actionable Recommendations Section -->
-            <Border CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
-                <StackPanel Spacing="10">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <FontIcon Glyph="&#xE81E;" Foreground="{ThemeResource SystemAccentColor}" FontSize="18" />
-                        <TextBlock x:Uid="RecommendedActions" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
-                    </StackPanel>
-                    <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.Analysis_ActionableRecommendations, Mode=OneWay}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,4,0,4">
-                                    <FontIcon Glyph="&#xEA3A;" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
-                                    <TextBlock Text="{x:Bind}" TextWrapping="Wrap" IsTextSelectionEnabled="True" Style="{StaticResource BodyTextBlockStyle}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom"
+                            Visibility="{x:Bind ViewModel.AnalysisResults.Analysis_RecalculationProgressVisibility, Mode=OneWay}">
+                    <ProgressRing Width="22" Height="22" IsActive="{x:Bind ViewModel.AnalysisResults.Analysis_IsRecalculating, Mode=OneWay}" IsIndeterminate="True" />
+                    <TextBlock Text="Recalculating analysis" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
-            </Border>
+            </CCToolKit:WrapPanel>
+        </Border>
 
-            <!-- Top Level Outcomes Cards -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="1"
+                      Margin="0,10,0,0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Opacity="{x:Bind ViewModel.AnalysisResults.Analysis_ContentOpacity, Mode=OneWay}"
+                      IsHitTestVisible="{x:Bind ViewModel.AnalysisResults.Analysis_ContentIsHitTestVisible, Mode=OneWay}">
+            <StackPanel Spacing="20">
 
-                <Border Grid.Column="0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                <!-- Data Summary Section -->
+                <Border CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel Spacing="10">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <FontIcon Glyph="&#xEA39;" Foreground="Red" FontSize="20" />
-                            <TextBlock x:Uid="TotalBlockedItems" Style="{StaticResource SubtitleTextBlockStyle}" />
+                            <FontIcon Glyph="&#xE8F3;" Foreground="{ThemeResource SystemAccentColor}" FontSize="18" />
+                            <TextBlock x:Uid="DataSummary" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
                         </StackPanel>
-                        <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_TotalBlocked, Mode=OneWay}" Style="{StaticResource HeaderTextBlockStyle}" FontWeight="Bold" />
+                        <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_SummaryText, Mode=OneWay}" IsTextSelectionEnabled="True" TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Column="2" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                <!-- Actionable Recommendations Section -->
+                <Border CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
                     <StackPanel Spacing="10">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <FontIcon Glyph="&#xE73E;" Foreground="LimeGreen" FontSize="20" />
-                            <TextBlock x:Uid="TotalAllowedOrAuditedItems" Style="{StaticResource SubtitleTextBlockStyle}" />
+                            <FontIcon Glyph="&#xE81E;" Foreground="{ThemeResource SystemAccentColor}" FontSize="18" />
+                            <TextBlock x:Uid="RecommendedActions" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
                         </StackPanel>
-                        <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_TotalAllowed, Mode=OneWay}" Style="{StaticResource HeaderTextBlockStyle}" FontWeight="Bold" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- Color Palettes -->
-            <StackPanel Spacing="10">
-                <TextBlock x:Uid="ColorPalettes" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled">
-                    <ItemsControl ItemsSource="{x:Bind Analysis:FileIdentityAnalysis.AvailablePalettes}" Margin="0,0,0,10">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" Spacing="15" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="Analysis:ColorPalette">
-                                <Button Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.PaletteButton_Click}" Tag="{x:Bind}" Padding="10" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                                    <StackPanel Spacing="5" HorizontalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal" Spacing="0" Background="Transparent">
-                                            <Border Width="20" Height="20" Background="{x:Bind Brush1}" CornerRadius="4,0,0,4" />
-                                            <Border Width="20" Height="20" Background="{x:Bind Brush2}" />
-                                            <Border Width="20" Height="20" Background="{x:Bind Brush3}" CornerRadius="0,4,4,0" />
-                                        </StackPanel>
-                                        <TextBlock Text="{x:Bind Name}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.Analysis_ActionableRecommendations, Mode=OneWay}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,4,0,4">
+                                        <FontIcon Glyph="&#xEA3A;" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{x:Bind}" TextWrapping="Wrap" IsTextSelectionEnabled="True" Style="{StaticResource BodyTextBlockStyle}" />
                                     </StackPanel>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
 
-            <!-- Visualization Charts Section -->
-            <StackPanel Spacing="15">
-                <TextBlock x:Uid="DataVisualizations" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
-                <CCToolKit:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Horizontal">
+                <!-- Top Level Outcomes Cards -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                    <!-- Pie Chart (Allowed vs Blocked) -->
-                    <Border CornerRadius="8" MinWidth="340" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
-                        <StackPanel Spacing="20">
-                            <Grid>
-                                <TextBlock x:Uid="DistributionOverview" Style="{StaticResource BaseTextBlockStyle}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Padding="4" Tag="Pie" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.ExportChart_Click}" ToolTipService.ToolTip="Download SVG">
-                                    <FontIcon Glyph="&#xE896;" FontSize="14" />
-                                </Button>
-                            </Grid>
+                    <Border Grid.Column="0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                        <StackPanel Spacing="10">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xEA39;" Foreground="Red" FontSize="20" />
+                                <TextBlock x:Uid="TotalBlockedItems" Style="{StaticResource SubtitleTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_TotalBlocked, Mode=OneWay}" Style="{StaticResource HeaderTextBlockStyle}" FontWeight="Bold" />
+                        </StackPanel>
+                    </Border>
 
-                            <Grid Width="200" Height="200" HorizontalAlignment="Center">
-                                <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.Chart_PieSlices, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <Grid />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="Analysis:PieSliceData">
-                                            <Grid PointerEntered="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.PieSlice_PointerEntered}" PointerExited="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.PieSlice_PointerExited}" Tag="{x:Bind}">
-                                                <Path Data="{x:Bind PathData}" Fill="{x:Bind Fill}" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" StrokeLineJoin="Round" ToolTipService.ToolTip="{x:Bind Tooltip}">
-                                                    <Path.Transitions>
-                                                        <TransitionCollection>
-                                                            <EntranceThemeTransition />
-                                                        </TransitionCollection>
-                                                    </Path.Transitions>
-                                                </Path>
+                    <Border Grid.Column="2" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                        <StackPanel Spacing="10">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE73E;" Foreground="LimeGreen" FontSize="20" />
+                                <TextBlock x:Uid="TotalAllowedOrAuditedItems" Style="{StaticResource SubtitleTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_TotalAllowed, Mode=OneWay}" Style="{StaticResource HeaderTextBlockStyle}" FontWeight="Bold" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
 
-                                                <!-- Slice Percentage Label -->
-                                                <TextBlock Text="{x:Bind PercentageText}"
+                <!-- Color Palettes -->
+                <StackPanel Spacing="10">
+                    <TextBlock x:Uid="ColorPalettes" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled">
+                        <ItemsControl ItemsSource="{x:Bind Analysis:FileIdentityAnalysis.AvailablePalettes}" Margin="0,0,0,10">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="15" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="Analysis:ColorPalette">
+                                    <Button Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.PaletteButton_Click}" Tag="{x:Bind}" Padding="10" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                                        <StackPanel Spacing="5" HorizontalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="0" Background="Transparent">
+                                                <Border Width="20" Height="20" Background="{x:Bind Brush1}" CornerRadius="4,0,0,4" />
+                                                <Border Width="20" Height="20" Background="{x:Bind Brush2}" />
+                                                <Border Width="20" Height="20" Background="{x:Bind Brush3}" CornerRadius="0,4,4,0" />
+                                            </StackPanel>
+                                            <TextBlock Text="{x:Bind Name}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+
+                <!-- Visualization Charts Section -->
+                <StackPanel Spacing="15">
+                    <TextBlock x:Uid="DataVisualizations" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
+                    <CCToolKit:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Horizontal">
+
+                        <!-- Pie Chart (Allowed vs Blocked) -->
+                        <Border CornerRadius="8" MinWidth="340" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                            <StackPanel Spacing="20">
+                                <Grid>
+                                    <TextBlock x:Uid="DistributionOverview" Style="{StaticResource BaseTextBlockStyle}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Padding="4" Tag="Pie" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.ExportChart_Click}" ToolTipService.ToolTip="Download SVG">
+                                        <FontIcon Glyph="&#xE896;" FontSize="14" />
+                                    </Button>
+                                </Grid>
+
+                                <Grid Width="200" Height="200" HorizontalAlignment="Center">
+                                    <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.Chart_PieSlices, Mode=OneWay}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Grid />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="Analysis:PieSliceData">
+                                                <Grid PointerEntered="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.PieSlice_PointerEntered}" PointerExited="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.PieSlice_PointerExited}" Tag="{x:Bind}">
+                                                    <Path Data="{x:Bind PathData}" Fill="{x:Bind Fill}" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" StrokeLineJoin="Round" ToolTipService.ToolTip="{x:Bind Tooltip}">
+                                                        <Path.Transitions>
+                                                            <TransitionCollection>
+                                                                <EntranceThemeTransition />
+                                                            </TransitionCollection>
+                                                        </Path.Transitions>
+                                                    </Path>
+
+                                                    <!-- Slice Percentage Label -->
+                                                    <TextBlock Text="{x:Bind PercentageText}"
                                                            FontWeight="SemiBold"
                                                            FontSize="12"
                                                            HorizontalAlignment="Left"
                                                            VerticalAlignment="Top"
                                                            IsHitTestVisible="False">
-                                                    <TextBlock.RenderTransform>
-                                                        <TranslateTransform X="{x:Bind LabelX}" Y="{x:Bind LabelY}" />
-                                                    </TextBlock.RenderTransform>
-                                                </TextBlock>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Grid>
+                                                        <TextBlock.RenderTransform>
+                                                            <TranslateTransform X="{x:Bind LabelX}" Y="{x:Bind LabelY}" />
+                                                        </TextBlock.RenderTransform>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
 
-                            <!-- Pie Legend -->
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
-                                <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <Ellipse Width="10" Height="10" Fill="LimeGreen" />
-                                    <TextBlock x:Uid="Allowed" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <Ellipse Width="10" Height="10" Fill="OrangeRed" />
-                                    <TextBlock x:Uid="Blocked" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <!-- Pie Legend -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <Ellipse Width="10" Height="10" Fill="LimeGreen" />
+                                        <TextBlock x:Uid="Allowed" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <Ellipse Width="10" Height="10" Fill="OrangeRed" />
+                                        <TextBlock x:Uid="Blocked" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Border>
+                        </Border>
 
-                    <!-- Line Chart (Blocks over Time) -->
-                    <Border CornerRadius="8" MinWidth="850" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
-                        <StackPanel Spacing="20">
-                            <Grid>
-                                <TextBlock x:Uid="BlockedEventsTrend" Style="{StaticResource BaseTextBlockStyle}" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="OrangeRed" VerticalAlignment="Center" />
-                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Padding="4" Tag="BlockedLine" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.ExportChart_Click}" ToolTipService.ToolTip="Download SVG">
-                                    <FontIcon Glyph="&#xE896;" FontSize="14" />
-                                </Button>
-                            </Grid>
+                        <!-- Line Chart (Blocks over Time) -->
+                        <Border CornerRadius="8" MinWidth="850" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                            <StackPanel Spacing="20">
+                                <Grid>
+                                    <TextBlock x:Uid="BlockedEventsTrend" Style="{StaticResource BaseTextBlockStyle}" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="OrangeRed" VerticalAlignment="Center" />
+                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Padding="4" Tag="BlockedLine" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.ExportChart_Click}" ToolTipService.ToolTip="Download SVG">
+                                        <FontIcon Glyph="&#xE896;" FontSize="14" />
+                                    </Button>
+                                </Grid>
 
-                            <Grid HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="800" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="250" />
-                                    <RowDefinition Height="30" />
-                                </Grid.RowDefinitions>
+                                <Grid HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="800" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="250" />
+                                        <RowDefinition Height="30" />
+                                    </Grid.RowDefinitions>
 
-                                <!-- Y Axis Labels -->
-                                <ItemsControl Grid.Row="0" Grid.Column="0" ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_YAxisLabels, Mode=OneWay}" Margin="0,0,10,0">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <Grid />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="Analysis:AxisLabel">
-                                            <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="50" TextAlignment="Right" Margin="0,-8,0,0">
-                                                <TextBlock.RenderTransform>
-                                                    <TranslateTransform Y="{x:Bind Offset}" />
-                                                </TextBlock.RenderTransform>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                    <!-- Y Axis Labels -->
+                                    <ItemsControl Grid.Row="0" Grid.Column="0" ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_YAxisLabels, Mode=OneWay}" Margin="0,0,10,0">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Grid />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="Analysis:AxisLabel">
+                                                <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="50" TextAlignment="Right" Margin="0,-8,0,0">
+                                                    <TextBlock.RenderTransform>
+                                                        <TranslateTransform Y="{x:Bind Offset}" />
+                                                    </TextBlock.RenderTransform>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
 
-                                <!-- X Axis Horizontal Labels -->
-                                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_XAxisLabels, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <Grid />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="Analysis:AxisLabel">
-                                            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
-                                                <Grid.RenderTransform>
-                                                    <TranslateTransform X="{x:Bind Offset}" Y="5" />
-                                                </Grid.RenderTransform>
-                                                <!-- Displayed horizontally, properly spaced via the code computation -->
-                                                <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" Margin="-35,0,0,0" Width="70" TextAlignment="Center" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                    <!-- X Axis Horizontal Labels -->
+                                    <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_XAxisLabels, Mode=OneWay}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Grid />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="Analysis:AxisLabel">
+                                                <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                                                    <Grid.RenderTransform>
+                                                        <TranslateTransform X="{x:Bind Offset}" Y="5" />
+                                                    </Grid.RenderTransform>
+                                                    <!-- Displayed horizontally, properly spaced via the code computation -->
+                                                    <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" Margin="-35,0,0,0" Width="70" TextAlignment="Center" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
 
-                                <!-- Chart Background Dynamic Grid Lines -->
-                                <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_YGridLines, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <Grid />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="Analysis:ChartGridLine">
-                                            <Line X1="0" X2="800" Y1="0" Y2="0" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" StrokeDashArray="4 4" VerticalAlignment="Top">
-                                                <Line.RenderTransform>
-                                                    <TranslateTransform Y="{x:Bind Offset}" />
-                                                </Line.RenderTransform>
-                                            </Line>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                    <!-- Chart Background Dynamic Grid Lines -->
+                                    <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_YGridLines, Mode=OneWay}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Grid />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="Analysis:ChartGridLine">
+                                                <Line X1="0" X2="800" Y1="0" Y2="0" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" StrokeDashArray="4 4" VerticalAlignment="Top">
+                                                    <Line.RenderTransform>
+                                                        <TranslateTransform Y="{x:Bind Offset}" />
+                                                    </Line.RenderTransform>
+                                                </Line>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
 
-                                <!-- Chart Path & Points -->
-                                <Grid Grid.Row="0" Grid.Column="1" Width="800" Height="250">
-                                    <!-- Background Path Line -->
-                                    <Path Data="{x:Bind ViewModel.AnalysisResults.BlockedChart_LinePathData, Mode=OneWay}"
+                                    <!-- Chart Path & Points -->
+                                    <Grid Grid.Row="0" Grid.Column="1" Width="800" Height="250">
+                                        <!-- Background Path Line -->
+                                        <Path Data="{x:Bind ViewModel.AnalysisResults.BlockedChart_LinePathData, Mode=OneWay}"
                                           Stroke="OrangeRed"
                                           StrokeThickness="3"
                                           StrokeLineJoin="Round">
-                                        <Path.Transitions>
-                                            <TransitionCollection>
-                                                <EntranceThemeTransition />
-                                            </TransitionCollection>
-                                        </Path.Transitions>
-                                    </Path>
+                                            <Path.Transitions>
+                                                <TransitionCollection>
+                                                    <EntranceThemeTransition />
+                                                </TransitionCollection>
+                                            </Path.Transitions>
+                                        </Path>
 
-                                    <!-- Interactive Hotspots -->
-                                    <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_LinePoints, Mode=OneWay}">
+                                        <!-- Interactive Hotspots -->
+                                        <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedChart_LinePoints, Mode=OneWay}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <Grid />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="Analysis:LinePointData">
+                                                    <Grid Margin="-7,-7,0,0"
+                                                      Background="Transparent"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Top"
+                                                      PointerEntered="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.Hotspot_PointerEntered}"
+                                                      PointerExited="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.Hotspot_PointerExited}">
+                                                        <Grid.RenderTransform>
+                                                            <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
+                                                        </Grid.RenderTransform>
+
+                                                        <!-- RenderTransformOrigin for perfectly uniform scaling from the center -->
+                                                        <Ellipse x:Name="PointEllipse" Width="14" Height="14" Fill="OrangeRed" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" RenderTransformOrigin="0.5,0.5">
+                                                            <Ellipse.RenderTransform>
+                                                                <ScaleTransform ScaleX="1" ScaleY="1" x:Name="PointScale" />
+                                                            </Ellipse.RenderTransform>
+                                                            <Ellipse.Transitions>
+                                                                <TransitionCollection>
+                                                                    <EntranceThemeTransition IsStaggeringEnabled="True" />
+                                                                </TransitionCollection>
+                                                            </Ellipse.Transitions>
+                                                        </Ellipse>
+
+                                                        <!-- IsHitTestVisible="False" to prevent pointer stealing resulting in instant close -->
+                                                        <Popup x:Name="DataPopup" IsLightDismissEnabled="False" VerticalOffset="-45" HorizontalOffset="-30" IsHitTestVisible="False">
+                                                            <Popup.ChildTransitions>
+                                                                <TransitionCollection>
+                                                                    <PopupThemeTransition />
+                                                                </TransitionCollection>
+                                                            </Popup.ChildTransitions>
+                                                            <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                                                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                                BorderThickness="1" CornerRadius="6" Padding="12,8"
+                                                                Shadow="{StaticResource PopoutShadow}"
+                                                                Translation="0,0,32"
+                                                                IsHitTestVisible="False">
+                                                                <StackPanel Spacing="4">
+                                                                    <TextBlock Text="{x:Bind DateText}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                        <TextBlock Text="Blocks:" FontWeight="SemiBold" FontSize="13" />
+                                                                        <TextBlock Text="{x:Bind CountText}" Foreground="OrangeRed" FontWeight="Bold" FontSize="13" />
+                                                                    </StackPanel>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Line Chart (Allowed/Audited over Time) -->
+                        <Border CornerRadius="8" MinWidth="850" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                            <StackPanel Spacing="20">
+                                <Grid>
+                                    <TextBlock x:Uid="AllowedOrAuditedEventsTrend" Style="{StaticResource BaseTextBlockStyle}" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="LimeGreen" VerticalAlignment="Center" />
+                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Padding="4" Tag="AllowedLine" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.ExportChart_Click}" ToolTipService.ToolTip="Download SVG">
+                                        <FontIcon Glyph="&#xE896;" FontSize="14" />
+                                    </Button>
+                                </Grid>
+
+                                <Grid HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="800" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="250" />
+                                        <RowDefinition Height="30" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Y Axis Labels -->
+                                    <ItemsControl Grid.Row="0" Grid.Column="0" ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_YAxisLabels, Mode=OneWay}" Margin="0,0,10,0">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <Grid />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="Analysis:LinePointData">
-                                                <Grid Margin="-7,-7,0,0"
-                                                      Background="Transparent"
-                                                      HorizontalAlignment="Left"
-                                                      VerticalAlignment="Top"
-                                                      PointerEntered="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.Hotspot_PointerEntered}"
-                                                      PointerExited="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.Hotspot_PointerExited}">
+                                            <DataTemplate x:DataType="Analysis:AxisLabel">
+                                                <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="50" TextAlignment="Right" Margin="0,-8,0,0">
+                                                    <TextBlock.RenderTransform>
+                                                        <TranslateTransform Y="{x:Bind Offset}" />
+                                                    </TextBlock.RenderTransform>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <!-- X Axis Horizontal Labels -->
+                                    <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_XAxisLabels, Mode=OneWay}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Grid />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="Analysis:AxisLabel">
+                                                <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
                                                     <Grid.RenderTransform>
-                                                        <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
+                                                        <TranslateTransform X="{x:Bind Offset}" Y="5" />
                                                     </Grid.RenderTransform>
-
-                                                    <!-- RenderTransformOrigin for perfectly uniform scaling from the center -->
-                                                    <Ellipse x:Name="PointEllipse" Width="14" Height="14" Fill="OrangeRed" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" RenderTransformOrigin="0.5,0.5">
-                                                        <Ellipse.RenderTransform>
-                                                            <ScaleTransform ScaleX="1" ScaleY="1" x:Name="PointScale" />
-                                                        </Ellipse.RenderTransform>
-                                                        <Ellipse.Transitions>
-                                                            <TransitionCollection>
-                                                                <EntranceThemeTransition IsStaggeringEnabled="True" />
-                                                            </TransitionCollection>
-                                                        </Ellipse.Transitions>
-                                                    </Ellipse>
-
-                                                    <!-- IsHitTestVisible="False" to prevent pointer stealing resulting in instant close -->
-                                                    <Popup x:Name="DataPopup" IsLightDismissEnabled="False" VerticalOffset="-45" HorizontalOffset="-30" IsHitTestVisible="False">
-                                                        <Popup.ChildTransitions>
-                                                            <TransitionCollection>
-                                                                <PopupThemeTransition />
-                                                            </TransitionCollection>
-                                                        </Popup.ChildTransitions>
-                                                        <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                                                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                                BorderThickness="1" CornerRadius="6" Padding="12,8"
-                                                                Shadow="{StaticResource PopoutShadow}"
-                                                                Translation="0,0,32"
-                                                                IsHitTestVisible="False">
-                                                            <StackPanel Spacing="4">
-                                                                <TextBlock Text="{x:Bind DateText}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                    <TextBlock Text="Blocks:" FontWeight="SemiBold" FontSize="13" />
-                                                                    <TextBlock Text="{x:Bind CountText}" Foreground="OrangeRed" FontWeight="Bold" FontSize="13" />
-                                                                </StackPanel>
-                                                            </StackPanel>
-                                                        </Border>
-                                                    </Popup>
+                                                    <!-- Displayed horizontally, properly spaced via the code computation -->
+                                                    <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" Margin="-35,0,0,0" Width="70" TextAlignment="Center" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                </Grid>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
 
-                    <!-- Line Chart (Allowed/Audited over Time) -->
-                    <Border CornerRadius="8" MinWidth="850" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
-                        <StackPanel Spacing="20">
-                            <Grid>
-                                <TextBlock x:Uid="AllowedOrAuditedEventsTrend" Style="{StaticResource BaseTextBlockStyle}" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="LimeGreen" VerticalAlignment="Center" />
-                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Padding="4" Tag="AllowedLine" Click="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.ExportChart_Click}" ToolTipService.ToolTip="Download SVG">
-                                    <FontIcon Glyph="&#xE896;" FontSize="14" />
-                                </Button>
-                            </Grid>
+                                    <!-- Chart Background Dynamic Grid Lines -->
+                                    <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_YGridLines, Mode=OneWay}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Grid />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="Analysis:ChartGridLine">
+                                                <Line X1="0" X2="800" Y1="0" Y2="0" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" StrokeDashArray="4 4" VerticalAlignment="Top">
+                                                    <Line.RenderTransform>
+                                                        <TranslateTransform Y="{x:Bind Offset}" />
+                                                    </Line.RenderTransform>
+                                                </Line>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
 
-                            <Grid HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="800" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="250" />
-                                    <RowDefinition Height="30" />
-                                </Grid.RowDefinitions>
-
-                                <!-- Y Axis Labels -->
-                                <ItemsControl Grid.Row="0" Grid.Column="0" ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_YAxisLabels, Mode=OneWay}" Margin="0,0,10,0">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <Grid />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="Analysis:AxisLabel">
-                                            <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="50" TextAlignment="Right" Margin="0,-8,0,0">
-                                                <TextBlock.RenderTransform>
-                                                    <TranslateTransform Y="{x:Bind Offset}" />
-                                                </TextBlock.RenderTransform>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <!-- X Axis Horizontal Labels -->
-                                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_XAxisLabels, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <Grid />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="Analysis:AxisLabel">
-                                            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
-                                                <Grid.RenderTransform>
-                                                    <TranslateTransform X="{x:Bind Offset}" Y="5" />
-                                                </Grid.RenderTransform>
-                                                <!-- Displayed horizontally, properly spaced via the code computation -->
-                                                <TextBlock Text="{x:Bind Text}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" Margin="-35,0,0,0" Width="70" TextAlignment="Center" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <!-- Chart Background Dynamic Grid Lines -->
-                                <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_YGridLines, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <Grid />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="Analysis:ChartGridLine">
-                                            <Line X1="0" X2="800" Y1="0" Y2="0" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" StrokeDashArray="4 4" VerticalAlignment="Top">
-                                                <Line.RenderTransform>
-                                                    <TranslateTransform Y="{x:Bind Offset}" />
-                                                </Line.RenderTransform>
-                                            </Line>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <!-- Chart Path & Points -->
-                                <Grid Grid.Row="0" Grid.Column="1" Width="800" Height="250">
-                                    <!-- Background Path Line -->
-                                    <Path Data="{x:Bind ViewModel.AnalysisResults.AllowedChart_LinePathData, Mode=OneWay}"
+                                    <!-- Chart Path & Points -->
+                                    <Grid Grid.Row="0" Grid.Column="1" Width="800" Height="250">
+                                        <!-- Background Path Line -->
+                                        <Path Data="{x:Bind ViewModel.AnalysisResults.AllowedChart_LinePathData, Mode=OneWay}"
                                           Stroke="LimeGreen"
                                           StrokeThickness="3"
                                           StrokeLineJoin="Round">
-                                        <Path.Transitions>
-                                            <TransitionCollection>
-                                                <EntranceThemeTransition />
-                                            </TransitionCollection>
-                                        </Path.Transitions>
-                                    </Path>
+                                            <Path.Transitions>
+                                                <TransitionCollection>
+                                                    <EntranceThemeTransition />
+                                                </TransitionCollection>
+                                            </Path.Transitions>
+                                        </Path>
 
-                                    <!-- Interactive Hotspots -->
-                                    <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_LinePoints, Mode=OneWay}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <Grid />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="Analysis:LinePointData">
-                                                <Grid Margin="-7,-7,0,0"
+                                        <!-- Interactive Hotspots -->
+                                        <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedChart_LinePoints, Mode=OneWay}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <Grid />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="Analysis:LinePointData">
+                                                    <Grid Margin="-7,-7,0,0"
                                                       Background="Transparent"
                                                       HorizontalAlignment="Left"
                                                       VerticalAlignment="Top"
                                                       PointerEntered="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.Hotspot_PointerEntered}"
                                                       PointerExited="{x:Bind VMs:ViewModelProvider.EventLogsPolicyCreationVM.AnalysisResults.Hotspot_PointerExited}">
-                                                    <Grid.RenderTransform>
-                                                        <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
-                                                    </Grid.RenderTransform>
+                                                        <Grid.RenderTransform>
+                                                            <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
+                                                        </Grid.RenderTransform>
 
-                                                    <!-- RenderTransformOrigin for perfectly uniform scaling from the center -->
-                                                    <Ellipse x:Name="PointEllipse" Width="14" Height="14" Fill="LimeGreen" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" RenderTransformOrigin="0.5,0.5">
-                                                        <Ellipse.RenderTransform>
-                                                            <ScaleTransform ScaleX="1" ScaleY="1" x:Name="PointScale" />
-                                                        </Ellipse.RenderTransform>
-                                                        <Ellipse.Transitions>
-                                                            <TransitionCollection>
-                                                                <EntranceThemeTransition IsStaggeringEnabled="True" />
-                                                            </TransitionCollection>
-                                                        </Ellipse.Transitions>
-                                                    </Ellipse>
+                                                        <!-- RenderTransformOrigin for perfectly uniform scaling from the center -->
+                                                        <Ellipse x:Name="PointEllipse" Width="14" Height="14" Fill="LimeGreen" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" RenderTransformOrigin="0.5,0.5">
+                                                            <Ellipse.RenderTransform>
+                                                                <ScaleTransform ScaleX="1" ScaleY="1" x:Name="PointScale" />
+                                                            </Ellipse.RenderTransform>
+                                                            <Ellipse.Transitions>
+                                                                <TransitionCollection>
+                                                                    <EntranceThemeTransition IsStaggeringEnabled="True" />
+                                                                </TransitionCollection>
+                                                            </Ellipse.Transitions>
+                                                        </Ellipse>
 
-                                                    <!-- IsHitTestVisible="False" to prevent pointer stealing resulting in instant close -->
-                                                    <Popup x:Name="DataPopup" IsLightDismissEnabled="False" VerticalOffset="-45" HorizontalOffset="-30" IsHitTestVisible="False">
-                                                        <Popup.ChildTransitions>
-                                                            <TransitionCollection>
-                                                                <PopupThemeTransition />
-                                                            </TransitionCollection>
-                                                        </Popup.ChildTransitions>
-                                                        <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                                                        <!-- IsHitTestVisible="False" to prevent pointer stealing resulting in instant close -->
+                                                        <Popup x:Name="DataPopup" IsLightDismissEnabled="False" VerticalOffset="-45" HorizontalOffset="-30" IsHitTestVisible="False">
+                                                            <Popup.ChildTransitions>
+                                                                <TransitionCollection>
+                                                                    <PopupThemeTransition />
+                                                                </TransitionCollection>
+                                                            </Popup.ChildTransitions>
+                                                            <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                                                 BorderThickness="1" CornerRadius="6" Padding="12,8"
                                                                 Shadow="{StaticResource PopoutShadow}"
                                                                 Translation="0,0,32"
                                                                 IsHitTestVisible="False">
-                                                            <StackPanel Spacing="4">
-                                                                <TextBlock Text="{x:Bind DateText}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                    <TextBlock Text="Allowed:" FontWeight="SemiBold" FontSize="13" />
-                                                                    <TextBlock Text="{x:Bind CountText}" Foreground="LimeGreen" FontWeight="Bold" FontSize="13" />
+                                                                <StackPanel Spacing="4">
+                                                                    <TextBlock Text="{x:Bind DateText}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                        <TextBlock Text="Allowed:" FontWeight="SemiBold" FontSize="13" />
+                                                                        <TextBlock Text="{x:Bind CountText}" Foreground="LimeGreen" FontWeight="Bold" FontSize="13" />
+                                                                    </StackPanel>
                                                                 </StackPanel>
-                                                            </StackPanel>
-                                                        </Border>
-                                                    </Popup>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
+                            </StackPanel>
+                        </Border>
 
-                </CCToolKit:WrapPanel>
+                    </CCToolKit:WrapPanel>
+                </StackPanel>
+
+                <!-- Global Security Metrics (All Events) -->
+                <StackPanel Spacing="15">
+                    <TextBlock x:Uid="GlobalMetrics" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
+                    <CCToolKit:WrapPanel HorizontalSpacing="15" VerticalSpacing="15" Orientation="Horizontal">
+
+                        <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Signed Files" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalSigned, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Unsigned Files" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalUnsigned, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="User-Writeable Locations" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" ToolTipService.ToolTip="Originating from paths like Downloads or AppData." />
+                                <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalUserWriteable, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Signing Level Mismatches" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalSigningLevelMismatches, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="ECC Signed Files" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalECCSigned, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="WHQL Certified" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalWHQL, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+
+                    </CCToolKit:WrapPanel>
+                </StackPanel>
+
+                <!-- Blocked Insights Section -->
+                <StackPanel Spacing="15">
+                    <TextBlock Text="Insights: Blocked Events" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="Red" FontWeight="SemiBold" />
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedCategories, Mode=OneWay}" ItemTemplate="{StaticResource AnalysisCategoryTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <CCToolKit:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Allowed / Audited Insights Section -->
+                <StackPanel Spacing="15">
+                    <TextBlock Text="Insights: Allowed / Audited Events" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="LimeGreen" FontWeight="SemiBold" />
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedCategories, Mode=OneWay}" ItemTemplate="{StaticResource AnalysisCategoryTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <CCToolKit:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+
             </StackPanel>
-
-            <!-- Global Security Metrics (All Events) -->
-            <StackPanel Spacing="15">
-                <TextBlock x:Uid="GlobalMetrics" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
-                <CCToolKit:WrapPanel HorizontalSpacing="15" VerticalSpacing="15" Orientation="Horizontal">
-
-                    <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
-                        <StackPanel Spacing="5">
-                            <TextBlock Text="Signed Files" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalSigned, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
-                        <StackPanel Spacing="5">
-                            <TextBlock Text="Unsigned Files" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalUnsigned, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
-                        <StackPanel Spacing="5">
-                            <TextBlock Text="User-Writeable Locations" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" ToolTipService.ToolTip="Originating from paths like Downloads or AppData." />
-                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalUserWriteable, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
-                        <StackPanel Spacing="5">
-                            <TextBlock Text="Signing Level Mismatches" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalSigningLevelMismatches, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
-                        <StackPanel Spacing="5">
-                            <TextBlock Text="ECC Signed Files" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalECCSigned, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border CornerRadius="8" MinWidth="220" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="15">
-                        <StackPanel Spacing="5">
-                            <TextBlock Text="WHQL Certified" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.AnalysisResults.Analysis_Global_TotalWHQL, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
-                        </StackPanel>
-                    </Border>
-
-                </CCToolKit:WrapPanel>
-            </StackPanel>
-
-            <!-- Blocked Insights Section -->
-            <StackPanel Spacing="15">
-                <TextBlock Text="Insights: Blocked Events" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="Red" FontWeight="SemiBold" />
-                <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.BlockedCategories, Mode=OneWay}" ItemTemplate="{StaticResource AnalysisCategoryTemplate}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <CCToolKit:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </StackPanel>
-
-            <!-- Allowed / Audited Insights Section -->
-            <StackPanel Spacing="15">
-                <TextBlock Text="Insights: Allowed / Audited Events" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="LimeGreen" FontWeight="SemiBold" />
-                <ItemsControl ItemsSource="{x:Bind ViewModel.AnalysisResults.AllowedCategories, Mode=OneWay}" ItemTemplate="{StaticResource AnalysisCategoryTemplate}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <CCToolKit:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </StackPanel>
-
-        </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Page>

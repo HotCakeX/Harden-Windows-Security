@@ -684,12 +684,10 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				return;
 			}
 
-			if (string.Equals(targetApp.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(targetApp.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase) &&
+				await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)
 			{
-				if (await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)
-				{
-					return;
-				}
+				return;
 			}
 
 			ElementsAreEnabled = false;
@@ -1016,12 +1014,9 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		List<PackagedAppView> appsToUninstall = AppsListItemsSourceSelectedItems.ToList();
 
 		PackagedAppView? currentApplicationPackage = appsToUninstall.FirstOrDefault(x => string.Equals(x.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase));
-		if (currentApplicationPackage is not null)
+		if (currentApplicationPackage is not null && await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)
 		{
-			if (await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)
-			{
-				return;
-			}
+			return;
 		}
 
 		try

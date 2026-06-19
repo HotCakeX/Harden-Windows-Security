@@ -981,25 +981,19 @@ internal static class EXIFScrubber
 
 			// For APP2 - Application Segment 2 - Exif extended data
 			// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - Table 22 - Marker Segments
-			if (markerType == 0xE2)
+			// 11 characters + the null terminator at the end = 12 bytes
+			if (markerType == 0xE2 && payload.Length >= 12 && payload.AsSpan(0, 12).SequenceEqual("ICC_PROFILE\0"u8))
 			{
-				// 11 characters + the null terminator at the end = 12 bytes
-				if (payload.Length >= 12 && payload.AsSpan(0, 12).SequenceEqual("ICC_PROFILE\0"u8))
-				{
-					return "ICC_PROFILE";
-				}
+				return "ICC_PROFILE";
 			}
 
 			// APP13
 			// The APPn designation with the range goes from 0xFFE0 to 0xFFEF means APP0 through APP15.
 			// Source: https://www.w3.org/Graphics/JPEG/itu-t81.pdf - Table B.1 – Marker code assignments - Other markers
-			if (markerType == 0xED)
+			// 13 characters + the null terminator at the end = 14 bytes
+			if (markerType == 0xED && payload.Length >= 14 && payload.AsSpan(0, 14).SequenceEqual("Photoshop 3.0\0"u8))
 			{
-				// 13 characters + the null terminator at the end = 14 bytes
-				if (payload.Length >= 14 && payload.AsSpan(0, 14).SequenceEqual("Photoshop 3.0\0"u8))
-				{
-					return "Photoshop/IRB";
-				}
+				return "Photoshop/IRB";
 			}
 
 			// Find out the exact application segment number by subtracting the base value (0xE0) from the markerType byte we are currently reading.
@@ -1067,16 +1061,13 @@ internal static class EXIFScrubber
 		ctx.AddTag(categoryId, categoryName, false, "Bits Per Sample", precision.ToString());
 		ctx.AddTag(categoryId, categoryName, false, "Color Components", components.ToString());
 
-		if (payload.Length >= 6 + (components * 3))
+		if (payload.Length >= 6 + (components * 3) && components == 3)
 		{
-			if (components == 3)
-			{
-				byte ySampling = payload[7];
-				byte cbSampling = payload[10];
-				byte crSampling = payload[13];
-				string subsampling = GetSubSampling(ySampling, cbSampling, crSampling);
-				ctx.AddTag(categoryId, categoryName, false, "Y Cb Cr Sub Sampling", subsampling);
-			}
+			byte ySampling = payload[7];
+			byte cbSampling = payload[10];
+			byte crSampling = payload[13];
+			string subsampling = GetSubSampling(ySampling, cbSampling, crSampling);
+			ctx.AddTag(categoryId, categoryName, false, "Y Cb Cr Sub Sampling", subsampling);
 		}
 
 		long pixels = (long)width * height;

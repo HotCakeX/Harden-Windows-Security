@@ -285,12 +285,9 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SP(ref field, value) && AllServices.Count > 0)
 			{
-				if (AllServices.Count > 0)
-				{
-					ApplyFilter();
-				}
+				ApplyFilter();
 			}
 		}
 	} = true;
@@ -415,12 +412,12 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 	private void SelectorBar_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 	{
 		// Forces the SelectorBar to update visually when the ListView recycles the container
-		if (sender is SelectorBar sb && args.NewValue is ServiceItemViewModel svm)
+		if (sender is SelectorBar sb &&
+			args.NewValue is ServiceItemViewModel svm &&
+			svm.SelectedTab >= 0 &&
+			svm.SelectedTab < sb.Items.Count)
 		{
-			if (svm.SelectedTab >= 0 && svm.SelectedTab < sb.Items.Count)
-			{
-				sb.SelectedItem = sb.Items[svm.SelectedTab];
-			}
+			sb.SelectedItem = sb.Items[svm.SelectedTab];
 		}
 	}
 

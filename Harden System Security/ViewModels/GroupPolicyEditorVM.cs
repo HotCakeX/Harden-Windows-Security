@@ -202,20 +202,19 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			RegistryPolicyEntryPropertyMappings.TryGetValue(key, out (string Label, Func<RegistryPolicyEntry, object?> Getter) mapping))
 		{
 			// Look up the mapping in the reusable property mappings dictionary.
-			if (RegistryPolicyEntryPropertyMappings.TryGetValue(key, out (string Label, Func<RegistryPolicyEntry, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SearchKeyword,
-					AllPolicies,
-					Policies,
-					SortState,
-					key,
-					regKey: ListViewHelper.ListViewsRegistry.GroupPolicyEditor);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				SearchKeyword,
+				AllPolicies,
+				Policies,
+				SortState,
+				key,
+				regKey: ListViewHelper.ListViewsRegistry.GroupPolicyEditor);
 		}
 	}
 

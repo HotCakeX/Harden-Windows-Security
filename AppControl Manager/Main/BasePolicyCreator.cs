@@ -619,15 +619,10 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledAuditMode]);
 		}
 
-		if (PolicyIDToUse is not null)
-		{
-			policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), PolicyIDToUse);
-		}
-		else
-		{
+		policyObj = PolicyIDToUse is not null
+			? SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), PolicyIDToUse)
 			// Reset PolicyID and BasePolicyID
-			policyObj = SetCiPolicyInfo.Set(policyObj, true, null, null);
-		}
+			: SetCiPolicyInfo.Set(policyObj, true, null, null);
 
 		// If it is to be deployed
 		if (deploy)

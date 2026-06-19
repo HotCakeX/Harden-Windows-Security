@@ -472,19 +472,18 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	internal void SSL_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			SSL_PropertyMappings.TryGetValue(key, out (string Label, Func<EccCurveSslProvider, object?> Getter) mapping))
 		{
-			if (SSL_PropertyMappings.TryGetValue(key, out (string Label, Func<EccCurveSslProvider, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SslProviderCurvesSearchKeyword,
-					AllSslProviderCurves,
-					SslProviderCurves,
-					SSL_SortState,
-					key,
-					ListViewHelper.ListViewsRegistry.CBOM_SSLProviderCurves);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				SslProviderCurvesSearchKeyword,
+				AllSslProviderCurves,
+				SslProviderCurves,
+				SSL_SortState,
+				key,
+				ListViewHelper.ListViewsRegistry.CBOM_SSLProviderCurves);
 		}
 	}
 
@@ -667,19 +666,18 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	internal void TLS_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			TLS_PropertyMappings.TryGetValue(key, out (string Label, Func<TlsCipherSuite, object?> Getter) mapping))
 		{
-			if (TLS_PropertyMappings.TryGetValue(key, out (string Label, Func<TlsCipherSuite, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					TlsCipherSuitesSearchKeyword,
-					AllTlsCipherSuites,
-					TlsCipherSuites,
-					TLS_SortState,
-					key,
-					ListViewHelper.ListViewsRegistry.CBOM_TlsCipherSuites);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				TlsCipherSuitesSearchKeyword,
+				AllTlsCipherSuites,
+				TlsCipherSuites,
+				TLS_SortState,
+				key,
+				ListViewHelper.ListViewsRegistry.CBOM_TlsCipherSuites);
 		}
 	}
 
@@ -844,19 +842,18 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	internal void REG_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			REG_PropertyMappings.TryGetValue(key, out (string Label, Func<string, object?> Getter) mapping))
 		{
-			if (REG_PropertyMappings.TryGetValue(key, out (string Label, Func<string, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					RegisteredProvidersSearchKeyword,
-					AllRegisteredProviders,
-					RegisteredProviders,
-					REG_SortState,
-					key,
-					ListViewHelper.ListViewsRegistry.CBOM_RegisteredProviders);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				RegisteredProvidersSearchKeyword,
+				AllRegisteredProviders,
+				RegisteredProviders,
+				REG_SortState,
+				key,
+				ListViewHelper.ListViewsRegistry.CBOM_RegisteredProviders);
 		}
 	}
 

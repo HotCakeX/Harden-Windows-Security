@@ -489,14 +489,12 @@ internal sealed partial class DismServiceClient : IDisposable
 			{
 				// Try to terminate the process gracefully first
 				uint waitResult = NativeMethods.WaitForSingleObject(_processHandle, 1000); // Wait 1 second
-				if (waitResult != 0) // If process is still running
+				if (waitResult != 0 && !NativeMethods.TerminateProcess(_processHandle, 0)) // If process is still running
 				{
-					if (!NativeMethods.TerminateProcess(_processHandle, 0))
-					{
-						int error = Marshal.GetLastPInvokeError();
-						Logger.Write($"Failed terminating DISMService process: {error}", LogTypeIntel.Error);
-					}
+					int error = Marshal.GetLastPInvokeError();
+					Logger.Write($"Failed terminating DISMService process: {error}", LogTypeIntel.Error);
 				}
+
 				_ = NativeMethods.CloseHandle(_processHandle);
 				_processHandle = IntPtr.Zero;
 			}

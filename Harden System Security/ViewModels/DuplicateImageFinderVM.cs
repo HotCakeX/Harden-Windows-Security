@@ -612,15 +612,13 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 
 						// Determine if it should be visible based on filter
 						// If no filter or matches filter
-						if (string.IsNullOrWhiteSpace(SearchText) ||
+						// Check if not already in Filtered (it shouldn't be if we just added to All)
+						if ((string.IsNullOrWhiteSpace(SearchText) ||
 							entry.Group.Original.FileName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
-							entry.Group.Duplicates.Any(d => d.FileName.Contains(SearchText, StringComparison.OrdinalIgnoreCase)))
+							entry.Group.Duplicates.Any(d => d.FileName.Contains(SearchText, StringComparison.OrdinalIgnoreCase))) &&
+							!FilteredDuplicateGroups.Contains(entry.Group))
 						{
-							// Check if not already in Filtered (it shouldn't be if we just added to All)
-							if (!FilteredDuplicateGroups.Contains(entry.Group))
-							{
-								FilteredDuplicateGroups.Add(entry.Group);
-							}
+							FilteredDuplicateGroups.Add(entry.Group);
 						}
 					}
 

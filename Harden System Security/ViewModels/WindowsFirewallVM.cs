@@ -162,13 +162,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Prevent unchecking if the other ones aren't checked
 			if (!value && !FirewallDirectionOutbound && !FirewallDirectionBoth) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					FirewallDirectionOutbound = false;
-					FirewallDirectionBoth = false;
-				}
+				FirewallDirectionOutbound = false;
+				FirewallDirectionBoth = false;
 			}
 		}
 	}
@@ -179,13 +176,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Prevent unchecking if the other ones aren't checked
 			if (!FirewallDirectionInbound && !value && !FirewallDirectionBoth) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					FirewallDirectionInbound = false;
-					FirewallDirectionBoth = false;
-				}
+				FirewallDirectionInbound = false;
+				FirewallDirectionBoth = false;
 			}
 		}
 	}
@@ -196,13 +190,10 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Prevent unchecking if the other ones aren't checked
 			if (!FirewallDirectionInbound && !FirewallDirectionOutbound && !value) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					FirewallDirectionInbound = false;
-					FirewallDirectionOutbound = false;
-				}
+				FirewallDirectionInbound = false;
+				FirewallDirectionOutbound = false;
 			}
 		}
 	} = true;
@@ -215,12 +206,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Prevent unchecking if the other one isn't checked
 			if (!value && !FirewallActionBlock) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					FirewallActionBlock = false;
-				}
+				FirewallActionBlock = false;
 			}
 		}
 	}
@@ -231,12 +219,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Prevent unchecking if the other one isn't checked
 			if (!FirewallActionAllow && !value) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					FirewallActionAllow = false;
-				}
+				FirewallActionAllow = false;
 			}
 		}
 	} = true;
@@ -249,12 +234,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Prevent unchecking if the other one isn't checked
 			if (!value && !FirewallStorePersistentStore) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					FirewallStorePersistentStore = false;
-				}
+				FirewallStorePersistentStore = false;
 			}
 		}
 	} = true;
@@ -265,12 +247,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Prevent unchecking if the other one isn't checked
 			if (!FirewallStoreGPO && !value) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					FirewallStoreGPO = false;
-				}
+				FirewallStoreGPO = false;
 			}
 		}
 	}
@@ -679,19 +658,18 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// </summary>
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			_firewallRuleMappings.TryGetValue(key, out (string Label, Func<FirewallRule, object?> Getter) mapping))
 		{
-			if (_firewallRuleMappings.TryGetValue(key, out (string Label, Func<FirewallRule, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					FirewallRulesSearchText,
-					AllFirewallRules,
-					FirewallRules,
-					SortState,
-					key,
-					regKey: ListViewHelper.ListViewsRegistry.Firewall_Management);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				FirewallRulesSearchText,
+				AllFirewallRules,
+				FirewallRules,
+				SortState,
+				key,
+				regKey: ListViewHelper.ListViewsRegistry.Firewall_Management);
 		}
 	}
 

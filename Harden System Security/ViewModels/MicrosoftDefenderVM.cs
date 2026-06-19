@@ -877,20 +877,19 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			_exclusionsMappings.TryGetValue(key, out (string Label, Func<Exclusions, object?> Getter) mapping))
 		{
 			// Look up the mapping in the reusable property mappings dictionary.
-			if (_exclusionsMappings.TryGetValue(key, out (string Label, Func<Exclusions, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					ExclusionsSearchText,
-					AllExclusions,
-					Exclusions,
-					SortState,
-					key,
-					regKey: ListViewHelper.ListViewsRegistry.MD_Exclusions);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				ExclusionsSearchText,
+				AllExclusions,
+				Exclusions,
+				SortState,
+				key,
+				regKey: ListViewHelper.ListViewsRegistry.MD_Exclusions);
 		}
 	}
 	#endregion

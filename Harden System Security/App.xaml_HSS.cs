@@ -116,7 +116,7 @@ public sealed partial class App : Application
 				{
 					notificationTargetInstance.Activated += App_Activated;
 				}
-				else if (launchToUpdatePageFromNotification && activatedEventArgs is not null)
+				else if (launchToUpdatePageFromNotification)
 				{
 					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
 					Environment.Exit(0);

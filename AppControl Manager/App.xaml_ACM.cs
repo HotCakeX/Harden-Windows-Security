@@ -24,7 +24,6 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
-using CommonCore.Taskbar;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.AppNotifications;
@@ -117,7 +116,7 @@ public sealed partial class App : Application
 				{
 					notificationTargetInstance.Activated += App_Activated;
 				}
-				else if (launchToUpdatePageFromNotification && activatedEventArgs is not null)
+				else if (launchToUpdatePageFromNotification)
 				{
 					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
 					Environment.Exit(0);

@@ -99,6 +99,10 @@ jobs:
                 id: cs/too-many-ref-parameters # Some methods or functions need to have many refs, such as OS native API functions.
             - exclude:
                 id: cs/missed-using-statement # This produces lots of false positives. If "using" keyword is not used and instead the object is properly disposed in a finally block then there is a pretty good reason for it and this detection does not understand that reason.
+            - exclude:
+                id: cs/linq/missed-all # Suggesting to use All from the Linq instead of foreach is only for readability or code shortening, Nothing to do with improved performance, reduced allocation or any such thing.
+            - exclude:
+                id: cs/call-to-unmanaged-code # This is not a problem and shouldn't be flagged. There is a valid reason unmanaged code is being used. If managed code had the logic, unmanaged code wouldn't have to be used.
 
     # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
     # If the analyze step fails for one of the languages you are analyzing with

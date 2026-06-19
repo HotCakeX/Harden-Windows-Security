@@ -2,6 +2,6 @@
 
 * Reduced the noise in the logs by no longer printing an error when CPU thermal counters are unavailable when the home page queries them.
 
-* When you click on the toast notification that says a new app update is avaialble, you will be redirected to the update page.
+* When you click on the toast notification that says a new app update is available, you will be redirected to the update page.
 
 * Updated dependencies to the latest version.

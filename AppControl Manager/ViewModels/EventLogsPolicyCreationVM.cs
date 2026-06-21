@@ -72,6 +72,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		ColumnManager.CalculateColumnWidths(FileIdentities);
 
 		ScanLogsCancellableButton = new(Atlas.GetStr("ScanEventLogsButton/Content"));
+		AnalysisResults.AnalysisCustomTimeRangeChanged += AnalysisResults_AnalysisCustomTimeRangeChanged;
 	}
 
 	internal readonly InfoBarSettings MainInfoBar = new();
@@ -91,6 +92,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	private readonly List<FileIdentity> AllFileIdentities = [];
+	private bool _analysisCustomRangeFilterIsActive;
+	private DateTime? _analysisCustomRangeStartTime;
+	private DateTime? _analysisCustomRangeEndTime;
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
@@ -198,15 +202,49 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal bool OnlyIncludeSelectedItemsToggleButton { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Applies the date and search filters to the data grid
+	/// Applies the date, search, and active analysis range filters to the data grid.
 	/// </summary>
 	private void ApplyFilters() => ListViewHelper.ApplyFilters(
-		allFileIdentities: AllFileIdentities,
-		filteredCollection: FileIdentities,
-		searchText: SearchBoxText,
-		selectedDate: DatePickerDate,
-		regKey: ListViewHelper.ListViewsRegistry.Event_Logs
-		);
+			allFileIdentities: GetFileIdentitiesForActiveAnalysisRange(),
+			filteredCollection: FileIdentities,
+			searchText: SearchBoxText,
+			selectedDate: DatePickerDate,
+			regKey: ListViewHelper.ListViewsRegistry.Event_Logs
+			);
+
+	private void AnalysisResults_AnalysisCustomTimeRangeChanged(object? sender, Analysis.AnalysisCustomTimeRangeChangedEventArgs e)
+	{
+		_analysisCustomRangeFilterIsActive = e.IsActive;
+		_analysisCustomRangeStartTime = e.StartTime;
+		_analysisCustomRangeEndTime = e.EndTime;
+		ApplyFilters();
+	}
+
+	private List<FileIdentity> GetFileIdentitiesForActiveAnalysisRange()
+	{
+		if (!_analysisCustomRangeFilterIsActive || !_analysisCustomRangeStartTime.HasValue || !_analysisCustomRangeEndTime.HasValue)
+		{
+			return AllFileIdentities;
+		}
+
+		DateTime startTime = _analysisCustomRangeStartTime.Value;
+		DateTime endTime = _analysisCustomRangeEndTime.Value;
+		if (endTime < startTime)
+		{
+			(endTime, startTime) = (startTime, endTime);
+		}
+		List<FileIdentity> filteredFileIdentities = new(AllFileIdentities.Count);
+
+		// Get the FileIdentities that are within the custom time range specified by the user in the analysis page.
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(AllFileIdentities))
+		{
+			if (item.TimeCreated.HasValue && item.TimeCreated.Value >= startTime && item.TimeCreated.Value <= endTime)
+			{
+				filteredFileIdentities.Add(item);
+			}
+		}
+		return filteredFileIdentities;
+	}
 
 	/// <summary>
 	/// Clears the selected AppLocker EVTX file paths
@@ -791,7 +829,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				ListViewHelper.SortColumn(
 					keySelector: mapping.Getter,
 					searchBoxText: SearchBoxText,
-					originalList: AllFileIdentities,
+					originalList: GetFileIdentitiesForActiveAnalysisRange(),
 					observableCollection: FileIdentities,
 					sortState: SortState,
 					newKey: key,

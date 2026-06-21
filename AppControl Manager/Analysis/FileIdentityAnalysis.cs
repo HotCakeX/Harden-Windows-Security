@@ -17,11 +17,13 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using CommonCore.IntelGathering;
 using CommonCore.ToolKits;
 using Microsoft.UI;
@@ -271,7 +273,7 @@ internal sealed class LinePointData(double x, double y, SolidColorBrush fill, st
 	internal string CountText => countText;
 }
 
-internal sealed class AxisLabel(string text, double offset)
+internal readonly struct AxisLabel(string text, double offset)
 {
 	internal string Text => text;
 	internal double Offset => offset;
@@ -291,7 +293,8 @@ internal enum AnalysisTimeRangeKind
 	PastWeek,
 	PastMonth,
 	Past6Months,
-	PastYear
+	PastYear,
+	Custom
 }
 
 internal sealed class TimeRangeFilterOption(string displayName, AnalysisTimeRangeKind kind)
@@ -299,6 +302,12 @@ internal sealed class TimeRangeFilterOption(string displayName, AnalysisTimeRang
 	internal string DisplayName => displayName;
 	internal AnalysisTimeRangeKind Kind => kind;
 	public override string ToString() => DisplayName;
+}
+internal sealed class AnalysisCustomTimeRangeChangedEventArgs(DateTime? startTime, DateTime? endTime, bool isActive) : EventArgs
+{
+	internal DateTime? StartTime => startTime;
+	internal DateTime? EndTime => endTime;
+	internal bool IsActive => isActive;
 }
 
 internal sealed partial class FileIdentityAnalysis : ViewModelBase
@@ -322,10 +331,14 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		new("Past week", AnalysisTimeRangeKind.PastWeek),
 		new("Past month", AnalysisTimeRangeKind.PastMonth),
 		new("Past 6 months", AnalysisTimeRangeKind.Past6Months),
-		new("Past year", AnalysisTimeRangeKind.PastYear)
+		new("Past year", AnalysisTimeRangeKind.PastYear),
+		new("Custom", AnalysisTimeRangeKind.Custom)
 	];
 
 	internal TimeRangeFilterOption? Analysis_SelectedTimeRange { get; set => SP(ref field, value); }
+	internal double? Analysis_CustomRangeStartTicks { get; set => SP(ref field, value); }
+	internal double? Analysis_CustomRangeEndTicks { get; set => SP(ref field, value); }
+	internal event EventHandler<AnalysisCustomTimeRangeChangedEventArgs>? AnalysisCustomTimeRangeChanged;
 
 	internal bool Analysis_IsRecalculating
 	{
@@ -410,6 +423,10 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	internal List<AxisLabel> AllowedChart_XAxisLabels { get; set => SP(ref field, value); } = [];
 	internal List<ChartGridLine> AllowedChart_YGridLines { get; set => SP(ref field, value); } = [];
 
+	// Raw event trend inputs for InteractiveLineChart. The chart performs adaptive aggregation for the current zoom range and hover summaries.
+	internal List<InteractiveLineChartPoint> BlockedTrendPoints { get; set => SP(ref field, value); } = [];
+	internal List<InteractiveLineChartPoint> AllowedTrendPoints { get; set => SP(ref field, value); } = [];
+
 	// Main method called from ViewModels.
 	internal async Task PrepareAnalysis(List<FileIdentity> AllFileIdentities)
 	{
@@ -417,16 +434,87 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		await RecalculateAnalysisForSelectedTimeRangeAsync();
 	}
 
-	internal async void TimeRangeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	internal async void TimeRangeComboBox_SelectionChanged()
 	{
-		if (_suppressTimeRangeRefresh || _allFileIdentities.Count == 0)
+		if (_suppressTimeRangeRefresh)
 		{
 			return;
 		}
-
+		TimeRangeFilterOption? selectedTimeRange = Analysis_SelectedTimeRange;
+		if (selectedTimeRange is not null && selectedTimeRange.Kind != AnalysisTimeRangeKind.Custom && HasActiveCustomTimeRange())
+		{
+			ClearCustomTimeRangeState();
+			AnalysisCustomTimeRangeChanged?.Invoke(this, new AnalysisCustomTimeRangeChangedEventArgs(null, null, false));
+		}
+		if (_allFileIdentities.Count == 0)
+		{
+			return;
+		}
 		await RecalculateAnalysisForSelectedTimeRangeAsync();
 	}
 
+	internal async void EventsTrendChart_RangeSelectionChanged(object sender, InteractiveLineChartRangeSelectionChangedEventArgs e)
+	{
+		if (!e.IsActive)
+		{
+			await ClearCustomTimeRangeAndRecalculateAsync();
+			return;
+		}
+		DateTime startTime = CreateDateTimeFromChartValue(e.MinimumX);
+		DateTime endTime = CreateDateTimeFromChartValue(e.MaximumX);
+		if (endTime < startTime)
+		{
+			(endTime, startTime) = (startTime, endTime);
+		}
+		Analysis_CustomRangeStartTicks = startTime.Ticks;
+		Analysis_CustomRangeEndTicks = endTime.Ticks;
+		TimeRangeFilterOption? customTimeRange = GetTimeRangeOption(AnalysisTimeRangeKind.Custom);
+		_suppressTimeRangeRefresh = true;
+		Analysis_SelectedTimeRange = customTimeRange;
+		_suppressTimeRangeRefresh = false;
+		AnalysisCustomTimeRangeChanged?.Invoke(this, new AnalysisCustomTimeRangeChangedEventArgs(startTime, endTime, true));
+		if (_allFileIdentities.Count > 0)
+		{
+			await RecalculateAnalysisForSelectedTimeRangeAsync();
+		}
+	}
+	private async Task ClearCustomTimeRangeAndRecalculateAsync()
+	{
+		ClearCustomTimeRangeState();
+		_suppressTimeRangeRefresh = true;
+		Analysis_SelectedTimeRange = Analysis_TimeRangeOptions[0];
+		_suppressTimeRangeRefresh = false;
+		AnalysisCustomTimeRangeChanged?.Invoke(this, new AnalysisCustomTimeRangeChangedEventArgs(null, null, false));
+		if (_allFileIdentities.Count > 0)
+		{
+			await RecalculateAnalysisForSelectedTimeRangeAsync();
+		}
+	}
+	private void ClearCustomTimeRangeState()
+	{
+		Analysis_CustomRangeStartTicks = null;
+		Analysis_CustomRangeEndTicks = null;
+	}
+	private bool HasActiveCustomTimeRange()
+	{
+		return Analysis_CustomRangeStartTicks.HasValue && Analysis_CustomRangeEndTicks.HasValue;
+	}
+	private TimeRangeFilterOption? GetTimeRangeOption(AnalysisTimeRangeKind timeRangeKind)
+	{
+		foreach (TimeRangeFilterOption option in Analysis_TimeRangeOptions)
+		{
+			if (option.Kind == timeRangeKind)
+			{
+				return option;
+			}
+		}
+		return null;
+	}
+	private static DateTime CreateDateTimeFromChartValue(double value)
+	{
+		double clampedTicks = Math.Clamp(value, DateTime.MinValue.Ticks, DateTime.MaxValue.Ticks);
+		return new DateTime((long)Math.Round(clampedTicks));
+	}
 	private async Task RecalculateAnalysisForSelectedTimeRangeAsync()
 	{
 		TimeRangeFilterOption? selectedTimeRange = Analysis_SelectedTimeRange;
@@ -450,11 +538,13 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		{
 			return new List<FileIdentity>(_allFileIdentities);
 		}
-
+		if (selectedTimeRange.Kind == AnalysisTimeRangeKind.Custom)
+		{
+			return GetFileIdentitiesForCustomTimeRange();
+		}
 		DateTime now = DateTime.Now;
 		DateTime threshold = GetThresholdForTimeRange(selectedTimeRange.Kind, now);
 		List<FileIdentity> filteredFileIdentities = new(_allFileIdentities.Count);
-
 		foreach (FileIdentity item in CollectionsMarshal.AsSpan(_allFileIdentities))
 		{
 			if (item.TimeCreated.HasValue && item.TimeCreated.Value >= threshold && item.TimeCreated.Value <= now)
@@ -462,10 +552,30 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 				filteredFileIdentities.Add(item);
 			}
 		}
-
 		return filteredFileIdentities;
 	}
-
+	private List<FileIdentity> GetFileIdentitiesForCustomTimeRange()
+	{
+		if (!Analysis_CustomRangeStartTicks.HasValue || !Analysis_CustomRangeEndTicks.HasValue)
+		{
+			return new(_allFileIdentities);
+		}
+		DateTime startTime = CreateDateTimeFromChartValue(Analysis_CustomRangeStartTicks.Value);
+		DateTime endTime = CreateDateTimeFromChartValue(Analysis_CustomRangeEndTicks.Value);
+		if (endTime < startTime)
+		{
+			(endTime, startTime) = (startTime, endTime);
+		}
+		List<FileIdentity> filteredFileIdentities = new(_allFileIdentities.Count);
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(_allFileIdentities))
+		{
+			if (item.TimeCreated.HasValue && item.TimeCreated.Value >= startTime && item.TimeCreated.Value <= endTime)
+			{
+				filteredFileIdentities.Add(item);
+			}
+		}
+		return filteredFileIdentities;
+	}
 	private static DateTime GetThresholdForTimeRange(AnalysisTimeRangeKind timeRangeKind, DateTime now) => timeRangeKind switch
 	{
 		AnalysisTimeRangeKind.Past1Hour => now.AddHours(-1),
@@ -513,6 +623,9 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			Dictionary<string, int> allowedSigningScenariosCount = new(StringComparer.OrdinalIgnoreCase);
 			Dictionary<string, int> allowedDirectories = new(StringComparer.OrdinalIgnoreCase);
 
+			List<InteractiveLineChartPoint> blockedTrendPoints = [];
+			List<InteractiveLineChartPoint> allowedTrendPoints = [];
+
 			foreach (FileIdentity item in CollectionsMarshal.AsSpan(AllFileIdentities))
 			{
 				if (item.SignatureStatus == SignatureStatus.IsSigned) globalSignedCount++;
@@ -530,11 +643,13 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 				if (item.Action == EventAction.Audit)
 				{
 					totalAllowedCount++;
+					AddRawTrendPoint(item, allowedTrendPoints);
 					ProcessEventForDictionaries(item, allowedFileExtensions, allowedTimeFrames, allowedPoliciesCount, allowedComputersCount, allowedFiles, allowedPublishers, allowedInitiatingProcesses, allowedPackagedAppsCount, allowedSigningScenariosCount, allowedDirectories);
 				}
 				else
 				{
 					totalBlockedCount++;
+					AddRawTrendPoint(item, blockedTrendPoints);
 					ProcessEventForDictionaries(item, blockedFileExtensions, blockedTimeFrames, blockedPoliciesCount, blockedComputersCount, blockedFiles, blockedPublishers, blockedInitiatingProcesses, blockedPackagedAppsCount, blockedSigningScenariosCount, blockedDirectories);
 				}
 			}
@@ -641,6 +756,18 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 				GeneratePieChartData(totalAllowedCount, totalBlockedCount);
 				GenerateLineChartData(blockedTimeFrames, isAllowed: false);
 				GenerateLineChartData(allowedTimeFrames, isAllowed: true);
+
+				if (Analysis_SelectedTimeRange is not null && Analysis_SelectedTimeRange.Kind == AnalysisTimeRangeKind.Custom)
+				{
+					BuildFullRangeTrendPointsForCustomRange(out List<InteractiveLineChartPoint> fullRangeBlockedTrendPoints, out List<InteractiveLineChartPoint> fullRangeAllowedTrendPoints);
+					BlockedTrendPoints = fullRangeBlockedTrendPoints;
+					AllowedTrendPoints = fullRangeAllowedTrendPoints;
+				}
+				else
+				{
+					BlockedTrendPoints = blockedTrendPoints.OrderBy(point => point.X).ToList();
+					AllowedTrendPoints = allowedTrendPoints.OrderBy(point => point.X).ToList();
+				}
 
 				Analysis_ActionableRecommendations.Clear();
 				foreach (string rec in CollectionsMarshal.AsSpan(recommendations))
@@ -896,6 +1023,74 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			BlockedChart_YAxisLabels = yLabels;
 			BlockedChart_YGridLines = yGridLines;
 			BlockedChart_XAxisLabels = xLabels;
+		}
+	}
+
+	/// <summary>
+	/// Builds full-range trend chart points while the analysis cards and data grid use the custom range.
+	/// This prevents the chart from getting stuck in the selected range after navigation or zoom reset.
+	/// </summary>
+	private void BuildFullRangeTrendPointsForCustomRange(out List<InteractiveLineChartPoint> blockedTrendPoints, out List<InteractiveLineChartPoint> allowedTrendPoints)
+	{
+		blockedTrendPoints = [];
+		allowedTrendPoints = [];
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(_allFileIdentities))
+		{
+			if (item.Action == EventAction.Audit)
+			{
+				AddRawTrendPoint(item, allowedTrendPoints);
+			}
+			else
+			{
+				AddRawTrendPoint(item, blockedTrendPoints);
+			}
+		}
+		blockedTrendPoints = blockedTrendPoints.OrderBy(point => point.X).ToList();
+		allowedTrendPoints = allowedTrendPoints.OrderBy(point => point.X).ToList();
+	}
+
+	/// <summary>
+	/// Adds one raw event timestamp and compact hover metadata to the adaptive trend chart input.
+	/// </summary>
+	private static void AddRawTrendPoint(FileIdentity item, List<InteractiveLineChartPoint> trendPoints)
+	{
+		if (!item.TimeCreated.HasValue)
+		{
+			return;
+		}
+
+		DateTime timeCreated = item.TimeCreated.Value;
+		string xText = timeCreated.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+		string? fileNameOnly = GetTrendFileNameOnly(item);
+
+		trendPoints.Add(new InteractiveLineChartPoint(
+			x: timeCreated.Ticks,
+			y: 1,
+			xText: xText,
+			yText: "1",
+			fileName: fileNameOnly,
+			computerName: item.ComputerName));
+	}
+
+	/// <summary>
+	/// Gets only the file name for trend hover summaries so long file paths do not stretch the tooltip.
+	/// </summary>
+	private static string? GetTrendFileNameOnly(FileIdentity item)
+	{
+		string? candidate = !string.IsNullOrWhiteSpace(item.FileName) ? item.FileName : item.FilePath;
+		if (string.IsNullOrWhiteSpace(candidate))
+		{
+			return null;
+		}
+
+		try
+		{
+			string? fileName = Path.GetFileName(candidate);
+			return string.IsNullOrWhiteSpace(fileName) ? candidate : fileName;
+		}
+		catch
+		{
+			return candidate;
 		}
 	}
 
@@ -1169,54 +1364,6 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		if (sender is Button btn && btn.Tag is ColorPalette palette)
 		{
 			ApplyColorPalette(palette);
-		}
-	}
-
-	/// <summary>
-	/// Interactive Hover for the Line Chart Hotspots.
-	/// Expands the ellipse uniformly and displays a floating layout seamlessly without pointer loops.
-	/// </summary>
-	internal void Hotspot_PointerEntered(object sender, PointerRoutedEventArgs e)
-	{
-		if (sender is Grid hotspotGrid)
-		{
-			Microsoft.UI.Xaml.Shapes.Ellipse? ellipse = FindVisualChildByName<Microsoft.UI.Xaml.Shapes.Ellipse>(hotspotGrid, "PointEllipse");
-			if (ellipse?.RenderTransform is ScaleTransform scale)
-			{
-				scale.ScaleX = 1.6;
-				scale.ScaleY = 1.6;
-			}
-
-			Popup? popup = FindVisualChildByName<Popup>(hotspotGrid, "DataPopup");
-			if (popup != null)
-			{
-				popup.IsOpen = true;
-				Canvas.SetZIndex(hotspotGrid, 100);
-			}
-		}
-	}
-
-	/// <summary>
-	/// Interactive Hover Exit for the Line Chart Hotspots.
-	/// Shrinks the ellipse uniformly back and closes the popup.
-	/// </summary>
-	internal void Hotspot_PointerExited(object sender, PointerRoutedEventArgs e)
-	{
-		if (sender is Grid hotspotGrid)
-		{
-			Microsoft.UI.Xaml.Shapes.Ellipse? ellipse = FindVisualChildByName<Microsoft.UI.Xaml.Shapes.Ellipse>(hotspotGrid, "PointEllipse");
-			if (ellipse?.RenderTransform is ScaleTransform scale)
-			{
-				scale.ScaleX = 1.0;
-				scale.ScaleY = 1.0;
-			}
-
-			Popup? popup = FindVisualChildByName<Popup>(hotspotGrid, "DataPopup");
-			if (popup != null)
-			{
-				popup.IsOpen = false;
-				Canvas.SetZIndex(hotspotGrid, 0);
-			}
 		}
 	}
 

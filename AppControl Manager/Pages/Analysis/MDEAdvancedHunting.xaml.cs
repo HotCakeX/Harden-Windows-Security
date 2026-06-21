@@ -16,6 +16,7 @@
 //
 
 using AppControlManager.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -30,5 +31,24 @@ internal sealed partial class MDEAdvancedHunting : Page
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
+	}
+
+	internal async void ExportPageToPdf_Click()
+	{
+		PdfExportProgressPanel.Visibility = Visibility.Visible;
+		PdfExportProgressRing.IsActive = true;
+		try
+		{
+			await AnalysisPagePdfExporter.ExportAsync(AnalysisContentPanel, "MDE_Advanced_Hunting_Analysis.pdf");
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+		finally
+		{
+			PdfExportProgressRing.IsActive = false;
+			PdfExportProgressPanel.Visibility = Visibility.Collapsed;
+		}
 	}
 }

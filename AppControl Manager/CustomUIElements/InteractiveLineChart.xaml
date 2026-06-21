@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="AppControlManager.CustomUIElements.InteractiveLineChart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    Loaded="{x:Bind InteractiveLineChart_Loaded}"
+    Unloaded="{x:Bind InteractiveLineChart_Unloaded}"
+    LayoutUpdated="{x:Bind InteractiveLineChart_LayoutUpdated}"
+    HorizontalAlignment="Stretch">
+
+    <Grid MinHeight="320" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,6" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Spacing="6" Visibility="{x:Bind Series1LegendVisibility, Mode=OneWay}">
+                    <Ellipse Width="10" Height="10" Fill="{x:Bind Series1Brush, Mode=OneWay}" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Bind Series1Name, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="6" Visibility="{x:Bind Series2LegendVisibility, Mode=OneWay}">
+                    <Ellipse Width="10" Height="10" Fill="{x:Bind Series2Brush, Mode=OneWay}" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Bind Series2Name, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                </StackPanel>
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="{x:Bind ZoomStatusText, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+        </Grid>
+
+        <CCToolKit:WrapPanel Grid.Row="1" Orientation="Horizontal" HorizontalSpacing="8" VerticalSpacing="8" HorizontalAlignment="Right" Margin="0,0,0,8">
+            <Button Content="Both" Click="{x:Bind ShowBothButton_Click}" Padding="10,4">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE736;" FontSize="14"/>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button Content="Blocked" Click="{x:Bind ShowSeries1Button_Click}" Padding="10,4">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE733;" FontSize="14"/>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button Content="Allowed" Click="{x:Bind ShowSeries2Button_Click}" Padding="10,4">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE8FB;" FontSize="14"/>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <RepeatButton Delay="350" Interval="85" Click="{x:Bind ZoomInRepeatButton_Click}" Padding="10,4" ToolTipService.ToolTip="Zoom in">
+                <FontIcon Glyph="&#xE8A3;" FontSize="14" />
+            </RepeatButton>
+            <RepeatButton Delay="350" Interval="85" Click="{x:Bind ZoomOutRepeatButton_Click}" Padding="10,4" ToolTipService.ToolTip="Zoom out">
+                <FontIcon Glyph="&#xE71F;" FontSize="14" />
+            </RepeatButton>
+            <Button Content="Reset" Click="{x:Bind ResetZoomButton_Click}" Padding="10,4">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE7A6;" FontSize="14"/>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button Content="{x:Bind RangeSelectionButtonText, Mode=OneWay}" Click="{x:Bind RangeSelectionButton_Click}" Padding="10,4">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xF5EF;" FontSize="14"/>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button Content="Clear range" Click="{x:Bind ClearRangeSelectionButton_Click}" Padding="10,4" Visibility="{x:Bind RangeSelectionClearButtonVisibility, Mode=OneWay}">
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE8E6;" FontSize="14"/>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </CCToolKit:WrapPanel>
+
+        <Canvas x:Name="ChartCanvas"
+                Grid.Row="2"
+                Background="Transparent"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                SizeChanged="{x:Bind ChartCanvas_SizeChanged}"
+                PointerPressed="{x:Bind ChartCanvas_PointerPressed}"
+                PointerReleased="{x:Bind ChartCanvas_PointerReleased}"
+                PointerMoved="{x:Bind ChartCanvas_PointerMoved}"
+                PointerExited="{x:Bind ChartCanvas_PointerExited}"
+                PointerWheelChanged="{x:Bind ChartCanvas_PointerWheelChanged}"
+                ManipulationDelta="{x:Bind ChartCanvas_ManipulationDelta}"
+                ManipulationMode="Scale,TranslateX">
+
+            <ItemsControl ItemsSource="{x:Bind HorizontalGridLines, Mode=OneWay}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:InteractiveLineChartLineVisual">
+                        <Line X1="{x:Bind X1}" Y1="{x:Bind Y1}" X2="{x:Bind X2}" Y2="{x:Bind Y2}" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" StrokeDashArray="4 4" Opacity="0.65" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{x:Bind VerticalGridLines, Mode=OneWay}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:InteractiveLineChartLineVisual">
+                        <Line X1="{x:Bind X1}" Y1="{x:Bind Y1}" X2="{x:Bind X2}" Y2="{x:Bind Y2}" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" StrokeDashArray="3 5" Opacity="0.35" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{x:Bind YAxisLabels, Mode=OneWay}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:InteractiveLineChartAxisLabel">
+                        <TextBlock Text="{x:Bind Text}" Width="{x:Bind Width}" FontSize="{x:Bind FontSize}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextAlignment="Right" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{x:Bind XAxisLabels, Mode=OneWay}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:InteractiveLineChartAxisLabel">
+                        <TextBlock Text="{x:Bind Text}" Width="{x:Bind Width}" FontSize="{x:Bind FontSize}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Rectangle Width="{x:Bind PlotWidth, Mode=OneWay}" Height="{x:Bind PlotHeight, Mode=OneWay}" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.7">
+                <Rectangle.RenderTransform>
+                    <TranslateTransform X="{x:Bind PlotLeft, Mode=OneWay}" Y="{x:Bind PlotTop, Mode=OneWay}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Rectangle Canvas.ZIndex="80" Width="{x:Bind RangeSelectionWidth, Mode=OneWay}" Height="{x:Bind PlotHeight, Mode=OneWay}" Fill="{ThemeResource AccentFillColorDefaultBrush}" Opacity="0.18" Visibility="{x:Bind RangeSelectionOverlayVisibility, Mode=OneWay}" PointerEntered="{x:Bind RangeSelectionArea_PointerEntered}" PointerExited="{x:Bind RangeSelectionInteractiveElement_PointerExited}" PointerPressed="{x:Bind RangeSelectionArea_PointerPressed}">
+                <Rectangle.RenderTransform>
+                    <TranslateTransform X="{x:Bind RangeSelectionLeft, Mode=OneWay}" Y="{x:Bind PlotTop, Mode=OneWay}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Rectangle Canvas.ZIndex="81" Width="{x:Bind RangeSelectionWidth, Mode=OneWay}" Height="{x:Bind PlotHeight, Mode=OneWay}" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="2" Opacity="0.85" Visibility="{x:Bind RangeSelectionOverlayVisibility, Mode=OneWay}" IsHitTestVisible="False">
+                <Rectangle.RenderTransform>
+                    <TranslateTransform X="{x:Bind RangeSelectionLeft, Mode=OneWay}" Y="{x:Bind PlotTop, Mode=OneWay}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Border Canvas.ZIndex="82" Width="24" Height="{x:Bind PlotHeight, Mode=OneWay}" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Opacity="0.95" Visibility="{x:Bind RangeSelectionOverlayVisibility, Mode=OneWay}" PointerEntered="{x:Bind RangeSelectionHandle_PointerEntered}" PointerExited="{x:Bind RangeSelectionInteractiveElement_PointerExited}" PointerPressed="{x:Bind RangeSelectionLeftHandle_PointerPressed}">
+                <Border.RenderTransform>
+                    <TranslateTransform X="{x:Bind RangeSelectionLeftHandleX, Mode=OneWay}" Y="{x:Bind PlotTop, Mode=OneWay}" />
+                </Border.RenderTransform>
+            </Border>
+            <Border Canvas.ZIndex="82" Width="24" Height="{x:Bind PlotHeight, Mode=OneWay}" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Opacity="0.95" Visibility="{x:Bind RangeSelectionOverlayVisibility, Mode=OneWay}" PointerEntered="{x:Bind RangeSelectionHandle_PointerEntered}" PointerExited="{x:Bind RangeSelectionInteractiveElement_PointerExited}" PointerPressed="{x:Bind RangeSelectionRightHandle_PointerPressed}">
+                <Border.RenderTransform>
+                    <TranslateTransform X="{x:Bind RangeSelectionRightHandleX, Mode=OneWay}" Y="{x:Bind PlotTop, Mode=OneWay}" />
+                </Border.RenderTransform>
+            </Border>
+
+            <Path Data="{x:Bind Series1PathData, Mode=OneWay}" Stroke="{x:Bind Series1Brush, Mode=OneWay}" StrokeThickness="3" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Fill="Transparent" Visibility="{x:Bind Series1PathVisibility, Mode=OneWay}" />
+            <Path Data="{x:Bind Series2PathData, Mode=OneWay}" Stroke="{x:Bind Series2Brush, Mode=OneWay}" StrokeThickness="3" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Fill="Transparent" Visibility="{x:Bind Series2PathVisibility, Mode=OneWay}" />
+
+            <Line X1="{x:Bind CrosshairX, Mode=OneWay}" X2="{x:Bind CrosshairX, Mode=OneWay}" Y1="{x:Bind PlotTop, Mode=OneWay}" Y2="{x:Bind PlotBottom, Mode=OneWay}" Stroke="{ThemeResource TextFillColorSecondaryBrush}" StrokeThickness="1" StrokeDashArray="2 4" Opacity="0.7" Visibility="{x:Bind CrosshairVisibility, Mode=OneWay}" />
+            <Line X1="{x:Bind PlotLeft, Mode=OneWay}" X2="{x:Bind PlotRight, Mode=OneWay}" Y1="{x:Bind CrosshairY, Mode=OneWay}" Y2="{x:Bind CrosshairY, Mode=OneWay}" Stroke="{ThemeResource TextFillColorSecondaryBrush}" StrokeThickness="1" StrokeDashArray="2 4" Opacity="0.45" Visibility="{x:Bind CrosshairVisibility, Mode=OneWay}" />
+
+            <Ellipse Width="12" Height="12" Fill="{x:Bind Series1Brush, Mode=OneWay}" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" Visibility="{x:Bind Series1MarkerVisibility, Mode=OneWay}">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform X="{x:Bind Series1MarkerX, Mode=OneWay}" Y="{x:Bind Series1MarkerY, Mode=OneWay}" />
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <Ellipse Width="12" Height="12" Fill="{x:Bind Series2Brush, Mode=OneWay}" Stroke="{ThemeResource LayerFillColorDefaultBrush}" StrokeThickness="2" Visibility="{x:Bind Series2MarkerVisibility, Mode=OneWay}">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform X="{x:Bind Series2MarkerX, Mode=OneWay}" Y="{x:Bind Series2MarkerY, Mode=OneWay}" />
+                </Ellipse.RenderTransform>
+            </Ellipse>
+
+            <Border Width="{x:Bind TooltipWidth, Mode=OneWay}"
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="10,12"
+                    Visibility="{x:Bind CrosshairVisibility, Mode=OneWay}">
+                <Border.RenderTransform>
+                    <TranslateTransform X="{x:Bind TooltipX, Mode=OneWay}" Y="{x:Bind TooltipY, Mode=OneWay}" />
+                </Border.RenderTransform>
+                <StackPanel Spacing="10">
+                    <TextBlock Text="{x:Bind TooltipHeaderText, Mode=OneWay}" FontSize="12" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" HorizontalAlignment="Center" TextAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+
+                    <Grid Visibility="{x:Bind TooltipBothVisibility, Mode=OneWay}" ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="1" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="{x:Bind TooltipBlockedHeaderText, Mode=OneWay}" Foreground="{x:Bind Series1Brush, Mode=OneWay}" FontSize="12" FontWeight="SemiBold" TextAlignment="Left" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                            <TextBlock Text="{x:Bind TooltipBlockedDetailsText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="False" />
+                        </StackPanel>
+
+                        <Border Grid.Column="1" Width="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Opacity="0.8" />
+
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="{x:Bind TooltipAllowedHeaderText, Mode=OneWay}" Foreground="{x:Bind Series2Brush, Mode=OneWay}" FontSize="12" FontWeight="SemiBold" TextAlignment="Left" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                            <TextBlock Text="{x:Bind TooltipAllowedDetailsText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="False" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Visibility="{x:Bind TooltipSingleVisibility, Mode=OneWay}" Spacing="6">
+                        <TextBlock Text="{x:Bind TooltipSingleHeaderText, Mode=OneWay}" FontSize="12" FontWeight="SemiBold" TextAlignment="Left" Foreground="{x:Bind TooltipSingleBrush, Mode=OneWay}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                        <TextBlock Text="{x:Bind TooltipSingleDetailsText, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="False" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Canvas>
+    </Grid>
+</UserControl>

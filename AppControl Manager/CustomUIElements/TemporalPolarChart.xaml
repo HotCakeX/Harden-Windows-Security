@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="AppControlManager.CustomUIElements.TemporalPolarChart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppControlManager.CustomUIElements"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    Loaded="{x:Bind TemporalPolarChart_Loaded}">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SizeChanged="{x:Bind RootGrid_SizeChanged}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="320" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,0,0,12">
+                <TextBlock Text="Event Activity Pattern" FontSize="20" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Padding="4" Click="{x:Bind ExportCurrentViewToSvg_Click}" ToolTipService.ToolTip="Download SVG">
+                    <FontIcon Glyph="&#xE896;" FontSize="14" />
+                </Button>
+            </Grid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="18" Margin="0,0,0,10">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Ellipse Width="12" Height="12" Fill="{x:Bind Series1Brush, Mode=OneWay}" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Bind Series1LegendText, Mode=OneWay}" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Ellipse Width="12" Height="12" Fill="{x:Bind Series2Brush, Mode=OneWay}" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Bind Series2LegendText, Mode=OneWay}" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Canvas x:Name="ChartCanvas" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SizeChanged="{x:Bind ChartCanvas_SizeChanged}">
+                    <ItemsControl ItemsSource="{x:Bind ShapeVisuals, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:TemporalPolarShapeVisual">
+                                <Path Data="{x:Bind Data}" Fill="{x:Bind Fill}" Stroke="{x:Bind Stroke}" StrokeThickness="{x:Bind StrokeThickness}" Opacity="{x:Bind Opacity}" StrokeLineJoin="Round" ToolTipService.ToolTip="{x:Bind Tooltip}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{x:Bind RingVisuals, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:TemporalPolarRingVisual">
+                                <Ellipse Width="{x:Bind Diameter}" Height="{x:Bind Diameter}" Stroke="{x:Bind Stroke}" StrokeThickness="{x:Bind StrokeThickness}" Opacity="{x:Bind Opacity}">
+                                    <Ellipse.RenderTransform>
+                                        <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{x:Bind LineVisuals, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:TemporalPolarLineVisual">
+                                <Line X1="{x:Bind X1}" Y1="{x:Bind Y1}" X2="{x:Bind X2}" Y2="{x:Bind Y2}" Stroke="{ThemeResource CardStrokeColorDefaultBrush}" StrokeThickness="1" Opacity="0.38" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{x:Bind TextVisuals, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:TemporalPolarTextVisual">
+                                <TextBlock Text="{x:Bind Text}" Width="{x:Bind Width}" FontSize="{x:Bind FontSize}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}" />
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Canvas>
+                <TextBlock Text="No activity data available" Visibility="{x:Bind EmptyMessageVisibility, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13" />
+            </Grid>
+        </Grid>
+        <Border Grid.Column="1" Margin="20,0,0,0" CornerRadius="12" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20" VerticalAlignment="Stretch">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Display mode" FontSize="15" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                <ComboBox MinWidth="260" HorizontalAlignment="Stretch" ItemsSource="{x:Bind ModeOptions, Mode=OneWay}" SelectedItem="{x:Bind SelectedModeOption, Mode=OneWay}" SelectionChanged="{x:Bind ModeComboBox_SelectionChanged}" />
+                <TextBlock Text="Hourly uses 24 sectors, one for each hour of day. Monthly uses 12 sectors. Day of week uses 7 sectors." Margin="0,10,0,0" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

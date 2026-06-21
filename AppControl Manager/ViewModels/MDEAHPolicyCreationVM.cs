@@ -68,6 +68,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 
 		// To adjust the initial width of the columns, giving them nice paddings.
 		ColumnManager.CalculateColumnWidths(FileIdentities);
+		AnalysisResults.AnalysisCustomTimeRangeChanged += AnalysisResults_AnalysisCustomTimeRangeChanged;
 	}
 
 	#region Property Filter Implementation
@@ -128,6 +129,9 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	private readonly List<FileIdentity> AllFileIdentities = [];
+	private bool _analysisCustomRangeFilterIsActive;
+	private DateTime? _analysisCustomRangeStartTime;
+	private DateTime? _analysisCustomRangeEndTime;
 
 	/// <summary>
 	/// To store the MDE Advanced Hunting CSV log file path.
@@ -410,10 +414,10 @@ DeviceEvents
 	}
 
 	/// <summary>
-	/// Applies the date, search, and property filters to the data in the ListView.
+	/// Applies the date, search, property, and active analysis range filters to the data in the ListView.
 	/// </summary>
 	private void ApplyFilters() => ListViewHelper.ApplyFilters(
-			allFileIdentities: AllFileIdentities,
+			allFileIdentities: GetFileIdentitiesForActiveAnalysisRange(),
 			filteredCollection: FileIdentities,
 			searchText: SearchBoxText,
 			selectedDate: DatePickerDate,
@@ -421,6 +425,41 @@ DeviceEvents
 			selectedPropertyFilter: SelectedPropertyFilter,
 			propertyFilterValue: PropertyFilterValue
 		);
+
+	private void AnalysisResults_AnalysisCustomTimeRangeChanged(object? sender, Analysis.AnalysisCustomTimeRangeChangedEventArgs e)
+	{
+		_analysisCustomRangeFilterIsActive = e.IsActive;
+		_analysisCustomRangeStartTime = e.StartTime;
+		_analysisCustomRangeEndTime = e.EndTime;
+		ApplyFilters();
+	}
+
+	private List<FileIdentity> GetFileIdentitiesForActiveAnalysisRange()
+	{
+		if (!_analysisCustomRangeFilterIsActive || !_analysisCustomRangeStartTime.HasValue || !_analysisCustomRangeEndTime.HasValue)
+		{
+			return AllFileIdentities;
+		}
+		DateTime startTime = _analysisCustomRangeStartTime.Value;
+		DateTime endTime = _analysisCustomRangeEndTime.Value;
+		if (endTime < startTime)
+		{
+			DateTime temporaryTime = startTime;
+			startTime = endTime;
+			endTime = temporaryTime;
+		}
+		List<FileIdentity> filteredFileIdentities = new(AllFileIdentities.Count);
+
+		// Get the FileIdentities that are within the custom time range specified by the user in the analysis page.
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(AllFileIdentities))
+		{
+			if (item.TimeCreated.HasValue && item.TimeCreated.Value >= startTime && item.TimeCreated.Value <= endTime)
+			{
+				filteredFileIdentities.Add(item);
+			}
+		}
+		return filteredFileIdentities;
+	}
 
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
@@ -945,6 +984,16 @@ DeviceEvents
 				ApplyFilters();
 
 				await Task.Run(CalculateColumnWidths);
+
+				// Analyze the data
+				await AnalysisResults.PrepareAnalysis(AllFileIdentities);
+
+				// If the app settings requires auto switch, do it here.
+				if (Atlas.Settings.AutoSwitchToAnalysisPageAfterDataRetrieval)
+				{
+					// Navigate to the analysis page
+					await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.MDEAdvancedHunting), null);
+				}
 			}
 		}
 		catch (Exception ex)
@@ -979,7 +1028,7 @@ DeviceEvents
 				ListViewHelper.SortColumn(
 					keySelector: mapping.Getter,
 					searchBoxText: SearchBoxText,
-					originalList: AllFileIdentities,
+					originalList: GetFileIdentitiesForActiveAnalysisRange(),
 					observableCollection: FileIdentities,
 					sortState: SortState,
 					newKey: key,
@@ -1010,6 +1059,7 @@ DeviceEvents
 
 	public void Dispose()
 	{
+		AnalysisResults.AnalysisCustomTimeRangeChanged -= AnalysisResults_AnalysisCustomTimeRangeChanged;
 		// Dispose the AuthenticationCompanion which implements IDisposable
 		AuthCompanionCLS.Dispose();
 	}

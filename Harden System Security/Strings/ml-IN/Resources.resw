@@ -4475,54 +4475,6 @@
     <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>ഇപ്പോൾ ഉപയോഗത്തിലുള്ള അക്കൗണ്ടിന്റെ വിശദാംശങ്ങൾ</value>
   </data>
-    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>ഉപയോക്തൃനാമം</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ഉപയോക്തൃനാമം.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ഉപയോക്തൃനാമം.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ഉപയോക്തൃനാമം ഇവിടെ പ്രത്യക്ഷപ്പെടും</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>ടേനന്റ് ID</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ടേനന്റ് ID.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ടേനന്റ് ID.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ടേനറ്റ് ID ഇവിടെ പ്രത്യക്ഷപ്പെടും</value>
-  </data>
-    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>അക്കൗണ്ട് തിരിച്ചറിയിപ്പ്</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ തിരിച്ചറിയിപ്പ്.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ തിരിച്ചറിയിപ്പ്.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ തിരിച്ചറിയിപ്പ് ഇവിടെ പ്രത്യക്ഷപ്പെടും</value>
-  </data>
-    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>അനുമതികൾ</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അനുമതികൾ.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ പ്രവർത്തനങ്ങൾ നിർവഹിക്കാൻ നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അനുമതികൾ.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അനുമതികൾ ഇവിടെ പ്രത്യക്ഷപ്പെടും</value>
-  </data>
     <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>നിങ്ങളുടെ Microsoft ടേനന്റിൽ സൈൻ-ഇൻ ചെയ്യുക. വിജയകരമായ സൈൻ-ഇൻ കഴിഞ്ഞാൽ, ആപ്പ് അടയ്ക്കുന്നതോ &quot;സൈൻ-ഇൻ ചെയ്ത അക്കൗണ്ടുകൾ&quot; വിഭാഗത്തിൽ നിന്ന് അത് നീക്കുന്നതോ വരെ അക്കൗണ്ട് വിവരം അപ്ലിക്കേഷന്റെ മെമ്മറിയിൽ സംരക്ഷിക്കും.</value>
   </data>
@@ -5428,18 +5380,6 @@
   </data>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>നിലനിർത്താൻ തിരഞ്ഞെടുത്ത ഒറിജിനൽ ഫോട്ടോ ഡിലീറ്റ് ചെയ്യുക.</value>
-  </data>
-      <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി ഇവിടെ ദൃശ്യമാകും</value>
   </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
@@ -7054,5 +6994,35 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>എളുപ്പത്തിലുള്ള ആക്‌സസിനായി ആപ്പ് Start മെനുവിലേക്ക് പിൻ ചെയ്യുക.</value>
+  </data>
+   <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രൊഫൈൽ ഫോട്ടോ ലോഡ് ചെയ്യുക അല്ലെങ്കിൽ പുതുക്കുക</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>സജീവം</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>ടെനന്റ് ഐഡി</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>അക്കൗണ്ട് തിരിച്ചറിയൽ</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>പരിസ്ഥിതി</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>അനുമതികൾ</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പകർത്തുക</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>സജീവ അക്കൗണ്ട് ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ല</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>സൈൻ ഇൻ ചെയ്ത അക്കൗണ്ടുകൾ തുറന്ന് ഒരു അക്കൗണ്ട് സജീവമായി സജ്ജമാക്കാൻ പ്രവർത്തനങ്ങളുടെ മെനു ഉപയോഗിക്കുക.</value>
   </data>
 </root>

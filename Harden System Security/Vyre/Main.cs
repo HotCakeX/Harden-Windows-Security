@@ -915,7 +915,7 @@ internal static class AuthRootProcessor
 				}
 			}
 			// NotBefore gating date for the subject – earlier usage may be treated differently or disallowed.
-			else if (string.Equals(attr.Oid, OidNotBeforeDate, StringComparison.OrdinalIgnoreCase) && (attr.Values.Count > 0 && attr.Values[0].Length == 8))
+			else if (string.Equals(attr.Oid, OidNotBeforeDate, StringComparison.OrdinalIgnoreCase) && attr.Values.Count > 0 && attr.Values[0].Length == 8)
 			{
 				DateTime dt = FileTimeToDateTime(attr.Values[0]);
 				notBefore = dt;

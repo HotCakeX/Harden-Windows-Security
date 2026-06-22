@@ -4475,54 +4475,6 @@
     <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>פרטי החשבון שנמצא כעת בשימוש</value>
   </data>
-    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>שם משתמש</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שם המשתמש של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שם המשתמש של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>שם המשתמש של החשבון שנבחר יופיע כאן</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>מזהה טננט</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מזהה הטננט של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מזהה הטננט של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>מזהה הטננט של החשבון שנבחר יופיע כאן</value>
-  </data>
-    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>מזהה חשבון</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מזהה החשבון של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מזהה החשבון של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>המזהה של החשבון שנבחר יופיע כאן</value>
-  </data>
-    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>הרשאות</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ההרשאות של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ההרשאות של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>ההרשאות של החשבון שנבחר יופיעו כאן</value>
-  </data>
     <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>התחבר לטננט של Microsoft שלך. לאחר התחברות מוצלחת, פרטי החשבון יישמרו בזיכרון היישום עד לסגירת האפליקציה או להסרתו מקטע &quot;חשבונות מחוברים&quot;.</value>
   </data>
@@ -5428,18 +5380,6 @@
   </data>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>מחק את התמונה המקורית שנבחרה להישמר.</value>
-  </data>
-     <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>סביבת ענן</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>סביבת הענן של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>סביבת הענן של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>סביבת הענן של החשבון הנבחר תופיע כאן</value>
   </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>סביבת ענן</value>
@@ -7054,5 +6994,35 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>הצמד את האפליקציה לתפריט התחלה לגישה נוחה.</value>
+  </data>
+   <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>טען או רענן תמונת פרופיל</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>פעיל</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>מזהה דייר</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>מזהה חשבון</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>סביבה</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>הרשאות</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פעולות</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>לא נבחר חשבון פעיל</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>פתח את החשבונות המחוברים והשתמש בתפריט הפעולות כדי להגדיר חשבון כפעיל.</value>
   </data>
 </root>

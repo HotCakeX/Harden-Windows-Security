@@ -4475,54 +4475,6 @@ Fingerabdruck: {3}</value>
     <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Details des aktuell verwendeten Kontos</value>
   </data>
-    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>Benutzername</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Der Benutzername des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Der Benutzername des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>Der Benutzername des ausgewählten Kontos wird hier angezeigt</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>Mandanten-ID</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Die Mandanten-ID des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Die Mandanten-ID des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>Die Mandanten-ID des ausgewählten Kontos wird hier angezeigt</value>
-  </data>
-    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Kontokennung</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Die Kontokennung des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Die Kontokennung des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>Die Kennung des ausgewählten Kontos wird hier angezeigt</value>
-  </data>
-    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Berechtigungen</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Die Berechtigungen des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Die Berechtigungen des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>Die Berechtigungen des ausgewählten Kontos werden hier angezeigt</value>
-  </data>
     <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Melden Sie sich bei Ihrem Microsoft-Mandanten an. Nach erfolgreicher Anmeldung werden die Kontoinformationen im Arbeitsspeicher der Anwendung gespeichert, bis die App geschlossen wird oder Sie es im Abschnitt &quot;Angemeldete Konten&quot; entfernen.</value>
   </data>
@@ -5428,18 +5380,6 @@ Fingerabdruck: {3}</value>
   </data>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>Löschen Sie das Originalfoto, das zur Aufbewahrung ausgewählt wurde.</value>
-  </data>
-   <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Cloud-Umgebung</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Die Cloud-Umgebung des Kontos, das aktuell für die Ausführung der Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Die Cloud-Umgebung des Kontos, das aktuell für die Ausführung der Aufgaben auf dieser Seite ausgewählt ist.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>Die Cloud-Umgebung des ausgewählten Kontos wird hier angezeigt</value>
   </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Cloud-Umgebung</value>
@@ -7054,5 +6994,35 @@ Fingerabdruck: {3}</value>
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Heften Sie die App für einfachen Zugriff an das Startmenü an.</value>
+  </data>
+   <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Profilfoto laden oder aktualisieren</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>Mandanten-ID</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Kontokennung</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Umgebung</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>Kein aktives Konto ausgewählt</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Öffnen Sie „Angemeldete Konten“ und verwenden Sie das Menü „Aktionen“, um ein Konto als aktiv festzulegen.</value>
   </data>
 </root>

@@ -4475,54 +4475,6 @@
     <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Λεπτομέρειες του λογαριασμού που χρησιμοποιείται αυτήν τη στιγμή</value>
   </data>
-    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>Όνομα χρήστη</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το όνομα χρήστη του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το όνομα χρήστη του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>Το όνομα χρήστη του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>Tenant ID</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το αναγνωριστικό μισθωτή του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το αναγνωριστικό μισθωτή του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>Το αναγνωριστικό μισθωτή του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
-  </data>
-    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Αναγνωριστικό λογαριασμού</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το αναγνωριστικό λογαριασμού του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το αναγνωριστικό λογαριασμού του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>Το αναγνωριστικό του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
-  </data>
-    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Δικαιώματα</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Τα δικαιώματα του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Τα δικαιώματα του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>Τα δικαιώματα του επιλεγμένου λογαριασμού θα εμφανιστούν εδώ</value>
-  </data>
     <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Συνδεθείτε στον μισθωτή σας στο Microsoft. Μετά από επιτυχή σύνδεση, οι πληροφορίες του λογαριασμού θα αποθηκευτούν στη μνήμη της εφαρμογής έως ότου η εφαρμογή κλείσει ή το αφαιρέσετε από την ενότητα &quot;Συνδεδεμένοι λογαριασμοί&quot;.</value>
   </data>
@@ -5428,18 +5380,6 @@
   </data>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>Διαγράψτε την αρχική φωτογραφία που έχει επιλεγεί για διατήρηση.</value>
-  </data>
-    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Περιβάλλον Cloud</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>Το Περιβάλλον Cloud του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
   </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Περιβάλλον Cloud</value>
@@ -7054,5 +6994,35 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Καρφιτσώστε την εφαρμογή στο μενού Έναρξη για εύκολη πρόσβαση.</value>
+  </data>
+   <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Φόρτωση ή ανανέωση φωτογραφίας προφίλ</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Ενεργός</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>Αναγνωριστικό μισθωτή</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Αναγνωριστικό λογαριασμού</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Περιβάλλον</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Δικαιώματα</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενέργειες</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>Δεν έχει επιλεγεί ενεργός λογαριασμός</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ανοίξτε τους συνδεδεμένους λογαριασμούς και χρησιμοποιήστε το μενού ενεργειών για να ορίσετε έναν λογαριασμό ως ενεργό.</value>
   </data>
 </root>

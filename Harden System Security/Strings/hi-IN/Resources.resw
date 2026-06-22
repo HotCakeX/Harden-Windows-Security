@@ -4475,54 +4475,6 @@
     <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>वर्तमान में उपयोग किए जा रहे खाते का विवरण</value>
   </data>
-    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>उपयोगकर्ता नाम</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते का उपयोगकर्ता नाम.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते का उपयोगकर्ता नाम.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>चयनित खाते का उपयोगकर्ता नाम यहाँ दिखाई देगा</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>टेनेंट ID</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते का टेनेंट ID.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते का टेनेंट ID.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>चयनित खाते का टेनेंट ID यहाँ दिखाई देगा</value>
-  </data>
-    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>खाते का पहचानकर्ता</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते का पहचानकर्ता.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते का पहचानकर्ता.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>चयनित खाते का पहचानकर्ता यहाँ दिखाई देगा</value>
-  </data>
-    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>अनुमतियाँ</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते की अनुमतियाँ.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>इस पृष्ठ पर कार्यों को करने के लिए वर्तमान में चुने गए खाते की अनुमतियाँ.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>चयनित खाते की अनुमतियाँ यहाँ दिखाई देंगी</value>
-  </data>
     <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>अपने Microsoft टेनेंट में साइन-इन करें. सफल साइन-इन के बाद, खाते की जानकारी ऐप की मेमोरी में तब तक सहेजी जाएगी जब तक ऐप बंद नहीं हो जाता या उसे &quot;साइन-इन खाते&quot; अनुभाग से हटा न दिया जाए.</value>
   </data>
@@ -5428,18 +5380,6 @@
   </data>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>बनाए रखने के लिए चुनी गई मूल फोटो को हटाएं.</value>
-  </data>
-      <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>क्लाउड परिवेश</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>उस खाते का क्लाउड परिवेश जो वर्तमान में इस पृष्ठ पर कार्य करने के लिए चयनित है.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>उस खाते का क्लाउड परिवेश जो वर्तमान में इस पृष्ठ पर कार्य करने के लिए चयनित है.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>चयनित खाते का क्लाउड परिवेश यहाँ दिखाई देगा</value>
   </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>क्लाउड परिवेश</value>
@@ -7054,5 +6994,35 @@
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>आसान पहुँच के लिए ऐप को Start मेनू पर पिन करें.</value>
+  </data>
+   <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रोफ़ाइल फ़ोटो लोड या रीफ़्रेश करें</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>सक्रिय</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>टेनेंट आईडी</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>खाता पहचानकर्ता</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>परिवेश</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>अनुमतियाँ</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कॉपी करें</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कार्रवाइयाँ</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>कोई सक्रिय खाता चयनित नहीं है</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>साइन-इन किए गए खाते खोलें और किसी खाते को सक्रिय के रूप में सेट करने के लिए कार्रवाइयाँ मेनू का उपयोग करें.</value>
   </data>
 </root>

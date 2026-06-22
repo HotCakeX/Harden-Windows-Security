@@ -4475,54 +4475,6 @@ Odcisk Palca: {3}</value>
     <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Szczegóły konta aktualnie używanego</value>
   </data>
-    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>Nazwa użytkownika</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nazwa użytkownika konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nazwa użytkownika konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>Nazwa użytkownika wybranego konta pojawi się tutaj</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>Tenant ID</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Identyfikator dzierżawy konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Identyfikator dzierżawy konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>Identyfikator dzierżawy wybranego konta pojawi się tutaj</value>
-  </data>
-    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Identyfikator konta</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Identyfikator konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Identyfikator konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>Identyfikator wybranego konta pojawi się tutaj</value>
-  </data>
-    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Uprawnienia</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Uprawnienia konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Uprawnienia konta aktualnie wybranego do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>Uprawnienia wybranego konta pojawią się tutaj</value>
-  </data>
     <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Zaloguj się do swojej dzierżawy Microsoft. Po pomyślnym zalogowaniu informacje o koncie zostaną zapisane w pamięci aplikacji do momentu zamknięcia aplikacji lub usunięcia ich z sekcji &quot;Zalogowane konta&quot;.</value>
   </data>
@@ -5428,18 +5380,6 @@ Odcisk Palca: {3}</value>
   </data>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>Usuń oryginalne zdjęcie, które zostało wybrane do zachowania.</value>
-  </data>
-     <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Środowisko chmury</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Środowisko chmury konta, które jest obecnie wybrane do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Środowisko chmury konta, które jest obecnie wybrane do wykonywania zadań na tej stronie.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>Środowisko chmury wybranego konta pojawi się tutaj</value>
   </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Środowisko chmury</value>
@@ -7054,5 +6994,35 @@ Odcisk Palca: {3}</value>
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przypnij aplikację do menu Start, aby uzyskać łatwy dostęp.</value>
+  </data>
+   <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Załaduj lub odśwież zdjęcie profilowe</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Aktywne</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>Identyfikator dzierżawy</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Identyfikator konta</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Środowisko</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Uprawnienia</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Akcje</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>Nie wybrano aktywnego konta</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Otwórz sekcję „Zalogowane konta” i użyj menu akcji, aby ustawić konto jako aktywne.</value>
   </data>
 </root>

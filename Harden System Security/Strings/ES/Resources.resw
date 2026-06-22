@@ -4475,54 +4475,6 @@ Huella Digital: {3}</value>
     <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Detalles de la cuenta que se está usando actualmente</value>
   </data>
-    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>Nombre de usuario</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El nombre de usuario de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El nombre de usuario de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>El nombre de usuario de la cuenta seleccionada aparecerá aquí</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>Id. de inquilino</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El Id. de inquilino de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El Id. de inquilino de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>El Id. de inquilino de la cuenta seleccionada aparecerá aquí</value>
-  </data>
-    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Identificador de cuenta</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El identificador de cuenta de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El identificador de cuenta de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>El identificador de la cuenta seleccionada aparecerá aquí</value>
-  </data>
-    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Permisos</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Los permisos de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Los permisos de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>Los permisos de la cuenta seleccionada aparecerán aquí</value>
-  </data>
     <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Inicie sesión en su inquilino de Microsoft. Después de un inicio de sesión correcto, la información de la cuenta se guardará en la memoria de la aplicación hasta que se cierre la aplicación o la elimine de la sección &quot;Cuentas con sesión iniciada&quot;.</value>
   </data>
@@ -5428,18 +5380,6 @@ Huella Digital: {3}</value>
   </data>
   <data name="DeleteSingleDuplicateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
      <value>Elimine la foto original que se seleccionó para conservar.</value>
-  </data>
-    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Entorno en la nube</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>El entorno en la nube de la cuenta seleccionada aparecerá aquí</value>
   </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Entorno en la nube</value>
@@ -7054,5 +6994,35 @@ Huella Digital: {3}</value>
   </data>
   <data name="PinToStartMenuMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ancla la aplicación al menú Inicio para acceder fácilmente.</value>
+  </data>
+   <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cargar o actualizar foto de perfil</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Activa</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>Id. de inquilino</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Identificador de cuenta</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Entorno</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Permisos</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>No se seleccionó ninguna cuenta activa</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Abre Cuentas con sesión iniciada y usa el menú de acciones para establecer una cuenta como activa.</value>
   </data>
 </root>

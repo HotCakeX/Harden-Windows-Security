@@ -67,7 +67,7 @@
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/e98e3a322d2bd04b6a77e2cd4d2d8909d0eb6af0/Pictures/Gifs/HardenWindowsSecurityApp.gif" width="750" alt="Harden System Security App Demo">
+<img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/HardenWindowsSecurityApp.gif?raw=true" width="800" alt="Harden System Security App Demo">
 
 </div>
 

@@ -1,7 +1,1 @@
-* The import and export of app settings has been improved. You can now import partial setting backup files to only restore specific settings instead of all settings.
-
-* Reduced the noise in the logs by no longer printing an error when CPU thermal counters are unavailable when the home page queries them.
-
-* When you click on the toast notification that says a new app update is available, you will be redirected to the update page.
-
-* Updated dependencies to the latest version.
+* Improved the online management and Microsoft Graph button by redesigning the elements and introducing new features. This applies to the Intune page.

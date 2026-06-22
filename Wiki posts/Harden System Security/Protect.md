@@ -28,7 +28,7 @@ When you press the **Verify Selected** in this page, you will be given a securit
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/657a3c356665065f2a320fc88ca17a8d08345625/Pictures/Gifs/HardenSystemSecurity-DeviceIntentsDemo.gif" alt="Device Intents demo Harden System Security App"/>
+<img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/HardenSystemSecurity-DeviceIntentsDemo.gif?raw=true" alt="Device Intents demo Harden System Security App"/>
 
 </div>
 

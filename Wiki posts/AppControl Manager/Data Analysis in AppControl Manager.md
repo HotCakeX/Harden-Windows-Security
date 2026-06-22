@@ -20,6 +20,14 @@ This section will provide you with one or more recommendations based on your dat
 
 ## Time Range Filtering
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20Analysis%20Page%20Screenshots/2.png" alt="AppControl Manager interactive chart">
+
+</div>
+
+<br>
+
 The analysis pages include a **Time range** selector at the top of the page so you can quickly narrow the entire analysis to the period that matters most. You can view the entire data set with **All time (entire range)** or focus on recent activity with choices such as **Past 1 hour**, **Past 12 hours**, **Past 24 hours**, **Past week**, **Past month**, **Past 6 months**, and **Past year**. When a range is selected, AppControl Manager recalculates the summary, recommendations, totals, charts, global metrics, and the audited/blocked insight categories for that time frame.
 
 This is useful when you want to answer questions such as what changed in the last hour, which devices generated the newest blocks, whether a policy update caused a sudden spike, or whether the current activity is different from the long term baseline. During recalculation, the page displays a progress indicator and temporarily reduces interaction with the analysis content so the user can see that the data is being refreshed.

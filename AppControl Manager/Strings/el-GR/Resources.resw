@@ -1739,54 +1739,6 @@
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Κεντρικοποιήστε τις πιστοποιήσεις των μισθωτών της Microsoft σας με ευκολία. Από αυτήν την ενότητα, μπορείτε να επιλέξετε τον λογαριασμό που επιθυμείτε να χρησιμοποιήσετε στην τρέχουσα σελίδα, να εξετάσετε όλους τους συνδεδεμένους λογαριασμούς, να αποσυνδεθείτε όπως χρειάζεται και πολλά άλλα.</value>
   </data>
-  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>Όνομα Χρήστη</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το Όνομα Χρήστη του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το Όνομα Χρήστη του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>Το Όνομα Χρήστη του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>ID Μισθωτή</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το ID Μισθωτή του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το ID Μισθωτή του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>Το ID Μισθωτή του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Αναγνωριστικό Λογαριασμού</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το Αναγνωριστικό Λογαριασμού του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το Αναγνωριστικό Λογαριασμού του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>Το Αναγνωριστικό του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Δικαιώματα</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Τα Δικαιώματα του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Τα Δικαιώματα του λογαριασμού που είναι προς το παρόν επιλεγμένος για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>Τα Δικαιώματα του επιλεγμένου λογαριασμού θα εμφανιστούν εδώ</value>
-  </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Συνδεθείτε στον μισθωτή της Microsoft σας. Μετά την επιτυχή σύνδεση, οι πληροφορίες του λογαριασμού θα αποθηκευτούν στη μνήμη της εφαρμογής έως ότου η εφαρμογή κλείσει ή τον αφαιρέσετε από την ενότητα "Συνδεδεμένοι Λογαριασμοί".</value>
   </data>
@@ -6911,18 +6863,6 @@
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Αναζητήστε και επιλέξτε μια πολιτική παραπάνω για να την καρφιτσώσετε εδώ για γρήγορη πρόσβαση.</value>
   </data>
-    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Περιβάλλον Cloud</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Το Περιβάλλον Cloud του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>Το Περιβάλλον Cloud του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
-  </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Περιβάλλον Cloud</value>
   </data>
@@ -7776,5 +7716,35 @@
   </data>
   <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αναζήτηση φακέλων</value>
+  </data>
+  <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Φόρτωση ή ανανέωση φωτογραφίας προφίλ</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Ενεργός</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>Αναγνωριστικό μισθωτή</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Αναγνωριστικό λογαριασμού</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Περιβάλλον</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Δικαιώματα</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενέργειες</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>Δεν έχει επιλεγεί ενεργός λογαριασμός</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ανοίξτε τους συνδεδεμένους λογαριασμούς και χρησιμοποιήστε το μενού ενεργειών για να ορίσετε έναν λογαριασμό ως ενεργό.</value>
   </data>
 </root>

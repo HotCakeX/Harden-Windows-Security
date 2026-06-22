@@ -1739,54 +1739,6 @@
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Microsoftテナントの認証を簡単に一元管理します。このセクションから、現在のページで使用するアカウントを選択したり、サインインしているすべてのアカウントを確認したり、必要に応じてログアウトしたり、その他多くの操作ができます。</value>
   </data>
-  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>ユーザー名</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントのユーザー名です。</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントのユーザー名です。</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>選択されたアカウントのユーザー名がここに表示されます</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>テナントID</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントのテナントIDです。</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントのテナントIDです。</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>選択されたアカウントのテナントIDがここに表示されます</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>アカウント識別子</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントの識別子です。</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントの識別子です。</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>選択されたアカウントの識別子がここに表示されます</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>権限</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントの権限です。</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントの権限です。</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>選択されたアカウントの権限がここに表示されます</value>
-  </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Microsoftテナントにサインインします。サインインが成功すると、アプリが閉じられるか、「サインイン済みアカウント」セクションから削除されるまで、アカウント情報はアプリケーションのメモリに保存されます。</value>
   </data>
@@ -6911,18 +6863,6 @@
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>上記でポリシーを検索して選択し、クイックアクセス用にここに固定します。</value>
   </data>
-  <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>クラウド環境</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントのクラウド環境です。</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>このページでタスクを実行するために現在選択されているアカウントのクラウド環境です。</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>選択されたアカウントのクラウド環境がここに表示されます</value>
-  </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>クラウド環境</value>
   </data>
@@ -7776,5 +7716,35 @@
   </data>
   <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>フォルダーを参照</value>
+  </data>
+  <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>プロフィール写真を読み込むか更新する</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>アクティブ</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>テナント ID</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>アカウント識別子</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>環境</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>アクセス許可</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>アクティブなアカウントが選択されていません</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>サインイン済みアカウントを開き、操作メニューを使用してアカウントをアクティブに設定します。</value>
   </data>
 </root>

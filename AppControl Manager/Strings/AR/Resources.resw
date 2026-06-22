@@ -1739,54 +1739,6 @@
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>مركزية مصادقة مستأجري Microsoft بسهولة. من هذا القسم، يمكنك اختيار الحساب الذي ترغب في استخدامه في الصفحة الحالية، ومراجعة جميع الحسابات المسجلة الدخول، وتسجيل الخروج حسب الحاجة، وغير ذلك الكثير.</value>
   </data>
-  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>اسم المستخدم</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>اسم مستخدم الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>اسم مستخدم الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>سيظهر اسم مستخدم الحساب المحدد هنا</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>معرف المستأجر</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>معرف مستأجر الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>معرف مستأجر الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>سيظهر معرف مستأجر الحساب المحدد هنا</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>معرف الحساب</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>معرف حساب الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>معرف حساب الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>سيظهر معرف الحساب المحدد هنا</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>الأذونات</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>أذونات الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>أذونات الحساب المحدد حاليًا لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>ستظهر أذونات الحساب المحدد هنا</value>
-  </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>سجل الدخول إلى مستأجر Microsoft الخاص بك. بعد تسجيل الدخول بنجاح، سيتم حفظ معلومات الحساب في ذاكرة التطبيق حتى يتم إغلاق التطبيق أو إزالته من قسم "الحسابات المسجلة الدخول".</value>
   </data>
@@ -6911,18 +6863,6 @@
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>ابحث وحدد نهجا أعلاه لتثبيته هنا للوصول السريع.</value>
   </data>
-    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>البيئة السحابية</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>البيئة السحابية للحساب المحدد حالياً لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>البيئة السحابية للحساب المحدد حالياً لتنفيذ المهام في هذه الصفحة.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>ستظهر البيئة السحابية للحساب المحدد هنا</value>
-  </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>البيئة السحابية</value>
   </data>
@@ -7776,5 +7716,35 @@
   </data>
   <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>استعراض المجلدات</value>
+  </data>
+  <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحميل صورة الملف الشخصي أو تحديثها</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>معرّف المستأجر</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>معرّف الحساب</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>البيئة</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>الأذونات</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>لم يتم تحديد حساب نشط</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>افتح الحسابات التي تم تسجيل الدخول إليها واستخدم قائمة الإجراءات لتعيين حساب كحساب نشط.</value>
   </data>
 </root>

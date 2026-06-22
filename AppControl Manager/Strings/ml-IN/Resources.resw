@@ -1739,54 +1739,6 @@
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>നിങ്ങളുടെ Microsoft ടെനന്റ് ആധികാരികതകൾ എളുപ്പത്തിൽ കേന്ദ്രീകരിക്കുക. ഈ വിഭാഗത്തിൽ നിന്ന്, നിലവിലെ പേജിൽ ഉപയോഗിക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്ന അക്കൗണ്ട് തിരഞ്ഞെടുക്കാനും, സൈൻ ഇൻ ചെയ്ത എല്ലാ അക്കൗണ്ടുകളും അവലോകനം ചെയ്യാനും, ആവശ്യമെങ്കിൽ ലോഗ് ഔട്ട് ചെയ്യാനും മറ്റു പലതും ചെയ്യാനും കഴിയും.</value>
   </data>
-  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>ഉപയോക്തൃനാമം</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ഉപയോക്തൃനാമം.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ഉപയോക്തൃനാമം.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ഉപയോക്തൃനാമം ഇവിടെ ദൃശ്യമാകും</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>ടെനന്റ് ഐഡി</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ടെനന്റ് ഐഡി.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ടെനന്റ് ഐഡി.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ടെനന്റ് ഐഡി ഇവിടെ ദൃശ്യമാകും</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>അക്കൗണ്ട് ഐഡന്റിഫയർ</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അക്കൗണ്ട് ഐഡന്റിഫയർ.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അക്കൗണ്ട് ഐഡന്റിഫയർ.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ഐഡന്റിഫയർ ഇവിടെ ദൃശ്യമാകും</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>അനുമതികൾ</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അനുമതികൾ.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിനായി നിലവിൽ തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അനുമതികൾ.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ അനുമതികൾ ഇവിടെ ദൃശ്യമാകും</value>
-  </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>നിങ്ങളുടെ Microsoft ടെനന്റിലേക്ക് സൈൻ ഇൻ ചെയ്യുക. വിജയകരമായ സൈൻ ഇൻ ചെയ്ത ശേഷം, ആപ്പ് അടയ്ക്കുകയോ "സൈൻ ഇൻ ചെയ്ത അക്കൗണ്ടുകൾ" വിഭാഗത്തിൽ നിന്ന് നീക്കം ചെയ്യുകയോ ചെയ്യുന്നതുവരെ അക്കൗണ്ടിന്റെ വിവരങ്ങൾ ആപ്ലിക്കേഷന്റെ മെമ്മറിയിൽ സംരക്ഷിക്കപ്പെടും.</value>
   </data>
@@ -6911,18 +6863,6 @@
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>ദ്രുത ആക്‌സസിനായി ഇവിടെ പിന്‍ ചെയ്യുന്നതിന് മുകളില്‍ ഒരു പോളിസി തിരഞ്ഞെടുക്കുക.</value>
   </data>
-    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഈ പേജിലെ ടാസ്‌ക്കുകൾ നിർവ്വഹിക്കുന്നതിന് നിലവിൽ തിരഞ്ഞെടുത്തിട്ടുള്ള അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത അക്കൗണ്ടിന്റെ ക്ലൗഡ് പരിസ്ഥിതി ഇവിടെ ദൃശ്യമാകും</value>
-  </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>ക്ലൗഡ് പരിസ്ഥിതി</value>
   </data>
@@ -7776,5 +7716,35 @@
   </data>
   <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രൊഫൈൽ ഫോട്ടോ ലോഡ് ചെയ്യുക അല്ലെങ്കിൽ പുതുക്കുക</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>സജീവം</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>ടെനന്റ് ഐഡി</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>അക്കൗണ്ട് തിരിച്ചറിയൽ</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>പരിസ്ഥിതി</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>അനുമതികൾ</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പകർത്തുക</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>സജീവ അക്കൗണ്ട് ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ല</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>സൈൻ ഇൻ ചെയ്ത അക്കൗണ്ടുകൾ തുറന്ന് ഒരു അക്കൗണ്ട് സജീവമായി സജ്ജമാക്കാൻ പ്രവർത്തനങ്ങളുടെ മെനു ഉപയോഗിക്കുക.</value>
   </data>
 </root>

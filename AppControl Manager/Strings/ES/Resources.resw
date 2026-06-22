@@ -1739,54 +1739,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Centralice las autenticaciones de sus inquilinos de Microsoft con facilidad. Desde esta sección, puede elegir la cuenta que desea usar en la página actual, revisar todas las cuentas conectadas, cerrar sesión según sea necesario y mucho más.</value>
   </data>
-  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>Nombre de Usuario</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El Nombre de Usuario de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El Nombre de Usuario de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>El Nombre de Usuario de la cuenta seleccionada aparecerá aquí</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>ID de Inquilino</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El ID de Inquilino de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El ID de Inquilino de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>El ID de Inquilino de la cuenta seleccionada aparecerá aquí</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Identificador de Cuenta</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El Identificador de Cuenta de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El Identificador de Cuenta de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>El Identificador de la cuenta seleccionada aparecerá aquí</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Permisos</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Los Permisos de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Los Permisos de la cuenta que está actualmente seleccionada para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>Los Permisos de la cuenta seleccionada aparecerán aquí</value>
-  </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Inicie sesión en su inquilino de Microsoft. Después de iniciar sesión correctamente, la información de la cuenta se guardará en la memoria de la aplicación hasta que se cierre la aplicación o se elimine de la sección "Cuentas Conectadas".</value>
   </data>
@@ -6911,18 +6863,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Busque y seleccione una directiva en la parte superior para anclarla aquí y acceder rápidamente.</value>
   </data>
-    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Entorno en la nube</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El entorno en la nube de la cuenta que está seleccionada actualmente para realizar las tareas en esta página.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>El entorno en la nube de la cuenta seleccionada aparecerá aquí</value>
-  </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Entorno en la nube</value>
   </data>
@@ -7776,5 +7716,35 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Examinar carpetas</value>
+  </data>
+  <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cargar o actualizar foto de perfil</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Activa</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>Id. de inquilino</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Identificador de cuenta</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Entorno</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Permisos</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>No se seleccionó ninguna cuenta activa</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Abre Cuentas con sesión iniciada y usa el menú de acciones para establecer una cuenta como activa.</value>
   </data>
 </root>

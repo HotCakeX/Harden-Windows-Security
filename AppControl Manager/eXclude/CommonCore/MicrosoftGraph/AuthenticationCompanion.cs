@@ -57,6 +57,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
+		UpdateAuthenticatedAccountCardStates();
 	}
 
 	/// <summary>
@@ -91,6 +92,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		try
 		{
 			await Main.RestoreCachedAccountsAsync();
+			UpdateAuthenticatedAccountCardStates();
 			AutoSelectAccountIfApplicable();
 		}
 		finally
@@ -122,10 +124,6 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 					{
 						CurrentActiveAccount = null;
 					}
-					if (ListViewSelectedAccount == removed)
-					{
-						ListViewSelectedAccount = null;
-					}
 				}
 			}
 
@@ -133,8 +131,19 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			if (e.Action == NotifyCollectionChangedAction.Reset)
 			{
 				CurrentActiveAccount = null;
-				ListViewSelectedAccount = null;
 			}
+		}
+		UpdateAuthenticatedAccountCardStates();
+	}
+
+	/// <summary>
+	/// Keeps active badges synchronized for the accounts displayed by this companion.
+	/// </summary>
+	private void UpdateAuthenticatedAccountCardStates()
+	{
+		foreach (AuthenticatedAccounts account in AuthenticatedAccounts)
+		{
+			account.SetActiveState(CurrentActiveAccount is not null && account.Equals(CurrentActiveAccount));
 		}
 	}
 
@@ -167,7 +176,15 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// </summary>
 	internal Visibility AuthenticatedAccountsShimmerVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
-	internal AuthenticatedAccounts? ListViewSelectedAccount { get; set => SP(ref field, value); }
+	/// <summary>
+	/// Visibility of the active account details area.
+	/// </summary>
+	internal Visibility ActiveAccountDetailsVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	/// <summary>
+	/// Visibility of the placeholder shown when no account is active.
+	/// </summary>
+	internal Visibility ActiveAccountPlaceholderVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
 	internal AuthenticatedAccounts? CurrentActiveAccount
 	{
@@ -177,6 +194,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			{
 				// When the current account changes, update the dependent properties.
 				UpdateAccountDetails();
+				UpdateAuthenticatedAccountCardStates();
 
 				_UpdateButtons(value is not null);
 			}
@@ -195,6 +213,8 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			CurrentActiveAccountAccountIdentifier = CurrentActiveAccount.AccountIdentifier;
 			CurrentActiveAccountPermissions = CurrentActiveAccount.Permissions;
 			CurrentActiveAccountEnvironment = CurrentActiveAccount.Environment.ToString();
+			ActiveAccountDetailsVisibility = Visibility.Visible;
+			ActiveAccountPlaceholderVisibility = Visibility.Collapsed;
 		}
 		else
 		{
@@ -204,6 +224,8 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 			CurrentActiveAccountAccountIdentifier = null;
 			CurrentActiveAccountPermissions = null;
 			CurrentActiveAccountEnvironment = null;
+			ActiveAccountDetailsVisibility = Visibility.Collapsed;
+			ActiveAccountPlaceholderVisibility = Visibility.Visible;
 		}
 	}
 
@@ -262,18 +284,30 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	}
 
 	/// <summary>
-	/// Logs out of the currently selected account.
+	/// Sets the provided account as the active account to use.
 	/// </summary>
-	internal async void LogOutOfSelectedAccount()
+	internal void SetActiveAccount(AuthenticatedAccounts? account)
+	{
+		CurrentActiveAccount = account;
+		if (CurrentActiveAccount is not null)
+		{
+			_InfoBar.WriteSuccess(string.Format(
+				Atlas.GetStr("SuccessfullySetActiveAccountMessage"),
+				CurrentActiveAccount.Username));
+		}
+	}
+
+	/// <summary>
+	/// Logs out of the provided account.
+	/// </summary>
+	internal async Task LogOutOfAccountAsync(AuthenticatedAccounts? account)
 	{
 		try
 		{
 			ManageButtonsStates(false);
-
-			if (ListViewSelectedAccount is not null)
+			if (account is not null)
 			{
-				await Main.SignOut(ListViewSelectedAccount);
-
+				await Main.SignOut(account);
 				_InfoBar.WriteInfo(Atlas.GetStr("SuccessfullyLoggedOutSelectedAccountMessage"));
 			}
 		}
@@ -281,22 +315,6 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		{
 			_InfoBar.IsClosable = true;
 			ManageButtonsStates(true);
-		}
-	}
-
-	/// <summary>
-	/// Set the selected item in the ListView as active account to use
-	/// </summary>
-	internal void SetActiveFromListView()
-	{
-		// Replace the current active account with the one from ListView
-		CurrentActiveAccount = ListViewSelectedAccount;
-
-		if (CurrentActiveAccount is not null)
-		{
-			_InfoBar.WriteSuccess(string.Format(
-				Atlas.GetStr("SuccessfullySetActiveAccountMessage"),
-				CurrentActiveAccount.Username));
 		}
 	}
 
@@ -453,7 +471,6 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 			AuthenticatedAccounts.Clear();
 			CurrentActiveAccount = null;
-			ListViewSelectedAccount = null;
 
 			_InfoBar.WriteSuccess("Local token cache cleared successfully.");
 		}

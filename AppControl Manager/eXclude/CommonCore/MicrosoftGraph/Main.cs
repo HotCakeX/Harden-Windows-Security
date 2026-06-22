@@ -37,7 +37,6 @@ namespace CommonCore.MicrosoftGraph;
 
 internal static class Main
 {
-
 	/// <summary>
 	/// For Microsoft Graph Command Line Tools
 	/// </summary>
@@ -63,6 +62,11 @@ internal static class Main
 	/// URL for M365 Groups
 	/// </summary>
 	private static Uri GetGroupsUrl(AzureCloudInstance environment) => new($"{GetGraphBaseUrl(environment)}/v1.0/groups");
+
+	/// <summary>
+	/// URL for the signed-in user profile photo binary content.
+	/// </summary>
+	private static Uri GetProfilePhotoContentUrl(AzureCloudInstance environment) => new($"{GetGraphBaseUrl(environment)}/v1.0/me/photo/$value");
 
 	/// <summary>
 	/// URL for Microsoft Defender for Endpoint Advanced Hunting queries
@@ -100,6 +104,11 @@ internal static class Main
 	private static readonly ConcurrentDictionary<(SignInMethods, AzureCloudInstance, bool), MsalCacheHelper> CacheHelpers = new();
 
 	private static readonly SemaphoreSlim AppCacheLock = new(1, 1);
+
+	/// <summary>
+	/// Least-privileged delegated scope required for retrieving the signed-in user profile photo.
+	/// </summary>
+	private static readonly string[] ProfilePhotoScopes = ["User.Read"];
 
 	// Prevents file locking IOExceptions if metadata is read/written rapidly.
 	private static readonly SemaphoreSlim MetadataFileLock = new(1, 1);
@@ -224,6 +233,82 @@ internal static class Main
 			account.Username));
 
 		return refreshedResult.AccessToken;
+	}
+
+	/// <summary>
+	/// Retrieves the signed-in user's profile photo with the least-privileged User.Read delegated scope.
+	/// Silent token acquisition is attempted first. Interactive consent is used only when explicitly allowed.
+	/// </summary>
+	internal static async Task<byte[]?> GetSignedInUserProfilePhotoAsync(AuthenticatedAccounts account, bool allowInteractiveConsent, CancellationToken cancellationToken)
+	{
+		IPublicClientApplication selectedApp = await GetAppAsync(account.MethodUsed, account.Environment, account.UseCache);
+		AuthenticationResult? profilePhotoAuthResult = null;
+
+		try
+		{
+			profilePhotoAuthResult = await selectedApp
+				.AcquireTokenSilent(ProfilePhotoScopes, account.Account)
+				.ExecuteAsync(cancellationToken);
+		}
+		catch (MsalUiRequiredException) when (allowInteractiveConsent)
+		{
+			switch (account.MethodUsed)
+			{
+				case SignInMethods.WebBrowser:
+					{
+						profilePhotoAuthResult = await selectedApp
+							.AcquireTokenInteractive(ProfilePhotoScopes)
+							.WithAccount(account.Account)
+							.WithUseEmbeddedWebView(false)
+							.ExecuteAsync(cancellationToken);
+
+						break;
+					}
+				case SignInMethods.WebAccountManager:
+					{
+						profilePhotoAuthResult = await selectedApp
+							.AcquireTokenInteractive(ProfilePhotoScopes)
+							.WithAccount(account.Account)
+							.ExecuteAsync(cancellationToken);
+
+						break;
+					}
+				default:
+					throw new InvalidOperationException(Atlas.GetStr("InvalidSignInMethodUsedMessage"));
+			}
+		}
+		catch (MsalUiRequiredException) when (!allowInteractiveConsent)
+		{
+			return null;
+		}
+
+		if (profilePhotoAuthResult is null)
+		{
+			return null;
+		}
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"GetSignedInUserProfilePhotoAsync",
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Get, GetProfilePhotoContentUrl(account.Environment));
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", profilePhotoAuthResult.AccessToken);
+				return request;
+			},
+			cancellationToken);
+
+		if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+		{
+			return null;
+		}
+
+		if (!response.IsSuccessStatusCode)
+		{
+			return null;
+		}
+
+		byte[] photoBytes = await response.Content.ReadAsByteArrayAsync(cancellationToken);
+		return photoBytes.Length > 0 ? photoBytes : null;
 	}
 
 	/// <summary>
@@ -704,7 +789,6 @@ DeviceEvents
 		}
 	}
 
-
 	/*
 	private static async Task GetPoliciesAndAssignments(string accessToken)
 	{
@@ -777,7 +861,6 @@ DeviceEvents
 		}
 	}
 	*/
-
 
 	/// <summary>
 	/// Retrieves the custom policies available in Intune

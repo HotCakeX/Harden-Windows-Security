@@ -1739,54 +1739,6 @@
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Centralisez facilement les authentifications de vos locataires Microsoft. Depuis cette section, vous pouvez choisir le compte à utiliser sur la page actuelle, consulter tous les comptes connectés, vous déconnecter si nécessaire, et bien plus encore.</value>
   </data>
-  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>Nom d'Utilisateur</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Le nom d'utilisateur du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Le nom d'utilisateur du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>Le nom d'utilisateur du compte sélectionné apparaîtra ici</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>ID de Locataire</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>L'ID de locataire du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>L'ID de locataire du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>L'ID de locataire du compte sélectionné apparaîtra ici</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Identifiant de Compte</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>L'identifiant de compte du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>L'identifiant de compte du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>L'identifiant du compte sélectionné apparaîtra ici</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Permissions</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Les permissions du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Les permissions du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>Les permissions du compte sélectionné apparaîtront ici</value>
-  </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Connectez-vous à votre locataire Microsoft. Après une connexion réussie, les informations du compte seront enregistrées en mémoire jusqu'à la fermeture de l'application ou leur suppression de la section "Comptes Connectés".</value>
   </data>
@@ -6911,18 +6863,6 @@
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Recherchez et selectionnez une strategie ci-dessus pour l'epingler ici pour un acces rapide.</value>
   </data>
-    <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Environnement cloud</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>L'environnement cloud du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>L'environnement cloud du compte actuellement sélectionné pour effectuer les tâches sur cette page.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>L'environnement cloud du compte sélectionné s'affichera ici</value>
-  </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Environnement cloud</value>
   </data>
@@ -7776,5 +7716,35 @@
   </data>
   <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Parcourir les dossiers</value>
+  </data>
+  <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Charger ou actualiser la photo de profil</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Actif</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>ID du locataire</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Identifiant du compte</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Environnement</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Autorisations</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>Aucun compte actif sélectionné</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ouvrez les comptes connectés et utilisez le menu des actions pour définir un compte comme actif.</value>
   </data>
 </root>

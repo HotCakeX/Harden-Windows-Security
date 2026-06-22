@@ -7,3 +7,5 @@
 * A new Event Activity Pattern polar chart helps identify recurring activity by hour, month, or day of week. It compares blocked and allowed/audited events in circular sectors, respects the selected time range, shows totals, supports tooltips, handles empty states, and can be exported as SVG.
 
 * The analysis pages also include a top Time range ComboBox for All time, recent periods, and Custom views, plus Export PDF support with progress feedback
+
+* Improved the online management and Microsoft Graph button by redesigning the elements and introducing new features.

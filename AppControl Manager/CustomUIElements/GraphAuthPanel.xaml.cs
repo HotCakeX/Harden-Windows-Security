@@ -93,4 +93,34 @@ internal sealed partial class GraphAuthPanel : UserControl
 		}
 	}
 
+	/// <summary>
+	/// Gets the account associated with an action button inside an account card template.
+	/// </summary>
+	private static AuthenticatedAccounts? GetAccountFromSender(object sender) => sender is FrameworkElement frameworkElement ? frameworkElement.DataContext as AuthenticatedAccounts : null;
+
+	/// <summary>
+	/// Sets the account card that raised the click as active for this panel's host.
+	/// </summary>
+	private void SetAccountAsActiveButton_Click(object sender, RoutedEventArgs e)
+	{
+		AuthenticatedAccounts? account = GetAccountFromSender(sender);
+		IGraphAuthHost? host = Host;
+		if (account is not null && host is not null)
+		{
+			host.AuthCompanionCLS.SetActiveAccount(account);
+		}
+	}
+
+	/// <summary>
+	/// Removes the account card that raised the click from this panel's host.
+	/// </summary>
+	private async void RemoveAccountButton_Click(object sender, RoutedEventArgs e)
+	{
+		AuthenticatedAccounts? account = GetAccountFromSender(sender);
+		IGraphAuthHost? host = Host;
+		if (account is not null && host is not null)
+		{
+			await host.AuthCompanionCLS.LogOutOfAccountAsync(account);
+		}
+	}
 }

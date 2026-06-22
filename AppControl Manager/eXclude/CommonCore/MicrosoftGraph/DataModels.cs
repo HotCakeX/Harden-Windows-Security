@@ -17,8 +17,13 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
 
 namespace CommonCore.MicrosoftGraph;
 
@@ -564,7 +569,7 @@ internal sealed class AzureCloudEnvironmentComboBoxItem(string name, AzureCloudI
 	internal AzureCloudInstance Environment => environment;
 }
 
-internal sealed class AuthenticatedAccounts(
+internal sealed partial class AuthenticatedAccounts(
 	string accountIdentifier,
 	string username,
 	string tenantID,
@@ -574,7 +579,7 @@ internal sealed class AuthenticatedAccounts(
 	IAccount account,
 	SignInMethods methodUsed,
 	AzureCloudInstance environment,
-	bool useCache)
+	bool useCache) : ViewModelBase
 {
 	internal string AccountIdentifier => accountIdentifier;
 	internal string Username => username;
@@ -586,6 +591,103 @@ internal sealed class AuthenticatedAccounts(
 	internal SignInMethods MethodUsed => methodUsed;
 	internal AzureCloudInstance Environment => environment;
 	internal bool UseCache => useCache;
+
+	internal string Initials => BuildInitials(Username);
+
+	internal Visibility ActiveAccountBadgeVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal ImageSource? ProfilePhotoImageSource { get; private set => SP(ref field, value); }
+
+	internal bool ProfilePhotoAutomaticLoadAttempted { get; private set => SP(ref field, value); }
+
+	/// <summary>
+	/// Updates whether this account is the active account for the current authentication panel.
+	/// </summary>
+	internal void SetActiveState(bool isActive) => ActiveAccountBadgeVisibility = isActive ? Visibility.Visible : Visibility.Collapsed;
+
+	/// <summary>
+	/// x:Bind target for the avatar button. Allows interactive consent when User.Read has not been granted yet.
+	/// </summary>
+	internal async void LoadProfilePhotoWithConsent() => await LoadProfilePhotoAsync(true);
+
+	/// <summary>
+	/// x:Bind target for card materialization. Attempts silent profile photo retrieval only once per account instance.
+	/// </summary>
+	internal async void LoadProfilePhotoSilently()
+	{
+		if (ProfilePhotoAutomaticLoadAttempted)
+		{
+			return;
+		}
+
+		ProfilePhotoAutomaticLoadAttempted = true;
+		await LoadProfilePhotoAsync(false);
+	}
+
+	// Little copy buttons event handlers
+	internal void CopyTenantID() => ClipboardManagement.CopyText(TenantID);
+	internal void CopyAccountIdentifier() => ClipboardManagement.CopyText(AccountIdentifier);
+	internal void CopyEnvironment() => ClipboardManagement.CopyText(Environment.ToString());
+	internal void CopyAuthContext() => ClipboardManagement.CopyText(AuthContext.ToString());
+	internal void CopyPermissions() => ClipboardManagement.CopyText(Permissions);
+
+	private async Task LoadProfilePhotoAsync(bool allowInteractiveConsent)
+	{
+		try
+		{
+			byte[]? photoBytes = await Main.GetSignedInUserProfilePhotoAsync(this, allowInteractiveConsent, CancellationToken.None);
+			if (photoBytes is null || photoBytes.Length == 0)
+			{
+				return;
+			}
+
+			using InMemoryRandomAccessStream randomAccessStream = new();
+			DataWriter dataWriter = new(randomAccessStream);
+			dataWriter.WriteBytes(photoBytes);
+			_ = await dataWriter.StoreAsync();
+			_ = dataWriter.DetachStream();
+			dataWriter.Dispose();
+
+			randomAccessStream.Seek(0);
+			BitmapImage bitmapImage = new();
+			await bitmapImage.SetSourceAsync(randomAccessStream);
+			ProfilePhotoImageSource = bitmapImage;
+		}
+		catch (OperationCanceledException)
+		{
+			throw;
+		}
+		catch
+		{
+			// Keep the PersonPicture initials fallback when Graph has no photo or the image cannot be decoded.
+		}
+	}
+
+	private static string BuildInitials(string value)
+	{
+		if (string.IsNullOrWhiteSpace(value))
+		{
+			return "?";
+		}
+
+		string namePart = value.Split('@', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[0];
+		string[] parts = namePart.Split(['.', '_', '-', ' '], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+		if (parts.Length == 0)
+		{
+			return value[0].ToString().ToUpperInvariant();
+		}
+
+		if (parts.Length == 1)
+		{
+			string single = parts[0];
+			return single.Length >= 2
+				? string.Concat(single[0], single[1]).ToUpperInvariant()
+				: single[0].ToString().ToUpperInvariant();
+		}
+
+		return string.Concat(parts[0][0], parts[1][0]).ToUpperInvariant();
+	}
 
 	public override bool Equals(object? obj)
 	{

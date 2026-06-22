@@ -1739,54 +1739,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Centralize your Microsoft tenants authentications with ease. From this section, you can choose the account you wish to use on the current page, review all signed-in accounts, log out as needed, and much more.</value>
   </data>
-  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
-    <value>UserName</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Username of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Username of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>The selected account's Username will appear here</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
-    <value>Tenant ID</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Tenant ID of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Tenant ID of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>The selected account's Tenant ID will appear here</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
-    <value>Account Identifier</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Account Identifier of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Account Identifier of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>The selected account's Identifier will appear here</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
-    <value>Permissions</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Permissions of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Permissions of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>The selected account's Permissions will appear here</value>
-  </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Sign into your Microsoft tenant. After successful sign in, the account's information will be saved in memory of the application until the app is closed or remove it from the &quot;Signed In Accounts&quot; section.</value>
   </data>
@@ -6911,18 +6863,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="NoPolicyPinnedDescription.Text" xml:space="preserve">
     <value>Search and select a policy above to pin it here for quick access.</value>
   </data>
-  <data name="CurrentActiveAccountEnvironment.Header" xml:space="preserve">
-    <value>Cloud Environment</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Cloud Environment of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Cloud Environment of the account that is currently selected to perform the tasks on this page.</value>
-  </data>
-  <data name="CurrentActiveAccountEnvironment.PlaceholderText" xml:space="preserve">
-    <value>The selected account's Cloud Environment will appear here</value>
-  </data>
   <data name="AzureCloudEnvironmentComboBox.Header" xml:space="preserve">
     <value>Cloud Environment</value>
   </data>
@@ -7776,5 +7716,35 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="BrowseFoldersButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Browse for Folders</value>
+  </data>
+  <data name="ProfilePhotoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Load or refresh profile photo</value>
+  </data>
+  <data name="ActiveAccountBadgeTextBlock.Text" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="AccountTenantIDHeaderTextBlock.Text" xml:space="preserve">
+    <value>Tenant ID</value>
+  </data>
+  <data name="AccountIdentifierHeaderTextBlock.Text" xml:space="preserve">
+    <value>Account identifier</value>
+  </data>
+  <data name="AccountEnvironmentHeaderTextBlock.Text" xml:space="preserve">
+    <value>Environment</value>
+  </data>
+  <data name="AccountPermissionsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="CopyAccountMetadataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="AuthenticatedAccountActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="NoActiveAccountSelectedTextBlock.Text" xml:space="preserve">
+    <value>No active account selected</value>
+  </data>
+  <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Open Signed-in accounts and use the actions menu to set an account as active.</value>
   </data>
 </root>

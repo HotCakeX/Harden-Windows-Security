@@ -28,7 +28,6 @@ namespace CommonCore.Others;
 
 internal static class FileUtility
 {
-
 	/// <summary>
 	/// Method that takes 2 collections, one containing file paths and the other containing folder paths.
 	/// It checks them and returns the unique file paths that are not in any of the folder paths.
@@ -131,6 +130,17 @@ internal static class FileUtility
 		BufferSize = 65536
 	};
 
+	// Used to enumerate the immediate sub-directories of each user-selected directory
+	private static readonly EnumerationOptions ImmediateDirectoriesEnumeration = new()
+	{
+		IgnoreInaccessible = true,
+		RecurseSubdirectories = false,
+		AttributesToSkip = FileAttributes.None,
+		MatchCasing = MatchCasing.CaseInsensitive,
+		ReturnSpecialDirectories = false,
+		MaxRecursionDepth = int.MaxValue,
+		BufferSize = 65536
+	};
 
 	// The Default App Control supported extensions, case-insensitive
 	private static readonly FrozenSet<string> AppControlExtensions = new string[]
@@ -138,7 +148,6 @@ internal static class FileUtility
 		".sys", ".exe", ".com", ".dll", ".rll", ".ocx", ".msp", ".mst", ".msi",
 		".js", ".vbs", ".ps1", ".appx", ".bin", ".bat", ".hxs", ".mui", ".lex", ".mof"
 	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
-
 
 	/// <summary>
 	/// A flexible and fast method that can accept directory paths and file paths as input and return file paths that are compliant with App Control policies.
@@ -175,7 +184,6 @@ internal static class FileUtility
 
 		// To store all of the tasks
 		List<Task> tasks = [];
-
 
 		#region Directories
 
@@ -232,65 +240,82 @@ internal static class FileUtility
 					}
 				}));
 
-
 				// Check for immediate sub-directories and process them if present
-				DirectoryInfo[] subDirectories = new DirectoryInfo(directory).GetDirectories();
-
-				if (subDirectories.Length > 0)
+				FileSystemEnumerable<FileSystemInfo> subDirectoryEnumeration = new(
+					directory,
+					(ref entry) => entry.ToFileSystemInfo(),
+					ImmediateDirectoriesEnumeration)
 				{
-					foreach (DirectoryInfo subDirectory in subDirectories)
+					ShouldIncludePredicate = (ref entry) => entry.IsDirectory
+				};
+
+				using IEnumerator<FileSystemInfo> subDirectoryEnumerator = subDirectoryEnumeration.GetEnumerator();
+				while (true)
+				{
+					cToken?.ThrowIfCancellationRequested();
+
+					try
 					{
-						// Process files in each sub-directory concurrently
-						tasks.Add(Task.Run(() =>
+						if (!subDirectoryEnumerator.MoveNext())
 						{
+							break;
+						}
+					}
+					catch
+					{
+						break;
+					}
 
-							FileSystemEnumerable<FileSystemInfo> enumeration = new(
-								subDirectory.FullName,
-								(ref entry) => entry.ToFileSystemInfo(),
-								RecursiveEnumeration)
+					FileSystemInfo subDirectory = subDirectoryEnumerator.Current;
+
+					// Process files in each sub-directory concurrently
+					tasks.Add(Task.Run(() =>
+					{
+
+						FileSystemEnumerable<FileSystemInfo> enumeration = new(
+							subDirectory.FullName,
+							(ref entry) => entry.ToFileSystemInfo(),
+							RecursiveEnumeration)
+						{
+							ShouldIncludePredicate = (ref entry) =>
 							{
-								ShouldIncludePredicate = (ref entry) =>
+								// Skip directories.
+								if (entry.IsDirectory)
 								{
-									// Skip directories.
-									if (entry.IsDirectory)
-									{
-										return false;
-									}
-
-									// Make sure the file has the correct extension
-									if (lookup.Contains(Path.GetExtension(entry.FileName)))
-									{
-										return true;
-									}
-
 									return false;
 								}
-							};
 
-							using IEnumerator<FileSystemInfo> subEnumerator = enumeration.GetEnumerator();
-							while (true)
-							{
-								cToken?.ThrowIfCancellationRequested();
-
-								try
+								// Make sure the file has the correct extension
+								if (lookup.Contains(Path.GetExtension(entry.FileName)))
 								{
-									if (!subEnumerator.MoveNext())
-									{
-										break;
-									}
-									bc.Add(subEnumerator.Current.FullName);
+									return true;
 								}
-								catch { }
-							}
-						}));
-					}
-				}
 
+								return false;
+							}
+						};
+
+						using IEnumerator<FileSystemInfo> subEnumerator = enumeration.GetEnumerator();
+						while (true)
+						{
+							cToken?.ThrowIfCancellationRequested();
+
+							try
+							{
+								if (!subEnumerator.MoveNext())
+								{
+									break;
+								}
+								bc.Add(subEnumerator.Current.FullName);
+							}
+							catch { }
+						}
+					}));
+				}
 			}
 		}
 
 		#endregion
-
 
 		#region Files
 
@@ -315,7 +340,6 @@ internal static class FileUtility
 		}
 
 		#endregion
-
 
 		// Wait for all tasks to be completed
 		Task.WaitAll(tasks);

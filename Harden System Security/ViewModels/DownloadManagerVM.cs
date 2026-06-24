@@ -2290,7 +2290,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				if (response.StatusCode != HttpStatusCode.PartialContent)
 				{
 					_ = response.EnsureSuccessStatusCode();
-					throw new HttpRequestException("The server did not honor the requested byte range.");
+					throw new HttpRequestException($"The server returned {FormatDownloadHttpStatus(response)} instead of HTTP 206 Partial Content for the requested byte range.");
 				}
 
 				await using Stream sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
@@ -2439,6 +2439,12 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 					}
 
 					_ = response.EnsureSuccessStatusCode();
+
+					if (!appendMode && response.StatusCode != HttpStatusCode.OK)
+					{
+						throw new HttpRequestException($"The server returned {FormatDownloadHttpStatus(response)} instead of HTTP 200 OK for the download payload.");
+					}
+
 					long? totalBytes = response.Content.Headers.ContentRange?.Length
 						?? (response.Content.Headers.ContentLength.HasValue
 							? startOffset + response.Content.Headers.ContentLength.Value
@@ -2800,6 +2806,11 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			return (true, totalBytes);
 		}
 
+		if (probeResponse.StatusCode != HttpStatusCode.OK)
+		{
+			throw new HttpRequestException($"The server returned {FormatDownloadHttpStatus(probeResponse)} while probing byte-range support.");
+		}
+
 		totalBytes ??= probeResponse.Content.Headers.ContentLength;
 		return (false, totalBytes);
 	}
@@ -2880,6 +2891,15 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				delay = delay >= TimeSpan.FromSeconds(4) ? delay : delay + delay;
 			}
 		}
+	}
+
+	private static string FormatDownloadHttpStatus(HttpResponseMessage response)
+	{
+		string reasonPhrase = string.IsNullOrWhiteSpace(response.ReasonPhrase)
+			? response.StatusCode.ToString()
+			: response.ReasonPhrase;
+
+		return $"HTTP {(int)response.StatusCode} {reasonPhrase}";
 	}
 
 	private static bool IsTransientDownloadException(Exception ex, CancellationToken cancellationToken) => ex switch

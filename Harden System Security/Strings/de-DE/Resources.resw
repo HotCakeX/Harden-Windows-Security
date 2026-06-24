@@ -4520,7 +4520,7 @@ Fingerabdruck: {3}</value>
   <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Konto aus der Liste entfernen. Es wird vollständig aus dem Arbeitsspeicher der App und dem Cache der Microsoft Authentication Library entfernt.</value>
   </data>
-    <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Entfernen</value>
   </data>
     <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -4529,7 +4529,7 @@ Fingerabdruck: {3}</value>
   <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Das aktuell ausgewählte Konto als aktives Konto für die Onlinevorgänge auf der aktuellen Seite festlegen.</value>
   </data>
-    <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Als aktiv festlegen</value>
   </data>
     <!-- For Intune Groups ListView - Headers -->
@@ -7024,5 +7024,8 @@ Fingerabdruck: {3}</value>
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Öffnen Sie „Angemeldete Konten“ und verwenden Sie das Menü „Aktionen“, um ein Konto als aktiv festzulegen.</value>
+  </data>  
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Kontext</value>
   </data>
 </root>

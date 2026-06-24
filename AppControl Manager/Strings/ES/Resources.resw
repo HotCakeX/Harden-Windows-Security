@@ -4882,10 +4882,10 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>Ver los archivos XML que seleccionaste.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Remover</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Establecer como Activo</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Abre Cuentas con sesión iniciada y usa el menú de acciones para establecer una cuenta como activa.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>Implementando la directiva en modo de cumplimiento debido al restablecimiento.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>Implementando la directiva en modo de auditoría.</value>
   </data>
 </root>

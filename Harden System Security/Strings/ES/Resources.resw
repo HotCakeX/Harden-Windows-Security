@@ -4520,7 +4520,7 @@ Huella Digital: {3}</value>
   <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Quite la cuenta de la lista. Se eliminará por completo de la memoria de la aplicación y de la caché de Microsoft Authentication Library.</value>
   </data>
-    <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Quitar</value>
   </data>
     <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -4529,7 +4529,7 @@ Huella Digital: {3}</value>
   <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Establezca la cuenta seleccionada como la cuenta activa para las operaciones en línea en la página actual.</value>
   </data>
-    <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Establecer como activa</value>
   </data>
     <!-- For Intune Groups ListView - Headers -->
@@ -7024,5 +7024,8 @@ Huella Digital: {3}</value>
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Abre Cuentas con sesión iniciada y usa el menú de acciones para establecer una cuenta como activa.</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Contexto</value>
   </data>
 </root>

@@ -39,7 +39,7 @@
                       PointerEntered="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AnalysisResults.AnalysisItem_PointerEntered}"
                       PointerExited="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AnalysisResults.AnalysisItem_PointerExited}"
                       Background="Transparent">
-                    <Border Background="{ThemeResource LayerFillColorDefaultBrush}"
+                    <Border x:Name="BaseBorder" Background="{ThemeResource LayerFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             BorderThickness="1"
                             CornerRadius="4"
@@ -58,7 +58,7 @@
                     </Border>
 
                     <!-- Popout Item (Full Text) -->
-                    <Popup IsLightDismissEnabled="False">
+                    <Popup x:Name="HoverPopup" IsLightDismissEnabled="False">
                         <Popup.ChildTransitions>
                             <TransitionCollection>
                                 <PopupThemeTransition />

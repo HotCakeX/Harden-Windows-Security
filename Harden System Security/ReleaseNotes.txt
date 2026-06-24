@@ -1,1 +1,5 @@
 * Improved the online management and Microsoft Graph button by redesigning the elements and introducing new features. This applies to the Intune page.
+
+* Updated dependencies to the latest versions.
+
+* Download Manager's handling of unusable links has been improved. It now displays the exact return code to the user.

@@ -4520,7 +4520,7 @@ Empreinte : {3}</value>
   <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Supprimez le compte de la liste. Il sera complètement supprimé de la mémoire de l'application et du cache de la bibliothèque d'authentification Microsoft.</value>
   </data>
-    <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Supprimer</value>
   </data>
     <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -4529,7 +4529,7 @@ Empreinte : {3}</value>
   <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Définissez le compte actuellement sélectionné comme compte actif à utiliser pour les opérations en ligne dans la page actuelle.</value>
   </data>
-    <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Définir comme actif</value>
   </data>
     <!-- For Intune Groups ListView - Headers -->
@@ -7024,5 +7024,8 @@ Empreinte : {3}</value>
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Ouvrez les comptes connectés et utilisez le menu des actions pour définir un compte comme actif.</value>
+  </data>
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>Contexte</value>
   </data>
 </root>

@@ -5,8 +5,349 @@
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    Loaded="{x:Bind GraphAuthPanel_Loaded}">
+    xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    Loaded="{x:Bind GraphAuthPanel_Loaded}"
+    Unloaded="{x:Bind GraphAuthPanel_Unloaded}">
     <UserControl.Resources>
+        <DataTemplate x:Key="AuthenticatedAccountMetadataGridTemplate" x:DataType="MSGraph:AuthenticatedAccounts">
+            <Grid ColumnSpacing="6" RowSpacing="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <win2d:CanvasControl Grid.Row="0"
+                                     Grid.Column="0"
+                                     Height="112"
+                                     Margin="-18,-18,-18,-18"
+                                     Opacity="0"
+                                     ClearColor="Transparent"
+                                     IsHitTestVisible="False"
+                                     Canvas.ZIndex="0"
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
+                <win2d:CanvasControl Grid.Row="0"
+                                     Grid.Column="1"
+                                     Height="112"
+                                     Margin="-18,-18,-18,-18"
+                                     Opacity="0"
+                                     ClearColor="Transparent"
+                                     IsHitTestVisible="False"
+                                     Canvas.ZIndex="0"
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
+                <win2d:CanvasControl Grid.Row="1"
+                                     Grid.Column="0"
+                                     Height="112"
+                                     Margin="-18,-18,-18,-18"
+                                     Opacity="0"
+                                     ClearColor="Transparent"
+                                     IsHitTestVisible="False"
+                                     Canvas.ZIndex="0"
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
+                <win2d:CanvasControl Grid.Row="1"
+                                     Grid.Column="1"
+                                     Height="112"
+                                     Margin="-18,-18,-18,-18"
+                                     Opacity="0"
+                                     ClearColor="Transparent"
+                                     IsHitTestVisible="False"
+                                     Canvas.ZIndex="0"
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
+                <win2d:CanvasControl Grid.Row="2"
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="2"
+                                     Height="112"
+                                     Margin="-18,-18,-18,-18"
+                                     Opacity="0"
+                                     ClearColor="Transparent"
+                                     IsHitTestVisible="False"
+                                     Canvas.ZIndex="0"
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
+                <Border Grid.Row="0"
+                        Grid.Column="0"
+                        Height="76"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Canvas.ZIndex="1">
+                    <Border Height="76"
+                            CornerRadius="8"
+                            Padding="6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            PointerEntered="AccountMetadataArea_PointerEntered"
+                            PointerExited="AccountMetadataArea_PointerExited">
+                        <Grid RowSpacing="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       x:Uid="AccountTenantIDHeaderTextBlock"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="22"
+                                    Height="22"
+                                    Padding="0"
+                                    x:Uid="CopyAccountMetadataButton"
+                                    Click="{x:Bind CopyTenantID}">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
+                            </Button>
+                            <Button Grid.Row="0"
+                                    Grid.Column="2"
+                                    Width="22"
+                                    Height="22"
+                                    Padding="0"
+                                    Margin="4,0,0,0"
+                                    AutomationProperties.Name="Toggle Tenant ID privacy mask"
+                                    ToolTipService.ToolTip="Toggle Tenant ID privacy mask"
+                                    Click="{x:Bind ToggleTenantIDMask}">
+                                <FontIcon Glyph="&#xE9A9;" FontSize="11" />
+                            </Button>
+                            <ScrollViewer Grid.Row="1"
+                                          Grid.Column="0"
+                                          Grid.ColumnSpan="3"
+                                          VerticalScrollBarVisibility="Auto"
+                                          VerticalScrollMode="Enabled"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          HorizontalScrollMode="Disabled">
+                                <TextBlock Text="{x:Bind TenantIDDisplayValue, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Border>
+                <Border Grid.Row="0"
+                        Grid.Column="1"
+                        Height="76"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Canvas.ZIndex="1">
+                    <Border Height="76"
+                            CornerRadius="8"
+                            Padding="6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            PointerEntered="AccountMetadataArea_PointerEntered"
+                            PointerExited="AccountMetadataArea_PointerExited">
+                        <Grid RowSpacing="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       x:Uid="AccountIdentifierHeaderTextBlock"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="22"
+                                    Height="22"
+                                    Padding="0"
+                                    x:Uid="CopyAccountMetadataButton"
+                                    Click="{x:Bind CopyAccountIdentifier}">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
+                            </Button>
+                            <Button Grid.Row="0"
+                                    Grid.Column="2"
+                                    Width="22"
+                                    Height="22"
+                                    Padding="0"
+                                    Margin="4,0,0,0"
+                                    AutomationProperties.Name="Toggle Account Identifier privacy mask"
+                                    ToolTipService.ToolTip="Toggle Account Identifier privacy mask"
+                                    Click="{x:Bind ToggleAccountIdentifierMask}">
+                                <FontIcon Glyph="&#xE9A9;" FontSize="11" />
+                            </Button>
+                            <ScrollViewer Grid.Row="1"
+                                          Grid.Column="0"
+                                          Grid.ColumnSpan="3"
+                                          VerticalScrollBarVisibility="Auto"
+                                          VerticalScrollMode="Enabled"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          HorizontalScrollMode="Disabled">
+                                <TextBlock Text="{x:Bind AccountIdentifierDisplayValue, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Border>
+                <Border Grid.Row="1"
+                        Grid.Column="0"
+                        Height="76"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Canvas.ZIndex="1">
+                    <Border Height="76"
+                            CornerRadius="8"
+                            Padding="6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            PointerEntered="AccountMetadataArea_PointerEntered"
+                            PointerExited="AccountMetadataArea_PointerExited">
+                        <Grid RowSpacing="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       x:Uid="ContextHeader"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="22"
+                                    Height="22"
+                                    Padding="0"
+                                    x:Uid="CopyAccountMetadataButton"
+                                    Click="{x:Bind CopyAuthContext}">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
+                            </Button>
+                            <ScrollViewer Grid.Row="1"
+                                          Grid.Column="0"
+                                          Grid.ColumnSpan="2"
+                                          VerticalScrollBarVisibility="Auto"
+                                          VerticalScrollMode="Enabled"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          HorizontalScrollMode="Disabled">
+                                <TextBlock Text="{x:Bind AuthContext, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Border>
+                <Border Grid.Row="1"
+                        Grid.Column="1"
+                        Height="76"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Canvas.ZIndex="1">
+                    <Border Height="76"
+                            CornerRadius="8"
+                            Padding="6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            PointerEntered="AccountMetadataArea_PointerEntered"
+                            PointerExited="AccountMetadataArea_PointerExited">
+                        <Grid RowSpacing="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       x:Uid="AccountEnvironmentHeaderTextBlock"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="22"
+                                    Height="22"
+                                    Padding="0"
+                                    x:Uid="CopyAccountMetadataButton"
+                                    Click="{x:Bind CopyEnvironment}">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
+                            </Button>
+                            <ScrollViewer Grid.Row="1"
+                                          Grid.Column="0"
+                                          Grid.ColumnSpan="2"
+                                          VerticalScrollBarVisibility="Auto"
+                                          VerticalScrollMode="Enabled"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          HorizontalScrollMode="Disabled">
+                                <TextBlock Text="{x:Bind Environment, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Border>
+                <Border Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Height="76"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Canvas.ZIndex="1">
+                    <Border Height="76"
+                            CornerRadius="8"
+                            Padding="6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            PointerEntered="AccountMetadataArea_PointerEntered"
+                            PointerExited="AccountMetadataArea_PointerExited">
+                        <Grid RowSpacing="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       x:Uid="AccountPermissionsHeaderTextBlock"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="22"
+                                    Height="22"
+                                    Padding="0"
+                                    x:Uid="CopyAccountMetadataButton"
+                                    Click="{x:Bind CopyPermissions}">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
+                            </Button>
+                            <ScrollViewer Grid.Row="1"
+                                          Grid.Column="0"
+                                          Grid.ColumnSpan="2"
+                                          VerticalScrollBarVisibility="Auto"
+                                          VerticalScrollMode="Enabled"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          HorizontalScrollMode="Disabled">
+                                <TextBlock Text="{x:Bind Permissions, Mode=OneWay}"  
+                                           TextWrapping="WrapWholeWords"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Border>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="AuthenticatedAccountCardTemplate" x:DataType="MSGraph:AuthenticatedAccounts">
             <Border Width="500"
                     HorizontalAlignment="Center"
@@ -46,7 +387,6 @@
                                     VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <TextBlock Text="{x:Bind Username, Mode=OneWay}"
-                                           IsTextSelectionEnabled="True"
                                            Style="{StaticResource BodyStrongTextBlockStyle}"
                                            TextTrimming="CharacterEllipsis"/>
                                 <Border Padding="8,2"
@@ -60,237 +400,11 @@
                             </StackPanel>
                         </StackPanel>
                     </Grid>
-                    <Grid Grid.Row="1" ColumnSpacing="6" RowSpacing="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0" Grid.Column="0"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountTenantIDHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyTenantID}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind TenantID, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="0" Grid.Column="1"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountIdentifierHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyAccountIdentifier}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind AccountIdentifier, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="0"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="ContextHeader"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyAuthContext}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind AuthContext, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="1"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountEnvironmentHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyEnvironment}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind Environment, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountPermissionsHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyPermissions}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind Permissions, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                    </Grid>
+                    <ContentPresenter Grid.Row="1"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      Content="{x:Bind}"
+                                      ContentTemplate="{StaticResource AuthenticatedAccountMetadataGridTemplate}"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -335,7 +449,6 @@
                                     VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <TextBlock Text="{x:Bind Username, Mode=OneWay}"
-                                           IsTextSelectionEnabled="True"
                                            Style="{StaticResource BodyStrongTextBlockStyle}"
                                            TextTrimming="CharacterEllipsis"/>
                                 <Border Padding="8,2"
@@ -359,287 +472,36 @@
                                 <FontIcon Glyph="&#xE712;" FontSize="16"/>
                             </Button.Content>
                             <Button.Flyout>
-                                <Flyout>
-                                    <Flyout.FlyoutPresenterStyle>
-                                        <Style TargetType="FlyoutPresenter">
-                                            <Setter Property="Padding" Value="0"/>
-                                            <Setter Property="Margin" Value="0"/>
-                                            <Setter Property="MinWidth" Value="0"/>
-                                            <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}"/>
-                                        </Style>
-                                    </Flyout.FlyoutPresenterStyle>
-                                    <StackPanel Orientation="Vertical"
-                                                Spacing="0"
-                                                Padding="0"
-                                                HorizontalAlignment="Stretch">
-                                        <Button x:Uid="SetAccountAsActiveButton"
-                                                HorizontalAlignment="Stretch"
-                                                HorizontalContentAlignment="Stretch"
-                                                Click="SetAccountAsActiveButton_Click">
-                                            <Button.Content>
-                                                <StackPanel Orientation="Horizontal"
-                                                            HorizontalAlignment="Stretch">
-                                                    <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                                        <AnimatedIcon.Source>
-                                                            <animatedvisuals:Select/>
-                                                        </AnimatedIcon.Source>
-                                                    </AnimatedIcon>
-                                                    <TextBlock x:Uid="SetAsActiveTextBlock" Margin="5,0,0,0" />
-                                                </StackPanel>
-                                            </Button.Content>
-                                        </Button>
-                                        <Button x:Uid="RemoveAccountButton"
-                                                HorizontalAlignment="Stretch"
-                                                HorizontalContentAlignment="Stretch"
-                                                Click="RemoveAccountButton_Click">
-                                            <Button.Content>
-                                                <StackPanel Orientation="Horizontal"
-                                                            HorizontalAlignment="Stretch">
-                                                    <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                                        <AnimatedIcon.Source>
-                                                            <animatedvisuals:Logout/>
-                                                        </AnimatedIcon.Source>
-                                                    </AnimatedIcon>
-                                                    <TextBlock x:Uid="RemoveTextBlock" Margin="5,0,0,0" />
-                                                </StackPanel>
-                                            </Button.Content>
-                                        </Button>
-                                    </StackPanel>
-                                </Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="SetAccountAsActiveButton"
+                                                    Click="SetAccountAsActiveButton_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                <AnimatedIcon.Source>
+                                                    <animatedvisuals:Select/>
+                                                </AnimatedIcon.Source>
+                                            </AnimatedIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem x:Uid="RemoveAccountButton"
+                                                    Click="RemoveAccountButton_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                <AnimatedIcon.Source>
+                                                    <animatedvisuals:Logout/>
+                                                </AnimatedIcon.Source>
+                                            </AnimatedIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
                             </Button.Flyout>
                         </Button>
                     </Grid>
-                    <Grid Grid.Row="1" ColumnSpacing="6" RowSpacing="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0" Grid.Column="0"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountTenantIDHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyTenantID}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind TenantID, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="0" Grid.Column="1"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountIdentifierHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyAccountIdentifier}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind AccountIdentifier, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="0"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="ContextHeader"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyAuthContext}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind AuthContext, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="1"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountEnvironmentHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyEnvironment}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind Environment, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                Height="76"
-                                CornerRadius="8"
-                                Padding="6"
-                                BorderThickness="1"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           x:Uid="AccountPermissionsHeaderTextBlock"
-                                           Style="{StaticResource CaptionTextBlockStyle}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"/>
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Width="22"
-                                        Height="22"
-                                        Padding="0"
-                                        x:Uid="CopyAccountMetadataButton"
-                                        Click="{x:Bind CopyPermissions}">
-                                    <FontIcon Glyph="&#xE8C8;" FontSize="11"/>
-                                </Button>
-                                <ScrollViewer Grid.Row="1"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="2"
-                                              VerticalScrollBarVisibility="Auto"
-                                              VerticalScrollMode="Enabled"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              HorizontalScrollMode="Disabled">
-                                    <TextBlock Text="{x:Bind Permissions, Mode=OneWay}"
-                                               IsTextSelectionEnabled="True"
-                                               TextWrapping="WrapWholeWords"/>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                    </Grid>
+                    <ContentPresenter Grid.Row="1"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      Content="{x:Bind}"
+                                      ContentTemplate="{StaticResource AuthenticatedAccountMetadataGridTemplate}"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -688,8 +550,6 @@
 
                 <Flyout.FlyoutPresenterStyle>
                     <Style TargetType="FlyoutPresenter">
-
-                        <Setter Property="Padding" Value="5,5,5,0"/>
 
                         <!-- Same corner radius as the one in PanelStyle  -->
                         <Setter Property="CornerRadius" Value="8" />

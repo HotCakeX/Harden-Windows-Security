@@ -4882,10 +4882,10 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>आपके द्वारा चयनित XML फ़ाइलें देखें।</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>हटाएं</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>सक्रिय के रूप में सेट करें</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>साइन-इन किए गए खाते खोलें और किसी खाते को सक्रिय के रूप में सेट करने के लिए कार्रवाइयाँ मेनू का उपयोग करें.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>रीसेट के कारण नीति को प्रवर्तन मोड में परिनियोजित किया जा रहा है.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>नीति को ऑडिट मोड में परिनियोजित किया जा रहा है.</value>
   </data>
 </root>

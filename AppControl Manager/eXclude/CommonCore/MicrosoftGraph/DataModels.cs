@@ -581,9 +581,9 @@ internal sealed partial class AuthenticatedAccounts(
 	AzureCloudInstance environment,
 	bool useCache) : ViewModelBase
 {
-	internal string AccountIdentifier => accountIdentifier;
+	internal string AccountIdentifier { get; } = accountIdentifier;
 	internal string Username => username;
-	internal string TenantID => tenantID;
+	internal string TenantID { get; } = tenantID;
 	internal string Permissions => permissions;
 	internal AuthenticationContext AuthContext => authContext;
 	internal AuthenticationResult? AuthResult { get; set; } = authResult;
@@ -593,6 +593,16 @@ internal sealed partial class AuthenticatedAccounts(
 	internal bool UseCache => useCache;
 
 	internal string Initials => BuildInitials(Username);
+
+	private const string AccountMetadataMask = "###############";
+
+	private bool tenantIDIsVisible = true;
+
+	private bool accountIdentifierIsVisible = true;
+
+	internal string TenantIDDisplayValue { get; private set => SP(ref field, value); } = tenantID;
+
+	internal string AccountIdentifierDisplayValue { get; private set => SP(ref field, value); } = accountIdentifier;
 
 	internal Visibility ActiveAccountBadgeVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -630,6 +640,18 @@ internal sealed partial class AuthenticatedAccounts(
 	internal void CopyEnvironment() => ClipboardManagement.CopyText(Environment.ToString());
 	internal void CopyAuthContext() => ClipboardManagement.CopyText(AuthContext.ToString());
 	internal void CopyPermissions() => ClipboardManagement.CopyText(Permissions);
+
+	internal void ToggleTenantIDMask()
+	{
+		tenantIDIsVisible = !tenantIDIsVisible;
+		TenantIDDisplayValue = tenantIDIsVisible ? TenantID : AccountMetadataMask;
+	}
+
+	internal void ToggleAccountIdentifierMask()
+	{
+		accountIdentifierIsVisible = !accountIdentifierIsVisible;
+		AccountIdentifierDisplayValue = accountIdentifierIsVisible ? AccountIdentifier : AccountMetadataMask;
+	}
 
 	private async Task LoadProfilePhotoAsync(bool allowInteractiveConsent)
 	{

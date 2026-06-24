@@ -4882,10 +4882,10 @@
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>Προβολή των αρχείων XML που επιλέξατε.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Αφαίρεση</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Ορισμός ως Ενεργό</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Ανοίξτε τους συνδεδεμένους λογαριασμούς και χρησιμοποιήστε το μενού ενεργειών για να ορίσετε έναν λογαριασμό ως ενεργό.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>Ανάπτυξη της πολιτικής σε λειτουργία επιβολής λόγω επαναφοράς.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>Ανάπτυξη της πολιτικής σε λειτουργία ελέγχου.</value>
   </data>
 </root>

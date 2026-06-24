@@ -4882,10 +4882,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>View the XML files you selected.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Remove</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Set as Active</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Open Signed-in accounts and use the actions menu to set an account as active.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>Deploying the policy in enforce mode due to reset.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>Deploying the policy in audit mode.</value>
   </data>
 </root>

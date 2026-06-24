@@ -4520,7 +4520,7 @@
   <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>הסר את החשבון מהרשימה. הוא יוסר לחלוטין מזיכרון האפליקציה וממטמון ספריית האימות של Microsoft.</value>
   </data>
-    <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>הסר</value>
   </data>
     <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -4529,7 +4529,7 @@
   <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>הגדר את החשבון הנבחר כחשבון הפעיל לשימוש בפעולות המקוונות בעמוד הנוכחי.</value>
   </data>
-    <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>הגדר כפעיל</value>
   </data>
     <!-- For Intune Groups ListView - Headers -->
@@ -7024,5 +7024,8 @@
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>פתח את החשבונות המחוברים והשתמש בתפריט הפעולות כדי להגדיר חשבון כפעיל.</value>
+  </data>  
+  <data name="ContextHeader.Text" xml:space="preserve">
+    <value>הקשר</value>
   </data>
 </root>

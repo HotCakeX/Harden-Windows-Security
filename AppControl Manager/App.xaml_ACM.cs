@@ -234,8 +234,15 @@ public sealed partial class App : Application
 		MainWindow.Closed += Window_Closed;  // Assign event handler for the window closed event
 		MainWindow.Activate();
 
-		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
-		BadgeNotificationManager.Current.ClearBadge();
+		try
+		{
+			// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
+			BadgeNotificationManager.Current.ClearBadge();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
 
 		#region Initial navigation and file activation processing
 

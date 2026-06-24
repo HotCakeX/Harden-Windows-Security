@@ -50,24 +50,31 @@ internal static class AppUpdate
 
 	private static void DisplayAvailableUpdateNotifications()
 	{
-		// Display Toast Notification
-		if (AppNotificationManager.IsSupported())
+		try
 		{
-			AppNotification notification = new AppNotificationBuilder()
-					.AddArgument(UpdateNotificationActionKey, UpdateNotificationActionValue)
-					.AddText("New Update Available")
-					.AddText("There is a new update available for the app.")
-					.SetAudioEvent(AppNotificationSoundEvent.Reminder)
-					.SetTimeStamp(DateTime.Now)
-					.SetGroup("New Update")
-					.SetScenario(AppNotificationScenario.Default)
-					.SetAttributionText("Please update to the latest version by opening the Microsoft Store.")
-					.BuildNotification();
-			AppNotificationManager.Default.Show(notification);
-		}
+			// Display Toast Notification
+			if (AppNotificationManager.IsSupported())
+			{
+				AppNotification notification = new AppNotificationBuilder()
+						.AddArgument(UpdateNotificationActionKey, UpdateNotificationActionValue)
+						.AddText("New Update Available")
+						.AddText("There is a new update available for the app.")
+						.SetAudioEvent(AppNotificationSoundEvent.Reminder)
+						.SetTimeStamp(DateTime.Now)
+						.SetGroup("New Update")
+						.SetScenario(AppNotificationScenario.Default)
+						.SetAttributionText("Please update to the latest version by opening the Microsoft Store.")
+						.BuildNotification();
+				AppNotificationManager.Default.Show(notification);
+			}
 
-		// Display a badge on the taskbar icon to indicate that an update is available
-		BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Alert);
+			// Display a badge on the taskbar icon to indicate that an update is available
+			BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Alert);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
 	}
 
 	/// <summary>

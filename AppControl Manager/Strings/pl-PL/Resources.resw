@@ -4882,10 +4882,10 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>Zobacz wybrane pliki XML.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Usuń</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Ustaw jako Aktywne</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Otwórz sekcję „Zalogowane konta” i użyj menu akcji, aby ustawić konto jako aktywne.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>Wdrażanie zasad w trybie wymuszania z powodu resetowania.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>Wdrażanie zasad w trybie inspekcji.</value>
   </data>
 </root>

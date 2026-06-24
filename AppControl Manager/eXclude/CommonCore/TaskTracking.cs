@@ -59,8 +59,15 @@ internal static class TaskTracking
 			// Increment when created
 			_ = Interlocked.Increment(ref _activeOperationsCount);
 
-			// Set the active badge
-			BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Activity);
+			try
+			{
+				// Set the active badge
+				BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Activity);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 		}
 
 		public void Dispose()
@@ -68,8 +75,15 @@ internal static class TaskTracking
 			// Decrement when disposed
 			if (Interlocked.Decrement(ref _activeOperationsCount) == 0)
 			{
-				// Clear the active badge if no more active operations
-				BadgeNotificationManager.Current.ClearBadge();
+				try
+				{
+					// Clear the active badge if no more active operations
+					BadgeNotificationManager.Current.ClearBadge();
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex);
+				}
 			}
 		}
 	}

@@ -4882,10 +4882,10 @@
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>Voir les fichiers XML que vous avez sélectionnés.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Supprimer</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Définir comme Actif</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Ouvrez les comptes connectés et utilisez le menu des actions pour définir un compte comme actif.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>Déploiement de la stratégie en mode d’application en raison de la réinitialisation.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>Déploiement de la stratégie en mode audit.</value>
   </data>
 </root>

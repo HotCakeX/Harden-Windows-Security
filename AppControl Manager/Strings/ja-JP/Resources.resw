@@ -4882,10 +4882,10 @@
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>選択したXMLファイルを表示します。</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>アクティブに設定</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>サインイン済みアカウントを開き、操作メニューを使用してアカウントをアクティブに設定します。</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>リセットのため、ポリシーを適用モードで展開しています。</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>ポリシーを監査モードで展開しています。</value>
   </data>
 </root>

@@ -1,11 +1,7 @@
+* Improved the design of the Microsoft Graph button and its flyout content with animations and visual upgrades. You can also mask tenant ID and account identifier in the UI now for privacy.
+
 * Updated dependencies to the latest version.
 
-* You can now dynamically change the time range in the Analysis page available for MDE Advanced Hunting data and Event Logs data. The charts and graphs will be dynamically generated based on the time range you choose.
+* Fixed an issue where an inaccessible directory in the root would prevent successful file enumeration: https://github.com/HotCakeX/Harden-Windows-Security/issues/1175
 
-* AppControl Manager's analysis pages now include a richer interactive reporting experience. The new Events Trend chart shows blocked and allowed/audited events together in one chronological view, with Both, Blocked, and Allowed modes, adaptive aggregation, hover details, crosshair markers, zooming, panning, reset, persistent chart state, and SVG export. You can use Select range to highlight a custom time window, resize or move it, and apply it to recalculate the analysis. The selected range also filters the main Event Logs or MDE Advanced Hunting ListView, so returning to the policy creation page shows only the updated data for that period.
-
-* A new Event Activity Pattern polar chart helps identify recurring activity by hour, month, or day of week. It compares blocked and allowed/audited events in circular sectors, respects the selected time range, shows totals, supports tooltips, handles empty states, and can be exported as SVG.
-
-* The analysis pages also include a top Time range ComboBox for All time, recent periods, and Custom views, plus Export PDF support with progress feedback
-
-* Improved the online management and Microsoft Graph button by redesigning the elements and introducing new features.
+* Improved localizations.

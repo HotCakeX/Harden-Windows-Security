@@ -4882,10 +4882,10 @@
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>عرض ملفات XML التي حددتها.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>إزالة</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>تعيين كنشط</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>افتح الحسابات التي تم تسجيل الدخول إليها واستخدم قائمة الإجراءات لتعيين حساب كحساب نشط.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>يتم نشر النهج في وضع الفرض بسبب إعادة التعيين.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>يتم نشر النهج في وضع التدقيق.</value>
   </data>
 </root>

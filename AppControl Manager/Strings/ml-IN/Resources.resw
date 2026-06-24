@@ -4882,10 +4882,10 @@
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത XML ഫയലുകൾ കാണുക.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>നീക്കം ചെയ്യുക</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>സജീവമായി സജ്ജീകരിക്കുക</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>സൈൻ ഇൻ ചെയ്ത അക്കൗണ്ടുകൾ തുറന്ന് ഒരു അക്കൗണ്ട് സജീവമായി സജ്ജമാക്കാൻ പ്രവർത്തനങ്ങളുടെ മെനു ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>റീസെറ്റ് കാരണം നയം നിർബന്ധിത മോഡിൽ വിന്യസിക്കുന്നു.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>നയം ഓഡിറ്റ് മോഡിൽ വിന്യസിക്കുന്നു.</value>
   </data>
 </root>

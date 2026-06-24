@@ -4882,10 +4882,10 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
     <value>Die ausgewählten XML-Dateien anzeigen.</value>
   </data>
-  <data name="RemoveTextBlock.Text" xml:space="preserve">
+  <data name="RemoveAccountButton.Text" xml:space="preserve">
     <value>Entfernen</value>
   </data>
-  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+  <data name="SetAccountAsActiveButton.Text" xml:space="preserve">
     <value>Als aktiv festlegen</value>
   </data>
   <data name="SignInTextBlock.Text" xml:space="preserve">
@@ -7746,5 +7746,11 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>Öffnen Sie „Angemeldete Konten“ und verwenden Sie das Menü „Aktionen“, um ein Konto als aktiv festzulegen.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>Die Richtlinie wird aufgrund der Zurücksetzung im Erzwingungsmodus bereitgestellt.</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>Die Richtlinie wird im Überwachungsmodus bereitgestellt.</value>
   </data>
 </root>

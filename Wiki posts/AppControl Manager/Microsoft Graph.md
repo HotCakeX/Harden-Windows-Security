@@ -4,6 +4,14 @@ The AppControl Manager offers integration with Microsoft Graph to allow you to m
 
 <br>
 
+<div align="center">
+
+<img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/MSGraphButton.gif?raw=true" alt="Microsoft Graph and online features"/>
+
+</div>
+
+<br>
+
 ## Sign In
 
 ### Sign In button <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph%20-%20Sign%20in.gif" alt="Sign In" width="30" />
@@ -48,11 +56,15 @@ After selecting an account from the list, you can remove it by clicking this but
 After selecting an account from the list, you can set it as the active account by clicking this button. This will make the selected account the default account for all operations that require Microsoft Graph access in the page you are currently on.
 
 The Signed In Accounts list displays the following details for each authenticated session to help you manage multiple logins:
+
 * Username
 * Tenant ID
 * Account Identifier
 * Permissions
 * Environment
+* Context
+* Profile Picture
+    * If the account has a profile picture and you've given consent to retreive it, then it will be displayed, otherwise the initials will be displayed. You can give consent by clicking/tapping on the avatar. If the avatar has already been loaded, clicking on it will attempt to retrieve it again, useful if you've changed your picture in the portal and want to sync it with the app.
 
 <br>
 
@@ -66,6 +78,8 @@ The displayed details for the active account include:
 * **Account Identifier**: The unique home account identifier.
 * **Permissions**: The list of Graph API scopes granted during the sign-in process.
 * **Environment**: The Azure Cloud environment (Public or US Government) the account is authenticated against.
+* **Context**: The authentication context used during the sign-in process which is a way the app groups permissions into logical sets for specific operations.
+* **Profile Picture**: The account's profile picture if available and consented to, otherwise the initials will be displayed.
 
 <br>
 

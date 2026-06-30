@@ -1,5 +1,13 @@
 # WinGet Management | Harden System Security
 
+<div align="center">
+
+<img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/WinGet%20Management%20Page.gif?raw=true" alt="WinGet Management in Harden System Security" />
+
+</div>
+
+<br>
+
 The **WinGet Management** page in the Harden System Security app is a full Windows Package Manager workspace. It makes everyday app management much easier and more convenient. You can search for apps, view and manage the apps already installed on your device, work with app bundles, and manage app sources, all from one dedicated place inside the app. The goal of this page is to give you a simpler and more organized way to handle app-related tasks without needing to jump between different tools, settings or command line.
 
 It also brings a smoother and more polished experience overall, with clearer progress updates, better status messages, easier cancellation when something is taking too long, and more helpful feedback when an app action cannot be completed. App bundles make it faster to set up or remove groups of apps together, while the improved installed apps and search experience helps you find what you need more quickly.

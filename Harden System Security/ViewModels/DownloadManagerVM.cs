@@ -513,7 +513,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	{
 		internal DownloadCheckpointRecord Checkpoint => checkpoint;
 
-		internal Lock SyncRoot { get; } = new();
+		internal readonly Lock SyncRoot = new();
 		internal DateTimeOffset LastCheckpointPersistUtc { get; set; } = DateTimeOffset.MinValue;
 		internal DateTimeOffset LastHistoryPersistUtc { get; set; } = DateTimeOffset.MinValue;
 		internal DateTimeOffset LastUiRefreshUtc { get; set; } = DateTimeOffset.MinValue;
@@ -529,7 +529,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		internal bool PauseRequested { get; set; }
 		internal bool RestartRequested { get; set; }
 		internal bool DeleteRequested { get; set; }
-		internal TaskCompletionSource<bool> CompletionSource { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+		internal readonly TaskCompletionSource<bool> CompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 	}
 
 	private sealed class DownloadPreparationResult(
@@ -3704,7 +3704,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		return Task.CompletedTask;
 	}
 
-	private static string ResolveDefaultDownloadsDirectory()
+	internal static string ResolveDefaultDownloadsDirectory()
 	{
 		IntPtr pathPointer = IntPtr.Zero;
 

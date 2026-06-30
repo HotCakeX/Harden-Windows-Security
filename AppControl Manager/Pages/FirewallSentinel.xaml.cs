@@ -106,14 +106,27 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 			{
 				if (!_neonVisualsMap.ContainsKey(parentCard))
 				{
-					// Create visuals attached to the overlay grid
-					NeonBorderVisuals visuals = new(overlayGrid);
-					_neonVisualsMap[parentCard] = visuals;
+					// Create visuals attached to the overlay grid.
+					NeonBorderVisuals? visuals = null;
 
-					// Update layout immediately
-					if (overlayGrid.ActualWidth > 0 && overlayGrid.ActualHeight > 0)
+					try
 					{
-						visuals.UpdateLayout(new Vector2((float)overlayGrid.ActualWidth, (float)overlayGrid.ActualHeight));
+						visuals = new(overlayGrid);
+
+						// Ownership is transferred to the map. FirewallSentinel_Unloaded disposes it.
+						_neonVisualsMap[parentCard] = visuals;
+						NeonBorderVisuals storedVisuals = visuals;
+						visuals = null;
+
+						// Update layout immediately
+						if (overlayGrid.ActualWidth > 0 && overlayGrid.ActualHeight > 0)
+						{
+							storedVisuals.UpdateLayout(new Vector2((float)overlayGrid.ActualWidth, (float)overlayGrid.ActualHeight));
+						}
+					}
+					finally
+					{
+						visuals?.Dispose();
 					}
 				}
 			}

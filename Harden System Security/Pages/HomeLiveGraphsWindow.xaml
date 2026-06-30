@@ -91,7 +91,7 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Background="{ThemeResource CardBackgroundFillColorDefault}" CornerRadius="10" HorizontalAlignment="Center" Padding="15,5,15,5">
                 <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12" VerticalAlignment="Center">
-                    <ComboBox x:Name="BackgroundTypeComboBox" Header="Background type" Width="150" SelectedIndex="0" SelectionChanged="{x:Bind OnBackgroundTypeComboBoxSelectionChanged}">
+                    <ComboBox x:Name="BackgroundTypeComboBox" x:Uid="BackgroundTypeComboBox" Width="150" SelectedIndex="0" SelectionChanged="{x:Bind OnBackgroundTypeComboBoxSelectionChanged}">
                         <ComboBoxItem Content="Tesseract" />
                         <ComboBoxItem Content="Black Hole" />
                     </ComboBox>
@@ -99,11 +99,11 @@
                         <ComboBoxItem Content="Green" />
                         <ComboBoxItem Content="Blue / White" />
                     </ComboBox>
-                    <Slider Header="Background opacity" Width="170" Minimum="0" Maximum="1" Value="1" StepFrequency="0.01" SmallChange="0.01" LargeChange="0.1" ValueChanged="{x:Bind OnBackgroundOpacitySliderValueChanged}" />
-                    <ComboBox x:Name="GraphSizeComboBox" Header="Graph size" Width="120" SelectedIndex="1" SelectionChanged="{x:Bind OnGraphSizeComboBoxSelectionChanged}">
-                        <ComboBoxItem Content="Small" />
-                        <ComboBoxItem Content="Medium" />
-                        <ComboBoxItem Content="Big" />
+                    <Slider x:Uid="BackgroundOpacitySlider" Width="170" Minimum="0" Maximum="1" Value="1" StepFrequency="0.01" SmallChange="0.01" LargeChange="0.1" ValueChanged="{x:Bind OnBackgroundOpacitySliderValueChanged}" />
+                    <ComboBox x:Name="GraphSizeComboBox" x:Uid="GraphSizeComboBox" Width="120" SelectedIndex="1" SelectionChanged="{x:Bind OnGraphSizeComboBoxSelectionChanged}">
+                        <ComboBoxItem x:Uid="GraphSizeSmallComboBoxItem" />
+                        <ComboBoxItem x:Uid="GraphSizeMediumComboBoxItem" />
+                        <ComboBoxItem x:Uid="GraphSizeBigComboBoxItem" />
                     </ComboBox>
                 </CCToolKit:WrapPanel>
             </Border>
@@ -143,7 +143,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="AppRamChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="1000 MB" />
-                                        <TextBlock Text="App RAM Usage" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Uid="AppRamUsageTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
                                         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="AppRamLiveGraph"
@@ -184,7 +184,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="SystemMemoryUtilizationChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100%" />
-                                        <TextBlock Text="Memory Utilization" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Uid="MemoryUtilizationTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
                                         <TextBlock x:Name="SystemMemoryUtilizationValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 %" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="SystemMemoryUtilizationLiveGraph" Grid.Row="1" PrimarySeriesName="Memory Utilization" ValueUnit="%" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF76B9ED" GridColor="#FF0078D4" />
@@ -223,7 +223,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="StorageTemperatureChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100 °C" />
-                                        <TextBlock Text="Storage Temperature" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Uid="StorageTemperatureTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
                                         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.DiskTemperatureText, Mode=OneWay}" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="StorageTemperatureLiveGraph" Grid.Row="1" Samples="{x:Bind ViewModel.StorageTemperatureChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="Storage Temperature" ValueUnit="°C" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF13A10E" GridColor="#FF10893E" />
@@ -262,7 +262,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="CpuTemperatureChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100 °C" />
-                                        <TextBlock Text="CPU Temperature" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Uid="CpuTemperatureTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
                                         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="CpuTemperatureLiveGraph" Grid.Row="1" Samples="{x:Bind ViewModel.CpuTemperatureChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="CPU Temperature" ValueUnit="°C" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF40B6E6" GridColor="#FF0078D4" />
@@ -301,7 +301,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="CpuUsageChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100%" />
-                                        <TextBlock Text="CPU Usage" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Uid="CpuUsageTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
                                         <TextBlock x:Name="CpuUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 %" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="CpuUsageLiveGraph" Grid.Row="1" PrimarySeriesName="CPU Usage" ValueUnit="%" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FFBF5AF2" GridColor="#FF881798" />
@@ -340,7 +340,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="DiskActivityMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
-                                        <TextBlock Text="Disk Activity" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Uid="DiskActivityTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
                                         <TextBlock x:Name="DiskActivityValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="210" TextTrimming="CharacterEllipsis" Text="R: 0 B/s - W: 0 B/s" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="DiskActivityLiveGraph" Grid.Row="1" PrimarySeriesName="Write" SecondarySeriesName="Read" ValueUnit="MB/s" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FFFFB900" SecondaryStrokeColor="#FF13A10E" GridColor="#FFFF8C00" />
@@ -379,7 +379,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="NetworkUsageChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
-                                        <TextBlock Text="Network Usage" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <TextBlock x:Uid="NetworkUsageTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
                                         <TextBlock x:Name="NetworkUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 Mbps" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="NetworkUsageLiveGraph" Grid.Row="1" PrimarySeriesName="Network Usage" ValueUnit="MB/s" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FF00B7C3" GridColor="#FF038387" />
@@ -422,7 +422,7 @@
                                 <FontIcon Glyph="&#xE9D2;"
                                           FontSize="12"
                                           Foreground="#FF76B9ED" />
-                                <TextBlock Text="Additional diagnostics"
+                                <TextBlock x:Uid="AdditionalDiagnosticsHeader"
                                            FontSize="12"
                                            FontWeight="SemiBold"
                                            Opacity="0.88" />
@@ -444,37 +444,32 @@
                     </Grid>
                     <SelectorBar x:Name="DiagnosticsSelectorBar" SelectionChanged="{x:Bind OnDiagnosticsSelectorBarSelectionChanged}" Margin="0,0,14,0" HorizontalAlignment="Center">
                         <SelectorBarItem x:Name="NetworkOpennessSelectorBarItem"
-                                         Text="Network Openness"
-                                         ToolTipService.ToolTip="Determine how permissive your network access is."
+                                         x:Uid="NetworkOpennessFeature"
                                          IsSelected="True">
                             <SelectorBarItem.Icon>
                                 <FontIcon Glyph="&#xE704;" />
                             </SelectorBarItem.Icon>
                         </SelectorBarItem>
                         <SelectorBarItem x:Name="WifiProfilesSelectorBarItem"
-                                         ToolTipService.ToolTip="View the history of all of the WIFI hotsots you've connected to in the past."
-                                         Text="Wi-Fi Profiles">
+                                         x:Uid="WifiProfilesFeature">
                             <SelectorBarItem.Icon>
                                 <FontIcon Glyph="&#xE701;" />
                             </SelectorBarItem.Icon>
                         </SelectorBarItem>
                         <SelectorBarItem x:Name="PhysicalOrientationSelectorBarItem"
-                                         ToolTipService.ToolTip="On supported hardware, you can view the physical orientation of youe device."
-                                         Text="Physical Orientation">
+                                         x:Uid="PhysicalOrientationFeature">
                             <SelectorBarItem.Icon>
                                 <FontIcon Glyph="&#xE805;" />
                             </SelectorBarItem.Icon>
                         </SelectorBarItem>
                         <SelectorBarItem x:Name="CompassSelectorBarItem"
-                                         ToolTipService.ToolTip="On supported hardware, you can use your device's sensors as a compass."
-                                         Text="Compass">
+                                         x:Uid="CompassFeature">
                             <SelectorBarItem.Icon>
                                 <FontIcon Glyph="&#xE812;" />
                             </SelectorBarItem.Icon>
                         </SelectorBarItem>
                         <SelectorBarItem x:Name="LightSensorSelectorBarItem"
-                                         ToolTipService.ToolTip="On supported hardware, you can see how bright your environment is."
-                                         Text="Light Sensor">
+                                         x:Uid="LightSensorFeature">
                             <SelectorBarItem.Icon>
                                 <FontIcon Glyph="&#xE793;" />
                             </SelectorBarItem.Icon>
@@ -484,8 +479,8 @@
                         <Border CornerRadius="10" Padding="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1">
                             <StackPanel Spacing="12">
                                 <StackPanel Spacing="4">
-                                    <TextBlock Text="Network Openness" FontSize="18" FontWeight="SemiBold" />
-                                    <TextBlock Text="Checks whether selected public websites and services are reachable from the current network." Opacity="0.75" TextWrapping="Wrap" />
+                                    <TextBlock x:Uid="NetworkOpennessFeature" FontSize="18" FontWeight="SemiBold" />
+                                    <TextBlock x:Uid="NetworkOpennessDescription" Opacity="0.75" TextWrapping="Wrap" />
                                 </StackPanel>
                                 <Grid ColumnSpacing="18">
                                     <Grid.ColumnDefinitions>
@@ -503,7 +498,7 @@
                                         <TextBlock x:Name="NetworkOpennessStatusTextBlock" Text="This test is off by default." Opacity="0.72" TextWrapping="Wrap" />
                                         <ProgressBar x:Name="NetworkOpennessProgressBar" Minimum="0" Maximum="100" Value="0" Height="8" Visibility="Collapsed" />
                                         <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                                            <Button x:Name="NetworkOpennessRunButton" Content="Run Network Openness Test" Click="{x:Bind OnNetworkOpennessRunButtonClick}">
+                                            <Button x:Name="NetworkOpennessRunButton" x:Uid="NetworkOpennessRunButton" Click="{x:Bind OnNetworkOpennessRunButtonClick}">
                                                 <Button.ContentTemplate>
                                                     <DataTemplate x:DataType="x:String">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
@@ -518,7 +513,7 @@
                                     </StackPanel>
                                 </Grid>
                                 <TextBlock x:Name="NetworkOpennessCategoryResultsTextBlock" TextWrapping="Wrap" />
-                                <TextBox x:Name="NetworkOpennessDetailsTextBox" Header="Detailed results" Text="Results will appear here after you run the test." IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" Height="200" />
+                                <TextBox x:Name="NetworkOpennessDetailsTextBox" x:Uid="NetworkOpennessDetailsTextBox" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" Height="200" />
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -539,12 +534,12 @@
                                     <StackPanel Spacing="4">
                                         <StackPanel Orientation="Horizontal" Spacing="10">
                                             <FontIcon Glyph="&#xE701;" Foreground="#7AA7FF" FontSize="18" />
-                                            <TextBlock Text="Wi-Fi Profiles" FontSize="18" FontWeight="SemiBold" />
+                                            <TextBlock x:Uid="WifiProfilesFeature" FontSize="18" FontWeight="SemiBold" />
                                         </StackPanel>
-                                        <TextBlock Text="Select a profile to view details." Opacity="0.72" TextWrapping="Wrap" />
+                                        <TextBlock x:Uid="WifiProfilesDescription" Opacity="0.72" TextWrapping="Wrap" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
-                                        <Button x:Name="WifiProfilesRunButton" Content="Retrieve" Click="{x:Bind OnWifiProfilesRunButtonClick}">
+                                        <Button x:Name="WifiProfilesRunButton" x:Uid="WifiProfilesRunButton" Click="{x:Bind OnWifiProfilesRunButtonClick}">
                                             <Button.ContentTemplate>
                                                 <DataTemplate x:DataType="x:String">
                                                     <StackPanel Orientation="Horizontal" Spacing="8">
@@ -568,8 +563,8 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Text="Profiles" FontWeight="SemiBold" />
-                                    <TextBlock Grid.Column="1" Text="Selected profile" FontWeight="SemiBold" />
+                                    <TextBlock x:Uid="WifiProfilesColumnHeader" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" x:Uid="WifiSelectedProfileColumnHeader" FontWeight="SemiBold" />
 
                                     <ListView x:Name="WifiProfilesListView"
                                               Grid.Row="1"
@@ -660,7 +655,7 @@
                                 </Grid>
 
                                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" Opacity="0.8">
-                                    <TextBlock Text="Total profiles:" />
+                                    <TextBlock x:Uid="WifiTotalProfilesLabel" />
                                     <TextBlock Text="{x:Bind WifiProfilesItems.Count}" FontWeight="SemiBold" />
                                 </StackPanel>
                             </Grid>
@@ -677,9 +672,9 @@
                                 <StackPanel Spacing="4">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <FontIcon Glyph="&#xE799;" Foreground="#4BD8B6" FontSize="18" />
-                                        <TextBlock Text="Physical Orientation" FontSize="18" FontWeight="SemiBold" />
+                                        <TextBlock x:Uid="PhysicalOrientationFeature" FontSize="18" FontWeight="SemiBold" />
                                     </StackPanel>
-                                    <TextBlock Text="Shows the device attitude in real time using motion sensors exposed by the device firmware and driver." Opacity="0.72" TextWrapping="Wrap" />
+                                    <TextBlock x:Uid="PhysicalOrientationDescription" Opacity="0.72" TextWrapping="Wrap" />
                                 </StackPanel>
                                 <Grid Grid.Row="1" ColumnSpacing="16">
                                     <Grid.ColumnDefinitions>
@@ -689,7 +684,7 @@
                                     <customUI:HomePhysicalOrientationView x:Name="PhysicalOrientationView" MinHeight="340" />
                                     <Border Grid.Column="1" CornerRadius="10" Padding="14" Background="#101525" BorderBrush="#2C3A66" BorderThickness="1">
                                         <StackPanel Spacing="12">
-                                            <TextBlock Text="Live reading" FontSize="16" FontWeight="SemiBold" />
+                                            <TextBlock x:Uid="LiveReadingHeader" FontSize="16" FontWeight="SemiBold" />
                                             <Grid ColumnSpacing="12" RowSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
@@ -732,9 +727,9 @@
                                 <StackPanel Spacing="4">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <FontIcon Glyph="&#xE707;" Foreground="#FF5252" FontSize="18" />
-                                        <TextBlock Text="Compass" FontSize="18" FontWeight="SemiBold" />
+                                        <TextBlock x:Uid="CompassFeature" FontSize="18" FontWeight="SemiBold" />
                                     </StackPanel>
-                                    <TextBlock Text="Shows magnetic north, true north when the driver provides it, heading accuracy, and a realistic compass face." Opacity="0.72" TextWrapping="Wrap" />
+                                    <TextBlock x:Uid="CompassDescription" Opacity="0.72" TextWrapping="Wrap" />
                                 </StackPanel>
                                 <Grid Grid.Row="1" ColumnSpacing="16">
                                     <Grid.ColumnDefinitions>
@@ -788,9 +783,9 @@
                                 <StackPanel Spacing="4">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <FontIcon Glyph="&#xE706;" Foreground="#FACC15" FontSize="18" />
-                                        <TextBlock Text="Light Sensor" FontSize="18" FontWeight="SemiBold" />
+                                        <TextBlock x:Uid="LightSensorFeature" FontSize="18" FontWeight="SemiBold" />
                                     </StackPanel>
-                                    <TextBlock Text="Shows ambient illuminance in lux, Microsoft lighting-condition ratings, session min and max, and readability guidance." Opacity="0.72" TextWrapping="Wrap" />
+                                    <TextBlock x:Uid="LightSensorDescription" Opacity="0.72" TextWrapping="Wrap" />
                                 </StackPanel>
                                 <Grid Grid.Row="1" ColumnSpacing="16">
                                     <Grid.ColumnDefinitions>
@@ -799,14 +794,14 @@
                                     </Grid.ColumnDefinitions>
                                     <Border CornerRadius="10" Padding="14" Background="#101525" BorderBrush="#4A3A12" BorderThickness="1">
                                         <StackPanel Spacing="10">
-                                            <TextBlock Text="Ambient light meter" FontSize="16" FontWeight="SemiBold" />
+                                            <TextBlock x:Uid="AmbientLightMeterHeader" FontSize="16" FontWeight="SemiBold" />
                                             <customUI:HomeLightSensorMeterView x:Name="LightSensorMeterView" Height="150" />
                                             <TextBlock x:Name="LightSensorMeterCaptionTextBlock" Text="Visual meter uses a log scale from 0 to 100000 lux." Opacity="0.75" TextWrapping="Wrap" />
                                         </StackPanel>
                                     </Border>
                                     <Border Grid.Column="1" CornerRadius="10" Padding="14" Background="#101525" BorderBrush="#4A3A12" BorderThickness="1">
                                         <StackPanel Spacing="12">
-                                            <TextBlock Text="Live reading" FontSize="16" FontWeight="SemiBold" />
+                                            <TextBlock x:Uid="LiveReadingHeader" FontSize="16" FontWeight="SemiBold" />
                                             <Grid ColumnSpacing="12" RowSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
@@ -832,9 +827,9 @@
                                 </Grid>
                                 <Border Grid.Row="2" CornerRadius="10" Padding="12" Background="#101525" BorderBrush="#4A3A12" BorderThickness="1">
                                     <StackPanel Spacing="8">
-                                        <TextBlock Text="Microsoft lux rating ranges" FontSize="16" FontWeight="SemiBold" />
-                                        <TextBlock Text="Pitch Black: 0 to 10 lux   Very Dark: 11 to 50 lux   Dark Indoors: 51 to 200 lux   Dim Indoors: 201 to 400 lux   Normal Indoors: 401 to 1000 lux" TextWrapping="Wrap" Opacity="0.85" />
-                                        <TextBlock Text="Bright Indoors: 1001 to 5000 lux   Dim Outdoors: 5001 to 10000 lux   Cloudy Outdoors: 10001 to 30000 lux   Direct Sunlight: 30001 to 100000 lux" TextWrapping="Wrap" Opacity="0.85" />
+                                        <TextBlock x:Uid="MicrosoftLuxRatingRangesHeader" FontSize="16" FontWeight="SemiBold" />
+                                        <TextBlock x:Uid="LuxRatingRangesLineOne" TextWrapping="Wrap" Opacity="0.85" />
+                                        <TextBlock x:Uid="LuxRatingRangesLineTwo" TextWrapping="Wrap" Opacity="0.85" />
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -844,7 +839,7 @@
             </ScrollViewer>
         </Grid>
         <Canvas x:Name="HeartAnimationCanvas" IsHitTestVisible="False" />
-        <Button Width="48" Height="48" Margin="0,0,30,24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="{x:Bind OnHeartBurstButtonClick}" ToolTipService.ToolTip="Show hearts">
+        <Button Width="48" Height="48" x:Uid="ShowHeartsButton" Margin="0,0,30,24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="{x:Bind OnHeartBurstButtonClick}">
             <TextBlock Text="♥" FontSize="24" Foreground="#F58D9C" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Button>
     </Grid>

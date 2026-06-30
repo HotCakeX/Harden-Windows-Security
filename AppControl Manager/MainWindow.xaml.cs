@@ -663,39 +663,59 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	{
 		if (DesktopAcrylicController.IsSupported())
 		{
-			ViewModel.ConfigurationSource = new();
-			Activated += Window_Activated;
-			Closed += Window_Closed;
+			DesktopAcrylicController? acrylicController = null;
 
-			ViewModel.ConfigurationSource.IsInputActive = true;
-
-			// On Acrylic Thin, only Dark theme looks nice, light theme creates white background for various elements.
-			ViewModel.ConfigurationSource.Theme = SystemBackdropTheme.Dark;
-
-			ViewModel.AcrylicController = new()
-			{
-				Kind = DesktopAcrylicKind.Thin,
-				TintOpacity = Atlas.Settings.AcrylicThinTintOpacity,
-				LuminosityOpacity = Atlas.Settings.AcrylicThinLuminosityOpacity
-			};
 			try
 			{
-				if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
+				SystemBackdropConfiguration configurationSource = new()
 				{
-					ViewModel.AcrylicController.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
+					IsInputActive = true,
+
+					// On Acrylic Thin, only Dark theme looks nice, light theme creates white background for various elements.
+					Theme = SystemBackdropTheme.Dark
+				};
+
+				// Keep the controller in a local variable until setup succeeds so it can be disposed on all exception paths.
+				acrylicController = new()
+				{
+					Kind = DesktopAcrylicKind.Thin,
+					TintOpacity = Atlas.Settings.AcrylicThinTintOpacity,
+					LuminosityOpacity = Atlas.Settings.AcrylicThinLuminosityOpacity
+				};
+
+				try
+				{
+					if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
+					{
+						acrylicController.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
+					}
 				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex);
+				}
+
+				// Enable the system backdrop
+				_ = acrylicController.AddSystemBackdropTarget(this.As<ICompositionSupportsSystemBackdrop>());
+				acrylicController.SetSystemBackdropConfiguration(configurationSource);
+
+				ViewModel.ConfigurationSource = configurationSource;
+				ViewModel.AcrylicController = acrylicController;
+
+				// Acrylic controller was successfully created at this point and assigned to the ViewModel,
+				// So we set the local variable to null so that it doesn't get disposed in the finally block.
+				acrylicController = null;
+
+				Activated += Window_Activated;
+				Closed += Window_Closed;
+
+				// Needed to null this since it's bound to the XAML in UI.
+				ViewModel.SystemBackDropStyle = null;
 			}
-			catch (Exception ex)
+			finally
 			{
-				Logger.Write(ex);
+				acrylicController?.Dispose();
 			}
-
-			// Enable the system backdrop
-			_ = ViewModel.AcrylicController.AddSystemBackdropTarget(this.As<ICompositionSupportsSystemBackdrop>());
-			ViewModel.AcrylicController.SetSystemBackdropConfiguration(ViewModel.ConfigurationSource);
-
-			// Needed to null this since it's bound to the XAML in UI.
-			ViewModel.SystemBackDropStyle = null;
 		}
 		else
 		{
@@ -708,28 +728,44 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		if (DesktopAcrylicController.IsSupported())
 		{
 			ViewModel.AcrylicController?.Dispose();
+			ViewModel.AcrylicController = null;
 
-			ViewModel.AcrylicController = new()
-			{
-				Kind = DesktopAcrylicKind.Thin,
-				TintOpacity = Atlas.Settings.AcrylicThinTintOpacity
-			};
+			DesktopAcrylicController? acrylicController = null;
+
 			try
 			{
-				if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
+				// Keep the controller in a local variable until setup succeeds so it can be disposed on all exception paths.
+				acrylicController = new()
 				{
-					ViewModel.AcrylicController.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
-				}
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
-			ViewModel.AcrylicController.LuminosityOpacity = Atlas.Settings.AcrylicThinLuminosityOpacity;
+					Kind = DesktopAcrylicKind.Thin,
+					TintOpacity = Atlas.Settings.AcrylicThinTintOpacity
+				};
 
-			// Enable the system backdrop
-			_ = ViewModel.AcrylicController.AddSystemBackdropTarget(this.As<ICompositionSupportsSystemBackdrop>());
-			ViewModel.AcrylicController.SetSystemBackdropConfiguration(ViewModel.ConfigurationSource);
+				try
+				{
+					if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
+					{
+						acrylicController.TintColor = Windows.UI.Color.FromArgb(255, R, G, B);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex);
+				}
+
+				acrylicController.LuminosityOpacity = Atlas.Settings.AcrylicThinLuminosityOpacity;
+
+				// Enable the system backdrop
+				_ = acrylicController.AddSystemBackdropTarget(this.As<ICompositionSupportsSystemBackdrop>());
+				acrylicController.SetSystemBackdropConfiguration(ViewModel.ConfigurationSource);
+
+				ViewModel.AcrylicController = acrylicController;
+				acrylicController = null;
+			}
+			finally
+			{
+				acrylicController?.Dispose();
+			}
 		}
 		else
 		{
@@ -1058,6 +1094,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			InstalledAppsManagementNavItem.Content = Atlas.GetStr("InstalledAppsManagementNavItem/Content");
 			AutomationProperties.SetHelpText(InstalledAppsManagementNavItem, Atlas.GetStr("InstalledAppsManagementNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(InstalledAppsManagementNavItem, Atlas.GetStr("InstalledAppsManagementNavItem/ToolTipService/ToolTip"));
+
+			WinGetManagementNavItem.Content = Atlas.GetStr("WinGetManagementNavItem/Content");
+			AutomationProperties.SetHelpText(WinGetManagementNavItem, Atlas.GetStr("WinGetManagementNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(WinGetManagementNavItem, Atlas.GetStr("WinGetManagementNavItem/ToolTipService/ToolTip"));
 
 			FileReputationNavItem.Content = Atlas.GetStr("FileReputationNavItem/Content");
 			AutomationProperties.SetHelpText(FileReputationNavItem, Atlas.GetStr("FileReputationNavItem/AutomationProperties/HelpText"));
@@ -2339,7 +2379,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	// Subtitle text for the UI's TeachingTip
 	private readonly string ElevationContextSwitchButtonTeachingTipSubtitle = Atlas.GetStr(Atlas.IsElevated ? "ElevationContextSwitchButtonTeachingTipSubtitleElevated" : "ElevationContextSwitchButtonTeachingTipSubtitleUnelevated");
 
-	private void ElevationContextSwitchButton_Click(object sender, RoutedEventArgs e) => ElevationContextSwitchButtonTeachingTip.IsOpen = true;
+	private void ElevationContextSwitchButton_Click() => ElevationContextSwitchButtonTeachingTip.IsOpen = true;
 
 	// The display Mode of the Sidebar's SplitView pane.
 	private SplitViewDisplayMode SidebarSplitViewDisplayMode { get; set => this.SP(ref field, value); } = Atlas.Settings.SidebarPaneDisplayMode == 0 ? SplitViewDisplayMode.Inline : SplitViewDisplayMode.Overlay;

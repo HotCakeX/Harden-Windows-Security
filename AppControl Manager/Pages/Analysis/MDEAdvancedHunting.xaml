@@ -320,11 +320,11 @@
                                 <CustomUIElements:InteractiveLineChart
                                     x:Name="EventsTrendChart"
                                     MinHeight="360"
-                                    ChartStateKey="MDEAdvancedHunting"  
+                                    ChartStateKey="MDEAdvancedHunting"
                                     Series1Name="Blocked"
-                                    Series2Name="Allowed"                                    
-                                    SelectedRangeMinimum="{x:Bind ViewModel.AnalysisResults.Analysis_CustomRangeStartTicks, Mode=OneWay}"  
-                                    SelectedRangeMaximum="{x:Bind ViewModel.AnalysisResults.Analysis_CustomRangeEndTicks, Mode=OneWay}"  
+                                    Series2Name="Allowed"
+                                    SelectedRangeMinimum="{x:Bind ViewModel.AnalysisResults.Analysis_CustomRangeStartTicks, Mode=OneWay}"
+                                    SelectedRangeMaximum="{x:Bind ViewModel.AnalysisResults.Analysis_CustomRangeEndTicks, Mode=OneWay}"
                                     RangeSelectionChanged="{x:Bind ViewModel.AnalysisResults.EventsTrendChart_RangeSelectionChanged}"  Series1Items="{x:Bind ViewModel.AnalysisResults.BlockedTrendPoints}"
                                     Series2Items="{x:Bind ViewModel.AnalysisResults.AllowedTrendPoints}" />
                             </StackPanel>

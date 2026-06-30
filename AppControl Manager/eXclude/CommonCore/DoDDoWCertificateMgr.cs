@@ -52,7 +52,7 @@ internal static class DoDDoWCertificateMgr
 	private const string DoDPkiBundleChecksumSignatureExtension = ".sha256";
 
 	/// <summary>
-	/// This list must be reviewed when DoD/DoW introduces a new root CA. 
+	/// This list must be reviewed when DoD/DoW introduces a new root CA.
 	/// </summary>
 	private static readonly HashSet<string> KnownDoDRootCaSha1Thumbprints = new(StringComparer.OrdinalIgnoreCase)
 	{

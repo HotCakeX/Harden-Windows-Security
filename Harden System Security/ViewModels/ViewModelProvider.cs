@@ -103,6 +103,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<InstalledAppsManagementVM> _installedAppsManagementVM = new(() =>
 		new InstalledAppsManagementVM(), false);
 
+	private static readonly Lazy<WinGetManagementVM> _WinGetManagementVM = new(() =>
+		new WinGetManagementVM(), false);
+
 	private static readonly Lazy<MicrosoftSecurityBaselineVM> _microsoftSecurityBaselineVM = new(() =>
 		new MicrosoftSecurityBaselineVM(), false);
 
@@ -183,6 +186,7 @@ internal static class ViewModelProvider
 	internal static CountryIPBlockingVM CountryIPBlockingVM => _countryIPBlockingVM.Value;
 	internal static FileReputationVM FileReputationVM => _fileReputationVM.Value;
 	internal static InstalledAppsManagementVM InstalledAppsManagementVM => _installedAppsManagementVM.Value;
+	internal static WinGetManagementVM WinGetManagementVM => _WinGetManagementVM.Value;
 	internal static MicrosoftSecurityBaselineVM MicrosoftSecurityBaselineVM => _microsoftSecurityBaselineVM.Value;
 	internal static Microsoft365AppsSecurityBaselineVM Microsoft365AppsSecurityBaselineVM => _microsoft365AppsSecurityBaselineVM.Value;
 	internal static MicrosoftBaseLinesOverridesVM MicrosoftBaseLinesOverridesVM => _microsoftBaseLinesOverridesVM.Value;
@@ -210,5 +214,8 @@ internal static class ViewModelProvider
 	{
 		try { if (_logsVM.IsValueCreated) _logsVM.Value.Dispose(); } catch { }
 		try { if (_optionalWindowsFeaturesVM.IsValueCreated) _optionalWindowsFeaturesVM.Value.Dispose(); } catch { }
+		try { if (_WinGetManagementVM.IsValueCreated) _WinGetManagementVM.Value.Dispose(); } catch { }
+		try { if (_homeVM.IsValueCreated) _homeVM.Value.Dispose(); } catch { }
+		try { if (_intuneVM.IsValueCreated) _intuneVM.Value.Dispose(); } catch { }
 	}
 }

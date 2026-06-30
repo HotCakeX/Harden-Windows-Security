@@ -71,18 +71,32 @@ internal static class Logger
 
 		LogFileName = Path.Join(LogsDirectory, $"{AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
-		_streamWriter = new(
-			new FileStream(
+		FileStream? fileStream = null;
+
+		try
+		{
+			fileStream = new FileStream(
 				path: LogFileName,
 				mode: FileMode.Append,
 				access: FileAccess.Write,
 				share: FileShare.Read,
 				bufferSize: 4096,
-				useAsync: true))
+				useAsync: true);
+
+			_streamWriter = new StreamWriter(fileStream)
+			{
+				// Ensures log messages are written to disk right away, reducing the risk of data loss in case of a crash or unexpected termination.
+				AutoFlush = true
+			};
+
+			// Ownership has been successfully transferred to the app-lifetime StreamWriter so null it out to avoid disposal in the finally block.
+			// If an exception occurs before this point, the fileStream will be disposed in the finally block to prevent resource leaks.
+			fileStream = null;
+		}
+		finally
 		{
-			// Ensures log messages are written to disk right away, reducing the risk of data loss in case of a crash or unexpected termination.
-			AutoFlush = true
-		};
+			fileStream?.Dispose();
+		}
 
 		// Start the background log processing task
 		// allowing the log processing to run concurrently without blocking the main thread.

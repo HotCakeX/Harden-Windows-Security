@@ -1314,7 +1314,7 @@ internal static class CustomDeserialization
 			}
 		}
 
-		// Parse the AppIDTag child elements		
+		// Parse the AppIDTag child elements
 		XmlNodeList appIDTagNodes = elem.GetElementsByTagName("AppIDTag", Atlas.SiPolicyNamespace);
 		List<AppIDTag> tags = [];
 		foreach (XmlElement tagElem in appIDTagNodes)

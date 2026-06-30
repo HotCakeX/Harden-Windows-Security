@@ -664,11 +664,12 @@ internal sealed partial class AuthenticatedAccounts(
 			}
 
 			using InMemoryRandomAccessStream randomAccessStream = new();
-			DataWriter dataWriter = new(randomAccessStream);
-			dataWriter.WriteBytes(photoBytes);
-			_ = await dataWriter.StoreAsync();
-			_ = dataWriter.DetachStream();
-			dataWriter.Dispose();
+			using (DataWriter dataWriter = new(randomAccessStream))
+			{
+				dataWriter.WriteBytes(photoBytes);
+				_ = await dataWriter.StoreAsync();
+				_ = dataWriter.DetachStream();
+			}
 
 			randomAccessStream.Seek(0);
 			BitmapImage bitmapImage = new();

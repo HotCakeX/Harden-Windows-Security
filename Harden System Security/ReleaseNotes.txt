@@ -1,5 +1,5 @@
-* Improved the online management and Microsoft Graph button by redesigning the elements and introducing new features. This applies to the Intune page.
+This release introduces a brand-new WinGet Management page that makes everyday app management much easier and more convenient. You can now search for apps, view and manage the apps already installed on your device, work with app bundles, and manage app sources, all from one dedicated place inside the app. The goal of this new page is to give you a simpler and more organized way to handle app-related tasks without needing to jump between different tools, settings or command line.
 
-* Updated dependencies to the latest versions.
+It also brings a smoother and more polished experience overall, with clearer progress updates, better status messages, easier cancellation when something is taking too long, and more helpful feedback when an app action cannot be completed. App bundles make it faster to set up or remove groups of apps together, while the improved installed apps and search experience helps you find what you need more quickly. Overall, this update is focused on making app management easier to understand, easier to use, and much more user-friendly for everyone.
 
-* Download Manager's handling of unusable links has been improved. It now displays the exact return code to the user.
+You do not need to use search engine or websites anymore to find the apps you want to install. You can also find and install fonts on your system in this new page. Give it a try and if you have any feedback, please don't hesitate sharing it with me on GitHub 🩵 https://github.com/HotCakeX/Harden-Windows-Security/discussions

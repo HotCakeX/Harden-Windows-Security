@@ -94,6 +94,7 @@ internal sealed partial class Main : ViewModelBase
 		CacheAuthenticationTokensLocally = ReadValue(nameof(CacheAuthenticationTokensLocally), CacheAuthenticationTokensLocally);
 		CustomSidebarPoliciesLibraryCacheLocation = ReadValue(nameof(CustomSidebarPoliciesLibraryCacheLocation), CustomSidebarPoliciesLibraryCacheLocation);
 		DownloadManagerDirectory = ReadValue(nameof(DownloadManagerDirectory), DownloadManagerDirectory);
+		WinGetDownloadDirectory = ReadValue(nameof(WinGetDownloadDirectory), WinGetDownloadDirectory);
 		DownloadManagerMaximumSimultaneousDownloads = ReadValue(nameof(DownloadManagerMaximumSimultaneousDownloads), DownloadManagerMaximumSimultaneousDownloads);
 		DownloadManagerParallelConnectionsPerDownload = ReadValue(nameof(DownloadManagerParallelConnectionsPerDownload), DownloadManagerParallelConnectionsPerDownload);
 		DownloadManagerSlowPresetKilobytesPerSecond = ReadValue(nameof(DownloadManagerSlowPresetKilobytesPerSecond), DownloadManagerSlowPresetKilobytesPerSecond);
@@ -638,6 +639,20 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(DownloadManagerDirectory), field);
+			}
+		}
+	} = string.Empty;
+
+	/// <summary>
+	/// Optional custom directory for WinGet package downloads. Empty string means the OS Downloads directory.
+	/// </summary>
+	internal string WinGetDownloadDirectory
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WinGetDownloadDirectory), field);
 			}
 		}
 	} = string.Empty;

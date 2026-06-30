@@ -7028,4 +7028,448 @@ Empreinte : {3}</value>
   <data name="ContextHeader.Text" xml:space="preserve">
     <value>Contexte</value>
   </data>
+  <data name="WinGetManagementNavItem.Content" xml:space="preserve">
+    <value>Gestion de WinGet</value>
+  </data>
+  <data name="WinGetManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recherchez, installez, mettez à jour, téléchargez, réparez et désinstallez des applications et des programmes avec WinGet, avec la prise en charge de la découverte de packages, de la gestion des applications installées, de la gestion des sources et des actions groupées.</value>
+  </data>
+  <data name="WinGetManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recherchez, installez, mettez à jour, téléchargez, réparez et désinstallez des applications et des programmes avec WinGet, avec la prise en charge de la découverte de packages, de la gestion des applications installées, de la gestion des sources et des actions groupées.</value>
+  </data>
+  <data name="WinGetSearchButton.Content" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="WinGetSearchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recherchez de nouveaux programmes et applications dans les sources configurées.</value>
+  </data>
+  <data name="WinGetSearchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recherchez de nouveaux programmes et applications dans les sources configurées.</value>
+  </data>
+  <data name="WinGetSearchClearButton.Content" xml:space="preserve">
+    <value>Effacer</value>
+  </data>
+  <data name="WinGetSearchClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Effacez les résultats de recherche WinGet actuels.</value>
+  </data>
+  <data name="WinGetSearchClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Effacez les résultats de recherche WinGet actuels.</value>
+  </data>
+  <data name="WinGetSearchSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ouvrir les paramètres de WinGet</value>
+  </data>
+  <data name="WinGetSearchSettingsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Paramètres de WinGet</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Choisissez l’emplacement où WinGet télécharge les programmes d’installation des packages. Par défaut, il s’agit du dossier Téléchargements de Windows.</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryTextBox.Header" xml:space="preserve">
+    <value>Répertoire de téléchargement</value>
+  </data>
+  <data name="WinGetSearchBrowseDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>Choisir le répertoire de téléchargement</value>
+  </data>
+  <data name="WinGetSearchResetDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>Réinitialiser au dossier Téléchargements de Windows</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copier la valeur de détail du package dans le Presse-papiers</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copier la valeur de détail du package dans le Presse-papiers</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cliquer pour les actions de l’application</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cliquer pour les actions de l’application</value>
+  </data>
+  <data name="WinGetInstallOrUpdateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Installer ou mettre à jour</value>
+  </data>
+  <data name="WinGetSilentMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Silencieux</value>
+  </data>
+  <data name="WinGetCurrentUserMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Utilisateur actuel</value>
+  </data>
+  <data name="WinGetSystemMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="WinGetInteractiveMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Interactif</value>
+  </data>
+  <data name="WinGetDownloadMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="WinGetRefreshStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Actualiser l’état</value>
+  </data>
+  <data name="WinGetShowInstallationNotesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Afficher les notes d’installation</value>
+  </data>
+  <data name="WinGetCancelOperationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Annuler l’opération</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Options du package</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Options du package</value>
+  </data>
+  <data name="WinGetPackageInstalledLabel.Text" xml:space="preserve">
+    <value>Installé</value>
+  </data>
+  <data name="WinGetPackageDetailsTextBlock.Text" xml:space="preserve">
+    <value>Détails du package</value>
+  </data>
+  <data name="WinGetSearchPackagesSelectorBarItem.Text" xml:space="preserve">
+    <value>Rechercher des packages</value>
+  </data>
+  <data name="WinGetInstalledProgramsSelectorBarItem.Text" xml:space="preserve">
+    <value>Programmes installés</value>
+  </data>
+  <data name="WinGetAppBundlesSelectorBarItem.Text" xml:space="preserve">
+    <value>Lots d’applications</value>
+  </data>
+  <data name="WinGetSourcesSelectorBarItem.Text" xml:space="preserve">
+    <value>Sources</value>
+  </data>
+  <data name="WinGetEngineVersionTextBlock.Text" xml:space="preserve">
+    <value>Version du moteur WinGet</value>
+  </data>
+  <data name="WinGetPackageSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>Rechercher des packages</value>
+  </data>
+  <data name="WinGetSearchFieldTextBlock.Text" xml:space="preserve">
+    <value>Champ de recherche</value>
+  </data>
+  <data name="WinGetMatchModeTextBlock.Text" xml:space="preserve">
+    <value>Mode de correspondance</value>
+  </data>
+  <data name="WinGetSearchResultLimitTextBlock.Text" xml:space="preserve">
+    <value>Limite des résultats de recherche</value>
+  </data>
+  <data name="WinGetCancelButton.Content" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="WinGetCancelButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Annuler l’opération WinGet actuelle</value>
+  </data>
+  <data name="WinGetCancelButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Annuler l’opération WinGet actuelle</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actions groupées pour les résultats de recherche sélectionnés</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actions groupées pour les résultats de recherche sélectionnés</value>
+  </data>
+  <data name="WinGetInstallOrUpdateSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Installer ou mettre à jour la sélection</value>
+  </data>
+  <data name="WinGetDownloadSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Télécharger la sélection</value>
+  </data>
+  <data name="WinGetRefreshSelectedStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Actualiser l’état de la sélection</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionner tous les résultats de recherche</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionner tous les résultats de recherche</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Désélectionner tous les résultats de recherche</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Désélectionner tous les résultats de recherche</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.Content" xml:space="preserve">
+    <value>Actualiser les programmes installés</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actualiser la liste des programmes installés</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actualiser la liste des programmes installés</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.Content" xml:space="preserve">
+    <value>Mises à jour uniquement</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Afficher uniquement les programmes installés avec des mises à jour disponibles</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Afficher uniquement les programmes installés avec des mises à jour disponibles</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actions groupées pour les programmes installés sélectionnés</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actions groupées pour les programmes installés sélectionnés</value>
+  </data>
+  <data name="WinGetUpdateOrReinstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Mettre à jour ou réinstaller la sélection</value>
+  </data>
+  <data name="WinGetRepairSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Réparer la sélection</value>
+  </data>
+  <data name="WinGetUninstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Désinstaller la sélection</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionner tous les programmes installés</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionner tous les programmes installés</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Désélectionner tous les programmes installés</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Désélectionner tous les programmes installés</value>
+  </data>
+  <data name="WinGetInstalledProgramsSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>Rechercher des programmes installés</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retour aux lots</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retour aux lots</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.Content" xml:space="preserve">
+    <value>Tout installer</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Installer toutes les applications du lot sélectionné</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Installer toutes les applications du lot sélectionné</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.Content" xml:space="preserve">
+    <value>Tout désinstaller</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Désinstaller toutes les applications du lot sélectionné</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Désinstaller toutes les applications du lot sélectionné</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.Header" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>winget</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.Header" xml:space="preserve">
+    <value>Argument</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.PlaceholderText" xml:space="preserve">
+    <value>https://winget.azureedge.net/cache</value>
+  </data>
+  <data name="WinGetSourceTypeComboBox.Header" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="WinGetSourceTrustComboBox.Header" xml:space="preserve">
+    <value>Confiance</value>
+  </data>
+  <data name="WinGetAddSourceButton.Content" xml:space="preserve">
+    <value>Ajouter une source</value>
+  </data>
+  <data name="WinGetAddSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ajouter la source WinGet configurée</value>
+  </data>
+  <data name="WinGetAddSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajouter la source WinGet configurée</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.Content" xml:space="preserve">
+    <value>Actualiser les sources</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actualiser la liste des sources WinGet</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actualiser la liste des sources WinGet</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actions groupées pour les sources sélectionnées</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actions groupées pour les sources sélectionnées</value>
+  </data>
+  <data name="WinGetUpdateSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Mettre à jour les sources sélectionnées</value>
+  </data>
+  <data name="WinGetRemoveSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Supprimer les sources sélectionnées</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionner toutes les sources</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionner toutes les sources</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Désélectionner toutes les sources</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Désélectionner toutes les sources</value>
+  </data>
+  <data name="WinGetArgumentTextBlock.Text" xml:space="preserve">
+    <value>Argument</value>
+  </data>
+  <data name="WinGetOriginTextBlock.Text" xml:space="preserve">
+    <value>Origine</value>
+  </data>
+  <data name="WinGetTrustTextBlock.Text" xml:space="preserve">
+    <value>Confiance</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.Content" xml:space="preserve">
+    <value>Mettre à jour</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mettre à jour la source WinGet sélectionnée</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Mettre à jour la source WinGet sélectionnée</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.Content" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimer la source WinGet sélectionnée</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Supprimer la source WinGet sélectionnée</value>
+  </data>
+  <data name="BackgroundTypeComboBox.Header" xml:space="preserve">
+    <value>Type d’arrière-plan</value>
+  </data>
+  <data name="BackgroundOpacitySlider.Header" xml:space="preserve">
+    <value>Opacité de l’arrière-plan</value>
+  </data>
+  <data name="GraphSizeComboBox.Header" xml:space="preserve">
+    <value>Taille du graphique</value>
+  </data>
+  <data name="GraphSizeSmallComboBoxItem.Content" xml:space="preserve">
+    <value>Petit</value>
+  </data>
+  <data name="GraphSizeMediumComboBoxItem.Content" xml:space="preserve">
+    <value>Moyen</value>
+  </data>
+  <data name="GraphSizeBigComboBoxItem.Content" xml:space="preserve">
+    <value>Grand</value>
+  </data>
+  <data name="AppRamUsageTitle.Text" xml:space="preserve">
+    <value>Utilisation de la RAM par l’application</value>
+  </data>
+  <data name="MemoryUtilizationTitle.Text" xml:space="preserve">
+    <value>Utilisation de la mémoire</value>
+  </data>
+  <data name="StorageTemperatureTitle.Text" xml:space="preserve">
+    <value>Température du stockage</value>
+  </data>
+  <data name="CpuTemperatureTitle.Text" xml:space="preserve">
+    <value>Température du processeur</value>
+  </data>
+  <data name="CpuUsageTitle.Text" xml:space="preserve">
+    <value>Utilisation du processeur</value>
+  </data>
+  <data name="DiskActivityTitle.Text" xml:space="preserve">
+    <value>Activité du disque</value>
+  </data>
+  <data name="NetworkUsageTitle.Text" xml:space="preserve">
+    <value>Utilisation du réseau</value>
+  </data>
+  <data name="AdditionalDiagnosticsHeader.Text" xml:space="preserve">
+    <value>Diagnostics supplémentaires</value>
+  </data>
+  <data name="NetworkOpennessFeature.Text" xml:space="preserve">
+    <value>Ouverture du réseau</value>
+  </data>
+  <data name="NetworkOpennessFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Déterminez le degré de permissivité de votre accès réseau.</value>
+  </data>
+  <data name="WifiProfilesFeature.Text" xml:space="preserve">
+    <value>Profils Wi‑Fi</value>
+  </data>
+  <data name="WifiProfilesFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Consultez l’historique de tous les points d’accès Wi‑Fi auxquels vous vous êtes connecté par le passé.</value>
+  </data>
+  <data name="PhysicalOrientationFeature.Text" xml:space="preserve">
+    <value>Orientation physique</value>
+  </data>
+  <data name="PhysicalOrientationFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sur le matériel pris en charge, vous pouvez afficher l’orientation physique de votre appareil.</value>
+  </data>
+  <data name="CompassFeature.Text" xml:space="preserve">
+    <value>Boussole</value>
+  </data>
+  <data name="CompassFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sur le matériel pris en charge, vous pouvez utiliser les capteurs de votre appareil comme boussole.</value>
+  </data>
+  <data name="LightSensorFeature.Text" xml:space="preserve">
+    <value>Capteur de lumière</value>
+  </data>
+  <data name="LightSensorFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sur le matériel pris en charge, vous pouvez voir le niveau de luminosité de votre environnement.</value>
+  </data>
+  <data name="NetworkOpennessDescription.Text" xml:space="preserve">
+    <value>Vérifie si les sites web et services publics sélectionnés sont accessibles depuis le réseau actuel.</value>
+  </data>
+  <data name="NetworkOpennessRunButton.Content" xml:space="preserve">
+    <value>Exécuter le test d’ouverture du réseau</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Header" xml:space="preserve">
+    <value>Résultats détaillés</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Text" xml:space="preserve">
+    <value>Les résultats apparaîtront ici après l’exécution du test.</value>
+  </data>
+  <data name="WifiProfilesDescription.Text" xml:space="preserve">
+    <value>Sélectionnez un profil pour afficher les détails.</value>
+  </data>
+  <data name="WifiProfilesRunButton.Content" xml:space="preserve">
+    <value>Récupérer</value>
+  </data>
+  <data name="WifiProfilesColumnHeader.Text" xml:space="preserve">
+    <value>Profils</value>
+  </data>
+  <data name="WifiSelectedProfileColumnHeader.Text" xml:space="preserve">
+    <value>Profil sélectionné</value>
+  </data>
+  <data name="WifiTotalProfilesLabel.Text" xml:space="preserve">
+    <value>Nombre total de profils :</value>
+  </data>
+  <data name="PhysicalOrientationDescription.Text" xml:space="preserve">
+    <value>Affiche l’attitude de l’appareil en temps réel à l’aide des capteurs de mouvement exposés par le microprogramme et le pilote de l’appareil.</value>
+  </data>
+  <data name="LiveReadingHeader.Text" xml:space="preserve">
+    <value>Lecture en direct</value>
+  </data>
+  <data name="CompassDescription.Text" xml:space="preserve">
+    <value>Affiche le nord magnétique, le nord géographique lorsque le pilote le fournit, la précision du cap et une représentation réaliste de la boussole.</value>
+  </data>
+  <data name="LightSensorDescription.Text" xml:space="preserve">
+    <value>Affiche l’éclairement ambiant en lux, les évaluations Microsoft des conditions d’éclairage, le minimum et le maximum de la session, ainsi que des recommandations de lisibilité.</value>
+  </data>
+  <data name="AmbientLightMeterHeader.Text" xml:space="preserve">
+    <value>Luxmètre ambiant</value>
+  </data>
+  <data name="MicrosoftLuxRatingRangesHeader.Text" xml:space="preserve">
+    <value>Plages d’évaluation en lux de Microsoft</value>
+  </data>
+  <data name="LuxRatingRangesLineOne.Text" xml:space="preserve">
+    <value>Noir complet : 0 à 10 lux   Très sombre : 11 à 50 lux   Intérieur sombre : 51 à 200 lux   Intérieur faiblement éclairé : 201 à 400 lux   Intérieur normal : 401 à 1000 lux</value>
+  </data>
+  <data name="LuxRatingRangesLineTwo.Text" xml:space="preserve">
+    <value>Intérieur lumineux : 1001 à 5000 lux   Extérieur faiblement éclairé : 5001 à 10000 lux   Extérieur nuageux : 10001 à 30000 lux   Lumière directe du soleil : 30001 à 100000 lux</value>
+  </data>
+  <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Afficher les cœurs</value>
+  </data>
 </root>

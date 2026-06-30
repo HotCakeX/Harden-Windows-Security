@@ -151,7 +151,10 @@ internal sealed partial class ListViewV2 : ListView
 	/// <param name="e"></param>
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
-		// Delay execution until the visual tree is ready
+		// Cache the ListView immediately so selection-only operations work even when the template ScrollViewer is not ready yet.
+		ListViewHelper.Register(RegistryKey, this);
+
+		// Delay ScrollViewer discovery until the visual tree is ready.
 		_ = DispatcherQueue.TryEnqueue(() =>
 		{
 			ScrollViewer? sv = this.FindScrollViewer();

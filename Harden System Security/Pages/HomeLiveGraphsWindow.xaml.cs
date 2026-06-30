@@ -95,6 +95,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 {
 	private const uint ErrorSuccess = 0U;
 	private const uint PdhFormatDouble = 0x00000200U;
+	private const string CpuUsageCounterPath = @"\Processor Information(_Total)\% Processor Time";
 	private const int DiskActivityMaxSamples = 120;
 	private const int HomeLiveMetricTimeWindowSeconds = 60;
 	private const int HomeLiveMetricUpdateIntervalSeconds = 2;
@@ -144,8 +145,9 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 	private IntPtr _diskWriteSpeedCounter;
 	private double _lastDiskReadBytesPerSecond;
 	private double _lastDiskWriteBytesPerSecond;
-	private TimeSpan _previousLiveProcessCpuTime;
-	private long _previousLiveProcessCpuSampleTicks;
+	private bool _cpuUsageCountersInitialized;
+	private IntPtr _cpuUsagePdhQuery;
+	private IntPtr _cpuUsageCounter;
 	private uint _liveNetworkInterfaceIndex;
 	private ulong _previousLiveNetworkInBytes;
 	private ulong _previousLiveNetworkOutBytes;
@@ -593,6 +595,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 		_blackHoleShaderEffect?.Dispose();
 		_blackHoleShaderEffect = null;
 		BlackHoleCanvas.RemoveFromVisualTree();
+		CloseCpuUsageCounters();
 		CloseDiskActivityCounters();
 		_gpuUsageTimer.Stop();
 		if (_gpuUsageTimerSubscribed)
@@ -643,27 +646,20 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 	{
 		try
 		{
-			using Process currentProcess = Process.GetCurrentProcess();
-			TimeSpan currentCpuTime = currentProcess.TotalProcessorTime;
-			long currentTicks = Stopwatch.GetTimestamp();
-			double cpuPercent;
-
-			if (_previousLiveProcessCpuSampleTicks == 0)
+			if (!EnsureCpuUsageCountersInitialized())
 			{
-				_previousLiveProcessCpuTime = currentCpuTime;
-				_previousLiveProcessCpuSampleTicks = currentTicks;
-				cpuPercent = 0.0;
-			}
-			else
-			{
-				double elapsedSeconds = (currentTicks - _previousLiveProcessCpuSampleTicks) / (double)Stopwatch.Frequency;
-				double cpuSeconds = (currentCpuTime - _previousLiveProcessCpuTime).TotalSeconds;
-				cpuPercent = elapsedSeconds <= 0.0 ? 0.0 : cpuSeconds / (elapsedSeconds * Environment.ProcessorCount) * 100.0;
-				cpuPercent = Math.Clamp(cpuPercent, 0.0, 100.0);
-				_previousLiveProcessCpuTime = currentCpuTime;
-				_previousLiveProcessCpuSampleTicks = currentTicks;
+				CpuUsageValueTextBlock.Text = "Unavailable";
+				return;
 			}
 
+			uint collectStatus = NativeMethods.PdhCollectQueryData(_cpuUsagePdhQuery);
+			if (collectStatus != ErrorSuccess)
+			{
+				CpuUsageValueTextBlock.Text = "Unavailable";
+				return;
+			}
+
+			double cpuPercent = Math.Clamp(GetFormattedCounterValue(_cpuUsageCounter), 0.0, 100.0);
 			CpuUsageValueTextBlock.Text = cpuPercent.ToString("0.0", CultureInfo.InvariantCulture) + " %";
 			AddLiveMetricSample(_cpuUsageSamples, cpuPercent);
 			CpuUsageLiveGraph.Samples = _cpuUsageSamples;
@@ -673,6 +669,31 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 			Logger.Write(ex);
 			CpuUsageValueTextBlock.Text = "Unavailable";
 		}
+	}
+
+	private bool EnsureCpuUsageCountersInitialized()
+	{
+		if (_cpuUsageCountersInitialized)
+		{
+			return true;
+		}
+
+		uint status = NativeMethods.PdhOpenQueryW(null, 0U, out _cpuUsagePdhQuery);
+		if (status != ErrorSuccess || _cpuUsagePdhQuery == IntPtr.Zero)
+		{
+			return false;
+		}
+
+		status = NativeMethods.PdhAddEnglishCounterW(_cpuUsagePdhQuery, CpuUsageCounterPath, 0U, out _cpuUsageCounter);
+		if (status != ErrorSuccess || _cpuUsageCounter == IntPtr.Zero)
+		{
+			CloseCpuUsageCounters();
+			return false;
+		}
+
+		_ = NativeMethods.PdhCollectQueryData(_cpuUsagePdhQuery);
+		_cpuUsageCountersInitialized = true;
+		return true;
 	}
 
 	private void UpdateNetworkUsage(bool firstSample)
@@ -1013,6 +1034,23 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 		return trimmedValue.Contains('%', StringComparison.OrdinalIgnoreCase) || trimmedValue.Contains('°', StringComparison.OrdinalIgnoreCase) || trimmedValue.Contains('B', StringComparison.OrdinalIgnoreCase) || trimmedValue.Contains('C', StringComparison.OrdinalIgnoreCase) ? trimmedValue : trimmedValue + " " + unit;
 	}
 
+	private void CloseCpuUsageCounters()
+	{
+		if (_cpuUsageCounter != IntPtr.Zero)
+		{
+			_ = NativeMethods.PdhRemoveCounter(_cpuUsageCounter);
+			_cpuUsageCounter = IntPtr.Zero;
+		}
+
+		if (_cpuUsagePdhQuery != IntPtr.Zero)
+		{
+			_ = NativeMethods.PdhCloseQuery(_cpuUsagePdhQuery);
+			_cpuUsagePdhQuery = IntPtr.Zero;
+		}
+
+		_cpuUsageCountersInitialized = false;
+	}
+
 	private void CloseDiskActivityCounters()
 	{
 		if (_diskReadSpeedCounter != IntPtr.Zero)
@@ -1320,7 +1358,7 @@ internal sealed partial class HomeLiveGraphsWindow
 		internal TextBlock MaxLabelTextBlock => maxLabelTextBlock;
 		internal TextBlock MinLabelTextBlock => minLabelTextBlock;
 		internal TextBlock StartSecondsLabelTextBlock => startSecondsLabelTextBlock;
-		internal List<double> Samples { get; } = new(GpuUsageMaxSamples);
+		internal readonly List<double> Samples = new(GpuUsageMaxSamples);
 	}
 
 
@@ -1544,6 +1582,11 @@ internal sealed partial class HomeLiveGraphsWindow
 			{
 				IntPtr dxgiAdapter = IntPtr.Zero;
 				int enumStatus = enumAdapters1(dxgiFactory, adapterIndex, &dxgiAdapter);
+
+				// IDXGIFactory1::EnumAdapters1 writes the adapter pointer through an unmanaged output pointer.
+				// Reload the value so CA1508 does not treat the original zero initialization as unchanged.
+				dxgiAdapter = Volatile.Read(ref dxgiAdapter);
+
 				if (enumStatus != GpuComSuccess || dxgiAdapter == IntPtr.Zero)
 				{
 					break;
@@ -1878,12 +1921,25 @@ internal sealed partial class HomeLiveGraphsWindow
 
 	private static HttpClient CreateNetworkOpennessHttpClient()
 	{
-		HttpClient httpClient = new()
+		HttpClient? httpClient = null;
+
+		try
 		{
-			Timeout = TimeSpan.FromSeconds(NetworkOpennessRequestTimeoutSeconds)
-		};
-		httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(Atlas.UserAgent);
-		return httpClient;
+			httpClient = new HttpClient()
+			{
+				Timeout = TimeSpan.FromSeconds(NetworkOpennessRequestTimeoutSeconds)
+			};
+
+			httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(Atlas.UserAgent);
+
+			HttpClient result = httpClient;
+			httpClient = null;
+			return result;
+		}
+		finally
+		{
+			httpClient?.Dispose();
+		}
 	}
 
 	private sealed class NetworkOpennessTarget(string category, string url)

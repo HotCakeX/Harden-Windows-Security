@@ -597,7 +597,7 @@ internal static class BinaryOpsReverse
 			: new CertRoot(type: CertEnumType.Wellknown, value: certValue);
 
 		// ID is populated later in the calling method ParseSiPolicy.
-		// The binary format stores custom roots as self-signed signer roots and well-known roots as small IDs.	
+		// The binary format stores custom roots as self-signed signer roots and well-known roots as small IDs.
 		string signerName = ind == 0
 			? "Custom"
 			: certValue[0] switch

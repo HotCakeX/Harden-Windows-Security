@@ -7028,4 +7028,448 @@
   <data name="ContextHeader.Text" xml:space="preserve">
     <value>Περιβάλλον</value>
   </data>
+  <data name="WinGetManagementNavItem.Content" xml:space="preserve">
+    <value>Διαχείριση WinGet</value>
+  </data>
+  <data name="WinGetManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε, εγκαταστήστε, ενημερώστε, πραγματοποιήστε λήψη, επιδιορθώστε και καταργήστε εφαρμογές και προγράμματα χρησιμοποιώντας το WinGet, με υποστήριξη για εντοπισμό πακέτων, διαχείριση εγκατεστημένων εφαρμογών, διαχείριση πηγών και μαζικές ενέργειες.</value>
+  </data>
+  <data name="WinGetManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε, εγκαταστήστε, ενημερώστε, πραγματοποιήστε λήψη, επιδιορθώστε και καταργήστε εφαρμογές και προγράμματα χρησιμοποιώντας το WinGet, με υποστήριξη για εντοπισμό πακέτων, διαχείριση εγκατεστημένων εφαρμογών, διαχείριση πηγών και μαζικές ενέργειες.</value>
+  </data>
+  <data name="WinGetSearchButton.Content" xml:space="preserve">
+    <value>Αναζήτηση</value>
+  </data>
+  <data name="WinGetSearchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε νέα προγράμματα και εφαρμογές στις ρυθμισμένες πηγές.</value>
+  </data>
+  <data name="WinGetSearchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε νέα προγράμματα και εφαρμογές στις ρυθμισμένες πηγές.</value>
+  </data>
+  <data name="WinGetSearchClearButton.Content" xml:space="preserve">
+    <value>Εκκαθάριση</value>
+  </data>
+  <data name="WinGetSearchClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εκκαθαρίστε τα τρέχοντα αποτελέσματα αναζήτησης του WinGet.</value>
+  </data>
+  <data name="WinGetSearchClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εκκαθαρίστε τα τρέχοντα αποτελέσματα αναζήτησης του WinGet.</value>
+  </data>
+  <data name="WinGetSearchSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Άνοιγμα ρυθμίσεων WinGet</value>
+  </data>
+  <data name="WinGetSearchSettingsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Ρυθμίσεις WinGet</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Επιλέξτε πού θα πραγματοποιεί λήψη το WinGet των προγραμμάτων εγκατάστασης πακέτων. Η προεπιλογή είναι ο φάκελος Λήψεις των Windows.</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryTextBox.Header" xml:space="preserve">
+    <value>Κατάλογος λήψεων</value>
+  </data>
+  <data name="WinGetSearchBrowseDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>Επιλογή καταλόγου λήψεων</value>
+  </data>
+  <data name="WinGetSearchResetDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>Επαναφορά στον φάκελο Λήψεις των Windows</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή της τιμής λεπτομέρειας πακέτου στο πρόχειρο</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγραφή της τιμής λεπτομέρειας πακέτου στο πρόχειρο</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κάντε κλικ για ενέργειες εφαρμογής</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κάντε κλικ για ενέργειες εφαρμογής</value>
+  </data>
+  <data name="WinGetInstallOrUpdateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Εγκατάσταση ή ενημέρωση</value>
+  </data>
+  <data name="WinGetSilentMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αθόρυβη</value>
+  </data>
+  <data name="WinGetCurrentUserMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Τρέχων χρήστης</value>
+  </data>
+  <data name="WinGetSystemMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Σύστημα</value>
+  </data>
+  <data name="WinGetInteractiveMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Διαδραστική</value>
+  </data>
+  <data name="WinGetDownloadMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Λήψη</value>
+  </data>
+  <data name="WinGetRefreshStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ανανέωση κατάστασης</value>
+  </data>
+  <data name="WinGetShowInstallationNotesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Εμφάνιση σημειώσεων εγκατάστασης</value>
+  </data>
+  <data name="WinGetCancelOperationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ακύρωση λειτουργίας</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλογές πακέτου</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλογές πακέτου</value>
+  </data>
+  <data name="WinGetPackageInstalledLabel.Text" xml:space="preserve">
+    <value>Εγκατεστημένο</value>
+  </data>
+  <data name="WinGetPackageDetailsTextBlock.Text" xml:space="preserve">
+    <value>Λεπτομέρειες πακέτου</value>
+  </data>
+  <data name="WinGetSearchPackagesSelectorBarItem.Text" xml:space="preserve">
+    <value>Αναζήτηση πακέτων</value>
+  </data>
+  <data name="WinGetInstalledProgramsSelectorBarItem.Text" xml:space="preserve">
+    <value>Εγκατεστημένα προγράμματα</value>
+  </data>
+  <data name="WinGetAppBundlesSelectorBarItem.Text" xml:space="preserve">
+    <value>Πακέτα εφαρμογών</value>
+  </data>
+  <data name="WinGetSourcesSelectorBarItem.Text" xml:space="preserve">
+    <value>Πηγές</value>
+  </data>
+  <data name="WinGetEngineVersionTextBlock.Text" xml:space="preserve">
+    <value>Έκδοση μηχανής WinGet</value>
+  </data>
+  <data name="WinGetPackageSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση πακέτων</value>
+  </data>
+  <data name="WinGetSearchFieldTextBlock.Text" xml:space="preserve">
+    <value>Πεδίο αναζήτησης</value>
+  </data>
+  <data name="WinGetMatchModeTextBlock.Text" xml:space="preserve">
+    <value>Λειτουργία αντιστοίχισης</value>
+  </data>
+  <data name="WinGetSearchResultLimitTextBlock.Text" xml:space="preserve">
+    <value>Όριο αποτελεσμάτων αναζήτησης</value>
+  </data>
+  <data name="WinGetCancelButton.Content" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="WinGetCancelButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ακύρωση της τρέχουσας λειτουργίας WinGet</value>
+  </data>
+  <data name="WinGetCancelButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ακύρωση της τρέχουσας λειτουργίας WinGet</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μαζικές ενέργειες για επιλεγμένα αποτελέσματα αναζήτησης</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μαζικές ενέργειες για επιλεγμένα αποτελέσματα αναζήτησης</value>
+  </data>
+  <data name="WinGetInstallOrUpdateSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Εγκατάσταση ή ενημέρωση επιλεγμένων</value>
+  </data>
+  <data name="WinGetDownloadSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Λήψη επιλεγμένων</value>
+  </data>
+  <data name="WinGetRefreshSelectedStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ανανέωση κατάστασης επιλεγμένων</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλογή όλων των αποτελεσμάτων αναζήτησης</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλογή όλων των αποτελεσμάτων αναζήτησης</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποεπιλογή όλων των αποτελεσμάτων αναζήτησης</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποεπιλογή όλων των αποτελεσμάτων αναζήτησης</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.Content" xml:space="preserve">
+    <value>Ανανέωση εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανανέωση της λίστας εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανανέωση της λίστας εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.Content" xml:space="preserve">
+    <value>Μόνο ενημερώσεις</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφάνιση μόνο εγκατεστημένων προγραμμάτων με διαθέσιμες ενημερώσεις</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εμφάνιση μόνο εγκατεστημένων προγραμμάτων με διαθέσιμες ενημερώσεις</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μαζικές ενέργειες για επιλεγμένα εγκατεστημένα προγράμματα</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μαζικές ενέργειες για επιλεγμένα εγκατεστημένα προγράμματα</value>
+  </data>
+  <data name="WinGetUpdateOrReinstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ενημέρωση ή επανεγκατάσταση επιλεγμένων</value>
+  </data>
+  <data name="WinGetRepairSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Επιδιόρθωση επιλεγμένων</value>
+  </data>
+  <data name="WinGetUninstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κατάργηση εγκατάστασης επιλεγμένων</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλογή όλων των εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλογή όλων των εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποεπιλογή όλων των εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποεπιλογή όλων των εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetInstalledProgramsSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση εγκατεστημένων προγραμμάτων</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Πίσω στα πακέτα</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Πίσω στα πακέτα</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.Content" xml:space="preserve">
+    <value>Εγκατάσταση όλων</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εγκατάσταση όλων των εφαρμογών στο επιλεγμένο πακέτο</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εγκατάσταση όλων των εφαρμογών στο επιλεγμένο πακέτο</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.Content" xml:space="preserve">
+    <value>Κατάργηση εγκατάστασης όλων</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση εγκατάστασης όλων των εφαρμογών στο επιλεγμένο πακέτο</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση εγκατάστασης όλων των εφαρμογών στο επιλεγμένο πακέτο</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.Header" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>winget</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.Header" xml:space="preserve">
+    <value>Όρισμα</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.PlaceholderText" xml:space="preserve">
+    <value>https://winget.azureedge.net/cache</value>
+  </data>
+  <data name="WinGetSourceTypeComboBox.Header" xml:space="preserve">
+    <value>Τύπος</value>
+  </data>
+  <data name="WinGetSourceTrustComboBox.Header" xml:space="preserve">
+    <value>Αξιοπιστία</value>
+  </data>
+  <data name="WinGetAddSourceButton.Content" xml:space="preserve">
+    <value>Προσθήκη πηγής</value>
+  </data>
+  <data name="WinGetAddSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη της διαμορφωμένης πηγής WinGet</value>
+  </data>
+  <data name="WinGetAddSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη της διαμορφωμένης πηγής WinGet</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.Content" xml:space="preserve">
+    <value>Ανανέωση πηγών</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανανέωση της λίστας πηγών WinGet</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανανέωση της λίστας πηγών WinGet</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μαζικές ενέργειες για επιλεγμένες πηγές</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μαζικές ενέργειες για επιλεγμένες πηγές</value>
+  </data>
+  <data name="WinGetUpdateSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ενημέρωση επιλεγμένων πηγών</value>
+  </data>
+  <data name="WinGetRemoveSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κατάργηση επιλεγμένων πηγών</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλογή όλων των πηγών</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλογή όλων των πηγών</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποεπιλογή όλων των πηγών</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποεπιλογή όλων των πηγών</value>
+  </data>
+  <data name="WinGetArgumentTextBlock.Text" xml:space="preserve">
+    <value>Όρισμα</value>
+  </data>
+  <data name="WinGetOriginTextBlock.Text" xml:space="preserve">
+    <value>Προέλευση</value>
+  </data>
+  <data name="WinGetTrustTextBlock.Text" xml:space="preserve">
+    <value>Αξιοπιστία</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.Content" xml:space="preserve">
+    <value>Ενημέρωση</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενημέρωση της επιλεγμένης πηγής WinGet</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενημέρωση της επιλεγμένης πηγής WinGet</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.Content" xml:space="preserve">
+    <value>Κατάργηση</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση της επιλεγμένης πηγής WinGet</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση της επιλεγμένης πηγής WinGet</value>
+  </data>
+  <data name="BackgroundTypeComboBox.Header" xml:space="preserve">
+    <value>Τύπος φόντου</value>
+  </data>
+  <data name="BackgroundOpacitySlider.Header" xml:space="preserve">
+    <value>Αδιαφάνεια φόντου</value>
+  </data>
+  <data name="GraphSizeComboBox.Header" xml:space="preserve">
+    <value>Μέγεθος γραφήματος</value>
+  </data>
+  <data name="GraphSizeSmallComboBoxItem.Content" xml:space="preserve">
+    <value>Μικρό</value>
+  </data>
+  <data name="GraphSizeMediumComboBoxItem.Content" xml:space="preserve">
+    <value>Μεσαίο</value>
+  </data>
+  <data name="GraphSizeBigComboBoxItem.Content" xml:space="preserve">
+    <value>Μεγάλο</value>
+  </data>
+  <data name="AppRamUsageTitle.Text" xml:space="preserve">
+    <value>Χρήση RAM εφαρμογής</value>
+  </data>
+  <data name="MemoryUtilizationTitle.Text" xml:space="preserve">
+    <value>Αξιοποίηση μνήμης</value>
+  </data>
+  <data name="StorageTemperatureTitle.Text" xml:space="preserve">
+    <value>Θερμοκρασία χώρου αποθήκευσης</value>
+  </data>
+  <data name="CpuTemperatureTitle.Text" xml:space="preserve">
+    <value>Θερμοκρασία CPU</value>
+  </data>
+  <data name="CpuUsageTitle.Text" xml:space="preserve">
+    <value>Χρήση CPU</value>
+  </data>
+  <data name="DiskActivityTitle.Text" xml:space="preserve">
+    <value>Δραστηριότητα δίσκου</value>
+  </data>
+  <data name="NetworkUsageTitle.Text" xml:space="preserve">
+    <value>Χρήση δικτύου</value>
+  </data>
+  <data name="AdditionalDiagnosticsHeader.Text" xml:space="preserve">
+    <value>Πρόσθετοι διαγνωστικοί έλεγχοι</value>
+  </data>
+  <data name="NetworkOpennessFeature.Text" xml:space="preserve">
+    <value>Ανοιχτότητα δικτύου</value>
+  </data>
+  <data name="NetworkOpennessFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσδιορίστε πόσο επιτρεπτική είναι η πρόσβαση στο δίκτυό σας.</value>
+  </data>
+  <data name="WifiProfilesFeature.Text" xml:space="preserve">
+    <value>Προφίλ Wi‑Fi</value>
+  </data>
+  <data name="WifiProfilesFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δείτε το ιστορικό όλων των hotspot Wi‑Fi στα οποία έχετε συνδεθεί στο παρελθόν.</value>
+  </data>
+  <data name="PhysicalOrientationFeature.Text" xml:space="preserve">
+    <value>Φυσικός προσανατολισμός</value>
+  </data>
+  <data name="PhysicalOrientationFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Σε υποστηριζόμενο υλικό, μπορείτε να προβάλετε τον φυσικό προσανατολισμό της συσκευής σας.</value>
+  </data>
+  <data name="CompassFeature.Text" xml:space="preserve">
+    <value>Πυξίδα</value>
+  </data>
+  <data name="CompassFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Σε υποστηριζόμενο υλικό, μπορείτε να χρησιμοποιήσετε τους αισθητήρες της συσκευής σας ως πυξίδα.</value>
+  </data>
+  <data name="LightSensorFeature.Text" xml:space="preserve">
+    <value>Αισθητήρας φωτός</value>
+  </data>
+  <data name="LightSensorFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Σε υποστηριζόμενο υλικό, μπορείτε να δείτε πόσο φωτεινό είναι το περιβάλλον σας.</value>
+  </data>
+  <data name="NetworkOpennessDescription.Text" xml:space="preserve">
+    <value>Ελέγχει αν επιλεγμένοι δημόσιοι ιστότοποι και υπηρεσίες είναι προσβάσιμοι από το τρέχον δίκτυο.</value>
+  </data>
+  <data name="NetworkOpennessRunButton.Content" xml:space="preserve">
+    <value>Εκτέλεση δοκιμής ανοιχτότητας δικτύου</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Header" xml:space="preserve">
+    <value>Αναλυτικά αποτελέσματα</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Text" xml:space="preserve">
+    <value>Τα αποτελέσματα θα εμφανιστούν εδώ αφού εκτελέσετε τη δοκιμή.</value>
+  </data>
+  <data name="WifiProfilesDescription.Text" xml:space="preserve">
+    <value>Επιλέξτε ένα προφίλ για να δείτε λεπτομέρειες.</value>
+  </data>
+  <data name="WifiProfilesRunButton.Content" xml:space="preserve">
+    <value>Ανάκτηση</value>
+  </data>
+  <data name="WifiProfilesColumnHeader.Text" xml:space="preserve">
+    <value>Προφίλ</value>
+  </data>
+  <data name="WifiSelectedProfileColumnHeader.Text" xml:space="preserve">
+    <value>Επιλεγμένο προφίλ</value>
+  </data>
+  <data name="WifiTotalProfilesLabel.Text" xml:space="preserve">
+    <value>Σύνολο προφίλ:</value>
+  </data>
+  <data name="PhysicalOrientationDescription.Text" xml:space="preserve">
+    <value>Εμφανίζει τη στάση της συσκευής σε πραγματικό χρόνο χρησιμοποιώντας αισθητήρες κίνησης που εκτίθενται από το υλικολογισμικό και το πρόγραμμα οδήγησης της συσκευής.</value>
+  </data>
+  <data name="LiveReadingHeader.Text" xml:space="preserve">
+    <value>Ζωντανή ένδειξη</value>
+  </data>
+  <data name="CompassDescription.Text" xml:space="preserve">
+    <value>Εμφανίζει τον μαγνητικό βορρά, τον πραγματικό βορρά όταν παρέχεται από το πρόγραμμα οδήγησης, την ακρίβεια κατεύθυνσης και μια ρεαλιστική όψη πυξίδας.</value>
+  </data>
+  <data name="LightSensorDescription.Text" xml:space="preserve">
+    <value>Εμφανίζει τον περιβάλλοντα φωτισμό σε lux, τις αξιολογήσεις συνθηκών φωτισμού της Microsoft, το ελάχιστο και μέγιστο της περιόδου λειτουργίας και οδηγίες αναγνωσιμότητας.</value>
+  </data>
+  <data name="AmbientLightMeterHeader.Text" xml:space="preserve">
+    <value>Μετρητής περιβάλλοντος φωτισμού</value>
+  </data>
+  <data name="MicrosoftLuxRatingRangesHeader.Text" xml:space="preserve">
+    <value>Εύρη αξιολόγησης lux της Microsoft</value>
+  </data>
+  <data name="LuxRatingRangesLineOne.Text" xml:space="preserve">
+    <value>Απόλυτο σκοτάδι: 0 έως 10 lux   Πολύ σκοτεινά: 11 έως 50 lux   Σκοτεινός εσωτερικός χώρος: 51 έως 200 lux   Χαμηλός εσωτερικός φωτισμός: 201 έως 400 lux   Κανονικός εσωτερικός φωτισμός: 401 έως 1000 lux</value>
+  </data>
+  <data name="LuxRatingRangesLineTwo.Text" xml:space="preserve">
+    <value>Φωτεινός εσωτερικός χώρος: 1001 έως 5000 lux   Χαμηλός εξωτερικός φωτισμός: 5001 έως 10000 lux   Συννεφιά σε εξωτερικό χώρο: 10001 έως 30000 lux   Άμεσο ηλιακό φως: 30001 έως 100000 lux</value>
+  </data>
+  <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφάνιση καρδιών</value>
+  </data>
 </root>

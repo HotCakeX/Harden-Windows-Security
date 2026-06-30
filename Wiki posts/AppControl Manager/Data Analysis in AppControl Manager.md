@@ -76,7 +76,7 @@ The analysis pages include an **Export PDF** button in the top control area next
 
 The PDF export captures the visible analysis content, including the data summary, recommended actions, totals, colorized charts, global security metrics, and the blocked and allowed/audited insight sections. It captures the page content section by section so the exported report keeps the same visual organization as the in-app analysis. The exporter renders content at a high scale, flattens transparency onto the current page background, crops horizontal background-only margins, compresses the images, and writes them into a PDF 2.0 document with PDF/A-4 metadata and an embedded sRGB profile.
 
-While the report is being generated, AppControl Manager displays a **Generating PDF** progress indicator so the user knows the export is in progress. The export uses the currently displayed analysis. This means if the time range selector is set to a recent period or the interactive chart has applied a custom range, the PDF represents that filtered view. 
+While the report is being generated, AppControl Manager displays a **Generating PDF** progress indicator so the user knows the export is in progress. The export uses the currently displayed analysis. This means if the time range selector is set to a recent period or the interactive chart has applied a custom range, the PDF represents that filtered view.
 
 > [!TIP]\
 > This is useful for creating focused reports for incident review, policy tuning, change validation, or sharing the exact state of the analysis with another administrator or team member. You can also use the PDF export to create a snapshot of the analysis for offline review or archiving.

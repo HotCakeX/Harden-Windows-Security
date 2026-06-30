@@ -7028,4 +7028,448 @@
   <data name="ContextHeader.Text" xml:space="preserve">
     <value>संदर्भ</value>
   </data>
+  <data name="WinGetManagementNavItem.Content" xml:space="preserve">
+    <value>WinGet प्रबंधन</value>
+  </data>
+  <data name="WinGetManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>WinGet का उपयोग करके ऐप्स और प्रोग्राम खोजें, इंस्टॉल करें, अपडेट करें, डाउनलोड करें, मरम्मत करें और अनइंस्टॉल करें, जिसमें पैकेज खोज, इंस्टॉल किए गए ऐप्स का प्रबंधन, स्रोत प्रबंधन और बल्क कार्रवाइयों का समर्थन शामिल है.</value>
+  </data>
+  <data name="WinGetManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>WinGet का उपयोग करके ऐप्स और प्रोग्राम खोजें, इंस्टॉल करें, अपडेट करें, डाउनलोड करें, मरम्मत करें और अनइंस्टॉल करें, जिसमें पैकेज खोज, इंस्टॉल किए गए ऐप्स का प्रबंधन, स्रोत प्रबंधन और बल्क कार्रवाइयों का समर्थन शामिल है.</value>
+  </data>
+  <data name="WinGetSearchButton.Content" xml:space="preserve">
+    <value>खोजें</value>
+  </data>
+  <data name="WinGetSearchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कॉन्फ़िगर किए गए स्रोतों में नए प्रोग्राम और ऐप्स खोजें.</value>
+  </data>
+  <data name="WinGetSearchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कॉन्फ़िगर किए गए स्रोतों में नए प्रोग्राम और ऐप्स खोजें.</value>
+  </data>
+  <data name="WinGetSearchClearButton.Content" xml:space="preserve">
+    <value>साफ़ करें</value>
+  </data>
+  <data name="WinGetSearchClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान WinGet खोज परिणाम साफ़ करें.</value>
+  </data>
+  <data name="WinGetSearchClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वर्तमान WinGet खोज परिणाम साफ़ करें.</value>
+  </data>
+  <data name="WinGetSearchSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>WinGet सेटिंग्स खोलें</value>
+  </data>
+  <data name="WinGetSearchSettingsHeaderTextBlock.Text" xml:space="preserve">
+    <value>WinGet सेटिंग्स</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>चुनें कि WinGet पैकेज इंस्टॉलर कहाँ डाउनलोड करे. डिफ़ॉल्ट Windows डाउनलोड फ़ोल्डर है.</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryTextBox.Header" xml:space="preserve">
+    <value>डाउनलोड निर्देशिका</value>
+  </data>
+  <data name="WinGetSearchBrowseDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>डाउनलोड निर्देशिका चुनें</value>
+  </data>
+  <data name="WinGetSearchResetDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>Windows डाउनलोड फ़ोल्डर पर रीसेट करें</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पैकेज विवरण मान को क्लिपबोर्ड पर कॉपी करें</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पैकेज विवरण मान को क्लिपबोर्ड पर कॉपी करें</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप कार्रवाइयों के लिए क्लिक करें</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप कार्रवाइयों के लिए क्लिक करें</value>
+  </data>
+  <data name="WinGetInstallOrUpdateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>इंस्टॉल या अपडेट करें</value>
+  </data>
+  <data name="WinGetSilentMenuFlyoutItem.Text" xml:space="preserve">
+    <value>मौन</value>
+  </data>
+  <data name="WinGetCurrentUserMenuFlyoutItem.Text" xml:space="preserve">
+    <value>वर्तमान उपयोगकर्ता</value>
+  </data>
+  <data name="WinGetSystemMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सिस्टम</value>
+  </data>
+  <data name="WinGetInteractiveMenuFlyoutItem.Text" xml:space="preserve">
+    <value>इंटरैक्टिव</value>
+  </data>
+  <data name="WinGetDownloadMenuFlyoutItem.Text" xml:space="preserve">
+    <value>डाउनलोड करें</value>
+  </data>
+  <data name="WinGetRefreshStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>स्थिति रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetShowInstallationNotesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>इंस्टॉलेशन नोट्स दिखाएं</value>
+  </data>
+  <data name="WinGetCancelOperationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ऑपरेशन रद्द करें</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पैकेज विकल्प</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पैकेज विकल्प</value>
+  </data>
+  <data name="WinGetPackageInstalledLabel.Text" xml:space="preserve">
+    <value>इंस्टॉल किया गया</value>
+  </data>
+  <data name="WinGetPackageDetailsTextBlock.Text" xml:space="preserve">
+    <value>पैकेज विवरण</value>
+  </data>
+  <data name="WinGetSearchPackagesSelectorBarItem.Text" xml:space="preserve">
+    <value>पैकेज खोजें</value>
+  </data>
+  <data name="WinGetInstalledProgramsSelectorBarItem.Text" xml:space="preserve">
+    <value>इंस्टॉल किए गए प्रोग्राम</value>
+  </data>
+  <data name="WinGetAppBundlesSelectorBarItem.Text" xml:space="preserve">
+    <value>ऐप बंडल</value>
+  </data>
+  <data name="WinGetSourcesSelectorBarItem.Text" xml:space="preserve">
+    <value>स्रोत</value>
+  </data>
+  <data name="WinGetEngineVersionTextBlock.Text" xml:space="preserve">
+    <value>WinGet इंजन संस्करण</value>
+  </data>
+  <data name="WinGetPackageSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>पैकेज खोजें</value>
+  </data>
+  <data name="WinGetSearchFieldTextBlock.Text" xml:space="preserve">
+    <value>खोज फ़ील्ड</value>
+  </data>
+  <data name="WinGetMatchModeTextBlock.Text" xml:space="preserve">
+    <value>मिलान मोड</value>
+  </data>
+  <data name="WinGetSearchResultLimitTextBlock.Text" xml:space="preserve">
+    <value>खोज परिणाम सीमा</value>
+  </data>
+  <data name="WinGetCancelButton.Content" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="WinGetCancelButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान WinGet ऑपरेशन रद्द करें</value>
+  </data>
+  <data name="WinGetCancelButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वर्तमान WinGet ऑपरेशन रद्द करें</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित खोज परिणामों के लिए बल्क कार्रवाइयां</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित खोज परिणामों के लिए बल्क कार्रवाइयां</value>
+  </data>
+  <data name="WinGetInstallOrUpdateSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित इंस्टॉल या अपडेट करें</value>
+  </data>
+  <data name="WinGetDownloadSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित डाउनलोड करें</value>
+  </data>
+  <data name="WinGetRefreshSelectedStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित स्थिति रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी खोज परिणाम चुनें</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी खोज परिणाम चुनें</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी खोज परिणामों का चयन हटाएं</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी खोज परिणामों का चयन हटाएं</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.Content" xml:space="preserve">
+    <value>इंस्टॉल किए गए प्रोग्राम रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इंस्टॉल किए गए प्रोग्राम की सूची रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इंस्टॉल किए गए प्रोग्राम की सूची रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.Content" xml:space="preserve">
+    <value>केवल अपडेट</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>केवल उपलब्ध अपडेट वाले इंस्टॉल किए गए प्रोग्राम दिखाएं</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>केवल उपलब्ध अपडेट वाले इंस्टॉल किए गए प्रोग्राम दिखाएं</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित इंस्टॉल किए गए प्रोग्राम के लिए बल्क कार्रवाइयां</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित इंस्टॉल किए गए प्रोग्राम के लिए बल्क कार्रवाइयां</value>
+  </data>
+  <data name="WinGetUpdateOrReinstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित अपडेट या पुनः इंस्टॉल करें</value>
+  </data>
+  <data name="WinGetRepairSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित की मरम्मत करें</value>
+  </data>
+  <data name="WinGetUninstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित अनइंस्टॉल करें</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी इंस्टॉल किए गए प्रोग्राम चुनें</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी इंस्टॉल किए गए प्रोग्राम चुनें</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी इंस्टॉल किए गए प्रोग्राम का चयन हटाएं</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी इंस्टॉल किए गए प्रोग्राम का चयन हटाएं</value>
+  </data>
+  <data name="WinGetInstalledProgramsSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>इंस्टॉल किए गए प्रोग्राम खोजें</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बंडल पर वापस जाएं</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बंडल पर वापस जाएं</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.Content" xml:space="preserve">
+    <value>सभी इंस्टॉल करें</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित बंडल में सभी ऐप इंस्टॉल करें</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित बंडल में सभी ऐप इंस्टॉल करें</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.Content" xml:space="preserve">
+    <value>सभी अनइंस्टॉल करें</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित बंडल में सभी ऐप अनइंस्टॉल करें</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित बंडल में सभी ऐप अनइंस्टॉल करें</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.Header" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>winget</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.Header" xml:space="preserve">
+    <value>आर्ग्यूमेंट</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.PlaceholderText" xml:space="preserve">
+    <value>https://winget.azureedge.net/cache</value>
+  </data>
+  <data name="WinGetSourceTypeComboBox.Header" xml:space="preserve">
+    <value>प्रकार</value>
+  </data>
+  <data name="WinGetSourceTrustComboBox.Header" xml:space="preserve">
+    <value>विश्वास</value>
+  </data>
+  <data name="WinGetAddSourceButton.Content" xml:space="preserve">
+    <value>स्रोत जोड़ें</value>
+  </data>
+  <data name="WinGetAddSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कॉन्फ़िगर किया गया WinGet स्रोत जोड़ें</value>
+  </data>
+  <data name="WinGetAddSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कॉन्फ़िगर किया गया WinGet स्रोत जोड़ें</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.Content" xml:space="preserve">
+    <value>स्रोत रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>WinGet स्रोतों की सूची रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>WinGet स्रोतों की सूची रिफ्रेश करें</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित स्रोतों के लिए बल्क कार्रवाइयां</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित स्रोतों के लिए बल्क कार्रवाइयां</value>
+  </data>
+  <data name="WinGetUpdateSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित स्रोत अपडेट करें</value>
+  </data>
+  <data name="WinGetRemoveSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>चयनित स्रोत हटाएं</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी स्रोत चुनें</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी स्रोत चुनें</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी स्रोतों का चयन हटाएं</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी स्रोतों का चयन हटाएं</value>
+  </data>
+  <data name="WinGetArgumentTextBlock.Text" xml:space="preserve">
+    <value>आर्ग्यूमेंट</value>
+  </data>
+  <data name="WinGetOriginTextBlock.Text" xml:space="preserve">
+    <value>मूल</value>
+  </data>
+  <data name="WinGetTrustTextBlock.Text" xml:space="preserve">
+    <value>विश्वास</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.Content" xml:space="preserve">
+    <value>अपडेट करें</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित WinGet स्रोत अपडेट करें</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित WinGet स्रोत अपडेट करें</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.Content" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित WinGet स्रोत हटाएं</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित WinGet स्रोत हटाएं</value>
+  </data>
+  <data name="BackgroundTypeComboBox.Header" xml:space="preserve">
+    <value>पृष्ठभूमि का प्रकार</value>
+  </data>
+  <data name="BackgroundOpacitySlider.Header" xml:space="preserve">
+    <value>पृष्ठभूमि की अपारदर्शिता</value>
+  </data>
+  <data name="GraphSizeComboBox.Header" xml:space="preserve">
+    <value>ग्राफ का आकार</value>
+  </data>
+  <data name="GraphSizeSmallComboBoxItem.Content" xml:space="preserve">
+    <value>छोटा</value>
+  </data>
+  <data name="GraphSizeMediumComboBoxItem.Content" xml:space="preserve">
+    <value>मध्यम</value>
+  </data>
+  <data name="GraphSizeBigComboBoxItem.Content" xml:space="preserve">
+    <value>बड़ा</value>
+  </data>
+  <data name="AppRamUsageTitle.Text" xml:space="preserve">
+    <value>ऐप RAM उपयोग</value>
+  </data>
+  <data name="MemoryUtilizationTitle.Text" xml:space="preserve">
+    <value>मेमोरी उपयोग</value>
+  </data>
+  <data name="StorageTemperatureTitle.Text" xml:space="preserve">
+    <value>स्टोरेज तापमान</value>
+  </data>
+  <data name="CpuTemperatureTitle.Text" xml:space="preserve">
+    <value>CPU तापमान</value>
+  </data>
+  <data name="CpuUsageTitle.Text" xml:space="preserve">
+    <value>CPU उपयोग</value>
+  </data>
+  <data name="DiskActivityTitle.Text" xml:space="preserve">
+    <value>डिस्क गतिविधि</value>
+  </data>
+  <data name="NetworkUsageTitle.Text" xml:space="preserve">
+    <value>नेटवर्क उपयोग</value>
+  </data>
+  <data name="AdditionalDiagnosticsHeader.Text" xml:space="preserve">
+    <value>अतिरिक्त निदान</value>
+  </data>
+  <data name="NetworkOpennessFeature.Text" xml:space="preserve">
+    <value>नेटवर्क खुलापन</value>
+  </data>
+  <data name="NetworkOpennessFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>निर्धारित करें कि आपका नेटवर्क एक्सेस कितना अनुमेय है.</value>
+  </data>
+  <data name="WifiProfilesFeature.Text" xml:space="preserve">
+    <value>Wi‑Fi प्रोफ़ाइल</value>
+  </data>
+  <data name="WifiProfilesFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उन सभी Wi‑Fi हॉटस्पॉट का इतिहास देखें जिनसे आप पहले कनेक्ट हुए हैं.</value>
+  </data>
+  <data name="PhysicalOrientationFeature.Text" xml:space="preserve">
+    <value>भौतिक अभिविन्यास</value>
+  </data>
+  <data name="PhysicalOrientationFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>समर्थित हार्डवेयर पर, आप अपने डिवाइस का भौतिक अभिविन्यास देख सकते हैं.</value>
+  </data>
+  <data name="CompassFeature.Text" xml:space="preserve">
+    <value>कंपास</value>
+  </data>
+  <data name="CompassFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>समर्थित हार्डवेयर पर, आप अपने डिवाइस के सेंसर को कंपास के रूप में उपयोग कर सकते हैं.</value>
+  </data>
+  <data name="LightSensorFeature.Text" xml:space="preserve">
+    <value>लाइट सेंसर</value>
+  </data>
+  <data name="LightSensorFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>समर्थित हार्डवेयर पर, आप देख सकते हैं कि आपका परिवेश कितना उज्ज्वल है.</value>
+  </data>
+  <data name="NetworkOpennessDescription.Text" xml:space="preserve">
+    <value>जांचता है कि चयनित सार्वजनिक वेबसाइटें और सेवाएं मौजूदा नेटवर्क से पहुंच योग्य हैं या नहीं.</value>
+  </data>
+  <data name="NetworkOpennessRunButton.Content" xml:space="preserve">
+    <value>नेटवर्क खुलापन परीक्षण चलाएं</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Header" xml:space="preserve">
+    <value>विस्तृत परिणाम</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Text" xml:space="preserve">
+    <value>परीक्षण चलाने के बाद परिणाम यहां दिखाई देंगे.</value>
+  </data>
+  <data name="WifiProfilesDescription.Text" xml:space="preserve">
+    <value>विवरण देखने के लिए कोई प्रोफ़ाइल चुनें.</value>
+  </data>
+  <data name="WifiProfilesRunButton.Content" xml:space="preserve">
+    <value>प्राप्त करें</value>
+  </data>
+  <data name="WifiProfilesColumnHeader.Text" xml:space="preserve">
+    <value>प्रोफ़ाइल</value>
+  </data>
+  <data name="WifiSelectedProfileColumnHeader.Text" xml:space="preserve">
+    <value>चयनित प्रोफ़ाइल</value>
+  </data>
+  <data name="WifiTotalProfilesLabel.Text" xml:space="preserve">
+    <value>कुल प्रोफ़ाइल:</value>
+  </data>
+  <data name="PhysicalOrientationDescription.Text" xml:space="preserve">
+    <value>डिवाइस फ़र्मवेयर और ड्राइवर द्वारा उजागर किए गए मोशन सेंसर का उपयोग करके डिवाइस की स्थिति को रीयल टाइम में दिखाता है.</value>
+  </data>
+  <data name="LiveReadingHeader.Text" xml:space="preserve">
+    <value>लाइव रीडिंग</value>
+  </data>
+  <data name="CompassDescription.Text" xml:space="preserve">
+    <value>मैग्नेटिक नॉर्थ, ड्राइवर द्वारा उपलब्ध कराए जाने पर ट्रू नॉर्थ, हेडिंग सटीकता और वास्तविक जैसा कंपास फेस दिखाता है.</value>
+  </data>
+  <data name="LightSensorDescription.Text" xml:space="preserve">
+    <value>लक्स में परिवेश प्रकाशमानता, Microsoft प्रकाश-स्थिति रेटिंग, सत्र का न्यूनतम और अधिकतम, और पठनीयता मार्गदर्शन दिखाता है.</value>
+  </data>
+  <data name="AmbientLightMeterHeader.Text" xml:space="preserve">
+    <value>परिवेश प्रकाश मीटर</value>
+  </data>
+  <data name="MicrosoftLuxRatingRangesHeader.Text" xml:space="preserve">
+    <value>Microsoft लक्स रेटिंग रेंज</value>
+  </data>
+  <data name="LuxRatingRangesLineOne.Text" xml:space="preserve">
+    <value>पूर्ण अंधकार: 0 से 10 लक्स   बहुत अंधेरा: 11 से 50 लक्स   घर के अंदर अंधेरा: 51 से 200 लक्स   घर के अंदर मंद: 201 से 400 लक्स   घर के अंदर सामान्य: 401 से 1000 लक्स</value>
+  </data>
+  <data name="LuxRatingRangesLineTwo.Text" xml:space="preserve">
+    <value>घर के अंदर उज्ज्वल: 1001 से 5000 लक्स   बाहर मंद: 5001 से 10000 लक्स   बाहर बादल छाए हुए: 10001 से 30000 लक्स   सीधी धूप: 30001 से 100000 लक्स</value>
+  </data>
+  <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>दिल दिखाएं</value>
+  </data>
 </root>

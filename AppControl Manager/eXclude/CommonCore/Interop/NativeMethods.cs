@@ -3295,10 +3295,7 @@ internal static unsafe partial class NativeMethods
 		}
 		finally
 		{
-			if (errorText != IntPtr.Zero)
-			{
-				_ = WindowsDeleteString(errorText);
-			}
+			_ = WindowsDeleteString(errorText);
 		}
 	}
 

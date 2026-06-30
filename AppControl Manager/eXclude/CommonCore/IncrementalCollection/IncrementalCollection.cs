@@ -411,27 +411,21 @@ internal sealed partial class IncrementalCollection<T>(
 
 				lock (_lockObject)
 				{
-					if (currentOperationId == _filterOperationId)
-					{
-						_filteredIndices.Clear();
-						_filteredIndices.AddRange(newFilteredIndices);
-						_currentUIIndex = 0;
-						_busy = false;
-						hasItems = _filteredIndices.Count > 0;
-						_hasMoreItems = hasItems;
-						_isFilteringInProgress = false;
-					}
+					_filteredIndices.Clear();
+					_filteredIndices.AddRange(newFilteredIndices);
+					_currentUIIndex = 0;
+					_busy = false;
+					hasItems = _filteredIndices.Count > 0;
+					_hasMoreItems = hasItems;
+					_isFilteringInProgress = false;
 				}
 
-				if (currentOperationId == _filterOperationId)
-				{
-					Clear();
-					OnPropertyChanged(nameof(HasMoreItems));
+				Clear();
+				OnPropertyChanged(nameof(HasMoreItems));
 
-					if (hasItems && !cancellationToken.IsCancellationRequested && !_disposed)
-					{
-						_ = await LoadMoreItemsAsync((uint)pageSize);
-					}
+				if (hasItems && !cancellationToken.IsCancellationRequested && !_disposed)
+				{
+					_ = await LoadMoreItemsAsync((uint)pageSize);
 				}
 			}
 			catch (OperationCanceledException)

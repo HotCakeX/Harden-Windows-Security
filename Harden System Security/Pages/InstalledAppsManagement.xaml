@@ -616,8 +616,7 @@
                         CornerRadius="8"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Command="{x:Bind vm:InstalledAppsManagementVM.PackagedAppsZoomedOutGroupInvokedCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind}">
+                        Click="{x:Bind vm:ViewModelProvider.InstalledAppsManagementVM.PackagedAppsZoomedOutGroup_Click}">
                     <TextBlock Text="{x:Bind vm:InstalledAppsManagementVM.GetPackagedAppsGroupKey(Group), Mode=OneWay}"
                                Style="{ThemeResource TitleTextBlockStyle}"
                                HorizontalAlignment="Center"

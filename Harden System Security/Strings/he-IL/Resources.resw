@@ -7024,8 +7024,452 @@
   </data>
   <data name="NoActiveAccountSelectedDescriptionTextBlock.Text" xml:space="preserve">
     <value>פתח את החשבונות המחוברים והשתמש בתפריט הפעולות כדי להגדיר חשבון כפעיל.</value>
-  </data>  
+  </data>
   <data name="ContextHeader.Text" xml:space="preserve">
     <value>הקשר</value>
+  </data>
+  <data name="WinGetManagementNavItem.Content" xml:space="preserve">
+    <value>ניהול WinGet</value>
+  </data>
+  <data name="WinGetManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חיפוש, התקנה, עדכון, הורדה, תיקון והסרה של אפליקציות ותוכניות באמצעות WinGet, עם תמיכה באיתור חבילות, ניהול אפליקציות מותקנות, ניהול מקורות ופעולות מרובות.</value>
+  </data>
+  <data name="WinGetManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חיפוש, התקנה, עדכון, הורדה, תיקון והסרה של אפליקציות ותוכניות באמצעות WinGet, עם תמיכה באיתור חבילות, ניהול אפליקציות מותקנות, ניהול מקורות ופעולות מרובות.</value>
+  </data>
+  <data name="WinGetSearchButton.Content" xml:space="preserve">
+    <value>חיפוש</value>
+  </data>
+  <data name="WinGetSearchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חפש תוכניות ואפליקציות חדשות במקורות שהוגדרו.</value>
+  </data>
+  <data name="WinGetSearchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חפש תוכניות ואפליקציות חדשות במקורות שהוגדרו.</value>
+  </data>
+  <data name="WinGetSearchClearButton.Content" xml:space="preserve">
+    <value>נקה</value>
+  </data>
+  <data name="WinGetSearchClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה את תוצאות החיפוש הנוכחיות של WinGet.</value>
+  </data>
+  <data name="WinGetSearchClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה את תוצאות החיפוש הנוכחיות של WinGet.</value>
+  </data>
+  <data name="WinGetSearchSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את הגדרות WinGet</value>
+  </data>
+  <data name="WinGetSearchSettingsHeaderTextBlock.Text" xml:space="preserve">
+    <value>הגדרות WinGet</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>בחר היכן WinGet יוריד מתקיני חבילות. ברירת המחדל היא תיקיית ההורדות של Windows.</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryTextBox.Header" xml:space="preserve">
+    <value>תיקיית הורדות</value>
+  </data>
+  <data name="WinGetSearchBrowseDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>בחר תיקיית הורדות</value>
+  </data>
+  <data name="WinGetSearchResetDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>אפס לתיקיית ההורדות של Windows</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק את ערך פרטי החבילה ללוח</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק את ערך פרטי החבילה ללוח</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לחץ לפעולות אפליקציה</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לחץ לפעולות אפליקציה</value>
+  </data>
+  <data name="WinGetInstallOrUpdateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>התקן או עדכן</value>
+  </data>
+  <data name="WinGetSilentMenuFlyoutItem.Text" xml:space="preserve">
+    <value>שקט</value>
+  </data>
+  <data name="WinGetCurrentUserMenuFlyoutItem.Text" xml:space="preserve">
+    <value>המשתמש הנוכחי</value>
+  </data>
+  <data name="WinGetSystemMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מערכת</value>
+  </data>
+  <data name="WinGetInteractiveMenuFlyoutItem.Text" xml:space="preserve">
+    <value>אינטראקטיבי</value>
+  </data>
+  <data name="WinGetDownloadMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הורד</value>
+  </data>
+  <data name="WinGetRefreshStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>רענן סטטוס</value>
+  </data>
+  <data name="WinGetShowInstallationNotesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הצג הערות התקנה</value>
+  </data>
+  <data name="WinGetCancelOperationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>בטל פעולה</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אפשרויות חבילה</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אפשרויות חבילה</value>
+  </data>
+  <data name="WinGetPackageInstalledLabel.Text" xml:space="preserve">
+    <value>מותקן</value>
+  </data>
+  <data name="WinGetPackageDetailsTextBlock.Text" xml:space="preserve">
+    <value>פרטי חבילה</value>
+  </data>
+  <data name="WinGetSearchPackagesSelectorBarItem.Text" xml:space="preserve">
+    <value>חפש חבילות</value>
+  </data>
+  <data name="WinGetInstalledProgramsSelectorBarItem.Text" xml:space="preserve">
+    <value>תוכניות מותקנות</value>
+  </data>
+  <data name="WinGetAppBundlesSelectorBarItem.Text" xml:space="preserve">
+    <value>חבילות אפליקציות</value>
+  </data>
+  <data name="WinGetSourcesSelectorBarItem.Text" xml:space="preserve">
+    <value>מקורות</value>
+  </data>
+  <data name="WinGetEngineVersionTextBlock.Text" xml:space="preserve">
+    <value>גרסת מנוע WinGet</value>
+  </data>
+  <data name="WinGetPackageSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>חפש חבילות</value>
+  </data>
+  <data name="WinGetSearchFieldTextBlock.Text" xml:space="preserve">
+    <value>שדה חיפוש</value>
+  </data>
+  <data name="WinGetMatchModeTextBlock.Text" xml:space="preserve">
+    <value>מצב התאמה</value>
+  </data>
+  <data name="WinGetSearchResultLimitTextBlock.Text" xml:space="preserve">
+    <value>מגבלת תוצאות חיפוש</value>
+  </data>
+  <data name="WinGetCancelButton.Content" xml:space="preserve">
+    <value>בטל</value>
+  </data>
+  <data name="WinGetCancelButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל את פעולת WinGet הנוכחית</value>
+  </data>
+  <data name="WinGetCancelButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל את פעולת WinGet הנוכחית</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פעולות מרובות עבור תוצאות החיפוש שנבחרו</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פעולות מרובות עבור תוצאות החיפוש שנבחרו</value>
+  </data>
+  <data name="WinGetInstallOrUpdateSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>התקן או עדכן את הנבחרים</value>
+  </data>
+  <data name="WinGetDownloadSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הורד את הנבחרים</value>
+  </data>
+  <data name="WinGetRefreshSelectedStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>רענן את סטטוס הנבחרים</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את כל תוצאות החיפוש</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את כל תוצאות החיפוש</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל בחירה של כל תוצאות החיפוש</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל בחירה של כל תוצאות החיפוש</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.Content" xml:space="preserve">
+    <value>רענן תוכניות מותקנות</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רענן את רשימת התוכניות המותקנות</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רענן את רשימת התוכניות המותקנות</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.Content" xml:space="preserve">
+    <value>עדכונים בלבד</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג רק תוכניות מותקנות עם עדכונים זמינים</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצג רק תוכניות מותקנות עם עדכונים זמינים</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פעולות מרובות עבור התוכניות המותקנות שנבחרו</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פעולות מרובות עבור התוכניות המותקנות שנבחרו</value>
+  </data>
+  <data name="WinGetUpdateOrReinstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>עדכן או התקן מחדש את הנבחרים</value>
+  </data>
+  <data name="WinGetRepairSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>תקן את הנבחרים</value>
+  </data>
+  <data name="WinGetUninstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הסר את הנבחרים</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את כל התוכניות המותקנות</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את כל התוכניות המותקנות</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל בחירה של כל התוכניות המותקנות</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל בחירה של כל התוכניות המותקנות</value>
+  </data>
+  <data name="WinGetInstalledProgramsSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>חפש תוכניות מותקנות</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חזרה לחבילות</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חזרה לחבילות</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.Content" xml:space="preserve">
+    <value>התקן הכול</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התקן את כל האפליקציות בחבילה שנבחרה</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התקן את כל האפליקציות בחבילה שנבחרה</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.Content" xml:space="preserve">
+    <value>הסר הכול</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את כל האפליקציות בחבילה שנבחרה</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את כל האפליקציות בחבילה שנבחרה</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.Header" xml:space="preserve">
+    <value>שם</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>winget</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.Header" xml:space="preserve">
+    <value>ארגומנט</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.PlaceholderText" xml:space="preserve">
+    <value>https://winget.azureedge.net/cache</value>
+  </data>
+  <data name="WinGetSourceTypeComboBox.Header" xml:space="preserve">
+    <value>סוג</value>
+  </data>
+  <data name="WinGetSourceTrustComboBox.Header" xml:space="preserve">
+    <value>אמון</value>
+  </data>
+  <data name="WinGetAddSourceButton.Content" xml:space="preserve">
+    <value>הוסף מקור</value>
+  </data>
+  <data name="WinGetAddSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף את מקור WinGet שהוגדר</value>
+  </data>
+  <data name="WinGetAddSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף את מקור WinGet שהוגדר</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.Content" xml:space="preserve">
+    <value>רענן מקורות</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רענן את רשימת מקורות WinGet</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רענן את רשימת מקורות WinGet</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פעולות מרובות עבור המקורות שנבחרו</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פעולות מרובות עבור המקורות שנבחרו</value>
+  </data>
+  <data name="WinGetUpdateSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>עדכן מקורות שנבחרו</value>
+  </data>
+  <data name="WinGetRemoveSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הסר מקורות שנבחרו</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את כל המקורות</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את כל המקורות</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל בחירה של כל המקורות</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל בחירה של כל המקורות</value>
+  </data>
+  <data name="WinGetArgumentTextBlock.Text" xml:space="preserve">
+    <value>ארגומנט</value>
+  </data>
+  <data name="WinGetOriginTextBlock.Text" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+  <data name="WinGetTrustTextBlock.Text" xml:space="preserve">
+    <value>אמון</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.Content" xml:space="preserve">
+    <value>עדכן</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עדכן את מקור WinGet שנבחר</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עדכן את מקור WinGet שנבחר</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.Content" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את מקור WinGet שנבחר</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את מקור WinGet שנבחר</value>
+  </data>
+  <data name="BackgroundTypeComboBox.Header" xml:space="preserve">
+    <value>סוג רקע</value>
+  </data>
+  <data name="BackgroundOpacitySlider.Header" xml:space="preserve">
+    <value>שקיפות רקע</value>
+  </data>
+  <data name="GraphSizeComboBox.Header" xml:space="preserve">
+    <value>גודל תרשים</value>
+  </data>
+  <data name="GraphSizeSmallComboBoxItem.Content" xml:space="preserve">
+    <value>קטן</value>
+  </data>
+  <data name="GraphSizeMediumComboBoxItem.Content" xml:space="preserve">
+    <value>בינוני</value>
+  </data>
+  <data name="GraphSizeBigComboBoxItem.Content" xml:space="preserve">
+    <value>גדול</value>
+  </data>
+  <data name="AppRamUsageTitle.Text" xml:space="preserve">
+    <value>שימוש בזיכרון RAM של האפליקציה</value>
+  </data>
+  <data name="MemoryUtilizationTitle.Text" xml:space="preserve">
+    <value>ניצול זיכרון</value>
+  </data>
+  <data name="StorageTemperatureTitle.Text" xml:space="preserve">
+    <value>טמפרטורת אחסון</value>
+  </data>
+  <data name="CpuTemperatureTitle.Text" xml:space="preserve">
+    <value>טמפרטורת המעבד</value>
+  </data>
+  <data name="CpuUsageTitle.Text" xml:space="preserve">
+    <value>שימוש במעבד</value>
+  </data>
+  <data name="DiskActivityTitle.Text" xml:space="preserve">
+    <value>פעילות דיסק</value>
+  </data>
+  <data name="NetworkUsageTitle.Text" xml:space="preserve">
+    <value>שימוש ברשת</value>
+  </data>
+  <data name="AdditionalDiagnosticsHeader.Text" xml:space="preserve">
+    <value>אבחונים נוספים</value>
+  </data>
+  <data name="NetworkOpennessFeature.Text" xml:space="preserve">
+    <value>פתיחות רשת</value>
+  </data>
+  <data name="NetworkOpennessFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבע עד כמה גישת הרשת שלך מתירנית.</value>
+  </data>
+  <data name="WifiProfilesFeature.Text" xml:space="preserve">
+    <value>פרופילי Wi‑Fi</value>
+  </data>
+  <data name="WifiProfilesFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג את ההיסטוריה של כל נקודות הגישה ל‑Wi‑Fi שאליהן התחברת בעבר.</value>
+  </data>
+  <data name="PhysicalOrientationFeature.Text" xml:space="preserve">
+    <value>כיוון פיזי</value>
+  </data>
+  <data name="PhysicalOrientationFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחומרה נתמכת, ניתן להציג את הכיוון הפיזי של המכשיר שלך.</value>
+  </data>
+  <data name="CompassFeature.Text" xml:space="preserve">
+    <value>מצפן</value>
+  </data>
+  <data name="CompassFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחומרה נתמכת, ניתן להשתמש בחיישני המכשיר שלך כמצפן.</value>
+  </data>
+  <data name="LightSensorFeature.Text" xml:space="preserve">
+    <value>חיישן אור</value>
+  </data>
+  <data name="LightSensorFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחומרה נתמכת, ניתן לראות עד כמה הסביבה שלך מוארת.</value>
+  </data>
+  <data name="NetworkOpennessDescription.Text" xml:space="preserve">
+    <value>בודק אם אתרים ושירותים ציבוריים נבחרים נגישים מהרשת הנוכחית.</value>
+  </data>
+  <data name="NetworkOpennessRunButton.Content" xml:space="preserve">
+    <value>הפעל בדיקת פתיחות רשת</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Header" xml:space="preserve">
+    <value>תוצאות מפורטות</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Text" xml:space="preserve">
+    <value>התוצאות יופיעו כאן לאחר הפעלת הבדיקה.</value>
+  </data>
+  <data name="WifiProfilesDescription.Text" xml:space="preserve">
+    <value>בחר פרופיל כדי להציג פרטים.</value>
+  </data>
+  <data name="WifiProfilesRunButton.Content" xml:space="preserve">
+    <value>אחזר</value>
+  </data>
+  <data name="WifiProfilesColumnHeader.Text" xml:space="preserve">
+    <value>פרופילים</value>
+  </data>
+  <data name="WifiSelectedProfileColumnHeader.Text" xml:space="preserve">
+    <value>פרופיל נבחר</value>
+  </data>
+  <data name="WifiTotalProfilesLabel.Text" xml:space="preserve">
+    <value>סה״כ פרופילים:</value>
+  </data>
+  <data name="PhysicalOrientationDescription.Text" xml:space="preserve">
+    <value>מציג את תנוחת המכשיר בזמן אמת באמצעות חיישני תנועה שנחשפים על ידי קושחת המכשיר ומנהל ההתקן.</value>
+  </data>
+  <data name="LiveReadingHeader.Text" xml:space="preserve">
+    <value>קריאה חיה</value>
+  </data>
+  <data name="CompassDescription.Text" xml:space="preserve">
+    <value>מציג צפון מגנטי, צפון אמיתי כאשר מנהל ההתקן מספק אותו, דיוק כיוון ותצוגת מצפן מציאותית.</value>
+  </data>
+  <data name="LightSensorDescription.Text" xml:space="preserve">
+    <value>מציג עוצמת תאורה סביבתית בלוקס, דירוגי תנאי תאורה של Microsoft, מינימום ומקסימום של ההפעלה והנחיות לקריאות.</value>
+  </data>
+  <data name="AmbientLightMeterHeader.Text" xml:space="preserve">
+    <value>מד תאורה סביבתית</value>
+  </data>
+  <data name="MicrosoftLuxRatingRangesHeader.Text" xml:space="preserve">
+    <value>טווחי דירוג לוקס של Microsoft</value>
+  </data>
+  <data name="LuxRatingRangesLineOne.Text" xml:space="preserve">
+    <value>חשכה מוחלטת: 0 עד 10 לוקס   חשוך מאוד: 11 עד 50 לוקס   חשוך בתוך מבנה: 51 עד 200 לוקס   תאורה עמומה בתוך מבנה: 201 עד 400 לוקס   תאורה רגילה בתוך מבנה: 401 עד 1000 לוקס</value>
+  </data>
+  <data name="LuxRatingRangesLineTwo.Text" xml:space="preserve">
+    <value>מואר בתוך מבנה: 1001 עד 5000 לוקס   תאורה עמומה בחוץ: 5001 עד 10000 לוקס   מעונן בחוץ: 10001 עד 30000 לוקס   אור שמש ישיר: 30001 עד 100000 לוקס</value>
+  </data>
+  <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג לבבות</value>
   </data>
 </root>

@@ -320,7 +320,7 @@
                                 <CustomUIElements:InteractiveLineChart
                                     x:Name="EventsTrendChart"
                                     MinHeight="360"
-                                    ChartStateKey="EventLogs"  
+                                    ChartStateKey="EventLogs"
                                     Series1Name="Blocked"
                                     Series2Name="Allowed"
                                     SelectedRangeMinimum="{x:Bind ViewModel.AnalysisResults.Analysis_CustomRangeStartTicks, Mode=OneWay}"

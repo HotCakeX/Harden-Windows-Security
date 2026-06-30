@@ -7028,4 +7028,448 @@
   <data name="ContextHeader.Text" xml:space="preserve">
     <value>സന്ദർഭം</value>
   </data>
+  <data name="WinGetManagementNavItem.Content" xml:space="preserve">
+    <value>WinGet മാനേജ്മെന്റ്</value>
+  </data>
+  <data name="WinGetManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>WinGet ഉപയോഗിച്ച് ആപ്പുകളും പ്രോഗ്രാമുകളും തിരയുക, ഇൻസ്റ്റാൾ ചെയ്യുക, അപ്‌ഡേറ്റ് ചെയ്യുക, ഡൗൺലോഡ് ചെയ്യുക, റിപ്പയർ ചെയ്യുക, അൺഇൻസ്റ്റാൾ ചെയ്യുക. പാക്കേജ് കണ്ടെത്തൽ, ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകളുടെ മാനേജ്മെന്റ്, സോഴ്‌സ് മാനേജ്മെന്റ്, ബൾക്ക് പ്രവർത്തനങ്ങൾ എന്നിവയ്ക്കുള്ള പിന്തുണയും ഉൾപ്പെടുന്നു.</value>
+  </data>
+  <data name="WinGetManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>WinGet ഉപയോഗിച്ച് ആപ്പുകളും പ്രോഗ്രാമുകളും തിരയുക, ഇൻസ്റ്റാൾ ചെയ്യുക, അപ്‌ഡേറ്റ് ചെയ്യുക, ഡൗൺലോഡ് ചെയ്യുക, റിപ്പയർ ചെയ്യുക, അൺഇൻസ്റ്റാൾ ചെയ്യുക. പാക്കേജ് കണ്ടെത്തൽ, ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകളുടെ മാനേജ്മെന്റ്, സോഴ്‌സ് മാനേജ്മെന്റ്, ബൾക്ക് പ്രവർത്തനങ്ങൾ എന്നിവയ്ക്കുള്ള പിന്തുണയും ഉൾപ്പെടുന്നു.</value>
+  </data>
+  <data name="WinGetSearchButton.Content" xml:space="preserve">
+    <value>തിരയുക</value>
+  </data>
+  <data name="WinGetSearchButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കോൺഫിഗർ ചെയ്ത സോഴ്‌സുകളിൽ പുതിയ പ്രോഗ്രാമുകളും ആപ്പുകളും തിരയുക.</value>
+  </data>
+  <data name="WinGetSearchButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കോൺഫിഗർ ചെയ്ത സോഴ്‌സുകളിൽ പുതിയ പ്രോഗ്രാമുകളും ആപ്പുകളും തിരയുക.</value>
+  </data>
+  <data name="WinGetSearchClearButton.Content" xml:space="preserve">
+    <value>മായ്ക്കുക</value>
+  </data>
+  <data name="WinGetSearchClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലുള്ള WinGet തിരയൽ ഫലങ്ങൾ മായ്ക്കുക.</value>
+  </data>
+  <data name="WinGetSearchClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലുള്ള WinGet തിരയൽ ഫലങ്ങൾ മായ്ക്കുക.</value>
+  </data>
+  <data name="WinGetSearchSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>WinGet ക്രമീകരണങ്ങൾ തുറക്കുക</value>
+  </data>
+  <data name="WinGetSearchSettingsHeaderTextBlock.Text" xml:space="preserve">
+    <value>WinGet ക്രമീകരണങ്ങൾ</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>WinGet പാക്കേജ് ഇൻസ്റ്റാളറുകൾ എവിടെ ഡൗൺലോഡ് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക. Windows ഡൗൺലോഡുകൾ ഫോൾഡറാണ് ഡിഫോൾട്ട്.</value>
+  </data>
+  <data name="WinGetSearchDownloadDirectoryTextBox.Header" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ഡയറക്ടറി</value>
+  </data>
+  <data name="WinGetSearchBrowseDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ഡയറക്ടറി തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="WinGetSearchResetDownloadDirectoryButton.Content" xml:space="preserve">
+    <value>Windows ഡൗൺലോഡുകൾ ഫോൾഡറിലേക്ക് പുനഃസജ്ജമാക്കുക</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പാക്കേജ് വിശദാംശ മൂല്യം ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക</value>
+  </data>
+  <data name="WinGetCopyDetailValueButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പാക്കേജ് വിശദാംശ മൂല്യം ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് പ്രവർത്തനങ്ങൾക്കായി ക്ലിക്ക് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetBundleAppActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് പ്രവർത്തനങ്ങൾക്കായി ക്ലിക്ക് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetInstallOrUpdateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്യുക അല്ലെങ്കിൽ അപ്ഡേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetSilentMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സൈലന്റ്</value>
+  </data>
+  <data name="WinGetCurrentUserMenuFlyoutItem.Text" xml:space="preserve">
+    <value>നിലവിലെ ഉപയോക്താവ്</value>
+  </data>
+  <data name="WinGetSystemMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സിസ്റ്റം</value>
+  </data>
+  <data name="WinGetInteractiveMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഇന്ററാക്ടീവ്</value>
+  </data>
+  <data name="WinGetDownloadMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetRefreshStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സ്ഥിതി പുതുക്കുക</value>
+  </data>
+  <data name="WinGetShowInstallationNotesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഇൻസ്റ്റാളേഷൻ കുറിപ്പുകൾ കാണിക്കുക</value>
+  </data>
+  <data name="WinGetCancelOperationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പ്രവർത്തനം റദ്ദാക്കുക</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പാക്കേജ് ഓപ്ഷനുകൾ</value>
+  </data>
+  <data name="WinGetPackageOptionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പാക്കേജ് ഓപ്ഷനുകൾ</value>
+  </data>
+  <data name="WinGetPackageInstalledLabel.Text" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്തത്</value>
+  </data>
+  <data name="WinGetPackageDetailsTextBlock.Text" xml:space="preserve">
+    <value>പാക്കേജ് വിശദാംശങ്ങൾ</value>
+  </data>
+  <data name="WinGetSearchPackagesSelectorBarItem.Text" xml:space="preserve">
+    <value>പാക്കേജുകൾ തിരയുക</value>
+  </data>
+  <data name="WinGetInstalledProgramsSelectorBarItem.Text" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകൾ</value>
+  </data>
+  <data name="WinGetAppBundlesSelectorBarItem.Text" xml:space="preserve">
+    <value>ആപ്പ് ബണ്ടിലുകൾ</value>
+  </data>
+  <data name="WinGetSourcesSelectorBarItem.Text" xml:space="preserve">
+    <value>സ്രോതസ്സുകൾ</value>
+  </data>
+  <data name="WinGetEngineVersionTextBlock.Text" xml:space="preserve">
+    <value>WinGet എൻജിൻ പതിപ്പ്</value>
+  </data>
+  <data name="WinGetPackageSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>പാക്കേജുകൾ തിരയുക</value>
+  </data>
+  <data name="WinGetSearchFieldTextBlock.Text" xml:space="preserve">
+    <value>തിരയൽ ഫീൽഡ്</value>
+  </data>
+  <data name="WinGetMatchModeTextBlock.Text" xml:space="preserve">
+    <value>മാച്ച് മോഡ്</value>
+  </data>
+  <data name="WinGetSearchResultLimitTextBlock.Text" xml:space="preserve">
+    <value>തിരയൽ ഫല പരിധി</value>
+  </data>
+  <data name="WinGetCancelButton.Content" xml:space="preserve">
+    <value>റദ്ദാക്കുക</value>
+  </data>
+  <data name="WinGetCancelButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ WinGet പ്രവർത്തനം റദ്ദാക്കുക</value>
+  </data>
+  <data name="WinGetCancelButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലെ WinGet പ്രവർത്തനം റദ്ദാക്കുക</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത തിരയൽ ഫലങ്ങൾക്കായുള്ള ബൾക്ക് പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="WinGetSearchResultsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത തിരയൽ ഫലങ്ങൾക്കായുള്ള ബൾക്ക് പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="WinGetInstallOrUpdateSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ ഇൻസ്റ്റാൾ ചെയ്യുക അല്ലെങ്കിൽ അപ്ഡേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetDownloadSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ ഡൗൺലോഡ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetRefreshSelectedStatusMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവയുടെ സ്ഥിതി പുതുക്കുക</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ തിരയൽ ഫലങ്ങളും തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="WinGetSelectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ തിരയൽ ഫലങ്ങളും തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ തിരയൽ ഫലങ്ങളുടെയും തിരഞ്ഞെടുപ്പ് ഒഴിവാക്കുക</value>
+  </data>
+  <data name="WinGetDeselectAllSearchResultsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ തിരയൽ ഫലങ്ങളുടെയും തിരഞ്ഞെടുപ്പ് ഒഴിവാക്കുക</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.Content" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകൾ പുതുക്കുക</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകളുടെ പട്ടിക പുതുക്കുക</value>
+  </data>
+  <data name="WinGetRefreshInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകളുടെ പട്ടിക പുതുക്കുക</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.Content" xml:space="preserve">
+    <value>അപ്ഡേറ്റുകൾ മാത്രം</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലഭ്യമായ അപ്ഡേറ്റുകളുള്ള ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകൾ മാത്രം കാണിക്കുക</value>
+  </data>
+  <data name="WinGetUpdatesOnlyToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലഭ്യമായ അപ്ഡേറ്റുകളുള്ള ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകൾ മാത്രം കാണിക്കുക</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകൾക്കായുള്ള ബൾക്ക് പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="WinGetInstalledProgramsBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകൾക്കായുള്ള ബൾക്ക് പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="WinGetUpdateOrReinstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ അപ്ഡേറ്റ് ചെയ്യുക അല്ലെങ്കിൽ വീണ്ടും ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetRepairSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ റിപ്പയർ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetUninstallSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ അൺഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകളും തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="WinGetSelectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകളും തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകളുടെയും തിരഞ്ഞെടുപ്പ് ഒഴിവാക്കുക</value>
+  </data>
+  <data name="WinGetDeselectAllInstalledProgramsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകളുടെയും തിരഞ്ഞെടുപ്പ് ഒഴിവാക്കുക</value>
+  </data>
+  <data name="WinGetInstalledProgramsSearchTextBox.PlaceholderText" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത പ്രോഗ്രാമുകൾ തിരയുക</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബണ്ടിലുകളിലേക്ക് മടങ്ങുക</value>
+  </data>
+  <data name="WinGetBackToBundlesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബണ്ടിലുകളിലേക്ക് മടങ്ങുക</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.Content" xml:space="preserve">
+    <value>എല്ലാം ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ബണ്ടിലിലെ എല്ലാ ആപ്പുകളും ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetInstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ബണ്ടിലിലെ എല്ലാ ആപ്പുകളും ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.Content" xml:space="preserve">
+    <value>എല്ലാം അൺഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ബണ്ടിലിലെ എല്ലാ ആപ്പുകളും അൺഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetUninstallAllSplitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ബണ്ടിലിലെ എല്ലാ ആപ്പുകളും അൺഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.Header" xml:space="preserve">
+    <value>പേര്</value>
+  </data>
+  <data name="WinGetSourceNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>winget</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.Header" xml:space="preserve">
+    <value>ആർഗ്യൂമെന്റ്</value>
+  </data>
+  <data name="WinGetSourceArgumentTextBox.PlaceholderText" xml:space="preserve">
+    <value>https://winget.azureedge.net/cache</value>
+  </data>
+  <data name="WinGetSourceTypeComboBox.Header" xml:space="preserve">
+    <value>തരം</value>
+  </data>
+  <data name="WinGetSourceTrustComboBox.Header" xml:space="preserve">
+    <value>വിശ്വാസം</value>
+  </data>
+  <data name="WinGetAddSourceButton.Content" xml:space="preserve">
+    <value>സ്രോതസ് ചേർക്കുക</value>
+  </data>
+  <data name="WinGetAddSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കോൺഫിഗർ ചെയ്ത WinGet സ്രോതസ് ചേർക്കുക</value>
+  </data>
+  <data name="WinGetAddSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കോൺഫിഗർ ചെയ്ത WinGet സ്രോതസ് ചേർക്കുക</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.Content" xml:space="preserve">
+    <value>സ്രോതസ്സുകൾ പുതുക്കുക</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>WinGet സ്രോതസ്സുകളുടെ പട്ടിക പുതുക്കുക</value>
+  </data>
+  <data name="WinGetRefreshSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>WinGet സ്രോതസ്സുകളുടെ പട്ടിക പുതുക്കുക</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സ്രോതസ്സുകൾക്കായുള്ള ബൾക്ക് പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="WinGetSourcesBulkActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സ്രോതസ്സുകൾക്കായുള്ള ബൾക്ക് പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="WinGetUpdateSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സ്രോതസ്സുകൾ അപ്ഡേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetRemoveSelectedSourcesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സ്രോതസ്സുകൾ നീക്കംചെയ്യുക</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ സ്രോതസ്സുകളും തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="WinGetSelectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ സ്രോതസ്സുകളും തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ സ്രോതസ്സുകളുടെയും തിരഞ്ഞെടുപ്പ് ഒഴിവാക്കുക</value>
+  </data>
+  <data name="WinGetDeselectAllSourcesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ സ്രോതസ്സുകളുടെയും തിരഞ്ഞെടുപ്പ് ഒഴിവാക്കുക</value>
+  </data>
+  <data name="WinGetArgumentTextBlock.Text" xml:space="preserve">
+    <value>ആർഗ്യൂമെന്റ്</value>
+  </data>
+  <data name="WinGetOriginTextBlock.Text" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+  <data name="WinGetTrustTextBlock.Text" xml:space="preserve">
+    <value>വിശ്വാസം</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.Content" xml:space="preserve">
+    <value>അപ്ഡേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത WinGet സ്രോതസ് അപ്ഡേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetUpdateSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത WinGet സ്രോതസ് അപ്ഡേറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.Content" xml:space="preserve">
+    <value>നീക്കംചെയ്യുക</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത WinGet സ്രോതസ് നീക്കംചെയ്യുക</value>
+  </data>
+  <data name="WinGetRemoveSourceButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത WinGet സ്രോതസ് നീക്കംചെയ്യുക</value>
+  </data>
+  <data name="BackgroundTypeComboBox.Header" xml:space="preserve">
+    <value>പശ്ചാത്തല തരം</value>
+  </data>
+  <data name="BackgroundOpacitySlider.Header" xml:space="preserve">
+    <value>പശ്ചാത്തല അതാര്യത</value>
+  </data>
+  <data name="GraphSizeComboBox.Header" xml:space="preserve">
+    <value>ഗ്രാഫിന്റെ വലുപ്പം</value>
+  </data>
+  <data name="GraphSizeSmallComboBoxItem.Content" xml:space="preserve">
+    <value>ചെറുത്</value>
+  </data>
+  <data name="GraphSizeMediumComboBoxItem.Content" xml:space="preserve">
+    <value>ഇടത്തരം</value>
+  </data>
+  <data name="GraphSizeBigComboBoxItem.Content" xml:space="preserve">
+    <value>വലുത്</value>
+  </data>
+  <data name="AppRamUsageTitle.Text" xml:space="preserve">
+    <value>ആപ്പിന്റെ RAM ഉപയോഗം</value>
+  </data>
+  <data name="MemoryUtilizationTitle.Text" xml:space="preserve">
+    <value>മെമ്മറി ഉപയോഗം</value>
+  </data>
+  <data name="StorageTemperatureTitle.Text" xml:space="preserve">
+    <value>സ്റ്റോറേജ് താപനില</value>
+  </data>
+  <data name="CpuTemperatureTitle.Text" xml:space="preserve">
+    <value>CPU താപനില</value>
+  </data>
+  <data name="CpuUsageTitle.Text" xml:space="preserve">
+    <value>CPU ഉപയോഗം</value>
+  </data>
+  <data name="DiskActivityTitle.Text" xml:space="preserve">
+    <value>ഡിസ്‌ക് പ്രവർത്തനം</value>
+  </data>
+  <data name="NetworkUsageTitle.Text" xml:space="preserve">
+    <value>നെറ്റ്‌വർക്ക് ഉപയോഗം</value>
+  </data>
+  <data name="AdditionalDiagnosticsHeader.Text" xml:space="preserve">
+    <value>അധിക ഡയഗ്നോസ്റ്റിക്സ്</value>
+  </data>
+  <data name="NetworkOpennessFeature.Text" xml:space="preserve">
+    <value>നെറ്റ്‌വർക്ക് തുറന്ന നില</value>
+  </data>
+  <data name="NetworkOpennessFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ നെറ്റ്‌വർക്ക് ആക്‌സസ് എത്രത്തോളം അനുമതിപരമാണെന്ന് നിർണ്ണയിക്കുക.</value>
+  </data>
+  <data name="WifiProfilesFeature.Text" xml:space="preserve">
+    <value>Wi‑Fi പ്രൊഫൈലുകൾ</value>
+  </data>
+  <data name="WifiProfilesFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ മുമ്പ് കണക്റ്റ് ചെയ്തിട്ടുള്ള എല്ലാ Wi‑Fi ഹോട്ട്സ്പോട്ടുകളുടെയും ചരിത്രം കാണുക.</value>
+  </data>
+  <data name="PhysicalOrientationFeature.Text" xml:space="preserve">
+    <value>ഭൗതിക ദിശാസ്ഥിതി</value>
+  </data>
+  <data name="PhysicalOrientationFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിന്തുണയ്ക്കുന്ന ഹാർഡ്‌വെയറിൽ, നിങ്ങളുടെ ഉപകരണത്തിന്റെ ഭൗതിക ദിശാസ്ഥിതി കാണാം.</value>
+  </data>
+  <data name="CompassFeature.Text" xml:space="preserve">
+    <value>കോമ്പസ്</value>
+  </data>
+  <data name="CompassFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിന്തുണയ്ക്കുന്ന ഹാർഡ്‌വെയറിൽ, നിങ്ങളുടെ ഉപകരണത്തിന്റെ സെൻസറുകൾ കോമ്പസായി ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="LightSensorFeature.Text" xml:space="preserve">
+    <value>ലൈറ്റ് സെൻസർ</value>
+  </data>
+  <data name="LightSensorFeature.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിന്തുണയ്ക്കുന്ന ഹാർഡ്‌വെയറിൽ, നിങ്ങളുടെ പരിസരം എത്ര തെളിച്ചമുള്ളതാണെന്ന് കാണാം.</value>
+  </data>
+  <data name="NetworkOpennessDescription.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പൊതു വെബ്‌സൈറ്റുകളും സേവനങ്ങളും നിലവിലെ നെറ്റ്‌വർക്കിൽ നിന്ന് എത്തിച്ചേരാനാകുമോ എന്ന് പരിശോധിക്കുന്നു.</value>
+  </data>
+  <data name="NetworkOpennessRunButton.Content" xml:space="preserve">
+    <value>നെറ്റ്‌വർക്ക് തുറന്ന നില പരിശോധന പ്രവർത്തിപ്പിക്കുക</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Header" xml:space="preserve">
+    <value>വിശദമായ ഫലങ്ങൾ</value>
+  </data>
+  <data name="NetworkOpennessDetailsTextBox.Text" xml:space="preserve">
+    <value>പരിശോധന പ്രവർത്തിപ്പിച്ചതിന് ശേഷം ഫലങ്ങൾ ഇവിടെ ദൃശ്യമാകും.</value>
+  </data>
+  <data name="WifiProfilesDescription.Text" xml:space="preserve">
+    <value>വിശദാംശങ്ങൾ കാണാൻ ഒരു പ്രൊഫൈൽ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="WifiProfilesRunButton.Content" xml:space="preserve">
+    <value>വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="WifiProfilesColumnHeader.Text" xml:space="preserve">
+    <value>പ്രൊഫൈലുകൾ</value>
+  </data>
+  <data name="WifiSelectedProfileColumnHeader.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പ്രൊഫൈൽ</value>
+  </data>
+  <data name="WifiTotalProfilesLabel.Text" xml:space="preserve">
+    <value>ആകെ പ്രൊഫൈലുകൾ:</value>
+  </data>
+  <data name="PhysicalOrientationDescription.Text" xml:space="preserve">
+    <value>ഉപകരണത്തിന്റെ ഫർമ്വെയറും ഡ്രൈവറും പുറത്തുവിടുന്ന മോഷൻ സെൻസറുകൾ ഉപയോഗിച്ച് ഉപകരണത്തിന്റെ നില റിയൽ ടൈമിൽ കാണിക്കുന്നു.</value>
+  </data>
+  <data name="LiveReadingHeader.Text" xml:space="preserve">
+    <value>തത്സമയ വായന</value>
+  </data>
+  <data name="CompassDescription.Text" xml:space="preserve">
+    <value>മാഗ്നറ്റിക് നോർത്ത്, ഡ്രൈവർ നൽകുമ്പോൾ ട്രൂ നോർത്ത്, ഹെഡിംഗ് കൃത്യത, യാഥാർത്ഥ്യസമാനമായ കോമ്പസ് ഫേസ് എന്നിവ കാണിക്കുന്നു.</value>
+  </data>
+  <data name="LightSensorDescription.Text" xml:space="preserve">
+    <value>ലക്സിലുള്ള പരിസര പ്രകാശതീവ്രത, Microsoft പ്രകാശ-സ്ഥിതി റേറ്റിംഗുകൾ, സെഷൻ കുറഞ്ഞതും കൂടിയതുമായ മൂല്യങ്ങൾ, വായനാസൗകര്യ മാർഗനിർദ്ദേശം എന്നിവ കാണിക്കുന്നു.</value>
+  </data>
+  <data name="AmbientLightMeterHeader.Text" xml:space="preserve">
+    <value>പരിസര പ്രകാശ മീറ്റർ</value>
+  </data>
+  <data name="MicrosoftLuxRatingRangesHeader.Text" xml:space="preserve">
+    <value>Microsoft ലക്സ് റേറ്റിംഗ് പരിധികൾ</value>
+  </data>
+  <data name="LuxRatingRangesLineOne.Text" xml:space="preserve">
+    <value>പൂർണ്ണ ഇരുട്ട്: 0 മുതൽ 10 ലക്സ് വരെ   വളരെ ഇരുണ്ടത്: 11 മുതൽ 50 ലക്സ് വരെ   വീടിനുള്ളിൽ ഇരുണ്ടത്: 51 മുതൽ 200 ലക്സ് വരെ   വീടിനുള്ളിൽ മങ്ങിയ വെളിച്ചം: 201 മുതൽ 400 ലക്സ് വരെ   വീടിനുള്ളിൽ സാധാരണ വെളിച്ചം: 401 മുതൽ 1000 ലക്സ് വരെ</value>
+  </data>
+  <data name="LuxRatingRangesLineTwo.Text" xml:space="preserve">
+    <value>വീടിനുള്ളിൽ തെളിച്ചമുള്ളത്: 1001 മുതൽ 5000 ലക്സ് വരെ   പുറത്തു മങ്ങിയ വെളിച്ചം: 5001 മുതൽ 10000 ലക്സ് വരെ   പുറത്തു മേഘാവൃതം: 10001 മുതൽ 30000 ലക്സ് വരെ   നേരിട്ടുള്ള സൂര്യപ്രകാശം: 30001 മുതൽ 100000 ലക്സ് വരെ</value>
+  </data>
+  <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഹൃദയങ്ങൾ കാണിക്കുക</value>
+  </data>
 </root>

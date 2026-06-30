@@ -279,6 +279,10 @@ internal static class SettingsBackupRestoreSerializer
 			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
 			$"'{nameof(Main.DownloadManagerDirectory)}' must be empty or an absolute path."),
 
+		CreateStringWithCustomValidation(nameof(Main.WinGetDownloadDirectory), "Absolute path or empty string", settings => settings.WinGetDownloadDirectory, (settings, value) => settings.WinGetDownloadDirectory = value,
+			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
+			$"'{nameof(Main.WinGetDownloadDirectory)}' must be empty or an absolute path."),
+
 		CreateInt(nameof(Main.DownloadManagerMaximumSimultaneousDownloads), "Integer in range 1-16", 1, 16, settings => settings.DownloadManagerMaximumSimultaneousDownloads, (settings, value) => settings.DownloadManagerMaximumSimultaneousDownloads = value),
 
 		CreateInt(nameof(Main.DownloadManagerParallelConnectionsPerDownload), "Integer in range 1-32", 1, 32, settings => settings.DownloadManagerParallelConnectionsPerDownload, (settings, value) => settings.DownloadManagerParallelConnectionsPerDownload = value),

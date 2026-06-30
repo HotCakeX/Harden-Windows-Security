@@ -167,7 +167,7 @@
 
                                 <Button x:Uid="WindowsUpdateRetrieveUpdatesButton"
                                         Style="{StaticResource AccentButtonStyle}"
-                                        VerticalAlignment="Center"       
+                                        VerticalAlignment="Center"
                                         Click="{x:Bind ViewModel.RetrieveAvailableUpdates}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>
@@ -181,7 +181,7 @@
                                 </Button>
 
                                 <Button x:Uid="WindowsUpdateHideSelectedButton"
-                                        VerticalAlignment="Center"       
+                                        VerticalAlignment="Center"
                                         Click="{x:Bind HideSelectedUpdates_Click}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>
@@ -195,7 +195,7 @@
                                 </Button>
 
                                 <Button x:Uid="WindowsUpdateUnhideSelectedButton"
-                                        VerticalAlignment="Center"       
+                                        VerticalAlignment="Center"
                                         Click="{x:Bind UnhideSelectedUpdates_Click}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>
@@ -209,7 +209,7 @@
                                 </Button>
 
                                 <Button x:Uid="ExportToJsonButton"
-                                        VerticalAlignment="Center"       
+                                        VerticalAlignment="Center"
                                         Click="{x:Bind ExportUpdatesToJson_Click}"
                                         IsEnabled="{x:Bind ViewModel.ManagementElementsAreEnabled, Mode=OneWay}">
                                     <Button.ContentTemplate>

@@ -1,7 +1,1 @@
-* Improved the design of the Microsoft Graph button and its flyout content with animations and visual upgrades. You can also mask tenant ID and account identifier in the UI now for privacy.
-
 * Updated dependencies to the latest version.
-
-* Fixed an issue where an inaccessible directory in the root would prevent successful file enumeration: https://github.com/HotCakeX/Harden-Windows-Security/issues/1175
-
-* Improved localizations.

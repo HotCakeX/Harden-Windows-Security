@@ -48,6 +48,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.GroupPolicyEditor),
 		typeof(Pages.Protects.NonAdmin),
 		typeof(Pages.FileReputation),
+		typeof(Pages.WinGetManagement),
 		typeof(AppControlManager.Pages.Home),
 		typeof(Pages.Intune),
 		typeof(AppControlManager.Pages.IntuneDeploymentDetails),
@@ -207,6 +208,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			pages: [typeof(Pages.InstalledAppsManagement)]
 		);
 
+		breadCrumbMappingsV2[typeof(Pages.WinGetManagement)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("WinGetManagementNavItem/Content")],
+			pages: [typeof(Pages.WinGetManagement)]
+		);
+
 		breadCrumbMappingsV2[typeof(Pages.Protects.MicrosoftSecurityBaseline)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("MicrosoftSecurityBaselineNavItem/Content")],
@@ -362,6 +369,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "NonAdmin", typeof(Pages.Protects.NonAdmin) },
 		{ "FileReputation", typeof(Pages.FileReputation) },
 		{ "InstalledAppsManagement", typeof(Pages.InstalledAppsManagement) },
+		{ "WinGetManagement", typeof(Pages.WinGetManagement) },
 		{ "MicrosoftSecurityBaseline", typeof(Pages.Protects.MicrosoftSecurityBaseline) },
 		{ "Microsoft365AppsSecurityBaseline", typeof(Pages.Protects.Microsoft365AppsSecurityBaseline) },
 		{ "MicrosoftBaseLinesOverrides", typeof(Pages.Protects.MicrosoftBaseLinesOverrides) },
@@ -413,6 +421,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.NonAdmin)] = Atlas.GetStr("NonAdminCommandsNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.FileReputation)] = Atlas.GetStr("FileReputationNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.InstalledAppsManagement)] = Atlas.GetStr("InstalledAppsManagementNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.WinGetManagement)] = Atlas.GetStr("WinGetManagementNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftSecurityBaseline)] = Atlas.GetStr("MicrosoftSecurityBaselineNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)] = Atlas.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftBaseLinesOverrides)] = Atlas.GetStr("MicrosoftBaseLinesOverridesNavItem/Content");
@@ -490,6 +499,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the File Installed Apps Management item.
 	/// </summary>
 	internal IconElement? InstalledAppsManagementIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the WinGet Search navigation item.
+	/// </summary>
+	internal IconElement? WinGetManagementIcon { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Icon for the Audit Policies item.
@@ -616,6 +630,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Toolbox()
 					};
 
+					WinGetManagementIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -27, -27, -27),
+						Source = new AppsColored()
+					};
+
 					AuditPoliciesIcon = new AnimatedIcon
 					{
 						Margin = new Thickness(0, -8, -8, -8),
@@ -737,6 +757,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					WinGetManagementIcon = new FontIcon
+					{
+						Glyph = "\uEFDA",
+						Foreground = accentBrush
+					};
+
 					AuditPoliciesIcon = new FontIcon
 					{
 						Glyph = "\uE9D5",
@@ -821,6 +847,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					GroupPolicyEditorIcon = new FontIcon { Glyph = "\uE70F" };
 					FileReputationIcon = new FontIcon { Glyph = "\uEA91" };
 					InstalledAppsManagementIcon = new FontIcon { Glyph = "\uE71D" };
+					WinGetManagementIcon = new FontIcon { Glyph = "\uEFDA" };
 					AuditPoliciesIcon = new FontIcon { Glyph = "\uE9D5" };
 					HomeIcon = new FontIcon { Glyph = "\uE80F" };
 					CBOMIcon = new FontIcon { Glyph = "\uE705" };

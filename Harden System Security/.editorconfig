@@ -1933,11 +1933,17 @@ dotnet_diagnostic.CA5351.severity = none
 # CA5381: Ensure certificates are not added to root store
 dotnet_diagnostic.CA5381.severity = none
 
+# CA5380: Ensure that certificates are not added to the root store
+dotnet_diagnostic.CA5380.severity = none
+
 # All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
+# Using these in groups only adds moderate amount of extra time during compilation
+# Group 1 - with 16 cores/64GB RAM, takes roughly 10 minutes to compile Harden System Security project. If "copy_analysis" is used too, it'll take 1 hour to compile the AppControl Manager project.
 # dotnet_code_quality.dispose_analysis_kind = AllPaths
 # dotnet_code_quality.CA2000.interprocedural_analysis_kind = ContextSensitive
-# dotnet_code_quality.CA2213.interprocedural_analysis_kind = ContextSensitive
 # dotnet_code_quality.CA2000.points_to_analysis_kind = Complete
+# Group 2
+# dotnet_code_quality.CA2213.interprocedural_analysis_kind = ContextSensitive
 # dotnet_code_quality.CA2213.points_to_analysis_kind = Complete
 # dotnet_code_quality.copy_analysis = true
 # dotnet_code_quality.try_determine_additional_string_formatting_methods_automatically = true

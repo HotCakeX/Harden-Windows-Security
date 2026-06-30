@@ -24,7 +24,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using HardenSystemSecurity.CustomUIElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,17 +36,6 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 {
-	private sealed partial class ActionCommand(Action<object?> execute) : ICommand
-	{
-		public event EventHandler? CanExecuteChanged { add { } remove { } }
-
-		public bool CanExecute(object? parameter) => true;
-
-		public void Execute(object? parameter) => execute(parameter);
-	}
-
-	internal static ICommand PackagedAppsZoomedOutGroupInvokedCommand { get; } = new ActionCommand(ViewModelProvider.InstalledAppsManagementVM.ZoomInToPackagedAppsGroup);
-
 	/// <summary>
 	/// The main InfoBar for this VM.
 	/// </summary>
@@ -269,22 +257,28 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		RestoreSelectionFromViewModel();
 	}
 
-	private void ZoomInToPackagedAppsGroup(object? parameter)
+	internal void PackagedAppsZoomedOutGroup_Click(object sender, RoutedEventArgs e)
 	{
-		if (parameter is not ICollectionViewGroup viewGroup)
+		if (sender is not FrameworkElement { DataContext: ICollectionViewGroup viewGroup })
 		{
 			return;
 		}
 
-		object? firstItem = null;
-		if (viewGroup.GroupItems is not null && viewGroup.GroupItems.Count > 0)
+		ZoomInToPackagedAppsGroup(viewGroup);
+	}
+
+	private void ZoomInToPackagedAppsGroup(ICollectionViewGroup viewGroup)
+	{
+		if (viewGroup.GroupItems is null || viewGroup.GroupItems.Count is 0)
 		{
-			firstItem = viewGroup.GroupItems[0];
+			return;
 		}
+
+		object firstItem = viewGroup.GroupItems[0];
 
 		IsPackagedAppsZoomedInViewActive = true;
 
-		if (firstItem is null || UIListView is null)
+		if (UIListView is null)
 		{
 			return;
 		}

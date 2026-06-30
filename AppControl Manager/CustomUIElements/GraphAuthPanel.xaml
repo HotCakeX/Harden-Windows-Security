@@ -340,7 +340,7 @@
                                           VerticalScrollMode="Enabled"
                                           HorizontalScrollBarVisibility="Disabled"
                                           HorizontalScrollMode="Disabled">
-                                <TextBlock Text="{x:Bind Permissions, Mode=OneWay}"  
+                                <TextBlock Text="{x:Bind Permissions, Mode=OneWay}"
                                            TextWrapping="WrapWholeWords"/>
                             </ScrollViewer>
                         </Grid>
@@ -565,7 +565,7 @@
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
 
-                <StackPanel Width="520"                            
+                <StackPanel Width="520"
                             VerticalAlignment="Top"
                             Orientation="Vertical"
                             Spacing="8">

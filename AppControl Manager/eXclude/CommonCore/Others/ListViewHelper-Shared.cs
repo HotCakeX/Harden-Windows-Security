@@ -80,7 +80,10 @@ internal static partial class ListViewHelper
 		Firewall_Management = 10015,
 		DuplicatePhotoFinder = 10016,
 		ViewExportedFunctions = 10017,
-		ExploitMitigations_Registry = 10018
+		ExploitMitigations_Registry = 10018,
+		WinGet_SearchResults = 10019,
+		WinGet_InstalledPackages = 10020,
+		WinGet_Sources = 10021
 	}
 
 	/// <summary>
@@ -94,6 +97,13 @@ internal static partial class ListViewHelper
 	private static readonly Dictionary<ListViewsRegistry, ScrollViewer> ListViewsScrollViewerCache = [];
 
 	/// <summary>
+	/// Registers a ListView in the cache as soon as it is loaded.
+	/// </summary>
+	/// <param name="key"></param>
+	/// <param name="listView"></param>
+	internal static void Register(ListViewsRegistry key, ListView listView) => ListViewsCache[key] = listView;
+
+	/// <summary>
 	/// Registers a ListView and its ScrollViewer in the caches.
 	/// </summary>
 	/// <param name="key"></param>
@@ -104,7 +114,7 @@ internal static partial class ListViewHelper
 		// Logger.Write("Registering ListView in the cache");
 
 		// Update caches to point to the new instance
-		ListViewsCache[key] = listView;
+		Register(key, listView);
 		ListViewsScrollViewerCache[key] = viewer;
 	}
 

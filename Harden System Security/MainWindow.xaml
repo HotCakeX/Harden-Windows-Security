@@ -586,6 +586,7 @@
                 </NavigationViewItem>
 
                 <NavigationViewItem x:Name="InstalledAppsManagementNavItem" x:Uid="InstalledAppsManagementNavItem" Icon="{x:Bind ViewModel.InstalledAppsManagementIcon, Mode=OneWay}" Tag="InstalledAppsManagement"/>
+                <NavigationViewItem x:Name="WinGetManagementNavItem" x:Uid="WinGetManagementNavItem" Icon="{x:Bind ViewModel.WinGetManagementIcon, Mode=OneWay}" Tag="WinGetManagement"/>
                 <NavigationViewItem x:Name="FileReputationNavItem" x:Uid="FileReputationNavItem" Icon="{x:Bind ViewModel.FileReputationIcon, Mode=OneWay}" Tag="FileReputation"/>
                 <NavigationViewItem x:Name="GroupPolicyEditorNavItem" x:Uid="GroupPolicyEditorNavItem" Icon="{x:Bind ViewModel.GroupPolicyEditorIcon, Mode=OneWay}" Tag="GroupPolicyEditor"/>
                 <NavigationViewItem x:Name="AuditPoliciesNavItem" x:Uid="AuditPoliciesNavItem" Icon="{x:Bind ViewModel.AuditPoliciesIcon, Mode=OneWay}" Tag="AuditPolicies"/>
@@ -638,7 +639,7 @@
             </NavigationView.FooterMenuItems>
 
             <!-- Split view to create the sidebar -->
-            <SplitView x:Name="SidebarSplitView"                       
+            <SplitView x:Name="SidebarSplitView"
                        PaneBackground="Transparent"
                        IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}"
                        PaneOpened="{x:Bind ViewModel.RefreshUltimatePerformancePowerPlanState}"

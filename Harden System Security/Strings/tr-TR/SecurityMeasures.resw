@@ -1,0 +1,1009 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:schema id="root">
+        <xs:element name="root" ns1:IsDataSet="true">
+            <xs:complexType>
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element name="data">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+                            </xs:sequence>
+                            <xs:attribute name="name" type="xsd:string" ns1:Ordinal="1" />
+                            <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+                            <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="resheader">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                            </xs:sequence>
+                            <xs:attribute name="name" type="xsd:string" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:complexType>
+        </xs:element>
+    </xs:schema>
+    <resheader name="resmimetype">
+        <value>metin/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Sürüm=2.0.3500.0, Kültür=nötr, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Sürüm=2.0.3500.0, Kültür=nötr, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>Gelişmiş Kimlik Avı Koruması Hizmeti Etkinleştirildi.</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>Gelişmiş Kimlik Avı Koruması: Güvenli Olmayan Uygulamayı Bildirin</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>Gelişmiş Kimlik Avı Koruması: Parolanın Yeniden Kullanımını Bildirin</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>Gelişmiş Kimlik Avı Koruması: Kötü Amaçlı Yazılımları Bildirin</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>Gelişmiş Kimlik Avı Koruması: Tehdit Yakalama Penceresi</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>Gecikmeden Sonra Öğeleri Temizle</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>Taranacak indirilen dosya ve eklerin maksimum boyutu</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>Tam Tarama İçin Eşlenen Ağ Sürücülerini Tarama</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>Ağ Dosyalarını Tarama</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>Çıkarılabilir Sürücü Taraması</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>Yeniden Ayrıştırma Noktası Taraması</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>Arşiv dosyalarını taramak için maksimum derinlik</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>Başlangıçta en son virüs ve casus yazılım güvenliği istihbaratını kontrol edin</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>Virüs güvenliği istihbaratının güncelliğini yitirmiş sayılmasından önceki gün sayısını tanımlayın</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>Casus yazılım güvenlik istihbaratının güncelliğini yitirmiş sayılmasından önceki gün sayısını tanımlayın</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>İlk Görüşte Engelle özelliğini etkinleştirin.</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>Akıllı Uygulama Kontrolü vb. İçin Gerekli Opsiyonel Tanılama Verileri</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>Tanılama verilerini etkinleştirme ayarlarını yapılandırma kullanıcı arayüzü</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>Ciddi Tehdit düzeyinde varsayılan eylem = Kaldır</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>Yüksek Tehdit düzeyinde varsayılan eylem = Kaldır</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>Orta Tehdit düzeyinde varsayılan eylem = Karantina</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>Düşük Tehdit düzeyinde varsayılan eylem = Karantina</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>Microsoft Defender Antivirus'ün ölçülü bir bağlantı üzerinden güncellenmesine izin verir</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>Daha fazla analiz gerektiğinde dosya örneklerini gönderin</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>Tehdit önem dereceleri için varsayılan eylemleri yapılandırma</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>Kontrollü Klasör Erişimini Etkinleştir</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>Ağ Korumasını Etkinleştir</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>Windows Server'da Ağ Korumasını Etkinleştirme</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>Intel TDT: Tehdit Algılama Teknolojisini etkinleştirin.</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>Bulut Blok Düzeyini maksimum değere ayarlayın: Tolerans Yok.</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>Genişletilmiş bulut denetimi zaman aşımı maksimum değere ayarlandı.</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>Dosya Karmalarının hesaplanmasını etkinleştirin.</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>Dev Drive'ın dosya tarama konusundaki gevşek güvenliğini devre dışı bırakın.</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>OOBE modu sırasında RTP ve İmza Güncellemesini etkinleştirin.</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>BruteForce Koruması özelliğini etkinleştirin.</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Brute Force saldırganlık düzeyini yüksek olarak yapılandırın.</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Uzaktan Şifreleme Koruması özelliğini etkinleştirin.</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Uzaktan Şifreleme Koruması saldırganlık düzeyini yüksek olarak yapılandırın.</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>E-posta Taramayı Etkinleştir.</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>Yakalama Hızlı Taramalarını etkinleştirin.</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>Taramayı Çalıştırmadan Önce İmzaları Kontrol Edin.</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>Güvenlik bilgileri güncellemelerini kontrol etme aralığını artırın.</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>En son güvenlik istihbaratıyla güncel kalmak için Microsoft MAPS (SpyNet olarak da bilinir) ağına katılın.</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>ASR Kurallarını Yapılandırma</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>Açıklardan yararlanılan, savunmasız imzalı sürücülerin kötüye kullanımını engelle</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>Adobe Reader'ın alt işlemler oluşturmasını engelleyin</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>Tüm Office uygulamalarının alt işlemler oluşturmasını engelleyin</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>Windows yerel güvenlik yetkilisi alt sisteminden (lsass.exe) kimlik bilgilerinin çalınmasını engelleyin</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>E-posta istemcisinden ve web postasından yürütülebilir içeriği engelleyin</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>Bir yaygınlık, yaş veya güvenilir liste kriterini karşılamadıkları sürece yürütülebilir dosyaların çalışmasını engelleyin</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>Karıştırılmış olabilecek komut dosyalarının yürütülmesini engelle</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>JavaScript veya VBScript'in indirilen yürütülebilir içeriği başlatmasını engelleyin</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>Office uygulamalarının yürütülebilir içerik oluşturmasını engelleyin</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>Office uygulamalarının diğer işlemlere kod eklemesini engelleyin</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>Office iletişim uygulamasının alt süreçler oluşturmasını engelleyin</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>WMI olay aboneliği aracılığıyla kalıcılığı engelle
+* Dosya ve klasör hariç tutmaları desteklenmez.</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>PSExec ve WMI komutlarından kaynaklanan süreç oluşturmaları engelleyin</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>Makinenin Güvenli Modda yeniden başlatılmasını engelle</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>USB'den çalıştırılan güvenilmeyen ve imzasız işlemleri engelleyin</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>Kopyalanan veya kimliğine bürünülen sistem araçlarının kullanımını engelle</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>Sunucular için Web Kabuğu oluşturulmasını engelle</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>Office makrolarından Win32 API çağrılarını engelle</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>Fidye yazılımlarına karşı gelişmiş koruma kullanın</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>Standart Kullanıcı PIN Sıfırlamasına İzin Verme</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>İşletim sisteminin başlangıçta ek kimlik doğrulama gerektirmesine izin ver</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>TPM olmadan BitLocker'a izin verme</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>TPM'nin tek başına kullanılmasına izin verme</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>Başlangıçta TPM + PIN kullanımına izin ver.</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>Başlangıçta TPM + tuşunun kullanılmasına izin verin.</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>Başlangıçta TPM + Başlangıç ​​Anahtarı + PIN kullanımına izin ver.</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>İşletim sistemi sürücüsü için doğru Şifreleme yöntemini yapılandırın: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>Sabit veri sürücüleri için doğru Şifreleme yöntemini yapılandırın: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>Çıkarılabilir sürücüler için doğru Şifreleme yöntemini yapılandırın: XTS-AES-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>PIN'de sembollerin ve diğer karakterlerin kullanılmasına izin vererek Gelişmiş PIN'i kullanın.</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>İşletim sistemi sürücüsü için güvenli tam disk şifreleme türünü yapılandırın</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Çıkarılabilir sürücüler için güvenli tam disk şifreleme türünü yapılandırın</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>Windows'un önceki sürümlerinden BitLocker korumalı çıkarılabilir veri sürücülerine erişimi engelleyin</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>Güvenli olmadıkları için "BitLocker To Go" Okuyucusunu FAT formatlı çıkarılabilir sürücülere yüklemeyin.</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>Başlatma için minimum PIN uzunluğunu yapılandırın.</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>Uyurken (fişe takılıyken) bekleme durumlarına (S1-S3) izin verme</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>Uyurken (pille) bekleme durumlarına (S1-S3) izin verme</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>İsterseniz cihazınızı hazırda bekletebilmeniz için işletim sistemindeki güç seçeneklerinde Hazırda Beklet Seçeneği'ni gösterin.</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Sabit Veri Sürücüleri için güvenli şifreleme türünü yapılandırın</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>Doğru TLS Şifre Paketlerini yapılandırın</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>Hizmet ECC Eğrilerini ve konumlarını yapılandırın.</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>TLS 1.0 istemcisini devre dışı bırakın - Varsayılan Olarak Devre Dışı</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>TLS 1.0 istemcisini devre dışı bırak - Etkin</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>TLS 1.0 sunucusunu devre dışı bırakın - Varsayılan Olarak Devre Dışı</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>TLS 1.0 sunucusunu devre dışı bırakın - Etkin</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>TLS 1.1 istemcisini devre dışı bırakın - Varsayılan Olarak Devre Dışı</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>TLS 1.1 istemcisini devre dışı bırak - Etkin</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>TLS 1.1 sunucusunu devre dışı bırakın - Varsayılan Olarak Devre Dışı</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>TLS 1.1 sunucusunu devre dışı bırakın - Etkin</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>NULL Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>56/56 Şifre Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>40/128 Şifre Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>RC2 56/128 Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>RC2 128/128 Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>RC4 40/128 Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>RC4 56/128 Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>RC4 64/128 Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>RC4 128/128 Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>Üçlü DES 168 Şifreleme Paketini Devre Dışı Bırak</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>MD5 Karma Algoritmasını Devre Dışı Bırak</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN'inde rakam kullanılmasını zorunlu kılın</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN'inde küçük harf kullanılmasını zorunlu kılın</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN'inin Sona Erme Tarihini Ayarlama</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN'inin geçmişini kaydedin</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>Kilit ekranında Ağ Seçimi Kullanıcı Arayüzünü Görüntüleme</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>Hızlı Kullanıcı Değiştirme giriş noktalarını gizle</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>Sanallaştırma Tabanlı Güvenliği Etkinleştir</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>Platform Güvenlik Özellikleri Gerektirir</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>Hiper Yöneticinin Zorunlu Kod Bütünlüğü - UEFI Kilidi</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>HVCI MAT (Bellek Özellik Tablosu) gerektirir</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>Kimlik Bilgisi Koruması Yapılandırması - UEFI Kilidi</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>Donanım desteği mevcutsa System Guard Secure Launch'ı etkinleştirin</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>Çekirdek Gölge Yığınlarını Yapılandırma Başlatma</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>UEFI Kilidi ile Yerel Güvenlik Yetkilisi (LSA) süreç Korumasını etkinleştirin</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>Makine Kimliği Yalıtım Yapılandırmasını Yapılandırma</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>Zorunlu Modda VBS ve Bellek Bütünlüğünü Etkinleştirme</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki Alanı profili için Windows Güvenlik Duvarı'nı etkinleştirin</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki Alanı profili için Varsayılan Giden İşlemi Ayarla</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki Alanı profili için Varsayılan Gelen Eylemi Ayarla</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki alanı profili için bildirimleri görüntüle</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki alanı profili için Günlük dosyası yolunu yapılandırın</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki alanı profili için Günlük dosyası boyutunu yapılandırma</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki alanı profili için engellenen bağlantıları günlüğe kaydet</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Etki alanı profili için başarılı bağlantıları günlüğe kaydet</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Özel profil için Windows Güvenlik Duvarı'nı etkinleştirin</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Özel profil için bildirimleri görüntüle</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>Özel profil için Günlük dosyası boyutunu yapılandırma</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Özel profil için engellenen bağlantıları günlüğe kaydet</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Özel profil için Günlük dosyası yolunu yapılandırın</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>Genel profil için Windows Güvenlik Duvarı'nı etkinleştirin</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Genel profil için bildirimleri görüntüle</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>Genel profil için Günlük dosyası boyutunu yapılandırma</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Genel profil için engellenen bağlantıları günlüğe kaydet</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>Genel profil için Günlük dosyası yolunu yapılandırın</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>Windows Güvenlik Duvarı İlkesi Sürümünü Yapılandırma</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>NetBIOS'u devre dışı bırakın</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>Akıllı Ad Çözümlemesini Devre Dışı Bırak</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>Çoklu Yayını Devre Dışı Bırak</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>HTTP Yazdırmayı Devre Dışı Bırak</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>Web PnP İndirmeyi Devre Dışı Bırak</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>Tüm ağ bağdaştırıcılarında LMHOSTS arama protokolünü devre dışı bırakın</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>QUIC Üzerinden SMB Sunucusunu Etkinleştirin</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>QUIC Üzerinden SMB İstemcisini Etkinleştirin</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>Güvenli SMB Sunucu Şifreleme Paketi Siparişini yapılandırın</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>Güvenli SMB İstemci Şifreleme Paketi Siparişini yapılandırın</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>Minimum SMB sunucusu sürümünü ayarlayın</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>Minimum SMB istemci sürümünü ayarlayın</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>SMB için NTLM'yi engelle</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>KOBİ istemcisi için şifreleme gerektir</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>RPC Uç Nokta Eşleştiricisi İstemci Kimlik Doğrulamasını Devre Dışı Bırak</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>SMB Sunucu Şifrelemesini Etkinleştir</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>Süreç oluşturma etkinliklerine komut satırını dahil et</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>Konumu Devre Dışı Bırak</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>Konum Komut Dosyasını Devre Dışı Bırak</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>Windows Konum Sağlayıcıyı Devre Dışı Bırak</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>Svchost Azaltma'yı Etkinleştir</value>
+</data>
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
+    <value>Önyükleme Başlatma Sürücüsü Başlatma Politikası Yalnızca İyi olarak ayarlandı</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>Windows'ta gelişmiş aramayı etkinleştir</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge'i (Kararlı) Tarifeli bağlantılar üzerinden güncelleme yapacak şekilde ayarlayın</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge'i (Beta) Tarifeli bağlantılar üzerinden güncelleme yapacak şekilde ayarlayın</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge'i (Dev) Ölçülü bağlantılar üzerinden güncellemeye ayarlayın</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>WinVerifyTrust İmza Doğrulaması bölüm 1'i uygulayın</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>WinVerifyTrust İmza Doğrulaması bölüm 2'yi uygulayın</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>DAC ve Kerberos zırhlaması için talep ve bileşik kimlik doğrulama isteği</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>Windows Korumalı Yazdırmayı Etkinleştir</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>Uzun yollar için desteği etkinleştirin</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>Çevrimiçi İpuçlarını devre dışı bırakın.</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>Cihazımı Bul özelliğini devre dışı bırakın.</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>Konuşma Verilerinin Otomatik Güncellenmesini Devre Dışı Bırak.</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>Reklam kimliğini kapatarak uygulamaların, uygulamalardaki deneyimler için kimliği kullanmasını önleyin.</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>Windows'u kullanırken ipuçları ve öneriler alın seçeneğini kapatın.</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>Tüm Windows deneyimlerinde bulut için optimize edilmiş içeriği kapatın.</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>Geri bildirim bildirimlerini gösterme.</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>Harita Verilerinin Otomatik İndirilmesi ve Güncellenmesi seçeneğini kapatın.</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>Hücresel metin mesajları için Mesaj Hizmeti Bulut Senkronizasyonunu devre dışı bırakın.</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>Windows'un Yazı Tipleri Kataloğunu indirmesini engelleyin.</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>"Bu cihazdaki deneyimlere devam et" özelliğini devre dışı bırakın.</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>Uygulama URI işleyicileriyle web'den uygulamaya bağlantı desteğini devre dışı bırakın.</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>Web'de arama yapmayın veya Web sonuçlarını Arama'da görüntülemeyin.</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>Web aramasına izin vermeyin.</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>Güncellemelerin tarifeli bağlantılar üzerinden otomatik olarak indirilmesine izin ver</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>Varsayılan olarak kapalı olan, hizmet yoluyla sunulan özellikleri etkinleştirin</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Özellik güncellemelerinin cihazlara otomatik olarak yüklenmesinden önceki gün sayısını belirtin</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Kalite güncellemelerinin cihazlara otomatik olarak yüklenmesinden önceki gün sayısını belirtin</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Kalite güncellemelerinin cihazlara otomatik olarak yüklenmesine kadar geçen gün sayısı</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>Kalite güncellemelerinin cihazlara otomatik olarak yüklenmesinden önceki ek süre günlerinin sayısı</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Özellik güncellemelerinin cihazlara otomatik olarak yüklenmesine kadar geçen gün sayısı</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Özellik güncellemelerinin cihazlara otomatik olarak yüklenmesinden önceki ek süre günlerinin sayısı</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>Bilgisayarı, Windows Update aracılığıyla güvenlik güncelleştirmelerini ve diğer önemli indirmeleri alacak şekilde ayarlayın</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>Güncellemeleri otomatik olarak indirin ve bakım gününde yükleyin</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>Otomatik bakım sırasında güncellemeleri yükleyin</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>Planlanan yükleme gününü her güne ayarla</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>Planlanan yükleme süresini istediğiniz zamana ayarlayın</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>Diğer Microsoft ürünlerine yönelik güncelleştirmeleri yükleyin</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>Windows güncellemesi için yeniden başlatma bildirimini etkinleştir</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>Güncelleştirmelerin yalnızca belirli haftalarda yüklenmesine ilişkin planlamayı kaldırın.</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Özellik güncellemeleri için uyumluluk son tarihini ayarlayın.</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Kalite güncellemeleri için uyumluluk son tarihini belirleyin.</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>3. taraf çerezlerini engelle</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>Sistem DoH ayarlarını kullanmak için HTTPS Üzerinden DNS Modunu ayarlayın</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>Şifreli İstemci Merhabasını Etkinleştir</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>HTTP için Temel kimlik doğrulamayı engelle</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>Edge'in politikaları kullandıktan sonra bile yeni özellikler almasına izin ver</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>Ses sürecini korumalı alanda çalışmaya zorlar</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>Ek işletim sistemi bölgesini paylaşma ayarının hiçbir zaman olarak ayarlanmasını önerir</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)'i devre dışı bırakın</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)'i devre dışı bırakın</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_CBC_SHA'yı devre dışı bırakın - (PFS YOK - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_CBC_SHA'yı devre dışı bırakın - (PFS YOK - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_GCM_SHA256'yı devre dışı bırakın - (PFS YOK)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_GCM_SHA384'ü devre dışı bırakın - (PFS YOK)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>Manifest V2 uzantı desteğini hiçbir zaman devre dışı bırakmayın</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>Web sitelerinin yerel USB bağlantılı cihazlara erişim istemesine asla izin vermeyin</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>Varsayılan olarak tüm sitelerde Pencere Yönetimi iznini reddeder</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>Tarayıcı işleminin dinamik kod oluşturmasını önleyin</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>Dosya Gezgini'nde Dosya uzantılarının gösterilmesini etkinleştir</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>Dosya Gezgini'nde gizli dosyaların gösterilmesini etkinleştir</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>Web sitelerinin yerel dil listesine erişimini devre dışı bırakın</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>Windows aramada güvenli aramayı kapatın</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>Pano Geçmişini Etkinleştir</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>Fiziksel klavyede yazarken metin önerilerini göster seçeneğini açın</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>Çok dilli metin önerilerini açın</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>Shift tuşuna 5 kez hızlı basmanın yapışkan tuş kısayolunu kapatın</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>Kilit ekranında hatırlatıcıları ve gelen VoIP çağrılarını göstermeyi devre dışı bırakır</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>Ağda oturum açma sırasında yerel hesaplara UAC kısıtlamaları uygulama</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>İşletim sisteminin diğer kuruluşlarda oluşturulan BitLocker şifreli sürücülerini kullanmasına izin verin.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>Tüketicilerin cihazlarından ve Microsoft hesabından en iyi şekilde yararlanmasına yardımcı olan deneyimleri kapatmayın.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>Oyun DVR özelliğinin kullanılmasına izin verin.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>Yerel Yönetici için İnternet Bağlantı Paylaşımı (ICS) kullanıcı arayüzünü etkinleştirin.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>Kullanıcıların Sudo özelliğini kullanmasına izin verin.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Microsoft Defender'daki istisnaları yerel Yöneticilerden gizlemeyin.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>Uzak Masaüstü Oturumlarında ve Hyper-V'de sürücü eşlemeye izin ver</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>Uzak Masaüstü Oturumlarında ve Hyper-V'de Pano paylaşımına izin ver</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Windows Güvenlik Duvarı ilkesi sürümünü yapılandırma</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>Özel Profil için Windows Güvenlik Duvarı'ndaki bildirimleri devre dışı bırakmayın</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Yalnızca Grup İlkesi'nde tanımlananları uygulamak yerine, Windows Güvenlik Duvarı gelişmiş ayarları bölümünde tanımlanan Windows Güvenlik Duvarı ilkelerinin kullanılmasına izin verin.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Yalnızca Grup İlkesi'nde tanımlananları uygulamak yerine, Windows Güvenlik Duvarı gelişmiş ayarları bölümünde tanımlanan Windows Güvenlik Duvarı IPSec ilkelerinin kullanılmasına izin verin.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>Genel Profil için Windows Güvenlik Duvarı'ndaki bildirimleri devre dışı bırakmayın</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>İşletim sisteminin BitLocker tarafından şifrelenmeyen çıkarılabilir sürücülere yazmasına izin verin</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>3. taraf çerezlerinin engellenmesi önerilir</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Edge'i sistemin DNS'sini HTTPS üzerinden kullanacak şekilde ayarlar. Bu, MDAG'nin de düzgün çalışmasını sağlar</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>Şifreli İstemci Merhabasını Etkinleştir</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>HTTP için Temel kimlik doğrulamayı engelle</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Edge kategorisi korumasını kullanan cihazların, normal cihazlar gibi yeni özellikler ve denemeler almasına izin verin</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>Ses sürecini korumalı alanda çalışmaya zorlar</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>Ek işletim sistemi bölgesini paylaşma ayarının hiçbir zaman olarak ayarlanmasını önerir.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)'i devre dışı bırakın</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)'i devre dışı bırakın</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_CBC_SHA'yı devre dışı bırakın - (PFS YOK - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_CBC_SHA'yı devre dışı bırakın - (PFS YOK - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_GCM_SHA256'yı devre dışı bırakın - (PFS YOK)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_GCM_SHA384'ü devre dışı bırakın - (PFS YOK)</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>Web sitelerinin yerel USB bağlantılı cihazlara erişim istemesine asla izin vermeyin</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>Varsayılan olarak tüm sitelerde Pencere Yönetimi iznini reddeder</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: RC2 128 bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: RC4 40 bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: RC4 64 bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: RC4 128 bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Schannel için zayıf Şifreyi devre dışı bırakın: 3DES 168 bit (Üçlü DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>SChannel için MD5 Karma Algoritmasını devre dışı bırakın.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Battle Net oyun istemcisiyle uyumluluk sağlamak için daha az güvenli "TLS_RSA_WITH_AES_256_CBC_SHA" Şifresinin kullanılmasına izin verin.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>Akıllı Uygulama Denetimi'ni açın. Lütfen Akıllı Uygulama Kontrolü'nün düzgün çalışması için gerekli olan isteğe bağlı tanılama verilerini de etkinleştirin.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>Makine hareketsizlik sınırı politikasını, cihazın 120 saniye boyunca işlem yapılmaması durumunda otomatik olarak kilitleneceği şekilde ayarlayın.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>Kimlik bilgilerinizi girmeden önce Kilit Ekranında CTRL+ALT+DEL tuş birleşimini gerektirecek bir Etkileşimli oturum açma ilkesi ayarlayın. Bu, kullanıcı kimlik bilgilerini şifreler gibi açık metinlerle yakalamak için sahte kilit ekranlarını kullanan belirli saldırıları azaltabilir.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>BitLocker şifreli aygıtın 5 başarısız oturum açma denemesinden sonra kilitlenmesi için Makine hesabı kilitleme eşiği için bir Etkileşimli oturum açma ilkesi ayarlayın. İşletim sistemi sürücüsünün tekrar oturum açması için BitLocker kurtarma anahtarını girmeniz istenecektir.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>Oturum kilitlendiğinde kullanıcı bilgilerinin görüntülenmesini durdurmak için Etkileşimli oturum açma ilkesini ayarlayın.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>Kullanıcı adının Kilit Ekranında görüntülenmesini durdurmak için bir Etkileşimli oturum açma ilkesi ayarlayın.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>Kilit Ekranında son oturum açma ayrıntılarının görüntülenmesini durdurmak için bir Etkileşimli oturum açma ilkesi ayarlayın.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>Yönetici Onay Modunda yöneticiler için yükseltme isteminin davranışını ayarlayın: Güvenli Masaüstünde Onay İstemi</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>Standart kullanıcılar için yükseltme isteminin davranışını ayarlayın: Güvenli Masaüstünde Kimlik Bilgisi İstemi</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>Sistemi yalnızca imzalanmış ve Doğrulanmış yürütülebilir dosyaları yükseltecek şekilde yapılandırın. İmzasız veya kendinden imzalı sertifikalarla imzalanmış hiçbir program yönetici olarak çalıştırılamaz.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>Gelişmiş Ayrıcalık Koruma Modunda yöneticiler için yükseltme isteminin davranışını ayarlayın: Güvenli Masaüstünde Kimlik Bilgisi İstemi</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>Yönetici Koruması: Yönetici Onay Modunun türünü gelişmiş ayrıcalık korumasıyla Yönetici Onay Modu olarak ayarlayın</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Uzaktan erişilebilen kayıt defteri yollarını kaldırın.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Uzaktan erişilebilen kayıt defteri yollarını ve alt yollarını kaldırın.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Tüm hesaplar için gelen NTLM bağlantılarını reddet.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Giden NTLM bağlantılarını reddet.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>Bilgisayarda depolanan kullanıcı anahtarları için güçlü anahtar korumasını zorunlu kılın. Bilgisayara yüklediğiniz sertifikaların özel anahtarlarını güvenli bir şekilde kaydedebileceksiniz ve imza işlemleri gibi özel anahtara erişirken de aynı kimlik bilgileri gerekli olacaktır.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>İzin verilen başarısız oturum açma denemelerinin sayısını 5 olarak ayarlayın. Bu kategorideki diğer ilkelerle birlikte, bu, her 5 başarısız oturum açma girişiminin, 5 deneme daha yapılabilmesi için tam bir günün geçmesi gerektiği anlamına gelir, aksi takdirde BitLocker devreye girecek, sistem yeniden başlatılacak ve 48 basamaklı BitLocker kodu gerekli olacaktır. Bu politika kaba kuvvet girişimlerini büyük ölçüde önler.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>Hesap kilitleme süresini 1440 dakika veya 1 gün olarak ayarlayın. Bu kategorideki diğer politikalarla birlikte bu, her 5 başarısız oturum açma denemesinden birinin, 5 deneme daha yapılabilmesi için tam bir günün geçmesi gerektiği anlamına gelir; aksi takdirde BitLocker devreye girecek, sistem yeniden başlatılacak ve 48 basamaklı BitLocker kodu gerekli olacaktır.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>Sıfırlama hesap kilitleme sayacını 1440 dakika veya 1 gün olarak ayarlayın.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>TLS v1 İstemcisini Devre Dışı Bırakma - Bölüm 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>TLS v1 İstemcisini Devre Dışı Bırakma - Bölüm 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>TLS v1 Sunucusunu Devre Dışı Bırakma - Bölüm 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>TLS v1 Sunucusunu Devre Dışı Bırakma - Bölüm 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>TLS v1.1 İstemcisini Devre Dışı Bırakma - Bölüm 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>TLS v1.1 İstemcisini Devre Dışı Bırakma - Bölüm 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>TLS v1.1 Sunucusunu Devre Dışı Bırakma - Bölüm 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>TLS v1.1 Sunucusunu Devre Dışı Bırakma - Bölüm 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>Önemli güvenlik olaylarına kolay erişim için Windows Olay Görüntüleyicisi'nde özel görünümler oluşturun.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>SSH istemcisinin yapılandırmalarını güvenli MAC'leri (Mesaj Kimlik Doğrulama Kodları) kullanacak şekilde yapılandırın.</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>Kilit Ekranı kilitlerini ve kilit açma işlemlerini denetlemeyi ve izlemeyi etkinleştirin.</value>
+</data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>Bağlantılı modern bekleme sırasında ağ bağlantısına izin ver (yalnızca fişe takılıyken)</value>
+</data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Bir IP adresinin Kaba Kuvvet Koruması tarafından engelleneceği maksimum süreyi mümkün olan maksimum değere ayarlayın. Bu sürenin sonunda engellenen IP adresleri oturum açabilecek ve oturum başlatabilecektir.</value>
+</data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Bir IP adresinin Uzaktan Şifreleme Koruması tarafından engelleneceği maksimum süreyi mümkün olan maksimum değere ayarlayın. Bu sürenin sonunda engellenen IP adresleri bağlantı başlatabilecektir.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>İstenmeyen türden olabilecek uygulamalar için algılamayı etkinleştirin. Microsoft Defender geçmişinde diğer tehditlerle birlikte görünecekler.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>mDNS UDP-Giriş Güvenlik Duvarı Kurallarını devre dışı bırakın. Kafe gibi halka açık yerlerde ekstra bir güvenlik önlemi sağlar ancak Genel profile veya Özel profilin seçilmediği ev ağlarına dayanan Miracast ekran paylaşımına müdahale edebilir.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Tüm bağlantıların Ağ Konumunu Genel olarak ayarlayın. Genel ağ, diğer ağ cihazlarına daha az güven anlamına gelir.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>Önyükleme Başlatma Sürücüsü Başlatma Politikası İyi ve Bilinmeyen olarak ayarlandı</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Uzak Masaüstü Hizmetleri aracılığıyla oturum açmaya izin verin. Bu, makinenizde oturum açmak için Uzak Masaüstü'nü (RDP) yerel olarak kullanmanıza olanak tanır.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Kısayol (.lnk) dosyalarının dosya uzantısını Dosya Gezgini'nde görüntüleyin. Saldırganlar, kötü amaçlı yükleri zararsız belgeler olarak gizlemek için sıklıkla kısayolların varsayılan gizli durumuna güvenir. Uzantının ortaya çıkarılması, gerçek dosya türünü doğrulamanıza ve yürütmeden önce aldatıcı kısayolları belirlemenize olanak tanır.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>(.url) dosyalarının dosya uzantısını Dosya Gezgini'nde görüntüleyin. İnternet kısayollarının meşru dosyalar gibi görünmesini önler. Bu, saldırganların kimlik avı bağlantılarını veya kötü amaçlı yönlendirmeleri güvenli belgeler olarak gizlemek için gizli uzantıları kullanması durumunda güvenlik risklerini azaltır.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>(.pif) dosyalarının dosya uzantısını Dosya Gezgini'nde görüntüleyin. Program Bilgisi Dosyaları (PIF), .exe dosyalarına benzer şekilde çalışır ve saldırganlar tarafından, kötü amaçlı yazılımları daha az tanıdık bir dosya türünün arkasına gizlemek için sıklıkla kullanılır.</value>
+</data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>Tüm üçüncü taraf kötü amaçlı yazılımdan koruma sağlayıcıları için Authenticode kod imzalama gereksinimlerini sıkı bir şekilde uygulamak amacıyla Kötü Amaçlı Yazılımdan Koruma Tarama Arayüzünü (AMSI) yapılandırın.</value>
+</data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>WebClient hizmetinin devre dışı bırakılması, saldırganların WebDAV'ı kötüye kullanarak NTLM kimlik bilgilerini ve diğer hassas verileri kötü amaçlı bağlantılar aracılığıyla ele geçirmesini ve çalmasını önler.</value>
+</data>
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>Bireysel komutlara izin verilmesi ancak komut dosyalarının çalıştırılmasına izin verilmemesi için Windows PowerShell'in yürütme ilkesini kısıtlı olarak ayarlayın.</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge'deki gelişmiş güvenlik modu, tam zamanında (JIT) JavaScript derlemesini devre dışı bırakarak ve tarayıcı için ek işletim sistemi korumalarını etkinleştirerek bellekle ilgili güvenlik açıklarını azaltır.</value>
+  </data>
+<data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>Web sitelerinin yerel olarak yüklenen yazı tipleri hakkındaki bilgilere erişmesini engelleyin.</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>Microsoft Edge'deki Tarayıcı Kodu Bütünlüğü, Edge işleminde yalnızca Microsoft imzalı ikili dosyaların yüklenmesine izin verilmesini sağlayarak tarayıcının güvenliğini artırır.</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>Oluşturucu işlemi için CPU çekirdek paylaşımını kısıtlayın. Oluşturucu işlemini özel bir CPU çekirdeğine yalıtarak yan kanallar arası işlemler arası bellek saldırılarının azaltılmasına yardımcı olur ve diğer işlemlerin aynı çekirdekte programlanmasını engeller.</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>Daha fazla güvenlik avantajı sağlamak için Renderer işlemlerini bir Uygulama Kapsayıcısında başlatır.</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge, TLS 1.3 ve QUIC bağlantıları için Ticari Ulusal Güvenlik Algoritması Paketi 2.0 (CNSA 2.0) için gereken algoritmaları tercih edecektir.</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge'i, Ticari Ulusal Güvenlik Algoritma Paketi sürüm 1.0 ve 2.0 (CNSA 1.0 ve 2.0) ile uyumluluk için gereken şifreleri tercih edecek şekilde yapılandırır. Yalnızca TLS 1.3 ve QUIC'yi etkiler.</value>
+</data>
+</root>

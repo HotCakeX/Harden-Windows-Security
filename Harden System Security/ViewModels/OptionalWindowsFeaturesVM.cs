@@ -2224,6 +2224,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			int correctCount = 0;
 			int incorrectCount = 0;
 			List<string> incorrectItems = [];
+			List<string> incorrectItemNames = [];
 
 			MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("VerifyingSecurityHardeningState"), SecurityHardeningConfigs.Count));
 
@@ -2297,6 +2298,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							incorrectCount++;
 							string validStates = string.Join(", ", config.ValidVerificationStates);
 							incorrectItems.Add($"{config.Name} (Expected: {validStates}, Actual: {actualState})");
+							incorrectItemNames.Add(config.Name);
 							MainInfoBar.WriteWarning($"Incorrect state for {config.Name}: Expected one of [{validStates}], Actual {actualState}");
 						}
 					}
@@ -2313,6 +2315,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							incorrectCount++;
 							string validStates = string.Join(", ", config.ValidVerificationStates);
 							incorrectItems.Add($"{config.Name} (Expected: {validStates}, Actual: Not Found)");
+							incorrectItemNames.Add(config.Name);
 							MainInfoBar.WriteWarning($"Item not found during verification: {config.Name}");
 						}
 					}
@@ -2341,6 +2344,15 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							incorrectItemsList += $" and {incorrectItems.Count - 3} more...";
 						}
 						MainInfoBar.WriteWarning(string.Format(Atlas.GetStr("IncorrectItems"), incorrectItemsList));
+
+						// Display a friendlier text after printing (and logging) the technical one
+						string incorrectItemNamesList = string.Join(", ", incorrectItemNames.Take(3));
+						if (incorrectItemNames.Count > 3)
+						{
+							incorrectItemNamesList += $" and {incorrectItemNames.Count - 3} more...";
+						}
+
+						MainInfoBar.WriteWarning($"These items aren't matching the recommended states: {incorrectItemNamesList}");
 					}
 				}
 			});

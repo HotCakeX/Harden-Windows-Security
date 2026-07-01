@@ -1798,7 +1798,7 @@
 <data name="PotentiallyUnwantedApplication" xml:space="preserve">
   <value>Kemungkinan Aplikasi Tak Dicari (PUA)</value>
 </data>
-<data name="Berbahaya" xml:space="preserve">
+<data name="Malicious" xml:space="preserve">
   <value>Berbahaya</value>
 </data>
 <data name="UnrecognizedScore" xml:space="preserve">
